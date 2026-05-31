@@ -1,5 +1,4 @@
-import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 import TopBar from './components/TopBar.jsx';
 import TabBar from './components/TabBar.jsx';
@@ -12,29 +11,33 @@ import WeekDetail from './screens/WeekDetail.jsx';
 import SessionDetail from './screens/SessionDetail.jsx';
 import Tracking from './screens/Tracking.jsx';
 import Checkin from './screens/Checkin.jsx';
+import Wearables from './screens/Wearables.jsx';
 import Metrics from './screens/Metrics.jsx';
 import Trends from './screens/Trends.jsx';
 import Log from './screens/Log.jsx';
 import Profile from './screens/Profile.jsx';
+import Injuries from './screens/Injuries.jsx';
 import Overview from './screens/Overview.jsx';
 import Decisions from './screens/Decisions.jsx';
 import Principles from './screens/Principles.jsx';
 import Reassess from './screens/Reassess.jsx';
 import Settings from './screens/Settings.jsx';
 
-// Map each route to a title + whether it's a top-level (no back button) screen
 const routeMeta = {
   '/': { title: 'Hybrid', topLevel: true, tab: 'home' },
-  '/phases': { title: 'Training Phases', topLevel: true, tab: 'phases' },
+  '/phases': { title: 'Phases', topLevel: true, tab: 'phases' },
   '/phases/:phaseId': { title: 'Phase', topLevel: false, tab: 'phases' },
   '/phases/:phaseId/weeks/:weekNum': { title: 'Week', topLevel: false, tab: 'phases' },
   '/phases/:phaseId/weeks/:weekNum/sessions/:sessionIdx': { title: 'Session', topLevel: false, tab: 'phases' },
   '/tracking': { title: 'Tracking', topLevel: true, tab: 'tracking' },
-  '/tracking/checkin': { title: 'Weekly Check-in', topLevel: false, tab: 'tracking' },
-  '/tracking/metrics': { title: 'Key Metrics', topLevel: false, tab: 'tracking' },
+  '/tracking/checkin': { title: 'Weekly check-in', topLevel: false, tab: 'tracking' },
+  '/tracking/wearables': { title: 'Wearable data', topLevel: false, tab: 'tracking' },
+  '/tracking/metrics': { title: 'Key metrics', topLevel: false, tab: 'tracking' },
   '/tracking/trends': { title: 'Trends', topLevel: false, tab: 'tracking' },
-  '/tracking/log': { title: 'Log History', topLevel: false, tab: 'tracking' },
+  '/tracking/log': { title: 'Log history', topLevel: false, tab: 'tracking' },
+  '/tracking/injuries': { title: 'Injury log', topLevel: false, tab: 'tracking' },
   '/profile': { title: 'Profile', topLevel: true, tab: 'profile' },
+  '/profile/injuries': { title: 'Injury log', topLevel: false, tab: 'profile' },
   '/profile/overview': { title: 'Overview', topLevel: false, tab: 'profile' },
   '/profile/decisions': { title: 'Decisions', topLevel: false, tab: 'profile' },
   '/profile/principles': { title: 'Principles', topLevel: false, tab: 'profile' },
@@ -42,12 +45,8 @@ const routeMeta = {
   '/settings': { title: 'Settings', topLevel: true, tab: 'settings' }
 };
 
-// Match the current path against meta entries (supports param wildcards)
 function matchRoute(pathname) {
-  // First, try exact match
   if (routeMeta[pathname]) return routeMeta[pathname];
-
-  // Otherwise, walk patterns and match by structure
   for (const pattern of Object.keys(routeMeta)) {
     if (!pattern.includes(':')) continue;
     const pParts = pattern.split('/');
@@ -65,10 +64,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <TopBar
-        title={meta.title}
-        showBack={!meta.topLevel}
-      />
+      <TopBar title={meta.title} showBack={!meta.topLevel} />
 
       <ScreenContainer pathname={location.pathname}>
         <Routes>
@@ -79,10 +75,13 @@ export default function App() {
           <Route path="/phases/:phaseId/weeks/:weekNum/sessions/:sessionIdx" element={<SessionDetail />} />
           <Route path="/tracking" element={<Tracking />} />
           <Route path="/tracking/checkin" element={<Checkin />} />
+          <Route path="/tracking/wearables" element={<Wearables />} />
           <Route path="/tracking/metrics" element={<Metrics />} />
           <Route path="/tracking/trends" element={<Trends />} />
           <Route path="/tracking/log" element={<Log />} />
+          <Route path="/tracking/injuries" element={<Injuries />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/injuries" element={<Injuries />} />
           <Route path="/profile/overview" element={<Overview />} />
           <Route path="/profile/decisions" element={<Decisions />} />
           <Route path="/profile/principles" element={<Principles />} />

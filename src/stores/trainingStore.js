@@ -51,6 +51,9 @@ function buildView() {
     logs,
     sessions,
     reassess: Database.services.getReassessAnswers(),
+    profile: Database.services.getProfile(),
+    injuries: Database.services.listInjuries(),
+    dailyMetrics: Database.services.listDailyMetrics(),
     // Bump this whenever data changes so React knows to re-render
     _tick: Date.now()
   };
@@ -92,6 +95,40 @@ export const useTrainingStore = create((set, get) => ({
   // ----- Reassessment -----
   setReassess(qid, value) {
     Database.services.setReassessAnswer(qid, value);
+    set(buildView());
+  },
+
+  // ----- Profile -----
+  updateProfile(patch) {
+    Database.services.updateProfile(patch);
+    set(buildView());
+  },
+  setGoals(goals) {
+    Database.services.setGoals(goals);
+    set(buildView());
+  },
+
+  // ----- Injuries -----
+  addInjury(fields) {
+    Database.services.addInjury(fields);
+    set(buildView());
+  },
+  updateInjury(id, patch) {
+    Database.services.updateInjury(id, patch);
+    set(buildView());
+  },
+  removeInjury(id) {
+    Database.services.removeInjury(id);
+    set(buildView());
+  },
+  addRecoveryLogEntry(injuryId, entry) {
+    Database.services.addRecoveryLogEntry(injuryId, entry);
+    set(buildView());
+  },
+
+  // ----- Daily metrics -----
+  upsertDailyMetric(fields) {
+    Database.services.upsertDailyMetric(fields);
     set(buildView());
   },
 

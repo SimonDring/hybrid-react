@@ -384,6 +384,25 @@ export const services = {
     return tablesApi.plans.find(p => p.user_id === u.id && p.status === 'active');
   },
 
+  // ---------- User profile (general info + ranked goals) ----------
+  // Profile lives in users.profile. This is what the AI reads in Stage 5.
+  getProfile() {
+    const u = this.currentUser();
+    return u ? (u.profile || {}) : {};
+  },
+
+  updateProfile(patch) {
+    const u = this.currentUser();
+    if (!u) return null;
+    const profile = { ...(u.profile || {}), ...patch };
+    tablesApi.users.update(u.id, { profile });
+    return profile;
+  },
+
+  setGoals(goals) {
+    return this.updateProfile({ goals });
+  },
+
   findOrCreateSessionByTemplate(templateRef) {
     let s = tablesApi.sessions.find(x => x.template_ref === templateRef);
     if (s) return s;
