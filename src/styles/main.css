@@ -2733,8 +2733,8 @@ html[data-theme="dark"] .st-rpe {
   margin: 8px 0 4px;
   border-radius: 14px;
   overflow: hidden;
-  background: var(--card, #fff);
-  box-shadow: 0 1px 3px rgba(14,20,16,0.06), 0 4px 16px rgba(14,20,16,0.04);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Header row — grid template set inline per activity type */
@@ -2742,12 +2742,12 @@ html[data-theme="dark"] .st-rpe {
   display: grid;
   gap: 4px;
   padding: 10px 14px;
-  background: var(--accent-bg, #f0ede8);
+  background: var(--bg-surface-2);
   font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--txt-muted, #6b6358);
+  color: var(--txt-muted);
 }
 .gt-head .gt-h-ex { text-align: left; }
 .gt-head .gt-h-cell { text-align: center; }
@@ -2755,7 +2755,7 @@ html[data-theme="dark"] .st-rpe {
 /* Data rows */
 .gt-row {
   padding: 0;
-  border-bottom: 1px solid var(--border, rgba(14,20,16,0.07));
+  border-bottom: 1px solid var(--hairline);
 }
 .gt-row:last-child { border-bottom: none; }
 
@@ -2778,7 +2778,7 @@ html[data-theme="dark"] .st-rpe {
   font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 0.05em;
-  color: var(--txt-muted, #8a8276);
+  color: var(--txt-muted);
   flex-shrink: 0;
 }
 .gt-name {
@@ -2786,7 +2786,7 @@ html[data-theme="dark"] .st-rpe {
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.01em;
-  color: var(--txt-strong, #0e1410);
+  color: var(--txt-strong);
 }
 
 /* Generic data cell — registry decides which columns exist */
@@ -2795,7 +2795,7 @@ html[data-theme="dark"] .st-rpe {
   font-variant-numeric: tabular-nums;
   font-size: 14px;
   font-weight: 600;
-  color: var(--txt-strong, #0e1410);
+  color: var(--txt-strong);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2808,14 +2808,14 @@ html[data-theme="dark"] .st-rpe {
 /* Accent-coloured cell (RPE / effort) */
 .gt-cell.gt-accent {
   font-size: 12px;
-  color: var(--rust, #b04a2e);
+  color: var(--rust);
 }
 /* Wide cell (stroke/drill names) — centred, smaller, wraps allowed */
 .gt-cell.gt-wide {
   text-align: center;
   font-size: 12px;
   font-weight: 600;
-  color: var(--txt-muted, #6b6358);
+  color: var(--txt-muted);
   white-space: normal;
   line-height: 1.2;
 }
@@ -2824,18 +2824,10 @@ html[data-theme="dark"] .st-rpe {
 .gt-note {
   font-size: 12px;
   line-height: 1.4;
-  color: var(--txt-muted, #6b6358);
+  color: var(--txt-muted);
   padding: 0 14px 11px 11px;
   margin-top: -4px;
   font-style: italic;
-}
-
-/* Dark mode */
-html[data-theme="dark"] .gym-table {
-  background: var(--card, #1a1813);
-}
-html[data-theme="dark"] .gt-head {
-  background: rgba(244,241,234,0.05);
 }
 
 /* ===================================================================
@@ -2867,7 +2859,7 @@ html[data-theme="dark"] .gt-head {
   font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: var(--txt-muted, #8a8276);
+  color: var(--txt-muted);
   text-transform: uppercase;
   flex-shrink: 0;
 }
@@ -2879,7 +2871,7 @@ html[data-theme="dark"] .gt-head {
 }
 .ses-card .ses-dur {
   font-size: 11px;
-  color: var(--txt-muted, #8a8276);
+  color: var(--txt-muted);
   flex-shrink: 0;
 }
 .ses-card .ses-badge {
