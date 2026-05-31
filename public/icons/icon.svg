@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="112" fill="#0e1410"/>
+  <!-- Subtle warm glow -->
+  <circle cx="380" cy="140" r="180" fill="#c89a3a" opacity="0.18"/>
+  <!-- Letter 'h' in Fraunces-style italic -->
+  <text x="256" y="370" text-anchor="middle"
+        font-family="ui-serif, 'Iowan Old Style', Georgia, serif"
+        font-size="320"
+        font-style="italic"
+        font-weight="400"
+        fill="#f4f1ea">h</text>
+  <!-- Accent dot -->
+  <circle cx="372" cy="345" r="14" fill="#b04a2e"/>
+</svg>
