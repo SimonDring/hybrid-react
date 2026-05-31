@@ -46,12 +46,12 @@ const p1 = {
   // Technique swim — focus on drills, modest distance (~800m in a 20m pool).
   // Set count: 10+6+6+8+6+4 × 20m = 40 lengths = 800m.
   tue_pm: (wk) => ({ title: 'Tuesday PM · Swim technique', duration: '40–45 min · 800 m total · 20m pool', items: [
-    { num: 'W1', name: 'Warm-up easy free', note: 'long body line', sets: '10 × 20m', rpe: 'Easy', tag: 'swim' },
-    { num: 'W2', name: 'Catch-up drill', note: 'forces high elbow', sets: '6 × 20m', rpe: 'Drill', tag: 'swim' },
-    { num: 'W3', name: 'Single-arm free', note: '3 strokes each side', sets: '6 × 20m', rpe: 'Drill', tag: 'swim' },
-    { num: 'W4', name: 'Pull-buoy swim', note: 'isolates upper body', sets: '8 × 20m', rpe: 'Easy', tag: 'swim' },
-    { num: 'W5', name: 'Bilateral breathing', note: 'every 3 strokes', sets: '6 × 20m', rpe: 'Easy', tag: 'swim' },
-    { num: 'W6', name: 'Cool-down', note: '', sets: '4 × 20m', rpe: 'Easy', tag: 'swim' }
+    { num: 'W1', name: 'Warm-up', stroke: 'Freestyle easy', distance: '10 × 20m', effort: 'Easy', cue: 'long body line', tag: 'swim' },
+    { num: 'W2', name: 'Catch-up drill', stroke: 'Drill', distance: '6 × 20m', effort: 'Technique', cue: 'forces high elbow', tag: 'swim' },
+    { num: 'W3', name: 'Single-arm free', stroke: 'Drill', distance: '6 × 20m', effort: 'Technique', cue: '3 strokes each side', tag: 'swim' },
+    { num: 'W4', name: 'Pull-buoy swim', stroke: 'Pull', distance: '8 × 20m', effort: 'Easy', cue: 'isolates upper body', tag: 'swim' },
+    { num: 'W5', name: 'Bilateral breathing', stroke: 'Freestyle', distance: '6 × 20m', effort: 'Easy', cue: 'breathe every 3 strokes', tag: 'swim' },
+    { num: 'W6', name: 'Cool-down', stroke: 'Easy choice', distance: '4 × 20m', effort: 'Easy', cue: '', tag: 'swim' }
   ]}),
   thu: (wk) => ({ title: 'Thursday · Lower (athletic)', duration: '55–65 min · RPE peak ' + (isP1Deload(wk) ? '6 deload' : '8'), items: [
     { num: 'A1', name: 'Trap-bar / hex deadlift', note: 'explosive intent', sets: isP1Deload(wk) ? '3 × 4' : '4 × 4', rpe: isP1Deload(wk) ? 'RPE 6' : 'RPE 7→8' },
@@ -79,11 +79,11 @@ const p1 = {
     };
     const d = mainData[wk] || mainData[1];
     return { title: 'Thursday PM · Swim endurance', duration: '45–55 min · ' + d.total + ' m total', items: [
-      { num: 'W1', name: 'Warm-up easy free', note: '', sets: '10 × 20m', rpe: 'Easy', tag: 'swim' },
-      { num: 'W2', name: 'Drill: catch-up + single-arm', note: '', sets: '6 × 20m', rpe: 'Drill', tag: 'swim' },
-      { num: 'W3', name: 'Main set', note: 'Wk ' + wk + ': ' + d.set, sets: 'see note', rpe: 'RPE 6', tag: 'swim' },
-      { num: 'W4', name: 'Pull-buoy bonus', note: 'technique under fatigue', sets: '6 × 20m', rpe: 'Easy', tag: 'swim' },
-      { num: 'W5', name: 'Cool-down', note: '', sets: '4 × 20m', rpe: 'Easy', tag: 'swim' }
+      { num: 'W1', name: 'Warm-up', stroke: 'Freestyle easy', distance: '10 × 20m', effort: 'Easy', cue: '', tag: 'swim' },
+      { num: 'W2', name: 'Drill set', stroke: 'Catch-up + single-arm', distance: '6 × 20m', effort: 'Technique', cue: '', tag: 'swim' },
+      { num: 'W3', name: 'Main set', stroke: 'Freestyle', distance: d.set, effort: 'Mod', cue: 'Wk ' + wk + ' main set', tag: 'swim' },
+      { num: 'W4', name: 'Pull-buoy bonus', stroke: 'Pull', distance: '6 × 20m', effort: 'Easy', cue: 'technique under fatigue', tag: 'swim' },
+      { num: 'W5', name: 'Cool-down', stroke: 'Easy choice', distance: '4 × 20m', effort: 'Easy', cue: '', tag: 'swim' }
     ]};
   },
   fri: (wk) => ({ title: 'Friday · Upper + conditioning', duration: '55–65 min · RPE peak ' + (isP1Deload(wk) ? '6 deload' : '8'), items: [
@@ -214,9 +214,9 @@ function sessionsFor(pid, wk, winp, deload) {
         { num: 'R2', name: 'Post-run mobility', note: 'calf, hip flexor, quad', sets: '5 min', rpe: 'Easy', tag: 'mobility' }
       ]},
       { title: 'Wednesday · Swim endurance', duration: '50–60 min · ' + swimTotal + ' m total', items: [
-        { num: 'W1', name: 'Warm-up + drills', note: '10 × 20m easy + 6 × 20m drill', sets: '16 × 20m', rpe: 'Easy', tag: 'swim' },
-        { num: 'W2', name: 'Continuous build', note: 'Wk ' + wk + ': ' + swimMain, sets: 'see note', rpe: 'RPE 6', tag: 'swim' },
-        { num: 'W3', name: 'Cool-down', note: '', sets: '4 × 20m', rpe: 'Easy', tag: 'swim' }
+        { num: 'W1', name: 'Warm-up + drills', stroke: 'Mixed', distance: '16 × 20m', effort: 'Easy', cue: '10 easy + 6 drill', tag: 'swim' },
+        { num: 'W2', name: 'Continuous build', stroke: 'Freestyle', distance: swimMain, effort: 'Mod', cue: 'Wk ' + wk + ' build', tag: 'swim' },
+        { num: 'W3', name: 'Cool-down', stroke: 'Easy choice', distance: '4 × 20m', effort: 'Easy', cue: '', tag: 'swim' }
       ]},
       { title: 'Thursday · Upper (maintenance)', duration: '50–60 min', items: [
         { num: 'A1', name: 'Bench press', note: 'maintain', sets: '3 × 5', rpe: 'RPE 7' },
@@ -251,8 +251,8 @@ function sessionsFor(pid, wk, winp, deload) {
         { num: 'R2', name: 'Post-run mobility', note: '', sets: '5 min', rpe: 'Easy', tag: 'mobility' }
       ]},
       { title: 'Wednesday · Swim (maintenance)', duration: '40 min · ' + swimTotal + ' m total', items: [
-        { num: 'W1', name: 'Warm-up + drills', note: '', sets: '15 × 20m', rpe: 'Easy', tag: 'swim' },
-        { num: 'W2', name: 'Continuous swim', note: swimMain, sets: 'see note', rpe: 'RPE 6', tag: 'swim' }
+        { num: 'W1', name: 'Warm-up + drills', stroke: 'Mixed', distance: '15 × 20m', effort: 'Easy', cue: '', tag: 'swim' },
+        { num: 'W2', name: 'Continuous swim', stroke: 'Freestyle', distance: swimMain, effort: 'Mod', cue: '', tag: 'swim' }
       ]},
       { title: 'Thursday · Upper (heavy & brief)', duration: '45–55 min', items: [
         { num: 'A1', name: 'Bench press', note: '', sets: '3 × 3', rpe: 'RPE 7' },
@@ -293,7 +293,7 @@ function sessionsFor(pid, wk, winp, deload) {
       ]},
       // Phase 4 Wednesday swim: continuous 1500-2000m steady = ~1750m midpoint
       { title: 'Wednesday · Swim (maintain)', duration: '35 min · 1500–2000 m', items: [
-        { num: 'W1', name: 'Continuous swim', note: '1500–2000m steady', sets: '1500–2000 m', rpe: 'RPE 6', tag: 'swim' }
+        { num: 'W1', name: 'Continuous swim', stroke: 'Freestyle', distance: '1500–2000 m', effort: 'Mod', cue: 'steady', tag: 'swim' }
       ]},
       { title: 'Thursday · Upper + ski', duration: '55 min', items: [
         { num: 'A1', name: 'Bench press', note: '', sets: '3 × 5', rpe: 'RPE 7' },
@@ -317,7 +317,7 @@ function sessionsFor(pid, wk, winp, deload) {
     ]},
     { title: 'Tuesday · Easy aerobic', duration: '30–40 min', items: [{ num: 'X1', name: 'Easy run / swim / bike', note: 'whatever knees prefer', sets: '30–40 min', rpe: 'Z2', tag: 'run' }]},
     // Phase 5 Wednesday swim: continuous + drill mix ~1500m
-    { title: 'Wednesday · Swim', duration: '40 min · 1500 m', items: [{ num: 'W1', name: 'Continuous + drill mix', note: 'maintain quality', sets: '1500 m', rpe: 'RPE 6', tag: 'swim' }]},
+    { title: 'Wednesday · Swim', duration: '40 min · 1500 m', items: [{ num: 'W1', name: 'Continuous + drill mix', stroke: 'Mixed', distance: '1500 m', effort: 'Mod', cue: 'maintain quality', tag: 'swim' }]},
     { title: 'Thursday · Lower (lighter)', duration: '50 min', items: [
       { num: 'A1', name: 'Front squat / goblet squat', note: 'lighter than P4', sets: '3 × 6', rpe: 'RPE 7' },
       { num: 'B1', name: 'Single-leg RDL', note: '', sets: '3 × 8 ea.', rpe: 'RPE 7' },
