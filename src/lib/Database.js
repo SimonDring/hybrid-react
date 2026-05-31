@@ -78,10 +78,51 @@ export const SCHEMA = {
     // created_at, updated_at, deleted_at
   },
   wearable_readings: {
-    // id, user_id (FK), source (string: 'apple_watch'|'garmin'|'whoop'|'strava'|'fitbit'|'manual'),
-    // recorded_at (timestamp), metric (string: 'hrv'|'rhr'|'sleep_hr'|'steps'|...),
+    // id, user_id (FK), source (string: 'strava'|'garmin'|'manual'),
+    // recorded_at (timestamp), workout_type (string), metric (string),
     // value (numeric), unit (string), raw (jsonb), created_at
-    // PLACEHOLDER — schema ready, populated by Stage 5-6 integrations.
+    // PER-WORKOUT data (distance, pace, HR zones, power). From Strava in Stage 5-6.
+  },
+  daily_metrics: {
+    // id, user_id (FK), date (YYYY-MM-DD, one row per day),
+    // source (string: 'manual'|'fitbit' — manual now, fitbit after integration),
+    // -- Recovery / cardiovascular --
+    // resting_hr (bpm|null), hrv_ms (ms|null), breathing_rate (brpm|null),
+    // spo2_pct (%|null), skin_temp_variation_c (°C|null),
+    // -- Sleep --
+    // sleep_duration_min (min|null), sleep_score (0-100|null),
+    // sleep_deep_min, sleep_rem_min, sleep_light_min, sleep_awake_min (null ok),
+    // -- Readiness (Fitbit Daily Readiness Score, or manual proxy) --
+    // readiness_score (0-100|null),
+    // -- Activity --
+    // steps (int|null), active_minutes (min|null), calories_out (kcal|null),
+    // -- Subjective (manual, even after wearable integration) --
+    // energy (1-5|null), soreness (1-5|null), mood (1-5|null), notes (text),
+    // created_at, updated_at, deleted_at
+    //
+    // This is the table the AI reads for daily readiness. Manual entry now;
+    // when Fitbit integration lands (Stage 5-6), rows get source='fitbit' and
+    // populate automatically. The manual subjective fields stay useful either way.
+  },
+  injuries: {
+    // id, user_id (FK),
+    // body_part (string, e.g. 'Left knee'), title (string, e.g. 'Patellar tendinopathy'),
+    // description (text), severity (1-5|null),
+    // status (string: 'active'|'rehabbing'|'recovered'|'monitoring'),
+    // date_occurred (YYYY-MM-DD), date_recovered (YYYY-MM-DD|null),
+    // rehab_plan (text — exercises/protocol),
+    // rehab_plan_source (string: 'self'|'physio'|'ai'),
+    // physio_approved (bool),
+    // affected_activities (array of activity-type keys, e.g. ['run','ski']),
+    // recovery_log (array of { date, note, response }),  -- progress entries
+    // prevention_notes (text — permanent note added after recovery; exercises
+    //   to reduce recurrence, folded into future plans),
+    // ai_generated (bool — was the rehab plan AI-suggested),
+    // created_at, updated_at, deleted_at
+    //
+    // VIRTUAL PHYSIO PIPELINE: after AI integration, the engine reads active
+    // injuries, reduces only affected activities in the plan, tracks recovery_log
+    // responses, and on recovery restores activity + writes prevention_notes.
   },
   ai_recommendations: {
     // id, user_id (FK), context (string: 'session'|'week'|'phase'|'recovery'),
@@ -104,6 +145,8 @@ const tables = {
   weeklyCheckins:    Storage.load(Storage.KEYS.weeklyCheckins, {}),
   reassessments:     Storage.load(Storage.KEYS.reassessments, {}),
   wearableReadings:  Storage.load(Storage.KEYS.wearableReadings, {}),
+  dailyMetrics:      Storage.load(Storage.KEYS.dailyMetrics, {}),
+  injuries:          Storage.load(Storage.KEYS.injuries, {}),
   aiRecommendations: Storage.load(Storage.KEYS.aiRecommendations, {})
 };
 const appMeta = Storage.load(Storage.KEYS.appMeta, { version: null, migrated_from_v3: false });
@@ -195,6 +238,8 @@ export const tablesApi = {
   weeklyCheckins:    table('weeklyCheckins'),
   reassessments:     table('reassessments'),
   wearableReadings:  table('wearableReadings'),
+  dailyMetrics:      table('dailyMetrics'),
+  injuries:          table('injuries'),
   aiRecommendations: table('aiRecommendations')
 };
 
@@ -463,6 +508,112 @@ export const services = {
     return r ? (r.answers || {}) : {};
   },
 
+  // ---------- Daily metrics (Fitbit-style; manual now, automatic later) ----------
+  // Upsert by date: one row per day. If a row for that date exists, patch it;
+  // otherwise create. This makes wearable sync idempotent later.
+  upsertDailyMetric(fields) {
+    const u = services.currentUser();
+    const date = fields.date;
+    if (!date) return null;
+    const existing = tablesApi.dailyMetrics.find(d =>
+      d.user_id === (u ? u.id : null) && d.date === date
+    );
+    const numeric = (v) => (v === '' || v == null) ? null : parseFloat(v);
+    const payload = {
+      user_id: u ? u.id : null,
+      date,
+      source: fields.source || 'manual',
+      resting_hr: numeric(fields.resting_hr),
+      hrv_ms: numeric(fields.hrv_ms),
+      breathing_rate: numeric(fields.breathing_rate),
+      spo2_pct: numeric(fields.spo2_pct),
+      skin_temp_variation_c: numeric(fields.skin_temp_variation_c),
+      sleep_duration_min: numeric(fields.sleep_duration_min),
+      sleep_score: numeric(fields.sleep_score),
+      sleep_deep_min: numeric(fields.sleep_deep_min),
+      sleep_rem_min: numeric(fields.sleep_rem_min),
+      sleep_light_min: numeric(fields.sleep_light_min),
+      sleep_awake_min: numeric(fields.sleep_awake_min),
+      readiness_score: numeric(fields.readiness_score),
+      steps: numeric(fields.steps),
+      active_minutes: numeric(fields.active_minutes),
+      calories_out: numeric(fields.calories_out),
+      energy: numeric(fields.energy),
+      soreness: numeric(fields.soreness),
+      mood: numeric(fields.mood),
+      notes: fields.notes || ''
+    };
+    if (existing) {
+      return tablesApi.dailyMetrics.update(existing.id, payload);
+    }
+    return tablesApi.dailyMetrics.create(payload);
+  },
+
+  listDailyMetrics() {
+    return tablesApi.dailyMetrics.all()
+      .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  },
+
+  getDailyMetric(date) {
+    const u = services.currentUser();
+    return tablesApi.dailyMetrics.find(d =>
+      d.user_id === (u ? u.id : null) && d.date === date
+    );
+  },
+
+  // ---------- Injuries ----------
+  addInjury(fields) {
+    const u = services.currentUser();
+    return tablesApi.injuries.create({
+      user_id: u ? u.id : null,
+      body_part: fields.body_part || '',
+      title: fields.title || '',
+      description: fields.description || '',
+      severity: fields.severity != null ? Number(fields.severity) : null,
+      status: fields.status || 'active',
+      date_occurred: fields.date_occurred || null,
+      date_recovered: fields.date_recovered || null,
+      rehab_plan: fields.rehab_plan || '',
+      rehab_plan_source: fields.rehab_plan_source || 'self',
+      physio_approved: !!fields.physio_approved,
+      affected_activities: fields.affected_activities || [],
+      recovery_log: fields.recovery_log || [],
+      prevention_notes: fields.prevention_notes || '',
+      ai_generated: !!fields.ai_generated
+    });
+  },
+
+  updateInjury(id, patch) {
+    return tablesApi.injuries.update(id, patch);
+  },
+
+  removeInjury(id) {
+    return tablesApi.injuries.remove(id);
+  },
+
+  listInjuries() {
+    return tablesApi.injuries.all()
+      .sort((a, b) => (b.date_occurred || '').localeCompare(a.date_occurred || ''));
+  },
+
+  listActiveInjuries() {
+    return services.listInjuries().filter(i =>
+      i.status === 'active' || i.status === 'rehabbing'
+    );
+  },
+
+  // Append a progress entry to an injury's recovery log
+  addRecoveryLogEntry(injuryId, entry) {
+    const inj = tablesApi.injuries.get(injuryId);
+    if (!inj) return null;
+    const log = [...(inj.recovery_log || []), {
+      date: entry.date || new Date().toISOString().split('T')[0],
+      note: entry.note || '',
+      response: entry.response || ''
+    }];
+    return tablesApi.injuries.update(injuryId, { recovery_log: log });
+  },
+
   exportAll() {
     return {
       schema_version: 4,
@@ -476,6 +627,8 @@ export const services = {
       weekly_checkins:    tablesApi.weeklyCheckins.all(),
       reassessments:      tablesApi.reassessments.all(),
       wearable_readings:  tablesApi.wearableReadings.all(),
+      daily_metrics:      tablesApi.dailyMetrics.all(),
+      injuries:           tablesApi.injuries.all(),
       ai_recommendations: tablesApi.aiRecommendations.all()
     };
   },
@@ -492,6 +645,8 @@ export const services = {
       ['weekly_checkins', 'weeklyCheckins'],
       ['reassessments', 'reassessments'],
       ['wearable_readings', 'wearableReadings'],
+      ['daily_metrics', 'dailyMetrics'],
+      ['injuries', 'injuries'],
       ['ai_recommendations', 'aiRecommendations']
     ];
     map.forEach(([snakeKey, camelKey]) => {

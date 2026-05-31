@@ -20,6 +20,8 @@ export const KEYS = {
   weeklyCheckins:    'htp_weekly_checkins_v4',
   reassessments:     'htp_reassessments_v4',
   wearableReadings:  'htp_wearable_readings_v4',
+  dailyMetrics:      'htp_daily_metrics_v4',
+  injuries:          'htp_injuries_v4',
   aiRecommendations: 'htp_ai_recommendations_v4',
   appMeta:           'htp_app_meta_v4',
   // ---- v3 (legacy): read-only during migration, deleted on success ----
