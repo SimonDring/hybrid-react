@@ -15,6 +15,20 @@
 import { create } from 'zustand';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient.js';
 
+// Import lazily to avoid circular dependency (authStore ← trainingStore ← Database)
+function getTrainingStore() {
+  return import('./trainingStore.js').then(m => m.useTrainingStore);
+}
+
+async function syncAfterSignIn() {
+  try {
+    const useTrainingStore = await getTrainingStore();
+    useTrainingStore.getState().syncFromCloud();
+  } catch (e) {
+    console.warn('[authStore] syncAfterSignIn failed:', e);
+  }
+}
+
 export const useAuthStore = create((set, get) => ({
   // 'loading' until we've checked for an existing session
   status: 'loading',          // 'loading' | 'signed_in' | 'signed_out' | 'not_configured'
@@ -66,11 +80,16 @@ export const useAuthStore = create((set, get) => ({
       user: data.session ? data.session.user : null
     });
     supabase.auth.onAuthStateChange((_event, session) => {
+      const wasSignedOut = !session;
       set({
         status: session ? 'signed_in' : 'signed_out',
         user: session ? session.user : null,
         linkSentTo: null
       });
+      // When signing IN (not out), pull fresh data from Supabase
+      if (session && _event === 'SIGNED_IN') {
+        syncAfterSignIn();
+      }
     });
   }
 }));

@@ -2882,3 +2882,9 @@ html[data-theme="dark"] .st-rpe {
   border-radius: 100px;
   flex-shrink: 0;
 }
+
+/* Sync pulse indicator */
+@keyframes pulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%       { opacity: 0.3; transform: scale(0.7); }
+}

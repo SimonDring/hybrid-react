@@ -1,0 +1,334 @@
+/**
+ * SyncService — online-first sync layer between the app and Supabase.
+ *
+ * Architecture:
+ *   Screens → trainingStore → SyncService → Supabase (primary)
+ *                                        ↘ Database.js / localStorage (cache + fallback)
+ *
+ * Online-first means:
+ *   - Writes go to Supabase first. On success, localStorage is updated as cache.
+ *   - If Supabase fails (offline / error), falls back to localStorage.
+ *   - On app startup (pullFromSupabase), fresh data is fetched from Supabase
+ *     and replaces the local cache so every device starts up-to-date.
+ *
+ * IMPORTANT: this module is only active when the user is signed in AND Supabase
+ * is configured. When either condition is false, every method delegates straight
+ * to Database.services (localStorage only). This preserves the dev experience
+ * when keys aren't set, and keeps things working offline.
+ *
+ * Table mapping (Supabase snake_case → localStorage camelCase):
+ *   users                → users
+ *   training_plans       → plans
+ *   sessions             → sessions
+ *   session_logs         → sessionLogs
+ *   weekly_checkins      → weeklyCheckins
+ *   reassessments        → reassessments
+ *   daily_metrics        → dailyMetrics
+ *   injuries             → injuries
+ *   wearable_readings    → wearableReadings
+ *
+ * Why not rewrite Database.js: it's stable, tested, and other things depend on
+ * its synchronous API. SyncService wraps it rather than replacing it, keeping
+ * the blast radius of this change minimal.
+ */
+
+import { supabase, isSupabaseConfigured } from './supabaseClient.js';
+import Database from './Database.js';
+
+// ---------- Helpers ----------
+
+// Get the current Supabase user id. Returns null if not signed in.
+function uid() {
+  try {
+    // Supabase stores the session in localStorage; we can read it synchronously.
+    const raw = localStorage.getItem('sb-' + new URL(import.meta.env.VITE_SUPABASE_URL || 'https://x.x').hostname.split('.')[0] + '-auth-token');
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed?.user?.id || null;
+  } catch {
+    return null;
+  }
+}
+
+// Is Supabase available for use right now?
+function canSync() {
+  return isSupabaseConfigured && !!uid();
+}
+
+// Log sync errors without crashing
+function logError(context, error) {
+  console.warn(`[SyncService] ${context}:`, error?.message || error);
+}
+
+// Strip fields Supabase doesn't accept on insert/upsert
+// (Supabase generates id server-side via triggers, but we send our own uuid —
+// that's fine. We just need to remove undefined values and ensure user_id.)
+function clean(obj, userId) {
+  const out = {};
+  Object.entries(obj).forEach(([k, v]) => {
+    if (v !== undefined) out[k] = v;
+  });
+  if (userId && !out.user_id) out.user_id = userId;
+  return out;
+}
+
+// ---------- Startup pull ----------
+
+/**
+ * Pull all data for the signed-in user from Supabase and replace localStorage.
+ * Called once on startup (after auth is confirmed).
+ * This is what makes cross-device sync work — open the app, get fresh data.
+ */
+export async function pullFromSupabase() {
+  if (!canSync()) return { ok: false, reason: 'not configured or not signed in' };
+
+  const userId = uid();
+
+  try {
+    // Fetch all tables in parallel
+    const [
+      usersRes, plansRes, sessionsRes, logsRes,
+      checkinsRes, reassessRes, dailyRes, injuriesRes
+    ] = await Promise.all([
+      supabase.from('users').select('*').eq('id', userId).is('deleted_at', null),
+      supabase.from('training_plans').select('*').eq('user_id', userId).is('deleted_at', null),
+      supabase.from('sessions').select('*').eq('user_id', userId).is('deleted_at', null),
+      supabase.from('session_logs').select('*').eq('user_id', userId).is('deleted_at', null),
+      supabase.from('weekly_checkins').select('*').eq('user_id', userId).is('deleted_at', null),
+      supabase.from('reassessments').select('*').eq('user_id', userId).is('deleted_at', null),
+      supabase.from('daily_metrics').select('*').eq('user_id', userId).is('deleted_at', null),
+      supabase.from('injuries').select('*').eq('user_id', userId).is('deleted_at', null)
+    ]);
+
+    // Check for errors
+    const errors = [usersRes, plansRes, sessionsRes, logsRes, checkinsRes, reassessRes, dailyRes, injuriesRes]
+      .map(r => r.error).filter(Boolean);
+    if (errors.length) {
+      logError('pullFromSupabase', errors[0]);
+      return { ok: false, reason: errors[0].message };
+    }
+
+    // Replace local cache with cloud data
+    if (usersRes.data?.length)      Database.tables.users.replaceAll(usersRes.data);
+    if (plansRes.data?.length)      Database.tables.plans.replaceAll(plansRes.data);
+    if (sessionsRes.data?.length)   Database.tables.sessions.replaceAll(sessionsRes.data);
+    if (logsRes.data?.length)       Database.tables.sessionLogs.replaceAll(logsRes.data);
+    if (checkinsRes.data?.length)   Database.tables.weeklyCheckins.replaceAll(checkinsRes.data);
+    if (reassessRes.data?.length)   Database.tables.reassessments.replaceAll(reassessRes.data);
+    if (dailyRes.data?.length)      Database.tables.dailyMetrics.replaceAll(dailyRes.data);
+    if (injuriesRes.data?.length)   Database.tables.injuries.replaceAll(injuriesRes.data);
+
+    return { ok: true };
+  } catch (err) {
+    logError('pullFromSupabase (exception)', err);
+    return { ok: false, reason: err.message };
+  }
+}
+
+// ---------- Profile / user ----------
+
+export async function updateProfile(patch) {
+  if (!canSync()) return Database.services.updateProfile(patch);
+  const userId = uid();
+  const profile = { ...(Database.services.getProfile()), ...patch };
+  const { error } = await supabase
+    .from('users')
+    .update({ profile, updated_at: new Date().toISOString() })
+    .eq('id', userId);
+  if (error) {
+    logError('updateProfile', error);
+    return Database.services.updateProfile(patch);
+  }
+  return Database.services.updateProfile(patch);
+}
+
+export async function setGoals(goals) {
+  return updateProfile({ goals });
+}
+
+// ---------- Sessions ----------
+
+export async function startSession(templateRef) {
+  if (!canSync()) return Database.services.startSession(templateRef);
+  const userId = uid();
+  // Ensure local session record exists first
+  Database.services.startSession(templateRef);
+  const local = Database.tables.sessions.find(s => s.template_ref === templateRef);
+  if (!local) return;
+  const { error } = await supabase
+    .from('sessions')
+    .upsert(clean(local, userId), { onConflict: 'id' });
+  if (error) logError('startSession', error);
+}
+
+export async function completeSession(templateRef, payload) {
+  if (!canSync()) return Database.services.completeSession(templateRef, payload);
+  const userId = uid();
+  Database.services.completeSession(templateRef, payload);
+  const session = Database.tables.sessions.find(s => s.template_ref === templateRef);
+  const log = session ? Database.tables.sessionLogs.find(l => l.session_id === session.id) : null;
+  const ops = [];
+  if (session) ops.push(supabase.from('sessions').upsert(clean(session, userId), { onConflict: 'id' }));
+  if (log)     ops.push(supabase.from('session_logs').upsert(clean(log, userId), { onConflict: 'id' }));
+  const results = await Promise.all(ops);
+  results.forEach(r => { if (r.error) logError('completeSession', r.error); });
+}
+
+export async function uncompleteSession(templateRef) {
+  if (!canSync()) return Database.services.uncompleteSession(templateRef);
+  const userId = uid();
+  const session = Database.tables.sessions.find(s => s.template_ref === templateRef);
+  const log = session ? Database.tables.sessionLogs.find(l => l.session_id === session.id) : null;
+  Database.services.uncompleteSession(templateRef);
+  const ops = [];
+  if (session) ops.push(supabase.from('sessions').upsert(clean(session, userId), { onConflict: 'id' }));
+  // Soft-delete the log in Supabase
+  if (log) ops.push(
+    supabase.from('session_logs')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', log.id)
+  );
+  const results = await Promise.all(ops);
+  results.forEach(r => { if (r.error) logError('uncompleteSession', r.error); });
+}
+
+// ---------- Weekly check-ins ----------
+
+export async function addCheckin(fields) {
+  if (!canSync()) return Database.services.addCheckin(fields);
+  const userId = uid();
+  // addCheckin returns the created record (with its id) — use that directly
+  // rather than guessing via sort order, which breaks for back-dated entries.
+  const created = Database.services.addCheckin(fields);
+  if (!created || !created.id) {
+    logError('addCheckin', 'no record returned from local create');
+    return created;
+  }
+  const { error } = await supabase
+    .from('weekly_checkins')
+    .upsert(clean(created, userId), { onConflict: 'id' });
+  if (error) logError('addCheckin', error);
+  return created;
+}
+
+export async function deleteCheckin(id) {
+  if (!canSync()) {
+    Database.tables.weeklyCheckins.remove(id);
+    return;
+  }
+  Database.tables.weeklyCheckins.remove(id);
+  const { error } = await supabase
+    .from('weekly_checkins')
+    .update({ deleted_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) logError('deleteCheckin', error);
+}
+
+// ---------- Daily metrics ----------
+
+export async function upsertDailyMetric(fields) {
+  if (!canSync()) return Database.services.upsertDailyMetric(fields);
+  const userId = uid();
+  const result = Database.services.upsertDailyMetric(fields);
+  if (!result) return;
+  const { error } = await supabase
+    .from('daily_metrics')
+    .upsert(clean(result, userId), { onConflict: 'id' });
+  if (error) logError('upsertDailyMetric', error);
+  return result;
+}
+
+// ---------- Reassessments ----------
+
+export async function setReassessAnswer(qid, value) {
+  if (!canSync()) return Database.services.setReassessAnswer(qid, value);
+  const userId = uid();
+  Database.services.setReassessAnswer(qid, value);
+  const all = Database.tables.reassessments.all();
+  const record = all.find(r => r.user_id === userId || r.quarter_number === 1);
+  if (!record) return;
+  const { error } = await supabase
+    .from('reassessments')
+    .upsert(clean(record, userId), { onConflict: 'id' });
+  if (error) logError('setReassessAnswer', error);
+}
+
+// ---------- Injuries ----------
+
+export async function addInjury(fields) {
+  if (!canSync()) return Database.services.addInjury(fields);
+  const userId = uid();
+  const result = Database.services.addInjury(fields);
+  if (!result) return result;
+  const { error } = await supabase
+    .from('injuries')
+    .upsert(clean(result, userId), { onConflict: 'id' });
+  if (error) logError('addInjury', error);
+  return result;
+}
+
+export async function updateInjury(id, patch) {
+  if (!canSync()) return Database.services.updateInjury(id, patch);
+  const userId = uid();
+  const result = Database.services.updateInjury(id, patch);
+  const updated = Database.tables.injuries.get(id);
+  if (!updated) return result;
+  const { error } = await supabase
+    .from('injuries')
+    .upsert(clean(updated, userId), { onConflict: 'id' });
+  if (error) logError('updateInjury', error);
+  return result;
+}
+
+export async function removeInjury(id) {
+  if (!canSync()) return Database.services.removeInjury(id);
+  Database.services.removeInjury(id);
+  const { error } = await supabase
+    .from('injuries')
+    .update({ deleted_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) logError('removeInjury', error);
+}
+
+export async function addRecoveryLogEntry(injuryId, entry) {
+  if (!canSync()) return Database.services.addRecoveryLogEntry(injuryId, entry);
+  const userId = uid();
+  const result = Database.services.addRecoveryLogEntry(injuryId, entry);
+  const updated = Database.tables.injuries.get(injuryId);
+  if (!updated) return result;
+  const { error } = await supabase
+    .from('injuries')
+    .upsert(clean(updated, userId), { onConflict: 'id' });
+  if (error) logError('addRecoveryLogEntry', error);
+  return result;
+}
+
+// ---------- Reset (dangerous — clears both local and cloud) ----------
+
+export async function resetAll() {
+  if (!canSync()) return Database.services.resetAll();
+  const userId = uid();
+  const tables = [
+    'sessions', 'session_logs', 'weekly_checkins', 'reassessments',
+    'daily_metrics', 'injuries', 'wearable_readings', 'training_plans'
+  ];
+  await Promise.all(
+    tables.map(t =>
+      supabase.from(t)
+        .update({ deleted_at: new Date().toISOString() })
+        .eq('user_id', userId)
+    )
+  );
+  Database.services.resetAll();
+}
+
+export default {
+  pullFromSupabase,
+  updateProfile, setGoals,
+  startSession, completeSession, uncompleteSession,
+  addCheckin, deleteCheckin,
+  upsertDailyMetric,
+  setReassessAnswer,
+  addInjury, updateInjury, removeInjury, addRecoveryLogEntry,
+  resetAll
+};

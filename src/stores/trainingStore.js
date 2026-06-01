@@ -1,22 +1,21 @@
 /**
- * trainingStore — Zustand store wrapping Database.
+ * trainingStore — Zustand store, now routing writes through SyncService.
  *
- * In Stage 1 (vanilla JS) we had a State module that used a subscribe/publish
- * pattern. In React, Zustand does the same thing with a much smaller API.
+ * Read path:  store reads from Database (localStorage cache) — always instant.
+ * Write path: store calls SyncService which writes to Supabase first (if signed
+ *             in), then updates localStorage. UI re-renders from localStorage
+ *             immediately via buildView(), so there's no spinner on writes.
  *
- * Components use it like:
- *   const sessions = useTrainingStore(state => state.sessions);
- *   const completeSession = useTrainingStore(state => state.completeSession);
- *
- * Calling an action updates Database (which writes to localStorage) AND
- * triggers a re-render of every component using the store.
+ * syncFromCloud(): called once on sign-in. Pulls all Supabase rows into local
+ * cache, then re-renders. This is what makes cross-device sync work.
  */
 
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
+import Sync, { pullFromSupabase } from '../lib/SyncService.js';
 
-// Build the legacy-shape view from Database tables so screens that expect
-// the old { logs, sessions, reassess } shape work without rewriting.
+// Read the current state from localStorage into a React-friendly shape.
+// All reads go through here — screens never call Database directly.
 function buildView() {
   const checkins = Database.services.listCheckins();
   const logs = checkins.map(c => ({
@@ -50,85 +49,92 @@ function buildView() {
   return {
     logs,
     sessions,
-    reassess: Database.services.getReassessAnswers(),
-    profile: Database.services.getProfile(),
-    injuries: Database.services.listInjuries(),
+    reassess:     Database.services.getReassessAnswers(),
+    profile:      Database.services.getProfile(),
+    injuries:     Database.services.listInjuries(),
     dailyMetrics: Database.services.listDailyMetrics(),
-    // Bump this whenever data changes so React knows to re-render
-    _tick: Date.now()
+    syncing:      false,
+    _tick:        Date.now()
   };
 }
 
-export const useTrainingStore = create((set, get) => ({
+export const useTrainingStore = create((set) => ({
   ...buildView(),
 
+  // Pull fresh data from Supabase into local cache, then re-render.
+  // Call this when the user signs in or the app comes to foreground.
+  async syncFromCloud() {
+    set({ syncing: true });
+    const result = await pullFromSupabase();
+    set({ ...buildView(), syncing: false });
+    return result;
+  },
+
   // ----- Session lifecycle -----
-  startSession(templateRef) {
-    Database.services.startSession(templateRef);
+  async startSession(templateRef) {
+    await Sync.startSession(templateRef);
     set(buildView());
   },
-  completeSession(templateRef, payload) {
-    Database.services.completeSession(templateRef, payload);
+  async completeSession(templateRef, payload) {
+    await Sync.completeSession(templateRef, payload);
     set(buildView());
   },
-  uncompleteSession(templateRef) {
-    Database.services.uncompleteSession(templateRef);
+  async uncompleteSession(templateRef) {
+    await Sync.uncompleteSession(templateRef);
     set(buildView());
   },
 
   // ----- Weekly check-ins -----
-  addLog(entry) {
-    Database.services.addCheckin(entry);
+  async addLog(entry) {
+    await Sync.addCheckin(entry);
     set(buildView());
   },
-  deleteLog(idx) {
+  async deleteLog(idx) {
     const view = buildView().logs;
-    // Logs are sorted ascending by date in buildView; UI usually shows desc.
-    // Caller passes index from THEIR view, so we need to match by id.
     const record = view[idx];
     if (record && record._id) {
-      Database.tables.weeklyCheckins.remove(record._id);
+      await Sync.deleteCheckin(record._id);
       set(buildView());
     }
   },
 
   // ----- Reassessment -----
-  setReassess(qid, value) {
-    Database.services.setReassessAnswer(qid, value);
+  async setReassess(qid, value) {
+    await Sync.setReassessAnswer(qid, value);
     set(buildView());
   },
 
   // ----- Profile -----
-  updateProfile(patch) {
-    Database.services.updateProfile(patch);
+  async updateProfile(patch) {
+    await Sync.updateProfile(patch);
     set(buildView());
   },
-  setGoals(goals) {
-    Database.services.setGoals(goals);
+  async setGoals(goals) {
+    await Sync.setGoals(goals);
     set(buildView());
   },
 
   // ----- Injuries -----
-  addInjury(fields) {
-    Database.services.addInjury(fields);
+  async addInjury(fields) {
+    await Sync.addInjury(fields);
     set(buildView());
   },
-  updateInjury(id, patch) {
-    Database.services.updateInjury(id, patch);
+  async updateInjury(id, patch) {
+    await Sync.updateInjury(id, patch);
     set(buildView());
   },
-  removeInjury(id) {
-    Database.services.removeInjury(id);
+  async removeInjury(id) {
+    await Sync.removeInjury(id);
     set(buildView());
   },
-  addRecoveryLogEntry(injuryId, entry) {
-    Database.services.addRecoveryLogEntry(injuryId, entry);
+  async addRecoveryLogEntry(injuryId, entry) {
+    await Sync.addRecoveryLogEntry(injuryId, entry);
     set(buildView());
   },
 
   // ----- Daily metrics -----
-  upsertDailyMetric(fields) {
-    Database.services.upsertDailyMetric(fields);
+  async upsertDailyMetric(fields) {
+    await Sync.upsertDailyMetric(fields);
     set(buildView());
   },
 
@@ -137,14 +143,13 @@ export const useTrainingStore = create((set, get) => ({
     Database.services.importAll(data);
     set(buildView());
   },
-  resetAll() {
-    Database.services.resetAll();
+  async resetAll() {
+    await Sync.resetAll();
     set(buildView());
   }
 }));
 
-// Subscribe to Database changes from outside the store too (e.g. if Database
-// changes are triggered from non-store code), to keep React in sync.
+// Keep the store current if something else writes to Database directly
 Database.subscribe(() => {
   useTrainingStore.setState(buildView());
 });

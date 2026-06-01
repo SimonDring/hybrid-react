@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom';
+import { useTrainingStore } from '../stores/trainingStore.js';
 
 export default function TopBar({ title, showBack }) {
   const navigate = useNavigate();
+  const syncing = useTrainingStore(s => s.syncing);
 
   return (
     <header className="topbar" id="topbar">
@@ -16,7 +18,15 @@ export default function TopBar({ title, showBack }) {
           <div className="topbar-spacer" />
         )}
         <div className="topbar-title">{title}</div>
-        <div className="topbar-spacer" />
+        <div className="topbar-spacer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+          {syncing && (
+            <div title="Syncing…" style={{
+              width: 7, height: 7, borderRadius: '50%',
+              background: 'var(--rust)', opacity: 0.7,
+              animation: 'pulse 1s ease-in-out infinite'
+            }} />
+          )}
+        </div>
       </div>
     </header>
   );
