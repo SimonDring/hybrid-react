@@ -404,6 +404,49 @@ export async function addRecoveryLogEntry(injuryId, entry) {
   return result;
 }
 
+// ---------- Fitbit ----------
+
+// Build the Fitbit OAuth URL. Opens in the browser; the Edge Function handles the callback.
+export function getFitbitAuthUrl(userId) {
+  const clientId   = import.meta.env.VITE_FITBIT_CLIENT_ID;
+  const redirectUri = encodeURIComponent(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fitbit-auth-callback`
+  );
+  const scopes = encodeURIComponent(
+    'activity sleep heartrate oxygen_saturation respiratory_rate profile'
+  );
+  return `https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&state=${userId}&expires_in=604800`;
+}
+
+// Check if Fitbit is connected for the signed-in user.
+export async function checkFitbitConnection() {
+  if (!canSync()) return null;
+  const { data, error } = await supabase
+    .from('wearable_connections')
+    .select('provider, connected_at, last_synced_at')
+    .eq('provider', 'fitbit')
+    .maybeSingle();
+  if (error) { logError('checkFitbitConnection', error); return null; }
+  return data || null;
+}
+
+// Trigger the fitbit-sync Edge Function for a date range.
+// date_from / date_to default to today inside the function if omitted.
+export async function syncFitbit(dateFrom, dateTo) {
+  if (!canSync()) return { ok: false, reason: 'not signed in' };
+  try {
+    const body = {};
+    if (dateFrom) body.date_from = dateFrom;
+    if (dateTo)   body.date_to   = dateTo;
+    const { data, error } = await supabase.functions.invoke('fitbit-sync', { body });
+    if (error) { logError('syncFitbit', error); return { ok: false, reason: error.message }; }
+    return data;
+  } catch (err) {
+    logError('syncFitbit (exception)', err);
+    return { ok: false, reason: err.message };
+  }
+}
+
 // ---------- Reset (dangerous — clears both local and cloud) ----------
 
 export async function resetAll() {
@@ -432,5 +475,6 @@ export default {
   upsertDailyMetric,
   setReassessAnswer,
   addInjury, updateInjury, removeInjury, addRecoveryLogEntry,
+  getFitbitAuthUrl, checkFitbitConnection, syncFitbit,
   resetAll
 };

@@ -12,7 +12,7 @@
 
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
-import Sync, { pullFromSupabase, runSessionDMigration } from '../lib/SyncService.js';
+import Sync, { pullFromSupabase, runSessionDMigration, checkFitbitConnection, syncFitbit } from '../lib/SyncService.js';
 
 // Read the current state from localStorage into a React-friendly shape.
 // All reads go through here — screens never call Database directly.
@@ -60,6 +60,8 @@ function buildView() {
 
 export const useTrainingStore = create((set) => ({
   ...buildView(),
+  fitbitConnection: null,   // null = not connected, object = { connected_at, last_synced_at }
+  fitbitSyncing: false,
 
   // Pull fresh data from Supabase into local cache, then re-render.
   // Call this when the user signs in or the app comes to foreground.
@@ -68,7 +70,44 @@ export const useTrainingStore = create((set) => ({
     // Session D: push any pre-auth localStorage data to Supabase (no-op if done)
     await runSessionDMigration();
     const result = await pullFromSupabase();
-    set({ ...buildView(), syncing: false });
+    // Check Fitbit connection and sync today's data if connected
+    const fitbitConnection = await checkFitbitConnection();
+    set({ ...buildView(), syncing: false, fitbitConnection });
+    if (fitbitConnection) {
+      useTrainingStore.getState().syncFitbitToday();
+    }
+    return result;
+  },
+
+  // ----- Fitbit -----
+  async refreshFitbitConnection() {
+    const fitbitConnection = await checkFitbitConnection();
+    set({ fitbitConnection });
+    return fitbitConnection;
+  },
+
+  async syncFitbitToday() {
+    set({ fitbitSyncing: true });
+    const result = await syncFitbit();
+    if (result?.ok) {
+      // Pull updated daily_metrics from Supabase into local cache
+      await pullFromSupabase();
+      set({ ...buildView(), fitbitSyncing: false });
+    } else {
+      set({ fitbitSyncing: false });
+    }
+    return result;
+  },
+
+  async syncFitbitRange(dateFrom, dateTo) {
+    set({ fitbitSyncing: true });
+    const result = await syncFitbit(dateFrom, dateTo);
+    if (result?.ok) {
+      await pullFromSupabase();
+      set({ ...buildView(), fitbitSyncing: false });
+    } else {
+      set({ fitbitSyncing: false });
+    }
     return result;
   },
 

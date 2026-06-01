@@ -14,6 +14,8 @@
 
 import { useState } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
+import { useAuthStore } from '../stores/authStore.js';
+import { getFitbitAuthUrl } from '../lib/SyncService.js';
 
 const FIELD_GROUPS = [
   {
@@ -53,8 +55,13 @@ const SUBJECTIVE = [
 ];
 
 export default function Wearables() {
-  const dailyMetrics = useTrainingStore(s => s.dailyMetrics);
-  const upsertDailyMetric = useTrainingStore(s => s.upsertDailyMetric);
+  const dailyMetrics        = useTrainingStore(s => s.dailyMetrics);
+  const upsertDailyMetric   = useTrainingStore(s => s.upsertDailyMetric);
+  const fitbitConnection    = useTrainingStore(s => s.fitbitConnection);
+  const fitbitSyncing       = useTrainingStore(s => s.fitbitSyncing);
+  const syncFitbitToday     = useTrainingStore(s => s.syncFitbitToday);
+  const refreshFitbitConnection = useTrainingStore(s => s.refreshFitbitConnection);
+  const user = useAuthStore(s => s.user);
 
   const today = new Date().toISOString().split('T')[0];
   const [date, setDate] = useState(today);
@@ -96,13 +103,81 @@ export default function Wearables() {
     textTransform: 'uppercase', opacity: 0.6, marginBottom: 4
   };
 
+  const connectFitbit = () => {
+    if (!user) return;
+    window.open(getFitbitAuthUrl(user.id), '_blank');
+  };
+
+  const lastSynced = fitbitConnection?.last_synced_at
+    ? new Date(fitbitConnection.last_synced_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    : null;
+
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
         <h1 className="h1" style={{ marginBottom: 0 }}>Daily metrics</h1>
         {saved && <span style={{ fontSize: 11, color: 'var(--moss)', fontWeight: 700, letterSpacing: '0.08em' }}>SAVED ✓</span>}
       </div>
-      <p className="sub">Log your daily recovery data. Manual now; auto-syncs from Fitbit once integrated. One entry per day.</p>
+      <p className="sub">Recovery data from Fitbit, plus manual subjective scores. One entry per day.</p>
+
+      {/* Fitbit connection panel */}
+      <div style={{
+        padding: '14px 16px', borderRadius: 12, marginBottom: 20,
+        border: '1px solid var(--hairline)', background: 'var(--bg-surface)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: fitbitConnection ? 8 : 0 }}>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt-strong)' }}>
+              {fitbitConnection ? 'Fitbit connected' : 'Connect Fitbit'}
+            </div>
+            {fitbitConnection && (
+              <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 2 }}>
+                {lastSynced ? `Last synced today at ${lastSynced}` : 'Not yet synced today'}
+              </div>
+            )}
+            {!fitbitConnection && (
+              <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 2 }}>
+                Auto-fills sleep, HR, HRV, steps, and more
+              </div>
+            )}
+          </div>
+          {!fitbitConnection ? (
+            <button onClick={connectFitbit} style={{
+              padding: '8px 14px', borderRadius: 9, border: 'none',
+              background: 'var(--rust)', color: '#fff',
+              fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit'
+            }}>
+              Connect
+            </button>
+          ) : (
+            <button
+              onClick={syncFitbitToday}
+              disabled={fitbitSyncing}
+              style={{
+                padding: '8px 14px', borderRadius: 9,
+                border: '1px solid var(--hairline)', background: 'transparent',
+                color: fitbitSyncing ? 'var(--txt-muted)' : 'var(--txt-strong)',
+                fontSize: 13, fontWeight: 600, cursor: fitbitSyncing ? 'default' : 'pointer',
+                fontFamily: 'inherit'
+              }}
+            >
+              {fitbitSyncing ? 'Syncing…' : 'Sync now'}
+            </button>
+          )}
+        </div>
+        {!fitbitConnection && (
+          <button
+            onClick={refreshFitbitConnection}
+            style={{
+              fontSize: 11, color: 'var(--txt-muted)', background: 'none',
+              border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit',
+              marginTop: 6
+            }}
+          >
+            Already connected? Tap to check status
+          </button>
+        )}
+      </div>
 
       {/* Date selector */}
       <div className="form-card" style={{ marginBottom: 16 }}>
