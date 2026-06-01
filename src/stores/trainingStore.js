@@ -12,7 +12,7 @@
 
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
-import Sync, { pullFromSupabase } from '../lib/SyncService.js';
+import Sync, { pullFromSupabase, runSessionDMigration } from '../lib/SyncService.js';
 
 // Read the current state from localStorage into a React-friendly shape.
 // All reads go through here — screens never call Database directly.
@@ -65,6 +65,8 @@ export const useTrainingStore = create((set) => ({
   // Call this when the user signs in or the app comes to foreground.
   async syncFromCloud() {
     set({ syncing: true });
+    // Session D: push any pre-auth localStorage data to Supabase (no-op if done)
+    await runSessionDMigration();
     const result = await pullFromSupabase();
     set({ ...buildView(), syncing: false });
     return result;

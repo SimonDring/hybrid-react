@@ -34,6 +34,7 @@
 
 import { supabase, isSupabaseConfigured } from './supabaseClient.js';
 import Database from './Database.js';
+import * as Storage from './Storage.js';
 
 // ---------- Helpers ----------
 
@@ -70,6 +71,106 @@ function clean(obj, userId) {
   });
   if (userId && !out.user_id) out.user_id = userId;
   return out;
+}
+
+// ---------- Session D: one-time local → Supabase migration ----------
+
+/**
+ * Push every existing localStorage record up to Supabase, replacing the local
+ * user's UUID with the real Supabase auth.uid() so RLS policies are satisfied.
+ *
+ * Why: before Supabase auth was wired up, all data was stored with a locally-
+ * generated UUID as user_id. Now that the user is signed in, Supabase assigns
+ * a different UUID (auth.uid()). This migration remaps the FK and upserts every
+ * record. It is idempotent — safe to run more than once — and marks itself done
+ * in localStorage so it only does real work the first time.
+ *
+ * Run order in syncFromCloud(): migrate first, then pull. This ensures Supabase
+ * has the full history before we overwrite localStorage with the cloud copy.
+ */
+export async function runSessionDMigration() {
+  if (!canSync()) return { ok: false, reason: 'not signed in' };
+
+  // Already done on this device — nothing to do
+  if (Storage.load(Storage.KEYS.sessionDMigrated, false)) {
+    return { ok: true, skipped: true };
+  }
+
+  const userId = uid(); // real Supabase auth.uid()
+
+  // Strip undefined values and force user_id to the real Supabase auth.uid().
+  // All local records have user_id set to the local UUID — we overwrite it here.
+  const remap = (r) => {
+    const out = {};
+    for (const [k, v] of Object.entries(r)) {
+      if (v !== undefined) out[k] = v;
+    }
+    out.user_id = userId;
+    return out;
+  };
+
+  const sessions      = Database.tables.sessions.all().map(remap);
+  const sessionLogs   = Database.tables.sessionLogs.all().map(remap);
+  const checkins      = Database.tables.weeklyCheckins.all().map(remap);
+  const reassessments = Database.tables.reassessments.all().map(remap);
+  const dailyMetrics  = Database.tables.dailyMetrics.all().map(remap);
+  const injuries      = Database.tables.injuries.all().map(remap);
+  const localUser     = Database.tables.users.find(() => true);
+
+  const ops = [];
+
+  if (sessions.length)
+    ops.push(supabase.from('sessions').upsert(sessions, { onConflict: 'id' }));
+  if (sessionLogs.length)
+    ops.push(supabase.from('session_logs').upsert(sessionLogs, { onConflict: 'id' }));
+  if (checkins.length)
+    ops.push(supabase.from('weekly_checkins').upsert(checkins, { onConflict: 'id' }));
+  if (reassessments.length)
+    ops.push(supabase.from('reassessments').upsert(reassessments, { onConflict: 'id' }));
+  if (dailyMetrics.length)
+    ops.push(supabase.from('daily_metrics').upsert(dailyMetrics, { onConflict: 'id' }));
+  if (injuries.length)
+    ops.push(supabase.from('injuries').upsert(injuries, { onConflict: 'id' }));
+
+  // The signup trigger already created the users row. Just update the profile.
+  if (localUser) {
+    ops.push(
+      supabase.from('users')
+        .update({
+          profile: localUser.profile || {},
+          settings: localUser.settings || {},
+          name: localUser.name || '',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', userId)
+    );
+  }
+
+  try {
+    const results = await Promise.all(ops);
+    const errors = results.map(r => r.error).filter(Boolean);
+    if (errors.length) {
+      logError('runSessionDMigration', errors[0]);
+      return { ok: false, reason: errors[0].message };
+    }
+  } catch (err) {
+    logError('runSessionDMigration (exception)', err);
+    return { ok: false, reason: err.message };
+  }
+
+  Storage.save(Storage.KEYS.sessionDMigrated, true);
+
+  return {
+    ok: true,
+    counts: {
+      sessions:      sessions.length,
+      sessionLogs:   sessionLogs.length,
+      checkins:      checkins.length,
+      reassessments: reassessments.length,
+      dailyMetrics:  dailyMetrics.length,
+      injuries:      injuries.length
+    }
+  };
 }
 
 // ---------- Startup pull ----------
@@ -323,6 +424,7 @@ export async function resetAll() {
 }
 
 export default {
+  runSessionDMigration,
   pullFromSupabase,
   updateProfile, setGoals,
   startSession, completeSession, uncompleteSession,

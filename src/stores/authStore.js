@@ -79,6 +79,8 @@ export const useAuthStore = create((set, get) => ({
       status: data.session ? 'signed_in' : 'signed_out',
       user: data.session ? data.session.user : null
     });
+    // Sync on startup if already signed in (not just on fresh sign-in events)
+    if (data.session) syncAfterSignIn();
     supabase.auth.onAuthStateChange((_event, session) => {
       const wasSignedOut = !session;
       set({

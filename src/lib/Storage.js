@@ -24,6 +24,7 @@ export const KEYS = {
   injuries:          'htp_injuries_v4',
   aiRecommendations: 'htp_ai_recommendations_v4',
   appMeta:           'htp_app_meta_v4',
+  sessionDMigrated:  'htp_session_d_migrated',   // set to true once local→Supabase migration runs
   // ---- v3 (legacy): read-only during migration, deleted on success ----
   legacyLogs:     'htp_logs_v3',
   legacySessions: 'htp_sessions_v3',
