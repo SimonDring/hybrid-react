@@ -1,33 +1,62 @@
 /**
- * Login screen — email magic-link sign-in.
+ * Login screen — two-step email OTP sign-in.
  *
- * Shown by App.jsx when the user is signed out. Two states:
- *   1. Email entry form
- *   2. "Check your inbox" confirmation after the link is sent
+ * Step 1: user enters their email → Supabase sends a 6-digit code.
+ * Step 2: user enters the code → verifyOtp() signs them in inside the app.
  *
- * No password. Supabase emails a one-time link; clicking it signs you in and
- * redirects back here, where the auth store flips to signed_in and App swaps
- * to the real app.
+ * This avoids the magic-link redirect problem on iOS PWAs, where clicking a
+ * link in Mail opens Safari (a separate context) instead of the home screen app.
  */
 
 import { useState } from 'react';
 import { useAuthStore } from '../stores/authStore.js';
 
+const INPUT = {
+  width: '100%', fontSize: 16, padding: '14px 16px', borderRadius: 12,
+  border: '1px solid var(--hairline)', background: 'var(--bg-surface)',
+  fontFamily: 'inherit', color: 'var(--txt-strong)', marginBottom: 12,
+  boxSizing: 'border-box'
+};
+
+const BTN_PRIMARY = (active) => ({
+  width: '100%', padding: 15, borderRadius: 12, border: 'none',
+  background: active ? 'var(--rust)' : 'var(--bg-surface-2)',
+  color: active ? '#fff' : 'var(--txt-muted)',
+  fontSize: 15, fontWeight: 600, cursor: active ? 'pointer' : 'default',
+  fontFamily: 'inherit', transition: 'background 0.15s'
+});
+
+const BTN_GHOST = {
+  width: '100%', padding: 14, borderRadius: 12,
+  border: '1px solid var(--hairline)', background: 'transparent',
+  color: 'var(--txt-muted)', fontSize: 14, fontWeight: 600,
+  cursor: 'pointer', fontFamily: 'inherit', marginTop: 10
+};
+
 export default function Login() {
   const signInWithEmail = useAuthStore(s => s.signInWithEmail);
-  const resetLinkSent = useAuthStore(s => s.resetLinkSent);
-  const sendingLink = useAuthStore(s => s.sendingLink);
-  const linkSentTo = useAuthStore(s => s.linkSentTo);
-  const errorMessage = useAuthStore(s => s.errorMessage);
-  const status = useAuthStore(s => s.status);
+  const verifyOtp       = useAuthStore(s => s.verifyOtp);
+  const resetLinkSent   = useAuthStore(s => s.resetLinkSent);
+  const sendingLink     = useAuthStore(s => s.sendingLink);
+  const verifyingOtp    = useAuthStore(s => s.verifyingOtp);
+  const linkSentTo      = useAuthStore(s => s.linkSentTo);
+  const errorMessage    = useAuthStore(s => s.errorMessage);
+  const status          = useAuthStore(s => s.status);
 
   const [email, setEmail] = useState('');
+  const [code, setCode]   = useState('');
 
-  const valid = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim());
+  const validEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim());
+  const validCode  = /^\d{6}$/.test(code.trim());
 
-  const submit = () => {
-    if (!valid) return;
-    signInWithEmail(email);
+  const submitEmail = () => { if (validEmail) signInWithEmail(email); };
+  const submitCode  = () => { if (validCode)  verifyOtp(linkSentTo, code); };
+
+  const handleCodeChange = (e) => {
+    const val = e.target.value.replace(/\D/g, '').slice(0, 6);
+    setCode(val);
+    // Auto-submit once 6 digits are entered
+    if (val.length === 6) verifyOtp(linkSentTo, val);
   };
 
   return (
@@ -40,12 +69,12 @@ export default function Login() {
           Hybrid Training
         </div>
         <h1 className="h1" style={{ marginBottom: 8 }}>
-          {linkSentTo ? 'Check your inbox' : 'Sign in'}
+          {linkSentTo ? 'Check your email' : 'Sign in'}
         </h1>
         <p className="sub" style={{ marginBottom: 0 }}>
           {linkSentTo
-            ? `We sent a sign-in link to ${linkSentTo}. Open it on this device to continue.`
-            : 'Enter your email and we\u2019ll send you a secure sign-in link. No password needed.'}
+            ? `We sent a 6-digit code to ${linkSentTo}. Enter it below to sign in.`
+            : 'Enter your email and we’ll send you a 6-digit sign-in code. No password needed.'}
         </p>
       </div>
 
@@ -69,39 +98,47 @@ export default function Login() {
             placeholder="you@example.com"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && submit()}
-            style={{
-              width: '100%', fontSize: 16, padding: '14px 16px', borderRadius: 12,
-              border: '1px solid var(--hairline)', background: 'var(--bg-surface)',
-              fontFamily: 'inherit', color: 'var(--txt-strong)', marginBottom: 12
-            }}
+            onKeyDown={e => e.key === 'Enter' && submitEmail()}
+            style={INPUT}
           />
           <button
-            onClick={submit}
-            disabled={!valid || sendingLink}
-            style={{
-              width: '100%', padding: 15, borderRadius: 12, border: 'none',
-              background: valid && !sendingLink ? 'var(--rust)' : 'var(--bg-surface-2)',
-              color: valid && !sendingLink ? '#fff' : 'var(--txt-muted)',
-              fontSize: 15, fontWeight: 600, cursor: valid && !sendingLink ? 'pointer' : 'default',
-              fontFamily: 'inherit', transition: 'background 0.15s'
-            }}
+            onClick={submitEmail}
+            disabled={!validEmail || sendingLink}
+            style={BTN_PRIMARY(validEmail && !sendingLink)}
           >
-            {sendingLink ? 'Sending\u2026' : 'Send sign-in link'}
+            {sendingLink ? 'Sending…' : 'Send code'}
           </button>
         </>
       ) : (
-        <button
-          onClick={resetLinkSent}
-          style={{
-            width: '100%', padding: 14, borderRadius: 12,
-            border: '1px solid var(--hairline)', background: 'transparent',
-            color: 'var(--txt-muted)', fontSize: 14, fontWeight: 600,
-            cursor: 'pointer', fontFamily: 'inherit'
-          }}
-        >
-          Use a different email
-        </button>
+        <>
+          <input
+            type="text"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            placeholder="000000"
+            value={code}
+            onChange={handleCodeChange}
+            onKeyDown={e => e.key === 'Enter' && submitCode()}
+            style={{ ...INPUT, fontSize: 28, letterSpacing: '0.25em', textAlign: 'center' }}
+            autoFocus
+          />
+          <button
+            onClick={submitCode}
+            disabled={!validCode || verifyingOtp}
+            style={BTN_PRIMARY(validCode && !verifyingOtp)}
+          >
+            {verifyingOtp ? 'Verifying…' : 'Sign in'}
+          </button>
+          <button onClick={() => { resetLinkSent(); setCode(''); }} style={BTN_GHOST}>
+            Use a different email
+          </button>
+          <button
+            onClick={() => { setCode(''); signInWithEmail(linkSentTo); }}
+            style={{ ...BTN_GHOST, border: 'none', color: 'var(--txt-muted)', fontSize: 13, marginTop: 4 }}
+          >
+            Resend code
+          </button>
+        </>
       )}
 
       {errorMessage && (

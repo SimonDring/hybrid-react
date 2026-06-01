@@ -33,8 +33,9 @@ export const useAuthStore = create((set, get) => ({
   // 'loading' until we've checked for an existing session
   status: 'loading',          // 'loading' | 'signed_in' | 'signed_out' | 'not_configured'
   user: null,                 // Supabase user object (has .id, .email)
-  sendingLink: false,         // true while a magic link is being sent
-  linkSentTo: null,           // email the link was sent to (for the "check your inbox" UI)
+  sendingLink: false,         // true while a code is being sent
+  linkSentTo: null,           // email the code was sent to (drives step 2 UI)
+  verifyingOtp: false,        // true while the entered code is being verified
   errorMessage: null,
 
   // Send a magic link to the given email
@@ -56,7 +57,23 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  // Clear the "link sent" state (e.g. to try a different email)
+  // Verify the 6-digit OTP code the user received by email.
+  // On success the onAuthStateChange listener fires SIGNED_IN and handles the rest.
+  async verifyOtp(email, token) {
+    set({ verifyingOtp: true, errorMessage: null });
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token: token.trim(),
+      type: 'email'
+    });
+    if (error) {
+      set({ verifyingOtp: false, errorMessage: error.message });
+    } else {
+      set({ verifyingOtp: false });
+    }
+  },
+
+  // Clear the "code sent" state (e.g. to try a different email)
   resetLinkSent() {
     set({ linkSentTo: null, errorMessage: null });
   },
