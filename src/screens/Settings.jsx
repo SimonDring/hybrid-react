@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
+import { useAuthStore } from '../stores/authStore.js';
 import Database from '../lib/Database.js';
 
 export default function Settings() {
   const [theme, setTheme] = useState(localStorage.getItem('htp_theme') || 'auto');
   const replaceAll = useTrainingStore(state => state.replaceAll);
   const resetAll = useTrainingStore(state => state.resetAll);
+  const authStatus = useAuthStore(s => s.status);
+  const user = useAuthStore(s => s.user);
+  const signOut = useAuthStore(s => s.signOut);
 
   const handleSetTheme = (newTheme) => {
     setTheme(newTheme);
@@ -114,6 +118,30 @@ export default function Settings() {
         <li><span className="k">Schema</span><span className="v">v4</span></li>
         <li><span className="k">Storage</span><span className="v">Local (this device)</span></li>
       </ul>
+
+      <h2 className="h3">Account</h2>
+      {authStatus === 'signed_in' && user ? (
+        <>
+          <ul className="kv-list">
+            <li><span className="k">Signed in as</span><span className="v">{user.email}</span></li>
+          </ul>
+          <button
+            onClick={() => { if (confirm('Sign out of this device?')) signOut(); }}
+            style={{
+              width: '100%', padding: 13, marginTop: 10, borderRadius: 11,
+              border: '1px solid var(--hairline)', background: 'transparent',
+              color: 'var(--rust)', fontSize: 14, fontWeight: 600,
+              cursor: 'pointer', fontFamily: 'inherit'
+            }}
+          >
+            Sign out
+          </button>
+        </>
+      ) : (
+        <p style={{ fontSize: 13, color: 'var(--txt-muted)' }}>
+          Not signed in. Data is stored locally on this device only.
+        </p>
+      )}
     </>
   );
 }

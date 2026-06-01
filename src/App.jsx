@@ -1,4 +1,8 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+
+import { useAuthStore } from './stores/authStore.js';
+import Login from './screens/Login.jsx';
 
 import TopBar from './components/TopBar.jsx';
 import TabBar from './components/TabBar.jsx';
@@ -62,6 +66,31 @@ export default function App() {
   const location = useLocation();
   const meta = matchRoute(location.pathname);
 
+  const authStatus = useAuthStore(s => s.status);
+  const initAuth = useAuthStore(s => s.init);
+
+  // Check for an existing session once on mount
+  useEffect(() => { initAuth(); }, [initAuth]);
+
+  // While checking for a session, show a minimal splash (avoids a flash of Login)
+  if (authStatus === 'loading') {
+    return (
+      <div style={{
+        minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center'
+      }}>
+        <div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', opacity: 0.4 }}>
+          Hybrid
+        </div>
+      </div>
+    );
+  }
+
+  // Signed out (or Supabase not configured) → show Login
+  if (authStatus === 'signed_out' || authStatus === 'not_configured') {
+    return <Login />;
+  }
+
+  // Signed in → the app
   return (
     <div className="app">
       <TopBar title={meta.title} showBack={!meta.topLevel} />
