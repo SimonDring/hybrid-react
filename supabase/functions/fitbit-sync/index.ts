@@ -95,124 +95,115 @@ function dateRange(from: string, to: string): string[] {
   return dates
 }
 
-// Helpers to extract values from DataPoint objects.
-// Field names may be camelCase or snake_case depending on API version — try both.
-function getField(obj: any, ...keys: string[]): any {
-  for (const k of keys) {
-    if (obj?.[k] != null) return obj[k]
-  }
-  return null
-}
-
 function firstPoint(data: any): any {
   return data?.dataPoints?.[0] ?? null
 }
 
-function sumPoints(data: any, field: string, altField?: string): number | null {
-  if (!data?.dataPoints?.length) return null
-  let total = 0
-  for (const p of data.dataPoints) {
-    const inner = p[field] ?? (altField ? p[altField] : null) ?? p
-    const val = getField(inner, 'count', 'value', 'intValue', 'integer_value', 'floatValue', 'float_value')
-    if (val != null) total += Number(val)
-  }
-  return total || null
-}
-
 function buildRow(date: string, userId: string, raw: Record<string, any>): Record<string, any> {
-  const stepsData  = raw.steps
-  const calData    = raw['active-energy-burned']
-  const actData    = raw['active-minutes']
-  const hrData     = raw['daily-heart-rate']
-  const hrvData    = raw['daily-heart-rate-variability']
-  const spo2Data   = raw['daily-oxygen-saturation']
-  const respData   = raw['daily-respiratory-rate']
-  const sleepData  = raw.sleep
+  const stepsData = raw.steps
+  const calData   = raw['active-energy-burned']
+  const actData   = raw['active-minutes']
+  const hrData    = raw['heart-rate']
+  const hrvData   = raw['daily-heart-rate-variability']
+  const spo2Data  = raw['daily-oxygen-saturation']
+  const respData  = raw['daily-respiratory-rate']
+  const sleepData = raw.sleep
 
-  // Steps — sum all intraday points
-  const steps = sumPoints(stepsData, 'steps')
+  const isoDate = (iso: string) => iso?.split('T')[0]
 
-  // Calories — sum active energy burned points
+  // Steps — sum steps.count for all 1-minute intervals on the target date
+  const steps = (() => {
+    const pts = (stepsData?.dataPoints ?? []).filter((p: any) =>
+      !p?.steps?.interval?.startTime || isoDate(p.steps.interval.startTime) === date
+    )
+    const total = pts.reduce((acc: number, p: any) => acc + (Number(p?.steps?.count) || 0), 0)
+    return total || null
+  })()
+
+  // Calories — sum activeEnergyBurned.kcal for all intervals on the target date
   const calories_out = (() => {
-    if (!calData?.dataPoints?.length) return null
-    let total = 0
-    for (const p of calData.dataPoints) {
-      const inner = p.active_energy_burned ?? p.activeEnergyBurned ?? p
-      const val = getField(inner, 'kilocalories', 'kcal', 'value', 'floatValue', 'float_value')
-      if (val != null) total += Number(val)
-    }
+    const pts = (calData?.dataPoints ?? []).filter((p: any) =>
+      !p?.activeEnergyBurned?.interval?.startTime || isoDate(p.activeEnergyBurned.interval.startTime) === date
+    )
+    const total = pts.reduce((acc: number, p: any) => acc + (p?.activeEnergyBurned?.kcal || 0), 0)
     return total ? Math.round(total) : null
   })()
 
-  // Active minutes — sum all points
-  const active_minutes = sumPoints(actData, 'active_minutes') ?? sumPoints(actData, 'activeMinutes')
+  // Active minutes — sum MODERATE + VIGOROUS from activeMinutesByActivityLevel
+  const active_minutes = (() => {
+    const pts = (actData?.dataPoints ?? []).filter((p: any) =>
+      !p?.activeMinutes?.interval?.startTime || isoDate(p.activeMinutes.interval.startTime) === date
+    )
+    const total = pts.reduce((acc: number, p: any) => {
+      const levels: any[] = p?.activeMinutes?.activeMinutesByActivityLevel ?? []
+      return acc + levels
+        .filter((l: any) => l.activityLevel === 'MODERATE' || l.activityLevel === 'VIGOROUS')
+        .reduce((s: number, l: any) => s + (Number(l.activeMinutes) || 0), 0)
+    }, 0)
+    return total || null
+  })()
 
-  // Resting heart rate — daily summary, first point
+  // Resting HR — use nonRemHeartRateBeatsPerMinute from HRV data (best daily proxy).
+  // Fallback: minimum individual HR reading on the target date.
   const resting_hr = (() => {
-    const p = firstPoint(hrData)
-    if (!p) return null
-    const inner = p.daily_heart_rate ?? p.dailyHeartRate ?? p
-    const val = getField(inner, 'resting_bpm', 'restingBpm', 'resting_heart_rate', 'restingHeartRate', 'value')
-    return val != null ? Math.round(Number(val)) : null
+    const hrvPoint = firstPoint(hrvData)
+    const nonRem = hrvPoint?.dailyHeartRateVariability?.nonRemHeartRateBeatsPerMinute
+    if (nonRem != null) return Math.round(Number(nonRem))
+
+    const pts = (hrData?.dataPoints ?? []).filter((p: any) =>
+      !p?.heartRate?.sampleTime?.physicalTime || isoDate(p.heartRate.sampleTime.physicalTime) === date
+    )
+    if (!pts.length) return null
+    const bpms = pts.map((p: any) => Number(p?.heartRate?.beatsPerMinute)).filter(v => !isNaN(v) && v > 0)
+    return bpms.length ? Math.round(Math.min(...bpms)) : null
   })()
 
-  // HRV — daily summary, first point
+  // HRV — dailyHeartRateVariability.averageHeartRateVariabilityMilliseconds
   const hrv_ms = (() => {
-    const p = firstPoint(hrvData)
-    if (!p) return null
-    const inner = p.daily_heart_rate_variability ?? p.dailyHeartRateVariability ?? p
-    const val = getField(inner, 'rmssd', 'daily_rmssd', 'dailyRmssd', 'value')
+    const val = firstPoint(hrvData)?.dailyHeartRateVariability?.averageHeartRateVariabilityMilliseconds
     return val != null ? Math.round(Number(val)) : null
   })()
 
-  // SpO2 — daily summary
+  // SpO2 — dailyOxygenSaturation.averagePercentage
   const spo2_pct = (() => {
-    const p = firstPoint(spo2Data)
-    if (!p) return null
-    const inner = p.daily_oxygen_saturation ?? p.dailyOxygenSaturation ?? p
-    const val = getField(inner, 'avg', 'average', 'value')
+    const val = firstPoint(spo2Data)?.dailyOxygenSaturation?.averagePercentage
     return val != null ? Math.round(Number(val) * 10) / 10 : null
   })()
 
-  // Breathing rate — daily summary
+  // Breathing rate — dailyRespiratoryRate.breathsPerMinute
   const breathing_rate = (() => {
-    const p = firstPoint(respData)
-    if (!p) return null
-    const inner = p.daily_respiratory_rate ?? p.dailyRespiratoryRate ?? p
-    const val = getField(inner, 'breathing_rate', 'breathingRate', 'value')
+    const val = firstPoint(respData)?.dailyRespiratoryRate?.breathsPerMinute
     return val != null ? Math.round(Number(val) * 10) / 10 : null
   })()
 
-  // Sleep — parse stage durations from session points
-  let deepMs = 0, remMs = 0, lightMs = 0, awakeMs = 0, sleepScore = null
-  for (const p of sleepData?.dataPoints ?? []) {
-    const inner = p.sleep ?? p
-    const stages: any[] = inner.stages ?? inner.sleep_stages ?? []
-    for (const s of stages) {
-      const type  = (s.type ?? s.stage ?? '').toString().toUpperCase()
-      const secs  = Number(s.duration_seconds ?? s.durationSeconds ?? s.duration ?? 0)
-      const ms    = secs * 1000
-      if      (type.includes('DEEP'))  deepMs  += ms
-      else if (type.includes('REM'))   remMs   += ms
-      else if (type.includes('LIGHT')) lightMs += ms
-      else if (type.includes('AWAKE') || type.includes('WAKE')) awakeMs += ms
+  // Sleep — find session whose endTime falls on the target date (sleep starts night before).
+  // Stages have explicit startTime + endTime so duration = end - start.
+  let deepMs = 0, remMs = 0, lightMs = 0, awakeMs = 0
+  const sleepPts = (sleepData?.dataPoints ?? []).filter((p: any) =>
+    !p?.sleep?.interval?.endTime || isoDate(p.sleep.interval.endTime) === date
+  )
+  for (const p of sleepPts) {
+    for (const s of (p?.sleep?.stages ?? [])) {
+      const dur  = new Date(s.endTime).getTime() - new Date(s.startTime).getTime()
+      const type = (s.type ?? '').toUpperCase()
+      if      (type === 'DEEP')  deepMs  += dur
+      else if (type === 'REM')   remMs   += dur
+      else if (type === 'LIGHT') lightMs += dur
+      else if (type === 'AWAKE') awakeMs += dur
     }
-    // Sleep efficiency / score if present
-    const eff = getField(inner, 'efficiency', 'sleep_efficiency', 'sleepEfficiency', 'score', 'sleep_score')
-    if (eff != null && sleepScore == null) sleepScore = Math.round(Number(eff))
   }
-  const totalSleepMs = deepMs + remMs + lightMs
-  const sleep_duration_min = totalSleepMs ? Math.round(totalSleepMs / 60_000) : null
-  const sleep_deep_min     = deepMs   ? Math.round(deepMs   / 60_000) : null
-  const sleep_rem_min      = remMs    ? Math.round(remMs    / 60_000) : null
-  const sleep_light_min    = lightMs  ? Math.round(lightMs  / 60_000) : null
-  const sleep_awake_min    = awakeMs  ? Math.round(awakeMs  / 60_000) : null
+  const totalMs = deepMs + remMs + lightMs
 
   const row: Record<string, any> = {
     user_id: userId, date, source: 'fitbit',
     steps, calories_out, active_minutes, resting_hr, hrv_ms, spo2_pct, breathing_rate,
-    sleep_duration_min, sleep_deep_min, sleep_rem_min, sleep_light_min, sleep_awake_min,
-    sleep_score: sleepScore
+    sleep_duration_min: totalMs  ? Math.round(totalMs  / 60_000) : null,
+    sleep_deep_min:     deepMs   ? Math.round(deepMs   / 60_000) : null,
+    sleep_rem_min:      remMs    ? Math.round(remMs    / 60_000) : null,
+    sleep_light_min:    lightMs  ? Math.round(lightMs  / 60_000) : null,
+    sleep_awake_min:    awakeMs  ? Math.round(awakeMs  / 60_000) : null,
+    sleep_score:     null,  // Fitbit proprietary — not in Google Health API
+    readiness_score: null   // Fitbit proprietary — not in Google Health API
   }
 
   // Strip nulls so we never overwrite a manual entry with null
@@ -270,29 +261,28 @@ Deno.serve(async (req: Request) => {
   for (const date of dates) {
     const nd = nextDate(date)
 
-    // Daily summary types use a date equality filter
-    const dailyFilter  = (type: string) => `filter=${type}.date="${date}"`
-    // Sample/interval types use a time range filter
-    const sampleFilter = (type: string) =>
-      `filter=${type}.sample_time.physical_time>="${date}T00:00:00Z" AND ${type}.sample_time.physical_time<"${nd}T00:00:00Z"`
-    const sleepFilter  = `filter=sleep.interval.start_time>="${date}T00:00:00Z" AND sleep.interval.start_time<"${nd}T00:00:00Z"`
+    // Daily summary types support date-range filtering
+    const df = (type: string) => `filter=${type}.date>="${date}" AND ${type}.date<"${nd}"`
+    // Intraday/interval types support no query-time filtering — fetch up to a day's worth
+    // of points (steps can be 1 per minute = ~1440/day) and filter client-side by date
+    const unfiltered = `pageSize=1500`
 
     const [stepsRaw, calRaw, actRaw, hrRaw, hrvRaw, spo2Raw, respRaw, sleepRaw] = await Promise.all([
-      fetchType(accessToken, apiBase, 'steps',                        sampleFilter('steps')),
-      fetchType(accessToken, apiBase, 'active-energy-burned',         sampleFilter('active_energy_burned')),
-      fetchType(accessToken, apiBase, 'active-minutes',               sampleFilter('active_minutes')),
-      fetchType(accessToken, apiBase, 'daily-heart-rate',             dailyFilter('daily_heart_rate')),
-      fetchType(accessToken, apiBase, 'daily-heart-rate-variability', dailyFilter('daily_heart_rate_variability')),
-      fetchType(accessToken, apiBase, 'daily-oxygen-saturation',      dailyFilter('daily_oxygen_saturation')),
-      fetchType(accessToken, apiBase, 'daily-respiratory-rate',       dailyFilter('daily_respiratory_rate')),
-      fetchType(accessToken, apiBase, 'sleep',                        sleepFilter)
+      fetchType(accessToken, apiBase, 'steps',                        unfiltered),
+      fetchType(accessToken, apiBase, 'active-energy-burned',         unfiltered),
+      fetchType(accessToken, apiBase, 'active-minutes',               unfiltered),
+      fetchType(accessToken, apiBase, 'heart-rate',                   unfiltered),
+      fetchType(accessToken, apiBase, 'daily-heart-rate-variability', df('daily_heart_rate_variability')),
+      fetchType(accessToken, apiBase, 'daily-oxygen-saturation',      df('daily_oxygen_saturation')),
+      fetchType(accessToken, apiBase, 'daily-respiratory-rate',       df('daily_respiratory_rate')),
+      fetchType(accessToken, apiBase, 'sleep',                        unfiltered)
     ])
 
     const raw = {
       steps:                    stepsRaw,
       'active-energy-burned':   calRaw,
       'active-minutes':         actRaw,
-      'daily-heart-rate':       hrRaw,
+      'heart-rate':             hrRaw,
       'daily-heart-rate-variability': hrvRaw,
       'daily-oxygen-saturation': spo2Raw,
       'daily-respiratory-rate': respRaw,
