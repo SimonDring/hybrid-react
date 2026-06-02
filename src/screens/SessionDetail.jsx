@@ -4,6 +4,8 @@ import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../data/Plan.js';
 import * as Utils from '../lib/Utils.js';
 import { activityFor } from '../data/activityTypes.js';
+import RestTimer from '../components/RestTimer.jsx';
+import { getChecked, toggleChecked, clearChecked } from '../lib/SessionProgress.js';
 
 export default function SessionDetail() {
   const { phaseId, weekNum, sessionIdx } = useParams();
@@ -15,6 +17,7 @@ export default function SessionDetail() {
   const [showForm, setShowForm] = useState(false);
   const [ratings, setRatings] = useState({ quality: null, energy: null, recovery: null });
   const [notes, setNotes] = useState('');
+  const [checked, setChecked] = useState([]);
 
   const phase = Plan.getPhase(Number(phaseId));
   const week = phase ? phase.weeks.find(w => w.num === Number(weekNum)) : null;
@@ -26,6 +29,7 @@ export default function SessionDetail() {
     setShowForm(false);
     setRatings({ quality: null, energy: null, recovery: null });
     setNotes('');
+    setChecked(getChecked(key));
   }, [key]);
 
   if (!session) return <div style={{ padding: 24 }}>Session not found</div>;
@@ -35,6 +39,8 @@ export default function SessionDetail() {
 
   const handleStart = () => startSession(key);
 
+  const toggleItem = (idx) => setChecked(toggleChecked(key, idx));
+
   const handleSubmit = () => {
     completeSession(key, {
       quality: ratings.quality,
@@ -42,6 +48,8 @@ export default function SessionDetail() {
       recovery: ratings.recovery,
       notes
     });
+    clearChecked(key);
+    setChecked([]);
     setShowForm(false);
     setRatings({ quality: null, energy: null, recovery: null });
     setNotes('');
@@ -65,13 +73,13 @@ export default function SessionDetail() {
         // header row with the right columns. Most sessions are a single type,
         // but a session can mix (e.g. strength + mobility, or run + swim).
         const groups = [];
-        session.items.forEach((item) => {
+        session.items.forEach((item, gIdx) => {
           const activity = activityFor(item);
           const last = groups[groups.length - 1];
           if (last && last.activity.key === activity.key) {
-            last.items.push(item);
+            last.items.push({ item, idx: gIdx });
           } else {
-            groups.push({ activity, items: [item] });
+            groups.push({ activity, items: [{ item, idx: gIdx }] });
           }
         });
 
@@ -92,17 +100,21 @@ export default function SessionDetail() {
                 ))}
               </div>
 
-              {items.map((item, i) => {
+              {items.map(({ item, idx }, i) => {
                 const isTagged = !!item.tag;
                 const cue = activity.cue(item);
+                const done = checked.includes(idx);
                 return (
                   <div
                     key={i}
-                    className="gt-row"
+                    className={`gt-row ${isStarted ? 'checkable' : ''} ${done ? 'is-checked' : ''}`}
                     style={{ borderLeft: `3px solid ${isTagged ? activity.accent : 'transparent'}` }}
+                    onClick={isStarted ? () => toggleItem(idx) : undefined}
+                    role={isStarted ? 'button' : undefined}
                   >
                     <div className="gt-main" style={{ gridTemplateColumns: gridTemplate }}>
                       <div className="gt-ex">
+                        {isStarted && <span className={`gt-check ${done ? 'on' : ''}`} aria-hidden="true">✓</span>}
                         <span className="gt-num">{item.num}</span>
                         <span className="gt-name">{item.name}</span>
                       </div>
@@ -235,13 +247,14 @@ export default function SessionDetail() {
           )}
           {isStarted && (
             <>
-              <div className="callout" style={{ marginTop: 20 }}>
-                <strong>In progress</strong>
-                {state.startedAt && (
-                  <div style={{ fontSize: 12, marginTop: 2, opacity: 0.7 }}>
-                    Started {new Date(state.startedAt).toLocaleTimeString()}
-                  </div>
-                )}
+              <div className="session-live" style={{ marginTop: 20 }}>
+                <div className="sl-head">
+                  <span className="sl-progress">{checked.length}/{session.items.length} done</span>
+                  {state.startedAt && (
+                    <span className="sl-started">Started {new Date(state.startedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  )}
+                </div>
+                <RestTimer />
               </div>
               <button
                 className="btn-primary"

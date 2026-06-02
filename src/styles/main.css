@@ -1899,6 +1899,167 @@ html[data-theme="dark"] .decision-card .scen { color: #9eb3bf; }
 .recent-row .rr-date { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--txt-muted); }
 .recent-row .rr-metrics { font-size: 12px; color: var(--txt-body); }
 
+/* ============================================================
+   P4 — in-workout session (check-off, rest timer) + tab Log button
+   ============================================================ */
+.gt-row.checkable { cursor: pointer; }
+.gt-row.checkable:active { background: var(--bg-surface-2); }
+.gt-row.is-checked { opacity: 0.5; }
+.gt-row.is-checked .gt-name { text-decoration: line-through; }
+.gt-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--hairline-strong);
+  color: transparent;
+  font-size: 11px;
+  font-weight: 700;
+  margin-right: 7px;
+  flex-shrink: 0;
+}
+.gt-check.on { background: var(--moss); border-color: var(--moss); color: #fff; }
+
+/* Live (in-progress) session panel */
+.session-live {
+  background: var(--bg-surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  padding: var(--s-4);
+  box-shadow: var(--shadow-sm);
+}
+.sl-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--s-3);
+}
+.sl-progress { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--txt-strong); }
+.sl-started { font-family: var(--mono); font-size: 11px; color: var(--txt-muted); }
+
+/* Rest timer */
+.rest-timer { display: flex; flex-direction: column; gap: var(--s-3); }
+.rt-display {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  background: var(--bg-ink);
+  color: #f4f1ea;
+  border: none;
+  border-radius: var(--r-md);
+  padding: 12px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+.rt-display:disabled { opacity: 0.55; cursor: default; }
+.rt-display.running { box-shadow: inset 0 0 0 2px var(--ochre); }
+.rt-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ochre);
+}
+.rt-time { font-family: var(--serif); font-size: 28px; font-weight: 600; letter-spacing: -0.02em; }
+.rt-state { margin-left: auto; font-family: var(--mono); font-size: 10px; color: rgba(244,241,234,0.55); }
+.rt-presets { display: flex; gap: 6px; }
+.rt-preset {
+  flex: 1;
+  padding: 9px 0;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--hairline);
+  background: var(--bg-surface-2);
+  color: var(--txt-strong);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rt-preset:active { transform: scale(0.97); }
+.rt-reset { color: var(--rust); }
+
+/* Tab-bar centre "Coach" button (placeholder for the future AI coach) */
+.tab-coach {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px 6px;
+}
+.tab-coach:active { transform: scale(0.94); }
+.tab-coach-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--rust);
+  color: #fff;
+  margin-top: -8px;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.12s;
+}
+.tab-coach.active .tab-coach-icon { transform: scale(1.06); box-shadow: var(--shadow-md), 0 0 0 3px rgba(176,74,46,0.18); }
+.tab-coach-icon svg { width: 20px; height: 20px; }
+.tab-coach-label {
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--txt-muted);
+}
+.tab-coach.active .tab-coach-label { color: var(--txt-strong); }
+
+/* Coach placeholder screen */
+.coach-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  margin: var(--s-5) 0;
+}
+.coach-bubble {
+  max-width: 85%;
+  padding: 11px 14px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  border-radius: var(--r-lg);
+}
+.coach-bubble-ai {
+  align-self: flex-start;
+  background: var(--bg-ink);
+  color: #f4f1ea;
+  border-bottom-left-radius: var(--r-sm);
+}
+.coach-bubble-you {
+  align-self: flex-end;
+  background: var(--bg-surface-2);
+  color: var(--txt-body);
+  border: 1px solid var(--hairline);
+  border-bottom-right-radius: var(--r-sm);
+}
+.coach-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 16px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--hairline);
+  background: var(--bg-surface);
+  color: var(--txt-soft);
+  font-size: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.coach-input svg { width: 18px; height: 18px; color: var(--txt-soft); flex-shrink: 0; }
+
 /* Callouts used as tappable buttons keep only the left accent stripe */
 button.callout {
   border-top: 0; border-right: 0; border-bottom: 0;

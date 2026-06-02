@@ -26,6 +26,7 @@ import Decisions from './screens/Decisions.jsx';
 import Principles from './screens/Principles.jsx';
 import Reassess from './screens/Reassess.jsx';
 import Settings from './screens/Settings.jsx';
+import Coach from './screens/Coach.jsx';
 
 const routeMeta = {
   '/': { title: 'Hybrid', topLevel: true, tab: 'today' },
@@ -46,7 +47,8 @@ const routeMeta = {
   '/profile/decisions': { title: 'Decisions', topLevel: false, tab: 'profile' },
   '/profile/principles': { title: 'Principles', topLevel: false, tab: 'profile' },
   '/profile/reassess': { title: 'Reassessment', topLevel: false, tab: 'profile' },
-  '/settings': { title: 'Settings', topLevel: false, tab: 'profile' }
+  '/settings': { title: 'Settings', topLevel: false, tab: 'profile' },
+  '/coach': { title: 'Coach', topLevel: true, tab: 'coach' }
 };
 
 function matchRoute(pathname) {
@@ -116,6 +118,7 @@ export default function App() {
           <Route path="/profile/principles" element={<Principles />} />
           <Route path="/profile/reassess" element={<Reassess />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/coach" element={<Coach />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </ScreenContainer>

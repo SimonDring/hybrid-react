@@ -33,28 +33,12 @@ export default function Home() {
   // Today's readiness — drives the hero.
   const readiness = computeReadiness(dailyMetrics, logs);
 
-  // Find next incomplete session (walk all phases, all weeks)
-  const phases = Plan.getPhases();
-  let nextSession = null;
-  let nextWeek = null;
-  let nextPhase = null;
-  let nextSessionIdx = 0;
-  outer: for (const phase of phases) {
-    const fullPhase = Plan.getPhase(phase.id);
-    if (!fullPhase || !fullPhase.weeks) continue;
-    for (const wk of fullPhase.weeks) {
-      for (let i = 0; i < wk.sessions.length; i++) {
-        const key = Utils.weekKey(phase.id, wk.num, i);
-        if (!sessions[key] || !sessions[key].completed) {
-          nextSession = wk.sessions[i];
-          nextWeek = wk;
-          nextPhase = phase;
-          nextSessionIdx = i;
-          break outer;
-        }
-      }
-    }
-  }
+  // Find next incomplete session (shared with the tab-bar "+ Log" quick-start)
+  const next = Plan.findNextSession(sessions);
+  const nextSession = next ? next.session : null;
+  const nextWeek = next ? next.week : null;
+  const nextPhase = next ? next.phase : null;
+  const nextSessionIdx = next ? next.sessionIdx : 0;
 
   // Current week progress for the (now secondary) streak ring
   const targetWeeklySessions = 6;

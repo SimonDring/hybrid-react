@@ -61,6 +61,22 @@ export const ACTIVITY_TYPES = {
       { key: 'effort',   label: 'Effort', accessor: (it) => cleanEffort(it.effort || it.rpe), accent: true }
     ],
     cue: (it) => it.cue || it.note || ''
+  },
+
+  // Running: a prescription (distance or duration) at a target zone/pace.
+  // Run exercises in Plan.js carry tag:'run' but previously fell back to the
+  // strength layout (sets/reps/weight), which read wrong. This shows the right
+  // columns: the target volume and the intensity zone.
+  run: {
+    key: 'run',
+    label: 'Run',
+    accent: '#b04a2e',
+    tagBg: '#f6e9e4',
+    columns: [
+      { key: 'target', label: 'Target', accessor: (it) => it.distance || it.sets || '—', emphasis: true, wide: true },
+      { key: 'zone',   label: 'Zone',   accessor: (it) => cleanEffort(it.pace || it.rpe), accent: true }
+    ],
+    cue: (it) => it.note || it.cue || ''
   }
 };
 

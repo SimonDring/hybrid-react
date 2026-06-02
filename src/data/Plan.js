@@ -345,4 +345,28 @@ export function getWeek(pid, wkNum) {
   return p ? p.weeks.find(w => w.num === wkNum) : null;
 }
 
-export default { getPhases, getPhase, getWeek };
+/**
+ * Walk the whole plan (all phases, all weeks) and return the first session that
+ * isn't completed — the "up next" session. Shared by the Today screen and the
+ * tab-bar "+ Log" quick-start so they always agree.
+ *
+ * @param {object} sessions  store.sessions (keyed by template_ref)
+ * @returns {{ phase, week, session, sessionIdx: number, key: string }|null}
+ */
+export function findNextSession(sessions = {}) {
+  for (const phase of getPhases()) {
+    const full = getPhase(phase.id);
+    if (!full || !full.weeks) continue;
+    for (const week of full.weeks) {
+      for (let i = 0; i < week.sessions.length; i++) {
+        const key = `p${phase.id}_wk${week.num}_s${i}`;
+        if (!sessions[key] || !sessions[key].completed) {
+          return { phase, week, session: week.sessions[i], sessionIdx: i, key };
+        }
+      }
+    }
+  }
+  return null;
+}
+
+export default { getPhases, getPhase, getWeek, findNextSession };

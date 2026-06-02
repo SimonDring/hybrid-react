@@ -26,22 +26,37 @@ const TABS = [
 export default function TabBar({ activeTab }) {
   const navigate = useNavigate();
 
+  const renderTab = (tab) => (
+    <button
+      key={tab.id}
+      className={`tab ${activeTab === tab.id ? 'active' : ''}`}
+      data-tab={tab.id}
+      onClick={() => navigate(tab.path)}
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+        {tab.icon}
+      </svg>
+      <span>{tab.label}</span>
+    </button>
+  );
+
   return (
     <nav className="tabbar" id="tabbar">
       <div className="tabbar-inner">
-        {TABS.map(tab => (
-          <button
-            key={tab.id}
-            className={`tab ${activeTab === tab.id ? 'active' : ''}`}
-            data-tab={tab.id}
-            onClick={() => navigate(tab.path)}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-              {tab.icon}
+        {TABS.slice(0, 2).map(renderTab)}
+        <button
+          className={`tab-coach ${activeTab === 'coach' ? 'active' : ''}`}
+          onClick={() => navigate('/coach')}
+          aria-label="AI coach"
+        >
+          <span className="tab-coach-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
-            <span>{tab.label}</span>
-          </button>
-        ))}
+          </span>
+          <span className="tab-coach-label">Coach</span>
+        </button>
+        {TABS.slice(2).map(renderTab)}
       </div>
     </nav>
   );
