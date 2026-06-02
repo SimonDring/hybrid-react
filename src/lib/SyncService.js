@@ -407,15 +407,18 @@ export async function addRecoveryLogEntry(injuryId, entry) {
 // ---------- Fitbit ----------
 
 // Build the Fitbit OAuth URL. Opens in the browser; the Edge Function handles the callback.
+// VITE_FITBIT_OAUTH_URL defaults to Fitbit's own auth page but can be overridden
+// if Google routes new-app registrations through a different authorization endpoint.
 export function getFitbitAuthUrl(userId) {
-  const clientId   = import.meta.env.VITE_FITBIT_CLIENT_ID;
+  const clientId    = import.meta.env.VITE_FITBIT_CLIENT_ID;
+  const oauthBase   = import.meta.env.VITE_FITBIT_OAUTH_URL ?? 'https://www.fitbit.com/oauth2/authorize';
   const redirectUri = encodeURIComponent(
     `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fitbit-auth-callback`
   );
   const scopes = encodeURIComponent(
     'activity sleep heartrate oxygen_saturation respiratory_rate profile'
   );
-  return `https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&state=${userId}&expires_in=604800`;
+  return `${oauthBase}?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&state=${userId}&expires_in=604800`;
 }
 
 // Check if Fitbit is connected for the signed-in user.

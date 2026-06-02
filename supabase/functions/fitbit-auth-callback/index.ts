@@ -1,26 +1,27 @@
 /**
  * fitbit-auth-callback — Supabase Edge Function
  *
- * Receives the OAuth 2.0 authorization code from Fitbit after the user
- * approves access, exchanges it for tokens, stores them in wearable_connections,
- * then redirects the user back to the app.
+ * Handles the OAuth 2.0 callback after the user authorises Fitbit access.
+ * Exchanges the auth code for tokens, stores them, redirects back to the app.
  *
- * Flow:
- *   App → Fitbit OAuth page → user approves → Fitbit redirects here
- *   → exchange code → store tokens → redirect to app with ?fitbit=connected
+ * Registration note: Fitbit new-app registration has moved to Google Cloud Console
+ * via the Google Health API. The Fitbit Web API endpoints (api.fitbit.com) still
+ * work for data fetching, but OAuth credentials now come from Google. The token
+ * and data API URLs are configurable via env vars so they can be updated without
+ * a code change if Google changes the endpoints.
  *
- * Environment variables required (set in Supabase Dashboard → Settings → Edge Functions):
- *   FITBIT_CLIENT_ID      — from your Fitbit Developer App
- *   FITBIT_CLIENT_SECRET  — from your Fitbit Developer App
+ * Environment variables (set in Supabase Dashboard → Settings → Edge Functions):
+ *   FITBIT_CLIENT_ID      — OAuth client ID (from Google Cloud Console)
+ *   FITBIT_CLIENT_SECRET  — OAuth client secret (from Google Cloud Console)
+ *   FITBIT_TOKEN_URL      — (optional) defaults to https://api.fitbit.com/oauth2/token
+ *                           Override if Google moves the token endpoint
  *
- * Auto-available in all Edge Functions:
- *   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY
+ * Auto-available: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY
  */
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const APP_URL = 'https://simondring.github.io/hybrid-react/'
-const FITBIT_TOKEN_URL = 'https://api.fitbit.com/oauth2/token'
 
 Deno.serve(async (req: Request) => {
   const url = new URL(req.url)
@@ -39,8 +40,11 @@ Deno.serve(async (req: Request) => {
   const supabaseUrl  = Deno.env.get('SUPABASE_URL')!
   const redirectUri  = `${supabaseUrl}/functions/v1/fitbit-auth-callback`
 
-  // Exchange the auth code for access + refresh tokens
-  const tokenRes = await fetch(FITBIT_TOKEN_URL, {
+  // Token URL is configurable — Fitbit's own endpoint is the default,
+  // but Google may route this differently for apps registered via Google Health API
+  const tokenUrl = Deno.env.get('FITBIT_TOKEN_URL') ?? 'https://api.fitbit.com/oauth2/token'
+
+  const tokenRes = await fetch(tokenUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
