@@ -2,12 +2,36 @@ import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../data/Plan.js';
 import * as Utils from '../lib/Utils.js';
+import { computeReadiness } from '../lib/Readiness.js';
+
+// Greeting that matches the time of day.
+function greeting(d) {
+  const h = d.getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 18) return 'Good afternoon';
+  return 'Good evening';
+}
+
+// A readiness-aware nudge for the recommended session.
+function sessionNote(status) {
+  if (status === 'strong') return "You're recovered — good day for it.";
+  if (status === 'low') return 'Recovery looks low — ease off or swap for easy work if you need to.';
+  if (status === 'moderate') return 'Train as planned, listen to your body.';
+  return null;
+}
 
 export default function Home() {
   const navigate = useNavigate();
   const sessions = useTrainingStore(state => state.sessions);
+  const dailyMetrics = useTrainingStore(state => state.dailyMetrics);
+  const logs = useTrainingStore(state => state.logs);
 
   const completed = Utils.countCompleted(sessions);
+  const now = new Date();
+  const dateLabel = now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
+
+  // Today's readiness — drives the hero.
+  const readiness = computeReadiness(dailyMetrics, logs);
 
   // Find next incomplete session (walk all phases, all weeks)
   const phases = Plan.getPhases();
@@ -32,7 +56,7 @@ export default function Home() {
     }
   }
 
-  // Current week progress for streak ring
+  // Current week progress for the (now secondary) streak ring
   const targetWeeklySessions = 6;
   const thisWeekDone = nextWeek
     ? nextWeek.sessions.filter((_, i) => {
@@ -44,21 +68,84 @@ export default function Home() {
   const ringCircumference = 2 * Math.PI * 22;
   const ringOffset = ringCircumference - (ringCircumference * ringPct / 100);
 
+  // Readiness ring geometry
+  const rR = 30;
+  const rCirc = 2 * Math.PI * rR;
+  const rPct = readiness.score != null ? readiness.score : 0;
+  const rOffset = rCirc - (rCirc * rPct / 100);
+  const accentVar = `var(--${readiness.accent})`;
+
+  const note = sessionNote(readiness.status);
+
   return (
     <>
-      <div className="eyebrow">Hybrid · 12-month plan</div>
-      <h1 className="h1">Built to last</h1>
-      <p className="sub">Strength + endurance, planned across phases. One session at a time.</p>
+      <div className="today-greeting">
+        <div className="today-date">{greeting(now)} · {dateLabel}</div>
+      </div>
 
+      {/* READINESS HERO */}
+      <div className="today-hero" data-status={readiness.status}>
+        <div className="th-eyebrow">
+          {readiness.status === 'unknown'
+            ? 'Today'
+            : readiness.estimated ? 'Readiness · estimate' : 'Readiness'}
+        </div>
+        <div className="th-main">
+          <div className="th-ring">
+            <svg viewBox="0 0 72 72">
+              <circle cx="36" cy="36" r={rR} fill="none" stroke="rgba(244,241,234,0.14)" strokeWidth="5" />
+              {readiness.score != null && (
+                <circle cx="36" cy="36" r={rR} fill="none" stroke={accentVar} strokeWidth="5"
+                  strokeLinecap="round" strokeDasharray={rCirc} strokeDashoffset={rOffset}
+                  transform="rotate(-90 36 36)" />
+              )}
+            </svg>
+            <div className="th-ring-text">
+              {readiness.score != null ? readiness.score : '—'}
+            </div>
+          </div>
+          <div className="th-copy">
+            <div className="th-headline">{readiness.headline}</div>
+            <div className="th-note">{readiness.note}</div>
+          </div>
+        </div>
+
+        <div className="vital-row">
+          <div className="vital-chip">
+            <div className="vc-label">Sleep</div>
+            <div className="vc-value">{readiness.vitals.sleepHrs != null ? readiness.vitals.sleepHrs : '—'}<span>{readiness.vitals.sleepHrs != null ? 'h' : ''}</span></div>
+          </div>
+          <div className="vital-chip">
+            <div className="vc-label">HRV</div>
+            <div className="vc-value">{readiness.vitals.hrv != null ? readiness.vitals.hrv : '—'}<span>{readiness.vitals.hrv != null ? 'ms' : ''}</span></div>
+          </div>
+          <div className="vital-chip">
+            <div className="vc-label">Resting HR</div>
+            <div className="vc-value">{readiness.vitals.rhr != null ? readiness.vitals.rhr : '—'}<span>{readiness.vitals.rhr != null ? 'bpm' : ''}</span></div>
+          </div>
+        </div>
+
+        {readiness.status === 'unknown' && (
+          <button className="th-prompt" onClick={() => navigate('/tracking/wearables')}>
+            Add today's metrics →
+          </button>
+        )}
+      </div>
+
+      {/* RECOMMENDED TODAY */}
+      {nextSession && nextWeek && nextPhase && (
+        <h2 className="h3">Recommended today</h2>
+      )}
       {nextSession && nextWeek && nextPhase && (
         <button
           className="today-card"
           onClick={() => navigate(`/phases/${nextPhase.id}/weeks/${nextWeek.num}/sessions/${nextSessionIdx}`)}
           style={{ width: '100%', textAlign: 'left', fontFamily: 'inherit', border: 'none', cursor: 'pointer', color: '#f4f1ea' }}
         >
-          <div className="today-eyebrow">Up next · Week {nextWeek.num}</div>
+          <div className="today-eyebrow">Week {nextWeek.num} · {nextPhase.title || `Phase ${nextPhase.id}`}</div>
           <div className="today-title">{nextSession.title}</div>
           <div className="today-meta">{nextSession.duration}</div>
+          {note && <div className="today-readiness-note">{note}</div>}
           <div className="today-cta">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3" /></svg>
             Open session
@@ -66,6 +153,7 @@ export default function Home() {
         </button>
       )}
 
+      {/* THIS WEEK (secondary) */}
       {nextWeek && (
         <div className="streak-card">
           <div className="streak-ring">
@@ -79,44 +167,20 @@ export default function Home() {
           </div>
           <div>
             <div className="streak-title">Week {nextWeek.num} progress</div>
-            <div className="streak-sub">{thisWeekDone === 0 ? "Let's start" : thisWeekDone >= targetWeeklySessions ? 'Full week complete' : `${targetWeeklySessions - thisWeekDone} sessions to go`}</div>
+            <div className="streak-sub">{thisWeekDone === 0 ? "Let's start" : thisWeekDone >= targetWeeklySessions ? 'Full week complete' : `${targetWeeklySessions - thisWeekDone} sessions to go · ${completed} done overall`}</div>
           </div>
         </div>
       )}
 
-      <div className="stats-strip">
-        <div className="stat-tile">
-          <div className="l">Sessions</div>
-          <div className="v">{completed}</div>
-          <div className="d">completed</div>
-        </div>
-        <div className="stat-tile">
-          <div className="l">Phase</div>
-          <div className="v">{nextPhase ? nextPhase.id : '—'}</div>
-          <div className="d">of 5</div>
-        </div>
-        <div className="stat-tile">
-          <div className="l">Week</div>
-          <div className="v">{nextWeek ? nextWeek.num : '—'}</div>
-          <div className="d">of 52</div>
-        </div>
-      </div>
-
+      {/* QUICK ACTIONS (trimmed) */}
       <h2 className="h3">Quick actions</h2>
       <div className="quick-grid">
-        <button className="quick-tile" onClick={() => navigate('/phases')}>
+        <button className="quick-tile" onClick={() => navigate('/tracking/wearables')}>
           <div className="qt-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="16" rx="2" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
           </div>
-          <div className="qt-title">View all phases</div>
-          <div className="qt-meta">5 phases · 52 weeks</div>
-        </button>
-        <button className="quick-tile" onClick={() => navigate('/tracking/checkin')}>
-          <div className="qt-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-          </div>
-          <div className="qt-title">Log this week</div>
-          <div className="qt-meta">Bodyweight, RHR, sleep</div>
+          <div className="qt-title">Today's metrics</div>
+          <div className="qt-meta">Sleep, HRV, resting HR</div>
         </button>
         <button className="quick-tile" onClick={() => navigate('/tracking/trends')}>
           <div className="qt-icon">
@@ -125,20 +189,6 @@ export default function Home() {
           <div className="qt-title">Trends</div>
           <div className="qt-meta">Last 4–12 weeks</div>
         </button>
-        <button className="quick-tile" onClick={() => navigate('/profile/reassess')}>
-          <div className="qt-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-          </div>
-          <div className="qt-title">Reassess</div>
-          <div className="qt-meta">Quarterly checkpoint</div>
-        </button>
-      </div>
-
-      <h2 className="h3">Reference</h2>
-      <div className="sec-links">
-        <button className="sec-link" onClick={() => navigate('/profile/principles')}>Operating principles →</button>
-        <button className="sec-link" onClick={() => navigate('/profile/decisions')}>Decision framework →</button>
-        <button className="sec-link" onClick={() => navigate('/profile/overview')}>12-month overview →</button>
       </div>
     </>
   );

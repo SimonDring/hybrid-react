@@ -1,106 +1,97 @@
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
+import { computeReadiness } from '../lib/Readiness.js';
+
+// One link row to a deep-dive screen.
+function LinkRow({ title, sub, badge, onClick }) {
+  return (
+    <button className="link-row" onClick={onClick}>
+      <div className="lr-body">
+        <div className="lr-title">{title}</div>
+        <div className="lr-sub">{sub}</div>
+      </div>
+      {badge && <span className="lr-badge">{badge}</span>}
+      <svg className="lr-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </button>
+  );
+}
 
 export default function Tracking() {
   const navigate = useNavigate();
   const logs = useTrainingStore(state => state.logs);
   const injuries = useTrainingStore(state => state.injuries);
-  const latestLog = logs.length > 0 ? logs[logs.length - 1] : null;
-  const activeInjuries = injuries.filter(i => i.status === 'active' || i.status === 'rehabbing' || i.status === 'monitoring');
+  const dailyMetrics = useTrainingStore(state => state.dailyMetrics);
 
-  const sections = [
-    {
-      title: 'Weekly check-in',
-      sub: 'Bodyweight, RHR, RPE, sleep, knee',
-      path: '/tracking/checkin',
-      badge: latestLog ? `Last: ${latestLog.date}` : 'Not logged yet'
-    },
-    {
-      title: 'Daily metrics',
-      sub: 'Sleep, HRV, resting HR, readiness',
-      path: '/tracking/wearables',
-      badge: 'Manual + Fitbit-ready'
-    },
-    {
-      title: 'Injury log',
-      sub: 'Injuries, rehab plans, recovery',
-      path: '/tracking/injuries',
-      badge: activeInjuries.length > 0 ? `${activeInjuries.length} active` : 'None active'
-    },
-    {
-      title: 'Key metrics',
-      sub: 'Latest snapshot across all sources',
-      path: '/tracking/metrics',
-      badge: logs.length > 0 ? `${logs.length} entries` : null
-    },
-    {
-      title: 'Trends',
-      sub: 'Multi-metric charts over time',
-      path: '/tracking/trends',
-      badge: null
-    },
-    {
-      title: 'Log history',
-      sub: 'All past check-ins with edit/delete',
-      path: '/tracking/log',
-      badge: null
-    }
-  ];
+  const readiness = computeReadiness(dailyMetrics, logs);
+  const daysRecorded = dailyMetrics.length;
+  const activeInjuries = injuries.filter(i =>
+    i.status === 'active' || i.status === 'rehabbing' || i.status === 'monitoring'
+  );
 
   return (
     <>
       <h1 className="h1">Tracking</h1>
-      <p className="sub">
-        Weekly check-ins, wearable data, and progress trends. When AI integration arrives, this data feeds directly into plan adaptation.
-      </p>
+      <p className="sub">Your wearable recovery data at a glance — feeds plan adaptation when AI integration arrives.</p>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {sections.map(s => (
-          <button
-            key={s.path}
-            onClick={() => navigate(s.path)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              padding: '13px 16px',
-              background: 'var(--bg-surface)',
-              border: '1px solid var(--hairline)',
-              borderRadius: 14,
-              textAlign: 'left',
-              cursor: 'pointer',
-              width: '100%',
-              fontFamily: 'inherit'
-            }}
-          >
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--txt-strong)', marginBottom: 2 }}>
-                {s.title}
-              </div>
-              <div style={{ fontSize: 11, opacity: 0.6 }}>{s.sub}</div>
-              {s.badge && (
-                <div style={{
-                  display: 'inline-block',
-                  marginTop: 5,
-                  fontSize: 9,
-                  fontWeight: 700,
-                  letterSpacing: '0.1em',
-                  padding: '2px 7px',
-                  borderRadius: 4,
-                  background: 'var(--bg-surface-2)',
-                  color: 'var(--txt-muted)'
-                }}>
-                  {s.badge}
-                </div>
-              )}
-            </div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-              strokeLinecap="round" strokeLinejoin="round"
-              style={{ width: 16, height: 16, opacity: 0.3, flexShrink: 0 }}>
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
-        ))}
+      {/* TODAY'S RECOVERY */}
+      <div className="dash-head">
+        <h2 className="h3" style={{ marginBottom: 0 }}>Today's recovery</h2>
+        {readiness.score != null && (
+          <span className="readiness-pill" style={{
+            color: `var(--${readiness.accent})`,
+            background: readiness.accent === 'moss' ? 'rgba(74,93,58,0.12)'
+              : readiness.accent === 'rust' ? 'rgba(176,74,46,0.12)'
+              : 'rgba(200,154,58,0.14)'
+          }}>
+            {readiness.estimated ? '~' : ''}{readiness.score}{readiness.estimated ? ' est' : ''}
+          </span>
+        )}
+      </div>
+
+      {dailyMetrics.length === 0 ? (
+        <button className="callout amber" style={{ width: '100%', textAlign: 'left', cursor: 'pointer', display: 'block' }} onClick={() => navigate('/tracking/wearables')}>
+          <strong>No recovery data yet.</strong> Add today's sleep, HRV and resting HR →
+        </button>
+      ) : (
+        <div className="stat-grid cols-3" style={{ marginBottom: 20 }}>
+          <div className="stat-card">
+            <div className="l">Sleep</div>
+            <div className="v">{readiness.vitals.sleepHrs ?? '—'}</div>
+            <div className="d">{readiness.vitals.sleepHrs != null ? 'hours' : ''}</div>
+          </div>
+          <div className="stat-card">
+            <div className="l">HRV</div>
+            <div className="v">{readiness.vitals.hrv ?? '—'}</div>
+            <div className="d">{readiness.vitals.hrv != null ? 'ms' : ''}</div>
+          </div>
+          <div className="stat-card">
+            <div className="l">Resting HR</div>
+            <div className="v">{readiness.vitals.rhr ?? '—'}</div>
+            <div className="d">{readiness.vitals.rhr != null ? 'bpm' : ''}</div>
+          </div>
+        </div>
+      )}
+
+      <button className="full-btn" style={{ marginTop: 4 }} onClick={() => navigate('/tracking/wearables')}>
+        {daysRecorded ? "Update today's metrics" : 'Add daily metrics'}
+      </button>
+
+      {/* ACTIVE INJURIES */}
+      {activeInjuries.length > 0 && (
+        <button className="callout" style={{ width: '100%', textAlign: 'left', cursor: 'pointer', display: 'block', marginTop: 18, borderLeftColor: 'var(--rust)' }} onClick={() => navigate('/tracking/injuries')}>
+          <strong>{activeInjuries.length} active {activeInjuries.length === 1 ? 'injury' : 'injuries'}.</strong>{' '}
+          {activeInjuries.map(i => i.title || i.body_part).filter(Boolean).join(' · ')} →
+        </button>
+      )}
+
+      {/* DEEP DIVES */}
+      <h2 className="h3" style={{ marginTop: 24 }}>Explore</h2>
+      <div className="link-list">
+        <LinkRow title="Trends" sub="Recovery & activity charts over time" onClick={() => navigate('/tracking/trends')} badge={daysRecorded >= 2 ? `${daysRecorded} days` : null} />
+        <LinkRow title="Daily metrics" sub="Sleep, HRV, resting HR, readiness — manual + Fitbit" onClick={() => navigate('/tracking/wearables')} />
+        <LinkRow title="Injury log" sub="Injuries, rehab plans, recovery" onClick={() => navigate('/tracking/injuries')} badge={activeInjuries.length ? `${activeInjuries.length} active` : null} />
       </div>
     </>
   );

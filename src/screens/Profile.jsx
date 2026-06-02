@@ -43,6 +43,22 @@ function Field({ label, value, onChange, type = 'text', placeholder = '', suffix
   );
 }
 
+// Canonical navigation row — shared visual language with Tracking/Wearables.
+function LinkRow({ title, sub, badge, onClick }) {
+  return (
+    <button className="link-row" onClick={onClick}>
+      <div className="lr-body">
+        <div className="lr-title">{title}</div>
+        <div className="lr-sub">{sub}</div>
+      </div>
+      {badge && <span className="lr-badge">{badge}</span>}
+      <svg className="lr-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </button>
+  );
+}
+
 export default function Profile() {
   const navigate = useNavigate();
   const profile = useTrainingStore(s => s.profile);
@@ -153,55 +169,29 @@ export default function Profile() {
       </div>
 
       <div className="h3">Injuries</div>
-      <button
-        onClick={() => navigate('/tracking/injuries')}
-        style={{
-          width: '100%', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit',
-          padding: '14px 16px', marginBottom: 22, borderRadius: 14,
-          background: activeInjuries.length ? 'rgba(176,74,46,0.06)' : 'var(--bg-surface)',
-          border: '1px solid ' + (activeInjuries.length ? 'rgba(176,74,46,0.22)' : 'var(--hairline)')
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--txt-strong)', marginBottom: 3 }}>
-              {activeInjuries.length === 0
-                ? 'No active injuries'
-                : activeInjuries.length + ' active ' + (activeInjuries.length === 1 ? 'injury' : 'injuries')}
-            </div>
-            <div style={{ fontSize: 12, color: 'var(--txt-muted)' }}>
-              {activeInjuries.length === 0
-                ? 'Tap to log an injury or view history'
-                : activeInjuries.map(i => i.title || i.body_part).filter(Boolean).join(' · ')}
-            </div>
-          </div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16, opacity: 0.3 }}>
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-        </div>
-      </button>
+      <div className="link-list" style={{ marginBottom: 22 }}>
+        <LinkRow
+          title={activeInjuries.length === 0
+            ? 'No active injuries'
+            : `${activeInjuries.length} active ${activeInjuries.length === 1 ? 'injury' : 'injuries'}`}
+          sub={activeInjuries.length === 0
+            ? 'Tap to log an injury or view history'
+            : activeInjuries.map(i => i.title || i.body_part).filter(Boolean).join(' · ')}
+          badge={activeInjuries.length ? `${activeInjuries.length} active` : null}
+          onClick={() => navigate('/tracking/injuries')}
+        />
+      </div>
 
       <div className="h3">Reference</div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div className="link-list">
         {[
           { path: '/profile/overview', title: '12-month overview', sub: 'Phase timeline' },
           { path: '/profile/decisions', title: 'Decision framework', sub: 'If/then responses to disruptions' },
           { path: '/profile/principles', title: 'Operating principles', sub: 'Non-negotiables' },
-          { path: '/profile/reassess', title: 'Quarterly reassessment', sub: 'Review and adapt the plan' }
+          { path: '/profile/reassess', title: 'Quarterly reassessment', sub: 'Review and adapt the plan' },
+          { path: '/settings', title: 'Settings', sub: 'Appearance, data, account' }
         ].map(item => (
-          <button key={item.path} onClick={() => navigate(item.path)} style={{
-            display: 'flex', alignItems: 'center', gap: 12, padding: '13px 16px',
-            background: 'var(--bg-surface)', border: '1px solid var(--hairline)',
-            borderRadius: 14, textAlign: 'left', cursor: 'pointer', width: '100%', fontFamily: 'inherit'
-          }}>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--txt-strong)', marginBottom: 2 }}>{item.title}</div>
-              <div style={{ fontSize: 11, opacity: 0.6 }}>{item.sub}</div>
-            </div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16, opacity: 0.3 }}>
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
+          <LinkRow key={item.path} title={item.title} sub={item.sub} onClick={() => navigate(item.path)} />
         ))}
       </div>
     </>

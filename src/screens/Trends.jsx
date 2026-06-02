@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 
 // Draws a simple line chart on a canvas given numeric data points
@@ -60,54 +61,75 @@ function drawChart(canvas, data, color) {
   });
 }
 
+// Wearable (daily_metrics) charts. `transform` adapts the stored unit for display.
 const CHARTS = [
-  { field: 'bw', label: 'Bodyweight (kg)', color: '#b04a2e' },
-  { field: 'rhr', label: 'Resting HR (bpm)', color: '#c89a3a' },
-  { field: 'sleep', label: 'Sleep score', color: '#4a5d3a' },
-  { field: 'rpe', label: 'Avg RPE', color: '#7a5d3a' },
-  { field: 'knee', label: 'Knee rating', color: '#7a3a4a' }
+  { field: 'readiness_score', label: 'Readiness', color: '#4a5d3a' },
+  { field: 'hrv_ms', label: 'HRV (ms)', color: '#4a5d3a' },
+  { field: 'resting_hr', label: 'Resting HR (bpm)', color: '#c89a3a' },
+  { field: 'sleep_duration_min', label: 'Sleep (hours)', color: '#2a3a44', transform: v => Math.round((v / 60) * 10) / 10 },
+  { field: 'steps', label: 'Steps', color: '#b04a2e' }
+];
+
+const RANGES = [
+  { id: '7d', label: '7 days', days: 7 },
+  { id: '30d', label: '30 days', days: 30 },
+  { id: 'all', label: 'All', days: Infinity }
 ];
 
 export default function Trends() {
-  const logs = useTrainingStore(state => state.logs);
-  const [range, setRange] = useState('12w');
+  const navigate = useNavigate();
+  const dailyMetrics = useTrainingStore(state => state.dailyMetrics);
+  const [range, setRange] = useState('30d');
   const canvasRefs = useRef({});
 
-  // Filter logs by range
-  let displayLogs = logs;
-  if (range === '4w') displayLogs = logs.slice(-4);
-  else if (range === '12w') displayLogs = logs.slice(-12);
+  // Oldest → newest, so the line reads left-to-right in time order.
+  const sorted = [...dailyMetrics].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  const days = RANGES.find(r => r.id === range).days;
+  const displayMetrics = days === Infinity ? sorted : sorted.slice(-days);
 
   useEffect(() => {
     CHARTS.forEach(c => {
       const canvas = canvasRefs.current[c.field];
-      const data = displayLogs.map(l => parseFloat(l[c.field])).filter(v => !isNaN(v));
+      const data = displayMetrics
+        .map(m => (m[c.field] == null ? NaN : (c.transform ? c.transform(m[c.field]) : m[c.field])))
+        .filter(v => !isNaN(v));
       drawChart(canvas, data, c.color);
     });
-  }, [displayLogs, range]);
+  }, [displayMetrics, range]);
 
-  if (logs.length === 0) {
+  if (dailyMetrics.length === 0) {
     return (
       <>
         <h1 className="h1">Trends</h1>
-        <p className="sub">Log at least 2 weekly check-ins to see trends.</p>
+        <p className="sub">No wearable data yet. Sync your Fitbit or add daily metrics to see trends.</p>
+        <button className="full-btn" onClick={() => navigate('/tracking/wearables')}>Add daily metrics</button>
       </>
     );
   }
 
+  const hasAny = CHARTS.some(c => displayMetrics.some(m => m[c.field] != null));
+
   return (
     <>
       <h1 className="h1">Trends</h1>
-      <p className="sub">Track your metrics across time. {logs.length} check-ins logged.</p>
+      <p className="sub">Recovery and activity from your wearable. {dailyMetrics.length} day{dailyMetrics.length !== 1 ? 's' : ''} recorded.</p>
 
       <div className="chart-filter" style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
-        <button className={range === '4w' ? 'active' : ''} onClick={() => setRange('4w')}>4 wks</button>
-        <button className={range === '12w' ? 'active' : ''} onClick={() => setRange('12w')}>12 wks</button>
-        <button className={range === 'all' ? 'active' : ''} onClick={() => setRange('all')}>All</button>
+        {RANGES.map(r => (
+          <button key={r.id} className={range === r.id ? 'active' : ''} onClick={() => setRange(r.id)}>{r.label}</button>
+        ))}
       </div>
 
+      {!hasAny && (
+        <div className="callout">
+          <strong>Not enough data in this range.</strong> Try a wider range, or sync more days from your wearable.
+        </div>
+      )}
+
       {CHARTS.map(c => {
-        const data = displayLogs.map(l => parseFloat(l[c.field])).filter(v => !isNaN(v));
+        const data = displayMetrics
+          .map(m => (m[c.field] == null ? NaN : (c.transform ? c.transform(m[c.field]) : m[c.field])))
+          .filter(v => !isNaN(v));
         if (data.length === 0) return null;
         return (
           <div key={c.field} className="chart-card">

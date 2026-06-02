@@ -28,7 +28,7 @@ import Reassess from './screens/Reassess.jsx';
 import Settings from './screens/Settings.jsx';
 
 const routeMeta = {
-  '/': { title: 'Hybrid', topLevel: true, tab: 'home' },
+  '/': { title: 'Hybrid', topLevel: true, tab: 'today' },
   '/phases': { title: 'Phases', topLevel: true, tab: 'phases' },
   '/phases/:phaseId': { title: 'Phase', topLevel: false, tab: 'phases' },
   '/phases/:phaseId/weeks/:weekNum': { title: 'Week', topLevel: false, tab: 'phases' },
@@ -46,7 +46,7 @@ const routeMeta = {
   '/profile/decisions': { title: 'Decisions', topLevel: false, tab: 'profile' },
   '/profile/principles': { title: 'Principles', topLevel: false, tab: 'profile' },
   '/profile/reassess': { title: 'Reassessment', topLevel: false, tab: 'profile' },
-  '/settings': { title: 'Settings', topLevel: true, tab: 'settings' }
+  '/settings': { title: 'Settings', topLevel: false, tab: 'profile' }
 };
 
 function matchRoute(pathname) {
@@ -59,7 +59,7 @@ function matchRoute(pathname) {
     const match = pParts.every((p, i) => p.startsWith(':') || p === aParts[i]);
     if (match) return routeMeta[pattern];
   }
-  return { title: 'Hybrid', topLevel: true, tab: 'home' };
+  return { title: 'Hybrid', topLevel: true, tab: 'today' };
 }
 
 export default function App() {
