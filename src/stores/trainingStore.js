@@ -124,6 +124,10 @@ export const useTrainingStore = create((set) => ({
     await Sync.uncompleteSession(templateRef);
     set(buildView());
   },
+  async cancelSession(templateRef) {
+    await Sync.cancelSession(templateRef);
+    set(buildView());
+  },
 
   // ----- Weekly check-ins -----
   async addLog(entry) {

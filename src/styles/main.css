@@ -1717,6 +1717,18 @@ html[data-theme="dark"] .pt-status.provisional { background: rgba(200,154,58,0.2
   padding: 14px;
 }
 .btn-secondary:active { background: var(--bg-surface-2); }
+.btn-text {
+  background: transparent;
+  border: none;
+  color: var(--txt-muted);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 10px;
+  cursor: pointer;
+}
+.btn-text:active { color: var(--rust); }
 
 /* Rating buttons */
 .rating-row { gap: 8px; }

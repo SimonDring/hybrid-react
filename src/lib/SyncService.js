@@ -293,6 +293,26 @@ export async function uncompleteSession(templateRef) {
   results.forEach(r => { if (r.error) logError('uncompleteSession', r.error); });
 }
 
+export async function cancelSession(templateRef) {
+  if (!canSync()) return Database.services.cancelSession(templateRef);
+  const userId = uid();
+  const session = Database.tables.sessions.find(s => s.template_ref === templateRef);
+  const log = session ? Database.tables.sessionLogs.find(l => l.session_id === session.id) : null;
+  Database.services.cancelSession(templateRef);
+  // Re-read so we push the reverted (pending, started_at null) state, not the
+  // pre-cancel snapshot.
+  const updated = Database.tables.sessions.find(s => s.template_ref === templateRef);
+  const ops = [];
+  if (updated) ops.push(supabase.from('sessions').upsert(clean(updated, userId), { onConflict: 'id' }));
+  if (log) ops.push(
+    supabase.from('session_logs')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', log.id)
+  );
+  const results = await Promise.all(ops);
+  results.forEach(r => { if (r.error) logError('cancelSession', r.error); });
+}
+
 // ---------- Weekly check-ins ----------
 
 export async function addCheckin(fields) {
@@ -475,7 +495,7 @@ export default {
   runSessionDMigration,
   pullFromSupabase,
   updateProfile, setGoals,
-  startSession, completeSession, uncompleteSession,
+  startSession, completeSession, uncompleteSession, cancelSession,
   addCheckin, deleteCheckin,
   upsertDailyMetric,
   setReassessAnswer,

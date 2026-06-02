@@ -483,6 +483,17 @@ export const services = {
     tablesApi.sessions.update(s.id, { status: 'pending', completed_at: null });
   },
 
+  // Cancel a session that was started (or completed) in error — revert it fully
+  // to "not started": clears started_at so a fresh start stamps a new time, and
+  // removes any log. Distinct from uncompleteSession, which keeps started_at.
+  cancelSession(templateRef) {
+    const s = tablesApi.sessions.find(x => x.template_ref === templateRef);
+    if (!s) return;
+    const log = tablesApi.sessionLogs.find(l => l.session_id === s.id);
+    if (log) tablesApi.sessionLogs.remove(log.id);
+    tablesApi.sessions.update(s.id, { status: 'pending', started_at: null, completed_at: null });
+  },
+
   addCheckin(fields) {
     const u = services.currentUser();
     return tablesApi.weeklyCheckins.create({

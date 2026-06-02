@@ -13,6 +13,7 @@ export default function SessionDetail() {
   const startSession = useTrainingStore(state => state.startSession);
   const completeSession = useTrainingStore(state => state.completeSession);
   const uncompleteSession = useTrainingStore(state => state.uncompleteSession);
+  const cancelSession = useTrainingStore(state => state.cancelSession);
 
   const [showForm, setShowForm] = useState(false);
   const [ratings, setRatings] = useState({ quality: null, energy: null, recovery: null });
@@ -40,6 +41,13 @@ export default function SessionDetail() {
   const handleStart = () => startSession(key);
 
   const toggleItem = (idx) => setChecked(toggleChecked(key, idx));
+
+  const handleCancel = () => {
+    if (!confirm('Started this by mistake? This clears the start time and resets it to not started. Your check-offs will be cleared.')) return;
+    cancelSession(key);
+    clearChecked(key);
+    setChecked([]);
+  };
 
   const handleSubmit = () => {
     completeSession(key, {
@@ -262,6 +270,13 @@ export default function SessionDetail() {
                 onClick={() => setShowForm(true)}
               >
                 Complete session
+              </button>
+              <button
+                className="btn-text"
+                style={{ marginTop: 8, width: '100%' }}
+                onClick={handleCancel}
+              >
+                Started by mistake? Cancel
               </button>
             </>
           )}
