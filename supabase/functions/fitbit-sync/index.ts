@@ -4,19 +4,23 @@
  * Fetches Fitbit data for a date range and writes to daily_metrics.
  * Called on app open (today only) and manually from the Wearables screen.
  *
- * Registration note: Fitbit new-app registration has moved to Google Cloud Console
- * via the Google Health API. The Fitbit Web API data endpoints (api.fitbit.com)
- * still work for apps with valid credentials. The API base URL is configurable
- * via env var so it can be updated if Google moves the endpoints.
+ * App registration is through Google Cloud Console (Google Health API).
+ * OAuth tokens are issued by Google (oauth2.googleapis.com).
+ *
+ * TODO: The data-fetching endpoints below still target api.fitbit.com.
+ * Once the Google Health API data endpoint structure is confirmed from their
+ * documentation, update FITBIT_API_BASE and the path strings in this file.
+ * Set FITBIT_API_BASE as a Supabase secret to switch without redeploying.
  *
  * Request: POST { date_from?: 'YYYY-MM-DD', date_to?: 'YYYY-MM-DD' }
  * Auth:    Supabase JWT in Authorization header (sent automatically by supabase client)
  *
  * Environment variables:
- *   FITBIT_CLIENT_ID      — OAuth client ID (from Google Cloud Console)
- *   FITBIT_CLIENT_SECRET  — OAuth client secret (from Google Cloud Console)
- *   FITBIT_TOKEN_URL      — (optional) token refresh endpoint
- *   FITBIT_API_BASE       — (optional) data API base, defaults to https://api.fitbit.com
+ *   FITBIT_CLIENT_ID      — Google OAuth client ID
+ *   FITBIT_CLIENT_SECRET  — Google OAuth client secret
+ *   FITBIT_TOKEN_URL      — (optional) defaults to https://oauth2.googleapis.com/token
+ *   FITBIT_API_BASE       — (optional) data API base; update when Google Health API
+ *                           endpoints are confirmed (currently defaults to api.fitbit.com)
  *
  * Auto-available: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY
  */
@@ -30,17 +34,17 @@ async function getAccessToken(supabase: any, connection: any): Promise<string> {
 
   const clientId     = Deno.env.get('FITBIT_CLIENT_ID')!
   const clientSecret = Deno.env.get('FITBIT_CLIENT_SECRET')!
-  const tokenUrl     = Deno.env.get('FITBIT_TOKEN_URL') ?? 'https://api.fitbit.com/oauth2/token'
+  const tokenUrl     = Deno.env.get('FITBIT_TOKEN_URL') ?? 'https://oauth2.googleapis.com/token'
 
+  // Google accepts client credentials in the POST body
   const res = await fetch(tokenUrl, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `Basic ${btoa(`${clientId}:${clientSecret}`)}`
-    },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
       grant_type:    'refresh_token',
-      refresh_token: connection.refresh_token
+      refresh_token: connection.refresh_token,
+      client_id:     clientId,
+      client_secret: clientSecret
     })
   })
 

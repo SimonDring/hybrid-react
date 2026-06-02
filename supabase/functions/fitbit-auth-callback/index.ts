@@ -1,20 +1,17 @@
 /**
  * fitbit-auth-callback — Supabase Edge Function
  *
- * Handles the OAuth 2.0 callback after the user authorises Fitbit access.
- * Exchanges the auth code for tokens, stores them, redirects back to the app.
+ * Handles the Google OAuth 2.0 callback after the user authorises Fitbit/Google
+ * Health API access. Exchanges the auth code for tokens and stores them.
  *
- * Registration note: Fitbit new-app registration has moved to Google Cloud Console
- * via the Google Health API. The Fitbit Web API endpoints (api.fitbit.com) still
- * work for data fetching, but OAuth credentials now come from Google. The token
- * and data API URLs are configurable via env vars so they can be updated without
- * a code change if Google changes the endpoints.
+ * App registration is through Google Cloud Console (Google Health API).
+ * OAuth is handled by Google accounts (accounts.google.com).
+ * Data is fetched from the Google Health API (see fitbit-sync).
  *
- * Environment variables (set in Supabase Dashboard → Settings → Edge Functions):
- *   FITBIT_CLIENT_ID      — OAuth client ID (from Google Cloud Console)
- *   FITBIT_CLIENT_SECRET  — OAuth client secret (from Google Cloud Console)
- *   FITBIT_TOKEN_URL      — (optional) defaults to https://api.fitbit.com/oauth2/token
- *                           Override if Google moves the token endpoint
+ * Environment variables (Supabase Dashboard → Settings → Edge Functions):
+ *   FITBIT_CLIENT_ID      — Google OAuth client ID
+ *   FITBIT_CLIENT_SECRET  — Google OAuth client secret
+ *   FITBIT_TOKEN_URL      — (optional) defaults to https://oauth2.googleapis.com/token
  *
  * Auto-available: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY
  */
@@ -39,21 +36,19 @@ Deno.serve(async (req: Request) => {
   const clientSecret = Deno.env.get('FITBIT_CLIENT_SECRET')!
   const supabaseUrl  = Deno.env.get('SUPABASE_URL')!
   const redirectUri  = `${supabaseUrl}/functions/v1/fitbit-auth-callback`
+  const tokenUrl     = Deno.env.get('FITBIT_TOKEN_URL') ?? 'https://oauth2.googleapis.com/token'
 
-  // Token URL is configurable — Fitbit's own endpoint is the default,
-  // but Google may route this differently for apps registered via Google Health API
-  const tokenUrl = Deno.env.get('FITBIT_TOKEN_URL') ?? 'https://api.fitbit.com/oauth2/token'
-
+  // Exchange auth code for access + refresh tokens
+  // Google accepts client credentials in the POST body (unlike Fitbit which used Basic auth)
   const tokenRes = await fetch(tokenUrl, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `Basic ${btoa(`${clientId}:${clientSecret}`)}`
-    },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
-      grant_type:   'authorization_code',
+      grant_type:    'authorization_code',
       code,
-      redirect_uri: redirectUri
+      redirect_uri:  redirectUri,
+      client_id:     clientId,
+      client_secret: clientSecret
     })
   })
 
@@ -64,6 +59,15 @@ Deno.serve(async (req: Request) => {
   }
 
   const tokens = await tokenRes.json()
+
+  // Google's token response has no user_id field (unlike Fitbit).
+  // We use the Supabase user ID (state param) as the identifier instead.
+  if (!tokens.refresh_token) {
+    // This happens if prompt=consent was missing from the auth URL.
+    // The user must disconnect and reconnect to force a new consent screen.
+    console.error('[fitbit-auth-callback] No refresh token in response')
+    return Response.redirect(`${APP_URL}?fitbit=error&reason=no_refresh_token`)
+  }
 
   const supabase = createClient(
     supabaseUrl,
@@ -77,7 +81,7 @@ Deno.serve(async (req: Request) => {
     .upsert({
       user_id:          state,
       provider:         'fitbit',
-      provider_user_id: tokens.user_id,
+      provider_user_id: null,   // not provided by Google OAuth
       access_token:     tokens.access_token,
       refresh_token:    tokens.refresh_token,
       expires_at:       expiresAt,

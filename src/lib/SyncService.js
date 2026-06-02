@@ -406,19 +406,22 @@ export async function addRecoveryLogEntry(injuryId, entry) {
 
 // ---------- Fitbit ----------
 
-// Build the Fitbit OAuth URL. Opens in the browser; the Edge Function handles the callback.
-// VITE_FITBIT_OAUTH_URL defaults to Fitbit's own auth page but can be overridden
-// if Google routes new-app registrations through a different authorization endpoint.
+// Build the Google Health API OAuth URL.
+// access_type=offline gets a refresh token so the app can sync without re-authorising.
+// prompt=consent forces the consent screen each time, which is required to receive
+// a refresh token even when the user has previously authorised.
 export function getFitbitAuthUrl(userId) {
   const clientId    = import.meta.env.VITE_FITBIT_CLIENT_ID;
-  const oauthBase   = import.meta.env.VITE_FITBIT_OAUTH_URL ?? 'https://www.fitbit.com/oauth2/authorize';
+  const oauthBase   = import.meta.env.VITE_FITBIT_OAUTH_URL ?? 'https://accounts.google.com/o/oauth2/v2/auth';
   const redirectUri = encodeURIComponent(
     `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fitbit-auth-callback`
   );
-  const scopes = encodeURIComponent(
-    'activity sleep heartrate oxygen_saturation respiratory_rate profile'
-  );
-  return `${oauthBase}?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&state=${userId}&expires_in=604800`;
+  const scopes = encodeURIComponent([
+    'https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly',
+    'https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly',
+    'https://www.googleapis.com/auth/googlehealth.sleep.readonly'
+  ].join(' '));
+  return `${oauthBase}?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&state=${userId}&access_type=offline&prompt=consent`;
 }
 
 // Check if Fitbit is connected for the signed-in user.
