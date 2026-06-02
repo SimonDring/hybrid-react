@@ -407,9 +407,8 @@ export async function addRecoveryLogEntry(injuryId, entry) {
 // ---------- Fitbit ----------
 
 // Build the Google Health API OAuth URL.
-// access_type=offline gets a refresh token so the app can sync without re-authorising.
-// prompt=consent forces the consent screen each time, which is required to receive
-// a refresh token even when the user has previously authorised.
+// access_type=offline gets a refresh token. prompt=consent forces the consent screen
+// so a refresh token is always issued (required on first connect and after scope changes).
 export function getFitbitAuthUrl(userId) {
   const clientId    = import.meta.env.VITE_FITBIT_CLIENT_ID;
   const oauthBase   = import.meta.env.VITE_FITBIT_OAUTH_URL ?? 'https://accounts.google.com/o/oauth2/v2/auth';
