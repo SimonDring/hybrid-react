@@ -160,7 +160,14 @@ export const useAuthStore = create((set, get) => ({
     set({ errorMessage: null });
     const { error } = await supabase.auth.updateUser({ password });
     if (error) {
-      set({ errorMessage: error.message });
+      // "Auth session missing!" means the (often old) session has lapsed. Bounce
+      // to sign-in so they can get a fresh session (e.g. via an email code) and
+      // try again — rather than showing a dead-end error.
+      if (/session/i.test(error.message)) {
+        set({ status: 'signed_out', user: null, errorMessage: 'Your session expired — sign in again, then set your password.' });
+      } else {
+        set({ errorMessage: error.message });
+      }
       return false;
     }
     set({ recoveryMode: false });

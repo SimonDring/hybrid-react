@@ -5,6 +5,9 @@
  *  - Create account: name + email + password (gated by the invite allowlist —
  *                    the server rejects emails that aren't invited).
  *  - Forgot password: emails a reset link.
+ *  - Code sign-in: emails a 6-digit code (no password). The most PWA-friendly
+ *    way in — and the only way back for older accounts that never set a
+ *    password. Once signed in this way, a password can be set in Settings.
  *
  * Account creation may require email confirmation (a Supabase Auth setting).
  * When it does, signUp returns no session and we show a "check your email" note.
@@ -50,9 +53,14 @@ export default function Login() {
   const signUp              = useAuthStore(s => s.signUp);
   const signInWithPassword  = useAuthStore(s => s.signInWithPassword);
   const sendPasswordReset   = useAuthStore(s => s.sendPasswordReset);
+  const signInWithEmail     = useAuthStore(s => s.signInWithEmail);
+  const verifyOtp           = useAuthStore(s => s.verifyOtp);
   const resetLinkSent       = useAuthStore(s => s.resetLinkSent);
   const signingUp           = useAuthStore(s => s.signingUp);
   const signingIn           = useAuthStore(s => s.signingIn);
+  const sendingLink         = useAuthStore(s => s.sendingLink);
+  const verifyingOtp        = useAuthStore(s => s.verifyingOtp);
+  const linkSentTo          = useAuthStore(s => s.linkSentTo);
   const resetSent           = useAuthStore(s => s.resetSent);
   const confirmEmailSent    = useAuthStore(s => s.confirmEmailSent);
   const errorMessage        = useAuthStore(s => s.errorMessage);
@@ -60,13 +68,22 @@ export default function Login() {
 
   const [mode, setMode]   = useState('signin');   // 'signin' | 'signup'
   const [forgot, setForgot] = useState(false);
+  const [otpMode, setOtpMode] = useState(false);
   const [name, setName]     = useState('');
   const [email, setEmail]   = useState('');
   const [password, setPassword] = useState('');
+  const [code, setCode]     = useState('');
 
   const validEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim());
   const validPassword = password.length >= 6;
   const validName = name.trim().length > 0;
+  const validCode = /^\d{6}$/.test(code.trim());
+
+  const handleCodeChange = (e) => {
+    const val = e.target.value.replace(/\D/g, '').slice(0, 6);
+    setCode(val);
+    if (val.length === 6) verifyOtp(linkSentTo, val);  // auto-submit at 6 digits
+  };
 
   const busy = signingUp || signingIn;
   const canSignIn = validEmail && validPassword && !busy;
@@ -78,7 +95,7 @@ export default function Login() {
   };
   const submitReset = () => { if (validEmail) sendPasswordReset(email); };
 
-  const startOver = () => { resetLinkSent(); setForgot(false); setPassword(''); };
+  const startOver = () => { resetLinkSent(); setForgot(false); setOtpMode(false); setPassword(''); setCode(''); };
 
   // ---- Confirm-email state (sign-up with email confirmation on) ----
   if (confirmEmailSent) {
@@ -110,6 +127,49 @@ export default function Login() {
               Send reset link
             </button>
             <button onClick={startOver} style={BTN_GHOST}>Back to sign in</button>
+          </>
+        )}
+        {errorMessage && <p style={{ fontSize: 13, color: 'var(--rust)', marginTop: 14 }}>{errorMessage}</p>}
+      </Shell>
+    );
+  }
+
+  // ---- Code (OTP) sign-in: no password, works well inside an iOS PWA ----
+  if (otpMode) {
+    return (
+      <Shell
+        heading={linkSentTo ? 'Enter your code' : 'Sign in with a code'}
+        sub={linkSentTo
+          ? `We sent a 6-digit code to ${linkSentTo}. Enter it to sign in.`
+          : 'We’ll email you a 6-digit code — no password needed.'}
+      >
+        {!linkSentTo ? (
+          <>
+            <input type="email" inputMode="email" autoCapitalize="off" autoCorrect="off"
+              placeholder="you@example.com" value={email}
+              onChange={e => setEmail(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && validEmail && signInWithEmail(email)} style={INPUT} />
+            <button onClick={() => validEmail && signInWithEmail(email)}
+              disabled={!validEmail || sendingLink} style={BTN_PRIMARY(validEmail && !sendingLink)}>
+              {sendingLink ? 'Sending…' : 'Email me a code'}
+            </button>
+            <button onClick={() => { setOtpMode(false); useAuthStore.setState({ errorMessage: null }); }} style={BTN_GHOST}>
+              Use a password instead
+            </button>
+          </>
+        ) : (
+          <>
+            <input type="text" inputMode="numeric" autoComplete="one-time-code"
+              placeholder="000000" value={code} onChange={handleCodeChange}
+              onKeyDown={e => e.key === 'Enter' && validCode && verifyOtp(linkSentTo, code)}
+              style={{ ...INPUT, fontSize: 28, letterSpacing: '0.25em', textAlign: 'center' }} autoFocus />
+            <button onClick={() => validCode && verifyOtp(linkSentTo, code)}
+              disabled={!validCode || verifyingOtp} style={BTN_PRIMARY(validCode && !verifyingOtp)}>
+              {verifyingOtp ? 'Verifying…' : 'Sign in'}
+            </button>
+            <button onClick={() => { resetLinkSent(); setCode(''); }} style={BTN_GHOST}>Use a different email</button>
+            <button onClick={() => { setCode(''); signInWithEmail(linkSentTo); }}
+              style={{ ...BTN_GHOST, border: 'none', fontSize: 13, marginTop: 4 }}>Resend code</button>
           </>
         )}
         {errorMessage && <p style={{ fontSize: 13, color: 'var(--rust)', marginTop: 14 }}>{errorMessage}</p>}
@@ -152,10 +212,14 @@ export default function Login() {
       </button>
 
       {!isSignup && (
-        <button onClick={() => { setForgot(true); useAuthStore.setState({ errorMessage: null }); }}
-          style={{ ...LINK_BTN, display: 'block', margin: '14px auto 0' }}>
-          Forgot password?
-        </button>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 14 }}>
+          <button onClick={() => { setForgot(true); useAuthStore.setState({ errorMessage: null }); }} style={LINK_BTN}>
+            Forgot password?
+          </button>
+          <button onClick={() => { setOtpMode(true); useAuthStore.setState({ errorMessage: null }); }} style={LINK_BTN}>
+            Email me a code
+          </button>
+        </div>
       )}
 
       {errorMessage && <p style={{ fontSize: 13, color: 'var(--rust)', marginTop: 14 }}>{errorMessage}</p>}
