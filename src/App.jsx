@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 
 import { useAuthStore } from './stores/authStore.js';
 import Login from './screens/Login.jsx';
+import SetNewPassword from './screens/SetNewPassword.jsx';
 
 import TopBar from './components/TopBar.jsx';
 import TabBar from './components/TabBar.jsx';
@@ -69,6 +70,7 @@ export default function App() {
   const meta = matchRoute(location.pathname);
 
   const authStatus = useAuthStore(s => s.status);
+  const recoveryMode = useAuthStore(s => s.recoveryMode);
   const initAuth = useAuthStore(s => s.init);
 
   // Check for an existing session once on mount
@@ -90,6 +92,11 @@ export default function App() {
   // Signed out (or Supabase not configured) → show Login
   if (authStatus === 'signed_out' || authStatus === 'not_configured') {
     return <Login />;
+  }
+
+  // A password-reset link opened the app → prompt for a new password first
+  if (recoveryMode) {
+    return <SetNewPassword />;
   }
 
   // Signed in → the app

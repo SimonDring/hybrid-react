@@ -1,11 +1,13 @@
 /**
- * Login screen — two-step email OTP sign-in.
+ * Login screen — email + password accounts with a "create account" mode.
  *
- * Step 1: user enters their email → Supabase sends a 6-digit code.
- * Step 2: user enters the code → verifyOtp() signs them in inside the app.
+ *  - Sign in:        existing users enter email + password.
+ *  - Create account: name + email + password (gated by the invite allowlist —
+ *                    the server rejects emails that aren't invited).
+ *  - Forgot password: emails a reset link.
  *
- * This avoids the magic-link redirect problem on iOS PWAs, where clicking a
- * link in Mail opens Safari (a separate context) instead of the home screen app.
+ * Account creation may require email confirmation (a Supabase Auth setting).
+ * When it does, signUp returns no session and we show a "check your email" note.
  */
 
 import { useState } from 'react';
@@ -33,32 +35,149 @@ const BTN_GHOST = {
   cursor: 'pointer', fontFamily: 'inherit', marginTop: 10
 };
 
-export default function Login() {
-  const signInWithEmail = useAuthStore(s => s.signInWithEmail);
-  const verifyOtp       = useAuthStore(s => s.verifyOtp);
-  const resetLinkSent   = useAuthStore(s => s.resetLinkSent);
-  const sendingLink     = useAuthStore(s => s.sendingLink);
-  const verifyingOtp    = useAuthStore(s => s.verifyingOtp);
-  const linkSentTo      = useAuthStore(s => s.linkSentTo);
-  const errorMessage    = useAuthStore(s => s.errorMessage);
-  const status          = useAuthStore(s => s.status);
+const LINK_BTN = {
+  background: 'none', border: 'none', color: 'var(--rust)', fontSize: 13,
+  fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', padding: 0
+};
 
-  const [email, setEmail] = useState('');
-  const [code, setCode]   = useState('');
+const NOTICE = {
+  padding: '14px 16px', borderRadius: 12, marginBottom: 20,
+  background: 'rgba(74,93,58,0.10)', border: '1px solid rgba(74,93,58,0.30)',
+  fontSize: 13, lineHeight: 1.5, color: 'var(--txt-body)'
+};
+
+export default function Login() {
+  const signUp              = useAuthStore(s => s.signUp);
+  const signInWithPassword  = useAuthStore(s => s.signInWithPassword);
+  const sendPasswordReset   = useAuthStore(s => s.sendPasswordReset);
+  const resetLinkSent       = useAuthStore(s => s.resetLinkSent);
+  const signingUp           = useAuthStore(s => s.signingUp);
+  const signingIn           = useAuthStore(s => s.signingIn);
+  const resetSent           = useAuthStore(s => s.resetSent);
+  const confirmEmailSent    = useAuthStore(s => s.confirmEmailSent);
+  const errorMessage        = useAuthStore(s => s.errorMessage);
+  const status              = useAuthStore(s => s.status);
+
+  const [mode, setMode]   = useState('signin');   // 'signin' | 'signup'
+  const [forgot, setForgot] = useState(false);
+  const [name, setName]     = useState('');
+  const [email, setEmail]   = useState('');
+  const [password, setPassword] = useState('');
 
   const validEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim());
-  const validCode  = /^\d{6}$/.test(code.trim());
+  const validPassword = password.length >= 6;
+  const validName = name.trim().length > 0;
 
-  const submitEmail = () => { if (validEmail) signInWithEmail(email); };
-  const submitCode  = () => { if (validCode)  verifyOtp(linkSentTo, code); };
+  const busy = signingUp || signingIn;
+  const canSignIn = validEmail && validPassword && !busy;
+  const canSignUp = validName && validEmail && validPassword && !busy;
 
-  const handleCodeChange = (e) => {
-    const val = e.target.value.replace(/\D/g, '').slice(0, 6);
-    setCode(val);
-    // Auto-submit once 6 digits are entered
-    if (val.length === 6) verifyOtp(linkSentTo, val);
+  const submit = () => {
+    if (mode === 'signup') { if (canSignUp) signUp(email, password, name); }
+    else                   { if (canSignIn) signInWithPassword(email, password); }
   };
+  const submitReset = () => { if (validEmail) sendPasswordReset(email); };
 
+  const startOver = () => { resetLinkSent(); setForgot(false); setPassword(''); };
+
+  // ---- Confirm-email state (sign-up with email confirmation on) ----
+  if (confirmEmailSent) {
+    return (
+      <Shell heading="Check your email"
+             sub={`We sent a confirmation link to ${confirmEmailSent}. Click it to finish creating your account, then come back and sign in.`}>
+        <button onClick={startOver} style={BTN_GHOST}>Back to sign in</button>
+      </Shell>
+    );
+  }
+
+  // ---- Forgot-password state ----
+  if (forgot) {
+    return (
+      <Shell heading="Reset password"
+             sub="Enter your email and we’ll send you a link to set a new password.">
+        {resetSent ? (
+          <>
+            <div style={NOTICE}>If an account exists for {email.trim()}, a reset link is on its way.</div>
+            <button onClick={startOver} style={BTN_GHOST}>Back to sign in</button>
+          </>
+        ) : (
+          <>
+            <input type="email" inputMode="email" autoCapitalize="off" autoCorrect="off"
+              placeholder="you@example.com" value={email}
+              onChange={e => setEmail(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && submitReset()} style={INPUT} />
+            <button onClick={submitReset} disabled={!validEmail} style={BTN_PRIMARY(validEmail)}>
+              Send reset link
+            </button>
+            <button onClick={startOver} style={BTN_GHOST}>Back to sign in</button>
+          </>
+        )}
+        {errorMessage && <p style={{ fontSize: 13, color: 'var(--rust)', marginTop: 14 }}>{errorMessage}</p>}
+      </Shell>
+    );
+  }
+
+  // ---- Main sign-in / create-account form ----
+  const isSignup = mode === 'signup';
+  return (
+    <Shell
+      heading={isSignup ? 'Create your account' : 'Sign in'}
+      sub={isSignup
+        ? 'Set up your account to start building your plan. Accounts are invite-only during testing.'
+        : 'Welcome back. Enter your email and password.'}
+    >
+      {status === 'not_configured' && (
+        <div style={{ ...NOTICE, background: 'rgba(176,74,46,0.08)', border: '1px solid rgba(176,74,46,0.25)' }}>
+          Supabase isn't configured yet. Add your keys to <code>.env.local</code> and restart the dev server.
+        </div>
+      )}
+
+      {isSignup && (
+        <input type="text" autoCapitalize="words" placeholder="Your name"
+          value={name} onChange={e => setName(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && submit()} style={INPUT} />
+      )}
+      <input type="email" inputMode="email" autoCapitalize="off" autoCorrect="off"
+        placeholder="you@example.com" value={email}
+        onChange={e => setEmail(e.target.value)}
+        onKeyDown={e => e.key === 'Enter' && submit()} style={INPUT} />
+      <input type="password" autoComplete={isSignup ? 'new-password' : 'current-password'}
+        placeholder={isSignup ? 'Choose a password (min 6 characters)' : 'Password'}
+        value={password} onChange={e => setPassword(e.target.value)}
+        onKeyDown={e => e.key === 'Enter' && submit()} style={INPUT} />
+
+      <button onClick={submit} disabled={isSignup ? !canSignUp : !canSignIn}
+        style={BTN_PRIMARY(isSignup ? canSignUp : canSignIn)}>
+        {busy ? (isSignup ? 'Creating…' : 'Signing in…') : (isSignup ? 'Create account' : 'Sign in')}
+      </button>
+
+      {!isSignup && (
+        <button onClick={() => { setForgot(true); useAuthStore.setState({ errorMessage: null }); }}
+          style={{ ...LINK_BTN, display: 'block', margin: '14px auto 0' }}>
+          Forgot password?
+        </button>
+      )}
+
+      {errorMessage && <p style={{ fontSize: 13, color: 'var(--rust)', marginTop: 14 }}>{errorMessage}</p>}
+
+      <p style={{ fontSize: 13, color: 'var(--txt-muted)', marginTop: 24, textAlign: 'center' }}>
+        {isSignup ? 'Already have an account?' : 'New here?'}{' '}
+        <button
+          onClick={() => { setMode(isSignup ? 'signin' : 'signup'); setPassword(''); useAuthStore.setState({ errorMessage: null }); }}
+          style={LINK_BTN}>
+          {isSignup ? 'Sign in' : 'Create an account'}
+        </button>
+      </p>
+
+      <p style={{ fontSize: 11, opacity: 0.5, marginTop: 24, lineHeight: 1.5 }}>
+        Your data is private to your account. Signing in lets it sync across your devices.
+      </p>
+    </Shell>
+  );
+}
+
+// Shared page chrome so every auth state looks consistent.
+function Shell({ heading, sub, children }) {
   return (
     <div style={{
       minHeight: '100dvh', display: 'flex', flexDirection: 'column',
@@ -68,86 +187,10 @@ export default function Login() {
         <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: 10 }}>
           Hybrid Training
         </div>
-        <h1 className="h1" style={{ marginBottom: 8 }}>
-          {linkSentTo ? 'Check your email' : 'Sign in'}
-        </h1>
-        <p className="sub" style={{ marginBottom: 0 }}>
-          {linkSentTo
-            ? `We sent a 6-digit code to ${linkSentTo}. Enter it below to sign in.`
-            : 'Enter your email and we’ll send you a 6-digit sign-in code. No password needed.'}
-        </p>
+        <h1 className="h1" style={{ marginBottom: 8 }}>{heading}</h1>
+        <p className="sub" style={{ marginBottom: 0 }}>{sub}</p>
       </div>
-
-      {status === 'not_configured' && (
-        <div style={{
-          padding: '14px 16px', borderRadius: 12, marginBottom: 20,
-          background: 'rgba(176,74,46,0.08)', border: '1px solid rgba(176,74,46,0.25)',
-          fontSize: 13, lineHeight: 1.5, color: 'var(--txt-body)'
-        }}>
-          Supabase isn't configured yet. Add your keys to <code>.env.local</code> and restart the dev server.
-        </div>
-      )}
-
-      {!linkSentTo ? (
-        <>
-          <input
-            type="email"
-            inputMode="email"
-            autoCapitalize="off"
-            autoCorrect="off"
-            placeholder="you@example.com"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && submitEmail()}
-            style={INPUT}
-          />
-          <button
-            onClick={submitEmail}
-            disabled={!validEmail || sendingLink}
-            style={BTN_PRIMARY(validEmail && !sendingLink)}
-          >
-            {sendingLink ? 'Sending…' : 'Send code'}
-          </button>
-        </>
-      ) : (
-        <>
-          <input
-            type="text"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            placeholder="000000"
-            value={code}
-            onChange={handleCodeChange}
-            onKeyDown={e => e.key === 'Enter' && submitCode()}
-            style={{ ...INPUT, fontSize: 28, letterSpacing: '0.25em', textAlign: 'center' }}
-            autoFocus
-          />
-          <button
-            onClick={submitCode}
-            disabled={!validCode || verifyingOtp}
-            style={BTN_PRIMARY(validCode && !verifyingOtp)}
-          >
-            {verifyingOtp ? 'Verifying…' : 'Sign in'}
-          </button>
-          <button onClick={() => { resetLinkSent(); setCode(''); }} style={BTN_GHOST}>
-            Use a different email
-          </button>
-          <button
-            onClick={() => { setCode(''); signInWithEmail(linkSentTo); }}
-            style={{ ...BTN_GHOST, border: 'none', color: 'var(--txt-muted)', fontSize: 13, marginTop: 4 }}
-          >
-            Resend code
-          </button>
-        </>
-      )}
-
-      {errorMessage && (
-        <p style={{ fontSize: 13, color: 'var(--rust)', marginTop: 14 }}>{errorMessage}</p>
-      )}
-
-      <p style={{ fontSize: 11, opacity: 0.5, marginTop: 28, lineHeight: 1.5 }}>
-        Your data is private to your account. Signing in lets it sync across your devices.
-      </p>
+      {children}
     </div>
   );
 }

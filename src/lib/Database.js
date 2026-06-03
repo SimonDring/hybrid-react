@@ -247,24 +247,24 @@ export const tablesApi = {
 function ensureDefaultUserAndPlan() {
   let user = tablesApi.users.find(u => true);
   if (!user) {
+    // Generic empty profile. Real identity comes from the signed-in Supabase
+    // user (pulled in on sign-in); onboarding (Stage B) fills goals/availability.
+    // Do NOT seed any one person's goals/injuries here — this is shared default
+    // scaffolding for local-only / pre-sync mode.
     user = tablesApi.users.create({
-      name: 'Athlete',
+      name: '',
       email: null,
       profile: {
-        age: 28,
-        bodyweight_kg: 80,
+        age: null,
+        bodyweight_kg: null,
         height_cm: null,
         sex: null,
-        injuries: [{ id: uuid(), label: 'Left patellar tendon — mild, improving', flagged_at: now() }],
-        goals: [
-          { id: uuid(), rank: 1, label: '1:40 half marathon', target_date: '2026-12-31' },
-          { id: uuid(), rank: 2, label: '2.5 km continuous swim', target_date: '2026-12-31' },
-          { id: uuid(), rank: 3, label: 'Ski-ready', target_date: '2026-11-01' }
-        ]
+        injuries: [],
+        goals: []
       },
       settings: {
         units: 'metric',
-        default_pool_length_m: 20,
+        default_pool_length_m: 25,
         theme: 'paper'
       }
     });
@@ -273,12 +273,12 @@ function ensureDefaultUserAndPlan() {
   if (!plan) {
     plan = tablesApi.plans.create({
       user_id: user.id,
-      name: 'Hybrid 12-Month Plan',
-      description: 'Built to last, not to peak. Foundation → Run reentry → Half build → Pre-ski + peak → Ski season.',
+      name: 'Training plan',
+      description: '',
       start_date: null,
       target_end_date: null,
       status: 'active',
-      template_ref: 'hybrid_v1'
+      template_ref: null
     });
   }
   return { user, plan };
