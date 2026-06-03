@@ -9,8 +9,6 @@
  */
 
 import { useTrainingStore } from '../stores/trainingStore.js';
-import { useAuthStore } from '../stores/authStore.js';
-import { getFitbitAuthUrl } from '../lib/SyncService.js';
 import { computeReadiness, readinessFor, sleepScoreFor } from '../lib/Readiness.js';
 
 // A value box that shows "est" when the number is derived rather than measured.
@@ -38,12 +36,7 @@ function Vital({ label, value, suffix }) {
 }
 
 export default function Wearables() {
-  const dailyMetrics            = useTrainingStore(s => s.dailyMetrics);
-  const fitbitConnection        = useTrainingStore(s => s.fitbitConnection);
-  const fitbitSyncing           = useTrainingStore(s => s.fitbitSyncing);
-  const syncFitbitToday         = useTrainingStore(s => s.syncFitbitToday);
-  const refreshFitbitConnection = useTrainingStore(s => s.refreshFitbitConnection);
-  const user = useAuthStore(s => s.user);
+  const dailyMetrics = useTrainingStore(s => s.dailyMetrics);
 
   // Newest first, plus oldest-first for baseline look-ups.
   const desc = [...dailyMetrics].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
@@ -60,15 +53,6 @@ export default function Wearables() {
   const latestReadiness = latest ? readinessFor(latest, priorFor(latest)) : null;
   const latestSleep = latest ? sleepScoreFor(latest) : null;
 
-  const connectFitbit = () => {
-    if (!user) return;
-    window.open(getFitbitAuthUrl(user.id), '_blank');
-  };
-
-  const lastSynced = fitbitConnection?.last_synced_at
-    ? new Date(fitbitConnection.last_synced_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    : null;
-
   const recent = desc.slice(0, 7);
 
   return (
@@ -76,62 +60,9 @@ export default function Wearables() {
       <h1 className="h1">Daily metrics</h1>
       <p className="sub">Recovery and activity straight from your wearable. Readiness and sleep scores are estimated from the underlying data where your device doesn't supply them.</p>
 
-      {/* Fitbit connection panel */}
-      <div style={{
-        padding: '14px 16px', borderRadius: 12, marginBottom: 20,
-        border: '1px solid var(--hairline)', background: 'var(--bg-surface)'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt-strong)' }}>
-              {fitbitConnection ? 'Fitbit connected' : 'Connect Fitbit'}
-            </div>
-            <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 2 }}>
-              {fitbitConnection
-                ? (lastSynced ? `Last synced today at ${lastSynced}` : 'Not yet synced today')
-                : 'Auto-fills sleep, HR, HRV, steps, and more'}
-            </div>
-          </div>
-          {!fitbitConnection ? (
-            <button onClick={connectFitbit} style={{
-              padding: '8px 14px', borderRadius: 9, border: 'none',
-              background: 'var(--rust)', color: '#fff',
-              fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit'
-            }}>
-              Connect
-            </button>
-          ) : (
-            <button
-              onClick={syncFitbitToday}
-              disabled={fitbitSyncing}
-              style={{
-                padding: '8px 14px', borderRadius: 9,
-                border: '1px solid var(--hairline)', background: 'transparent',
-                color: fitbitSyncing ? 'var(--txt-muted)' : 'var(--txt-strong)',
-                fontSize: 13, fontWeight: 600, cursor: fitbitSyncing ? 'default' : 'pointer',
-                fontFamily: 'inherit'
-              }}
-            >
-              {fitbitSyncing ? 'Syncing…' : 'Sync now'}
-            </button>
-          )}
-        </div>
-        {!fitbitConnection && (
-          <button
-            onClick={refreshFitbitConnection}
-            style={{
-              fontSize: 11, color: 'var(--txt-muted)', background: 'none',
-              border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit', marginTop: 8
-            }}
-          >
-            Already connected? Tap to check status
-          </button>
-        )}
-      </div>
-
       {!latest ? (
         <div className="callout amber">
-          <strong>No data yet.</strong> Connect your Fitbit and sync to start seeing your recovery and activity here.
+          <strong>No data yet.</strong> Connect your wearable in Settings → Integrations, then sync to start seeing your recovery and activity here.
         </div>
       ) : (
         <>

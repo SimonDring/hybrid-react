@@ -22,10 +22,7 @@ import Trends from './screens/Trends.jsx';
 import Log from './screens/Log.jsx';
 import Profile from './screens/Profile.jsx';
 import Injuries from './screens/Injuries.jsx';
-import Overview from './screens/Overview.jsx';
-import Decisions from './screens/Decisions.jsx';
-import Principles from './screens/Principles.jsx';
-import Reassess from './screens/Reassess.jsx';
+import QuarterlyReview from './screens/QuarterlyReview.jsx';
 import Settings from './screens/Settings.jsx';
 import Coach from './screens/Coach.jsx';
 
@@ -44,10 +41,7 @@ const routeMeta = {
   '/tracking/injuries': { title: 'Injury log', topLevel: false, tab: 'tracking' },
   '/profile': { title: 'Profile', topLevel: true, tab: 'profile' },
   '/profile/injuries': { title: 'Injury log', topLevel: false, tab: 'profile' },
-  '/profile/overview': { title: 'Overview', topLevel: false, tab: 'profile' },
-  '/profile/decisions': { title: 'Decisions', topLevel: false, tab: 'profile' },
-  '/profile/principles': { title: 'Principles', topLevel: false, tab: 'profile' },
-  '/profile/reassess': { title: 'Reassessment', topLevel: false, tab: 'profile' },
+  '/profile/review': { title: 'Quarterly review', topLevel: false, tab: 'profile' },
   '/settings': { title: 'Settings', topLevel: false, tab: 'profile' },
   '/coach': { title: 'Coach', topLevel: true, tab: 'coach' }
 };
@@ -120,10 +114,7 @@ export default function App() {
           <Route path="/tracking/injuries" element={<Injuries />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/injuries" element={<Injuries />} />
-          <Route path="/profile/overview" element={<Overview />} />
-          <Route path="/profile/decisions" element={<Decisions />} />
-          <Route path="/profile/principles" element={<Principles />} />
-          <Route path="/profile/reassess" element={<Reassess />} />
+          <Route path="/profile/review" element={<QuarterlyReview />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/coach" element={<Coach />} />
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import { useAuthStore } from '../stores/authStore.js';
 import Database from '../lib/Database.js';
-import { runSessionDMigration } from '../lib/SyncService.js';
+import { runSessionDMigration, getFitbitAuthUrl } from '../lib/SyncService.js';
 
 export default function Settings() {
   const [theme, setTheme] = useState(localStorage.getItem('htp_theme') || 'auto');
@@ -11,9 +11,21 @@ export default function Settings() {
   );
   const replaceAll = useTrainingStore(state => state.replaceAll);
   const resetAll = useTrainingStore(state => state.resetAll);
+  const fitbitConnection        = useTrainingStore(s => s.fitbitConnection);
+  const fitbitSyncing           = useTrainingStore(s => s.fitbitSyncing);
+  const syncFitbitToday         = useTrainingStore(s => s.syncFitbitToday);
+  const refreshFitbitConnection = useTrainingStore(s => s.refreshFitbitConnection);
   const authStatus = useAuthStore(s => s.status);
   const user = useAuthStore(s => s.user);
   const signOut = useAuthStore(s => s.signOut);
+
+  const connectFitbit = () => {
+    if (!user) return;
+    window.open(getFitbitAuthUrl(user.id), '_blank');
+  };
+  const lastSynced = fitbitConnection?.last_synced_at
+    ? new Date(fitbitConnection.last_synced_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    : null;
 
   const handleSetTheme = (newTheme) => {
     setTheme(newTheme);
@@ -104,6 +116,62 @@ export default function Settings() {
           </div>
         </div>
       </div>
+
+      <h2 className="h3">Integrations</h2>
+      <div style={{
+        padding: '14px 16px', borderRadius: 12, marginBottom: 8,
+        border: '1px solid var(--hairline)', background: 'var(--bg-surface)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt-strong)' }}>
+              {fitbitConnection ? 'Fitbit connected' : 'Connect Fitbit'}
+            </div>
+            <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 2 }}>
+              {fitbitConnection
+                ? (lastSynced ? `Last synced today at ${lastSynced}` : 'Not yet synced today')
+                : 'Auto-fills sleep, HR, HRV, steps, and more'}
+            </div>
+          </div>
+          {!fitbitConnection ? (
+            <button onClick={connectFitbit} style={{
+              padding: '8px 14px', borderRadius: 9, border: 'none',
+              background: 'var(--rust)', color: '#fff',
+              fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit'
+            }}>
+              Connect
+            </button>
+          ) : (
+            <button
+              onClick={syncFitbitToday}
+              disabled={fitbitSyncing}
+              style={{
+                padding: '8px 14px', borderRadius: 9,
+                border: '1px solid var(--hairline)', background: 'transparent',
+                color: fitbitSyncing ? 'var(--txt-muted)' : 'var(--txt-strong)',
+                fontSize: 13, fontWeight: 600, cursor: fitbitSyncing ? 'default' : 'pointer',
+                fontFamily: 'inherit'
+              }}
+            >
+              {fitbitSyncing ? 'Syncing…' : 'Sync now'}
+            </button>
+          )}
+        </div>
+        {!fitbitConnection && (
+          <button
+            onClick={refreshFitbitConnection}
+            style={{
+              fontSize: 11, color: 'var(--txt-muted)', background: 'none',
+              border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit', marginTop: 8
+            }}
+          >
+            Already connected? Tap to check status
+          </button>
+        )}
+      </div>
+      <p className="sub" style={{ fontSize: 11, marginBottom: 20 }}>
+        Your synced recovery and activity data appears under Tracking → Daily metrics.
+      </p>
 
       <h2 className="h3">Data</h2>
       <div className="settings-group">

@@ -1,49 +1,52 @@
 /**
- * Profile screen.
+ * Profile screen — READ-ONLY view of everything that informs the plan.
  *
- * Sections, top to bottom:
- *   1. General info — name, age, height, weight (persisted to Database users.profile)
- *   2. Goals — ranked, editable, persisted to users.profile
- *   3. Injuries — SUMMARY of active injuries with a link to the full log in Tracking
- *   4. Reference links (overview, decisions, principles, reassess)
+ * This is the human-readable mirror of what the AI coach sees: baseline,
+ * ranked goals, active injuries, and a snapshot of the active plan. It is
+ * intentionally NOT editable here — details are captured during onboarding
+ * (Stage B) and changes flow through the AI coach (Stage 5), not manual edits.
  *
- * All data lives in the Database layer (users.profile + injuries table), NOT a
- * separate localStorage key. When AI integration arrives (Stage 5), the
- * plan-generation prompt reads exactly this data with no extra wiring.
+ * App, account, and wearable integration live behind the cogwheel (Settings),
+ * reachable from the TopBar on this top-level screen and the link at the bottom.
+ *
+ * Data source: users.profile (name/age/height/weight/goals) + the injuries
+ * table + the plan template, all via the store. No separate localStorage keys.
  */
 
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
+import * as Plan from '../data/Plan.js';
 
-function Field({ label, value, onChange, type = 'text', placeholder = '', suffix }) {
+// Read-only labelled value. Shows a muted placeholder when not set yet.
+function Stat({ label, value, suffix }) {
+  const has = value !== '' && value != null;
   return (
-    <div style={{ marginBottom: 14 }}>
-      <label style={{
-        display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.14em',
-        opacity: 0.6, marginBottom: 5, textTransform: 'uppercase'
-      }}>
-        {label}
-      </label>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <input
-          type={type}
-          value={value ?? ''}
-          onChange={e => onChange(e.target.value)}
-          placeholder={placeholder}
-          style={{
-            width: '100%', fontSize: 16, padding: '10px 12px', borderRadius: 10,
-            border: '1px solid var(--hairline)', background: 'var(--bg-surface)',
-            fontFamily: 'inherit', color: 'var(--txt-strong)'
-          }}
-        />
-        {suffix && <span style={{ fontSize: 13, color: 'var(--txt-muted)', flexShrink: 0 }}>{suffix}</span>}
+    <div>
+      <div style={{ fontSize: 9, opacity: 0.55, letterSpacing: '0.1em', marginBottom: 3 }}>{label.toUpperCase()}</div>
+      <div style={{ fontSize: 18, fontWeight: 700, color: has ? 'var(--txt-strong)' : 'var(--txt-muted)' }}>
+        {has ? value : '—'}
+        {has && suffix && <span style={{ fontSize: 11, opacity: 0.6, marginLeft: 3 }}>{suffix}</span>}
       </div>
     </div>
   );
 }
 
-// Canonical navigation row — shared visual language with Tracking/Wearables.
+function Card({ title, children }) {
+  return (
+    <div style={{
+      padding: '14px 16px', background: 'var(--bg-surface)',
+      border: '1px solid var(--hairline)', borderRadius: 14, marginBottom: 12
+    }}>
+      <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.14em', opacity: 0.5, marginBottom: 12 }}>{title}</div>
+      {children}
+    </div>
+  );
+}
+
+function Empty({ children }) {
+  return <div style={{ fontSize: 13, color: 'var(--txt-muted)', fontStyle: 'italic' }}>{children}</div>;
+}
+
 function LinkRow({ title, sub, badge, onClick }) {
   return (
     <button className="link-row" onClick={onClick}>
@@ -61,138 +64,104 @@ function LinkRow({ title, sub, badge, onClick }) {
 
 export default function Profile() {
   const navigate = useNavigate();
-  const profile = useTrainingStore(s => s.profile);
+  const profile  = useTrainingStore(s => s.profile);
   const injuries = useTrainingStore(s => s.injuries);
-  const updateProfile = useTrainingStore(s => s.updateProfile);
-  const setGoals = useTrainingStore(s => s.setGoals);
-
-  const [form, setForm] = useState({
-    name: profile.name || '',
-    age: profile.age ?? '',
-    height_cm: profile.height_cm ?? '',
-    bodyweight_kg: profile.bodyweight_kg ?? ''
-  });
-  const [saved, setSaved] = useState(false);
-
-  useEffect(() => {
-    setForm({
-      name: profile.name || '',
-      age: profile.age ?? '',
-      height_cm: profile.height_cm ?? '',
-      bodyweight_kg: profile.bodyweight_kg ?? ''
-    });
-  }, [profile.name, profile.age, profile.height_cm, profile.bodyweight_kg]);
-
-  const flashSaved = () => { setSaved(true); setTimeout(() => setSaved(false), 1400); };
-
-  const commitField = (field, value) => {
-    setForm(f => ({ ...f, [field]: value }));
-    const numericFields = ['age', 'height_cm', 'bodyweight_kg'];
-    const stored = numericFields.includes(field)
-      ? (value === '' ? null : parseFloat(value))
-      : value;
-    updateProfile({ [field]: stored });
-    flashSaved();
-  };
+  const sessions = useTrainingStore(s => s.sessions);
 
   const goals = profile.goals || [];
+  const activeInjuries = injuries.filter(i => i.status === 'active' || i.status === 'rehabbing' || i.status === 'monitoring');
 
-  const updateGoal = (idx, field, value) => {
-    const next = goals.map((g, i) => i === idx ? { ...g, [field]: value } : g);
-    setGoals(next);
-    flashSaved();
-  };
-  const addGoal = () => setGoals([...goals, { rank: goals.length + 1, label: '', target_date: '' }]);
-  const removeGoal = (idx) => {
-    const next = goals.filter((_, i) => i !== idx).map((g, i) => ({ ...g, rank: i + 1 }));
-    setGoals(next);
-    flashSaved();
-  };
+  // Plan snapshot (read-only) — completed count + what's up next.
+  const completedCount = Object.values(sessions).filter(s => s && s.completed).length;
+  const next = Plan.findNextSession(sessions);
+  const phaseCount = Plan.getPhases().length;
 
-  const activeInjuries = injuries.filter(i => i.status === 'active' || i.status === 'rehabbing');
+  const hasBaseline = [profile.name, profile.age, profile.height_cm, profile.bodyweight_kg]
+    .some(v => v !== '' && v != null);
 
   return (
     <>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-        <h1 className="h1" style={{ marginBottom: 0 }}>Profile</h1>
-        {saved && <span style={{ fontSize: 11, color: 'var(--moss)', fontWeight: 700, letterSpacing: '0.08em' }}>SAVED ✓</span>}
-      </div>
-      <p className="sub">Your baseline, goals, and health context. This feeds AI plan generation when integrated.</p>
+      <h1 className="h1" style={{ marginBottom: 4 }}>Profile</h1>
+      <p className="sub">
+        What your coach knows about you and your plan. This updates from your data and the
+        AI coach — there's nothing to edit here.
+      </p>
 
-      <div className="h3">General</div>
-      <div className="form-card" style={{ marginBottom: 22 }}>
-        <Field label="Name" value={form.name} onChange={v => commitField('name', v)} placeholder="Your name" />
-        <Field label="Age" value={form.age} onChange={v => commitField('age', v)} type="number" placeholder="28" suffix="years" />
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-          <Field label="Height" value={form.height_cm} onChange={v => commitField('height_cm', v)} type="number" placeholder="180" suffix="cm" />
-          <Field label="Weight" value={form.bodyweight_kg} onChange={v => commitField('bodyweight_kg', v)} type="number" placeholder="80" suffix="kg" />
-        </div>
-      </div>
-
-      <div className="h3">Goals — ranked by priority</div>
-      <div style={{ marginBottom: 22 }}>
-        {goals.map((g, idx) => (
-          <div key={idx} style={{
-            display: 'grid', gridTemplateColumns: '28px 1fr auto', gap: 10,
-            alignItems: 'flex-start', marginBottom: 10, padding: '12px 14px',
-            background: 'var(--bg-surface)', border: '1px solid var(--hairline)', borderRadius: 12
-          }}>
-            <div style={{
-              width: 28, height: 28, borderRadius: '50%', background: 'var(--bg-surface-2)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 13, fontWeight: 800, color: 'var(--txt-strong)'
-            }}>{g.rank}</div>
-            <div>
-              <input
-                type="text" value={g.label}
-                onChange={e => updateGoal(idx, 'label', e.target.value)}
-                placeholder="Describe the goal"
-                style={{ width: '100%', fontSize: 14, padding: '7px 10px', borderRadius: 8, border: '1px solid var(--hairline)', background: 'transparent', fontFamily: 'inherit', color: 'var(--txt-strong)', marginBottom: 6 }}
-              />
-              <input
-                type="date" value={g.target_date || ''}
-                onChange={e => updateGoal(idx, 'target_date', e.target.value)}
-                style={{ fontSize: 12, padding: '5px 8px', borderRadius: 7, border: '1px solid var(--hairline)', background: 'transparent', fontFamily: 'inherit', color: 'var(--txt-muted)' }}
-              />
-            </div>
-            <button onClick={() => removeGoal(idx)} style={{
-              background: 'transparent', border: 'none', color: 'var(--txt-muted)',
-              fontSize: 16, cursor: 'pointer', padding: 4, opacity: 0.5
-            }}>✕</button>
+      {/* Baseline */}
+      <div className="h3">You</div>
+      <Card title="BASELINE">
+        {hasBaseline ? (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px 28px' }}>
+            <Stat label="Name" value={profile.name || ''} />
+            <Stat label="Age" value={profile.age} suffix="yrs" />
+            <Stat label="Height" value={profile.height_cm} suffix="cm" />
+            <Stat label="Weight" value={profile.bodyweight_kg} suffix="kg" />
           </div>
-        ))}
-        <button onClick={addGoal} style={{
-          width: '100%', padding: 10, borderRadius: 10, border: '1.5px dashed var(--hairline)',
-          background: 'transparent', fontSize: 13, fontWeight: 600, color: 'var(--txt-muted)',
-          cursor: 'pointer', fontFamily: 'inherit'
-        }}>+ Add goal</button>
-      </div>
+        ) : (
+          <Empty>Your details will be captured when you set up your plan.</Empty>
+        )}
+      </Card>
 
-      <div className="h3">Injuries</div>
+      {/* Goals */}
+      <div className="h3">Goals</div>
+      <Card title="RANKED BY PRIORITY">
+        {goals.length > 0 ? (
+          goals.map((g, i) => (
+            <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'baseline', marginBottom: i === goals.length - 1 ? 0 : 8 }}>
+              <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--txt-muted)' }}>{g.rank ?? i + 1}.</span>
+              <span style={{ fontSize: 14, color: 'var(--txt-strong)', flex: 1 }}>{g.label || '—'}</span>
+              {g.target_date && <span style={{ fontSize: 11, color: 'var(--txt-muted)' }}>{g.target_date}</span>}
+            </div>
+          ))
+        ) : (
+          <Empty>No goals set yet — these come from your setup, then the coach refines them.</Empty>
+        )}
+      </Card>
+
+      {/* Plan snapshot */}
+      <div className="h3">Your plan</div>
+      <Card title="SNAPSHOT">
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px 28px', marginBottom: next ? 12 : 0 }}>
+          <Stat label="Phases" value={phaseCount} />
+          <Stat label="Sessions done" value={completedCount} />
+        </div>
+        {next && (
+          <div style={{ borderTop: '1px solid var(--hairline)', paddingTop: 10 }}>
+            <div style={{ fontSize: 9, opacity: 0.55, letterSpacing: '0.1em', marginBottom: 3 }}>UP NEXT</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--txt-strong)' }}>{next.session.title}</div>
+            <div style={{ fontSize: 12, color: 'var(--txt-muted)', marginTop: 2 }}>
+              {next.phase.title} · Week {next.week.num}
+            </div>
+          </div>
+        )}
+      </Card>
+
+      {/* Injuries (read-only summary) */}
+      <div className="h3">Health</div>
       <div className="link-list" style={{ marginBottom: 22 }}>
         <LinkRow
-          title={activeInjuries.length === 0
-            ? 'No active injuries'
-            : `${activeInjuries.length} active ${activeInjuries.length === 1 ? 'injury' : 'injuries'}`}
+          title={activeInjuries.length === 0 ? 'No active injuries' : `${activeInjuries.length} active ${activeInjuries.length === 1 ? 'injury' : 'injuries'}`}
           sub={activeInjuries.length === 0
-            ? 'Tap to log an injury or view history'
+            ? 'View your injury history'
             : activeInjuries.map(i => i.title || i.body_part).filter(Boolean).join(' · ')}
           badge={activeInjuries.length ? `${activeInjuries.length} active` : null}
           onClick={() => navigate('/tracking/injuries')}
         />
       </div>
 
-      <div className="h3">Reference</div>
+      {/* Reviews + settings */}
+      <div className="h3">More</div>
       <div className="link-list">
-        {[
-          { path: '/profile/overview', title: '12-month overview', sub: 'Phase timeline' },
-          { path: '/profile/decisions', title: 'Decision framework', sub: 'If/then responses to disruptions' },
-          { path: '/profile/principles', title: 'Operating principles', sub: 'Non-negotiables' },
-          { path: '/profile/reassess', title: 'Quarterly reassessment', sub: 'Review and adapt the plan' },
-          { path: '/settings', title: 'Settings', sub: 'Appearance, data, account' }
-        ].map(item => (
-          <LinkRow key={item.path} title={item.title} sub={item.sub} onClick={() => navigate(item.path)} />
-        ))}
+        <LinkRow
+          title="Quarterly review"
+          sub="AI assessment of your progress (coming soon)"
+          onClick={() => navigate('/profile/review')}
+        />
+        <LinkRow
+          title="Settings & integrations"
+          sub="Appearance, wearables, data, account"
+          onClick={() => navigate('/settings')}
+        />
       </div>
     </>
   );
