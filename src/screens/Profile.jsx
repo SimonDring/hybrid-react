@@ -17,6 +17,20 @@ import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../data/Plan.js';
 
+// Label maps for codes captured during onboarding (kept human-readable here).
+const FOCUS_LABELS = {
+  run: 'Running', swim: 'Swimming', cycle: 'Cycling', triathlon: 'Triathlon',
+  strength_functional: 'Gym — functional', strength_physique: 'Gym — bodybuilding',
+  general_health: 'General health'
+};
+const LEVEL_LABELS = {
+  beginner: 'Beginner', returning: 'Returning', intermediate: 'Intermediate', advanced: 'Advanced'
+};
+const ACCESS_LABELS = {
+  full_gym: 'Full gym', home_weights: 'Home weights', pool: 'Pool',
+  bike: 'Bike / turbo', open_water: 'Open water', none: 'No equipment'
+};
+
 // Read-only labelled value. Shows a muted placeholder when not set yet.
 function Stat({ label, value, suffix }) {
   const has = value !== '' && value != null;
@@ -69,6 +83,11 @@ export default function Profile() {
   const sessions = useTrainingStore(s => s.sessions);
 
   const goals = profile.goals || [];
+  const focus = profile.focus || [];
+  const experience = profile.experience || {};
+  const availability = profile.availability || {};
+  const access = profile.access || [];
+  const hasTraining = focus.length > 0 || availability.days_per_week != null || access.length > 0;
   const activeInjuries = injuries.filter(i => i.status === 'active' || i.status === 'rehabbing' || i.status === 'monitoring');
 
   // Plan snapshot (read-only) — completed count + what's up next.
@@ -115,6 +134,44 @@ export default function Profile() {
           ))
         ) : (
           <Empty>No goals set yet — these come from your setup, then the coach refines them.</Empty>
+        )}
+      </Card>
+
+      {/* Training context (captured at onboarding) */}
+      <div className="h3">Training</div>
+      <Card title="FOCUS & AVAILABILITY">
+        {hasTraining ? (
+          <div style={{ display: 'grid', gap: 12 }}>
+            {focus.length > 0 && (
+              <div>
+                <div style={{ fontSize: 9, opacity: 0.55, letterSpacing: '0.1em', marginBottom: 5 }}>FOCUS</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {focus.map(k => (
+                    <span key={k} style={{
+                      fontSize: 12, fontWeight: 600, padding: '4px 10px', borderRadius: 100,
+                      background: 'var(--bg-surface-2)', color: 'var(--txt-strong)'
+                    }}>
+                      {FOCUS_LABELS[k] || k}{experience[k] ? ` · ${LEVEL_LABELS[experience[k]] || experience[k]}` : ''}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px 28px' }}>
+              {availability.days_per_week != null && <Stat label="Days / week" value={availability.days_per_week} />}
+              {availability.session_minutes != null && <Stat label="Session" value={availability.session_minutes === 90 ? '90+' : availability.session_minutes} suffix="min" />}
+            </div>
+            {access.length > 0 && (
+              <div>
+                <div style={{ fontSize: 9, opacity: 0.55, letterSpacing: '0.1em', marginBottom: 5 }}>ACCESS</div>
+                <div style={{ fontSize: 13, color: 'var(--txt-strong)' }}>
+                  {access.map(k => ACCESS_LABELS[k] || k).join(' · ')}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <Empty>Captured when you set up your plan.</Empty>
         )}
       </Card>
 

@@ -17,9 +17,14 @@ rows are marked deleted, not physically removed, so sync stays consistent).
 ## Tables (12)
 
 **users** — one profile row per account, 1:1 with Supabase auth.
-Key fields: `name`, `email`, `profile` (jsonb: age, bodyweight_kg, height_cm,
-sex, ranked `goals[]`), `settings` (jsonb: units, theme, default pool length).
-A trigger auto-creates this row on signup.
+Key fields: `name`, `email`, `profile` (jsonb), `settings` (jsonb: units, theme,
+default pool length). A trigger auto-creates this row on signup; signup is gated
+by the `allowed_emails` invite list.
+`profile` jsonb holds: `age`, `bodyweight_kg`, `height_cm`, `sex`, ranked
+`goals[]`, and the onboarding capture — `onboarded` (bool), `focus[]` (sport
+keys), `experience{}` (focus→level), `availability{}` (days_per_week,
+session_minutes, days[]), `access[]` (equipment keys), `pool_length_m`,
+`markers` (free text). This is exactly what the AI reads for plan generation.
 
 **training_plans** — a user's plan(s).
 Key fields: `name`, `start_date`, `target_end_date`, `status`

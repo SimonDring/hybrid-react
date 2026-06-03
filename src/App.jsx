@@ -2,8 +2,10 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
 import { useAuthStore } from './stores/authStore.js';
+import { useTrainingStore } from './stores/trainingStore.js';
 import Login from './screens/Login.jsx';
 import SetNewPassword from './screens/SetNewPassword.jsx';
+import Onboarding from './screens/Onboarding.jsx';
 
 import TopBar from './components/TopBar.jsx';
 import TabBar from './components/TabBar.jsx';
@@ -66,21 +68,15 @@ export default function App() {
   const authStatus = useAuthStore(s => s.status);
   const recoveryMode = useAuthStore(s => s.recoveryMode);
   const initAuth = useAuthStore(s => s.init);
+  const profile = useTrainingStore(s => s.profile);
+  const syncing = useTrainingStore(s => s.syncing);
 
   // Check for an existing session once on mount
   useEffect(() => { initAuth(); }, [initAuth]);
 
   // While checking for a session, show a minimal splash (avoids a flash of Login)
   if (authStatus === 'loading') {
-    return (
-      <div style={{
-        minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center'
-      }}>
-        <div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', opacity: 0.4 }}>
-          Hybrid
-        </div>
-      </div>
-    );
+    return <Splash />;
   }
 
   // Signed out (or Supabase not configured) → show Login
@@ -91,6 +87,21 @@ export default function App() {
   // A password-reset link opened the app → prompt for a new password first
   if (recoveryMode) {
     return <SetNewPassword />;
+  }
+
+  // First-run onboarding. A user is treated as onboarded if they've finished the
+  // wizard OR already have data (goals/name) — so existing users aren't trapped.
+  const isOnboarded = profile.onboarded === true
+    || (profile.goals && profile.goals.length > 0)
+    || !!(profile.name && profile.name.trim());
+  // While the first cloud pull is in flight we can't yet tell a brand-new user
+  // from an existing one on a fresh device — hold on the splash to avoid showing
+  // either the wizard or the app on the wrong side of the sync.
+  if (!isOnboarded && syncing) {
+    return <Splash />;
+  }
+  if (!isOnboarded) {
+    return <Onboarding />;
   }
 
   // Signed in → the app
@@ -122,6 +133,19 @@ export default function App() {
       </ScreenContainer>
 
       <TabBar activeTab={meta.tab} />
+    </div>
+  );
+}
+
+// Minimal full-screen splash, shown while we resolve auth/sync state.
+function Splash() {
+  return (
+    <div style={{
+      minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center'
+    }}>
+      <div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', opacity: 0.4 }}>
+        Hybrid
+      </div>
     </div>
   );
 }

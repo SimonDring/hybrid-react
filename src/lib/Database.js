@@ -34,7 +34,13 @@ export const now = () => new Date().toISOString();
 export const SCHEMA = {
   users: {
     // id, name, email, profile, settings, created_at, updated_at, deleted_at
-    // profile: { age, bodyweight_kg, height_cm, sex, injuries:[], goals:[] }
+    // profile: {
+    //   age, bodyweight_kg, height_cm, sex, injuries:[], goals:[],
+    //   // captured by the onboarding wizard (Stage B):
+    //   onboarded:bool, focus:[key], experience:{focusKey:level},
+    //   availability:{ days_per_week, session_minutes, days:[dayKey] },
+    //   access:[key], pool_length_m, markers (free text)
+    // }
     // settings: { units, default_pool_length_m, theme }
   },
   training_plans: {
