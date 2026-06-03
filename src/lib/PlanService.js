@@ -79,4 +79,89 @@ export function findNextSession(sessions = {}) {
   return null;
 }
 
-export default { getPhases, getPhase, getWeek, findNextSession };
+// ---------------------------------------------------------------------------
+// Calendar anchoring. Generated plans store plan_start_date at onboarding so we
+// can map abstract week numbers onto real dates and surface "today's session".
+// Weeks are Monday-aligned to the start date's week. Legacy plans (no start
+// date) skip all of this and keep the plain "next incomplete" behaviour.
+// ---------------------------------------------------------------------------
+const DAY_IDX = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
+
+function parseISO(s) { const d = new Date(s + 'T00:00:00'); return isNaN(d.getTime()) ? null : d; }
+function mondayOf(d) {
+  const x = new Date(d); x.setHours(0, 0, 0, 0);
+  x.setDate(x.getDate() - ((x.getDay() + 6) % 7));  // back up to Monday
+  return x;
+}
+function weekdayOfTitle(title) {
+  const t = (title || '').toLowerCase();
+  for (const k in DAY_IDX) if (t.includes(k)) return DAY_IDX[k];
+  return null;
+}
+function todayMondayIndex() { return (new Date().getDay() + 6) % 7; }
+
+export function getStartDate() {
+  const p = Database.services.getProfile() || {};
+  return p.plan_start_date ? parseISO(p.plan_start_date) : null;
+}
+
+function totalWeeks() {
+  let max = 0;
+  getPhases().forEach(p => (p.weeks || []).forEach(w => { if (w.num > max) max = w.num; }));
+  return max;
+}
+
+// Absolute week number for today, or null when there's no start date.
+export function currentWeekNumber() {
+  const start = getStartDate();
+  if (!start) return null;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const wk = 1 + Math.floor((today - mondayOf(start)) / (7 * 86400000));
+  return Math.max(1, Math.min(totalWeeks() || 1, wk));
+}
+
+// Calendar date a given session falls on, from its week number + weekday title.
+export function dateForSession(weekNum, title) {
+  const start = getStartDate();
+  const wi = weekdayOfTitle(title);
+  if (!start || wi == null) return null;
+  const d = mondayOf(start);
+  d.setDate(d.getDate() + (weekNum - 1) * 7 + wi);
+  return d;
+}
+
+/**
+ * The session to surface on "Today". For dated (generated) plans: today's
+ * scheduled session in the current week if it isn't done, else the first
+ * unfinished session this week, else the next unfinished session anywhere.
+ * For legacy plans (no start date) this is just findNextSession.
+ * Same return shape as findNextSession.
+ */
+export function recommendedSession(sessions = {}) {
+  if (!getStartDate()) return findNextSession(sessions);
+  const cw = currentWeekNumber();
+
+  let target = null;
+  for (const phase of getPhases()) {
+    const full = getPhase(phase.id);
+    const week = full && full.weeks && full.weeks.find(w => w.num === cw);
+    if (week) { target = { phase, week }; break; }
+  }
+
+  if (target) {
+    const { phase, week } = target;
+    const done = (i) => sessions[`p${phase.id}_wk${week.num}_s${i}`] &&
+                        sessions[`p${phase.id}_wk${week.num}_s${i}`].completed;
+    const todayIdx = todayMondayIndex();
+    let idx = week.sessions.findIndex((s, i) => weekdayOfTitle(s.title) === todayIdx && !done(i));
+    if (idx < 0) idx = week.sessions.findIndex((_, i) => !done(i));  // first unfinished this week
+    if (idx >= 0) {
+      const key = `p${phase.id}_wk${week.num}_s${idx}`;
+      return { phase, week, session: week.sessions[idx], sessionIdx: idx, key };
+    }
+  }
+  // Current week complete (or not found) → next unfinished session anywhere.
+  return findNextSession(sessions);
+}
+
+export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate };

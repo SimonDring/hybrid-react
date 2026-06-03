@@ -20,6 +20,18 @@ function sessionNote(status) {
   return null;
 }
 
+// Friendly relative date for the recommended session (dated plans only).
+function dayLabel(date) {
+  if (!date) return null;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const d = new Date(date); d.setHours(0, 0, 0, 0);
+  const diff = Math.round((d - today) / 86400000);
+  if (diff === 0) return 'Today';
+  if (diff === 1) return 'Tomorrow';
+  if (diff === -1) return 'Yesterday';
+  return d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'short' });
+}
+
 export default function Home() {
   const navigate = useNavigate();
   const sessions = useTrainingStore(state => state.sessions);
@@ -33,15 +45,17 @@ export default function Home() {
   // Today's readiness — drives the hero.
   const readiness = computeReadiness(dailyMetrics, logs);
 
-  // Find next incomplete session (shared with the tab-bar "+ Log" quick-start)
-  const next = Plan.findNextSession(sessions);
+  // Today's recommended session — date-aware for generated plans, falls back to
+  // the next incomplete session for the legacy plan.
+  const next = Plan.recommendedSession(sessions);
   const nextSession = next ? next.session : null;
   const nextWeek = next ? next.week : null;
   const nextPhase = next ? next.phase : null;
   const nextSessionIdx = next ? next.sessionIdx : 0;
+  const nextDayLabel = next ? dayLabel(Plan.dateForSession(next.week.num, next.session.title)) : null;
 
   // Current week progress for the (now secondary) streak ring
-  const targetWeeklySessions = 6;
+  const targetWeeklySessions = nextWeek ? nextWeek.sessions.length : 6;
   const thisWeekDone = nextWeek
     ? nextWeek.sessions.filter((_, i) => {
         const k = Utils.weekKey(nextPhase.id, nextWeek.num, i);
@@ -126,7 +140,9 @@ export default function Home() {
           onClick={() => navigate(`/phases/${nextPhase.id}/weeks/${nextWeek.num}/sessions/${nextSessionIdx}`)}
           style={{ width: '100%', textAlign: 'left', fontFamily: 'inherit', border: 'none', cursor: 'pointer', color: '#f4f1ea' }}
         >
-          <div className="today-eyebrow">Week {nextWeek.num} · {nextPhase.title || `Phase ${nextPhase.id}`}</div>
+          <div className="today-eyebrow">
+            {nextDayLabel ? `${nextDayLabel} · ` : ''}Week {nextWeek.num} · {nextPhase.title || `Phase ${nextPhase.id}`}
+          </div>
           <div className="today-title">{nextSession.title}</div>
           <div className="today-meta">{nextSession.duration}</div>
           {note && <div className="today-readiness-note">{note}</div>}

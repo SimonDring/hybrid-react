@@ -360,6 +360,7 @@ export default function Onboarding() {
     setSaving(true);
     const today = new Date().toISOString().slice(0, 10);
     await updateProfile({
+      plan_start_date: today,   // anchors week 1 to the calendar (see PlanService)
       name: a.name.trim(),
       age: numOrNull(a.age),
       sex: a.sex || null,

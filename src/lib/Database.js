@@ -37,7 +37,8 @@ export const SCHEMA = {
     // profile: {
     //   age, bodyweight_kg, height_cm, sex, injuries:[], goals:[],
     //   // captured by the onboarding wizard (Stage B):
-    //   onboarded:bool, focus:[key], experience:{focusKey:level},
+    //   onboarded:bool, plan_start_date (ISO — anchors week 1 to the calendar),
+    //   focus:[key], experience:{focusKey:level},
     //   availability:{ days_per_week, session_minutes, days:[dayKey] },
     //   access:[key], pool_length_m, markers (free text)
     // }

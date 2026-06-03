@@ -94,6 +94,11 @@ export default function Profile() {
   const completedCount = Object.values(sessions).filter(s => s && s.completed).length;
   const next = Plan.findNextSession(sessions);
   const phaseCount = Plan.getPhases().length;
+  const startDate = Plan.getStartDate();
+  const currentWeek = Plan.currentWeekNumber();
+  const startLabel = startDate
+    ? startDate.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
+    : null;
 
   const hasBaseline = [profile.name, profile.age, profile.height_cm, profile.bodyweight_kg]
     .some(v => v !== '' && v != null);
@@ -180,7 +185,9 @@ export default function Profile() {
       <Card title="SNAPSHOT">
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px 28px', marginBottom: next ? 12 : 0 }}>
           <Stat label="Phases" value={phaseCount} />
+          {currentWeek != null && <Stat label="Current week" value={currentWeek} />}
           <Stat label="Sessions done" value={completedCount} />
+          {startLabel && <Stat label="Started" value={startLabel} />}
         </div>
         {next && (
           <div style={{ borderTop: '1px solid var(--hairline)', paddingTop: 10 }}>
