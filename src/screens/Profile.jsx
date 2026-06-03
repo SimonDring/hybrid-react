@@ -15,7 +15,7 @@
 
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
-import * as Plan from '../data/Plan.js';
+import * as Plan from '../lib/PlanService.js';
 
 // Label maps for codes captured during onboarding (kept human-readable here).
 const FOCUS_LABELS = {

@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
-import * as Plan from '../data/Plan.js';
+import * as Plan from '../lib/PlanService.js';
 import * as Utils from '../lib/Utils.js';
 import { activityFor } from '../data/activityTypes.js';
 import RestTimer from '../components/RestTimer.jsx';

@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
-import * as Plan from '../data/Plan.js';
+import * as Plan from '../lib/PlanService.js';
 import * as Utils from '../lib/Utils.js';
 
 export default function PhaseDetail() {

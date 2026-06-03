@@ -77,6 +77,20 @@ export const ACTIVITY_TYPES = {
       { key: 'zone',   label: 'Zone',   accessor: (it) => cleanEffort(it.pace || it.rpe), accent: true }
     ],
     cue: (it) => it.note || it.cue || ''
+  },
+
+  // Cycling: same prescription shape as running (duration/distance at a zone).
+  // Reuses the Target/Zone layout — target is the ride volume, zone the effort.
+  cycle: {
+    key: 'cycle',
+    label: 'Ride',
+    accent: '#3a6d7a',
+    tagBg: '#e4eef0',
+    columns: [
+      { key: 'target', label: 'Target', accessor: (it) => it.distance || it.sets || '—', emphasis: true, wide: true },
+      { key: 'zone',   label: 'Zone',   accessor: (it) => cleanEffort(it.pace || it.rpe), accent: true }
+    ],
+    cue: (it) => it.note || it.cue || ''
   }
 };
 

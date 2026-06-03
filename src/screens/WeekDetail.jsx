@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
-import * as Plan from '../data/Plan.js';
+import * as Plan from '../lib/PlanService.js';
 import * as Utils from '../lib/Utils.js';
 
 const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
@@ -22,6 +22,7 @@ function sessionType(title) {
   const t = title.toLowerCase();
   if (t.includes('swim')) return { label: 'SWIM', color: '#4a5d3a' };
   if (t.includes('run')) return { label: 'RUN', color: '#b04a2e' };
+  if (t.includes('ride') || t.includes('cycle') || t.includes('bike')) return { label: 'RIDE', color: '#3a6d7a' };
   if (t.includes('upper')) return { label: 'UPPER', color: '#c89a3a' };
   if (t.includes('lower')) return { label: 'LOWER', color: '#7a5d3a' };
   if (t.includes('ski')) return { label: 'SKI', color: '#4a5d7a' };
