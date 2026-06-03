@@ -164,6 +164,10 @@ export const useAuthStore = create((set, get) => ({
       return false;
     }
     set({ recoveryMode: false });
+    // Strip any recovery token from the URL so a reload doesn't re-enter recovery.
+    if (typeof window !== 'undefined' && /type=recovery|access_token|[?&]code=/.test(window.location.href)) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
     return true;
   },
 
@@ -180,26 +184,37 @@ export const useAuthStore = create((set, get) => ({
       set({ status: 'not_configured' });
       return;
     }
-    const { data } = await supabase.auth.getSession();
-    set({
-      status: data.session ? 'signed_in' : 'signed_out',
-      user: data.session ? data.session.user : null
-    });
-    // Sync on startup if already signed in (not just on fresh sign-in events)
-    if (data.session) syncAfterSignIn();
-    supabase.auth.onAuthStateChange((_event, session) => {
-      set({
+
+    // A password-reset link lands the app here. Detect recovery from the URL up
+    // front: depending on the auth flow the recovery shows up as a hash/query
+    // `type=recovery` (implicit) or as a code exchange that fires the
+    // PASSWORD_RECOVERY event (PKCE). Catching both — and keeping recoveryMode
+    // "sticky" — is what reliably routes the user to the set-new-password screen.
+    if (/type=recovery/.test(window.location.href)) {
+      set({ recoveryMode: true });
+    }
+
+    // Subscribe BEFORE getSession so we can't miss an early PASSWORD_RECOVERY.
+    supabase.auth.onAuthStateChange((event, session) => {
+      set((prev) => ({
         status: session ? 'signed_in' : 'signed_out',
         user: session ? session.user : null,
         linkSentTo: null,
-        // A reset link opens the app in recovery mode → prompt for a new password.
-        recoveryMode: _event === 'PASSWORD_RECOVERY'
-      });
-      // When signing IN (not out), pull fresh data from Supabase
-      if (session && _event === 'SIGNED_IN') {
+        recoveryMode: event === 'PASSWORD_RECOVERY' ? true : prev.recoveryMode
+      }));
+      // Pull data on a real sign-in — but not mid password-reset.
+      if (session && event === 'SIGNED_IN' && !get().recoveryMode) {
         syncAfterSignIn();
       }
     });
+
+    const { data } = await supabase.auth.getSession();
+    set((prev) => ({
+      status: data.session ? 'signed_in' : 'signed_out',
+      user: data.session ? data.session.user : null,
+      recoveryMode: prev.recoveryMode
+    }));
+    if (data.session && !get().recoveryMode) syncAfterSignIn();
   }
 }));
 

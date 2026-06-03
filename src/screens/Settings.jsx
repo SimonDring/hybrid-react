@@ -18,6 +18,23 @@ export default function Settings() {
   const authStatus = useAuthStore(s => s.status);
   const user = useAuthStore(s => s.user);
   const signOut = useAuthStore(s => s.signOut);
+  const updatePassword = useAuthStore(s => s.updatePassword);
+
+  // Set / change password (works while signed in — no email needed)
+  const [pwOpen, setPwOpen] = useState(false);
+  const [newPw, setNewPw] = useState('');
+  const [pwMsg, setPwMsg] = useState(null);
+  const handleSetPassword = async () => {
+    if (newPw.length < 6) { setPwMsg('Use at least 6 characters.'); return; }
+    setPwMsg('Saving…');
+    const ok = await updatePassword(newPw);
+    if (ok) {
+      setNewPw(''); setPwMsg('Password updated ✓');
+      setTimeout(() => { setPwOpen(false); setPwMsg(null); }, 1400);
+    } else {
+      setPwMsg(useAuthStore.getState().errorMessage || 'Could not update password.');
+    }
+  };
 
   const connectFitbit = () => {
     if (!user) return;
@@ -232,6 +249,67 @@ export default function Settings() {
           <ul className="kv-list">
             <li><span className="k">Signed in as</span><span className="v">{user.email}</span></li>
           </ul>
+
+          {!pwOpen ? (
+            <button
+              className="settings-row"
+              onClick={() => { setPwOpen(true); setPwMsg(null); }}
+              style={{ marginTop: 4 }}
+            >
+              <span>Set / change password</span>
+              <span className="sr-meta">›</span>
+            </button>
+          ) : (
+            <div style={{
+              marginTop: 8, padding: '14px 16px', borderRadius: 12,
+              border: '1px solid var(--hairline)', background: 'var(--bg-surface)'
+            }}>
+              <div style={{ fontSize: 13, color: 'var(--txt-muted)', marginBottom: 10, lineHeight: 1.5 }}>
+                Set a password for {user.email}. You'll use it to sign in next time.
+              </div>
+              <input
+                type="password"
+                autoComplete="new-password"
+                placeholder="New password (min 6 characters)"
+                value={newPw}
+                onChange={e => setNewPw(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleSetPassword()}
+                style={{
+                  width: '100%', boxSizing: 'border-box', fontSize: 16, padding: '12px 14px',
+                  borderRadius: 11, border: '1px solid var(--hairline)', background: 'var(--bg-surface-2)',
+                  fontFamily: 'inherit', color: 'var(--txt-strong)', marginBottom: 10
+                }}
+              />
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button
+                  onClick={handleSetPassword}
+                  style={{
+                    flex: 1, padding: 12, borderRadius: 11, border: 'none',
+                    background: 'var(--rust)', color: '#fff', fontSize: 14, fontWeight: 600,
+                    cursor: 'pointer', fontFamily: 'inherit'
+                  }}
+                >
+                  Save password
+                </button>
+                <button
+                  onClick={() => { setPwOpen(false); setNewPw(''); setPwMsg(null); }}
+                  style={{
+                    padding: '12px 18px', borderRadius: 11, border: '1px solid var(--hairline)',
+                    background: 'transparent', color: 'var(--txt-muted)', fontSize: 14, fontWeight: 600,
+                    cursor: 'pointer', fontFamily: 'inherit'
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+              {pwMsg && (
+                <div style={{ fontSize: 13, marginTop: 10, color: pwMsg.includes('✓') ? 'var(--moss)' : 'var(--rust)' }}>
+                  {pwMsg}
+                </div>
+              )}
+            </div>
+          )}
+
           <button
             onClick={() => { if (confirm('Sign out of this device?')) signOut(); }}
             style={{
