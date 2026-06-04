@@ -78,6 +78,46 @@ function lift(weights, barbell, bodyweight) {
   return weights ? barbell : bodyweight;
 }
 
+// ---- target working weights from optional 1RMs (squat / bench / deadlift) ----
+// Kept deliberately simple: an Epley-based %1RM from the prescribed reps + reps-
+// in-reserve (from RPE), with a gentle weekly creep within a phase. Lifts the
+// user didn't give a max for show "—" and a cue to log their working set.
+function num(v) { const n = parseFloat(v); return isNaN(n) ? null : n; }
+function round2_5(x) { return Math.round(x / 2.5) * 2.5; }
+function parseReps(sets) { const m = /[×x]\s*(\d+)/.exec(sets || ''); return m ? Number(m[1]) : null; }
+function parseRpe(rpe) { const m = /(\d+)/.exec(rpe || ''); return m ? Number(m[1]) : 7; } // first (lower) number — conservative
+
+// Map an exercise name to which 1RM drives it + a strength factor vs that lift.
+function liftMatch(name) {
+  const n = (name || '').toLowerCase();
+  if (/bench press/.test(n)) return { key: 'bench', factor: 1 };
+  if (/romanian deadlift/.test(n)) return { key: 'deadlift', factor: 0.8 }; // RDL ≈ 80% of DL
+  if (/trap-bar|hex deadlift|^deadlift|\bdeadlift\b/.test(n) && !/romanian/.test(n)) return { key: 'deadlift', factor: 1 };
+  if (/squat/.test(n) && /back|front/.test(n) && !/split/.test(n)) return { key: 'squat', factor: 1 };
+  return null;
+}
+
+// Annotate items with target weights in place.
+function applyWeights(items, lifts, winp) {
+  if (!lifts) lifts = {};
+  for (const it of items) {
+    const m = liftMatch(it.name);
+    if (!m) continue;
+    const oneRM = num(lifts[m.key]);
+    const reps = parseReps(it.sets);
+    if (!oneRM) {
+      it.weight = '—';
+      if (it.num === 'A1') it.note = (it.note ? it.note + ' · ' : '') + 'log your top set — targets build from it';
+      continue;
+    }
+    if (!reps) continue;
+    const rir = Math.max(0, 10 - parseRpe(it.rpe));
+    let pct = 1 / (1 + (reps + rir) / 30);                 // Epley inverse
+    pct *= 1 + Math.min(0.05, 0.01 * ((winp || 1) - 1));   // gentle weekly creep
+    it.weight = `${round2_5(oneRM * m.factor * pct)} kg`;
+  }
+}
+
 // Build the item list for one session role. Style nudges which accessories and
 // finishers appear; the scheme sets the sets×reps. Items use the strength shape
 // the screens already render ({ num, name, sets, rpe, note, tag? }).
@@ -182,14 +222,18 @@ export function buildWeek(ctx = {}) {
   const lo = Math.max(35, minutes - 10);
   const duration = `${lo}–${minutes} min`;
 
-  return roles.map(role => ({
-    discipline: 'gym',
-    focus: ROLE_FOCUS[role] || ROLE_FOCUS.full,
-    duration,
-    items: itemsForRole(role, { style, weights, s, deload }),
-    intensity: deload ? 'moderate' : 'hard',
-    lowerBody: LOWER_ROLES.has(role)
-  }));
+  return roles.map(role => {
+    const items = itemsForRole(role, { style, weights, s, deload });
+    if (weights) applyWeights(items, ctx.lifts, ctx.winp);
+    return {
+      discipline: 'gym',
+      focus: ROLE_FOCUS[role] || ROLE_FOCUS.full,
+      duration,
+      items,
+      intensity: deload ? 'moderate' : 'hard',
+      lowerBody: LOWER_ROLES.has(role)
+    };
+  });
 }
 
 // ===========================================================================

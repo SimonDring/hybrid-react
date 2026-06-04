@@ -249,7 +249,7 @@ function buildDisciplineSpecs(discipline, count, ctx, profile) {
   const common = { intent: ctx.intent, deload: ctx.deload, winp: ctx.winp, weekNum: ctx.weekNum, progress: ctx.progress, level: levelFor(discipline, profile), minutes: ctx.minutes, access: profile.access || [] };
   switch (discipline) {
     case 'gym':
-      return strength.buildWeek({ ...common, gymDays: count, style: strengthStyle(profile) });
+      return strength.buildWeek({ ...common, gymDays: count, style: strengthStyle(profile), lifts: profile.lifts });
     case 'run':
       return running.buildWeek({ ...common, runDays: count, goal: profile.run_goal || { distance: '10k', current: null } });
     case 'swim':
