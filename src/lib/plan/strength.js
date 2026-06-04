@@ -192,4 +192,80 @@ export function buildWeek(ctx = {}) {
   }));
 }
 
-export default { buildWeek };
+// ===========================================================================
+// Supplemental strength — short sessions that SUPPORT an endurance athlete who
+// didn't pick the gym. The research: endurance runners/swimmers benefit from
+// 2×/week strength (posterior chain, single-leg, plyometrics, tendon work for
+// runners; pulling, shoulders, core for swimmers) — it improves economy and
+// durability without big hypertrophy volume. These are light/short and marked
+// intensity:'moderate', lowerBody:false so the scheduler can pair them with an
+// easy run/swim day (a double) rather than spacing them like a hard leg day.
+// ===========================================================================
+function supportItems(forSport, variant, weights, deload) {
+  const sets = deload ? '2' : '3';
+  const run = [
+    [ // A — posterior chain + single-leg
+      { num: 'A1', name: lift(weights, 'Romanian deadlift', 'Single-leg hip hinge'), sets: `${sets} × 6`, rpe: 'RPE 7', note: 'controlled hinge' },
+      { num: 'B1', name: 'Bulgarian split squat', sets: `${sets} × 8 ea.`, rpe: 'RPE 7', note: 'knee tracks toe' },
+      { num: 'B2', name: 'Single-leg calf raise', sets: '3 × 12 ea.', rpe: 'RPE 7', note: 'tendon stiffness', tag: 'mobility' },
+      { num: 'C1', name: 'Hip thrust / glute bridge', sets: `${sets} × 10`, rpe: 'RPE 7', note: '' },
+      { num: 'C2', name: 'Pallof press', sets: '3 × 10 ea.', rpe: 'RPE 6', note: 'anti-rotation core', tag: 'mobility' }
+    ],
+    [ // B — plyometric + durability
+      { num: 'A1', name: 'Pogo hops / low box jumps', sets: `${sets} × 6`, rpe: 'RPE 7', note: 'stiff, springy — quality over height' },
+      { num: 'B1', name: 'Step-up', sets: `${sets} × 8 ea.`, rpe: 'RPE 7', note: 'drive through the heel' },
+      { num: 'B2', name: 'Nordic / slider hamstring curl', sets: `${sets} × 6`, rpe: 'RPE 7', note: 'slow eccentric', tag: 'mobility' },
+      { num: 'C1', name: 'Copenhagen plank', sets: '3 × 20s ea.', rpe: 'RPE 7', note: 'adductor health', tag: 'mobility' },
+      { num: 'C2', name: 'Calf raise', sets: '3 × 15', rpe: 'RPE 7', note: '', tag: 'mobility' }
+    ]
+  ];
+  const swim = [
+    [ // A — pull & posture
+      { num: 'A1', name: lift(weights, 'Pull-up / lat pulldown', 'Band-assisted pull-up'), sets: `${sets} × 8`, rpe: 'RPE 7', note: 'full range' },
+      { num: 'A2', name: 'Band / cable row', sets: `${sets} × 12`, rpe: 'RPE 7', note: 'squeeze 1s' },
+      { num: 'B1', name: 'DB shoulder press', sets: `${sets} × 10`, rpe: 'RPE 7', note: '' },
+      { num: 'C1', name: 'Prone Y-T-W raises', sets: '3 × 10', rpe: 'RPE 6', note: 'scap / rotator health', tag: 'mobility' },
+      { num: 'C2', name: 'Hollow hold', sets: '3 × 30s', rpe: 'RPE 6', note: 'midline', tag: 'mobility' }
+    ],
+    [ // B — lats & rotation
+      { num: 'A1', name: 'Straight-arm pulldown', sets: `${sets} × 12`, rpe: 'RPE 7', note: 'feel the lats' },
+      { num: 'B1', name: lift(weights, 'Single-arm DB row', 'Inverted row'), sets: `${sets} × 10 ea.`, rpe: 'RPE 7', note: '' },
+      { num: 'B2', name: 'External rotation', sets: '3 × 12 ea.', rpe: 'RPE 6', note: 'cuff health', tag: 'mobility' },
+      { num: 'C1', name: 'Rotational core (Pallof / chop)', sets: '3 × 10 ea.', rpe: 'RPE 6', note: '', tag: 'mobility' },
+      { num: 'C2', name: 'Plank', sets: '3 × 40s', rpe: 'RPE 6', note: '', tag: 'mobility' }
+    ]
+  ];
+  const pool = forSport === 'swim' ? swim : run;
+  return pool[variant % pool.length];
+}
+
+/**
+ * Build short supplemental-strength sessions for an endurance athlete.
+ * @param {object} ctx
+ *   count    how many sessions this week (1–2)
+ *   for      'run' | 'swim' (which support template family)
+ *   deload   boolean
+ *   access   equipment keys
+ *   weekNum  rotates the variant so the two/weekly sessions differ
+ * @returns {Array} session specs (intensity 'moderate', lowerBody false)
+ */
+export function buildSupport(ctx = {}) {
+  const count = Math.max(1, Math.min(2, ctx.count || 2));
+  const forSport = ctx.for === 'swim' ? 'swim' : 'run';
+  const deload = !!ctx.deload;
+  const access = ctx.access || [];
+  const weights = access.includes('full_gym') || access.includes('home_weights') || access.length === 0;
+  const base = (ctx.weekNum || 1) - 1;
+  const focus = forSport === 'swim' ? 'Swim-support strength' : 'Run-support strength';
+  return Array.from({ length: count }, (_, i) => ({
+    discipline: 'gym',
+    focus,
+    duration: '25–30 min',
+    items: supportItems(forSport, base + i, weights, deload),
+    intensity: 'moderate',
+    lowerBody: false,
+    supplemental: true
+  }));
+}
+
+export default { buildWeek, buildSupport };

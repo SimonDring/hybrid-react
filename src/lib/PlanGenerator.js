@@ -27,7 +27,7 @@
 import * as strength from './plan/strength.js';
 import * as running from './plan/running.js';
 import * as swimming from './plan/swimming.js';
-import { schedule } from './plan/scheduler.js';
+import { scheduleWeek } from './plan/scheduler.js';
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
@@ -95,7 +95,8 @@ function dayAllocation(profile, disciplines, totalDays) {
 }
 
 // Choose the weekday slots for `n` sessions, honouring the user's preferred days.
-function chooseDays(availability, n) {
+// When a longRunDay is given (running plans) it's guaranteed to be one of them.
+function chooseDays(availability, n, longRunDay) {
   let days = (availability?.days || []).filter(d => DAY_ORDER.includes(d));
   days = [...new Set(days)].sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
   if (days.length >= n) days = days.slice(0, n);
@@ -103,7 +104,29 @@ function chooseDays(availability, n) {
     const def = DEFAULT_DAYS[n] || DAY_ORDER.slice(0, n);
     days = [...new Set([...days, ...def])].sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b)).slice(0, n);
   }
+  // Guarantee the long-run day is in the set (swap the last slot for it).
+  if (longRunDay && DAY_ORDER.includes(longRunDay) && !days.includes(longRunDay) && n > 0) {
+    days[days.length - 1] = longRunDay;
+    days.sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
+  }
   return days.map(d => DAY_NAMES[d]);
+}
+
+// Supplemental strength: short support sessions for an endurance athlete who
+// did NOT pick the gym. Skipped when gym is already in focus or opted out.
+function wantsSupplemental(profile, disciplines) {
+  if (disciplines.includes('gym')) return false;
+  if (profile.supplemental_strength === false) return false;
+  return disciplines.includes('run') || disciplines.includes('swim');
+}
+function supplementalSpecs(profile, disciplines, ctx) {
+  if (!wantsSupplemental(profile, disciplines)) return [];
+  const days = (profile.availability && profile.availability.days_per_week) || 3;
+  return strength.buildSupport({
+    count: days >= 4 ? 2 : 1,
+    for: disciplines.includes('run') ? 'run' : 'swim',
+    deload: ctx.deload, access: profile.access || [], weekNum: ctx.weekNum, intent: ctx.intent
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -243,9 +266,16 @@ export function generatePlan(profile = {}) {
   const totalDays = Math.max(1, Math.min(7, availability.days_per_week || 3));
   const minutes = availability.session_minutes || 60;
 
-  const disciplines = focusToDisciplines(profile.focus || []);
+  let disciplines = focusToDisciplines(profile.focus || []);
+  // The chosen primary sport leads — it gets the spare day in the allocation.
+  if (profile.primary && disciplines.includes(profile.primary)) {
+    disciplines = [profile.primary, ...disciplines.filter(d => d !== profile.primary)];
+  }
   const alloc = dayAllocation(profile, disciplines, totalDays);
   const totalSessions = Object.values(alloc).reduce((a, b) => a + b, 0) || totalDays;
+
+  const allowDoubles = profile.doubles !== false;
+  const longRunDay = disciplines.includes('run') ? (profile.long_run_day || 'sat') : null;
 
   const total = weeksToGoal(profile);
   const split = phaseSplit(total);
@@ -267,11 +297,13 @@ export function generatePlan(profile = {}) {
       const progress = total > 1 ? (weekNum - 1) / (total - 1) : 1;
       const ctx = { intent: seg.intent, deload, winp, weekNum, minutes, progress };
 
-      // Gather every discipline's sessions for the week, then schedule them.
-      const specs = [];
-      Object.keys(alloc).forEach(d => specs.push(...buildDisciplineSpecs(d, alloc[d], ctx, profile)));
-      const days = chooseDays(availability, specs.length);
-      const sessions = schedule(specs, days);
+      // Gather every discipline's sport sessions, plus any supplemental strength,
+      // then schedule them (supplemental folds in as easy-day doubles / rest days).
+      const sportSpecs = [];
+      Object.keys(alloc).forEach(d => sportSpecs.push(...buildDisciplineSpecs(d, alloc[d], ctx, profile)));
+      const supSpecs = supplementalSpecs(profile, disciplines, ctx);
+      const dayNames = chooseDays(availability, sportSpecs.length, longRunDay);
+      const sessions = scheduleWeek({ sportSpecs, supSpecs, dayNames, allowDoubles, longRunDay });
 
       weeks.push({ num: weekNum, deload, theme: themeFor(seg.intent, deload), sessions, provisional: pi > 0 });
     }
