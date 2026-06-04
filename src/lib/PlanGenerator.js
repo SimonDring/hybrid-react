@@ -122,8 +122,12 @@ function wantsSupplemental(profile, disciplines) {
 function supplementalSpecs(profile, disciplines, ctx) {
   if (!wantsSupplemental(profile, disciplines)) return [];
   const days = (profile.availability && profile.availability.days_per_week) || 3;
+  // Single-sport endurance athletes get up to 2; multi-sport (e.g. triathlon)
+  // already carry a lot of load, so cap at 1.
+  const sportCount = disciplines.filter(d => d !== 'gym').length;
+  const count = sportCount >= 2 ? 1 : (days >= 4 ? 2 : 1);
   return strength.buildSupport({
-    count: days >= 4 ? 2 : 1,
+    count,
     for: disciplines.includes('run') ? 'run' : 'swim',
     deload: ctx.deload, access: profile.access || [], weekNum: ctx.weekNum, intent: ctx.intent
   });
@@ -149,6 +153,31 @@ function buildCycleWeek({ count, level, intent, deload, winp }) {
     return { discipline: 'cycle', focus: 'Ride — endurance', duration: `${dur} min`, intensity: 'moderate', lowerBody: false,
       items: [{ num: 'C1', name: 'Endurance ride', distance: `${dur} min`, pace: 'Z2', note: 'steady aerobic, smooth cadence', tag: 'cycle' }] };
   });
+}
+
+// Triathlon brick — two disciplines back-to-back in race order (swim→bike or
+// bike→run) so the body adapts to the transitions. Introduced in build/peak.
+// Built on the cycle "channel" so it schedules like a ride (hard day).
+function brickSpec(type, profile, ctx) {
+  const lvl = levelFor('run', profile);
+  const { paces } = running.computePaces((profile.run_goal && profile.run_goal.distance) || '10k', profile.run_goal && profile.run_goal.current, lvl);
+  const runPace = ctx.intent === 'peak' ? `Goal · ${paces.goal}/km` : `Easy–goal · ${paces.easy}–${paces.goal}/km`;
+  if (type === 'swim_bike') {
+    return {
+      discipline: 'cycle', focus: 'Brick · swim → bike', duration: '60–75 min', intensity: 'hard', lowerBody: false,
+      items: [
+        { num: 'S1', name: 'Swim', stroke: 'Freestyle', distance: '1200–1500 m steady', effort: 'Aerobic', cue: 'controlled — then straight onto the bike', tag: 'swim' },
+        { num: 'B1', name: 'Bike off the swim', distance: '40–50 min', pace: 'Z2–Z3', note: 'settle the breathing, build to steady', tag: 'cycle' }
+      ]
+    };
+  }
+  return {
+    discipline: 'cycle', focus: 'Brick · bike → run', duration: '60–80 min', intensity: 'hard', lowerBody: false,
+    items: [
+      { num: 'B1', name: 'Bike', distance: `${ctx.intent === 'peak' ? '50–60' : '40–50'} min`, pace: 'Z2–Z3 build', note: 'last 10 min near race effort', tag: 'cycle' },
+      { num: 'R1', name: 'Transition run (off the bike)', distance: `${ctx.intent === 'peak' ? '20–25' : '15'} min`, pace: runPace, note: 'legs feel heavy — quick cadence, settle into rhythm', tag: 'run' }
+    ]
+  };
 }
 
 function buildGeneralWeek({ count, deload }) {
@@ -301,6 +330,13 @@ export function generatePlan(profile = {}) {
       // then schedule them (supplemental folds in as easy-day doubles / rest days).
       const sportSpecs = [];
       Object.keys(alloc).forEach(d => sportSpecs.push(...buildDisciplineSpecs(d, alloc[d], ctx, profile)));
+
+      // Triathlon: swap one ride for a brick (transition practice) in build/peak.
+      if ((profile.focus || []).includes('triathlon') && seg.intent !== 'base' && !deload) {
+        const ci = sportSpecs.findIndex(s => s.discipline === 'cycle');
+        if (ci >= 0) sportSpecs[ci] = brickSpec(weekNum % 2 === 0 ? 'swim_bike' : 'bike_run', profile, ctx);
+      }
+
       const supSpecs = supplementalSpecs(profile, disciplines, ctx);
       const dayNames = chooseDays(availability, sportSpecs.length, longRunDay);
       const sessions = scheduleWeek({ sportSpecs, supSpecs, dayNames, allowDoubles, longRunDay });
