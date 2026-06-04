@@ -214,10 +214,19 @@ export default function DevPlayground() {
   const profilePreview = answers ? answersToProfile(answers) : null;
 
   return (
-    <div style={{ maxWidth: 760, margin: '0 auto', padding: '20px 16px 60px' }}>
-      <div style={{ background: 'var(--ochre)', color: '#1a1205', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, marginBottom: 16 }}>
-        DEV TESTING MODE · local only — nothing here is saved to your account or Supabase
-      </div>
+    // Own full-viewport scroll container: body has overflow:hidden and relies on
+    // the app shell's .screen for scrolling, which /dev renders outside of.
+    <div style={{
+      position: 'fixed', inset: 0, overflowY: 'auto', overflowX: 'hidden',
+      WebkitOverflowScrolling: 'touch', background: 'var(--bg-surface-2)'
+    }}>
+      <div style={{
+        maxWidth: 760, margin: '0 auto', boxSizing: 'border-box',
+        padding: 'calc(16px + env(safe-area-inset-top)) 16px calc(60px + env(safe-area-inset-bottom))'
+      }}>
+        <div style={{ background: 'var(--ochre)', color: '#1a1205', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, marginBottom: 16 }}>
+          DEV TESTING MODE · local only — nothing here is saved to your account or Supabase
+        </div>
 
       {/* Presets */}
       <div style={card}>
@@ -283,6 +292,7 @@ export default function DevPlayground() {
             </div>
           ))}
         </div>
+      </div>
       </div>
     </div>
   );
