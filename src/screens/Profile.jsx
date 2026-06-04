@@ -16,13 +16,17 @@
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
+import { computePaces } from '../lib/plan/running.js';
 
 // Label maps for codes captured during onboarding (kept human-readable here).
 const FOCUS_LABELS = {
   run: 'Running', swim: 'Swimming', cycle: 'Cycling', triathlon: 'Triathlon',
+  gym: 'Gym / strength',
   strength_functional: 'Gym — functional', strength_physique: 'Gym — bodybuilding',
   general_health: 'General health'
 };
+const RUN_DIST_LABELS = { '5k': '5K', '10k': '10K', half: 'Half-marathon', marathon: 'Marathon' };
+const STYLE_LABELS = { strength: 'Strength / power', bodybuilding: 'Muscle & physique', functional: 'Functional fitness' };
 const LEVEL_LABELS = {
   beginner: 'Beginner', returning: 'Returning', intermediate: 'Intermediate', advanced: 'Advanced'
 };
@@ -87,6 +91,14 @@ export default function Profile() {
   const experience = profile.experience || {};
   const availability = profile.availability || {};
   const access = profile.access || [];
+
+  // Structured run/swim goals → human-readable targets (incl. predicted time).
+  const runGoal = profile.run_goal;
+  const swimGoal = profile.swim_goal;
+  const runLevel = experience.run || experience.triathlon || 'beginner';
+  const runPrediction = runGoal && runGoal.distance
+    ? computePaces(runGoal.distance, runGoal.current, runLevel) : null;
+  const hasGoalTargets = (runGoal && runGoal.distance) || (swimGoal && swimGoal.distance_m);
   const hasTraining = focus.length > 0 || availability.days_per_week != null || access.length > 0;
   const activeInjuries = injuries.filter(i => i.status === 'active' || i.status === 'rehabbing' || i.status === 'monitoring');
 
@@ -94,6 +106,7 @@ export default function Profile() {
   const completedCount = Object.values(sessions).filter(s => s && s.completed).length;
   const next = Plan.findNextSession(sessions);
   const phaseCount = Plan.getPhases().length;
+  const totalWeeks = Plan.getPhases().reduce((m, p) => Math.max(m, p.weekEnd || 0), 0);
   const startDate = Plan.getStartDate();
   const currentWeek = Plan.currentWeekNumber();
   const startLabel = startDate
@@ -128,19 +141,48 @@ export default function Profile() {
 
       {/* Goals */}
       <div className="h3">Goals</div>
-      <Card title="RANKED BY PRIORITY">
-        {goals.length > 0 ? (
-          goals.map((g, i) => (
-            <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'baseline', marginBottom: i === goals.length - 1 ? 0 : 8 }}>
-              <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--txt-muted)' }}>{g.rank ?? i + 1}.</span>
-              <span style={{ fontSize: 14, color: 'var(--txt-strong)', flex: 1 }}>{g.label || '—'}</span>
-              {g.target_date && <span style={{ fontSize: 11, color: 'var(--txt-muted)' }}>{g.target_date}</span>}
-            </div>
-          ))
-        ) : (
-          <Empty>No goals set yet — these come from your setup, then the coach refines them.</Empty>
-        )}
-      </Card>
+      {hasGoalTargets && (
+        <Card title="GOAL TARGETS">
+          <div style={{ display: 'grid', gap: 10 }}>
+            {runGoal && runGoal.distance && (
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--txt-strong)' }}>
+                  🏃 {RUN_DIST_LABELS[runGoal.distance] || runGoal.distance}
+                  {runGoal.target_date && <span style={{ fontSize: 11, fontWeight: 500, color: 'var(--txt-muted)', marginLeft: 6 }}>by {runGoal.target_date}</span>}
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--txt-muted)', marginTop: 2 }}>
+                  {runPrediction && runPrediction.goalPrediction
+                    ? `${runPrediction.estimated ? 'Estimated' : 'Projected'} time ~${runPrediction.goalPrediction} · easy ${runPrediction.paces.easy}/km · threshold ${runPrediction.paces.threshold}/km`
+                    : 'Pace targets set from your training'}
+                </div>
+              </div>
+            )}
+            {swimGoal && swimGoal.distance_m && (
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--txt-strong)' }}>
+                  🏊 {swimGoal.distance_m} m continuous
+                  {swimGoal.target_date && <span style={{ fontSize: 11, fontWeight: 500, color: 'var(--txt-muted)', marginLeft: 6 }}>by {swimGoal.target_date}</span>}
+                </div>
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
+      {(goals.length > 0 || !hasGoalTargets) && (
+        <Card title={hasGoalTargets ? 'OTHER GOALS' : 'RANKED BY PRIORITY'}>
+          {goals.length > 0 ? (
+            goals.map((g, i) => (
+              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'baseline', marginBottom: i === goals.length - 1 ? 0 : 8 }}>
+                <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--txt-muted)' }}>{g.rank ?? i + 1}.</span>
+                <span style={{ fontSize: 14, color: 'var(--txt-strong)', flex: 1 }}>{g.label || '—'}</span>
+                {g.target_date && <span style={{ fontSize: 11, color: 'var(--txt-muted)' }}>{g.target_date}</span>}
+              </div>
+            ))
+          ) : (
+            <Empty>No goals set yet — these come from your setup, then the coach refines them.</Empty>
+          )}
+        </Card>
+      )}
 
       {/* Training context (captured at onboarding) */}
       <div className="h3">Training</div>
@@ -185,6 +227,7 @@ export default function Profile() {
       <Card title="SNAPSHOT">
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px 28px', marginBottom: next ? 12 : 0 }}>
           <Stat label="Phases" value={phaseCount} />
+          {totalWeeks > 0 && <Stat label="Plan length" value={totalWeeks} suffix="wks" />}
           {currentWeek != null && <Stat label="Current week" value={currentWeek} />}
           <Stat label="Sessions done" value={completedCount} />
           {startLabel && <Stat label="Started" value={startLabel} />}

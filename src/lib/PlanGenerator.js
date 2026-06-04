@@ -44,7 +44,8 @@ const DEFAULT_DAYS = {
 
 // Map onboarding focus keys → internal discipline keys. Handles the OLD keys
 // (strength_functional / strength_physique) so existing testers don't break.
-function focusToDisciplines(focus = []) {
+// Exported so the onboarding wizard can derive disciplines for day-allocation.
+export function focusToDisciplines(focus = []) {
   const map = {
     gym: ['gym'], strength_functional: ['gym'], strength_physique: ['gym'],
     run: ['run'], swim: ['swim'], cycle: ['cycle'],
