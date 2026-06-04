@@ -1,0 +1,289 @@
+/**
+ * DevPlayground — hidden developer testing route (/dev).
+ *
+ * Lets you iterate on the onboarding → plan-generation pipeline without an
+ * account and WITHOUT touching production data or Supabase:
+ *   • Onboarding simulator — the REAL OnboardingWizard in devTools mode
+ *     (step-jumper, next/back), answers held in local React state only.
+ *   • Preset seeds — one click to fill a representative athlete, so you don't
+ *     re-answer everything each iteration.
+ *   • Generate / Regenerate / Clear — build the plan from the current answers
+ *     (calls generatePlan() directly — a pure function; no store, no network).
+ *   • Plan review — phases, weeks, sessions and per-exercise targets, rendered
+ *     with the same activity-type columns the live app uses.
+ *   • Review notes — Good / Issues / Changes / Bugs, persisted to localStorage
+ *     (a dev-only key; never written to Supabase).
+ *
+ * Reached by typing the URL only — it is not linked anywhere and is registered
+ * before the auth/onboarding gate in App.jsx, so it needs no sign-in.
+ */
+
+import { useState, useEffect } from 'react';
+import OnboardingWizard from '../components/OnboardingWizard.jsx';
+import { BLANK_ANSWERS, answersToProfile } from '../lib/onboardingModel.js';
+import { generatePlan } from '../lib/PlanGenerator.js';
+import { activityFor } from '../data/activityTypes.js';
+
+const NOTES_KEY = 'htp_dev_review_notes';
+
+// A future date `n` weeks out (presets need real target dates to size the plan).
+function inWeeks(n) {
+  const d = new Date();
+  d.setDate(d.getDate() + n * 7);
+  return d.toISOString().slice(0, 10);
+}
+
+// Representative athletes — each is a full answer set merged over BLANK_ANSWERS.
+const PRESETS = [
+  {
+    name: 'Hybrid (gym+run+swim)',
+    answers: {
+      ...BLANK_ANSWERS, name: 'Test Hybrid', focus: ['gym', 'run', 'swim'], strengthStyle: 'functional',
+      experience: { gym: 'intermediate', run: 'intermediate', swim: 'beginner' },
+      runGoal: { distance: 'half', target_date: inWeeks(14), currentDistance: '5k', currentTime: '22:30' },
+      swimGoal: { distance_m: 2500, target_date: inWeeks(14), currentPace: '', currentDistance: '800' },
+      daysPerWeek: 6, sessionMinutes: 60, days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], access: ['full_gym', 'pool']
+    }
+  },
+  {
+    name: 'Half-marathoner',
+    answers: {
+      ...BLANK_ANSWERS, name: 'Test Runner', focus: ['run'], experience: { run: 'intermediate' },
+      runGoal: { distance: 'half', target_date: inWeeks(16), currentDistance: '10k', currentTime: '50:00' },
+      daysPerWeek: 4, sessionMinutes: 60, days: ['tue', 'thu', 'sat', 'sun'], access: []
+    }
+  },
+  {
+    name: 'Powerlifter (4-day)',
+    answers: {
+      ...BLANK_ANSWERS, name: 'Test Lifter', focus: ['gym'], strengthStyle: 'strength',
+      experience: { gym: 'advanced' }, daysPerWeek: 4, sessionMinutes: 75, days: ['mon', 'tue', 'thu', 'fri'],
+      access: ['full_gym'], goals: [{ label: 'Add 20 kg to my total', target_date: inWeeks(12) }]
+    }
+  },
+  {
+    name: 'Bodybuilder (6-day PPL)',
+    answers: {
+      ...BLANK_ANSWERS, name: 'Test Physique', focus: ['gym'], strengthStyle: 'bodybuilding',
+      experience: { gym: 'intermediate' }, daysPerWeek: 6, sessionMinutes: 75,
+      days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], access: ['full_gym']
+    }
+  },
+  {
+    name: 'Triathlete',
+    answers: {
+      ...BLANK_ANSWERS, name: 'Test Tri', focus: ['triathlon'], experience: { triathlon: 'intermediate' },
+      runGoal: { distance: '10k', target_date: inWeeks(18), currentDistance: '10k', currentTime: '55:00' },
+      swimGoal: { distance_m: 1500, target_date: inWeeks(18), currentPace: '1:50', currentDistance: '' },
+      daysPerWeek: 6, sessionMinutes: 60, days: [], access: ['full_gym', 'pool', 'bike']
+    }
+  },
+  {
+    name: 'Beginner, no equipment',
+    answers: {
+      ...BLANK_ANSWERS, name: 'Test Beginner', focus: ['general_health'], experience: { general_health: 'beginner' },
+      daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], access: ['none']
+    }
+  }
+];
+
+const card = { background: 'var(--bg-surface)', border: '1px solid var(--hairline)', borderRadius: 14, padding: 16, marginBottom: 14 };
+const btn = (active) => ({
+  padding: '8px 12px', borderRadius: 9, fontSize: 13, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer',
+  border: '1px solid var(--hairline)', background: active ? 'var(--rust)' : 'var(--bg-surface)', color: active ? '#fff' : 'var(--txt-strong)'
+});
+
+// ---- plan review pieces ----
+function ItemsTable({ session }) {
+  return (
+    <div style={{ display: 'grid', gap: 6 }}>
+      {session.items.map((it, i) => {
+        const def = activityFor(it);
+        return (
+          <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'baseline', flexWrap: 'wrap', fontSize: 12, paddingBottom: 5, borderBottom: '1px solid var(--hairline)' }}>
+            <span style={{ fontWeight: 700, color: 'var(--txt-muted)', minWidth: 26 }}>{it.num}</span>
+            <span style={{ fontWeight: 600, color: 'var(--txt-strong)', flex: '1 1 120px' }}>{it.name || it.stroke}</span>
+            {def.columns.map(col => {
+              const v = col.accessor(it);
+              if (v === '' || v == null || v === '—') return null;
+              return (
+                <span key={col.key} style={{ color: col.accent ? 'var(--rust)' : 'var(--txt-body)', fontWeight: col.emphasis ? 700 : 400 }}>
+                  <span style={{ opacity: 0.5 }}>{col.label}:</span> {v}
+                </span>
+              );
+            })}
+            {def.cue(it) && <span style={{ width: '100%', color: 'var(--txt-muted)', fontStyle: 'italic' }}>{def.cue(it)}</span>}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function WeekBlock({ phase, week }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ marginBottom: 6 }}>
+      <button onClick={() => setOpen(o => !o)} style={{
+        width: '100%', textAlign: 'left', padding: '8px 10px', borderRadius: 9, cursor: 'pointer', fontFamily: 'inherit',
+        border: '1px solid var(--hairline)', background: 'var(--bg-surface-2)', color: 'var(--txt-strong)',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8
+      }}>
+        <span style={{ fontSize: 13, fontWeight: 700 }}>
+          Week {week.num} {week.deload && <span style={{ color: 'var(--ochre)', fontWeight: 600 }}>· deload</span>}
+        </span>
+        <span style={{ fontSize: 11, color: 'var(--txt-muted)' }}>{week.sessions.length} sessions · {open ? '▾' : '▸'}</span>
+      </button>
+      {open && (
+        <div style={{ padding: '8px 4px 4px', display: 'grid', gap: 10 }}>
+          <div style={{ fontSize: 11, color: 'var(--txt-muted)', fontStyle: 'italic' }}>{week.theme}</div>
+          {week.sessions.map((s, i) => (
+            <div key={i} style={{ border: '1px solid var(--hairline)', borderRadius: 10, padding: 10 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt-strong)' }}>{s.title}</span>
+                <span style={{ fontSize: 11, color: 'var(--txt-muted)' }}>{s.duration}</span>
+              </div>
+              <ItemsTable session={s} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PlanReview({ plan }) {
+  return (
+    <div>
+      <div style={{ fontSize: 13, color: 'var(--txt-body)', marginBottom: 12 }}>
+        <strong>{plan.totalWeeks} weeks</strong> · {plan.phases.length} phases ·{' '}
+        {plan.phases[0]?.weeks[0]?.sessions.length || 0} sessions/week
+      </div>
+      {plan.phases.map(phase => (
+        <div key={phase.id} style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 15, fontWeight: 800, color: 'var(--txt-strong)' }}>
+            {phase.title} <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--txt-muted)' }}>{phase.range}</span>
+          </div>
+          <div style={{ fontSize: 12, color: 'var(--txt-muted)', marginBottom: 4 }}>{phase.tagline}</div>
+          {phase.gates?.length > 0 && (
+            <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginBottom: 8 }}>
+              Gates: {phase.gates.map(g => g.label).join(' · ')}
+            </div>
+          )}
+          {phase.weeks.map(week => <WeekBlock key={week.num} phase={phase} week={week} />)}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const NOTE_FIELDS = [
+  { key: 'good', label: '✅ Good', placeholder: 'What works well…' },
+  { key: 'issues', label: '⚠️ Issues / not good', placeholder: 'What reads wrong…' },
+  { key: 'changes', label: '🔧 Changes to make', placeholder: 'What to adjust…' },
+  { key: 'bugs', label: '🐞 Bugs', placeholder: 'Anything broken…' }
+];
+
+export default function DevPlayground() {
+  const [seed, setSeed] = useState(BLANK_ANSWERS);
+  const [seedKey, setSeedKey] = useState(0);
+  const [answers, setAnswers] = useState(null);
+  const [plan, setPlan] = useState(null);
+  const [error, setError] = useState(null);
+  const [showJson, setShowJson] = useState(false);
+  const [notes, setNotes] = useState({ good: '', issues: '', changes: '', bugs: '' });
+
+  // Load persisted review notes once (dev-only localStorage key, never Supabase).
+  useEffect(() => {
+    try { const saved = localStorage.getItem(NOTES_KEY); if (saved) setNotes(JSON.parse(saved)); } catch { /* ignore */ }
+  }, []);
+  const updateNote = (key, value) => {
+    const nextNotes = { ...notes, [key]: value };
+    setNotes(nextNotes);
+    try { localStorage.setItem(NOTES_KEY, JSON.stringify(nextNotes)); } catch { /* ignore */ }
+  };
+
+  const generateFrom = (a) => {
+    try { setError(null); setPlan(generatePlan(answersToProfile(a))); }
+    catch (e) { setError(e?.message || String(e)); setPlan(null); }
+  };
+
+  const applyPreset = (preset) => { setSeed(preset.answers); setSeedKey(k => k + 1); setPlan(null); setError(null); };
+  const resetAnswers = () => { setSeed({ ...BLANK_ANSWERS }); setSeedKey(k => k + 1); setPlan(null); setError(null); };
+
+  const profilePreview = answers ? answersToProfile(answers) : null;
+
+  return (
+    <div style={{ maxWidth: 760, margin: '0 auto', padding: '20px 16px 60px' }}>
+      <div style={{ background: 'var(--ochre)', color: '#1a1205', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, marginBottom: 16 }}>
+        DEV TESTING MODE · local only — nothing here is saved to your account or Supabase
+      </div>
+
+      {/* Presets */}
+      <div style={card}>
+        <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.14em', opacity: 0.5, marginBottom: 10 }}>QUICK-FILL PRESETS</div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {PRESETS.map(p => (
+            <button key={p.name} onClick={() => applyPreset(p)} style={btn(false)}>{p.name}</button>
+          ))}
+          <button onClick={resetAnswers} style={{ ...btn(false), color: 'var(--txt-muted)' }}>Reset (blank)</button>
+        </div>
+      </div>
+
+      {/* Onboarding simulator */}
+      <div style={card}>
+        <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.14em', opacity: 0.5, marginBottom: 10 }}>ONBOARDING SIMULATOR</div>
+        <OnboardingWizard
+          key={seedKey}
+          initialAnswers={seed}
+          devTools
+          completeLabel="Generate plan ↓"
+          onAnswersChange={setAnswers}
+          onComplete={generateFrom}
+        />
+      </div>
+
+      {/* Actions */}
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 14 }}>
+        <button onClick={() => answers && generateFrom(answers)} style={{ ...btn(true), padding: '10px 16px' }}>
+          {plan ? 'Regenerate plan' : 'Generate plan'}
+        </button>
+        {plan && <button onClick={() => setPlan(null)} style={btn(false)}>Clear plan</button>}
+        <button onClick={() => setShowJson(s => !s)} style={btn(showJson)}>{showJson ? 'Hide' : 'Show'} JSON</button>
+      </div>
+
+      {error && (
+        <div style={{ ...card, borderColor: 'var(--rust)', color: 'var(--rust)', fontSize: 13, fontWeight: 600 }}>
+          Generation error: {error}
+        </div>
+      )}
+
+      {/* Plan review */}
+      {plan && <div style={card}><PlanReview plan={plan} /></div>}
+
+      {/* Raw JSON (profile + plan) */}
+      {showJson && (
+        <div style={card}>
+          <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.14em', opacity: 0.5, marginBottom: 8 }}>PROFILE FED TO GENERATOR</div>
+          <pre style={{ fontSize: 11, whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'var(--txt-body)', margin: 0 }}>
+            {JSON.stringify(profilePreview, null, 2)}
+          </pre>
+        </div>
+      )}
+
+      {/* Review notes */}
+      <div style={card}>
+        <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.14em', opacity: 0.5, marginBottom: 10 }}>REVIEW NOTES (saved locally)</div>
+        <div style={{ display: 'grid', gap: 12 }}>
+          {NOTE_FIELDS.map(f => (
+            <div key={f.key}>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 700, marginBottom: 5, color: 'var(--txt-strong)' }}>{f.label}</label>
+              <textarea rows={3} value={notes[f.key]} placeholder={f.placeholder} onChange={e => updateNote(f.key, e.target.value)}
+                style={{ width: '100%', fontSize: 14, padding: '10px 12px', borderRadius: 10, border: '1px solid var(--hairline)', background: 'var(--bg-surface)', color: 'var(--txt-strong)', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

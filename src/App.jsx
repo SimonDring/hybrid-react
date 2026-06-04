@@ -6,6 +6,7 @@ import { useTrainingStore } from './stores/trainingStore.js';
 import Login from './screens/Login.jsx';
 import SetNewPassword from './screens/SetNewPassword.jsx';
 import Onboarding from './screens/Onboarding.jsx';
+import DevPlayground from './screens/DevPlayground.jsx';
 
 import TopBar from './components/TopBar.jsx';
 import TabBar from './components/TabBar.jsx';
@@ -73,6 +74,12 @@ export default function App() {
 
   // Check for an existing session once on mount
   useEffect(() => { initAuth(); }, [initAuth]);
+
+  // Hidden developer testing route — bypasses auth + onboarding and never writes
+  // to the store/Supabase. Reached by typing /dev only; not linked anywhere.
+  if (location.pathname === '/dev') {
+    return <DevPlayground />;
+  }
 
   // While checking for a session, show a minimal splash (avoids a flash of Login)
   if (authStatus === 'loading') {
