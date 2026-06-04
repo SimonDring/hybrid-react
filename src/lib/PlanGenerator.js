@@ -223,7 +223,7 @@ function gatesFor(intent, isLast, profile, totalSessions) {
 // Per-week assembly
 // ---------------------------------------------------------------------------
 function buildDisciplineSpecs(discipline, count, ctx, profile) {
-  const common = { intent: ctx.intent, deload: ctx.deload, winp: ctx.winp, progress: ctx.progress, level: levelFor(discipline, profile), minutes: ctx.minutes, access: profile.access || [] };
+  const common = { intent: ctx.intent, deload: ctx.deload, winp: ctx.winp, weekNum: ctx.weekNum, progress: ctx.progress, level: levelFor(discipline, profile), minutes: ctx.minutes, access: profile.access || [] };
   switch (discipline) {
     case 'gym':
       return strength.buildWeek({ ...common, gymDays: count, style: strengthStyle(profile) });
@@ -265,7 +265,7 @@ export function generatePlan(profile = {}) {
       // long runs / swims build steadily toward the goal rather than resetting
       // each phase. Deload weeks are handled inside the engines.
       const progress = total > 1 ? (weekNum - 1) / (total - 1) : 1;
-      const ctx = { intent: seg.intent, deload, winp, minutes, progress };
+      const ctx = { intent: seg.intent, deload, winp, weekNum, minutes, progress };
 
       // Gather every discipline's sessions for the week, then schedule them.
       const specs = [];
