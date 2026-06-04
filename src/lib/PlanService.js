@@ -27,7 +27,8 @@ let _cache = { sig: null, plan: null };
 function profileSignature(profile) {
   return JSON.stringify({
     f: profile.focus, e: profile.experience, g: profile.goals,
-    a: profile.availability, ac: profile.access, p: profile.pool_length_m
+    a: profile.availability, ac: profile.access, p: profile.pool_length_m,
+    ss: profile.strength_style, rg: profile.run_goal, sg: profile.swim_goal
   });
 }
 

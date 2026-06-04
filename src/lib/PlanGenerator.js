@@ -4,115 +4,169 @@
  *
  *   generatePlan(profile) → { phases: [ { id, title, range, weeks: [...] } ] }
  *
- * Approach (a science-backed assembler, not a black box):
+ * Architecture (a science-backed assembler, not a black box):
  *   1. Size the plan to the soonest dated goal (clamped 4–24 weeks; default 12).
  *   2. Split it into 1–3 periodised phases (Base → Build → Peak).
- *   3. Each week, spread `days_per_week` sessions across the chosen sports by
- *      priority, choose a role for each (easy/long/quality, technique/endurance,
- *      push/pull/legs, …), and pull the matching template from planTemplates.
- *   4. Deload every 4th week within a phase.
+ *   3. Each week, ask each discipline engine to build its sessions:
+ *        gym  → src/lib/plan/strength.js   (split by gym-days, ~2×/muscle/week)
+ *        run  → src/lib/plan/running.js    (80/20, pace targets from a time)
+ *        swim → src/lib/plan/swimming.js   (CSS paces, staged technique)
+ *        cycle/general → light inline builders below
+ *   4. Hand the week's sessions to the scheduler, which lays them onto weekdays
+ *      applying concurrent-training rules (spacing hard days, keeping leg work
+ *      away from hard runs).
+ *   5. Deload every 4th week within a phase.
  *
- * Guardrails live in the templates (sane volumes) + here (clamped length, gentle
- * progression, mandatory deloads). The generator is a pure function of profile,
- * so the same answers always produce the same plan — and the session keys
- * (p{phase}_wk{week}_s{idx}) stay stable, so completion state keeps mapping.
+ * The generator is a pure function of the profile, so the same answers always
+ * produce the same plan — and the session keys (p{phase}_wk{week}_s{idx}) stay
+ * stable, so completion state keeps mapping. This fixes the old round-robin's
+ * three bugs by construction: every chosen sport is programmed, equipment access
+ * gates the content, and the goal date drives the length (surfaced in the UI).
  */
 
-import { buildSession } from '../data/planTemplates.js';
+import * as strength from './plan/strength.js';
+import * as running from './plan/running.js';
+import * as swimming from './plan/swimming.js';
+import { schedule } from './plan/scheduler.js';
 
-const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
 // Sensible rest-spaced defaults when the user didn't pick specific days.
 const DEFAULT_DAYS = {
-  1: ['mon'], 2: ['mon', 'thu'], 3: ['mon', 'wed', 'fri'],
+  1: ['wed'], 2: ['mon', 'thu'], 3: ['mon', 'wed', 'fri'],
   4: ['mon', 'tue', 'thu', 'sat'], 5: ['mon', 'tue', 'wed', 'fri', 'sat'],
   6: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], 7: [...DAY_ORDER]
 };
 
-// Onboarding focus keys → internal template sport keys.
-function expandFocus(focus = []) {
+// ---------------------------------------------------------------------------
+// Profile → disciplines + day allocation
+// ---------------------------------------------------------------------------
+
+// Map onboarding focus keys → internal discipline keys. Handles the OLD keys
+// (strength_functional / strength_physique) so existing testers don't break.
+function focusToDisciplines(focus = []) {
   const map = {
+    gym: ['gym'], strength_functional: ['gym'], strength_physique: ['gym'],
     run: ['run'], swim: ['swim'], cycle: ['cycle'],
-    triathlon: ['swim', 'cycle', 'run'],
-    strength_functional: ['strength_f'], strength_physique: ['strength_p'],
-    general_health: ['general']
+    triathlon: ['swim', 'cycle', 'run'], general_health: ['general']
   };
   const out = [];
-  focus.forEach(f => (map[f] || []).forEach(s => out.push(s)));
-  return [...new Set(out)];
+  focus.forEach(f => (map[f] || []).forEach(d => { if (!out.includes(d)) out.push(d); }));
+  return out;
 }
 
-// Experience level for an internal sport, falling back through triathlon → beginner.
-function levelFor(sportKey, profile) {
+// Gym style: explicit field, or inferred from the old focus keys.
+function strengthStyle(profile) {
+  if (profile.strength_style) return profile.strength_style;
+  if ((profile.focus || []).includes('strength_physique')) return 'bodybuilding';
+  return 'functional';
+}
+
+// Experience level for a discipline, with sensible fall-backs.
+function levelFor(discipline, profile) {
   const e = profile.experience || {};
-  const fromTri = e.triathlon;
   const direct = {
-    run: e.run, swim: e.swim, cycle: e.cycle,
-    strength_f: e.strength_functional, strength_p: e.strength_physique,
-    general: e.general_health
-  }[sportKey];
-  return direct || (['run', 'swim', 'cycle'].includes(sportKey) ? fromTri : null) || 'beginner';
+    gym: e.gym || e.strength_functional || e.strength_physique,
+    run: e.run, swim: e.swim, cycle: e.cycle, general: e.general_health
+  }[discipline];
+  const tri = e.triathlon;
+  return direct || (['run', 'swim', 'cycle'].includes(discipline) ? tri : null) || 'beginner';
 }
 
+// How many days each discipline gets this week. Uses the user's saved allocation
+// when present; otherwise spreads total days across disciplines by priority.
+function dayAllocation(profile, disciplines, totalDays) {
+  const saved = profile.availability && profile.availability.allocation;
+  if (saved && disciplines.some(d => saved[d] > 0)) {
+    const out = {};
+    disciplines.forEach(d => { if (saved[d] > 0) out[d] = saved[d]; });
+    if (Object.keys(out).length) return out;
+  }
+  // Even split by priority order, remainder to the highest-priority sports.
+  const out = {};
+  const n = disciplines.length || 1;
+  const base = Math.floor(totalDays / n);
+  let rem = totalDays - base * n;
+  disciplines.forEach(d => { out[d] = base + (rem-- > 0 ? 1 : 0); });
+  // Drop any that landed on 0.
+  Object.keys(out).forEach(d => { if (out[d] <= 0) delete out[d]; });
+  return out;
+}
+
+// Choose the weekday slots for `n` sessions, honouring the user's preferred days.
 function chooseDays(availability, n) {
   let days = (availability?.days || []).filter(d => DAY_ORDER.includes(d));
   days = [...new Set(days)].sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
   if (days.length >= n) days = days.slice(0, n);
   else {
     const def = DEFAULT_DAYS[n] || DAY_ORDER.slice(0, n);
-    days = [...new Set([...days, ...def])]
-      .sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b))
-      .slice(0, n);
+    days = [...new Set([...days, ...def])].sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b)).slice(0, n);
   }
   return days.map(d => DAY_NAMES[d]);
 }
 
-// Round-robin sports across n slots, honouring priority order.
-function assignSports(sports, n) {
-  if (sports.length === 0) return Array(n).fill('general');
-  return Array.from({ length: n }, (_, i) => sports[i % sports.length]);
+// ---------------------------------------------------------------------------
+// Light builders for disciplines without a dedicated engine yet
+// ---------------------------------------------------------------------------
+function buildCycleWeek({ count, level, intent, deload, winp }) {
+  const endBase = { beginner: 45, returning: 60, intermediate: 75, advanced: 90 }[level] || 60;
+  const roles = [];
+  for (let i = 0; i < count; i++) roles.push(intent !== 'base' && i === 0 ? 'intervals' : 'endurance');
+  return roles.map(role => {
+    if (deload) return { discipline: 'cycle', focus: 'Ride — recovery', duration: `${Math.round(endBase * 0.6 / 5) * 5} min`, intensity: 'easy', lowerBody: false,
+      items: [{ num: 'C1', name: 'Easy spin', distance: `${Math.round(endBase * 0.6 / 5) * 5} min`, pace: 'Z1–Z2', note: 'deload — light, high cadence', tag: 'cycle' }] };
+    if (role === 'intervals') return { discipline: 'cycle', focus: 'Ride — intervals', duration: '50–60 min', intensity: 'hard', lowerBody: false,
+      items: [
+        { num: 'C1', name: 'Warm-up', distance: '15 min', pace: 'Z1–Z2', note: 'build cadence', tag: 'cycle' },
+        { num: 'C2', name: 'Main set', distance: `${4 + Math.min(winp, 4)} × 4 min hard / 3 min easy`, pace: 'Z4', note: 'threshold effort', tag: 'cycle' },
+        { num: 'C3', name: 'Cool-down', distance: '10 min', pace: 'Z1', note: '', tag: 'cycle' }
+      ] };
+    const dur = Math.round((endBase + (intent === 'build' ? Math.min(winp, 6) * 5 : 0)) / 5) * 5;
+    return { discipline: 'cycle', focus: 'Ride — endurance', duration: `${dur} min`, intensity: 'moderate', lowerBody: false,
+      items: [{ num: 'C1', name: 'Endurance ride', distance: `${dur} min`, pace: 'Z2', note: 'steady aerobic, smooth cadence', tag: 'cycle' }] };
+  });
 }
 
-// Role rotation per sport (drives which template variant gets built).
-function rolePattern(sportKey, intent) {
-  switch (sportKey) {
-    case 'run':        return intent === 'base' ? ['long', 'easy', 'quality'] : ['quality', 'long', 'easy'];
-    case 'swim':       return ['endurance', 'technique'];
-    case 'cycle':      return intent === 'base' ? ['endurance'] : ['endurance', 'intervals'];
-    case 'strength_f': return ['full', 'lower', 'upper'];
-    case 'strength_p': return ['push', 'pull', 'legs'];
-    default:           return ['mixed'];
-  }
-}
-function rolesFor(sportKey, count, intent) {
-  const pat = rolePattern(sportKey, intent);
-  return Array.from({ length: count }, (_, i) => pat[i % pat.length]);
+function buildGeneralWeek({ count, deload }) {
+  const sets = deload ? '2 sets' : '3 sets';
+  const session = () => ({ discipline: 'general', focus: 'Movement & strength', duration: '40–50 min', intensity: 'moderate', lowerBody: true,
+    items: [
+      { num: 'A1', name: 'Goblet squat', sets: `${sets} × 10`, rpe: 'RPE 6', note: 'smooth, full range' },
+      { num: 'A2', name: 'Push-up (incline if needed)', sets: `${sets} × 10`, rpe: 'RPE 6', note: '' },
+      { num: 'B1', name: 'DB row', sets: `${sets} × 10`, rpe: 'RPE 6', note: '' },
+      { num: 'B2', name: 'Glute bridge', sets: `${sets} × 12`, rpe: 'RPE 6', note: '' },
+      { num: 'C1', name: 'Easy cardio finisher', sets: '10–15 min', rpe: 'Z2', note: 'walk, bike, or row — keep it easy', tag: 'run' },
+      { num: 'C2', name: 'Full-body mobility', sets: '5 min', rpe: 'Easy', tag: 'mobility', note: 'hips, t-spine, ankles' }
+    ] });
+  return Array.from({ length: count }, session);
 }
 
-function weeksToGoal(goals) {
+// ---------------------------------------------------------------------------
+// Goal dates, phase split, gates
+// ---------------------------------------------------------------------------
+function allGoalDates(profile) {
+  const dates = [];
+  const push = (d) => { if (d) { const t = new Date(d); if (!isNaN(t.getTime())) dates.push(t); } };
+  push(profile.run_goal && profile.run_goal.target_date);
+  push(profile.swim_goal && profile.swim_goal.target_date);
+  (profile.goals || []).forEach(g => push(g && g.target_date));
+  return dates;
+}
+
+function weeksToGoal(profile) {
   const today = new Date(); today.setHours(0, 0, 0, 0);
-  const dates = (goals || [])
-    .map(g => g && g.target_date)
-    .filter(Boolean)
-    .map(d => new Date(d))
-    .filter(d => !isNaN(d.getTime()) && d > today);
-  if (!dates.length) return 12;
-  const earliest = new Date(Math.min(...dates.map(d => d.getTime())));
-  const wks = Math.ceil((earliest - today) / (7 * 24 * 3600 * 1000));
-  return Math.max(4, Math.min(24, wks));
+  const future = allGoalDates(profile).filter(d => d > today);
+  if (!future.length) return 12;
+  const earliest = new Date(Math.min(...future.map(d => d.getTime())));
+  return Math.max(4, Math.min(24, Math.ceil((earliest - today) / (7 * 86400000))));
 }
 
-// Split total weeks into periodised phases.
 function phaseSplit(total) {
   if (total <= 7) return [{ intent: 'build', weeks: total }];
-  if (total <= 11) {
-    const base = Math.ceil(total / 2);
-    return [{ intent: 'base', weeks: base }, { intent: 'build', weeks: total - base }];
-  }
+  if (total <= 11) { const base = Math.ceil(total / 2); return [{ intent: 'base', weeks: base }, { intent: 'build', weeks: total - base }]; }
   const base = Math.round(total * 0.4);
   const peak = Math.max(2, Math.round(total * 0.2));
-  const build = total - base - peak;
-  return [{ intent: 'base', weeks: base }, { intent: 'build', weeks: build }, { intent: 'peak', weeks: peak }];
+  return [{ intent: 'base', weeks: base }, { intent: 'build', weeks: total - base - peak }, { intent: 'peak', weeks: peak }];
 }
 
 const PHASE_META = {
@@ -131,32 +185,68 @@ function themeFor(intent, deload) {
     : 'Sharpen and taper toward your goal.';
 }
 
-function gatesFor(intent, isLast, goals, daysPerWeek) {
+// Human-readable goal targets for the final phase's gates.
+function goalGateLabels(profile) {
+  const out = [];
+  const rg = profile.run_goal;
+  if (rg && rg.distance) {
+    const { goalPrediction } = running.computePaces(rg.distance, rg.current, levelFor('run', profile));
+    const dist = { '5k': '5K', '10k': '10K', 'half': 'Half-marathon', 'marathon': 'Marathon' }[rg.distance] || rg.distance;
+    const bits = [];
+    if (goalPrediction) bits.push(`~${goalPrediction}`);
+    if (rg.target_date) bits.push(`by ${rg.target_date}`);
+    out.push({ label: `${dist}${bits.length ? ' (' + bits.join(', ') + ')' : ''}`, required: true });
+  }
+  const sg = profile.swim_goal;
+  if (sg && sg.distance_m) out.push({ label: `Swim ${sg.distance_m} m continuous${sg.target_date ? ` (by ${sg.target_date})` : ''}`, required: true });
+  (profile.goals || []).filter(g => g && g.label && g.label.trim())
+    .forEach(g => out.push({ label: g.label.trim() + (g.target_date ? ` (by ${g.target_date})` : ''), required: true }));
+  return out;
+}
+
+function gatesFor(intent, isLast, profile, totalSessions) {
   const gates = [];
   if (intent === 'base') {
-    gates.push({ label: `Hit ${daysPerWeek} sessions most weeks`, required: true });
+    gates.push({ label: `Hit ${totalSessions} sessions most weeks`, required: true });
     gates.push({ label: 'Movements feel smooth and pain-free', required: false });
   } else if (intent === 'build') {
     gates.push({ label: 'Absorb the added intensity without lingering soreness', required: true });
   } else {
     gates.push({ label: 'Sharp and recovered through the taper', required: true });
   }
-  if (isLast) {
-    (goals || []).filter(g => g && g.label && g.label.trim())
-      .forEach(g => gates.push({ label: g.label.trim() + (g.target_date ? ` (by ${g.target_date})` : ''), required: true }));
-  }
+  if (isLast) goalGateLabels(profile).forEach(g => gates.push(g));
   return gates;
 }
 
-export function generatePlan(profile = {}) {
-  const sports = expandFocus(profile.focus || []);
-  const availability = profile.availability || {};
-  const daysPerWeek = Math.max(1, Math.min(7, availability.days_per_week || 3));
-  const minutes = availability.session_minutes || 60;
-  const access = profile.access || [];
-  const poolLength = profile.pool_length_m || 25;
+// ---------------------------------------------------------------------------
+// Per-week assembly
+// ---------------------------------------------------------------------------
+function buildDisciplineSpecs(discipline, count, ctx, profile) {
+  const common = { intent: ctx.intent, deload: ctx.deload, winp: ctx.winp, progress: ctx.progress, level: levelFor(discipline, profile), minutes: ctx.minutes, access: profile.access || [] };
+  switch (discipline) {
+    case 'gym':
+      return strength.buildWeek({ ...common, gymDays: count, style: strengthStyle(profile) });
+    case 'run':
+      return running.buildWeek({ ...common, runDays: count, goal: profile.run_goal || { distance: '10k', current: null } });
+    case 'swim':
+      return swimming.buildWeek({ ...common, swimDays: count, goal: profile.swim_goal || { distance_m: 2000, current: null } });
+    case 'cycle':
+      return buildCycleWeek({ ...common, count });
+    default:
+      return buildGeneralWeek({ ...common, count });
+  }
+}
 
-  const total = weeksToGoal(profile.goals);
+export function generatePlan(profile = {}) {
+  const availability = profile.availability || {};
+  const totalDays = Math.max(1, Math.min(7, availability.days_per_week || 3));
+  const minutes = availability.session_minutes || 60;
+
+  const disciplines = focusToDisciplines(profile.focus || []);
+  const alloc = dayAllocation(profile, disciplines, totalDays);
+  const totalSessions = Object.values(alloc).reduce((a, b) => a + b, 0) || totalDays;
+
+  const total = weeksToGoal(profile);
   const split = phaseSplit(total);
 
   const phases = [];
@@ -170,26 +260,17 @@ export function generatePlan(profile = {}) {
     for (let winp = 1; winp <= seg.weeks; winp++) {
       weekNum++;
       const deload = winp % 4 === 0;
-      const days = chooseDays(availability, daysPerWeek);
-      const slots = assignSports(sports, daysPerWeek);
+      // Global progress (0→1 across the whole plan) ramps endurance volume so
+      // long runs / swims build steadily toward the goal rather than resetting
+      // each phase. Deload weeks are handled inside the engines.
+      const progress = total > 1 ? (weekNum - 1) / (total - 1) : 1;
+      const ctx = { intent: seg.intent, deload, winp, minutes, progress };
 
-      // role queue per sport for this week
-      const counts = {};
-      slots.forEach(s => { counts[s] = (counts[s] || 0) + 1; });
-      const roleQueues = {};
-      Object.keys(counts).forEach(s => { roleQueues[s] = rolesFor(s, counts[s], seg.intent); });
-      const roleIdx = {};
-
-      const sessions = slots.map((sportKey, i) => {
-        roleIdx[sportKey] = (roleIdx[sportKey] ?? -1) + 1;
-        const role = roleQueues[sportKey][roleIdx[sportKey]];
-        return buildSession(sportKey, {
-          day: days[i] || DAY_NAMES[DAY_ORDER[i % 7]],
-          role, intent: seg.intent, winp, deload,
-          level: levelFor(sportKey, profile),
-          minutes, access, poolLength
-        });
-      });
+      // Gather every discipline's sessions for the week, then schedule them.
+      const specs = [];
+      Object.keys(alloc).forEach(d => specs.push(...buildDisciplineSpecs(d, alloc[d], ctx, profile)));
+      const days = chooseDays(availability, specs.length);
+      const sessions = schedule(specs, days);
 
       weeks.push({ num: weekNum, deload, theme: themeFor(seg.intent, deload), sessions, provisional: pi > 0 });
     }
@@ -204,7 +285,7 @@ export function generatePlan(profile = {}) {
       status: pi === 0 ? 'current' : 'provisional',
       tags: meta.tags,
       summary: meta.summary,
-      gates: gatesFor(seg.intent, isLast, profile.goals, daysPerWeek),
+      gates: gatesFor(seg.intent, isLast, profile, totalSessions),
       weeks
     });
   });
