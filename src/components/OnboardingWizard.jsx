@@ -96,7 +96,7 @@ function inferLevelFor(key, a) {
 
 // ---- shared styles ----
 const INPUT = {
-  width: '100%', fontSize: 16, padding: '12px 14px', borderRadius: 11, border: '1px solid var(--hairline)',
+  width: '100%', minWidth: 0, maxWidth: '100%', fontSize: 16, padding: '12px 14px', borderRadius: 11, border: '1px solid var(--hairline)',
   background: 'var(--bg-surface)', fontFamily: 'inherit', color: 'var(--txt-strong)', boxSizing: 'border-box'
 };
 const FIELD_LABEL = { display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', opacity: 0.6, marginBottom: 6, textTransform: 'uppercase' };
@@ -113,20 +113,36 @@ function proposeAllocation(focus, days) {
 }
 
 // ---- UI atoms ----
-function Chip({ selected, onClick, label, hint, full, emoji }) {
+// A uniform option tile. Always fills its grid cell (width + height 100%), so a
+// group of options is always the same size regardless of text length. `center`
+// centres short labels; `emoji` renders an icon-led tile.
+function Chip({ selected, onClick, label, hint, emoji, center }) {
   return (
     <button onClick={onClick} style={{
-      textAlign: 'left', padding: emoji ? '14px 14px' : '11px 14px', borderRadius: 12, cursor: 'pointer', fontFamily: 'inherit', width: full ? '100%' : 'auto',
+      width: '100%', height: '100%', boxSizing: 'border-box',
+      minHeight: emoji ? 62 : (hint ? 58 : 46),
+      padding: emoji ? '12px 14px' : '10px 12px', borderRadius: 12, cursor: 'pointer', fontFamily: 'inherit',
       border: `1.5px solid ${selected ? 'var(--rust)' : 'var(--hairline)'}`,
-      background: selected ? 'rgba(176,74,46,0.08)' : 'var(--bg-surface)', color: 'var(--txt-strong)', transition: 'border-color 0.12s, background 0.12s',
-      display: emoji ? 'flex' : 'block', alignItems: 'center', gap: 12
+      background: selected ? 'rgba(176,74,46,0.08)' : 'var(--bg-surface)', color: 'var(--txt-strong)',
+      transition: 'border-color 0.12s, background 0.12s',
+      display: 'flex', alignItems: 'center', justifyContent: center && !emoji ? 'center' : 'flex-start', gap: emoji ? 12 : 0,
+      textAlign: center && !emoji ? 'center' : 'left'
     }}>
-      {emoji && <span style={{ fontSize: 22, lineHeight: 1, flexShrink: 0 }}>{emoji}</span>}
-      <span>
-        <span style={{ display: 'block', fontSize: 14, fontWeight: 600 }}>{label}</span>
-        {hint && <span style={{ display: 'block', fontSize: 11, color: 'var(--txt-muted)', marginTop: 2 }}>{hint}</span>}
+      {emoji && <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0 }}>{emoji}</span>}
+      <span style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
+        <span style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.2 }}>{label}</span>
+        {hint && <span style={{ fontSize: 11, color: 'var(--txt-muted)', lineHeight: 1.3 }}>{hint}</span>}
       </span>
     </button>
+  );
+}
+// Equal-size option grid: N columns that can shrink (no overflow), equal row
+// heights (grid-auto-rows: 1fr). `fill` makes it expand to fill the page.
+function OptionGrid({ cols = 2, gap = 8, fill = false, children }) {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, gridAutoRows: '1fr', gap, ...(fill ? { height: '100%' } : {}) }}>
+      {children}
+    </div>
   );
 }
 function Field({ label, value, onChange, type = 'text', placeholder = '', suffix }) {
@@ -165,7 +181,6 @@ function SummaryRow({ label, value }) {
     </div>
   );
 }
-const Row = ({ children }) => <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>{children}</div>;
 
 export default function OnboardingWizard({ initialAnswers, onComplete, onAnswersChange, devTools = false, completeLabel = 'Create my plan' }) {
   const [a, setA] = useState({ ...BLANK_ANSWERS, ...(initialAnswers || {}) });
@@ -223,26 +238,26 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
           <Field label="Age" value={a.age} onChange={v => set({ age: v })} type="number" suffix="yrs" />
           <div>
             <label style={FIELD_LABEL}>Sex</label>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+            <OptionGrid cols={3} gap={6}>
               {['male', 'female', 'other'].map(s => (
-                <Chip key={s} selected={a.sex === s} onClick={() => set({ sex: s })} label={s[0].toUpperCase() + s.slice(1)} full />
+                <Chip key={s} center selected={a.sex === s} onClick={() => set({ sex: s })} label={s[0].toUpperCase() + s.slice(1)} />
               ))}
-            </div>
+            </OptionGrid>
           </div>
           <Field label="Height" value={a.height_cm} onChange={v => set({ height_cm: v })} type="number" suffix="cm" />
           <Field label="Weight" value={a.bodyweight_kg} onChange={v => set({ bodyweight_kg: v })} type="number" suffix="kg" />
           <div>
             <label style={FIELD_LABEL}>Daily activity (outside training)</label>
-            <div style={{ display: 'grid', gap: 6 }}>{ACTIVITY.map(o => <Chip key={o.key} full selected={a.activityLevel === o.key} onClick={() => set({ activityLevel: o.key })} label={o.label} hint={o.hint} />)}</div>
+            <OptionGrid cols={1} gap={6}>{ACTIVITY.map(o => <Chip key={o.key} selected={a.activityLevel === o.key} onClick={() => set({ activityLevel: o.key })} label={o.label} hint={o.hint} />)}</OptionGrid>
           </div>
         </div>
       ) },
 
     { title: 'What\'s your training focus?', subtitle: 'Pick the one thing your plan should be built around — we\'ll add the right supporting work automatically.', valid: () => a.focus.length > 0,
-      render: () => <div style={{ display: 'grid', gap: 8 }}>{FOCUS.map(f => <Chip key={f.key} full emoji={f.emoji} selected={a.focus[0] === f.key} onClick={() => pickFocus(f.key)} label={f.label} hint={f.hint} />)}</div> },
+      render: () => <OptionGrid cols={1}>{FOCUS.map(f => <Chip key={f.key} emoji={f.emoji} selected={a.focus[0] === f.key} onClick={() => pickFocus(f.key)} label={f.label} hint={f.hint} />)}</OptionGrid> },
 
     hasGym && { title: 'What\'s your gym goal?', subtitle: 'This sets your rep ranges and exercise choices.', valid: () => !!a.strengthStyle,
-      render: () => <div style={{ display: 'grid', gap: 8 }}>{STYLES.map(s => <Chip key={s.key} full selected={a.strengthStyle === s.key} onClick={() => set({ strengthStyle: s.key })} label={s.label} hint={s.hint} />)}</div> },
+      render: () => <OptionGrid cols={1}>{STYLES.map(s => <Chip key={s.key} selected={a.strengthStyle === s.key} onClick={() => set({ strengthStyle: s.key })} label={s.label} hint={s.hint} />)}</OptionGrid> },
 
     hasGym && { title: 'Know your main lifts?', subtitle: 'Add your best single lift for real target weights — totally optional.', valid: () => true,
       render: () => (
@@ -266,14 +281,14 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         <div style={{ display: 'grid', gap: 16 }}>
           <div>
             <label style={FIELD_LABEL}>I'm working toward</label>
-            <Row>{RUN_DISTANCES.map(d => <Chip key={d.key || 'fit'} selected={a.runGoal.distance === d.key} onClick={() => set({ runGoal: { ...a.runGoal, distance: d.key } })} label={d.label} />)}</Row>
+            <OptionGrid cols={3}>{RUN_DISTANCES.map(d => <Chip key={d.key || 'fit'} center selected={a.runGoal.distance === d.key} onClick={() => set({ runGoal: { ...a.runGoal, distance: d.key } })} label={d.label} />)}</OptionGrid>
           </div>
           {a.runGoal.distance && (
             <Field label="Target time (optional)" value={a.runGoal.targetTime} onChange={v => set({ runGoal: { ...a.runGoal, targetTime: v } })} placeholder="e.g. 1:45:00" />
           )}
           <div>
             <label style={FIELD_LABEL}>Recent time (optional — sets your paces)</label>
-            <Row>{RUN_TIME_DISTANCES.map(d => <Chip key={d.key} selected={a.runGoal.currentDistance === d.key} onClick={() => set({ runGoal: { ...a.runGoal, currentDistance: d.key } })} label={d.label} />)}</Row>
+            <OptionGrid cols={4}>{RUN_TIME_DISTANCES.map(d => <Chip key={d.key} center selected={a.runGoal.currentDistance === d.key} onClick={() => set({ runGoal: { ...a.runGoal, currentDistance: d.key } })} label={d.label} />)}</OptionGrid>
             <div style={{ marginTop: 8 }}>
               <input type="text" value={a.runGoal.currentTime} placeholder="e.g. 24:30" onChange={e => set({ runGoal: { ...a.runGoal, currentTime: e.target.value } })} style={INPUT} />
             </div>
@@ -286,7 +301,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         <div style={{ display: 'grid', gap: 16 }}>
           <div>
             <label style={FIELD_LABEL}>Continuous distance goal</label>
-            <Row>{SWIM_DISTANCES.map(d => <Chip key={d.m} selected={a.swimGoal.distance_m === d.m} onClick={() => set({ swimGoal: { ...a.swimGoal, distance_m: d.m } })} label={d.label} />)}</Row>
+            <OptionGrid cols={3}>{SWIM_DISTANCES.map(d => <Chip key={d.m} center selected={a.swimGoal.distance_m === d.m} onClick={() => set({ swimGoal: { ...a.swimGoal, distance_m: d.m } })} label={d.label} />)}</OptionGrid>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
             <Field label="100m pace (opt.)" value={a.swimGoal.currentPace} onChange={v => set({ swimGoal: { ...a.swimGoal, currentPace: v } })} placeholder="e.g. 2:05" />
@@ -297,22 +312,22 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
 
     { title: 'Any other goals?', subtitle: 'Pick anything else you\'re working toward — optional.', valid: () => true,
       render: () => (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-          {OTHER_GOALS.map(g => <Chip key={g} selected={a.otherGoals.includes(g)} onClick={() => toggle(g, 'otherGoals')} label={g} />)}
-        </div>
+        <OptionGrid cols={2} fill>
+          {OTHER_GOALS.map(g => <Chip key={g} center selected={a.otherGoals.includes(g)} onClick={() => toggle(g, 'otherGoals')} label={g} />)}
+        </OptionGrid>
       ) },
 
     { title: 'Your experience', subtitle: 'We\'ve suggested a level from your goals — adjust if it feels off.', valid: () => a.focus.every(k => a.experience[k]),
       render: () => (
-        <div style={{ display: 'grid', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, height: '100%' }}>
           {a.focus.map(fk => {
             const f = FOCUS.find(x => x.key === fk);
             return (
-              <div key={fk}>
+              <div key={fk} style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt-strong)', marginBottom: 8 }}>{f.label}</div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <OptionGrid cols={2} fill>
                   {LEVELS.map(l => <Chip key={l.key} selected={a.experience[fk] === l.key} onClick={() => set({ experience: { ...a.experience, [fk]: l.key } })} label={l.label} hint={l.hint} />)}
-                </div>
+                </OptionGrid>
               </div>
             );
           })}
@@ -325,17 +340,17 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
           <div><label style={FIELD_LABEL}>Start date</label><DateField value={a.startDate} onChange={v => set({ startDate: v })} /></div>
           <div>
             <label style={FIELD_LABEL}>Training for an event?</label>
-            <Row>
-              <Chip selected={a.hasEvent} onClick={() => set({ hasEvent: true })} label="Yes — I have a date" />
-              <Chip selected={!a.hasEvent} onClick={() => set({ hasEvent: false })} label="No set date" />
-            </Row>
+            <OptionGrid cols={2}>
+              <Chip center selected={a.hasEvent} onClick={() => set({ hasEvent: true })} label="Yes — I have a date" />
+              <Chip center selected={!a.hasEvent} onClick={() => set({ hasEvent: false })} label="No set date" />
+            </OptionGrid>
           </div>
           {a.hasEvent ? (
             <div><label style={FIELD_LABEL}>Event date</label><DateField value={a.eventDate} onChange={v => set({ eventDate: v })} /><div style={HINT}>Your plan length is set by this date.</div></div>
           ) : (
             <div>
               <label style={FIELD_LABEL}>How many weeks?</label>
-              <Row>{PLAN_WEEKS.map(w => <Chip key={w} selected={a.planWeeks === w} onClick={() => set({ planWeeks: w })} label={`${w} wks`} />)}</Row>
+              <OptionGrid cols={4}>{PLAN_WEEKS.map(w => <Chip key={w} center selected={a.planWeeks === w} onClick={() => set({ planWeeks: w })} label={`${w} wks`} />)}</OptionGrid>
               <div style={HINT}>One training block — your coach extends it from there.</div>
             </div>
           )}
@@ -345,22 +360,22 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     { title: 'How much can you train?', subtitle: 'Be realistic — a plan you can stick to beats an ideal one you can\'t.', valid: () => a.daysPerWeek != null,
       render: () => (
         <div style={{ display: 'grid', gap: 20 }}>
-          <div><label style={FIELD_LABEL}>Days per week</label><Row>{[1, 2, 3, 4, 5, 6, 7].map(n => <Chip key={n} selected={a.daysPerWeek === n} onClick={() => set({ daysPerWeek: n })} label={String(n)} />)}</Row></div>
-          <div><label style={FIELD_LABEL}>Typical session length</label><Row>{SESSION_LENGTHS.map(m => <Chip key={m} selected={a.sessionMinutes === m} onClick={() => set({ sessionMinutes: m })} label={m === 90 ? '90+ min' : `${m} min`} />)}</Row></div>
+          <div><label style={FIELD_LABEL}>Days per week</label><OptionGrid cols={4}>{[1, 2, 3, 4, 5, 6, 7].map(n => <Chip key={n} center selected={a.daysPerWeek === n} onClick={() => set({ daysPerWeek: n })} label={String(n)} />)}</OptionGrid></div>
+          <div><label style={FIELD_LABEL}>Typical session length</label><OptionGrid cols={3}>{SESSION_LENGTHS.map(m => <Chip key={m} center selected={a.sessionMinutes === m} onClick={() => set({ sessionMinutes: m })} label={m === 90 ? '90+ min' : `${m} min`} />)}</OptionGrid></div>
         </div>
       ) },
 
     { title: 'Your week', subtitle: 'Fine-tune which days work and how we use them.', valid: () => true,
       render: () => (
         <div style={{ display: 'grid', gap: 20 }}>
-          <div><label style={FIELD_LABEL}>Which days suit you? (optional)</label><Row>{DAYS.map(d => <Chip key={d.key} selected={a.days.includes(d.key)} onClick={() => toggle(d.key, 'days')} label={d.label} />)}</Row></div>
-          {hasRun && <div><label style={FIELD_LABEL}>Long-run day</label><Row>{DAYS.map(d => <Chip key={d.key} selected={a.longRunDay === d.key} onClick={() => set({ longRunDay: d.key })} label={d.label} />)}</Row></div>}
+          <div><label style={FIELD_LABEL}>Which days suit you? (optional)</label><OptionGrid cols={4}>{DAYS.map(d => <Chip key={d.key} center selected={a.days.includes(d.key)} onClick={() => toggle(d.key, 'days')} label={d.label} />)}</OptionGrid></div>
+          {hasRun && <div><label style={FIELD_LABEL}>Long-run day</label><OptionGrid cols={4}>{DAYS.map(d => <Chip key={d.key} center selected={a.longRunDay === d.key} onClick={() => set({ longRunDay: d.key })} label={d.label} />)}</OptionGrid></div>}
           <div>
             <label style={FIELD_LABEL}>Open to two sessions in a day?</label>
-            <Row>
-              <Chip selected={a.doubles} onClick={() => set({ doubles: true })} label="Yes — doubles ok" />
-              <Chip selected={!a.doubles} onClick={() => set({ doubles: false })} label="One a day" />
-            </Row>
+            <OptionGrid cols={2}>
+              <Chip center selected={a.doubles} onClick={() => set({ doubles: true })} label="Yes — doubles ok" />
+              <Chip center selected={!a.doubles} onClick={() => set({ doubles: false })} label="One a day" />
+            </OptionGrid>
             <div style={HINT}>Lets us pair short strength work with an easy day instead of using a whole extra day.</div>
           </div>
         </div>
@@ -386,15 +401,15 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         <div style={{ display: 'grid', gap: 18 }}>
           <div>
             <label style={FIELD_LABEL}>{accessQuestion}</label>
-            <div style={{ display: 'grid', gap: 6 }}>{STRENGTH_ACCESS.map(o => <Chip key={o.key} full selected={a.strengthAccess === o.key} onClick={() => set({ strengthAccess: o.key })} label={o.label} hint={o.hint} />)}</div>
+            <OptionGrid cols={1} gap={6}>{STRENGTH_ACCESS.map(o => <Chip key={o.key} selected={a.strengthAccess === o.key} onClick={() => set({ strengthAccess: o.key })} label={o.label} hint={o.hint} />)}</OptionGrid>
           </div>
           {hasSwim && (
             <div>
               <label style={FIELD_LABEL}>Pool access</label>
-              <Row>
-                <Chip selected={a.poolAccess} onClick={() => set({ poolAccess: true })} label="I have a pool" />
-                <Chip selected={!a.poolAccess} onClick={() => set({ poolAccess: false })} label="Open water only" />
-              </Row>
+              <OptionGrid cols={2}>
+                <Chip center selected={a.poolAccess} onClick={() => set({ poolAccess: true })} label="I have a pool" />
+                <Chip center selected={!a.poolAccess} onClick={() => set({ poolAccess: false })} label="Open water only" />
+              </OptionGrid>
               {a.poolAccess && <div style={{ marginTop: 8 }}><Field label="Pool length" value={a.poolLengthM} onChange={v => set({ poolLengthM: v })} type="number" suffix="m" /></div>}
             </div>
           )}
