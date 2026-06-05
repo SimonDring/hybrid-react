@@ -13,6 +13,7 @@ import { useState, useEffect, useRef } from 'react';
 import { focusToDisciplines } from '../lib/PlanGenerator.js';
 import { computePaces } from '../lib/plan/running.js';
 import { BLANK_ANSWERS } from '../lib/onboardingModel.js';
+import TimePicker from './TimePicker.jsx';
 
 // ---- Option catalogues ----
 export const FOCUS = [
@@ -284,13 +285,16 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             <OptionGrid cols={3}>{RUN_DISTANCES.map(d => <Chip key={d.key || 'fit'} center selected={a.runGoal.distance === d.key} onClick={() => set({ runGoal: { ...a.runGoal, distance: d.key } })} label={d.label} />)}</OptionGrid>
           </div>
           {a.runGoal.distance && (
-            <Field label="Target time (optional)" value={a.runGoal.targetTime} onChange={v => set({ runGoal: { ...a.runGoal, targetTime: v } })} placeholder="e.g. 1:45:00" />
+            <div>
+              <label style={FIELD_LABEL}>Target time (optional)</label>
+              <TimePicker mode="hms" value={a.runGoal.targetTime} onChange={v => set({ runGoal: { ...a.runGoal, targetTime: v } })} placeholder="Tap to set a target" />
+            </div>
           )}
           <div>
             <label style={FIELD_LABEL}>Recent time (optional — sets your paces)</label>
             <OptionGrid cols={4}>{RUN_TIME_DISTANCES.map(d => <Chip key={d.key} center selected={a.runGoal.currentDistance === d.key} onClick={() => set({ runGoal: { ...a.runGoal, currentDistance: d.key } })} label={d.label} />)}</OptionGrid>
             <div style={{ marginTop: 8 }}>
-              <input type="text" value={a.runGoal.currentTime} placeholder="e.g. 24:30" onChange={e => set({ runGoal: { ...a.runGoal, currentTime: e.target.value } })} style={INPUT} />
+              <TimePicker mode="hms" value={a.runGoal.currentTime} onChange={v => set({ runGoal: { ...a.runGoal, currentTime: v } })} placeholder="Tap to set your time" />
             </div>
           </div>
         </div>
@@ -304,7 +308,10 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             <OptionGrid cols={3}>{SWIM_DISTANCES.map(d => <Chip key={d.m} center selected={a.swimGoal.distance_m === d.m} onClick={() => set({ swimGoal: { ...a.swimGoal, distance_m: d.m } })} label={d.label} />)}</OptionGrid>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-            <Field label="100m pace (opt.)" value={a.swimGoal.currentPace} onChange={v => set({ swimGoal: { ...a.swimGoal, currentPace: v } })} placeholder="e.g. 2:05" />
+            <div>
+              <label style={FIELD_LABEL}>100m pace (opt.)</label>
+              <TimePicker mode="ms" value={a.swimGoal.currentPace} onChange={v => set({ swimGoal: { ...a.swimGoal, currentPace: v } })} placeholder="Tap to set" />
+            </div>
             <Field label="Can swim now (opt.)" value={a.swimGoal.currentDistance} onChange={v => set({ swimGoal: { ...a.swimGoal, currentDistance: v } })} type="number" suffix="m" />
           </div>
         </div>

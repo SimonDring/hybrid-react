@@ -3380,3 +3380,24 @@ html[data-theme="dark"] .st-rpe {
 /* Readiness panel as a tappable hero */
 button.today-hero { width: 100%; display: block; text-align: left; border: none; font-family: inherit; cursor: pointer; }
 .readiness-tap .th-note { opacity: 0.85; }
+
+/* ============================================================
+   TIME PICKER (scroll-wheel time input)
+   ============================================================ */
+.time-input {
+  width: 100%; min-width: 0; box-sizing: border-box; text-align: left;
+  font-size: 16px; padding: 12px 14px; border-radius: 11px;
+  border: 1px solid var(--hairline); background: var(--bg-surface);
+  color: var(--txt-strong); font-family: inherit; cursor: pointer;
+}
+.tp-overlay { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.45); display: flex; align-items: flex-end; justify-content: center; }
+.tp-sheet { width: 100%; max-width: 480px; background: var(--bg-surface); border-radius: 18px 18px 0 0; padding: 10px 20px calc(20px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 40px rgba(0,0,0,0.3); }
+.tp-grab { width: 38px; height: 4px; border-radius: 2px; background: var(--hairline); margin: 0 auto 12px; }
+.tp-wheels { position: relative; display: flex; justify-content: center; gap: 8px; }
+.tp-band { position: absolute; left: 6px; right: 6px; top: calc(50% + 9px); transform: translateY(-50%); height: 38px; border-top: 1px solid var(--rust); border-bottom: 1px solid var(--rust); opacity: 0.4; pointer-events: none; }
+.tw-group { display: flex; flex-direction: column; align-items: center; }
+.tw-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: var(--txt-muted); text-transform: uppercase; margin-bottom: 6px; }
+.tw-col { width: 66px; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.tw-col::-webkit-scrollbar { display: none; }
+.tw-item { display: flex; align-items: center; justify-content: center; scroll-snap-align: center; font-size: 21px; color: var(--txt-strong); font-variant-numeric: tabular-nums; }
+.tp-done { width: 100%; margin-top: 16px; padding: 14px; border: none; border-radius: 12px; background: var(--rust); color: #fff; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }
