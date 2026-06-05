@@ -13,6 +13,8 @@
 
 import { useEffect } from 'react';
 import { lookupExercise } from '../data/exerciseLibrary.js';
+import { DEMOS } from '../data/exerciseDemos.js';
+import StickFigureDemo from './StickFigureDemo.jsx';
 
 const ACCENT = { strength: 'var(--txt-strong)', swim: 'var(--moss)', run: 'var(--rust)', mobility: 'var(--ochre)' };
 
@@ -48,15 +50,18 @@ export default function ExerciseInfo({ name, focus, fallbackCue, onClose }) {
         </div>
         {entry && <p style={{ fontSize: 14, color: 'var(--txt-body)', lineHeight: 1.5, marginTop: 4, marginBottom: 16 }}>{entry.summary}</p>}
 
-        {/* Demo placeholder — future animated stick-figure / frame-by-frame */}
-        <div style={{
-          background: 'var(--bg-surface-2)', border: '1px dashed var(--hairline)', borderRadius: 14,
-          padding: '22px 16px', textAlign: 'center', marginBottom: 18
-        }}>
-          <div style={{ fontSize: 28, marginBottom: 4 }}>🧍‍♂️</div>
-          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--txt-muted)', letterSpacing: '0.05em' }}>ANIMATED DEMO COMING SOON</div>
-          <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 4 }}>A step-by-step demonstration of this movement will live here.</div>
-        </div>
+        {/* Animated demo when we have one, else a placeholder. */}
+        {entry && entry.demo && DEMOS[entry.demo] ? (
+          <div style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--hairline)', borderRadius: 14, padding: '16px 16px 12px', marginBottom: 18 }}>
+            <StickFigureDemo demo={DEMOS[entry.demo]} />
+          </div>
+        ) : (
+          <div style={{ background: 'var(--bg-surface-2)', border: '1px dashed var(--hairline)', borderRadius: 14, padding: '22px 16px', textAlign: 'center', marginBottom: 18 }}>
+            <div style={{ fontSize: 28, marginBottom: 4 }}>🧍‍♂️</div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--txt-muted)', letterSpacing: '0.05em' }}>ANIMATED DEMO COMING SOON</div>
+            <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 4 }}>A step-by-step demonstration of this movement will live here.</div>
+          </div>
+        )}
 
         {entry ? (
           <div style={{ display: 'grid', gap: 18 }}>

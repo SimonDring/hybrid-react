@@ -22,7 +22,7 @@ const LIB = {
     how: ['Bar on your upper back (or weight at your chest), feet shoulder-width, toes slightly out.', 'Brace your core, break at hips and knees together, sit down between your legs.', 'Go as deep as you can keep a flat back — ideally hip crease below the knee.', 'Drive through mid-foot to stand tall, knees tracking over toes.'],
     lookFor: ['Chest up, flat back throughout', 'Knees track in line with toes', 'Even weight through the whole foot'],
     avoid: ['Knees caving inward', 'Heels lifting / weight on toes', 'Lower back rounding at the bottom'],
-    media: null
+    demo: 'squat', media: null
   },
   bench: {
     name: 'Bench press', type: 'strength',
@@ -38,7 +38,7 @@ const LIB = {
     how: ['Bar over mid-foot, shins close, hinge down and grip just outside your legs.', 'Flat back, chest proud, take the slack out of the bar.', 'Push the floor away and stand tall, bar dragging up your legs.', 'Lock out hips and knees together; lower by hinging back.'],
     lookFor: ['Flat, braced back start to finish', 'Bar stays close to the body', 'Hips and shoulders rise together'],
     avoid: ['Rounding the lower back', 'Bar drifting away from the shins', 'Hips shooting up first ("stripper" deadlift)'],
-    media: null
+    demo: 'hinge', media: null
   },
   rdl: {
     name: 'Romanian deadlift', type: 'strength',
@@ -46,7 +46,7 @@ const LIB = {
     how: ['Stand tall holding the bar/dumbbells at your thighs.', 'Soft knees, push your hips straight back, sliding the weight down your legs.', 'Go until you feel a strong hamstring stretch (around shin level), back flat.', 'Squeeze the glutes to drive the hips forward and stand tall.'],
     lookFor: ['Long flat back, hips travelling back not down', 'Weight close to the legs', 'Stretch felt in the hamstrings'],
     avoid: ['Turning it into a squat (knees bending lots)', 'Rounding the back to reach lower', 'Hyperextending at the top'],
-    media: null
+    demo: 'hinge', media: null
   },
   ohp: {
     name: 'Overhead press', type: 'strength',
@@ -54,7 +54,7 @@ const LIB = {
     how: ['Bar/dumbbells at shoulder height, elbows slightly in front, glutes and core braced.', 'Press straight overhead, moving your head back slightly to clear the path.', 'Finish with the weight stacked over your shoulders and mid-foot.', 'Lower under control back to the shoulders.'],
     lookFor: ['Ribs down, glutes squeezed (no big lean-back)', 'Bar finishes over the crown of the head', 'Wrists stacked over elbows'],
     avoid: ['Leaning back to press from the chest', 'Flaring elbows wide', 'Pressing around the face instead of through'],
-    media: null
+    demo: 'press', media: null
   },
   pullup: {
     name: 'Pull-up / lat pulldown', type: 'strength',
@@ -110,7 +110,7 @@ const LIB = {
     how: ['Hands under the shoulders, body in a straight line, core and glutes tight.', 'Lower until the chest is just off the floor, elbows ~45°.', 'Press back up keeping the body rigid.', 'Elevate the hands to make it easier; feet up to make it harder.'],
     lookFor: ['Straight line head-to-heels', 'Elbows ~45° from the body', 'Full range, chest near the floor'],
     avoid: ['Hips sagging or piking up', 'Head dropping / flaring elbows', 'Half reps'],
-    media: null
+    demo: 'pushup', media: null
   },
   plank: {
     name: 'Plank / anti-rotation core', type: 'mobility',
