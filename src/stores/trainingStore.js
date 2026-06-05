@@ -13,6 +13,7 @@
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, checkFitbitConnection, syncFitbit } from '../lib/SyncService.js';
+import { nextE1RM } from '../lib/liftProgression.js';
 
 // Read the current state from localStorage into a React-friendly shape.
 // All reads go through here — screens never call Database directly.
@@ -153,6 +154,24 @@ export const useTrainingStore = create((set) => ({
   async updateProfile(patch) {
     await Sync.updateProfile(patch);
     set(buildView());
+  },
+
+  // Log top-set results for the main lifts → updates the tracked e1RMs so next
+  // week's target weights autoregulate. `sets`: [{ key, weight, reps, rpe,
+  // targetRpe, factor }]. See src/lib/liftProgression.js.
+  async logLiftSets(sets) {
+    if (!sets || !sets.length) return;
+    const profile = buildView().profile || {};
+    const log = { ...(profile.lift_log || {}) };
+    let changed = false;
+    sets.forEach(s => {
+      const e1rm = nextE1RM(s);
+      if (e1rm) { log[s.key] = { e1rm, rpe: Number(s.rpe), at: new Date().toISOString() }; changed = true; }
+    });
+    if (changed) {
+      await Sync.updateProfile({ lift_log: log });
+      set(buildView());
+    }
   },
   async setGoals(goals) {
     await Sync.setGoals(goals);

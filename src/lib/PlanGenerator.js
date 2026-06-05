@@ -28,6 +28,7 @@ import * as strength from './plan/strength.js';
 import * as running from './plan/running.js';
 import * as swimming from './plan/swimming.js';
 import { scheduleWeek } from './plan/scheduler.js';
+import { resolveLifts } from './liftProgression.js';
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
@@ -288,7 +289,7 @@ function buildDisciplineSpecs(discipline, count, ctx, profile) {
   const lighten = ctx.deload || ctx.taper;
   switch (discipline) {
     case 'gym':
-      return strength.buildWeek({ ...common, deload: lighten, gymDays: count, style: strengthStyle(profile), lifts: profile.lifts });
+      return strength.buildWeek({ ...common, deload: lighten, gymDays: count, style: strengthStyle(profile), lifts: resolveLifts(profile) });
     case 'run':
       return running.buildWeek({ ...common, runDays: count, goal: profile.run_goal || { distance: '10k', current: null } });
     case 'swim':

@@ -30,6 +30,7 @@
  */
 
 import { EXERCISES, LEVELS, availableEquip } from '../../data/strengthExercises.js';
+import { matchLift } from '../liftProgression.js';
 
 // ---- split → ordered day blueprints by gym-days ----
 // Each day is a blueprint with a DISTINCT emphasis; together they cover the
@@ -144,35 +145,20 @@ function round2_5(x) { return Math.round(x / 2.5) * 2.5; }
 function parseReps(sets) { const m = /[×x]\s*(\d+)/.exec(sets || ''); return m ? Number(m[1]) : null; }
 function parseRpe(rpe) { const m = /(\d+)/.exec(rpe || ''); return m ? Number(m[1]) : 7; } // first (lower) number — conservative
 
-// Map an exercise name to which 1RM drives it + a strength factor vs that lift.
-function liftMatch(name) {
-  const n = (name || '').toLowerCase();
-  // Only barbell main lifts get 1RM-based targets — skip DB/goblet/band variants.
-  if (/\bdb\b|dumbbell|goblet|kettlebell|\bband\b/.test(n)) return null;
-  if (/bench press/.test(n)) return { key: 'bench', factor: 1 };
-  if (/romanian deadlift/.test(n)) return { key: 'deadlift', factor: 0.8 }; // RDL ≈ 80% of DL
-  if (/trap-bar|hex deadlift|^deadlift|\bdeadlift\b/.test(n) && !/romanian/.test(n)) return { key: 'deadlift', factor: 1 };
-  if (/squat/.test(n) && /back|front/.test(n) && !/split/.test(n)) return { key: 'squat', factor: 1 };
-  return null;
-}
-
-// Annotate items with target weights in place.
-function applyWeights(items, lifts, winp) {
+// Annotate barbell main lifts with a target weight from the tracked e1RMs.
+// Progression no longer comes from a blind weekly creep — it comes from the
+// athlete logging their top-set RPE (which updates the e1RM in profile.lift_log;
+// see src/lib/liftProgression.js), so targets here just reflect the current e1RM.
+function applyWeights(items, lifts) {
   if (!lifts) lifts = {};
   for (const it of items) {
-    const m = liftMatch(it.name);
+    const m = matchLift(it.name);
     if (!m) continue;
     const oneRM = num(lifts[m.key]);
     const reps = parseReps(it.sets);
-    if (!oneRM) {
-      it.weight = '—';
-      if (it.num === 'A1') it.note = (it.note ? it.note + ' · ' : '') + 'log your top set — targets build from it';
-      continue;
-    }
-    if (!reps) continue;
+    if (!oneRM || !reps) continue;
     const rir = Math.max(0, 10 - parseRpe(it.rpe));
-    let pct = 1 / (1 + (reps + rir) / 30);                 // Epley inverse
-    pct *= 1 + Math.min(0.05, 0.01 * ((winp || 1) - 1));   // gentle weekly creep
+    const pct = 1 / (1 + (reps + rir) / 30);               // Epley inverse
     it.weight = `${round2_5(oneRM * m.factor * pct)} kg`;
   }
 }
@@ -272,7 +258,7 @@ export function buildWeek(ctx = {}) {
   return days.map(bpKey => {
     const bp = BLUEPRINTS[bpKey] || BLUEPRINTS.fbA;
     const items = buildSessionItems(bp, { style, s, deload, equip, level, weekNum, maxItems, repBump });
-    applyWeights(items, ctx.lifts, ctx.winp); // no-op for bodyweight names
+    applyWeights(items, ctx.lifts); // no-op for bodyweight names
     return {
       discipline: 'gym',
       focus: bp.focus,

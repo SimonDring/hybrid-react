@@ -30,7 +30,8 @@ function profileSignature(profile) {
     a: profile.availability, ac: profile.access, p: profile.pool_length_m,
     ss: profile.strength_style, rg: profile.run_goal, sg: profile.swim_goal,
     pr: profile.primary, db: profile.doubles, lrd: profile.long_run_day,
-    sup: profile.supplemental_strength, lf: profile.lifts
+    sup: profile.supplemental_strength, lf: profile.lifts, ll: profile.lift_log,
+    bw: profile.bodyweight_kg, sx: profile.sex
   });
 }
 

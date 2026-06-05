@@ -7,6 +7,7 @@ import { activityFor } from '../data/activityTypes.js';
 import RestTimer from '../components/RestTimer.jsx';
 import ExerciseInfo from '../components/ExerciseInfo.jsx';
 import { getChecked, toggleChecked, clearChecked } from '../lib/SessionProgress.js';
+import { trackedLiftsInSession } from '../lib/liftProgression.js';
 
 export default function SessionDetail() {
   const { phaseId, weekNum, sessionIdx } = useParams();
@@ -15,12 +16,14 @@ export default function SessionDetail() {
   const completeSession = useTrainingStore(state => state.completeSession);
   const uncompleteSession = useTrainingStore(state => state.uncompleteSession);
   const cancelSession = useTrainingStore(state => state.cancelSession);
+  const logLiftSets = useTrainingStore(state => state.logLiftSets);
 
   const [showForm, setShowForm] = useState(false);
   const [ratings, setRatings] = useState({ quality: null, energy: null, recovery: null });
   const [notes, setNotes] = useState('');
   const [checked, setChecked] = useState([]);
   const [infoItem, setInfoItem] = useState(null); // exercise tapped for the form guide
+  const [lifts, setLifts] = useState({}); // top-set log: key → { weight, rpe }
 
   const phase = Plan.getPhase(Number(phaseId));
   const week = phase ? phase.weeks.find(w => w.num === Number(weekNum)) : null;
@@ -33,9 +36,14 @@ export default function SessionDetail() {
     setRatings({ quality: null, energy: null, recovery: null });
     setNotes('');
     setChecked(getChecked(key));
+    setLifts({});
   }, [key]);
 
   if (!session) return <div style={{ padding: 24 }}>Session not found</div>;
+
+  // Main barbell lifts in this session whose top set we log to drive progression.
+  const trackedLifts = trackedLiftsInSession(session);
+  const targetKg = (t) => { const m = /([\d.]+)/.exec(t || ''); return m ? Number(m[1]) : null; };
 
   const isDone = state && state.completed;
   const isStarted = state && state.startedAt && !state.completed;
@@ -51,7 +59,15 @@ export default function SessionDetail() {
     setChecked([]);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // Log top-set results for the main lifts → autoregulates next week's weights.
+    const sets = trackedLifts.map(l => {
+      const entry = lifts[l.key] || {};
+      const weight = entry.weight != null && entry.weight !== '' ? Number(entry.weight) : targetKg(l.target);
+      return (weight && entry.rpe) ? { key: l.key, weight, reps: l.reps, rpe: entry.rpe, targetRpe: l.targetRpe, factor: l.factor } : null;
+    }).filter(Boolean);
+    if (sets.length) await logLiftSets(sets);
+
     completeSession(key, {
       quality: ratings.quality,
       energy: ratings.energy,
@@ -63,6 +79,7 @@ export default function SessionDetail() {
     setShowForm(false);
     setRatings({ quality: null, energy: null, recovery: null });
     setNotes('');
+    setLifts({});
   };
 
   const handleUncomplete = () => {
@@ -198,6 +215,38 @@ export default function SessionDetail() {
       {/* Rating form */}
       {!isDone && showForm && (
         <div className="form-card" style={{ marginTop: 20 }}>
+          {/* Top-set logging for the main lifts — drives next week's targets */}
+          {trackedLifts.length > 0 && (
+            <div style={{ marginBottom: 20 }}>
+              <div className="h3" style={{ marginTop: 0, marginBottom: 4 }}>Log your top set</div>
+              <div style={{ fontSize: 12, color: 'var(--txt-muted)', marginBottom: 14 }}>
+                How the last set felt sets next week's weight — heavier if it was easy, steady if it was right.
+              </div>
+              {trackedLifts.map(l => (
+                <div key={l.key} style={{ marginBottom: 16 }}>
+                  <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>
+                    {l.name} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--txt-muted)' }}>· {l.reps} reps{l.target ? ` · target ${l.target}` : ''}</span>
+                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <input type="number" inputMode="decimal" placeholder={targetKg(l.target) != null ? String(targetKg(l.target)) : 'kg'}
+                      value={lifts[l.key]?.weight ?? ''}
+                      onChange={e => setLifts(p => ({ ...p, [l.key]: { ...p[l.key], weight: e.target.value } }))}
+                      style={{ width: 90, fontSize: 16, padding: '10px 12px', borderRadius: 10, border: '1px solid var(--hairline)', background: 'var(--bg-surface)', color: 'var(--txt-strong)', fontFamily: 'inherit', boxSizing: 'border-box' }} />
+                    <span style={{ fontSize: 13, color: 'var(--txt-muted)' }}>kg used</span>
+                  </div>
+                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: 'var(--txt-muted)', marginBottom: 5 }}>FINAL-SET RPE</div>
+                  <div className="rating-row">
+                    {[6, 7, 8, 9, 10].map(n => (
+                      <button key={n} className={`rating-btn ${lifts[l.key]?.rpe === n ? 'active' : ''}`}
+                        onClick={() => setLifts(p => ({ ...p, [l.key]: { ...p[l.key], rpe: n } }))}>{n}</button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <div style={{ borderBottom: '1px solid var(--hairline)', margin: '4px 0 16px' }} />
+            </div>
+          )}
+
           <div className="h3" style={{ marginTop: 0, marginBottom: 16 }}>Rate this session</div>
 
           {[
