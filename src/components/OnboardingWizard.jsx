@@ -6,11 +6,12 @@
  *   • src/screens/Onboarding.jsx — production; onComplete writes to the store.
  *   • src/screens/DevPlayground.jsx — the /dev tester; devTools mode, local only.
  *
- * The answer shape → users.profile mapping lives in src/lib/onboardingModel.js.
+ * The answer → users.profile mapping lives in src/lib/onboardingModel.js.
  *
- * Layout note: the header (progress, title, subtitle) and footer (Back/Next)
- * sit in fixed positions and the content area has a reserved min-height, so the
- * screen doesn't jump around as steps change size.
+ * Layout: a fixed-height flex column — the header (progress, title) and footer
+ * (Back / Continue) are pinned, and ONLY the content area between them scrolls.
+ * So the action buttons never move on a phone. Dense topics are split into small
+ * single-purpose steps so most fit a screen without scrolling at all.
  */
 
 import { useState, useEffect, useRef } from 'react';
@@ -28,9 +29,9 @@ export const FOCUS = [
   { key: 'general_health', label: 'General health', hint: 'Move well, feel good' }
 ];
 export const STYLES = [
-  { key: 'strength',     label: 'Strength / power', hint: 'Heavy, low reps, the big lifts' },
-  { key: 'bodybuilding', label: 'Muscle & physique', hint: 'Moderate–high reps, more volume' },
-  { key: 'functional',   label: 'Functional fitness', hint: 'Compounds, carries, core — mixed' }
+  { key: 'strength',     label: 'Get stronger', hint: 'Heavy, low reps, the big lifts' },
+  { key: 'bodybuilding', label: 'Build muscle', hint: 'Moderate–high reps, more volume' },
+  { key: 'functional',   label: 'Move & perform', hint: 'Compounds, carries, core — mixed' }
 ];
 const LEVELS = [
   { key: 'beginner',     label: 'Beginner',     hint: 'New to it' },
@@ -97,6 +98,7 @@ const INPUT = {
   background: 'var(--bg-surface)', fontFamily: 'inherit', color: 'var(--txt-strong)', boxSizing: 'border-box'
 };
 const FIELD_LABEL = { display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', opacity: 0.6, marginBottom: 6, textTransform: 'uppercase' };
+const HINT = { fontSize: 11, color: 'var(--txt-muted)', marginTop: 6, lineHeight: 1.4 };
 
 function proposeAllocation(focus, days) {
   const ds = focusToDisciplines(focus);
@@ -112,7 +114,7 @@ function proposeAllocation(focus, days) {
 function Chip({ selected, onClick, label, hint, full }) {
   return (
     <button onClick={onClick} style={{
-      textAlign: 'left', padding: '12px 14px', borderRadius: 12, cursor: 'pointer', fontFamily: 'inherit', width: full ? '100%' : 'auto',
+      textAlign: 'left', padding: '11px 14px', borderRadius: 12, cursor: 'pointer', fontFamily: 'inherit', width: full ? '100%' : 'auto',
       border: `1.5px solid ${selected ? 'var(--rust)' : 'var(--hairline)'}`,
       background: selected ? 'rgba(176,74,46,0.08)' : 'var(--bg-surface)', color: 'var(--txt-strong)', transition: 'border-color 0.12s, background 0.12s'
     }}>
@@ -133,6 +135,11 @@ function Field({ label, value, onChange, type = 'text', placeholder = '', suffix
     </div>
   );
 }
+// Date input that closes its picker once a date is chosen.
+function DateField({ value, onChange }) {
+  return <input type="date" value={value || ''} onChange={e => { onChange(e.target.value); e.target.blur(); }}
+    style={{ ...INPUT, fontSize: 15, color: value ? 'var(--txt-strong)' : 'var(--txt-muted)' }} />;
+}
 function Stepper({ value, onDec, onInc }) {
   const btn = (txt, fn) => (
     <button onClick={fn} style={{ width: 34, height: 34, borderRadius: 9, border: '1px solid var(--hairline)', background: 'var(--bg-surface)', color: 'var(--txt-strong)', fontSize: 18, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', lineHeight: 1 }}>{txt}</button>
@@ -148,16 +155,18 @@ function Stepper({ value, onDec, onInc }) {
 function SummaryRow({ label, value }) {
   return (
     <div style={{ display: 'flex', gap: 12, padding: '9px 0', borderBottom: '1px solid var(--hairline)' }}>
-      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--txt-muted)', minWidth: 88 }}>{label}</div>
+      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--txt-muted)', minWidth: 84 }}>{label}</div>
       <div style={{ fontSize: 14, color: 'var(--txt-strong)', flex: 1 }}>{value}</div>
     </div>
   );
 }
+const Row = ({ children, cols = 'auto' }) => <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>{children}</div>;
 
 export default function OnboardingWizard({ initialAnswers, onComplete, onAnswersChange, devTools = false, completeLabel = 'Create my plan' }) {
   const [a, setA] = useState({ ...BLANK_ANSWERS, ...(initialAnswers || {}) });
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
+  const scrollRef = useRef(null);
 
   const set = (patch) => setA(prev => ({ ...prev, ...patch }));
   const toggle = (key, listName) => set({ [listName]: a[listName].includes(key) ? a[listName].filter(k => k !== key) : [...a[listName], key] });
@@ -172,14 +181,9 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
   const hasSwim = disciplines.includes('swim');
   const multi = disciplines.length > 1;
 
-  // Default the start date to today.
   useEffect(() => { if (!a.startDate) set({ startDate: todayISO() }); /* eslint-disable-next-line */ }, []);
-  // Re-propose the day allocation when focus / total days change.
   useEffect(() => { set({ allocation: proposeAllocation(a.focus, a.daysPerWeek) }); /* eslint-disable-next-line */ }, [a.focus.join(','), a.daysPerWeek]);
-  // Default the primary sport to the first chosen discipline.
   useEffect(() => { if (disciplines.length && !disciplines.includes(a.primary)) set({ primary: disciplines[0] }); /* eslint-disable-next-line */ }, [a.focus.join(',')]);
-  // Pre-fill a suggested experience level for any sport not set yet (inference;
-  // the user can still change it on the Experience step).
   useEffect(() => {
     const next = { ...a.experience };
     let changed = false;
@@ -193,9 +197,9 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
 
   const steps = [
     { title: 'Welcome', subtitle: 'A few quick questions so we can shape a plan around you. Takes about two minutes — you can change any of it later.', valid: () => true,
-      render: () => <div style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--txt-body)' }}>We'll ask about your sports, experience, goals, and how much time you have. Your answers stay private to your account.</div> },
+      render: () => <div style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--txt-body)' }}>We'll ask about your sports, goals, experience and how much time you have. Your answers stay private to your account.</div> },
 
-    { title: 'About you', subtitle: 'The basics. All optional, but they help tailor volumes and loads.', valid: () => true,
+    { title: 'About you', subtitle: 'The basics — they help tailor volumes and loads. All optional.', valid: () => true,
       render: () => (
         <div style={{ display: 'grid', gap: 14 }}>
           <Field label="Name" value={a.name} onChange={v => set({ name: v })} placeholder="Your name" />
@@ -203,9 +207,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             <Field label="Age" value={a.age} onChange={v => set({ age: v })} type="number" suffix="yrs" />
             <div>
               <label style={FIELD_LABEL}>Sex</label>
-              <div style={{ display: 'flex', gap: 6 }}>
-                {['male', 'female', 'other'].map(s => <Chip key={s} selected={a.sex === s} onClick={() => set({ sex: s })} label={s[0].toUpperCase() + s.slice(1)} />)}
-              </div>
+              <Row>{['male', 'female', 'other'].map(s => <Chip key={s} selected={a.sex === s} onClick={() => set({ sex: s })} label={s[0].toUpperCase() + s.slice(1)} />)}</Row>
             </div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
@@ -215,75 +217,86 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         </div>
       ) },
 
-    { title: 'What do you want to train?', subtitle: 'Pick everything that applies. We can rebalance these as you go.', valid: () => a.focus.length > 0,
+    { title: 'What do you want to train?', subtitle: 'Pick everything that applies — we can rebalance as you go.', valid: () => a.focus.length > 0,
       render: () => <div style={{ display: 'grid', gap: 8 }}>{FOCUS.map(f => <Chip key={f.key} full selected={a.focus.includes(f.key)} onClick={() => toggle(f.key, 'focus')} label={f.label} hint={f.hint} />)}</div> },
 
-    multi && { title: 'Your main focus', subtitle: 'Which one leads? It gets priority for the hard days and a little more volume — the rest support it.', valid: () => !!a.primary,
+    multi && { title: 'Your main focus', subtitle: 'Which one leads? It gets the priority for hard days and a little more volume — the rest support it.', valid: () => !!a.primary,
       render: () => <div style={{ display: 'grid', gap: 8 }}>{disciplines.map(d => <Chip key={d} full selected={a.primary === d} onClick={() => set({ primary: d })} label={DISCIPLINE_LABEL[d] || d} />)}</div> },
 
-    hasGym && { title: 'Your gym emphasis', subtitle: 'Shapes your rep ranges and exercises. If you know your main lifts, add them for real target weights — optional.', valid: () => !!a.strengthStyle,
+    hasGym && { title: 'What\'s your gym goal?', subtitle: 'This sets your rep ranges and exercise choices.', valid: () => !!a.strengthStyle,
+      render: () => (
+        <div style={{ display: 'grid', gap: 8 }}>
+          {STYLES.map(s => <Chip key={s.key} full selected={a.strengthStyle === s.key} onClick={() => set({ strengthStyle: s.key })} label={s.label} hint={s.hint} />)}
+        </div>
+      ) },
+
+    hasGym && { title: 'Know your main lifts?', subtitle: 'Add your best single lift for real target weights — totally optional.', valid: () => true,
+      render: () => (
+        <div>
+          <label style={FIELD_LABEL}>1-rep maxes (kg)</label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+            {['squat', 'bench', 'deadlift'].map(k => (
+              <div key={k}>
+                <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginBottom: 4, textAlign: 'center' }}>{k[0].toUpperCase() + k.slice(1)}</div>
+                <input type="number" inputMode="decimal" placeholder="—" value={a.lifts[k]}
+                  onChange={e => set({ lifts: { ...a.lifts, [k]: e.target.value } })} style={{ ...INPUT, padding: '12px 8px', textAlign: 'center' }} />
+              </div>
+            ))}
+          </div>
+          <div style={HINT}>No idea? Leave them blank — we'll ask you to log a working set after week 1, then targets build from there.</div>
+        </div>
+      ) },
+
+    hasRun && { title: 'Your running goal', subtitle: 'Pick a distance, or keep it general. A target time + recent time are optional but make your paces accurate.', valid: () => true,
       render: () => (
         <div style={{ display: 'grid', gap: 16 }}>
-          <div style={{ display: 'grid', gap: 8 }}>{STYLES.map(s => <Chip key={s.key} full selected={a.strengthStyle === s.key} onClick={() => set({ strengthStyle: s.key })} label={s.label} hint={s.hint} />)}</div>
           <div>
-            <label style={FIELD_LABEL}>1-rep maxes (optional, kg)</label>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
-              {['squat', 'bench', 'deadlift'].map(k => (
-                <input key={k} type="number" inputMode="decimal" placeholder={k[0].toUpperCase() + k.slice(1)} value={a.lifts[k]}
-                  onChange={e => set({ lifts: { ...a.lifts, [k]: e.target.value } })} style={{ ...INPUT, padding: '10px 10px' }} />
-              ))}
+            <label style={FIELD_LABEL}>I'm working toward</label>
+            <Row>{RUN_DISTANCES.map(d => <Chip key={d.key || 'gen'} selected={a.runGoal.distance === d.key} onClick={() => set({ runGoal: { ...a.runGoal, distance: d.key } })} label={d.label} />)}</Row>
+          </div>
+          {a.runGoal.distance && (
+            <Field label="Target time (optional)" value={a.runGoal.targetTime} onChange={v => set({ runGoal: { ...a.runGoal, targetTime: v } })} placeholder="e.g. 1:45:00" />
+          )}
+          <div>
+            <label style={FIELD_LABEL}>Recent time (optional — sets your paces)</label>
+            <Row>{RUN_TIME_DISTANCES.map(d => <Chip key={d.key} selected={a.runGoal.currentDistance === d.key} onClick={() => set({ runGoal: { ...a.runGoal, currentDistance: d.key } })} label={d.label} />)}</Row>
+            <div style={{ marginTop: 8 }}>
+              <input type="text" value={a.runGoal.currentTime} placeholder="e.g. 24:30" onChange={e => set({ runGoal: { ...a.runGoal, currentTime: e.target.value } })} style={INPUT} />
             </div>
-            <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 6 }}>No problem if you don't know them — we'll ask you to log a working set after week 1.</div>
           </div>
         </div>
       ) },
 
-    { title: 'Your goals', subtitle: 'Pick a race distance or just keep it general. Add a recent time for real pace targets — all optional.', valid: () => true,
+    hasSwim && { title: 'Your swimming goal', subtitle: 'How far do you want to swim continuously? Current ability is optional.', valid: () => true,
       render: () => (
-        <div style={{ display: 'grid', gap: 22 }}>
-          {hasRun && (
-            <div style={{ display: 'grid', gap: 10 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt-strong)' }}>🏃 Running</div>
-              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                {RUN_DISTANCES.map(d => <Chip key={d.key || 'gen'} selected={a.runGoal.distance === d.key} onClick={() => set({ runGoal: { ...a.runGoal, distance: d.key } })} label={d.label} />)}
-              </div>
-              <div>
-                <label style={FIELD_LABEL}>Recent time (optional — sets your paces)</label>
-                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
-                  {RUN_TIME_DISTANCES.map(d => <Chip key={d.key} selected={a.runGoal.currentDistance === d.key} onClick={() => set({ runGoal: { ...a.runGoal, currentDistance: d.key } })} label={d.label} />)}
-                </div>
-                <input type="text" value={a.runGoal.currentTime} placeholder="e.g. 24:30 or 1:45:00" onChange={e => set({ runGoal: { ...a.runGoal, currentTime: e.target.value } })} style={INPUT} />
-              </div>
-            </div>
-          )}
-          {hasSwim && (
-            <div style={{ display: 'grid', gap: 10 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt-strong)' }}>🏊 Swimming</div>
-              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                {SWIM_DISTANCES.map(d => <Chip key={d.m} selected={a.swimGoal.distance_m === d.m} onClick={() => set({ swimGoal: { ...a.swimGoal, distance_m: d.m } })} label={d.label} />)}
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                <Field label="Current 100m pace (opt.)" value={a.swimGoal.currentPace} onChange={v => set({ swimGoal: { ...a.swimGoal, currentPace: v } })} placeholder="e.g. 2:05" />
-                <Field label="Can swim now (opt.)" value={a.swimGoal.currentDistance} onChange={v => set({ swimGoal: { ...a.swimGoal, currentDistance: v } })} type="number" suffix="m" />
-              </div>
-            </div>
-          )}
-          <div style={{ display: 'grid', gap: 10 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt-strong)' }}>Other goals (optional)</div>
-            {a.goals.map((g, i) => (
-              <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 10, alignItems: 'center' }}>
-                <input type="text" value={g.label} placeholder="e.g. Squat bodyweight, ski-ready" onChange={e => set({ goals: a.goals.map((x, j) => j === i ? { ...x, label: e.target.value } : x) })} style={INPUT} />
-                {a.goals.length > 1 && <button onClick={() => set({ goals: a.goals.filter((_, j) => j !== i) })} style={{ background: 'none', border: 'none', color: 'var(--txt-muted)', fontSize: 16, cursor: 'pointer', padding: 4 }}>✕</button>}
-              </div>
-            ))}
-            {a.goals.length < 3 && <button onClick={() => set({ goals: [...a.goals, { label: '', target_date: '' }] })} style={{ padding: 10, borderRadius: 10, border: '1.5px dashed var(--hairline)', background: 'transparent', fontSize: 13, fontWeight: 600, color: 'var(--txt-muted)', cursor: 'pointer', fontFamily: 'inherit' }}>+ Add a goal</button>}
+        <div style={{ display: 'grid', gap: 16 }}>
+          <div>
+            <label style={FIELD_LABEL}>Continuous distance goal</label>
+            <Row>{SWIM_DISTANCES.map(d => <Chip key={d.m} selected={a.swimGoal.distance_m === d.m} onClick={() => set({ swimGoal: { ...a.swimGoal, distance_m: d.m } })} label={d.label} />)}</Row>
           </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <Field label="100m pace (opt.)" value={a.swimGoal.currentPace} onChange={v => set({ swimGoal: { ...a.swimGoal, currentPace: v } })} placeholder="e.g. 2:05" />
+            <Field label="Can swim now (opt.)" value={a.swimGoal.currentDistance} onChange={v => set({ swimGoal: { ...a.swimGoal, currentDistance: v } })} type="number" suffix="m" />
+          </div>
+        </div>
+      ) },
+
+    { title: 'Any other goals?', subtitle: 'Anything else you\'re working toward — optional.', valid: () => true,
+      render: () => (
+        <div style={{ display: 'grid', gap: 10 }}>
+          {a.goals.map((g, i) => (
+            <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 10, alignItems: 'center' }}>
+              <input type="text" value={g.label} placeholder="e.g. Squat bodyweight, ski-ready" onChange={e => set({ goals: a.goals.map((x, j) => j === i ? { ...x, label: e.target.value } : x) })} style={INPUT} />
+              {a.goals.length > 1 && <button onClick={() => set({ goals: a.goals.filter((_, j) => j !== i) })} style={{ background: 'none', border: 'none', color: 'var(--txt-muted)', fontSize: 16, cursor: 'pointer', padding: 4 }}>✕</button>}
+            </div>
+          ))}
+          {a.goals.length < 3 && <button onClick={() => set({ goals: [...a.goals, { label: '', target_date: '' }] })} style={{ padding: 10, borderRadius: 10, border: '1.5px dashed var(--hairline)', background: 'transparent', fontSize: 13, fontWeight: 600, color: 'var(--txt-muted)', cursor: 'pointer', fontFamily: 'inherit' }}>+ Add a goal</button>}
         </div>
       ) },
 
     { title: 'Your experience', subtitle: 'We\'ve suggested a level from your goals — adjust any that feel off.', valid: () => a.focus.every(k => a.experience[k]),
       render: () => (
-        <div style={{ display: 'grid', gap: 18 }}>
+        <div style={{ display: 'grid', gap: 16 }}>
           {a.focus.map(fk => {
             const f = FOCUS.find(x => x.key === fk);
             return (
@@ -298,33 +311,31 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         </div>
       ) },
 
-    { title: 'Plan timing', subtitle: 'When do you start, and are you building toward a date?', valid: () => !!a.startDate && (!a.hasEvent || !!a.eventDate),
+    { title: 'When do you start?', subtitle: 'And are you building toward a date?', valid: () => !!a.startDate && (!a.hasEvent || !!a.eventDate),
       render: () => (
-        <div style={{ display: 'grid', gap: 20 }}>
+        <div style={{ display: 'grid', gap: 18 }}>
           <div>
             <label style={FIELD_LABEL}>Start date</label>
-            <input type="date" value={a.startDate} onChange={e => set({ startDate: e.target.value })} style={INPUT} />
+            <DateField value={a.startDate} onChange={v => set({ startDate: v })} />
           </div>
           <div>
             <label style={FIELD_LABEL}>Training for an event?</label>
-            <div style={{ display: 'flex', gap: 6 }}>
+            <Row>
               <Chip selected={a.hasEvent} onClick={() => set({ hasEvent: true })} label="Yes — I have a date" />
               <Chip selected={!a.hasEvent} onClick={() => set({ hasEvent: false })} label="No set date" />
-            </div>
+            </Row>
           </div>
           {a.hasEvent ? (
             <div>
               <label style={FIELD_LABEL}>Event date</label>
-              <input type="date" value={a.eventDate} onChange={e => set({ eventDate: e.target.value })} style={INPUT} />
-              <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 6 }}>Your plan length is set by this date.</div>
+              <DateField value={a.eventDate} onChange={v => set({ eventDate: v })} />
+              <div style={HINT}>Your plan length is set by this date.</div>
             </div>
           ) : (
             <div>
               <label style={FIELD_LABEL}>How many weeks?</label>
-              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                {PLAN_WEEKS.map(w => <Chip key={w} selected={a.planWeeks === w} onClick={() => set({ planWeeks: w })} label={`${w} wks`} />)}
-              </div>
-              <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 6 }}>One training block. Your coach extends it from there.</div>
+              <Row>{PLAN_WEEKS.map(w => <Chip key={w} selected={a.planWeeks === w} onClick={() => set({ planWeeks: w })} label={`${w} wks`} />)}</Row>
+              <div style={HINT}>One training block — your coach extends it from there.</div>
             </div>
           )}
         </div>
@@ -335,34 +346,39 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         <div style={{ display: 'grid', gap: 20 }}>
           <div>
             <label style={FIELD_LABEL}>Days per week</label>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>{[1, 2, 3, 4, 5, 6, 7].map(n => <Chip key={n} selected={a.daysPerWeek === n} onClick={() => set({ daysPerWeek: n })} label={String(n)} />)}</div>
+            <Row>{[1, 2, 3, 4, 5, 6, 7].map(n => <Chip key={n} selected={a.daysPerWeek === n} onClick={() => set({ daysPerWeek: n })} label={String(n)} />)}</Row>
           </div>
           <div>
             <label style={FIELD_LABEL}>Typical session length</label>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>{SESSION_LENGTHS.map(m => <Chip key={m} selected={a.sessionMinutes === m} onClick={() => set({ sessionMinutes: m })} label={m === 90 ? '90+ min' : `${m} min`} />)}</div>
-          </div>
-          <div>
-            <label style={FIELD_LABEL}>Which days suit you? (optional)</label>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>{DAYS.map(d => <Chip key={d.key} selected={a.days.includes(d.key)} onClick={() => toggle(d.key, 'days')} label={d.label} />)}</div>
-          </div>
-          {hasRun && (
-            <div>
-              <label style={FIELD_LABEL}>Long-run day</label>
-              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>{DAYS.map(d => <Chip key={d.key} selected={a.longRunDay === d.key} onClick={() => set({ longRunDay: d.key })} label={d.label} />)}</div>
-            </div>
-          )}
-          <div>
-            <label style={FIELD_LABEL}>Open to two sessions in a day?</label>
-            <div style={{ display: 'flex', gap: 6 }}>
-              <Chip selected={a.doubles} onClick={() => set({ doubles: true })} label="Yes — doubles ok" />
-              <Chip selected={!a.doubles} onClick={() => set({ doubles: false })} label="One a day" />
-            </div>
-            <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 6 }}>Lets us pair short strength work with an easy day instead of using a whole extra day.</div>
+            <Row>{SESSION_LENGTHS.map(m => <Chip key={m} selected={a.sessionMinutes === m} onClick={() => set({ sessionMinutes: m })} label={m === 90 ? '90+ min' : `${m} min`} />)}</Row>
           </div>
         </div>
       ) },
 
-    multi && { title: 'Split your week', subtitle: 'A suggested split across your sports — nudge it to suit you. Your gym days set the split (full-body / upper-lower / PPL).', valid: () => allocSum === a.daysPerWeek,
+    { title: 'Your week', subtitle: 'Fine-tune which days work and how we use them.', valid: () => true,
+      render: () => (
+        <div style={{ display: 'grid', gap: 20 }}>
+          <div>
+            <label style={FIELD_LABEL}>Which days suit you? (optional)</label>
+            <Row>{DAYS.map(d => <Chip key={d.key} selected={a.days.includes(d.key)} onClick={() => toggle(d.key, 'days')} label={d.label} />)}</Row>
+          </div>
+          {hasRun && (
+            <div>
+              <label style={FIELD_LABEL}>Long-run day</label>
+              <Row>{DAYS.map(d => <Chip key={d.key} selected={a.longRunDay === d.key} onClick={() => set({ longRunDay: d.key })} label={d.label} />)}</Row>
+            </div>
+          )}
+          <div>
+            <label style={FIELD_LABEL}>Open to two sessions in a day?</label>
+            <Row>
+              <Chip selected={a.doubles} onClick={() => set({ doubles: true })} label="Yes — doubles ok" />
+              <Chip selected={!a.doubles} onClick={() => set({ doubles: false })} label="One a day" />
+            </Row>
+          </div>
+        </div>
+      ) },
+
+    multi && { title: 'Split your week', subtitle: 'A suggested split across your sports — nudge to suit you. Gym days set the split (full-body / upper-lower / PPL).', valid: () => allocSum === a.daysPerWeek,
       render: () => (
         <div style={{ display: 'grid', gap: 12 }}>
           {disciplines.map(d => (
@@ -407,25 +423,24 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
       render: () => {
         const focusLabels = a.focus.map(k => FOCUS.find(f => f.key === k)?.label).filter(Boolean);
         const otherGoals = a.goals.filter(g => g.label.trim());
-        const runLabel = hasRun ? `${RUN_DISTANCES.find(d => d.key === a.runGoal.distance)?.label || 'General'}${a.runGoal.currentTime.trim() ? ` · from ${a.runGoal.currentTime.trim()}` : ''}` : null;
+        const runLabel = hasRun ? `${RUN_DISTANCES.find(d => d.key === a.runGoal.distance)?.label || 'General'}${a.runGoal.targetTime.trim() ? ` · target ${a.runGoal.targetTime.trim()}` : ''}` : null;
         const swimLabel = hasSwim ? `${(a.swimGoal.distance_m / 1000)} km${a.swimGoal.currentPace.trim() ? ` · ${a.swimGoal.currentPace.trim()}/100m` : ''}` : null;
         const allocLabel = multi ? disciplines.map(d => `${a.allocation[d] || 0} ${DISCIPLINE_LABEL[d]?.toLowerCase() || d}`).join(' · ') : null;
         const liftBits = hasGym ? ['squat', 'bench', 'deadlift'].filter(k => a.lifts[k]).map(k => `${k[0].toUpperCase()}${a.lifts[k]}`) : [];
-        const timing = a.hasEvent ? `from ${a.startDate} → event ${a.eventDate || '?'}` : `${a.startDate} · ${a.planWeeks} wks`;
+        const timing = a.hasEvent ? `${a.startDate} → event ${a.eventDate || '?'}` : `${a.startDate} · ${a.planWeeks} wks`;
         return (
-          <div style={{ display: 'grid', gap: 8 }}>
+          <div style={{ display: 'grid', gap: 6 }}>
             <SummaryRow label="Focus" value={focusLabels.join(', ') || '—'} />
             {multi && <SummaryRow label="Primary" value={DISCIPLINE_LABEL[a.primary] || a.primary || '—'} />}
-            {hasGym && <SummaryRow label="Gym style" value={STYLES.find(s => s.key === a.strengthStyle)?.label || '—'} />}
+            {hasGym && <SummaryRow label="Gym goal" value={STYLES.find(s => s.key === a.strengthStyle)?.label || '—'} />}
             {liftBits.length > 0 && <SummaryRow label="Maxes" value={liftBits.join(' · ') + ' kg'} />}
             {runLabel && <SummaryRow label="Running" value={runLabel} />}
             {swimLabel && <SummaryRow label="Swimming" value={swimLabel} />}
-            {otherGoals.length > 0 && <SummaryRow label="Other goals" value={otherGoals.map(g => g.label.trim()).join(' · ')} />}
+            {otherGoals.length > 0 && <SummaryRow label="Other" value={otherGoals.map(g => g.label.trim()).join(' · ')} />}
             <SummaryRow label="Timing" value={timing} />
-            <SummaryRow label="Week" value={a.daysPerWeek ? `${a.daysPerWeek} days · ${a.sessionMinutes === 90 ? '90+' : a.sessionMinutes} min${a.doubles ? ' · doubles ok' : ''}` : '—'} />
+            <SummaryRow label="Week" value={a.daysPerWeek ? `${a.daysPerWeek} days · ${a.sessionMinutes === 90 ? '90+' : a.sessionMinutes} min${a.doubles ? ' · doubles' : ''}` : '—'} />
             {allocLabel && <SummaryRow label="Split" value={allocLabel} />}
             <SummaryRow label="Access" value={a.access.map(k => ACCESS.find(o => o.key === k)?.label).filter(Boolean).join(', ') || '—'} />
-            {a.injuries.filter(i => i.title.trim()).length > 0 && <SummaryRow label="Training around" value={a.injuries.filter(i => i.title.trim()).map(i => i.title.trim()).join(', ')} />}
           </div>
         );
       } }
@@ -436,6 +451,9 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
   const isLast = safeStep === steps.length - 1;
   const canNext = cur.valid();
 
+  // Scroll the content area back to top whenever the step changes.
+  useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = 0; }, [safeStep]);
+
   const next = () => { if (canNext && !isLast) setStep(safeStep + 1); };
   const back = () => setStep(Math.max(0, safeStep - 1));
   const finish = async () => {
@@ -444,29 +462,34 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     try { if (onComplete) await onComplete(a); } finally { setSaving(false); }
   };
 
+  const PAD = devTools ? 10 : 22;
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: devTools ? 'auto' : '100dvh', maxWidth: 480, margin: '0 auto', padding: devTools ? '4px 2px' : '24px 22px 22px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: devTools ? 'auto' : '100dvh', maxWidth: 480, width: '100%', margin: '0 auto', boxSizing: 'border-box' }}>
       {devTools && (
-        <div style={{ display: 'flex', gap: 6, overflowX: 'auto', marginBottom: 12, paddingBottom: 4 }}>
+        <div style={{ display: 'flex', gap: 6, overflowX: 'auto', padding: '4px 2px', marginBottom: 6 }}>
           {steps.map((s, i) => (
             <button key={i} onClick={() => setStep(i)} title={s.title} style={{ flexShrink: 0, padding: '5px 9px', borderRadius: 8, fontSize: 11, fontWeight: 700, border: '1px solid var(--hairline)', cursor: 'pointer', fontFamily: 'inherit', background: i === safeStep ? 'var(--rust)' : 'var(--bg-surface-2)', color: i === safeStep ? '#fff' : 'var(--txt-muted)', whiteSpace: 'nowrap' }}>{i + 1}. {s.title}</button>
           ))}
         </div>
       )}
 
-      {/* Fixed header */}
-      <div style={{ display: 'flex', gap: 5, marginBottom: 18 }}>
-        {steps.map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= safeStep ? 'var(--rust)' : 'var(--bg-surface-2)', transition: 'background 0.2s' }} />)}
+      {/* Pinned header */}
+      <div style={{ flexShrink: 0, padding: `${devTools ? 4 : 22}px ${PAD}px 0` }}>
+        <div style={{ display: 'flex', gap: 5, marginBottom: 16 }}>
+          {steps.map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= safeStep ? 'var(--rust)' : 'var(--bg-surface-2)', transition: 'background 0.2s' }} />)}
+        </div>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: 6 }}>Step {safeStep + 1} of {steps.length}</div>
+        <h1 className="h1" style={{ marginBottom: 6 }}>{cur.title}</h1>
+        <p className="sub" style={{ marginBottom: 16 }}>{cur.subtitle}</p>
       </div>
-      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: 8 }}>Step {safeStep + 1} of {steps.length}</div>
-      <h1 className="h1" style={{ marginBottom: 8 }}>{cur.title}</h1>
-      <p className="sub" style={{ marginBottom: 22 }}>{cur.subtitle}</p>
 
-      {/* Reserved content area — keeps the footer from jumping between steps */}
-      <div style={{ flex: 1, minHeight: devTools ? 'auto' : 320 }}>{cur.render()}</div>
+      {/* Scrollable content — the ONLY part that scrolls */}
+      <div ref={scrollRef} style={{ flex: 1, minHeight: 0, overflowY: devTools ? 'visible' : 'auto', WebkitOverflowScrolling: 'touch', padding: `2px ${PAD}px 16px` }}>
+        {cur.render()}
+      </div>
 
-      {/* Fixed footer */}
-      <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
+      {/* Pinned footer — buttons never move */}
+      <div style={{ flexShrink: 0, display: 'flex', gap: 10, padding: `12px ${PAD}px calc(14px + env(safe-area-inset-bottom))`, borderTop: '1px solid var(--hairline)', background: 'var(--bg-surface)' }}>
         {safeStep > 0 && <button onClick={back} disabled={saving} style={{ padding: '14px 20px', borderRadius: 12, border: '1px solid var(--hairline)', background: 'transparent', color: 'var(--txt-muted)', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Back</button>}
         <button onClick={isLast ? finish : next} disabled={!canNext || saving} style={{ flex: 1, padding: 15, borderRadius: 12, border: 'none', background: (canNext && !saving) ? 'var(--rust)' : 'var(--bg-surface-2)', color: (canNext && !saving) ? '#fff' : 'var(--txt-muted)', fontSize: 15, fontWeight: 600, cursor: (canNext && !saving) ? 'pointer' : 'default', fontFamily: 'inherit' }}>
           {saving ? 'Setting up…' : isLast ? completeLabel : 'Continue'}

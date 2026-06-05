@@ -97,7 +97,7 @@ export default function Profile() {
   const swimGoal = profile.swim_goal;
   const runLevel = experience.run || experience.triathlon || 'beginner';
   const runPrediction = runGoal && runGoal.distance
-    ? computePaces(runGoal.distance, runGoal.current, runLevel) : null;
+    ? computePaces(runGoal.distance, runGoal.current, runLevel, runGoal.target_time) : null;
   const hasGoalTargets = (runGoal && runGoal.distance) || (swimGoal && swimGoal.distance_m);
   const hasTraining = focus.length > 0 || availability.days_per_week != null || access.length > 0;
   const activeInjuries = injuries.filter(i => i.status === 'active' || i.status === 'rehabbing' || i.status === 'monitoring');
@@ -152,7 +152,7 @@ export default function Profile() {
                 </div>
                 <div style={{ fontSize: 12, color: 'var(--txt-muted)', marginTop: 2 }}>
                   {runPrediction && runPrediction.goalPrediction
-                    ? `${runPrediction.estimated ? 'Estimated' : 'Projected'} time ~${runPrediction.goalPrediction} · easy ${runPrediction.paces.easy}/km · threshold ${runPrediction.paces.threshold}/km`
+                    ? `${runPrediction.isTarget ? 'Target' : runPrediction.estimated ? 'Estimated' : 'Projected'} ${runPrediction.goalPrediction} · goal ${runPrediction.paces.goal}/km · easy ${runPrediction.paces.easy}/km`
                     : 'Pace targets set from your training'}
                 </div>
               </div>

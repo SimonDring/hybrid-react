@@ -54,7 +54,7 @@ function riegel(t1, d1, d2) { return t1 * Math.pow(d2 / d1, 1.06); }
  * @returns {{ paces, fivekPaceSec, goalPaceSec, goalPrediction, estimated }}
  *   paces: { easy, marathon, threshold, interval, rep, goal } 'm:ss' per km
  */
-export function computePaces(goalKey, current, level = 'beginner') {
+export function computePaces(goalKey, current, level = 'beginner', targetTime = null) {
   let fivekSec, estimated;
   const t = current && parseTime(current.time);
   const dm = current && metresFor(current.distance);
@@ -65,12 +65,16 @@ export function computePaces(goalKey, current, level = 'beginner') {
   const paces = {};
   for (const k in PACE_OFFSET) paces[k] = fmtPace(fivekPaceSec + PACE_OFFSET[k]);
 
+  // Goal pace: the athlete's TARGET time when they gave one (their ambition),
+  // otherwise a Riegel prediction from current fitness. Easy/threshold/interval
+  // paces always come from current fitness — you train where you are, race at goal.
   const goalM = metresFor(goalKey) || 10000;
-  const goalSec = riegel(fivekSec, 5000, goalM);
+  const tgt = parseTime(targetTime);
+  const goalSec = tgt || riegel(fivekSec, 5000, goalM);
   const goalPaceSec = goalSec / (goalM / 1000);
   paces.goal = fmtPace(goalPaceSec);
 
-  return { paces, fivekPaceSec, goalPaceSec, goalPrediction: fmtTime(goalSec), estimated };
+  return { paces, fivekPaceSec, goalPaceSec, goalPrediction: fmtTime(goalSec), estimated, isTarget: !!tgt };
 }
 
 // Zone label + actual pace, e.g. "Threshold · 4:49/km".
@@ -189,7 +193,7 @@ export function buildWeek(ctx = {}) {
   const progress = ctx.progress != null ? ctx.progress : 0.5;
   const taper = !!ctx.taper;
   const taperMult = ctx.taperMult || 1;
-  const { paces } = computePaces(goalKey, goal.current, level);
+  const { paces } = computePaces(goalKey, goal.current, level, goal.target_time);
 
   // Per-week scaling of rep counts / tempo length (grows with fitness + level).
   const lf = { beginner: -1, returning: 0, intermediate: 0, advanced: 1 }[level] ?? 0;

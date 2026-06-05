@@ -251,10 +251,10 @@ function goalGateLabels(profile) {
   const out = [];
   const rg = profile.run_goal;
   if (rg && rg.distance) {
-    const { goalPrediction } = running.computePaces(rg.distance, rg.current, levelFor('run', profile));
+    const { goalPrediction, isTarget } = running.computePaces(rg.distance, rg.current, levelFor('run', profile), rg.target_time);
     const dist = { '5k': '5K', '10k': '10K', 'half': 'Half-marathon', 'marathon': 'Marathon' }[rg.distance] || rg.distance;
     const bits = [];
-    if (goalPrediction) bits.push(`~${goalPrediction}`);
+    if (goalPrediction) bits.push(`${isTarget ? 'target ' : '~'}${goalPrediction}`);
     if (rg.target_date) bits.push(`by ${rg.target_date}`);
     out.push({ label: `${dist}${bits.length ? ' (' + bits.join(', ') + ')' : ''}`, required: true });
   }

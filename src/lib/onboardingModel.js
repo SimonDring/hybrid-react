@@ -22,7 +22,7 @@ export const BLANK_ANSWERS = {
   focus: [], primary: '', strengthStyle: 'functional',
   lifts: { squat: '', bench: '', deadlift: '' },
   experience: {},
-  runGoal: { distance: '', currentDistance: '5k', currentTime: '' },
+  runGoal: { distance: '', targetTime: '', currentDistance: '5k', currentTime: '' },
   swimGoal: { distance_m: 2000, currentPace: '', currentDistance: '' },
   goals: [{ label: '', target_date: '' }],
   // Timing: start date + either an event date or a block length (weeks).
@@ -57,7 +57,7 @@ export function answersToProfilePatch(a) {
     strength_style: hasGym ? a.strengthStyle : null,
     lifts: hasGym ? { squat: numOrNull(a.lifts.squat), bench: numOrNull(a.lifts.bench), deadlift: numOrNull(a.lifts.deadlift) } : null,
     experience: a.experience,
-    run_goal: hasRun ? { distance: a.runGoal.distance || null, target_date: target, current: runCurrent } : null,
+    run_goal: hasRun ? { distance: a.runGoal.distance || null, target_date: target, target_time: (a.runGoal.targetTime || '').trim() || null, current: runCurrent } : null,
     swim_goal: hasSwim ? { distance_m: a.swimGoal.distance_m, target_date: target, current: swimCurrent } : null,
     availability: {
       days_per_week: a.daysPerWeek, session_minutes: a.sessionMinutes, days: a.days,
