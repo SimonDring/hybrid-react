@@ -15,6 +15,8 @@
 
 import { create } from 'zustand';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient.js';
+import Database from '../lib/Database.js';
+import { deleteAccount as deleteCloudAccount } from '../lib/SyncService.js';
 
 // Import lazily to avoid circular dependency (authStore ← trainingStore ← Database)
 function getTrainingStore() {
@@ -182,6 +184,20 @@ export const useAuthStore = create((set, get) => ({
     if (!isSupabaseConfigured) return;
     await supabase.auth.signOut();
     set({ status: 'signed_out', user: null, linkSentTo: null, recoveryMode: false });
+  },
+
+  // Permanently delete the account: wipe cloud data + the auth user (server-side),
+  // then clear this device and sign out. Returns true on success.
+  async deleteAccount() {
+    const res = await deleteCloudAccount();
+    if (!res.ok) {
+      set({ errorMessage: res.error || 'Could not delete your account. Please try again.' });
+      return false;
+    }
+    Database.services.resetAll();                 // clear local cache on this device
+    if (isSupabaseConfigured) await supabase.auth.signOut();
+    set({ status: 'signed_out', user: null, linkSentTo: null, recoveryMode: false, errorMessage: null });
+    return true;
   },
 
   // Called once at startup to check for an existing session and subscribe

@@ -173,6 +173,19 @@ export const useTrainingStore = create((set) => ({
       set(buildView());
     }
   },
+  // Clear the current plan and re-trigger onboarding to build a fresh one. KEEPS
+  // baseline, tracked ability (lifts/lift_log) and ALL training history (sessions,
+  // check-ins, metrics, injuries) — only the plan-defining inputs are reset, so
+  // the next plan layers on top of where you actually are.
+  async clearPlan() {
+    await Sync.updateProfile({
+      focus: [], primary: null, strength_style: null, experience: {},
+      run_goal: null, swim_goal: null, availability: {}, long_run_day: null, doubles: true,
+      plan_start_date: null, plan_weeks: null, access: [], pool_length_m: null,
+      markers: '', goals: [], onboarded: false
+    });
+    set(buildView());
+  },
   async setGoals(goals) {
     await Sync.setGoals(goals);
     set(buildView());

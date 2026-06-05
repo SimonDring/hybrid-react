@@ -15,10 +15,28 @@ export default function Settings() {
   const fitbitSyncing           = useTrainingStore(s => s.fitbitSyncing);
   const syncFitbitToday         = useTrainingStore(s => s.syncFitbitToday);
   const refreshFitbitConnection = useTrainingStore(s => s.refreshFitbitConnection);
+  const clearPlan = useTrainingStore(state => state.clearPlan);
   const authStatus = useAuthStore(s => s.status);
   const user = useAuthStore(s => s.user);
   const signOut = useAuthStore(s => s.signOut);
   const updatePassword = useAuthStore(s => s.updatePassword);
+  const deleteAccount = useAuthStore(s => s.deleteAccount);
+
+  // Delete-account confirmation (type-to-confirm)
+  const [delOpen, setDelOpen] = useState(false);
+  const [delText, setDelText] = useState('');
+  const [delMsg, setDelMsg] = useState(null);
+  const handleClearPlan = async () => {
+    if (!confirm('Clear your current plan and set up a new one?\n\nYour training history, logged sessions and tracked lift weights are kept — only the plan is rebuilt from fresh answers.')) return;
+    await clearPlan(); // sets onboarded:false → the onboarding wizard takes over
+  };
+  const handleDeleteAccount = async () => {
+    if (delText.trim().toUpperCase() !== 'DELETE') { setDelMsg('Type DELETE to confirm.'); return; }
+    setDelMsg('Deleting…');
+    const ok = await deleteAccount();
+    if (!ok) setDelMsg(useAuthStore.getState().errorMessage || 'Could not delete account. Try again.');
+    // on success the app signs out and this screen unmounts
+  };
 
   // Set / change password (works while signed in — no email needed)
   const [pwOpen, setPwOpen] = useState(false);
@@ -236,6 +254,17 @@ export default function Settings() {
         <li><span className="k">Reassessments</span><span className="v">{counts.reassessments}</span></li>
       </ul>
 
+      <h2 className="h3">Plan</h2>
+      <div className="settings-group">
+        <button className="settings-row" onClick={handleClearPlan}>
+          <span>Clear plan &amp; start over</span>
+          <span className="sr-meta">↻</span>
+        </button>
+      </div>
+      <p className="sub" style={{ fontSize: 11, marginBottom: 20 }}>
+        Rebuilds your plan from fresh setup answers. Keeps your history, logged sessions and tracked lift weights.
+      </p>
+
       <h2 className="h3">About</h2>
       <ul className="kv-list">
         <li><span className="k">Version</span><span className="v">2.0 React</span></li>
@@ -321,6 +350,34 @@ export default function Settings() {
           >
             Sign out
           </button>
+
+          {/* Danger zone — permanent account deletion */}
+          {!delOpen ? (
+            <button
+              onClick={() => { setDelOpen(true); setDelMsg(null); setDelText(''); }}
+              style={{ width: '100%', padding: 13, marginTop: 10, borderRadius: 11, border: '1px solid var(--hairline)', background: 'transparent', color: 'var(--rust)', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}
+            >
+              Delete account
+            </button>
+          ) : (
+            <div style={{ marginTop: 10, padding: '14px 16px', borderRadius: 12, border: '1px solid var(--rust)', background: 'var(--bg-surface)' }}>
+              <div style={{ fontSize: 13, color: 'var(--txt-strong)', fontWeight: 700, marginBottom: 6 }}>Permanently delete your account</div>
+              <div style={{ fontSize: 12.5, color: 'var(--txt-muted)', marginBottom: 10, lineHeight: 1.5 }}>
+                This erases your account and all your data everywhere — sessions, metrics, plan and tracked lifts. It can't be undone. Type <strong>DELETE</strong> to confirm.
+              </div>
+              <input
+                value={delText}
+                onChange={e => setDelText(e.target.value)}
+                placeholder="DELETE"
+                style={{ width: '100%', boxSizing: 'border-box', fontSize: 16, padding: '12px 14px', borderRadius: 11, border: '1px solid var(--hairline)', background: 'var(--bg-surface-2)', fontFamily: 'inherit', color: 'var(--txt-strong)', marginBottom: 10 }}
+              />
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button onClick={handleDeleteAccount} style={{ flex: 1, padding: 12, borderRadius: 11, border: 'none', background: 'var(--rust)', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>Delete forever</button>
+                <button onClick={() => { setDelOpen(false); setDelText(''); setDelMsg(null); }} style={{ padding: '12px 18px', borderRadius: 11, border: '1px solid var(--hairline)', background: 'transparent', color: 'var(--txt-muted)', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Cancel</button>
+              </div>
+              {delMsg && <div style={{ fontSize: 13, marginTop: 10, color: 'var(--rust)' }}>{delMsg}</div>}
+            </div>
+          )}
         </>
       ) : (
         <p style={{ fontSize: 13, color: 'var(--txt-muted)' }}>

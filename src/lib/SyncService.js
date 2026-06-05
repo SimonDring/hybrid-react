@@ -247,6 +247,22 @@ export async function setGoals(goals) {
   return updateProfile({ goals });
 }
 
+/**
+ * Permanently delete the signed-in user's account + all their cloud data via the
+ * server-side delete_user() function (see supabase/migrations/003_delete_user.sql).
+ * Local data is cleared separately by the caller after this resolves.
+ * @returns {{ ok:boolean, local?:boolean, error?:string }}
+ */
+export async function deleteAccount() {
+  if (!canSync()) return { ok: true, local: true }; // offline / not configured — local only
+  const { error } = await supabase.rpc('delete_user');
+  if (error) {
+    logError('deleteAccount', error);
+    return { ok: false, error: error.message };
+  }
+  return { ok: true };
+}
+
 // ---------- Sessions ----------
 
 export async function startSession(templateRef) {

@@ -98,9 +98,14 @@ export default function App() {
 
   // First-run onboarding. A user is treated as onboarded if they've finished the
   // wizard OR already have data (goals/name) — so existing users aren't trapped.
-  const isOnboarded = profile.onboarded === true
-    || (profile.goals && profile.goals.length > 0)
-    || !!(profile.name && profile.name.trim());
+  // An explicit onboarded:false (e.g. after "Clear plan") always re-triggers the
+  // wizard, even though the user still has a name + history. Otherwise a user is
+  // treated as onboarded if they've finished it or already have goals/name.
+  const isOnboarded = profile.onboarded === false
+    ? false
+    : (profile.onboarded === true
+      || (profile.goals && profile.goals.length > 0)
+      || !!(profile.name && profile.name.trim()));
   // While the first cloud pull is in flight we can't yet tell a brand-new user
   // from an existing one on a fresh device — hold on the splash to avoid showing
   // either the wizard or the app on the wrong side of the sync.
