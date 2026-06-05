@@ -16,6 +16,7 @@ export default function Settings() {
   const syncFitbitToday         = useTrainingStore(s => s.syncFitbitToday);
   const refreshFitbitConnection = useTrainingStore(s => s.refreshFitbitConnection);
   const clearPlan = useTrainingStore(state => state.clearPlan);
+  const wipeTrainingData = useTrainingStore(state => state.wipeTrainingData);
   const authStatus = useAuthStore(s => s.status);
   const user = useAuthStore(s => s.user);
   const signOut = useAuthStore(s => s.signOut);
@@ -29,6 +30,11 @@ export default function Settings() {
   const handleClearPlan = async () => {
     if (!confirm('Clear your current plan and set up a new one?\n\nYour training history, logged sessions and tracked lift weights are kept — only the plan is rebuilt from fresh answers.')) return;
     await clearPlan(); // sets onboarded:false → the onboarding wizard takes over
+  };
+  const handleWipeData = async () => {
+    if (!confirm('Delete all your logged training data — sessions, check-ins, daily metrics, injuries and tracked lift weights?\n\nYour account, profile and current plan are kept. This cannot be undone.')) return;
+    await wipeTrainingData();
+    alert('Your training data has been deleted.');
   };
   const handleDeleteAccount = async () => {
     if (delText.trim().toUpperCase() !== 'DELETE') { setDelMsg('Type DELETE to confirm.'); return; }
@@ -349,6 +355,14 @@ export default function Settings() {
             }}
           >
             Sign out
+          </button>
+
+          {/* Lighter reset — wipe history, keep the account + plan */}
+          <button
+            onClick={handleWipeData}
+            style={{ width: '100%', padding: 13, marginTop: 10, borderRadius: 11, border: '1px solid var(--hairline)', background: 'transparent', color: 'var(--txt-muted)', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}
+          >
+            Delete my training data
           </button>
 
           {/* Danger zone — permanent account deletion */}

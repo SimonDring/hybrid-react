@@ -248,6 +248,26 @@ export async function setGoals(goals) {
 }
 
 /**
+ * Soft-delete all the user's logged training data in the cloud (sessions,
+ * check-ins, daily metrics, injuries, reassessments) — but keep the account and
+ * profile. Uses bulk update of deleted_at, so it works with the existing
+ * update-own-rows RLS (no migration needed). The plan + history disappear from
+ * the app because pullFromSupabase() filters deleted_at IS NULL.
+ * @returns {{ ok:boolean, local?:boolean, error?:string }}
+ */
+export async function deleteTrainingData() {
+  if (!canSync()) return { ok: true, local: true };
+  const userId = uid();
+  const stamp = new Date().toISOString();
+  const tables = ['session_logs', 'sessions', 'weekly_checkins', 'reassessments', 'daily_metrics', 'injuries'];
+  for (const t of tables) {
+    const { error } = await supabase.from(t).update({ deleted_at: stamp }).eq('user_id', userId).is('deleted_at', null);
+    if (error) { logError('deleteTrainingData:' + t, error); return { ok: false, error: error.message }; }
+  }
+  return { ok: true };
+}
+
+/**
  * Permanently delete the signed-in user's account + all their cloud data via the
  * server-side delete_user() function (see supabase/migrations/003_delete_user.sql).
  * Local data is cleared separately by the caller after this resolves.

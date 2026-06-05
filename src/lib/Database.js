@@ -713,6 +713,13 @@ export const services = {
     Storage.remove(Storage.KEYS.legacyReassess);
     ensureDefaultUserAndPlan();
     notify();
+  },
+
+  // Clear logged training history locally (keeps the account, profile + plan).
+  clearTrainingData() {
+    ['session_logs', 'sessions', 'weekly_checkins', 'reassessments', 'daily_metrics', 'injuries']
+      .forEach(t => { if (tables[t]) { tables[t] = {}; persist(t); } });
+    notify();
   }
 };
 

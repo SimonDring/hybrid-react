@@ -186,6 +186,16 @@ export const useTrainingStore = create((set) => ({
     });
     set(buildView());
   },
+  // Delete all logged training data (sessions, check-ins, daily metrics,
+  // injuries, reassessments) and reset tracked lift ability — but KEEP the
+  // account, baseline and current plan. A clean slate of history without
+  // re-onboarding. (Lighter than clearPlan, much lighter than account deletion.)
+  async wipeTrainingData() {
+    await Sync.deleteTrainingData();          // cloud soft-delete (no-op if local)
+    await Sync.updateProfile({ lift_log: null }); // reset tracked ability
+    Database.services.clearTrainingData();    // clear local history
+    set(buildView());
+  },
   async setGoals(goals) {
     await Sync.setGoals(goals);
     set(buildView());
