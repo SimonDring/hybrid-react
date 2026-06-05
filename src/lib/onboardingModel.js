@@ -17,20 +17,32 @@ export function numOrNull(v) {
 }
 
 // A complete, empty answer set — every caller seeds from this.
+// `focus` is a single-choice array ([] or [key]) — triathlon expands to 3
+// disciplines downstream. `strengthAccess` (full_gym|home_weights|none) +
+// `poolAccess` are composed into the legacy `access` array in the patch.
 export const BLANK_ANSWERS = {
-  name: '', age: '', sex: '', height_cm: '', bodyweight_kg: '',
+  name: '', age: '', sex: '', height_cm: '', bodyweight_kg: '', activityLevel: '',
   focus: [], primary: '', strengthStyle: 'functional',
   lifts: { squat: '', bench: '', deadlift: '' },
   experience: {},
   runGoal: { distance: '', targetTime: '', currentDistance: '5k', currentTime: '' },
   swimGoal: { distance_m: 2000, currentPace: '', currentDistance: '' },
-  goals: [{ label: '', target_date: '' }],
+  otherGoals: [],
   // Timing: start date + either an event date or a block length (weeks).
   startDate: '', hasEvent: false, eventDate: '', planWeeks: 16,
   daysPerWeek: null, sessionMinutes: 60, days: [], allocation: {},
   longRunDay: 'sat', doubles: true,
-  access: [], poolLengthM: 25, injuries: [], notes: ''
+  strengthAccess: '', poolAccess: false, poolLengthM: 25, injuries: [], notes: ''
 };
+
+// Build the legacy access array the engines expect from the branched answers.
+function composeAccess(a, disciplines) {
+  const access = [];
+  if (a.strengthAccess) access.push(a.strengthAccess);        // full_gym | home_weights | none
+  if (disciplines.includes('swim') && a.poolAccess) access.push('pool');
+  if (disciplines.includes('cycle')) access.push('bike');     // implied for cyclists/triathletes
+  return access;
+}
 
 export function answersToProfilePatch(a) {
   const today = new Date().toISOString().slice(0, 10);
@@ -47,11 +59,13 @@ export function answersToProfilePatch(a) {
     ? { pace_per_100: swimPace || null, distance_m: numOrNull(a.swimGoal.currentDistance) } : null;
   // Event date (if any) anchors the goal target; otherwise the block length drives it.
   const target = a.hasEvent ? (a.eventDate || '') : '';
+  const access = composeAccess(a, disciplines);
   return {
     plan_start_date: a.startDate || today,
     plan_weeks: a.hasEvent ? null : (numOrNull(a.planWeeks) || 16),
     name: a.name.trim(), age: numOrNull(a.age), sex: a.sex || null,
     height_cm: numOrNull(a.height_cm), bodyweight_kg: numOrNull(a.bodyweight_kg),
+    activity_level: a.activityLevel || null,
     focus: a.focus,
     primary: a.primary || disciplines[0] || null,
     strength_style: hasGym ? a.strengthStyle : null,
@@ -65,17 +79,15 @@ export function answersToProfilePatch(a) {
     },
     long_run_day: a.longRunDay || 'sat',
     doubles: a.doubles !== false,
-    access: a.access,
-    pool_length_m: a.access.includes('pool') ? numOrNull(a.poolLengthM) : null,
+    access,
+    pool_length_m: access.includes('pool') ? numOrNull(a.poolLengthM) : null,
     markers: a.notes.trim(),
     onboarded: true
   };
 }
 
 export function answersToGoalRows(a) {
-  return a.goals.filter(g => g.label.trim()).map((g, i) => ({
-    rank: i + 1, label: g.label.trim(), target_date: g.target_date || ''
-  }));
+  return (a.otherGoals || []).map((label, i) => ({ rank: i + 1, label, target_date: '' }));
 }
 
 export function answersToInjuries(a) {

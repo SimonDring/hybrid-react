@@ -43,7 +43,7 @@ const PRESETS = [
       runGoal: { distance: 'half', currentDistance: '5k', currentTime: '22:30' },
       swimGoal: { distance_m: 2500, currentPace: '', currentDistance: '800' },
       hasEvent: true, eventDate: inWeeks(14), lifts: { squat: '120', bench: '90', deadlift: '150' },
-      daysPerWeek: 6, sessionMinutes: 60, days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], longRunDay: 'sat', doubles: true, access: ['full_gym', 'pool']
+      daysPerWeek: 6, sessionMinutes: 60, days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], longRunDay: 'sat', doubles: true, strengthAccess: 'full_gym', poolAccess: true
     }
   },
   {
@@ -52,7 +52,7 @@ const PRESETS = [
       ...BLANK_ANSWERS, name: 'Test Runner', focus: ['run'], primary: 'run', experience: { run: 'intermediate' },
       runGoal: { distance: 'half', currentDistance: '10k', currentTime: '50:00' },
       hasEvent: true, eventDate: inWeeks(16),
-      daysPerWeek: 4, sessionMinutes: 60, days: ['tue', 'thu', 'sat', 'sun'], longRunDay: 'sun', doubles: true, access: []
+      daysPerWeek: 4, sessionMinutes: 60, days: ['tue', 'thu', 'sat', 'sun'], longRunDay: 'sun', doubles: true, strengthAccess: 'none'
     }
   },
   {
@@ -61,7 +61,7 @@ const PRESETS = [
       ...BLANK_ANSWERS, name: 'Test Lifter', focus: ['gym'], primary: 'gym', strengthStyle: 'strength',
       lifts: { squat: '160', bench: '110', deadlift: '200' },
       experience: { gym: 'advanced' }, planWeeks: 12, daysPerWeek: 4, sessionMinutes: 75, days: ['mon', 'tue', 'thu', 'fri'],
-      access: ['full_gym'], goals: [{ label: 'Add 20 kg to my total', target_date: '' }]
+      strengthAccess: 'full_gym', otherGoals: ['Get stronger']
     }
   },
   {
@@ -69,7 +69,7 @@ const PRESETS = [
     answers: {
       ...BLANK_ANSWERS, name: 'Test Physique', focus: ['gym'], primary: 'gym', strengthStyle: 'bodybuilding',
       experience: { gym: 'intermediate' }, planWeeks: 16, daysPerWeek: 6, sessionMinutes: 75,
-      days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], access: ['full_gym']
+      days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], strengthAccess: 'full_gym'
     }
   },
   {
@@ -79,14 +79,14 @@ const PRESETS = [
       runGoal: { distance: '10k', currentDistance: '10k', currentTime: '55:00' },
       swimGoal: { distance_m: 1500, currentPace: '1:50', currentDistance: '' },
       hasEvent: true, eventDate: inWeeks(18),
-      daysPerWeek: 6, sessionMinutes: 60, days: [], longRunDay: 'sat', doubles: true, access: ['full_gym', 'pool', 'bike']
+      daysPerWeek: 6, sessionMinutes: 60, days: [], longRunDay: 'sat', doubles: true, strengthAccess: 'full_gym', poolAccess: true
     }
   },
   {
     name: 'Beginner, no equipment',
     answers: {
       ...BLANK_ANSWERS, name: 'Test Beginner', focus: ['general_health'], primary: 'general', experience: { general_health: 'beginner' },
-      planWeeks: 12, daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], access: ['none']
+      planWeeks: 12, daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], strengthAccess: 'none'
     }
   }
 ];

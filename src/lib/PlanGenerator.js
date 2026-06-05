@@ -181,18 +181,42 @@ function brickSpec(type, profile, ctx) {
   };
 }
 
-function buildGeneralWeek({ count, deload }) {
-  const sets = deload ? '2 sets' : '3 sets';
-  const session = () => ({ discipline: 'general', focus: 'Movement & strength', duration: '40–50 min', intensity: 'moderate', lowerBody: true,
-    items: [
-      { num: 'A1', name: 'Goblet squat', sets: `${sets} × 10`, rpe: 'RPE 6', note: 'smooth, full range' },
-      { num: 'A2', name: 'Push-up (incline if needed)', sets: `${sets} × 10`, rpe: 'RPE 6', note: '' },
-      { num: 'B1', name: 'DB row', sets: `${sets} × 10`, rpe: 'RPE 6', note: '' },
-      { num: 'B2', name: 'Glute bridge', sets: `${sets} × 12`, rpe: 'RPE 6', note: '' },
-      { num: 'C1', name: 'Easy cardio finisher', sets: '10–15 min', rpe: 'Z2', note: 'walk, bike, or row — keep it easy', tag: 'run' },
-      { num: 'C2', name: 'Full-body mobility', sets: '5 min', rpe: 'Easy', tag: 'mobility', note: 'hips, t-spine, ankles' }
-    ] });
-  return Array.from({ length: count }, session);
+// Functional fitness = mobility + movement quality to counter a desk-bound day,
+// NOT a lifting/running program. Three rotating sessions so it varies day-to-day
+// and week-to-week (mobility-led, posture, full-body movement).
+const GENERAL_SESSIONS = [
+  { focus: 'Mobility & lower body', items: [
+    { num: 'A1', name: 'Hip flexor + 90/90 flow', sets: '5 min', rpe: 'Easy', tag: 'mobility', note: 'open the hips after sitting' },
+    { num: 'B1', name: 'Goblet squat', sets: '3 × 10', rpe: 'RPE 6', note: 'smooth, full range' },
+    { num: 'B2', name: 'Glute bridge', sets: '3 × 12', rpe: 'RPE 6', note: 'squeeze at the top' },
+    { num: 'C1', name: 'Split squat', sets: '3 × 8 ea.', rpe: 'RPE 6', note: 'balance & control' },
+    { num: 'D1', name: 'Dead bug', sets: '3 × 8 ea.', rpe: 'RPE 6', tag: 'mobility', note: 'brace the core' },
+    { num: 'E1', name: 'Easy walk or cycle', sets: '10–15 min', rpe: 'Z2', note: 'flush the legs', tag: 'run' }
+  ] },
+  { focus: 'Posture & upper body', items: [
+    { num: 'A1', name: 'T-spine extension on roller', sets: '5 min', rpe: 'Easy', tag: 'mobility', note: 'reverse the desk hunch' },
+    { num: 'B1', name: 'Band / DB row', sets: '3 × 12', rpe: 'RPE 6', note: 'squeeze the upper back' },
+    { num: 'B2', name: 'Push-up (incline if needed)', sets: '3 × 10', rpe: 'RPE 6', note: '' },
+    { num: 'C1', name: 'Band pull-apart + Y-T-W', sets: '3 × 12', rpe: 'RPE 6', tag: 'mobility', note: 'shoulder health' },
+    { num: 'D1', name: 'Side plank', sets: '3 × 30s ea.', rpe: 'RPE 6', tag: 'mobility', note: '' },
+    { num: 'E1', name: 'Brisk walk', sets: '10–15 min', rpe: 'Z2', note: '', tag: 'run' }
+  ] },
+  { focus: 'Full-body movement', items: [
+    { num: 'A1', name: "World's greatest stretch", sets: '5 min', rpe: 'Easy', tag: 'mobility', note: 'full-body opener' },
+    { num: 'B1', name: 'Hip hinge (RDL / hip thrust)', sets: '3 × 10', rpe: 'RPE 6', note: 'posterior chain' },
+    { num: 'B2', name: 'Overhead-reach squat', sets: '3 × 10', rpe: 'RPE 6', note: '' },
+    { num: 'C1', name: 'Suitcase carry', sets: '3 × 30 m ea.', rpe: 'RPE 6', note: 'tall posture' },
+    { num: 'C2', name: 'Bird dog', sets: '3 × 8 ea.', rpe: 'RPE 6', tag: 'mobility', note: 'anti-rotation' },
+    { num: 'E1', name: 'Easy cardio finisher', sets: '10–15 min', rpe: 'Z2', note: 'walk, bike or row', tag: 'run' }
+  ] }
+];
+function buildGeneralWeek({ count, deload, weekNum }) {
+  const base = (weekNum || 1) - 1;
+  return Array.from({ length: count }, (_, i) => {
+    const t = GENERAL_SESSIONS[(base + i) % GENERAL_SESSIONS.length];
+    const items = deload ? t.items.map(it => ({ ...it, sets: it.sets.replace(/^3 ×/, '2 ×') })) : t.items;
+    return { discipline: 'general', focus: t.focus, duration: '35–45 min', intensity: 'moderate', lowerBody: true, items };
+  });
 }
 
 // ---------------------------------------------------------------------------

@@ -1,17 +1,12 @@
 /**
  * OnboardingWizard — the shared first-run questionnaire UI.
  *
- * Holds every question screen, navigation, validation and inference. Two callers
- * use it so the screens never drift:
- *   • src/screens/Onboarding.jsx — production; onComplete writes to the store.
- *   • src/screens/DevPlayground.jsx — the /dev tester; devTools mode, local only.
- *
- * The answer → users.profile mapping lives in src/lib/onboardingModel.js.
- *
- * Layout: a fixed-height flex column — the header (progress, title) and footer
- * (Back / Continue) are pinned, and ONLY the content area between them scrolls.
- * So the action buttons never move on a phone. Dense topics are split into small
- * single-purpose steps so most fit a screen without scrolling at all.
+ * Flow: a visual Welcome landing, then About-you, a SINGLE training focus, then
+ * questions that branch off that focus (gym goal+maxes / run goal / swim goal),
+ * predefined other goals, experience, timing, availability, and an access step
+ * that only asks what's relevant to the chosen focus. No "step N of M" — just a
+ * quiet progress bar. Used by production Onboarding + the /dev tester so the
+ * screens never drift; answer→profile mapping lives in src/lib/onboardingModel.js.
  */
 
 import { useState, useEffect, useRef } from 'react';
@@ -21,26 +16,31 @@ import { BLANK_ANSWERS } from '../lib/onboardingModel.js';
 
 // ---- Option catalogues ----
 export const FOCUS = [
-  { key: 'run',            label: 'Running',        hint: '5k → marathon' },
-  { key: 'swim',           label: 'Swimming',       hint: 'Pool or open water' },
-  { key: 'cycle',          label: 'Cycling',        hint: 'Road, gravel, turbo' },
-  { key: 'triathlon',      label: 'Triathlon',      hint: 'Swim · bike · run' },
-  { key: 'gym',            label: 'Gym / strength', hint: 'Lifting — any style' },
-  { key: 'general_health', label: 'General health', hint: 'Move well, feel good' }
+  { key: 'run',            label: 'Running',           hint: '5k → marathon', emoji: '🏃' },
+  { key: 'swim',           label: 'Swimming',          hint: 'Pool or open water', emoji: '🏊' },
+  { key: 'cycle',          label: 'Cycling',           hint: 'Road, gravel, turbo', emoji: '🚴' },
+  { key: 'triathlon',      label: 'Triathlon',         hint: 'Swim · bike · run', emoji: '🏅' },
+  { key: 'gym',            label: 'Gym',               hint: 'Strength & muscle', emoji: '🏋️' },
+  { key: 'general_health', label: 'Functional fitness', hint: 'Mobility & movement — counter a desk-bound day', emoji: '🧘' }
 ];
 export const STYLES = [
   { key: 'strength',     label: 'Get stronger', hint: 'Heavy, low reps, the big lifts' },
   { key: 'bodybuilding', label: 'Build muscle', hint: 'Moderate–high reps, more volume' },
   { key: 'functional',   label: 'Move & perform', hint: 'Compounds, carries, core — mixed' }
 ];
+const ACTIVITY = [
+  { key: 'sedentary', label: 'Mostly sitting', hint: 'Desk job' },
+  { key: 'moderate',  label: 'On my feet a fair bit', hint: '' },
+  { key: 'active',    label: 'Active / physical job', hint: '' }
+];
 const LEVELS = [
-  { key: 'beginner',     label: 'Beginner',     hint: 'New to it' },
-  { key: 'returning',    label: 'Returning',    hint: 'Back after a break' },
+  { key: 'beginner', label: 'Beginner', hint: 'New to it' },
+  { key: 'returning', label: 'Returning', hint: 'Back after a break' },
   { key: 'intermediate', label: 'Intermediate', hint: 'Consistent' },
-  { key: 'advanced',     label: 'Advanced',     hint: 'Experienced' }
+  { key: 'advanced', label: 'Advanced', hint: 'Experienced' }
 ];
 const RUN_DISTANCES = [
-  { key: '', label: 'General fitness' }, { key: '5k', label: '5K' }, { key: '10k', label: '10K' },
+  { key: '', label: 'Improve fitness' }, { key: '5k', label: '5K' }, { key: '10k', label: '10K' },
   { key: 'half', label: 'Half' }, { key: 'marathon', label: 'Marathon' }
 ];
 const RUN_TIME_DISTANCES = [{ key: '5k', label: '5K' }, { key: '10k', label: '10K' }, { key: 'half', label: 'Half' }, { key: 'marathon', label: 'Marathon' }];
@@ -48,21 +48,23 @@ const SWIM_DISTANCES = [
   { m: 1000, label: '1 km' }, { m: 1500, label: '1.5 km' }, { m: 2000, label: '2 km' },
   { m: 2500, label: '2.5 km' }, { m: 3000, label: '3 km' }
 ];
+const OTHER_GOALS = ['Lose body fat', 'Build muscle', 'Improve endurance', 'Get stronger', 'Move better & mobility', 'Stay consistent', 'Reduce injury risk', 'More energy & better sleep'];
 const DAYS = [
   { key: 'mon', label: 'Mon' }, { key: 'tue', label: 'Tue' }, { key: 'wed', label: 'Wed' },
   { key: 'thu', label: 'Thu' }, { key: 'fri', label: 'Fri' }, { key: 'sat', label: 'Sat' }, { key: 'sun', label: 'Sun' }
 ];
 const SESSION_LENGTHS = [30, 45, 60, 75, 90];
 const PLAN_WEEKS = [8, 12, 16, 20];
-const ACCESS = [
-  { key: 'full_gym', label: 'Full gym' }, { key: 'home_weights', label: 'Home weights' }, { key: 'pool', label: 'Pool' },
-  { key: 'bike', label: 'Bike / turbo' }, { key: 'open_water', label: 'Open water' }, { key: 'none', label: 'No equipment' }
+const STRENGTH_ACCESS = [
+  { key: 'full_gym', label: 'Full gym', hint: 'Barbells, machines, cables' },
+  { key: 'home_weights', label: 'Home / free weights', hint: 'Dumbbells, maybe a barbell' },
+  { key: 'none', label: 'Bodyweight only', hint: 'No equipment' }
 ];
-const DISCIPLINE_LABEL = { gym: 'Gym', run: 'Run', swim: 'Swim', cycle: 'Cycle', general: 'General health' };
+const DISCIPLINE_LABEL = { gym: 'Gym', run: 'Run', swim: 'Swim', cycle: 'Cycle', general: 'Functional' };
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
-// ---- experience inference (a suggested level the user can override) ----
+// ---- experience inference ----
 function parsePace100(str) {
   if (!str) return null;
   const p = String(str).trim().split(':').map(Number);
@@ -89,7 +91,7 @@ function inferLevelFor(key, a) {
   if (key === 'run' || key === 'triathlon') return inferRunLevel(a.runGoal);
   if (key === 'swim') return inferSwimLevel(a.swimGoal);
   if (key === 'general_health') return 'beginner';
-  return 'intermediate'; // gym, cycle
+  return 'intermediate';
 }
 
 // ---- shared styles ----
@@ -111,15 +113,19 @@ function proposeAllocation(focus, days) {
 }
 
 // ---- UI atoms ----
-function Chip({ selected, onClick, label, hint, full }) {
+function Chip({ selected, onClick, label, hint, full, emoji }) {
   return (
     <button onClick={onClick} style={{
-      textAlign: 'left', padding: '11px 14px', borderRadius: 12, cursor: 'pointer', fontFamily: 'inherit', width: full ? '100%' : 'auto',
+      textAlign: 'left', padding: emoji ? '14px 14px' : '11px 14px', borderRadius: 12, cursor: 'pointer', fontFamily: 'inherit', width: full ? '100%' : 'auto',
       border: `1.5px solid ${selected ? 'var(--rust)' : 'var(--hairline)'}`,
-      background: selected ? 'rgba(176,74,46,0.08)' : 'var(--bg-surface)', color: 'var(--txt-strong)', transition: 'border-color 0.12s, background 0.12s'
+      background: selected ? 'rgba(176,74,46,0.08)' : 'var(--bg-surface)', color: 'var(--txt-strong)', transition: 'border-color 0.12s, background 0.12s',
+      display: emoji ? 'flex' : 'block', alignItems: 'center', gap: 12
     }}>
-      <div style={{ fontSize: 14, fontWeight: 600 }}>{label}</div>
-      {hint && <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 2 }}>{hint}</div>}
+      {emoji && <span style={{ fontSize: 22, lineHeight: 1, flexShrink: 0 }}>{emoji}</span>}
+      <span>
+        <span style={{ display: 'block', fontSize: 14, fontWeight: 600 }}>{label}</span>
+        {hint && <span style={{ display: 'block', fontSize: 11, color: 'var(--txt-muted)', marginTop: 2 }}>{hint}</span>}
+      </span>
     </button>
   );
 }
@@ -135,7 +141,6 @@ function Field({ label, value, onChange, type = 'text', placeholder = '', suffix
     </div>
   );
 }
-// Date input that closes its picker once a date is chosen.
 function DateField({ value, onChange }) {
   return <input type="date" value={value || ''} onChange={e => { onChange(e.target.value); e.target.blur(); }}
     style={{ ...INPUT, fontSize: 15, color: value ? 'var(--txt-strong)' : 'var(--txt-muted)' }} />;
@@ -160,7 +165,7 @@ function SummaryRow({ label, value }) {
     </div>
   );
 }
-const Row = ({ children, cols = 'auto' }) => <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>{children}</div>;
+const Row = ({ children }) => <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>{children}</div>;
 
 export default function OnboardingWizard({ initialAnswers, onComplete, onAnswersChange, devTools = false, completeLabel = 'Create my plan' }) {
   const [a, setA] = useState({ ...BLANK_ANSWERS, ...(initialAnswers || {}) });
@@ -194,12 +199,24 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
 
   const allocSum = Object.values(a.allocation).reduce((x, y) => x + (y || 0), 0);
   const adjustAlloc = (d, delta) => set({ allocation: { ...a.allocation, [d]: Math.max(0, Math.min(a.daysPerWeek || 7, (a.allocation[d] || 0) + delta)) } });
+  const pickFocus = (key) => set({ focus: [key] }); // single-choice
+
+  const accessQuestion = hasGym ? 'Your gym setup' : 'Strength equipment for your supporting work';
 
   const steps = [
-    { title: 'Welcome', subtitle: 'A few quick questions so we can shape a plan around you. Takes about two minutes — you can change any of it later.', valid: () => true,
-      render: () => <div style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--txt-body)' }}>We'll ask about your sports, goals, experience and how much time you have. Your answers stay private to your account.</div> },
+    { hero: true, valid: () => true,
+      render: () => (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: '0 8px' }}>
+          <div style={{ width: 84, height: 84, borderRadius: 24, marginBottom: 26, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 38, background: 'linear-gradient(145deg, var(--rust), #7d2f1c)', boxShadow: '0 12px 34px rgba(176,74,46,0.34)' }}>🏔️</div>
+          <h1 style={{ fontFamily: 'var(--serif, Georgia, serif)', fontSize: 34, fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--txt-strong)', margin: '0 0 10px' }}>Welcome</h1>
+          <p style={{ fontSize: 16, fontWeight: 600, color: 'var(--txt-strong)', margin: '0 0 8px' }}>Training built around you.</p>
+          <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--txt-muted)', maxWidth: 320, margin: 0 }}>
+            A few quick questions and we'll generate a plan tailored to your goal, your time, and your body — then adapt it as you go.
+          </p>
+        </div>
+      ) },
 
-    { title: 'About you', subtitle: 'The basics — they help tailor volumes and loads. All optional.', valid: () => true,
+    { title: 'About you', subtitle: 'The basics help us tailor your volumes, loads and recovery.', valid: () => true,
       render: () => (
         <div style={{ display: 'grid', gap: 14 }}>
           <Field label="Name" value={a.name} onChange={v => set({ name: v })} placeholder="Your name" />
@@ -214,21 +231,18 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             <Field label="Height" value={a.height_cm} onChange={v => set({ height_cm: v })} type="number" suffix="cm" />
             <Field label="Weight" value={a.bodyweight_kg} onChange={v => set({ bodyweight_kg: v })} type="number" suffix="kg" />
           </div>
+          <div>
+            <label style={FIELD_LABEL}>Daily activity (outside training)</label>
+            <div style={{ display: 'grid', gap: 6 }}>{ACTIVITY.map(o => <Chip key={o.key} full selected={a.activityLevel === o.key} onClick={() => set({ activityLevel: o.key })} label={o.label} hint={o.hint} />)}</div>
+          </div>
         </div>
       ) },
 
-    { title: 'What do you want to train?', subtitle: 'Pick everything that applies — we can rebalance as you go.', valid: () => a.focus.length > 0,
-      render: () => <div style={{ display: 'grid', gap: 8 }}>{FOCUS.map(f => <Chip key={f.key} full selected={a.focus.includes(f.key)} onClick={() => toggle(f.key, 'focus')} label={f.label} hint={f.hint} />)}</div> },
-
-    multi && { title: 'Your main focus', subtitle: 'Which one leads? It gets the priority for hard days and a little more volume — the rest support it.', valid: () => !!a.primary,
-      render: () => <div style={{ display: 'grid', gap: 8 }}>{disciplines.map(d => <Chip key={d} full selected={a.primary === d} onClick={() => set({ primary: d })} label={DISCIPLINE_LABEL[d] || d} />)}</div> },
+    { title: 'What\'s your training focus?', subtitle: 'Pick the one thing your plan should be built around — we\'ll add the right supporting work automatically.', valid: () => a.focus.length > 0,
+      render: () => <div style={{ display: 'grid', gap: 8 }}>{FOCUS.map(f => <Chip key={f.key} full emoji={f.emoji} selected={a.focus[0] === f.key} onClick={() => pickFocus(f.key)} label={f.label} hint={f.hint} />)}</div> },
 
     hasGym && { title: 'What\'s your gym goal?', subtitle: 'This sets your rep ranges and exercise choices.', valid: () => !!a.strengthStyle,
-      render: () => (
-        <div style={{ display: 'grid', gap: 8 }}>
-          {STYLES.map(s => <Chip key={s.key} full selected={a.strengthStyle === s.key} onClick={() => set({ strengthStyle: s.key })} label={s.label} hint={s.hint} />)}
-        </div>
-      ) },
+      render: () => <div style={{ display: 'grid', gap: 8 }}>{STYLES.map(s => <Chip key={s.key} full selected={a.strengthStyle === s.key} onClick={() => set({ strengthStyle: s.key })} label={s.label} hint={s.hint} />)}</div> },
 
     hasGym && { title: 'Know your main lifts?', subtitle: 'Add your best single lift for real target weights — totally optional.', valid: () => true,
       render: () => (
@@ -247,12 +261,12 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         </div>
       ) },
 
-    hasRun && { title: 'Your running goal', subtitle: 'Pick a distance, or keep it general. A target time + recent time are optional but make your paces accurate.', valid: () => true,
+    hasRun && { title: 'Your running goal', subtitle: 'Pick a distance, or just improve fitness. A target time + recent time are optional but sharpen your paces.', valid: () => true,
       render: () => (
         <div style={{ display: 'grid', gap: 16 }}>
           <div>
             <label style={FIELD_LABEL}>I'm working toward</label>
-            <Row>{RUN_DISTANCES.map(d => <Chip key={d.key || 'gen'} selected={a.runGoal.distance === d.key} onClick={() => set({ runGoal: { ...a.runGoal, distance: d.key } })} label={d.label} />)}</Row>
+            <Row>{RUN_DISTANCES.map(d => <Chip key={d.key || 'fit'} selected={a.runGoal.distance === d.key} onClick={() => set({ runGoal: { ...a.runGoal, distance: d.key } })} label={d.label} />)}</Row>
           </div>
           {a.runGoal.distance && (
             <Field label="Target time (optional)" value={a.runGoal.targetTime} onChange={v => set({ runGoal: { ...a.runGoal, targetTime: v } })} placeholder="e.g. 1:45:00" />
@@ -281,20 +295,14 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         </div>
       ) },
 
-    { title: 'Any other goals?', subtitle: 'Anything else you\'re working toward — optional.', valid: () => true,
+    { title: 'Any other goals?', subtitle: 'Pick anything else you\'re working toward — optional.', valid: () => true,
       render: () => (
-        <div style={{ display: 'grid', gap: 10 }}>
-          {a.goals.map((g, i) => (
-            <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 10, alignItems: 'center' }}>
-              <input type="text" value={g.label} placeholder="e.g. Squat bodyweight, ski-ready" onChange={e => set({ goals: a.goals.map((x, j) => j === i ? { ...x, label: e.target.value } : x) })} style={INPUT} />
-              {a.goals.length > 1 && <button onClick={() => set({ goals: a.goals.filter((_, j) => j !== i) })} style={{ background: 'none', border: 'none', color: 'var(--txt-muted)', fontSize: 16, cursor: 'pointer', padding: 4 }}>✕</button>}
-            </div>
-          ))}
-          {a.goals.length < 3 && <button onClick={() => set({ goals: [...a.goals, { label: '', target_date: '' }] })} style={{ padding: 10, borderRadius: 10, border: '1.5px dashed var(--hairline)', background: 'transparent', fontSize: 13, fontWeight: 600, color: 'var(--txt-muted)', cursor: 'pointer', fontFamily: 'inherit' }}>+ Add a goal</button>}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          {OTHER_GOALS.map(g => <Chip key={g} selected={a.otherGoals.includes(g)} onClick={() => toggle(g, 'otherGoals')} label={g} />)}
         </div>
       ) },
 
-    { title: 'Your experience', subtitle: 'We\'ve suggested a level from your goals — adjust any that feel off.', valid: () => a.focus.every(k => a.experience[k]),
+    { title: 'Your experience', subtitle: 'We\'ve suggested a level from your goals — adjust if it feels off.', valid: () => a.focus.every(k => a.experience[k]),
       render: () => (
         <div style={{ display: 'grid', gap: 16 }}>
           {a.focus.map(fk => {
@@ -314,10 +322,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     { title: 'When do you start?', subtitle: 'And are you building toward a date?', valid: () => !!a.startDate && (!a.hasEvent || !!a.eventDate),
       render: () => (
         <div style={{ display: 'grid', gap: 18 }}>
-          <div>
-            <label style={FIELD_LABEL}>Start date</label>
-            <DateField value={a.startDate} onChange={v => set({ startDate: v })} />
-          </div>
+          <div><label style={FIELD_LABEL}>Start date</label><DateField value={a.startDate} onChange={v => set({ startDate: v })} /></div>
           <div>
             <label style={FIELD_LABEL}>Training for an event?</label>
             <Row>
@@ -326,11 +331,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             </Row>
           </div>
           {a.hasEvent ? (
-            <div>
-              <label style={FIELD_LABEL}>Event date</label>
-              <DateField value={a.eventDate} onChange={v => set({ eventDate: v })} />
-              <div style={HINT}>Your plan length is set by this date.</div>
-            </div>
+            <div><label style={FIELD_LABEL}>Event date</label><DateField value={a.eventDate} onChange={v => set({ eventDate: v })} /><div style={HINT}>Your plan length is set by this date.</div></div>
           ) : (
             <div>
               <label style={FIELD_LABEL}>How many weeks?</label>
@@ -344,41 +345,28 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     { title: 'How much can you train?', subtitle: 'Be realistic — a plan you can stick to beats an ideal one you can\'t.', valid: () => a.daysPerWeek != null,
       render: () => (
         <div style={{ display: 'grid', gap: 20 }}>
-          <div>
-            <label style={FIELD_LABEL}>Days per week</label>
-            <Row>{[1, 2, 3, 4, 5, 6, 7].map(n => <Chip key={n} selected={a.daysPerWeek === n} onClick={() => set({ daysPerWeek: n })} label={String(n)} />)}</Row>
-          </div>
-          <div>
-            <label style={FIELD_LABEL}>Typical session length</label>
-            <Row>{SESSION_LENGTHS.map(m => <Chip key={m} selected={a.sessionMinutes === m} onClick={() => set({ sessionMinutes: m })} label={m === 90 ? '90+ min' : `${m} min`} />)}</Row>
-          </div>
+          <div><label style={FIELD_LABEL}>Days per week</label><Row>{[1, 2, 3, 4, 5, 6, 7].map(n => <Chip key={n} selected={a.daysPerWeek === n} onClick={() => set({ daysPerWeek: n })} label={String(n)} />)}</Row></div>
+          <div><label style={FIELD_LABEL}>Typical session length</label><Row>{SESSION_LENGTHS.map(m => <Chip key={m} selected={a.sessionMinutes === m} onClick={() => set({ sessionMinutes: m })} label={m === 90 ? '90+ min' : `${m} min`} />)}</Row></div>
         </div>
       ) },
 
     { title: 'Your week', subtitle: 'Fine-tune which days work and how we use them.', valid: () => true,
       render: () => (
         <div style={{ display: 'grid', gap: 20 }}>
-          <div>
-            <label style={FIELD_LABEL}>Which days suit you? (optional)</label>
-            <Row>{DAYS.map(d => <Chip key={d.key} selected={a.days.includes(d.key)} onClick={() => toggle(d.key, 'days')} label={d.label} />)}</Row>
-          </div>
-          {hasRun && (
-            <div>
-              <label style={FIELD_LABEL}>Long-run day</label>
-              <Row>{DAYS.map(d => <Chip key={d.key} selected={a.longRunDay === d.key} onClick={() => set({ longRunDay: d.key })} label={d.label} />)}</Row>
-            </div>
-          )}
+          <div><label style={FIELD_LABEL}>Which days suit you? (optional)</label><Row>{DAYS.map(d => <Chip key={d.key} selected={a.days.includes(d.key)} onClick={() => toggle(d.key, 'days')} label={d.label} />)}</Row></div>
+          {hasRun && <div><label style={FIELD_LABEL}>Long-run day</label><Row>{DAYS.map(d => <Chip key={d.key} selected={a.longRunDay === d.key} onClick={() => set({ longRunDay: d.key })} label={d.label} />)}</Row></div>}
           <div>
             <label style={FIELD_LABEL}>Open to two sessions in a day?</label>
             <Row>
               <Chip selected={a.doubles} onClick={() => set({ doubles: true })} label="Yes — doubles ok" />
               <Chip selected={!a.doubles} onClick={() => set({ doubles: false })} label="One a day" />
             </Row>
+            <div style={HINT}>Lets us pair short strength work with an easy day instead of using a whole extra day.</div>
           </div>
         </div>
       ) },
 
-    multi && { title: 'Split your week', subtitle: 'A suggested split across your sports — nudge to suit you. Gym days set the split (full-body / upper-lower / PPL).', valid: () => allocSum === a.daysPerWeek,
+    multi && { title: 'Split your week', subtitle: 'A suggested split across your disciplines — nudge to suit you.', valid: () => allocSum === a.daysPerWeek,
       render: () => (
         <div style={{ display: 'grid', gap: 12 }}>
           {disciplines.map(d => (
@@ -395,9 +383,21 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
 
     { title: 'What can you access?', subtitle: 'So we only program what you can actually do.', valid: () => true,
       render: () => (
-        <div style={{ display: 'grid', gap: 8 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>{ACCESS.map(o => <Chip key={o.key} selected={a.access.includes(o.key)} onClick={() => toggle(o.key, 'access')} label={o.label} />)}</div>
-          {a.access.includes('pool') && <div style={{ marginTop: 6 }}><Field label="Pool length" value={a.poolLengthM} onChange={v => set({ poolLengthM: v })} type="number" suffix="m" /></div>}
+        <div style={{ display: 'grid', gap: 18 }}>
+          <div>
+            <label style={FIELD_LABEL}>{accessQuestion}</label>
+            <div style={{ display: 'grid', gap: 6 }}>{STRENGTH_ACCESS.map(o => <Chip key={o.key} full selected={a.strengthAccess === o.key} onClick={() => set({ strengthAccess: o.key })} label={o.label} hint={o.hint} />)}</div>
+          </div>
+          {hasSwim && (
+            <div>
+              <label style={FIELD_LABEL}>Pool access</label>
+              <Row>
+                <Chip selected={a.poolAccess} onClick={() => set({ poolAccess: true })} label="I have a pool" />
+                <Chip selected={!a.poolAccess} onClick={() => set({ poolAccess: false })} label="Open water only" />
+              </Row>
+              {a.poolAccess && <div style={{ marginTop: 8 }}><Field label="Pool length" value={a.poolLengthM} onChange={v => set({ poolLengthM: v })} type="number" suffix="m" /></div>}
+            </div>
+          )}
         </div>
       ) },
 
@@ -421,26 +421,23 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
 
     { title: 'Ready to go', subtitle: 'Here\'s what we captured. Create your plan and you\'re in.', valid: () => true,
       render: () => {
-        const focusLabels = a.focus.map(k => FOCUS.find(f => f.key === k)?.label).filter(Boolean);
-        const otherGoals = a.goals.filter(g => g.label.trim());
-        const runLabel = hasRun ? `${RUN_DISTANCES.find(d => d.key === a.runGoal.distance)?.label || 'General'}${a.runGoal.targetTime.trim() ? ` · target ${a.runGoal.targetTime.trim()}` : ''}` : null;
+        const focusLabel = FOCUS.find(f => f.key === a.focus[0])?.label || '—';
+        const runLabel = hasRun ? `${RUN_DISTANCES.find(d => d.key === a.runGoal.distance)?.label || 'Improve fitness'}${a.runGoal.targetTime.trim() ? ` · target ${a.runGoal.targetTime.trim()}` : ''}` : null;
         const swimLabel = hasSwim ? `${(a.swimGoal.distance_m / 1000)} km${a.swimGoal.currentPace.trim() ? ` · ${a.swimGoal.currentPace.trim()}/100m` : ''}` : null;
-        const allocLabel = multi ? disciplines.map(d => `${a.allocation[d] || 0} ${DISCIPLINE_LABEL[d]?.toLowerCase() || d}`).join(' · ') : null;
         const liftBits = hasGym ? ['squat', 'bench', 'deadlift'].filter(k => a.lifts[k]).map(k => `${k[0].toUpperCase()}${a.lifts[k]}`) : [];
         const timing = a.hasEvent ? `${a.startDate} → event ${a.eventDate || '?'}` : `${a.startDate} · ${a.planWeeks} wks`;
+        const accessLabel = [STRENGTH_ACCESS.find(o => o.key === a.strengthAccess)?.label, hasSwim && (a.poolAccess ? 'pool' : 'open water')].filter(Boolean).join(' · ');
         return (
           <div style={{ display: 'grid', gap: 6 }}>
-            <SummaryRow label="Focus" value={focusLabels.join(', ') || '—'} />
-            {multi && <SummaryRow label="Primary" value={DISCIPLINE_LABEL[a.primary] || a.primary || '—'} />}
+            <SummaryRow label="Focus" value={focusLabel} />
             {hasGym && <SummaryRow label="Gym goal" value={STYLES.find(s => s.key === a.strengthStyle)?.label || '—'} />}
             {liftBits.length > 0 && <SummaryRow label="Maxes" value={liftBits.join(' · ') + ' kg'} />}
             {runLabel && <SummaryRow label="Running" value={runLabel} />}
             {swimLabel && <SummaryRow label="Swimming" value={swimLabel} />}
-            {otherGoals.length > 0 && <SummaryRow label="Other" value={otherGoals.map(g => g.label.trim()).join(' · ')} />}
+            {a.otherGoals.length > 0 && <SummaryRow label="Other" value={a.otherGoals.join(' · ')} />}
             <SummaryRow label="Timing" value={timing} />
             <SummaryRow label="Week" value={a.daysPerWeek ? `${a.daysPerWeek} days · ${a.sessionMinutes === 90 ? '90+' : a.sessionMinutes} min${a.doubles ? ' · doubles' : ''}` : '—'} />
-            {allocLabel && <SummaryRow label="Split" value={allocLabel} />}
-            <SummaryRow label="Access" value={a.access.map(k => ACCESS.find(o => o.key === k)?.label).filter(Boolean).join(', ') || '—'} />
+            <SummaryRow label="Access" value={accessLabel || '—'} />
           </div>
         );
       } }
@@ -449,9 +446,9 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
   const safeStep = Math.min(step, steps.length - 1);
   const cur = steps[safeStep];
   const isLast = safeStep === steps.length - 1;
+  const isHero = !!cur.hero;
   const canNext = cur.valid();
 
-  // Scroll the content area back to top whenever the step changes.
   useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = 0; }, [safeStep]);
 
   const next = () => { if (canNext && !isLast) setStep(safeStep + 1); };
@@ -468,31 +465,32 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
       {devTools && (
         <div style={{ display: 'flex', gap: 6, overflowX: 'auto', padding: '4px 2px', marginBottom: 6 }}>
           {steps.map((s, i) => (
-            <button key={i} onClick={() => setStep(i)} title={s.title} style={{ flexShrink: 0, padding: '5px 9px', borderRadius: 8, fontSize: 11, fontWeight: 700, border: '1px solid var(--hairline)', cursor: 'pointer', fontFamily: 'inherit', background: i === safeStep ? 'var(--rust)' : 'var(--bg-surface-2)', color: i === safeStep ? '#fff' : 'var(--txt-muted)', whiteSpace: 'nowrap' }}>{i + 1}. {s.title}</button>
+            <button key={i} onClick={() => setStep(i)} title={s.title || 'Welcome'} style={{ flexShrink: 0, padding: '5px 9px', borderRadius: 8, fontSize: 11, fontWeight: 700, border: '1px solid var(--hairline)', cursor: 'pointer', fontFamily: 'inherit', background: i === safeStep ? 'var(--rust)' : 'var(--bg-surface-2)', color: i === safeStep ? '#fff' : 'var(--txt-muted)', whiteSpace: 'nowrap' }}>{i + 1}. {s.title || 'Welcome'}</button>
           ))}
         </div>
       )}
 
-      {/* Pinned header */}
-      <div style={{ flexShrink: 0, padding: `${devTools ? 4 : 22}px ${PAD}px 0` }}>
-        <div style={{ display: 'flex', gap: 5, marginBottom: 16 }}>
-          {steps.map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= safeStep ? 'var(--rust)' : 'var(--bg-surface-2)', transition: 'background 0.2s' }} />)}
+      {/* Header — quiet progress bar, no step numbers. Hidden on the hero. */}
+      {!isHero && (
+        <div style={{ flexShrink: 0, padding: `${devTools ? 4 : 22}px ${PAD}px 0` }}>
+          <div style={{ display: 'flex', gap: 5, marginBottom: 18 }}>
+            {steps.map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= safeStep ? 'var(--rust)' : 'var(--bg-surface-2)', transition: 'background 0.2s' }} />)}
+          </div>
+          <h1 className="h1" style={{ marginBottom: 6 }}>{cur.title}</h1>
+          <p className="sub" style={{ marginBottom: 16 }}>{cur.subtitle}</p>
         </div>
-        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: 6 }}>Step {safeStep + 1} of {steps.length}</div>
-        <h1 className="h1" style={{ marginBottom: 6 }}>{cur.title}</h1>
-        <p className="sub" style={{ marginBottom: 16 }}>{cur.subtitle}</p>
-      </div>
+      )}
 
-      {/* Scrollable content — the ONLY part that scrolls */}
-      <div ref={scrollRef} style={{ flex: 1, minHeight: 0, overflowY: devTools ? 'visible' : 'auto', WebkitOverflowScrolling: 'touch', padding: `2px ${PAD}px 16px` }}>
+      {/* Scrollable content */}
+      <div ref={scrollRef} style={{ flex: 1, minHeight: 0, overflowY: devTools ? 'visible' : 'auto', WebkitOverflowScrolling: 'touch', padding: isHero ? `0 ${PAD}px` : `2px ${PAD}px 16px`, display: isHero ? 'flex' : 'block', flexDirection: 'column' }}>
         {cur.render()}
       </div>
 
-      {/* Pinned footer — buttons never move */}
-      <div style={{ flexShrink: 0, display: 'flex', gap: 10, padding: `12px ${PAD}px calc(14px + env(safe-area-inset-bottom))`, borderTop: '1px solid var(--hairline)', background: 'var(--bg-surface)' }}>
-        {safeStep > 0 && <button onClick={back} disabled={saving} style={{ padding: '14px 20px', borderRadius: 12, border: '1px solid var(--hairline)', background: 'transparent', color: 'var(--txt-muted)', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Back</button>}
+      {/* Footer */}
+      <div style={{ flexShrink: 0, display: 'flex', gap: 10, padding: `12px ${PAD}px calc(14px + env(safe-area-inset-bottom))`, borderTop: isHero ? 'none' : '1px solid var(--hairline)', background: 'var(--bg-surface)' }}>
+        {safeStep > 0 && !isHero && <button onClick={back} disabled={saving} style={{ padding: '14px 20px', borderRadius: 12, border: '1px solid var(--hairline)', background: 'transparent', color: 'var(--txt-muted)', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Back</button>}
         <button onClick={isLast ? finish : next} disabled={!canNext || saving} style={{ flex: 1, padding: 15, borderRadius: 12, border: 'none', background: (canNext && !saving) ? 'var(--rust)' : 'var(--bg-surface-2)', color: (canNext && !saving) ? '#fff' : 'var(--txt-muted)', fontSize: 15, fontWeight: 600, cursor: (canNext && !saving) ? 'pointer' : 'default', fontFamily: 'inherit' }}>
-          {saving ? 'Setting up…' : isLast ? completeLabel : 'Continue'}
+          {saving ? 'Setting up…' : isLast ? completeLabel : isHero ? 'Get started' : 'Continue'}
         </button>
       </div>
     </div>

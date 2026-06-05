@@ -21,9 +21,9 @@ import { computePaces } from '../lib/plan/running.js';
 // Label maps for codes captured during onboarding (kept human-readable here).
 const FOCUS_LABELS = {
   run: 'Running', swim: 'Swimming', cycle: 'Cycling', triathlon: 'Triathlon',
-  gym: 'Gym / strength',
+  gym: 'Gym',
   strength_functional: 'Gym — functional', strength_physique: 'Gym — bodybuilding',
-  general_health: 'General health'
+  general_health: 'Functional fitness'
 };
 const RUN_DIST_LABELS = { '5k': '5K', '10k': '10K', half: 'Half-marathon', marathon: 'Marathon' };
 const STYLE_LABELS = { strength: 'Strength / power', bodybuilding: 'Muscle & physique', functional: 'Functional fitness' };
