@@ -96,19 +96,21 @@ export function scheduleWeek({ sportSpecs = [], supSpecs = [], dayNames = [], al
   const lrIdx = longRunDay != null ? KEY_IDX[longRunDay] : null;
   const placedSport = placeSport(sportSpecs, dayNames, lrIdx);
 
-  // Supplemental placement. Doubles → prefer easy sport days; else prefer rest
-  // days. Fall back to the other when the preferred pool is exhausted.
+  // Supplemental placement. NEVER share the long-run day (legs need to be fresh)
+  // — it's only used as an absolute last resort. Doubles → prefer easy sport
+  // days; else prefer rest days; fall back to the other pool.
   const usedIdx = new Set(placedSport.map(p => p.idx));
+  const longRunIdx = (placedSport.find(p => isLongRun(p.spec)) || {}).idx;
   const restIdx = IDX_DAY.map((_, i) => i).filter(i => !usedIdx.has(i));
-  const easyIdx = placedSport.filter(p => p.spec.intensity === 'easy').map(p => p.idx);
+  const easyIdx = placedSport.filter(p => p.spec.intensity === 'easy' && p.idx !== longRunIdx).map(p => p.idx);
   const primary = allowDoubles ? easyIdx.slice() : restIdx.slice();
   const fallback = allowDoubles ? restIdx.slice() : easyIdx.slice();
+  const lastResort = longRunIdx != null ? [longRunIdx] : []; // unavoidable case only
 
   const placedSup = [];
   for (const spec of supSpecs) {
-    let idx = primary.shift();
-    if (idx == null) idx = fallback.shift();
-    if (idx == null) continue; // no room this week — drop the extra
+    const idx = primary.shift() ?? fallback.shift() ?? lastResort.shift();
+    if (idx == null) continue; // no room at all this week — drop the extra
     placedSup.push({ idx, spec });
   }
 

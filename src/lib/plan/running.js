@@ -127,12 +127,13 @@ function easyRun({ level, minutes, paces, deload }) {
   };
 }
 
-function longRun({ goalKey, level, intent, progress, paces, deload }) {
+function longRun({ goalKey, level, intent, progress, paces, deload, taperMult }) {
   const base = { '5k': 40, '10k': 50, 'half': 70, 'marathon': 90 }[goalKey] || 60;
   const lvlF = { beginner: 0.7, returning: 0.85, intermediate: 1, advanced: 1.15 }[level] || 0.85;
   const peakExtra = { '5k': 15, '10k': 25, 'half': 45, 'marathon': 70 }[goalKey] || 30;
   let dur = base * lvlF + peakExtra * progress;
   if (deload) dur *= 0.6;
+  dur *= (taperMult || 1);
   dur = Math.round(dur / 5) * 5;
   // Build/peak long runs for half & marathon finish at goal race pace.
   const gpFinish = !deload && intent !== 'base' && (goalKey === 'half' || goalKey === 'marathon');
@@ -144,8 +145,19 @@ function longRun({ goalKey, level, intent, progress, paces, deload }) {
   return { discipline: 'run', focus: 'Long run', duration: `${dur}${gpFinish ? '+15' : ''} min`, intensity: deload ? 'easy' : 'moderate', items };
 }
 
-function qualityRun({ goalKey, intent, weekNum, slot, paces, s, deload }) {
+function qualityRun({ goalKey, intent, weekNum, slot, paces, s, deload, taper }) {
   if (deload) return easyRun({ level: 'intermediate', minutes: 30, paces, deload: true });
+  // Taper weeks: keep the legs sharp with a tiny amount of race-pace work, no volume.
+  if (taper) {
+    return {
+      discipline: 'run', focus: 'Sharpener run', duration: '30–35 min', intensity: 'hard',
+      items: [
+        { num: 'R1', name: 'Warm-up jog', distance: '12 min', pace: zone('Easy', paces, 'easy'), note: 'relaxed', tag: 'run' },
+        { num: 'R2', name: 'Sharpeners', distance: '4–5 × 1 min @ goal · 90s easy', pace: zone('Goal', paces, 'goal'), note: 'snappy, controlled — wake the system up', tag: 'run' },
+        { num: 'M1', name: 'Cooldown', distance: '8 min', pace: zone('Easy', paces, 'easy'), note: '', tag: 'run' }
+      ]
+    };
+  }
   const menu = (QUALITY[goalKey] || QUALITY['10k'])[intent] || ['tempo'];
   const key = menu[(weekNum - 1 + slot) % menu.length];
   const sel = (W[key] || W.tempo)(paces, s);
@@ -175,6 +187,8 @@ export function buildWeek(ctx = {}) {
   const minutes = ctx.minutes || 60;
   const weekNum = ctx.weekNum || 1;
   const progress = ctx.progress != null ? ctx.progress : 0.5;
+  const taper = !!ctx.taper;
+  const taperMult = ctx.taperMult || 1;
   const { paces } = computePaces(goalKey, goal.current, level);
 
   // Per-week scaling of rep counts / tempo length (grows with fitness + level).
@@ -188,9 +202,9 @@ export function buildWeek(ctx = {}) {
   const roles = rolePattern(runDays, intent);
   let slot = 0;
   const sessions = roles.map(role => {
-    if (role === 'long') return longRun({ goalKey, level, intent, progress, paces, deload });
-    if (role === 'quality') return qualityRun({ goalKey, intent, weekNum, slot: slot++, paces, s, deload });
-    return easyRun({ level, minutes, paces, deload });
+    if (role === 'long') return longRun({ goalKey, level, intent, progress, paces, deload, taperMult });
+    if (role === 'quality') return qualityRun({ goalKey, intent, weekNum, slot: slot++, paces, s, deload, taper });
+    return easyRun({ level, minutes: taper ? Math.min(minutes, 35) : minutes, paces, deload });
   });
 
   // Sprinkle strides onto one easy run in base/build to keep turnover sharp.

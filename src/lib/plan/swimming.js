@@ -133,12 +133,13 @@ function techniqueSession({ level, paces, vol, deload }) {
   return { discipline: 'swim', focus: `Swim technique — ${TECH_THEME[level] || TECH_THEME.beginner}`, duration: `35–45 min · ~${sumMetres(items)} m`, intensity: 'easy', items };
 }
 
-function enduranceSession({ goalDistanceM, level, progress, paces, vol, deload }) {
+function enduranceSession({ goalDistanceM, level, progress, paces, vol, deload, taperMult }) {
   // Endurance volume ramps across the whole plan toward the goal distance,
   // capped for safety (never more than ~2.2× the level baseline).
   const cap = goalDistanceM ? Math.min(goalDistanceM * 1.1, vol * 2.2) : vol * 1.4;
   let total = vol + (cap - vol) * progress;
   if (deload) total *= 0.6;
+  total *= (taperMult || 1);
   total = round50(total);
   // Size the continuous main set so warm-up + main + cool-down ≈ the target total.
   const mainM = round50(Math.max(200, total - 400));
@@ -182,6 +183,7 @@ export function buildWeek(ctx = {}) {
   const deload = !!ctx.deload;
   const winp = ctx.winp || 1;
   const progress = ctx.progress != null ? ctx.progress : 0.5; // 0→1 across the whole plan
+  const taperMult = ctx.taperMult || 1;
   const { paces } = computeCss(goal.current, level);
   const vol = LEVEL_VOLUME[level] || LEVEL_VOLUME.beginner;
   const goalDistanceM = goal.distance_m || null;
@@ -190,7 +192,7 @@ export function buildWeek(ctx = {}) {
   return roles.map(role => {
     if (role === 'technique') return techniqueSession({ level, paces, vol, deload });
     if (role === 'css') return cssSession({ intent, winp, paces, vol, deload });
-    return enduranceSession({ goalDistanceM, level, progress, paces, vol, deload });
+    return enduranceSession({ goalDistanceM, level, progress, paces, vol, deload, taperMult });
   });
 }
 
