@@ -19,11 +19,16 @@ export function numOrNull(v) {
 // A complete, empty answer set — every caller seeds from this.
 export const BLANK_ANSWERS = {
   name: '', age: '', sex: '', height_cm: '', bodyweight_kg: '',
-  focus: [], strengthStyle: 'functional', experience: {},
-  runGoal: { distance: '10k', target_date: '', currentDistance: '5k', currentTime: '' },
-  swimGoal: { distance_m: 2000, target_date: '', currentPace: '', currentDistance: '' },
+  focus: [], primary: '', strengthStyle: 'functional',
+  lifts: { squat: '', bench: '', deadlift: '' },
+  experience: {},
+  runGoal: { distance: '', currentDistance: '5k', currentTime: '' },
+  swimGoal: { distance_m: 2000, currentPace: '', currentDistance: '' },
   goals: [{ label: '', target_date: '' }],
+  // Timing: start date + either an event date or a block length (weeks).
+  startDate: '', hasEvent: false, eventDate: '', planWeeks: 16,
   daysPerWeek: null, sessionMinutes: 60, days: [], allocation: {},
+  longRunDay: 'sat', doubles: true,
   access: [], poolLengthM: 25, injuries: [], notes: ''
 };
 
@@ -35,22 +40,29 @@ export function answersToProfilePatch(a) {
   const hasSwim = disciplines.includes('swim');
   const multi = disciplines.length > 1;
   const runCurrent = a.runGoal.currentTime.trim()
-    ? { distance: a.runGoal.currentDistance || a.runGoal.distance, time: a.runGoal.currentTime.trim() } : null;
+    ? { distance: a.runGoal.currentDistance || a.runGoal.distance || '5k', time: a.runGoal.currentTime.trim() } : null;
   const swimCurrent = (a.swimGoal.currentPace.trim() || a.swimGoal.currentDistance)
     ? { pace_per_100: a.swimGoal.currentPace.trim() || null, distance_m: numOrNull(a.swimGoal.currentDistance) } : null;
+  // Event date (if any) anchors the goal target; otherwise the block length drives it.
+  const target = a.hasEvent ? (a.eventDate || '') : '';
   return {
-    plan_start_date: today,
+    plan_start_date: a.startDate || today,
+    plan_weeks: a.hasEvent ? null : (numOrNull(a.planWeeks) || 16),
     name: a.name.trim(), age: numOrNull(a.age), sex: a.sex || null,
     height_cm: numOrNull(a.height_cm), bodyweight_kg: numOrNull(a.bodyweight_kg),
     focus: a.focus,
+    primary: a.primary || disciplines[0] || null,
     strength_style: hasGym ? a.strengthStyle : null,
+    lifts: hasGym ? { squat: numOrNull(a.lifts.squat), bench: numOrNull(a.lifts.bench), deadlift: numOrNull(a.lifts.deadlift) } : null,
     experience: a.experience,
-    run_goal: hasRun ? { distance: a.runGoal.distance, target_date: a.runGoal.target_date || '', current: runCurrent } : null,
-    swim_goal: hasSwim ? { distance_m: a.swimGoal.distance_m, target_date: a.swimGoal.target_date || '', current: swimCurrent } : null,
+    run_goal: hasRun ? { distance: a.runGoal.distance || null, target_date: target, current: runCurrent } : null,
+    swim_goal: hasSwim ? { distance_m: a.swimGoal.distance_m, target_date: target, current: swimCurrent } : null,
     availability: {
       days_per_week: a.daysPerWeek, session_minutes: a.sessionMinutes, days: a.days,
       allocation: multi ? a.allocation : (disciplines.length === 1 ? { [disciplines[0]]: a.daysPerWeek } : {})
     },
+    long_run_day: a.longRunDay || 'sat',
+    doubles: a.doubles !== false,
     access: a.access,
     pool_length_m: a.access.includes('pool') ? numOrNull(a.poolLengthM) : null,
     markers: a.notes.trim(),

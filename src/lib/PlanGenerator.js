@@ -206,12 +206,18 @@ function allGoalDates(profile) {
   return dates;
 }
 
-function weeksToGoal(profile) {
-  const today = new Date(); today.setHours(0, 0, 0, 0);
-  const future = allGoalDates(profile).filter(d => d > today);
-  if (!future.length) return 12;
-  const earliest = new Date(Math.min(...future.map(d => d.getTime())));
-  return Math.max(4, Math.min(24, Math.ceil((earliest - today) / (7 * 86400000))));
+// Plan length in weeks. Anchored at the start date: if there's an event (a dated
+// goal) it sizes to the soonest one; otherwise it uses the chosen block length
+// (default 16 — one periodisation block the AI coach extends later).
+function planLength(profile) {
+  const start = profile.plan_start_date ? new Date(profile.plan_start_date + 'T00:00:00') : new Date();
+  start.setHours(0, 0, 0, 0);
+  const future = allGoalDates(profile).filter(d => d > start);
+  if (future.length) {
+    const earliest = new Date(Math.min(...future.map(d => d.getTime())));
+    return Math.max(4, Math.min(24, Math.ceil((earliest - start) / (7 * 86400000))));
+  }
+  return Math.max(4, Math.min(24, profile.plan_weeks || 16));
 }
 
 function phaseSplit(total) {
@@ -306,7 +312,7 @@ export function generatePlan(profile = {}) {
   const allowDoubles = profile.doubles !== false;
   const longRunDay = disciplines.includes('run') ? (profile.long_run_day || 'sat') : null;
 
-  const total = weeksToGoal(profile);
+  const total = planLength(profile);
   const split = phaseSplit(total);
 
   const phases = [];

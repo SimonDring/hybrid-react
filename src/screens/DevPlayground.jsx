@@ -39,50 +39,54 @@ const PRESETS = [
     name: 'Hybrid (gym+run+swim)',
     answers: {
       ...BLANK_ANSWERS, name: 'Test Hybrid', focus: ['gym', 'run', 'swim'], strengthStyle: 'functional',
-      experience: { gym: 'intermediate', run: 'intermediate', swim: 'beginner' },
-      runGoal: { distance: 'half', target_date: inWeeks(14), currentDistance: '5k', currentTime: '22:30' },
-      swimGoal: { distance_m: 2500, target_date: inWeeks(14), currentPace: '', currentDistance: '800' },
-      daysPerWeek: 6, sessionMinutes: 60, days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], access: ['full_gym', 'pool']
+      experience: { gym: 'intermediate', run: 'intermediate', swim: 'beginner' }, primary: 'run',
+      runGoal: { distance: 'half', currentDistance: '5k', currentTime: '22:30' },
+      swimGoal: { distance_m: 2500, currentPace: '', currentDistance: '800' },
+      hasEvent: true, eventDate: inWeeks(14), lifts: { squat: '120', bench: '90', deadlift: '150' },
+      daysPerWeek: 6, sessionMinutes: 60, days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], longRunDay: 'sat', doubles: true, access: ['full_gym', 'pool']
     }
   },
   {
     name: 'Half-marathoner',
     answers: {
-      ...BLANK_ANSWERS, name: 'Test Runner', focus: ['run'], experience: { run: 'intermediate' },
-      runGoal: { distance: 'half', target_date: inWeeks(16), currentDistance: '10k', currentTime: '50:00' },
-      daysPerWeek: 4, sessionMinutes: 60, days: ['tue', 'thu', 'sat', 'sun'], access: []
+      ...BLANK_ANSWERS, name: 'Test Runner', focus: ['run'], primary: 'run', experience: { run: 'intermediate' },
+      runGoal: { distance: 'half', currentDistance: '10k', currentTime: '50:00' },
+      hasEvent: true, eventDate: inWeeks(16),
+      daysPerWeek: 4, sessionMinutes: 60, days: ['tue', 'thu', 'sat', 'sun'], longRunDay: 'sun', doubles: true, access: []
     }
   },
   {
     name: 'Powerlifter (4-day)',
     answers: {
-      ...BLANK_ANSWERS, name: 'Test Lifter', focus: ['gym'], strengthStyle: 'strength',
-      experience: { gym: 'advanced' }, daysPerWeek: 4, sessionMinutes: 75, days: ['mon', 'tue', 'thu', 'fri'],
-      access: ['full_gym'], goals: [{ label: 'Add 20 kg to my total', target_date: inWeeks(12) }]
+      ...BLANK_ANSWERS, name: 'Test Lifter', focus: ['gym'], primary: 'gym', strengthStyle: 'strength',
+      lifts: { squat: '160', bench: '110', deadlift: '200' },
+      experience: { gym: 'advanced' }, planWeeks: 12, daysPerWeek: 4, sessionMinutes: 75, days: ['mon', 'tue', 'thu', 'fri'],
+      access: ['full_gym'], goals: [{ label: 'Add 20 kg to my total', target_date: '' }]
     }
   },
   {
     name: 'Bodybuilder (6-day PPL)',
     answers: {
-      ...BLANK_ANSWERS, name: 'Test Physique', focus: ['gym'], strengthStyle: 'bodybuilding',
-      experience: { gym: 'intermediate' }, daysPerWeek: 6, sessionMinutes: 75,
+      ...BLANK_ANSWERS, name: 'Test Physique', focus: ['gym'], primary: 'gym', strengthStyle: 'bodybuilding',
+      experience: { gym: 'intermediate' }, planWeeks: 16, daysPerWeek: 6, sessionMinutes: 75,
       days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], access: ['full_gym']
     }
   },
   {
     name: 'Triathlete',
     answers: {
-      ...BLANK_ANSWERS, name: 'Test Tri', focus: ['triathlon'], experience: { triathlon: 'intermediate' },
-      runGoal: { distance: '10k', target_date: inWeeks(18), currentDistance: '10k', currentTime: '55:00' },
-      swimGoal: { distance_m: 1500, target_date: inWeeks(18), currentPace: '1:50', currentDistance: '' },
-      daysPerWeek: 6, sessionMinutes: 60, days: [], access: ['full_gym', 'pool', 'bike']
+      ...BLANK_ANSWERS, name: 'Test Tri', focus: ['triathlon'], primary: 'run', experience: { triathlon: 'intermediate' },
+      runGoal: { distance: '10k', currentDistance: '10k', currentTime: '55:00' },
+      swimGoal: { distance_m: 1500, currentPace: '1:50', currentDistance: '' },
+      hasEvent: true, eventDate: inWeeks(18),
+      daysPerWeek: 6, sessionMinutes: 60, days: [], longRunDay: 'sat', doubles: true, access: ['full_gym', 'pool', 'bike']
     }
   },
   {
     name: 'Beginner, no equipment',
     answers: {
-      ...BLANK_ANSWERS, name: 'Test Beginner', focus: ['general_health'], experience: { general_health: 'beginner' },
-      daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], access: ['none']
+      ...BLANK_ANSWERS, name: 'Test Beginner', focus: ['general_health'], primary: 'general', experience: { general_health: 'beginner' },
+      planWeeks: 12, daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], access: ['none']
     }
   }
 ];
