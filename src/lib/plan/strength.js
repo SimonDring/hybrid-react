@@ -107,6 +107,21 @@ function scheme(style, intent, deload) {
   return (table[style] || table.functional)[intent] || table.functional.base;
 }
 
+// ---- subtle, evidence-based sex tuning ----
+// The heavy compounds are IDENTICAL between sexes: relative strength/hypertrophy
+// gains are the same (Refalo et al. 2025 meta-analysis), so the split, the main
+// lifts and their loads don't change. The one robust difference is that women
+// fatigue more slowly and recover faster between sets, completing more reps at a
+// given load (biological-sex fatigue studies) — so they can absorb a little more
+// rep volume on the SUPPORTING work. We nudge accessory/isolation reps up a
+// couple, nothing else. Heavy mains, core holds, carries and timed work untouched.
+function femaleRepBump(sex) { return sex === 'female' ? 2 : 0; }
+function bumpReps(sets, d) {
+  if (!d) return sets;
+  // Bump the rep number(s) after the × — but not seconds/metres (holds, carries).
+  return String(sets).replace(/×\s*(\d+(?:–\d+)?)(?!\s*[sm])/, (m, reps) => '× ' + reps.replace(/\d+/g, n => String(Number(n) + d)));
+}
+
 // Progression note shown on the primary lift.
 function mainNote(deload) {
   return deload
@@ -195,7 +210,7 @@ function coreSets(deload) { return deload ? '2 × 30s' : '3 × 30s'; }
 function isoSets(style) { return style === 'bodybuilding' ? '3 × 12–15' : '3 × 12'; }
 
 // Build a session's items from its blueprint, choosing real exercises.
-function buildSessionItems(bp, { style, s, deload, equip, level, weekNum, maxItems }) {
+function buildSessionItems(bp, { style, s, deload, equip, level, weekNum, maxItems, repBump }) {
   // Strength style keeps it compound-focused (drop most isolation, keep calves);
   // bb/fn slots only appear for their style.
   let slots = bp.slots.filter(sl => (!sl.bb || style === 'bodybuilding') && (!sl.fn || style === 'functional'));
@@ -217,9 +232,9 @@ function buildSessionItems(bp, { style, s, deload, equip, level, weekNum, maxIte
       items.push({ num, name: ex.name, sets: reps, rpe: 'RPE 6', tag: 'mobility', note: '' });
     } else if (sl.role === 'iso') {
       const t = /calf/i.test(ex.name) ? '3 × 12' : isoSets(style);
-      items.push({ num, name: ex.name, sets: t + per, rpe: s.accRpe, tag: ex.pattern === 'calf' ? 'mobility' : undefined, note: '' });
+      items.push({ num, name: ex.name, sets: bumpReps(t + per, repBump), rpe: s.accRpe, tag: ex.pattern === 'calf' ? 'mobility' : undefined, note: '' });
     } else {
-      items.push({ num, name: ex.name, sets: s.acc + per, rpe: s.accRpe, note: '' });
+      items.push({ num, name: ex.name, sets: bumpReps(s.acc + per, repBump), rpe: s.accRpe, note: '' });
     }
   });
   return items;
@@ -252,10 +267,11 @@ export function buildWeek(ctx = {}) {
   const lo = Math.max(35, minutes - 10);
   const duration = `${lo}–${minutes} min`;
   const maxItems = minutes <= 45 ? 5 : minutes <= 60 ? 6 : 7;
+  const repBump = femaleRepBump(ctx.sex);
 
   return days.map(bpKey => {
     const bp = BLUEPRINTS[bpKey] || BLUEPRINTS.fbA;
-    const items = buildSessionItems(bp, { style, s, deload, equip, level, weekNum, maxItems });
+    const items = buildSessionItems(bp, { style, s, deload, equip, level, weekNum, maxItems, repBump });
     applyWeights(items, ctx.lifts, ctx.winp); // no-op for bodyweight names
     return {
       discipline: 'gym',
@@ -332,12 +348,13 @@ export function buildSupport(ctx = {}) {
   const access = ctx.access || [];
   const weights = access.includes('full_gym') || access.includes('home_weights') || access.length === 0;
   const base = (ctx.weekNum || 1) - 1;
+  const repBump = femaleRepBump(ctx.sex);
   const focus = forSport === 'swim' ? 'Swim-support strength' : 'Run-support strength';
   return Array.from({ length: count }, (_, i) => ({
     discipline: 'gym',
     focus,
     duration: '25–30 min',
-    items: supportItems(forSport, base + i, weights, deload),
+    items: supportItems(forSport, base + i, weights, deload).map(it => ({ ...it, sets: bumpReps(it.sets, repBump) })),
     intensity: 'moderate',
     lowerBody: false,
     supplemental: true

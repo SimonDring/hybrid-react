@@ -129,7 +129,7 @@ function supplementalSpecs(profile, disciplines, ctx) {
   return strength.buildSupport({
     count,
     for: disciplines.includes('run') ? 'run' : 'swim',
-    deload: ctx.deload, access: profile.access || [], weekNum: ctx.weekNum, intent: ctx.intent
+    deload: ctx.deload, access: profile.access || [], weekNum: ctx.weekNum, intent: ctx.intent, sex: profile.sex
   });
 }
 
@@ -283,7 +283,7 @@ function gatesFor(intent, isLast, profile, totalSessions) {
 // Per-week assembly
 // ---------------------------------------------------------------------------
 function buildDisciplineSpecs(discipline, count, ctx, profile) {
-  const common = { intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, taperMult: ctx.taperMult, winp: ctx.winp, weekNum: ctx.weekNum, progress: ctx.progress, level: levelFor(discipline, profile), minutes: ctx.minutes, access: profile.access || [] };
+  const common = { intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, taperMult: ctx.taperMult, winp: ctx.winp, weekNum: ctx.weekNum, progress: ctx.progress, level: levelFor(discipline, profile), minutes: ctx.minutes, access: profile.access || [], sex: profile.sex };
   // Strength / cross-training pull back during the race taper, like a deload.
   const lighten = ctx.deload || ctx.taper;
   switch (discipline) {
