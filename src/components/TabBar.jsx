@@ -4,7 +4,7 @@ const TABS = [
   {
     id: 'today', path: '/',
     icon: <><path d="M3 12l9-9 9 9"></path><path d="M5 10v10h14V10"></path></>,
-    label: 'Today'
+    label: 'Home'
   },
   {
     id: 'phases', path: '/phases',

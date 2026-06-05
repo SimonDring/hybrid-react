@@ -145,6 +145,14 @@ export function sleepScoreFor(metric) {
  *   date: string|null
  * }}
  */
+// Format a sleep duration (minutes) as "7h 25m". Null when no data.
+export function fmtSleep(min) {
+  if (min == null) return null;
+  const h = Math.floor(min / 60);
+  const m = Math.round(min % 60);
+  return `${h}h ${String(m).padStart(2, '0')}m`;
+}
+
 export function computeReadiness(dailyMetrics = [], logs = []) {
   const sorted = [...dailyMetrics].sort((a, b) =>
     (b.date || '').localeCompare(a.date || '')
@@ -165,6 +173,7 @@ export function computeReadiness(dailyMetrics = [], logs = []) {
     sleepHrs: latest.sleep_duration_min != null
       ? Math.round((latest.sleep_duration_min / 60) * 10) / 10
       : null,
+    sleepMin: latest.sleep_duration_min ?? null,
     hrv: latest.hrv_ms ?? null,
     rhr: latest.resting_hr ?? null
   };

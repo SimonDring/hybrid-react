@@ -168,4 +168,55 @@ export function recommendedSession(sessions = {}) {
   return findNextSession(sessions);
 }
 
-export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate };
+// ---------------------------------------------------------------------------
+// Calendar — map every session onto its real date + a discipline (for colour).
+// ---------------------------------------------------------------------------
+
+// Local YYYY-MM-DD (timezone-safe — avoids the UTC shift toISOString can cause).
+export function localISO(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+// Which discipline a session belongs to, from its item tags (drives the colour).
+function sessionDiscipline(s) {
+  const tags = new Set((s.items || []).map(it => it.tag).filter(Boolean));
+  if (tags.has('swim')) return 'swim';
+  if (tags.has('cycle')) return tags.has('run') ? 'brick' : 'cycle';
+  if (tags.has('run')) return 'run';
+  return 'gym';
+}
+
+/**
+ * Build a calendar view of the plan: every session keyed by its real date, with
+ * completion state + discipline. Returns null for legacy plans with no start
+ * date (the home screen then falls back to the next-session card).
+ * @returns {{ byDate: { [iso]: Array }, start: Date, end: Date }|null}
+ */
+export function buildCalendar(sessions = {}) {
+  if (!getStartDate()) return null;
+  const byDate = {};
+  let min = null, max = null;
+  for (const phase of getPhases()) {
+    const full = getPhase(phase.id);
+    (full && full.weeks ? full.weeks : []).forEach(week => {
+      week.sessions.forEach((s, i) => {
+        const d = dateForSession(week.num, s.title);
+        if (!d) return;
+        const iso = localISO(d);
+        const key = `p${phase.id}_wk${week.num}_s${i}`;
+        const st = sessions[key];
+        (byDate[iso] = byDate[iso] || []).push({
+          phaseId: phase.id, weekNum: week.num, idx: i, key,
+          title: s.title, duration: s.duration,
+          completed: !!(st && st.completed),
+          discipline: sessionDiscipline(s)
+        });
+        if (!min || d < min) min = d;
+        if (!max || d > max) max = d;
+      });
+    });
+  }
+  return min ? { byDate, start: min, end: max } : null;
+}
+
+export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO };

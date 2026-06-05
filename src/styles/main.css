@@ -3336,3 +3336,47 @@ html[data-theme="dark"] .st-rpe {
   0%, 100% { opacity: 0.7; transform: scale(1); }
   50%       { opacity: 0.3; transform: scale(0.7); }
 }
+
+/* ============================================================
+   TRAINING CALENDAR (home screen)
+   ============================================================ */
+.cal { margin-bottom: 22px; }
+.cal-strip {
+  display: flex; gap: 6px; overflow-x: auto; padding: 4px 2px 12px;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.cal-strip::-webkit-scrollbar { display: none; }
+.cal-cell {
+  flex: 0 0 auto; width: 46px; padding: 8px 0 6px; border-radius: 13px;
+  border: 1.5px solid transparent; background: var(--bg-surface-2);
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  cursor: pointer; font-family: inherit;
+}
+.cal-cell.today { background: var(--bg-surface); border-color: var(--hairline); }
+.cal-cell.sel { border-color: var(--rust); background: rgba(176,74,46,0.10); }
+.cal-dow { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; color: var(--txt-muted); text-transform: uppercase; }
+.cal-dom { font-size: 17px; font-weight: 700; color: var(--txt-strong); line-height: 1.05; }
+.cal-dots { display: flex; gap: 3px; height: 6px; margin-top: 3px; align-items: center; }
+.cal-dots i { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+
+.cal-detail { margin-top: 2px; }
+.cal-detail-head { font-size: 13px; font-weight: 700; color: var(--txt-strong); margin-bottom: 8px; }
+.cal-detail-head.done { color: var(--moss); }
+.cal-rest { font-size: 13px; color: var(--txt-muted); padding: 8px 0; }
+.cal-session {
+  width: 100%; display: flex; align-items: center; gap: 12px; text-align: left;
+  padding: 14px; border-radius: 14px; border: 1px solid var(--hairline);
+  border-left-width: 4px; background: var(--bg-surface); cursor: pointer;
+  font-family: inherit; margin-bottom: 8px;
+}
+.cal-session.done { opacity: 0.72; }
+.cal-session-dot { display: none; }
+.cal-session-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.cal-session-title { font-size: 15px; font-weight: 700; color: var(--txt-strong); }
+.cal-session-meta { font-size: 12px; color: var(--txt-muted); }
+.cal-session-chev { width: 18px; height: 18px; color: var(--txt-muted); flex-shrink: 0; }
+.cal-session-check { font-size: 18px; color: var(--moss); flex-shrink: 0; }
+
+/* Readiness panel as a tappable hero */
+button.today-hero { width: 100%; display: block; text-align: left; border: none; font-family: inherit; cursor: pointer; }
+.readiness-tap .th-note { opacity: 0.85; }

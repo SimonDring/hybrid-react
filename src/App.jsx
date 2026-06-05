@@ -30,7 +30,7 @@ import Settings from './screens/Settings.jsx';
 import Coach from './screens/Coach.jsx';
 
 const routeMeta = {
-  '/': { title: 'Hybrid', topLevel: true, tab: 'today' },
+  '/': { title: 'Home', topLevel: true, tab: 'today' },
   '/phases': { title: 'Phases', topLevel: true, tab: 'phases' },
   '/phases/:phaseId': { title: 'Phase', topLevel: false, tab: 'phases' },
   '/phases/:phaseId/weeks/:weekNum': { title: 'Week', topLevel: false, tab: 'phases' },

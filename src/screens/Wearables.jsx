@@ -9,7 +9,7 @@
  */
 
 import { useTrainingStore } from '../stores/trainingStore.js';
-import { computeReadiness, readinessFor, sleepScoreFor } from '../lib/Readiness.js';
+import { computeReadiness, readinessFor, sleepScoreFor, fmtSleep } from '../lib/Readiness.js';
 
 // A value box that shows "est" when the number is derived rather than measured.
 function ScoreBox({ label, result, suffix }) {
@@ -76,7 +76,7 @@ export default function Wearables() {
             <ScoreBox label="Sleep score" result={latestSleep} suffix="/ 100" />
           </div>
           <div className="stat-grid cols-3" style={{ marginBottom: 24 }}>
-            <Vital label="Sleep" value={readiness.vitals.sleepHrs} suffix="hours" />
+            <Vital label="Sleep" value={fmtSleep(readiness.vitals.sleepMin)} suffix="" />
             <Vital label="HRV" value={readiness.vitals.hrv} suffix="ms" />
             <Vital label="Resting HR" value={readiness.vitals.rhr} suffix="bpm" />
             <Vital label="Steps" value={latest.steps ?? null} suffix="" />

@@ -209,15 +209,17 @@ export async function pullFromSupabase() {
       return { ok: false, reason: errors[0].message };
     }
 
-    // Replace local cache with cloud data
-    if (usersRes.data?.length)      Database.tables.users.replaceAll(usersRes.data);
-    if (plansRes.data?.length)      Database.tables.plans.replaceAll(plansRes.data);
-    if (sessionsRes.data?.length)   Database.tables.sessions.replaceAll(sessionsRes.data);
-    if (logsRes.data?.length)       Database.tables.sessionLogs.replaceAll(logsRes.data);
-    if (checkinsRes.data?.length)   Database.tables.weeklyCheckins.replaceAll(checkinsRes.data);
-    if (reassessRes.data?.length)   Database.tables.reassessments.replaceAll(reassessRes.data);
-    if (dailyRes.data?.length)      Database.tables.dailyMetrics.replaceAll(dailyRes.data);
-    if (injuriesRes.data?.length)   Database.tables.injuries.replaceAll(injuriesRes.data);
+    // Replace local cache with cloud data. ALWAYS replace (even with []) so a
+    // different user's stale rows are cleared on sign-in — e.g. a new account
+    // with no wearable data must not show the previous user's metrics.
+    if (usersRes.data?.length)      Database.tables.users.replaceAll(usersRes.data); // never blank out the signed-in user
+    Database.tables.plans.replaceAll(plansRes.data || []);
+    Database.tables.sessions.replaceAll(sessionsRes.data || []);
+    Database.tables.sessionLogs.replaceAll(logsRes.data || []);
+    Database.tables.weeklyCheckins.replaceAll(checkinsRes.data || []);
+    Database.tables.reassessments.replaceAll(reassessRes.data || []);
+    Database.tables.dailyMetrics.replaceAll(dailyRes.data || []);
+    Database.tables.injuries.replaceAll(injuriesRes.data || []);
 
     return { ok: true };
   } catch (err) {
