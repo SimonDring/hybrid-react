@@ -9,7 +9,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { BONES } from '../data/exerciseDemos.js';
+import { SIDE_BONES } from '../data/exerciseDemos.js';
 
 const SEG_MS = 1100; // time to move between two key poses
 const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
@@ -46,21 +46,21 @@ export default function StickFigureDemo({ demo }) {
   const p = {};
   for (const k in a) p[k] = [lerp(a[k][0], b[k][0], e), lerp(a[k][1], b[k][1], e)];
 
+  // Each demo can declare its own skeleton; default to the side-view set.
+  const bones = demo.bones || SIDE_BONES;
+  const dots = demo.dots || ['hand', 'ankle'];
+  const ground = demo.ground !== false;
+
   return (
     <div>
       <svg viewBox="0 0 100 100" style={{ width: '100%', maxWidth: 200, display: 'block', margin: '0 auto' }} aria-label="exercise demonstration">
-        {/* ground */}
-        <line x1="14" y1="91" x2="86" y2="91" stroke="var(--hairline)" strokeWidth="1.5" />
-        {/* bones */}
-        {BONES.map(([from, to], i) => (
+        {ground && <line x1="14" y1="91" x2="86" y2="91" stroke="var(--hairline)" strokeWidth="1.5" />}
+        {bones.map(([from, to], i) => (p[from] && p[to]) && (
           <line key={i} x1={p[from][0]} y1={p[from][1]} x2={p[to][0]} y2={p[to][1]}
             stroke="var(--rust)" strokeWidth="3.2" strokeLinecap="round" />
         ))}
-        {/* head */}
-        <circle cx={p.head[0]} cy={p.head[1]} r="5.5" fill="none" stroke="var(--rust)" strokeWidth="3.2" />
-        {/* hands/feet dots */}
-        <circle cx={p.hand[0]} cy={p.hand[1]} r="2" fill="var(--rust)" />
-        <circle cx={p.ankle[0]} cy={p.ankle[1]} r="2" fill="var(--rust)" />
+        {p.head && <circle cx={p.head[0]} cy={p.head[1]} r="5.5" fill="none" stroke="var(--rust)" strokeWidth="3.2" />}
+        {dots.map(d => p[d] && <circle key={d} cx={p[d][0]} cy={p[d][1]} r="2" fill="var(--rust)" />)}
       </svg>
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 6 }}>

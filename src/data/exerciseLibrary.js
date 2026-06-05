@@ -30,7 +30,7 @@ const LIB = {
     how: ['Lie back, eyes under the bar, feet flat, slight arch, shoulder blades pinched down.', 'Grip just wider than shoulders, unrack and hold over your chest.', 'Lower under control to mid-chest, elbows ~45° from the body.', 'Press back up and slightly back toward the rack.'],
     lookFor: ['Shoulder blades retracted and down', 'Bar touches mid-chest', 'Wrists stacked over elbows'],
     avoid: ['Elbows flaring straight out to 90°', 'Bouncing the bar off the chest', 'Hips lifting off the bench'],
-    media: null
+    demo: 'bench', media: null
   },
   deadlift: {
     name: 'Deadlift', type: 'strength',
@@ -62,7 +62,7 @@ const LIB = {
     how: ['Grip slightly wider than shoulders, start from a full hang (or tall seated).', 'Pull your shoulder blades down first, then drive elbows to your ribs.', 'Bring your chest toward the bar / the bar to your upper chest.', 'Lower under full control to a complete stretch.'],
     lookFor: ['Lead with the shoulder blades', 'Chest up, elbows driving down', 'Full range top and bottom'],
     avoid: ['Kipping / swinging for momentum', 'Half reps', 'Shrugging the shoulders up'],
-    media: null
+    demo: 'pullup', media: null
   },
   row: {
     name: 'Row', type: 'strength',
@@ -70,7 +70,7 @@ const LIB = {
     how: ['Hinge to a flat-back position (or use a chest support), arms hanging.', 'Pull the weight to your lower ribs, leading with the elbows.', 'Squeeze the shoulder blades together for a beat.', 'Lower under control to a full stretch.'],
     lookFor: ['Flat back, still torso', 'Elbows drive back past the ribs', 'Squeeze at the top'],
     avoid: ['Heaving with the lower back', 'Shrugging instead of rowing', 'Cutting the range short'],
-    media: null
+    demo: 'row', media: null
   },
   split_squat: {
     name: 'Split squat / lunge', type: 'strength',
@@ -78,7 +78,7 @@ const LIB = {
     how: ['Stagger your stance, most weight on the front foot (rear foot elevated for Bulgarian).', 'Lower straight down until the front thigh is about parallel.', 'Keep the front shin fairly vertical, torso tall.', 'Drive through the front heel to stand.'],
     lookFor: ['Front knee tracks over the foot', 'Tall, balanced torso', 'Controlled descent'],
     avoid: ['Front knee caving in', 'Pushing off the back foot', 'Knee crashing past the toes'],
-    media: null
+    demo: 'lunge', media: null
   },
   hip_thrust: {
     name: 'Hip thrust / glute bridge', type: 'strength',
@@ -86,7 +86,7 @@ const LIB = {
     how: ['Upper back on a bench (or floor for a bridge), weight across the hips.', 'Tuck the chin, push through your heels and drive the hips up.', 'Finish with a flat body line, glutes fully squeezed.', 'Lower under control.'],
     lookFor: ['Glutes do the work, ribs stay down', 'Full hip extension at the top', 'Shins roughly vertical at the top'],
     avoid: ['Arching the lower back to finish', 'Pushing through the toes', 'Bouncing off the floor'],
-    media: null
+    demo: 'hipthrust', media: null
   },
   calf_raise: {
     name: 'Calf raise', type: 'strength',
@@ -94,7 +94,7 @@ const LIB = {
     how: ['Balls of the feet on a step, heels free to drop.', 'Lower the heels for a full stretch.', 'Rise up onto the toes as high as you can.', 'Control the lowering (a slow 3-count builds tendon stiffness).'],
     lookFor: ['Full range — deep stretch to high rise', 'Slow, controlled tempo', 'Even push through both feet'],
     avoid: ['Tiny bouncy reps', 'Rolling onto the outside of the foot', 'Rushing the lowering'],
-    media: null
+    demo: 'calf', media: null
   },
   carry: {
     name: 'Loaded carry', type: 'strength',
@@ -118,7 +118,7 @@ const LIB = {
     how: ['Forearms (or hands) down, body in a straight line.', 'Squeeze glutes, tuck the ribs down, brace as if about to be poked.', 'Breathe normally while holding tension.', 'For Pallof/anti-rotation: resist a cable/band trying to twist you.'],
     lookFor: ['Flat line hips-to-shoulders', 'Ribs down, glutes tight', 'Steady breathing under tension'],
     avoid: ['Hips sagging or piking', 'Holding your breath', 'Letting the lower back arch'],
-    media: null
+    demo: 'plank', media: null
   },
   face_pull: {
     name: 'Face pull', type: 'mobility',
@@ -134,7 +134,7 @@ const LIB = {
     how: ['Dumbbells at your sides, slight forward lean, soft elbows.', 'Raise out to the sides to about shoulder height.', 'Lead with the elbows, pinkies slightly up.', 'Lower slowly — resist the way down.'],
     lookFor: ['Elbows lead, wrists neutral', 'Stop around shoulder height', 'Slow controlled lowering'],
     avoid: ['Swinging with momentum', 'Shrugging the traps up', 'Going way above shoulder height'],
-    media: null
+    demo: 'lateralraise', media: null
   },
   curl: {
     name: 'Biceps curl', type: 'strength',
@@ -142,7 +142,7 @@ const LIB = {
     how: ['Weights at your sides, elbows pinned to your ribs.', 'Curl up by bending only at the elbow.', 'Squeeze at the top.', 'Lower slowly to a full stretch.'],
     lookFor: ['Elbows stay still and pinned', 'Full range, controlled eccentric', 'Wrists neutral'],
     avoid: ['Swinging the elbows forward', 'Using the back/hips to heave', 'Half reps'],
-    media: null
+    demo: 'curl', media: null
   },
   nordic: {
     name: 'Nordic / hamstring curl', type: 'mobility',
