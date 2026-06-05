@@ -218,19 +218,19 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
 
     { title: 'About you', subtitle: 'The basics help us tailor your volumes, loads and recovery.', valid: () => true,
       render: () => (
-        <div style={{ display: 'grid', gap: 14 }}>
+        <div style={{ display: 'grid', gap: 16 }}>
           <Field label="Name" value={a.name} onChange={v => set({ name: v })} placeholder="Your name" />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <Field label="Age" value={a.age} onChange={v => set({ age: v })} type="number" suffix="yrs" />
-            <div>
-              <label style={FIELD_LABEL}>Sex</label>
-              <Row>{['male', 'female', 'other'].map(s => <Chip key={s} selected={a.sex === s} onClick={() => set({ sex: s })} label={s[0].toUpperCase() + s.slice(1)} />)}</Row>
+          <Field label="Age" value={a.age} onChange={v => set({ age: v })} type="number" suffix="yrs" />
+          <div>
+            <label style={FIELD_LABEL}>Sex</label>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+              {['male', 'female', 'other'].map(s => (
+                <Chip key={s} selected={a.sex === s} onClick={() => set({ sex: s })} label={s[0].toUpperCase() + s.slice(1)} full />
+              ))}
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <Field label="Height" value={a.height_cm} onChange={v => set({ height_cm: v })} type="number" suffix="cm" />
-            <Field label="Weight" value={a.bodyweight_kg} onChange={v => set({ bodyweight_kg: v })} type="number" suffix="kg" />
-          </div>
+          <Field label="Height" value={a.height_cm} onChange={v => set({ height_cm: v })} type="number" suffix="cm" />
+          <Field label="Weight" value={a.bodyweight_kg} onChange={v => set({ bodyweight_kg: v })} type="number" suffix="kg" />
           <div>
             <label style={FIELD_LABEL}>Daily activity (outside training)</label>
             <div style={{ display: 'grid', gap: 6 }}>{ACTIVITY.map(o => <Chip key={o.key} full selected={a.activityLevel === o.key} onClick={() => set({ activityLevel: o.key })} label={o.label} hint={o.hint} />)}</div>
