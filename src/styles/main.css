@@ -3222,6 +3222,20 @@ html[data-theme="dark"] .st-rpe {
   letter-spacing: -0.01em;
   color: var(--txt-strong);
 }
+/* "How to" info button next to each exercise name */
+.gt-info {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  padding: 0 2px;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--txt-muted);
+  opacity: 0.55;
+  cursor: pointer;
+  transition: opacity 0.12s, color 0.12s;
+}
+.gt-info:active, .gt-info:hover { opacity: 1; color: var(--rust); }
 
 /* Generic data cell — registry decides which columns exist */
 .gt-cell {

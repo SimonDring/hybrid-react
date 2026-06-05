@@ -5,6 +5,7 @@ import * as Plan from '../lib/PlanService.js';
 import * as Utils from '../lib/Utils.js';
 import { activityFor } from '../data/activityTypes.js';
 import RestTimer from '../components/RestTimer.jsx';
+import ExerciseInfo from '../components/ExerciseInfo.jsx';
 import { getChecked, toggleChecked, clearChecked } from '../lib/SessionProgress.js';
 
 export default function SessionDetail() {
@@ -19,6 +20,7 @@ export default function SessionDetail() {
   const [ratings, setRatings] = useState({ quality: null, energy: null, recovery: null });
   const [notes, setNotes] = useState('');
   const [checked, setChecked] = useState([]);
+  const [infoItem, setInfoItem] = useState(null); // exercise tapped for the form guide
 
   const phase = Plan.getPhase(Number(phaseId));
   const week = phase ? phase.weeks.find(w => w.num === Number(weekNum)) : null;
@@ -125,6 +127,11 @@ export default function SessionDetail() {
                         {isStarted && <span className={`gt-check ${done ? 'on' : ''}`} aria-hidden="true">✓</span>}
                         <span className="gt-num">{item.num}</span>
                         <span className="gt-name">{item.name}</span>
+                        <button
+                          className="gt-info"
+                          aria-label={`How to do ${item.name}`}
+                          onClick={(e) => { e.stopPropagation(); setInfoItem(item); }}
+                        >ⓘ</button>
                       </div>
                       {cols.map(c => {
                         const val = c.accessor(item);
@@ -281,6 +288,15 @@ export default function SessionDetail() {
             </>
           )}
         </>
+      )}
+
+      {infoItem && (
+        <ExerciseInfo
+          name={infoItem.name}
+          focus={session.title}
+          fallbackCue={infoItem.note || infoItem.cue}
+          onClose={() => setInfoItem(null)}
+        />
       )}
     </>
   );
