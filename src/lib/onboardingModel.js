@@ -39,10 +39,12 @@ export function answersToProfilePatch(a) {
   const hasRun = disciplines.includes('run');
   const hasSwim = disciplines.includes('swim');
   const multi = disciplines.length > 1;
-  const runCurrent = a.runGoal.currentTime.trim()
-    ? { distance: a.runGoal.currentDistance || a.runGoal.distance || '5k', time: a.runGoal.currentTime.trim() } : null;
-  const swimCurrent = (a.swimGoal.currentPace.trim() || a.swimGoal.currentDistance)
-    ? { pace_per_100: a.swimGoal.currentPace.trim() || null, distance_m: numOrNull(a.swimGoal.currentDistance) } : null;
+  const runTime = (a.runGoal.currentTime || '').trim();
+  const swimPace = (a.swimGoal.currentPace || '').trim();
+  const runCurrent = runTime
+    ? { distance: a.runGoal.currentDistance || a.runGoal.distance || '5k', time: runTime } : null;
+  const swimCurrent = (swimPace || a.swimGoal.currentDistance)
+    ? { pace_per_100: swimPace || null, distance_m: numOrNull(a.swimGoal.currentDistance) } : null;
   // Event date (if any) anchors the goal target; otherwise the block length drives it.
   const target = a.hasEvent ? (a.eventDate || '') : '';
   return {

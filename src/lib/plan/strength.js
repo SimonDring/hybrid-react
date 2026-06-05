@@ -29,17 +29,59 @@
  * leg work away from hard runs (the main concurrent-training conflict).
  */
 
-// ---- split selection: which session roles run this week, by gym-days ----
+import { EXERCISES, LEVELS, availableEquip } from '../../data/strengthExercises.js';
+
+// ---- split → ordered day blueprints by gym-days ----
+// Each day is a blueprint with a DISTINCT emphasis; together they cover the
+// movement patterns ~2×/week with a slight pull lean for posture. This is what
+// makes consecutive sessions feel different rather than copy-pasted.
 const SPLITS = {
-  1: ['full'],
-  2: ['full', 'full'],
-  3: ['full', 'full', 'full'],
-  4: ['upper', 'lower', 'upper', 'lower'],
-  5: ['upper', 'lower', 'push', 'pull', 'legs'],
-  6: ['push', 'pull', 'legs', 'push', 'pull', 'legs']
+  1: ['fbA'],
+  2: ['fbA', 'fbB'],
+  3: ['fbA', 'fbB', 'fbC'],
+  4: ['upperPush', 'lowerSquat', 'upperPull', 'lowerHinge'],
+  5: ['upperPush', 'lowerSquat', 'pushDelt', 'pullVert', 'lowerHinge'],
+  6: ['pushChest', 'pullVert', 'lowerSquat', 'pushDelt', 'pullHoriz', 'lowerHinge']
 };
 
-const LOWER_ROLES = new Set(['lower', 'legs', 'full']);
+// A blueprint = display focus + leg-day flag + ordered movement-pattern slots.
+// slot.pat: a movement pattern (or 'iso' + muscle). slot.role: primary (heavy
+// compound) | accessory | core | iso. `bb`/`fn` slots appear only for that style.
+const BLUEPRINTS = {
+  fbA: { focus: 'Full body · squat focus', lower: true, slots: [
+    { pat: 'squat', role: 'primary' }, { pat: 'hpush', role: 'accessory' }, { pat: 'hpull', role: 'accessory' },
+    { pat: 'hinge', role: 'accessory' }, { pat: 'core', role: 'core' }, { pat: 'carry', role: 'accessory', fn: true } ] },
+  fbB: { focus: 'Full body · posterior focus', lower: true, slots: [
+    { pat: 'hinge', role: 'primary' }, { pat: 'vpush', role: 'accessory' }, { pat: 'vpull', role: 'accessory' },
+    { pat: 'lunge', role: 'accessory' }, { pat: 'calf', role: 'iso' }, { pat: 'core', role: 'core' } ] },
+  fbC: { focus: 'Full body · push & single-leg', lower: true, slots: [
+    { pat: 'hpush', role: 'primary' }, { pat: 'lunge', role: 'accessory' }, { pat: 'hpull', role: 'accessory' },
+    { pat: 'hinge', role: 'accessory' }, { pat: 'core', role: 'core' }, { pat: 'iso', muscle: 'sidedelt', role: 'iso', bb: true } ] },
+  upperPush: { focus: 'Upper · push focus', lower: false, slots: [
+    { pat: 'hpush', role: 'primary' }, { pat: 'hpull', role: 'accessory' }, { pat: 'vpush', role: 'accessory' },
+    { pat: 'vpull', role: 'accessory' }, { pat: 'iso', muscle: 'reardelt', role: 'iso' }, { pat: 'iso', muscle: 'triceps', role: 'iso', bb: true } ] },
+  upperPull: { focus: 'Upper · pull focus', lower: false, slots: [
+    { pat: 'vpull', role: 'primary' }, { pat: 'vpush', role: 'accessory' }, { pat: 'hpull', role: 'accessory' },
+    { pat: 'hpush', role: 'accessory' }, { pat: 'iso', muscle: 'reardelt', role: 'iso' }, { pat: 'iso', muscle: 'biceps', role: 'iso', bb: true } ] },
+  pushChest: { focus: 'Push · chest focus', lower: false, slots: [
+    { pat: 'hpush', role: 'primary' }, { pat: 'hpush', role: 'accessory' }, { pat: 'vpush', role: 'accessory' },
+    { pat: 'iso', muscle: 'sidedelt', role: 'iso' }, { pat: 'iso', muscle: 'triceps', role: 'iso' } ] },
+  pushDelt: { focus: 'Push · shoulder focus', lower: false, slots: [
+    { pat: 'vpush', role: 'primary' }, { pat: 'hpush', role: 'accessory' }, { pat: 'iso', muscle: 'sidedelt', role: 'iso' },
+    { pat: 'iso', muscle: 'reardelt', role: 'iso' }, { pat: 'iso', muscle: 'triceps', role: 'iso' } ] },
+  pullVert: { focus: 'Pull · width focus', lower: false, slots: [
+    { pat: 'vpull', role: 'primary' }, { pat: 'hpull', role: 'accessory' }, { pat: 'iso', muscle: 'reardelt', role: 'iso' },
+    { pat: 'iso', muscle: 'biceps', role: 'iso' } ] },
+  pullHoriz: { focus: 'Pull · thickness focus', lower: false, slots: [
+    { pat: 'hpull', role: 'primary' }, { pat: 'vpull', role: 'accessory' }, { pat: 'iso', muscle: 'reardelt', role: 'iso' },
+    { pat: 'iso', muscle: 'biceps', role: 'iso' } ] },
+  lowerSquat: { focus: 'Lower · quad focus', lower: true, slots: [
+    { pat: 'squat', role: 'primary' }, { pat: 'lunge', role: 'accessory' }, { pat: 'hinge', role: 'accessory' },
+    { pat: 'calf', role: 'iso' }, { pat: 'iso', muscle: 'quad', role: 'iso', bb: true }, { pat: 'core', role: 'core' } ] },
+  lowerHinge: { focus: 'Lower · posterior focus', lower: true, slots: [
+    { pat: 'hinge', role: 'primary' }, { pat: 'lunge', role: 'accessory' }, { pat: 'iso', muscle: 'ham', role: 'iso' },
+    { pat: 'calf', role: 'iso' }, { pat: 'core', role: 'core' } ] }
+};
 
 // ---- rep/intensity scheme by style + phase intent ----
 // main = primary compound, acc = accessory. Deload overrides everything.
@@ -90,6 +132,8 @@ function parseRpe(rpe) { const m = /(\d+)/.exec(rpe || ''); return m ? Number(m[
 // Map an exercise name to which 1RM drives it + a strength factor vs that lift.
 function liftMatch(name) {
   const n = (name || '').toLowerCase();
+  // Only barbell main lifts get 1RM-based targets — skip DB/goblet/band variants.
+  if (/\bdb\b|dumbbell|goblet|kettlebell|\bband\b/.test(n)) return null;
   if (/bench press/.test(n)) return { key: 'bench', factor: 1 };
   if (/romanian deadlift/.test(n)) return { key: 'deadlift', factor: 0.8 }; // RDL ≈ 80% of DL
   if (/trap-bar|hex deadlift|^deadlift|\bdeadlift\b/.test(n) && !/romanian/.test(n)) return { key: 'deadlift', factor: 1 };
@@ -118,94 +162,79 @@ function applyWeights(items, lifts, winp) {
   }
 }
 
-// Build the item list for one session role. Style nudges which accessories and
-// finishers appear; the scheme sets the sets×reps. Items use the strength shape
-// the screens already render ({ num, name, sets, rpe, note, tag? }).
-function itemsForRole(role, { style, weights, s, deload }) {
-  const main = (num, name, note) => ({ num, name, sets: s.main, rpe: s.mainRpe, note: note ?? mainNote(deload) });
-  const acc  = (num, name, note) => ({ num, name, sets: s.acc, rpe: s.accRpe, note: note || '' });
-  const core = (num, name, sets, note) => ({ num, name, sets, rpe: 'RPE 6', tag: 'mobility', note: note || '' });
-
-  const squat  = lift(weights, 'Back squat', 'Bodyweight squat / split squat');
-  const hinge  = lift(weights, 'Romanian deadlift', 'Single-leg hip hinge');
-  const bench  = lift(weights, 'Bench press', 'Push-up (feet elevated if easy)');
-  const row    = lift(weights, 'Barbell / DB row', 'Inverted row / band row');
-  const press  = lift(weights, 'Overhead press', 'Pike push-up');
-  const pull   = lift(weights, 'Pull-up / lat pulldown', 'Band-assisted pull-up');
-
-  switch (role) {
-    case 'upper':
-      return [
-        main('A1', bench),
-        acc('A2', row, 'squeeze 1s'),
-        acc('B1', press),
-        acc('B2', pull),
-        ...(style === 'bodybuilding' ? [acc('C1', 'Lateral raise'), acc('C2', 'Biceps curl + triceps')] : []),
-        core('D1', 'Face pull', '3 × 15', 'shoulder health')
-      ];
-    case 'lower':
-      return [
-        main('A1', squat),
-        acc('B1', hinge, 'controlled hinge'),
-        acc('B2', 'Split squat / lunge', 'per leg'),
-        ...(style === 'bodybuilding' ? [acc('C1', 'Leg curl'), acc('C2', 'Leg extension')] : []),
-        ...(style === 'functional' ? [{ num: 'C1', name: 'Loaded carry', sets: '3 × 30 m', rpe: 'RPE 7', note: 'brace, tall posture' }] : []),
-        core('D1', 'Calf raise', '3 × 12'),
-        core('D2', 'Pallof press', '3 × 10 ea.', 'anti-rotation core')
-      ];
-    case 'push':
-      return [
-        main('A1', bench),
-        acc('A2', 'Incline DB press'),
-        acc('B1', press),
-        acc('B2', 'Lateral raise', 'RPE 9 — leave nothing'),
-        acc('C1', 'Triceps pushdown / dip')
-      ];
-    case 'pull':
-      return [
-        main('A1', pull),
-        acc('A2', row),
-        acc('B1', 'Cable / chest-supported row'),
-        core('B2', 'Face pull', '3 × 15'),
-        acc('C1', 'Biceps curl', 'control the eccentric')
-      ];
-    case 'legs':
-      return [
-        main('A1', squat),
-        acc('B1', hinge),
-        acc('B2', 'Leg press / split squat', 'per leg'),
-        ...(style === 'bodybuilding' ? [acc('C1', 'Leg curl'), acc('C2', 'Calf raise')] : [core('C1', 'Calf raise', '3 × 12')]),
-        core('D1', 'Hanging knee raise', '3 × 12', 'trunk')
-      ];
-    // full body (default)
-    default:
-      return [
-        main('A1', squat),
-        acc('A2', bench),
-        acc('B1', hinge),
-        acc('B2', row),
-        ...(style === 'functional'
-          ? [{ num: 'C1', name: 'Loaded carry', sets: '3 × 30 m', rpe: 'RPE 7', note: 'brace, tall posture' }]
-          : [acc('C1', press)]),
-        core('C2', 'Plank + hip mobility', '3 × 30s')
-      ];
-  }
+// ---- exercise selection from the database ----
+function slotMatches(e, slot) {
+  if (slot.pat === 'iso') return e.pattern === 'iso' && (!slot.muscle || e.muscle === slot.muscle);
+  return e.pattern === slot.pat;
 }
 
-const ROLE_FOCUS = {
-  full: 'Full-body strength', upper: 'Upper strength', lower: 'Lower strength',
-  push: 'Push (chest · shoulders · triceps)', pull: 'Pull (back · biceps)', legs: 'Legs'
-};
+// Pick one exercise for a slot: filter by available equipment + the athlete's
+// level, prefer primary-role lifts for primary slots, avoid repeats within the
+// session, and rotate the choice by week so variations change over time.
+function pickFor(slot, { equip, level, weekNum, used, seed }) {
+  let cands = EXERCISES.filter(e => slotMatches(e, slot) && equip.has(e.equip) && e.level <= level);
+  if (slot.role === 'primary') {
+    const prim = cands.filter(e => e.role === 'primary');
+    if (prim.length) cands = prim;
+    // Anchor the session on a barbell lift when one's available.
+    const barbell = cands.filter(e => e.equip === 'barbell');
+    if (barbell.length) cands = barbell;
+  }
+  // Fallback: relax to any bodyweight option for this pattern if nothing fits.
+  if (!cands.length) cands = EXERCISES.filter(e => slotMatches(e, slot) && e.equip === 'bodyweight' && e.level <= level);
+  if (!cands.length) return null;
+  const fresh = cands.filter(e => !used.has(e.id));
+  const pool = fresh.length ? fresh : cands;
+  const ex = pool[(weekNum + seed) % pool.length];
+  used.add(ex.id);
+  return ex;
+}
+
+// Rep scheme for non-primary slots.
+function coreSets(deload) { return deload ? '2 × 30s' : '3 × 30s'; }
+function isoSets(style) { return style === 'bodybuilding' ? '3 × 12–15' : '3 × 12'; }
+
+// Build a session's items from its blueprint, choosing real exercises.
+function buildSessionItems(bp, { style, s, deload, equip, level, weekNum, maxItems }) {
+  // Strength style keeps it compound-focused (drop most isolation, keep calves);
+  // bb/fn slots only appear for their style.
+  let slots = bp.slots.filter(sl => (!sl.bb || style === 'bodybuilding') && (!sl.fn || style === 'functional'));
+  if (style === 'strength') slots = slots.filter(sl => sl.role !== 'iso' || sl.pat === 'calf');
+  slots = slots.slice(0, maxItems);
+
+  const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+  const used = new Set();
+  const items = [];
+  slots.forEach((sl, i) => {
+    const ex = pickFor(sl, { equip, level, weekNum, used, seed: i });
+    if (!ex) return;
+    const num = `${letters[Math.min(i, letters.length - 1)]}1`;
+    const per = ex.unilateral ? ' ea.' : '';
+    if (sl.role === 'primary') {
+      items.push({ num, name: ex.name, sets: s.main + per, rpe: s.mainRpe, note: mainNote(deload) });
+    } else if (sl.role === 'core') {
+      const reps = /plank|hold|dead bug|copenhagen/i.test(ex.name) ? coreSets(deload) : '3 × 12' + per;
+      items.push({ num, name: ex.name, sets: reps, rpe: 'RPE 6', tag: 'mobility', note: '' });
+    } else if (sl.role === 'iso') {
+      const t = /calf/i.test(ex.name) ? '3 × 12' : isoSets(style);
+      items.push({ num, name: ex.name, sets: t + per, rpe: s.accRpe, tag: ex.pattern === 'calf' ? 'mobility' : undefined, note: '' });
+    } else {
+      items.push({ num, name: ex.name, sets: s.acc + per, rpe: s.accRpe, note: '' });
+    }
+  });
+  return items;
+}
 
 /**
- * Build the week's gym sessions.
+ * Build the week's gym sessions from the exercise database.
  * @param {object} ctx
  *   gymDays   number 1–6 (how many gym sessions this week)
  *   style     'strength' | 'bodybuilding' | 'functional'
  *   intent    'base' | 'build' | 'peak'
  *   deload    boolean
- *   minutes   typical session length (sets the duration label)
- *   access    array of equipment keys from onboarding
+ *   minutes   typical session length (caps the exercise count + sets duration)
+ *   access    array of equipment keys; level  experience; weekNum  for rotation
+ *   lifts     optional 1RMs for target weights
  * @returns {Array} session specs (no day assigned yet)
  */
 export function buildWeek(ctx = {}) {
@@ -214,24 +243,27 @@ export function buildWeek(ctx = {}) {
   const intent = ctx.intent || 'base';
   const deload = !!ctx.deload;
   const minutes = ctx.minutes || 60;
-  const access = ctx.access || [];
-  const weights = access.includes('full_gym') || access.includes('home_weights') || access.length === 0;
+  const equip = availableEquip(ctx.access || []);
+  const level = LEVELS[ctx.level] ?? 0;
+  const weekNum = ctx.weekNum || 1;
 
   const s = scheme(style, intent, deload);
-  const roles = SPLITS[gymDays] || SPLITS[3];
+  const days = SPLITS[gymDays] || SPLITS[3];
   const lo = Math.max(35, minutes - 10);
   const duration = `${lo}–${minutes} min`;
+  const maxItems = minutes <= 45 ? 5 : minutes <= 60 ? 6 : 7;
 
-  return roles.map(role => {
-    const items = itemsForRole(role, { style, weights, s, deload });
-    if (weights) applyWeights(items, ctx.lifts, ctx.winp);
+  return days.map(bpKey => {
+    const bp = BLUEPRINTS[bpKey] || BLUEPRINTS.fbA;
+    const items = buildSessionItems(bp, { style, s, deload, equip, level, weekNum, maxItems });
+    applyWeights(items, ctx.lifts, ctx.winp); // no-op for bodyweight names
     return {
       discipline: 'gym',
-      focus: ROLE_FOCUS[role] || ROLE_FOCUS.full,
+      focus: bp.focus,
       duration,
       items,
       intensity: deload ? 'moderate' : 'hard',
-      lowerBody: LOWER_ROLES.has(role)
+      lowerBody: bp.lower
     };
   });
 }
