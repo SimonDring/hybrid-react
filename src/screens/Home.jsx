@@ -68,6 +68,15 @@ export default function Home() {
         <div className="today-date">{greeting(now)} · {dateLabel}</div>
       </div>
 
+      {/* TRAIN NOW — on-demand session for whatever time + kit you've got */}
+      <button onClick={() => navigate('/train-now')} className="trainnow-cta">
+        <span className="tn-cta-text">
+          <span className="tn-cta-title">Train now</span>
+          <span className="tn-cta-sub">Got a gap? A session for your time &amp; kit</span>
+        </span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+      </button>
+
       {/* TRAINING CALENDAR — top of the page */}
       {hasCalendar ? (
         <TrainingCalendar sessions={sessions} onOpen={openSession} />

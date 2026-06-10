@@ -16,6 +16,7 @@ import Sync, { pullFromSupabase, runSessionDMigration, checkFitbitConnection, sy
 import { nextE1RM } from '../lib/liftProgression.js';
 import { computeReadiness } from '../lib/Readiness.js';
 import { setRuntime } from '../lib/PlanService.js';
+import { setOverride, clearOverride } from '../lib/sessionOverrides.js';
 
 // Read the current state from localStorage into a React-friendly shape.
 // All reads go through here — screens never call Database directly.
@@ -138,14 +139,22 @@ export const useTrainingStore = create((set) => ({
   },
   uncompleteSession(templateRef) {
     Sync.uncompleteSession(templateRef).catch(e => console.error('uncompleteSession sync failed:', e));
+    clearOverride(templateRef);   // re-completing later rebuilds from the plan, not the old train-now snapshot
     set(buildView());
   },
   cancelSession(templateRef) {
     Sync.cancelSession(templateRef).catch(e => console.error('cancelSession sync failed:', e));
+    clearOverride(templateRef);   // started by mistake → drop any train-now adaptation too
     set(buildView());
   },
   skipSession(templateRef) {
     Sync.skipSession(templateRef).catch(e => console.error('skipSession sync failed:', e));
+    set(buildView());
+  },
+  // "Train now" → pin a generated session onto the slot you're about to do, then
+  // the rest of the week reflows around it. Stored locally (see sessionOverrides).
+  applyTrainNow(sessionKey, snapshot) {
+    setOverride(sessionKey, snapshot);
     set(buildView());
   },
 

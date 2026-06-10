@@ -100,7 +100,14 @@ export default function SessionDetail() {
     <>
       <div className="eyebrow">Phase {phase.id} · Week {week.num}</div>
       <h1 className="h1" style={{ fontSize: 24, marginBottom: 2 }}>{session.title}</h1>
-      <p className="sub" style={{ marginBottom: 20 }}>{session.duration}</p>
+      <p className="sub" style={{ marginBottom: 20 }}>
+        {session.duration}
+        {session._trainNow && (
+          <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 700, color: 'var(--rust)', background: 'rgba(176,74,46,0.12)', borderRadius: 6, padding: '2px 7px' }}>
+            ADAPTED
+          </span>
+        )}
+      </p>
 
       {/* Exercise table — columns driven by each item's activity type */}
       {(() => {

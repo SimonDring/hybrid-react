@@ -25,7 +25,8 @@ import { weeklyMuscleTargets } from './strength/targets.js';
 import { allocateGym } from './plan/allocator.js';
 import { countWeeklyVolume } from './plan/volume.js';
 import { resolveLifts } from './liftProgression.js';
-import { MUSCLE_GROUPS } from '../data/muscleVolume.js';
+import { MUSCLE_GROUPS, MUSCLE_LABELS } from '../data/muscleVolume.js';
+import { getOverrides } from './sessionOverrides.js';
 
 let _cache = { sig: null, plan: null };
 
@@ -82,58 +83,66 @@ function weekTarget(phase, week, gctx) {
  * by readiness. Completed sessions (and all non-gym sessions) are returned
  * untouched, in place — so completion keys (p{phase}_wk{week}_s{idx}) stay valid.
  */
-function reflowWeek(phase, week, sessionsState, readiness, profile) {
+function reflowWeek(phase, week, sessionsState, readiness, profile, overrides = {}) {
   const gym = [];
   week.sessions.forEach((s, i) => { if (sessionDiscipline(s) === 'gym') gym.push({ i, s }); });
   if (!gym.length) return week;
 
   const stOf = (i) => sessionsState[sessionKey(phase.id, week.num, i)] || {};
+  const ovOf = (i) => overrides[sessionKey(phase.id, week.num, i)] || null;
 
-  // Only genuinely-pending sessions reflow. Completed / started / missed sessions
-  // are SETTLED — their content is locked so it can't change under the athlete.
-  const incomplete = gym.filter(g => { const st = stOf(g.i); return !st.completed && !st.skipped && !st.started; });
-  if (!incomplete.length) return week;          // nothing left to (re)plan this week
+  // A "train now" override pins a session to a fixed snapshot — committed, never
+  // reflowed. Otherwise, only genuinely-pending sessions reflow; completed /
+  // started / missed are settled and their content is locked.
+  const incomplete = gym.filter(g => {
+    const st = stOf(g.i);
+    return !ovOf(g.i) && !st.completed && !st.skipped && !st.started;
+  });
+  const hasOverride = gym.some(g => ovOf(g.i));
+  if (!incomplete.length && !hasOverride) return week;   // nothing to (re)plan
 
   const gctx = gymCtx(profile);
   const target = weekTarget(phase, week, gctx);
-  // Banked volume = completed work + work already started (committed). A MISSED
-  // (skipped) session banks nothing — so its volume stays "owed" and the pending
-  // sessions below try to recover what they can toward the goal.
-  const banked = gym.filter(g => { const st = stOf(g.i); return st.completed || st.started; }).map(g => g.s);
-  const done = countWeeklyVolume(banked).counts;
 
-  // What's still owed this week (full priority — we don't lower the goal). The
-  // remaining sessions try to fill this.
+  // Committed volume = completed + started work + every override snapshot. A
+  // MISSED (skipped) session banks nothing — its volume stays "owed" and the
+  // pending sessions below recover what they can toward the goal.
+  const committed = [];
+  gym.forEach(g => {
+    const ov = ovOf(g.i); const st = stOf(g.i);
+    if (st.skipped) return;                       // missed banks nothing, override or not
+    if (ov) committed.push({ items: ov.items });  // a pinned train-now session is committed
+    else if (st.completed || st.started) committed.push(g.s);
+  });
+  const done = countWeeklyVolume(committed).counts;
+
   const remaining = {};
   for (const m of MUSCLE_GROUPS) remaining[m] = Math.max(0, (target[m] || 0) - (done[m] || 0));
 
   // Readiness trims the remaining sessions by SHORTENING them (fewer sets fit),
-  // not by lowering the target — a tired day earns a lighter session, which is
-  // the science-backed call even when it doesn't feel "optimal".
+  // not by lowering the target.
   const mult = readinessMult(readiness);
-  const slots = incomplete.map(() => ({ minutes: Math.round(gctx.minutes * mult), equip: gctx.access }));
-  const specs = allocateGym({
-    targets: remaining, slots,
-    ctx: {
-      style: gctx.style, intent: intentOfTitle(phase.title), deload: !!week.deload,
-      weekNum: week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access
-    }
-  });
+  let specs = [];
+  if (incomplete.length) {
+    const slots = incomplete.map(() => ({ minutes: Math.round(gctx.minutes * mult), equip: gctx.access }));
+    specs = allocateGym({
+      targets: remaining, slots,
+      ctx: {
+        style: gctx.style, intent: intentOfTitle(phase.title), deload: !!week.deload,
+        weekNum: week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access
+      }
+    });
+  }
 
-  // Swap content of the incomplete gym sessions in place, preserving each one's
-  // weekday-prefixed title and its array position (= its completion key).
+  // Rebuild in place, preserving each session's weekday prefix + array position
+  // (= its completion key). Overrides take their snapshot; pending take the reflow.
   const newSessions = week.sessions.slice();
-  incomplete.forEach((g, k) => {
-    const spec = specs[k];
-    if (!spec) return;
-    const dayPrefix = (g.s.title.split('·')[0] || '').trim();
-    newSessions[g.i] = {
-      ...g.s,
-      title: dayPrefix ? `${dayPrefix} · ${spec.focus}` : spec.focus,
-      duration: spec.duration,
-      items: spec.items
-    };
-  });
+  const swap = (i, focus, duration, items, flag) => {
+    const dayPrefix = (newSessions[i].title.split('·')[0] || '').trim();
+    newSessions[i] = { ...newSessions[i], title: dayPrefix ? `${dayPrefix} · ${focus}` : focus, duration, items, ...flag };
+  };
+  gym.forEach(g => { const ov = ovOf(g.i); if (ov) swap(g.i, ov.focus, ov.duration, ov.items, { _trainNow: true }); });
+  incomplete.forEach((g, k) => { const spec = specs[k]; if (spec) swap(g.i, spec.focus, spec.duration, spec.items, { _trainNow: false }); });
   return { ...week, sessions: newSessions, _adapted: true };
 }
 
@@ -155,7 +164,13 @@ function adaptedPhases() {
     .sort().join(',');
   const band = _runtime.readiness == null ? 'n'
     : _runtime.readiness >= 70 ? 'h' : _runtime.readiness >= 50 ? 'm' : 'l';
-  const key = `${_cache.sig}|${cw}|${stateSig}|${band}`;
+  // Train-now overrides also drive the reflow — recompute when one is set/cleared.
+  const overrides = getOverrides();
+  const ovSig = Object.keys(overrides)
+    .filter(k => k.includes(`_wk${cw}_`))
+    .map(k => `${k}@${overrides[k].createdAt || 0}`)
+    .sort().join(',');
+  const key = `${_cache.sig}|${cw}|${stateSig}|${band}|${ovSig}`;
   if (_adaptCache.key === key) return _adaptCache.phases;
 
   const profile = Database.services.getProfile() || {};
@@ -164,7 +179,7 @@ function adaptedPhases() {
     return {
       ...phase,
       weeks: phase.weeks.map(w =>
-        w.num === cw ? reflowWeek(phase, w, _runtime.sessions, _runtime.readiness, profile) : w)
+        w.num === cw ? reflowWeek(phase, w, _runtime.sessions, _runtime.readiness, profile, overrides) : w)
     };
   });
   _adaptCache = { key, phases };
@@ -425,4 +440,85 @@ export function currentWeekVolumeProgress() {
   return null;
 }
 
-export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO, setRuntime, weekVolumeProgressFor, currentWeekVolumeProgress };
+// ---------------------------------------------------------------------------
+// On-demand "train now" — one optimal session for the time + equipment you have
+// RIGHT NOW, aimed at the week's biggest remaining volume gaps. Same allocator as
+// the weekly plan, single slot. Reused by the Train Now screen (and later the AI
+// coach as a tool). Pure read of the current profile + live week state.
+// ---------------------------------------------------------------------------
+// The next gym session this on-demand workout should ADAPT (today's, else the
+// next pending one in the current/future weeks). Null for legacy/no-gym plans.
+function nextPendingGymTarget() {
+  const cw = currentWeekNumber();
+  if (cw == null) return null;
+  for (const phase of getPhases()) {
+    const full = getPhase(phase.id);
+    for (const week of (full && full.weeks ? full.weeks : [])) {
+      if (week.num < cw) continue;
+      for (let i = 0; i < week.sessions.length; i++) {
+        if (sessionDiscipline(week.sessions[i]) !== 'gym') continue;
+        const st = _runtime.sessions[sessionKey(phase.id, week.num, i)] || {};
+        if (!st.completed && !st.skipped) {
+          return { phaseId: phase.id, weekNum: week.num, idx: i, key: sessionKey(phase.id, week.num, i) };
+        }
+      }
+    }
+  }
+  return null;
+}
+
+export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
+  const profile = Database.services.getProfile() || {};
+  const gctx = gymCtx(profile);
+  const equipArr = (equip && equip.length) ? equip : gctx.access;
+
+  // Current week's gap (target − banked) when there's a live plan; else a fresh target.
+  let target = null, done = {}, intent = 'base';
+  const cw = currentWeekNumber();
+  if (cw != null) {
+    const ap = adaptedPhases();
+    let phase = null, week = null;
+    for (const p of ap || []) { const w = (p.weeks || []).find(w => w.num === cw); if (w) { phase = p; week = w; break; } }
+    if (phase && week) {
+      intent = intentOfTitle(phase.title);
+      target = weekTarget(phase, week, gctx);
+      const banked = [];
+      week.sessions.forEach((s, i) => {
+        if (sessionDiscipline(s) !== 'gym') return;
+        const st = _runtime.sessions[sessionKey(phase.id, week.num, i)] || {};
+        if (st.completed || st.started) banked.push(s);
+      });
+      done = countWeeklyVolume(banked).counts;
+    }
+  }
+  if (!target) target = weeklyMuscleTargets({ style: gctx.style, intent, level: gctx.level, weekInPhase: 1, phaseWeeks: 1 });
+
+  const remaining = {};
+  for (const m of MUSCLE_GROUPS) remaining[m] = Math.max(0, (target[m] || 0) - (done[m] || 0));
+  // Week basically met → this is a balanced BONUS session rather than nothing.
+  const totalRem = Object.values(remaining).reduce((a, b) => a + b, 0);
+  const bonus = totalRem <= 5;
+  const fillTarget = bonus ? target : remaining;
+
+  const specs = allocateGym({
+    targets: fillTarget,
+    slots: [{ minutes, equip: equipArr }],
+    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr }
+  });
+  const session = specs[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
+  return { session, why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };
+}
+
+// Plain-language rationale shown with an on-demand session.
+function buildWhy(session, bonus, minutes) {
+  const vol = countWeeklyVolume([session]).counts;
+  const top = MUSCLE_GROUPS.filter(m => vol[m] > 0).sort((a, b) => vol[b] - vol[a]).slice(0, 3)
+    .map(m => MUSCLE_LABELS[m].toLowerCase());
+  const muscles = top.length > 1 ? `${top.slice(0, -1).join(', ')} and ${top[top.length - 1]}` : (top[0] || 'full body');
+  const lead = bonus
+    ? "You're on track for the week, so this is a balanced bonus session"
+    : 'Built around the muscle groups furthest behind this week';
+  return `${lead} — it leans into ${muscles}. Fitted to ~${Math.round(minutes / 5) * 5} min with the kit you picked, at your usual rep ranges and RPE.`;
+}
+
+export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO, setRuntime, weekVolumeProgressFor, currentWeekVolumeProgress, generateTrainNow };

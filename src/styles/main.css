@@ -3390,6 +3390,18 @@ html[data-theme="dark"] .st-rpe {
 .cal-session-tag { font-size: 9px; font-weight: 800; letter-spacing: 0.08em; padding: 3px 7px; border-radius: 6px; flex-shrink: 0; }
 .missed-tag { color: var(--rust); background: rgba(176,74,46,0.12); }
 
+/* Train-now CTA on the home screen */
+.trainnow-cta {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 13px 16px; margin-bottom: 18px; border-radius: 14px; cursor: pointer; font-family: inherit;
+  border: 1px solid var(--rust); background: rgba(176,74,46,0.06); box-shadow: var(--shadow-sm);
+}
+.trainnow-cta:active { transform: scale(0.99); }
+.trainnow-cta .tn-cta-text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.trainnow-cta .tn-cta-title { font-size: 15px; font-weight: 800; color: var(--txt-strong); }
+.trainnow-cta .tn-cta-sub { font-size: 12px; color: var(--txt-muted); }
+.trainnow-cta svg { width: 22px; height: 22px; color: var(--rust); flex-shrink: 0; }
+
 /* Catch-up: past-due sessions with one-tap Done / Missed */
 .catchup {
   background: var(--bg-surface); border: 1px solid var(--hairline);

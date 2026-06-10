@@ -116,11 +116,19 @@ export const EXERCISES = [
   { id: 'chest_fly',      name: 'Chest fly',         pattern: 'iso', muscle: 'chest',   equip: 'dumbbell',  level: 0, role: 'iso' }
 ];
 
-// Equipment the athlete can use, from their onboarding access answers.
+// Equipment keys an exercise can require.
+export const EQUIP_KEYS = ['barbell', 'dumbbell', 'machine', 'cable', 'band', 'kettlebell', 'bodyweight'];
+
+// Equipment the athlete can use. Accepts the onboarding ACCESS TIERS
+// (full_gym / home_weights / none) and also DIRECT equipment keys (e.g.
+// ['dumbbell','band']) — the latter is what the on-demand "train now" picker
+// passes when you only have what's in front of you. Bodyweight is always implied.
 export function availableEquip(access = []) {
   const has = k => access.includes(k);
   if (has('full_gym')) return new Set(['barbell', 'dumbbell', 'machine', 'cable', 'bodyweight', 'band', 'kettlebell']);
   if (has('home_weights')) return new Set(['dumbbell', 'barbell', 'bodyweight', 'band', 'kettlebell']);
+  const direct = access.filter(k => EQUIP_KEYS.includes(k));
+  if (direct.length) return new Set([...direct, 'bodyweight']);
   return new Set(['bodyweight', 'band']);
 }
 
