@@ -23,6 +23,9 @@ import OnboardingWizard from '../components/OnboardingWizard.jsx';
 import { BLANK_ANSWERS, answersToProfile } from '../lib/onboardingModel.js';
 import { generatePlan } from '../lib/PlanGenerator.js';
 import { activityFor } from '../data/activityTypes.js';
+import { volumeReport } from '../lib/plan/volume.js';
+import { weeklyMuscleTargets } from '../lib/strength/targets.js';
+import { MUSCLE_LABELS } from '../data/muscleVolume.js';
 
 const NOTES_KEY = 'htp_dev_review_notes';
 
@@ -124,7 +127,66 @@ function ItemsTable({ session }) {
   );
 }
 
-function WeekBlock({ phase, week }) {
+// Per-week strength volume: actual sets vs this week's target (the "training
+// debt"). Counts only gym sets, so it's blank for pure endurance weeks.
+// Colour shows how close actual is to target. (see lib/strength/targets.js)
+const GRADE_COLOR = {
+  under: 'var(--rust)', low: 'var(--ochre)', ideal: 'var(--moss)',
+  high: 'var(--ochre)', over: 'var(--rust)'
+};
+const gymLevel = (p) => (p.experience && (p.experience.gym || p.experience.strength_functional || p.experience.strength_physique)) || 'beginner';
+const intentOf = (title) => {
+  const t = (title || '').toLowerCase();
+  return t.includes('peak') ? 'peak' : t.includes('build') ? 'build' : 'base';
+};
+// How close actual volume is to the week's target → chip colour.
+function fillColor(actual, target) {
+  if (!target) return 'var(--txt-muted)';
+  const r = actual / target;
+  if (r >= 0.9) return 'var(--moss)';   // on target
+  if (r >= 0.6) return 'var(--ochre)';  // building
+  return 'var(--rust)';                 // well short
+}
+function VolumeReport({ phase, week, profile }) {
+  const { rows, skipped } = volumeReport(week.sessions);
+  const targets = weeklyMuscleTargets({
+    style: profile.strength_style || 'functional', intent: intentOf(phase.title),
+    weekInPhase: week.num - phase.weekStart + 1, phaseWeeks: phase.weekEnd - phase.weekStart + 1,
+    level: gymLevel(profile), deload: week.deload
+  });
+  const active = rows.filter(r => r.sets > 0 || targets[r.muscle] > 0);
+  if (!active.length) return null;
+  const totDone = active.reduce((a, r) => a + r.sets, 0);
+  const totTgt = active.reduce((a, r) => a + (targets[r.muscle] || 0), 0);
+  return (
+    <div style={{ border: '1px dashed var(--hairline)', borderRadius: 10, padding: '8px 10px' }}>
+      <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', opacity: 0.5, marginBottom: 8 }}>
+        WEEKLY SET VOLUME · actual / target ·{' '}
+        <span style={{ color: fillColor(totDone, totTgt) }}>{Math.round(totDone)}</span>/{Math.round(totTgt)} sets
+      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+        {active.map(r => {
+          const tgt = targets[r.muscle] || 0;
+          return (
+            <span key={r.muscle} title={`MEV ${r.landmarks.mev} · MAV ${r.landmarks.mav} · MRV ${r.landmarks.mrv} — ${r.grade}`}
+              style={{ fontSize: 11, padding: '3px 7px', borderRadius: 7, background: 'var(--bg-surface)', border: '1px solid var(--hairline)' }}>
+              <span style={{ color: 'var(--txt-muted)' }}>{MUSCLE_LABELS[r.muscle]}</span>{' '}
+              <span style={{ fontWeight: 700, color: fillColor(r.sets, tgt) }}>{r.sets}</span>
+              <span style={{ color: 'var(--txt-muted)', opacity: 0.6 }}>/{tgt}</span>
+            </span>
+          );
+        })}
+      </div>
+      {skipped.length > 0 && (
+        <div style={{ fontSize: 10, color: 'var(--txt-muted)', marginTop: 7 }}>
+          uncounted ({skipped.length}): {[...new Set(skipped)].join(', ')}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function WeekBlock({ phase, week, profile }) {
   const [open, setOpen] = useState(false);
   return (
     <div style={{ marginBottom: 6 }}>
@@ -141,6 +203,7 @@ function WeekBlock({ phase, week }) {
       {open && (
         <div style={{ padding: '8px 4px 4px', display: 'grid', gap: 10 }}>
           <div style={{ fontSize: 11, color: 'var(--txt-muted)', fontStyle: 'italic' }}>{week.theme}</div>
+          <VolumeReport phase={phase} week={week} profile={profile} />
           {week.sessions.map((s, i) => (
             <div key={i} style={{ border: '1px solid var(--hairline)', borderRadius: 10, padding: 10 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -156,7 +219,7 @@ function WeekBlock({ phase, week }) {
   );
 }
 
-function PlanReview({ plan }) {
+function PlanReview({ plan, profile }) {
   return (
     <div>
       <div style={{ fontSize: 13, color: 'var(--txt-body)', marginBottom: 12 }}>
@@ -174,7 +237,7 @@ function PlanReview({ plan }) {
               Gates: {phase.gates.map(g => g.label).join(' · ')}
             </div>
           )}
-          {phase.weeks.map(week => <WeekBlock key={week.num} phase={phase} week={week} />)}
+          {phase.weeks.map(week => <WeekBlock key={week.num} phase={phase} week={week} profile={profile} />)}
         </div>
       ))}
     </div>
@@ -272,7 +335,7 @@ export default function DevPlayground() {
       )}
 
       {/* Plan review */}
-      {plan && <div style={card}><PlanReview plan={plan} /></div>}
+      {plan && <div style={card}><PlanReview plan={plan} profile={profilePreview || {}} /></div>}
 
       {/* Raw JSON (profile + plan) */}
       {showJson && (
