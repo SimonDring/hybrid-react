@@ -4,6 +4,9 @@ import * as Plan from '../lib/PlanService.js';
 import { computeReadiness } from '../lib/Readiness.js';
 import TrainingCalendar from '../components/TrainingCalendar.jsx';
 
+const DISC_LABEL = { gym: 'Gym', run: 'Run', swim: 'Swim', cycle: 'Ride', brick: 'Brick', general: 'Movement' };
+const stripDay = (title) => (title || '').replace(/^[A-Za-z]+\s·\s/, '');
+
 // Greeting that matches the time of day.
 function greeting(d) {
   const h = d.getHours();
@@ -12,11 +15,18 @@ function greeting(d) {
   return 'Good evening';
 }
 
+// "Mon 8 Jun" from a YYYY-MM-DD string.
+function shortDate(iso) {
+  return new Date(iso + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+}
+
 export default function Home() {
   const navigate = useNavigate();
   const sessions = useTrainingStore(state => state.sessions);
   const dailyMetrics = useTrainingStore(state => state.dailyMetrics);
   const logs = useTrainingStore(state => state.logs);
+  const completeSession = useTrainingStore(state => state.completeSession);
+  const skipSession = useTrainingStore(state => state.skipSession);
 
   const now = new Date();
   const dateLabel = now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
@@ -28,6 +38,22 @@ export default function Home() {
   // simple next-session card.
   const hasCalendar = !!Plan.getStartDate();
   const next = hasCalendar ? null : Plan.recommendedSession(sessions);
+
+  // Past-due sessions still awaiting an outcome (not done, not yet marked missed).
+  // Surfacing them with one-tap Done/Missed lets the plan reflow around real life
+  // without opening each session. Today's session is left to the calendar.
+  const todayISO = Plan.localISO(now);
+  const cal = hasCalendar ? Plan.buildCalendar(sessions) : null;
+  let pastDue = [];
+  if (cal) {
+    Object.keys(cal.byDate).filter(iso => iso < todayISO).forEach(iso => {
+      cal.byDate[iso].forEach(e => { if (!e.completed && !e.skipped) pastDue.push({ ...e, iso }); });
+    });
+    // Most-recent first (this week's misses — the ones that reflow the plan — sit
+    // at the top), capped so a long-ignored backlog can't swamp the home screen.
+    pastDue.sort((a, b) => b.iso.localeCompare(a.iso));
+    pastDue = pastDue.slice(0, 6);
+  }
 
   // Readiness ring geometry
   const rR = 30;
@@ -56,6 +82,24 @@ export default function Home() {
           <div className="today-meta">{next.session.duration}</div>
         </button>
       ) : null}
+
+      {/* CATCH UP — one-tap Done / Missed for past-due sessions, so the plan
+          reflows around what actually happened without opening each one. */}
+      {pastDue.length > 0 && (
+        <div className="catchup">
+          <div className="catchup-head">Catch up — {pastDue.length} to settle</div>
+          {pastDue.map(e => (
+            <div className="catchup-row" key={e.key}>
+              <button className="catchup-main" onClick={() => openSession(e)}>
+                <span className="catchup-title">{stripDay(e.title)}</span>
+                <span className="catchup-sub">{shortDate(e.iso)} · {DISC_LABEL[e.discipline] || 'Session'}</span>
+              </button>
+              <button className="catchup-btn done" onClick={() => completeSession(e.key, {})}>Done</button>
+              <button className="catchup-btn miss" onClick={() => skipSession(e.key)}>Missed</button>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* READINESS — the score, tap through to the detailed metrics */}
       <button className="today-hero readiness-tap" data-status={readiness.status} onClick={() => navigate('/tracking/wearables')}>

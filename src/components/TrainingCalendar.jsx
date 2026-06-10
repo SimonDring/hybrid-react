@@ -20,17 +20,21 @@ const DAY_LETTER = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const stripDay = (title) => (title || '').replace(/^[A-Za-z]+\s·\s/, '');
 
 function SessionBlock({ s, onOpen }) {
+  const color = DISC_COLOR[s.discipline] || '#888';
+  const cls = `cal-session${s.completed ? ' done' : ''}${s.skipped ? ' missed' : ''}`;
   return (
-    <button className={`cal-session${s.completed ? ' done' : ''}`} onClick={() => onOpen(s)}
-      style={{ borderLeftColor: DISC_COLOR[s.discipline] || '#888' }}>
-      <span className="cal-session-dot" style={{ background: DISC_COLOR[s.discipline] || '#888' }} />
+    <button className={cls} onClick={() => onOpen(s)} style={{ borderLeftColor: color }}>
       <span className="cal-session-body">
         <span className="cal-session-title">{stripDay(s.title)}</span>
-        <span className="cal-session-meta">{DISC_LABEL[s.discipline] || 'Session'} · {s.duration}</span>
+        <span className="cal-session-meta">
+          {s.skipped ? 'Missed — tap to redo' : `${DISC_LABEL[s.discipline] || 'Session'} · est. ${(s.duration || '').replace(/^~/, '')}`}
+        </span>
       </span>
       {s.completed
         ? <span className="cal-session-check" aria-label="completed">✓</span>
-        : <svg className="cal-session-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>}
+        : s.skipped
+          ? <span className="cal-session-tag missed-tag">MISSED</span>
+          : <svg className="cal-session-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>}
     </button>
   );
 }
@@ -58,7 +62,7 @@ export default function TrainingCalendar({ sessions, onOpen }) {
   const allDone = todays.length > 0 && todays.every(s => s.completed);
 
   return (
-    <div className="cal">
+    <div className="cal cal-card">
       <div className="cal-strip">
         {days.map(d => {
           const iso = localISO(d);
@@ -72,9 +76,13 @@ export default function TrainingCalendar({ sessions, onOpen }) {
               <span className="cal-dow">{DAY_LETTER[d.getDay()]}</span>
               <span className="cal-dom">{d.getDate()}</span>
               <span className="cal-dots">
-                {entries.slice(0, 3).map((e, i) => (
-                  <i key={i} style={{ background: DISC_COLOR[e.discipline] || '#888', opacity: e.completed ? 1 : 0.45 }} />
-                ))}
+                {entries.slice(0, 3).map((e, i) => {
+                  const c = DISC_COLOR[e.discipline] || '#888';
+                  // completed = solid, missed = hollow ring, upcoming = soft.
+                  return <i key={i} style={e.skipped
+                    ? { background: 'transparent', boxShadow: `inset 0 0 0 1.5px ${c}`, opacity: 0.6 }
+                    : { background: c, opacity: e.completed ? 1 : 0.4 }} />;
+                })}
               </span>
             </button>
           );
@@ -82,16 +90,14 @@ export default function TrainingCalendar({ sessions, onOpen }) {
       </div>
 
       <div className="cal-detail">
-        {todays.length === 0 ? (
-          <div className="cal-rest">{heading} · rest day</div>
-        ) : (
-          <>
-            <div className={`cal-detail-head${allDone ? ' done' : ''}`}>
-              {allDone ? (isToday ? "Today's session complete ✓" : `${heading} · complete ✓`) : heading}
-            </div>
-            {todays.map(s => <SessionBlock key={s.key} s={s} onOpen={onOpen} />)}
-          </>
-        )}
+        <div className={`cal-detail-head${allDone ? ' done' : ''}`}>
+          {todays.length === 0
+            ? `${heading} · rest day`
+            : allDone ? `${heading} · all done ✓` : heading}
+        </div>
+        {todays.length === 0
+          ? <div className="cal-rest">Recovery day — let the work land.</div>
+          : todays.map(s => <SessionBlock key={s.key} s={s} onOpen={onOpen} />)}
       </div>
     </div>
   );

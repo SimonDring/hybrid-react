@@ -21,8 +21,155 @@
 import Database from './Database.js';
 import * as Legacy from '../data/Plan.js';
 import { generatePlan } from './PlanGenerator.js';
+import { weeklyMuscleTargets } from './strength/targets.js';
+import { allocateGym } from './plan/allocator.js';
+import { countWeeklyVolume } from './plan/volume.js';
+import { resolveLifts } from './liftProgression.js';
+import { MUSCLE_GROUPS } from '../data/muscleVolume.js';
 
 let _cache = { sig: null, plan: null };
+
+// ---------------------------------------------------------------------------
+// Adaptive reflow runtime. The plan is a pure projection; the CURRENT week
+// reflows around what's actually been done + how recovered the athlete is. The
+// store keeps this runtime fresh (setRuntime in trainingStore.buildView) so the
+// reflow can read live completion + readiness without changing any screen's
+// call signature. Future/past weeks are never touched — only the current week.
+// ---------------------------------------------------------------------------
+let _runtime = { sessions: {}, readiness: null };
+let _adaptCache = { key: null, phases: null };
+
+export function setRuntime(rt = {}) {
+  _runtime = { sessions: rt.sessions || {}, readiness: rt.readiness ?? null };
+}
+
+// Tired → trim the remaining volume; recovered → fill it in full.
+function readinessMult(score) {
+  if (score == null) return 1;
+  if (score >= 70) return 1;
+  if (score >= 50) return 0.9;
+  return 0.78;
+}
+
+// Gym programming context derived from the profile (mirrors PlanGenerator).
+function gymCtx(profile) {
+  const style = profile.strength_style
+    || ((profile.focus || []).includes('strength_physique') ? 'bodybuilding' : 'functional');
+  const e = profile.experience || {};
+  const level = e.gym || e.strength_functional || e.strength_physique || 'beginner';
+  const minutes = (profile.availability && profile.availability.session_minutes) || 60;
+  return { style, level, minutes, access: profile.access || [], sex: profile.sex, lifts: resolveLifts(profile) };
+}
+
+const intentOfTitle = (title) => {
+  const t = (title || '').toLowerCase();
+  return t.includes('peak') ? 'peak' : t.includes('build') ? 'build' : 'base';
+};
+
+const sessionKey = (phaseId, weekNum, idx) => `p${phaseId}_wk${weekNum}_s${idx}`;
+
+// This week's per-muscle set target (the "training debt").
+function weekTarget(phase, week, gctx) {
+  return weeklyMuscleTargets({
+    style: gctx.style, intent: intentOfTitle(phase.title), level: gctx.level,
+    weekInPhase: week.num - phase.weekStart + 1,
+    phaseWeeks: phase.weekEnd - phase.weekStart + 1, deload: !!week.deload
+  });
+}
+
+/**
+ * Reflow ONE week's incomplete gym sessions to fill the volume still owed, scaled
+ * by readiness. Completed sessions (and all non-gym sessions) are returned
+ * untouched, in place — so completion keys (p{phase}_wk{week}_s{idx}) stay valid.
+ */
+function reflowWeek(phase, week, sessionsState, readiness, profile) {
+  const gym = [];
+  week.sessions.forEach((s, i) => { if (sessionDiscipline(s) === 'gym') gym.push({ i, s }); });
+  if (!gym.length) return week;
+
+  const stOf = (i) => sessionsState[sessionKey(phase.id, week.num, i)] || {};
+
+  // Only genuinely-pending sessions reflow. Completed / started / missed sessions
+  // are SETTLED — their content is locked so it can't change under the athlete.
+  const incomplete = gym.filter(g => { const st = stOf(g.i); return !st.completed && !st.skipped && !st.started; });
+  if (!incomplete.length) return week;          // nothing left to (re)plan this week
+
+  const gctx = gymCtx(profile);
+  const target = weekTarget(phase, week, gctx);
+  // Banked volume = completed work + work already started (committed). A MISSED
+  // (skipped) session banks nothing — so its volume stays "owed" and the pending
+  // sessions below try to recover what they can toward the goal.
+  const banked = gym.filter(g => { const st = stOf(g.i); return st.completed || st.started; }).map(g => g.s);
+  const done = countWeeklyVolume(banked).counts;
+
+  // What's still owed this week (full priority — we don't lower the goal). The
+  // remaining sessions try to fill this.
+  const remaining = {};
+  for (const m of MUSCLE_GROUPS) remaining[m] = Math.max(0, (target[m] || 0) - (done[m] || 0));
+
+  // Readiness trims the remaining sessions by SHORTENING them (fewer sets fit),
+  // not by lowering the target — a tired day earns a lighter session, which is
+  // the science-backed call even when it doesn't feel "optimal".
+  const mult = readinessMult(readiness);
+  const slots = incomplete.map(() => ({ minutes: Math.round(gctx.minutes * mult), equip: gctx.access }));
+  const specs = allocateGym({
+    targets: remaining, slots,
+    ctx: {
+      style: gctx.style, intent: intentOfTitle(phase.title), deload: !!week.deload,
+      weekNum: week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access
+    }
+  });
+
+  // Swap content of the incomplete gym sessions in place, preserving each one's
+  // weekday-prefixed title and its array position (= its completion key).
+  const newSessions = week.sessions.slice();
+  incomplete.forEach((g, k) => {
+    const spec = specs[k];
+    if (!spec) return;
+    const dayPrefix = (g.s.title.split('·')[0] || '').trim();
+    newSessions[g.i] = {
+      ...g.s,
+      title: dayPrefix ? `${dayPrefix} · ${spec.focus}` : spec.focus,
+      duration: spec.duration,
+      items: spec.items
+    };
+  });
+  return { ...week, sessions: newSessions, _adapted: true };
+}
+
+// The plan phases with the current week reflowed (memoised on completion +
+// readiness so it only recomputes when those actually change). Returns null when
+// there's no generated plan (legacy plans don't reflow).
+function adaptedPhases() {
+  const g = generated();
+  if (!g) return null;
+  const cw = currentWeekNumber();
+  if (cw == null) return g.phases;               // no start date → no reflow
+
+  // Signature of every current-week session's settled state (completed/skipped/
+  // started) — reflow output depends on all three, so recompute when any change.
+  const stateSig = Object.keys(_runtime.sessions)
+    .filter(k => k.includes(`_wk${cw}_`))
+    .map(k => { const s = _runtime.sessions[k] || {}; return `${k}:${s.completed ? 'c' : ''}${s.skipped ? 's' : ''}${s.started ? 'p' : ''}`; })
+    .filter(x => !x.endsWith(':'))
+    .sort().join(',');
+  const band = _runtime.readiness == null ? 'n'
+    : _runtime.readiness >= 70 ? 'h' : _runtime.readiness >= 50 ? 'm' : 'l';
+  const key = `${_cache.sig}|${cw}|${stateSig}|${band}`;
+  if (_adaptCache.key === key) return _adaptCache.phases;
+
+  const profile = Database.services.getProfile() || {};
+  const phases = g.phases.map(phase => {
+    if (!phase.weeks || !phase.weeks.some(w => w.num === cw)) return phase;
+    return {
+      ...phase,
+      weeks: phase.weeks.map(w =>
+        w.num === cw ? reflowWeek(phase, w, _runtime.sessions, _runtime.readiness, profile) : w)
+    };
+  });
+  _adaptCache = { key, phases };
+  return phases;
+}
 
 function profileSignature(profile) {
   return JSON.stringify({
@@ -47,13 +194,13 @@ function generated() {
 }
 
 export function getPhases() {
-  const g = generated();
-  return g ? g.phases : Legacy.getPhases();
+  const ap = adaptedPhases();
+  return ap ? ap : Legacy.getPhases();
 }
 
 export function getPhase(id) {
-  const g = generated();
-  if (g) return g.phases.find(p => p.id === id) || null;
+  const ap = adaptedPhases();
+  if (ap) return ap.find(p => p.id === id) || null;
   return Legacy.getPhase(id);
 }
 
@@ -110,8 +257,13 @@ export function getStartDate() {
 }
 
 function totalWeeks() {
+  // Read the BASELINE plan, never the adapted view: week numbers are identical
+  // before/after reflow, and going through getPhases()/adaptedPhases() here would
+  // recurse (adaptedPhases → currentWeekNumber → totalWeeks → getPhases → …).
+  const g = generated();
+  const phases = g ? g.phases : Legacy.getPhases();
   let max = 0;
-  getPhases().forEach(p => (p.weeks || []).forEach(w => { if (w.num > max) max = w.num; }));
+  phases.forEach(p => (p.weeks || []).forEach(w => { if (w.num > max) max = w.num; }));
   return max;
 }
 
@@ -193,7 +345,8 @@ function sessionDiscipline(s) {
  * @returns {{ byDate: { [iso]: Array }, start: Date, end: Date }|null}
  */
 export function buildCalendar(sessions = {}) {
-  if (!getStartDate()) return null;
+  const start = getStartDate();
+  if (!start) return null;
   const byDate = {};
   let min = null, max = null;
   for (const phase of getPhases()) {
@@ -202,6 +355,9 @@ export function buildCalendar(sessions = {}) {
       week.sessions.forEach((s, i) => {
         const d = dateForSession(week.num, s.title);
         if (!d) return;
+        // Weeks are Monday-aligned, but the plan starts on the chosen date — never
+        // show sessions that fall before it (e.g. Mon/Tue of a Thursday start).
+        if (d < start) return;
         const iso = localISO(d);
         const key = `p${phase.id}_wk${week.num}_s${i}`;
         const st = sessions[key];
@@ -209,6 +365,7 @@ export function buildCalendar(sessions = {}) {
           phaseId: phase.id, weekNum: week.num, idx: i, key,
           title: s.title, duration: s.duration,
           completed: !!(st && st.completed),
+          skipped: !!(st && st.skipped),
           discipline: sessionDiscipline(s)
         });
         if (!min || d < min) min = d;
@@ -219,4 +376,53 @@ export function buildCalendar(sessions = {}) {
   return min ? { byDate, start: min, end: max } : null;
 }
 
-export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO };
+// ---------------------------------------------------------------------------
+// "This week" volume progress — the ledger surfaced. Shows, per muscle, how much
+// has been BANKED by completed sessions (done), how much the week will total if
+// you finish it (planned, from the reflowed sessions), and the ideal TARGET.
+// ---------------------------------------------------------------------------
+export function weekVolumeProgressFor(phase, week) {
+  if (!phase || !week) return null;
+  const profile = Database.services.getProfile() || {};
+  const gctx = gymCtx(profile);
+  const target = weekTarget(phase, week, gctx);
+
+  const completed = [], all = [];
+  week.sessions.forEach((s, i) => {
+    if (sessionDiscipline(s) !== 'gym') return;
+    all.push(s);
+    const st = _runtime.sessions[sessionKey(phase.id, week.num, i)];
+    if (st && st.completed) completed.push(s);
+  });
+  if (!all.length) return null;
+
+  const done = countWeeklyVolume(completed).counts;
+  const planned = countWeeklyVolume(all).counts;
+  const rows = MUSCLE_GROUPS
+    .map(m => ({ muscle: m, done: done[m] || 0, planned: planned[m] || 0, target: target[m] || 0 }))
+    .filter(r => r.planned > 0 || r.target > 0);
+  const sum = (sel) => Math.round(rows.reduce((a, r) => a + sel(r), 0));
+  return {
+    weekNum: week.num,
+    rows,
+    totals: { done: sum(r => r.done), planned: sum(r => r.planned), target: sum(r => r.target) },
+    sessionsTotal: all.length,
+    sessionsDone: completed.length
+  };
+}
+
+// Volume progress for the CURRENT week — what Home shows. Null for legacy plans
+// (no start date) or weeks with no gym work.
+export function currentWeekVolumeProgress() {
+  const cw = currentWeekNumber();
+  if (cw == null) return null;
+  const ap = adaptedPhases();
+  if (!ap) return null;
+  for (const phase of ap) {
+    const week = (phase.weeks || []).find(w => w.num === cw);
+    if (week) return weekVolumeProgressFor(phase, week);
+  }
+  return null;
+}
+
+export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO, setRuntime, weekVolumeProgressFor, currentWeekVolumeProgress };

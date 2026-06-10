@@ -59,21 +59,27 @@ export default function SessionDetail() {
     setChecked([]);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     // Log top-set results for the main lifts → autoregulates next week's weights.
+    // This is OPTIONAL and must never block completion: fire it off (it writes
+    // locally first, then syncs in the background and logs any error itself).
     const sets = trackedLifts.map(l => {
       const entry = lifts[l.key] || {};
       const weight = entry.weight != null && entry.weight !== '' ? Number(entry.weight) : targetKg(l.target);
       return (weight && entry.rpe) ? { key: l.key, weight, reps: l.reps, rpe: entry.rpe, targetRpe: l.targetRpe, factor: l.factor } : null;
     }).filter(Boolean);
-    if (sets.length) await logLiftSets(sets);
+    if (sets.length) Promise.resolve(logLiftSets(sets)).catch(e => console.error('Top-set log failed (continuing):', e));
 
-    completeSession(key, {
+    // Completion is the primary action — fire and close the form immediately. The
+    // store writes localStorage synchronously and syncs to Supabase in the
+    // background, so the UI never waits on (or is blocked by) the network.
+    Promise.resolve(completeSession(key, {
       quality: ratings.quality,
       energy: ratings.energy,
       recovery: ratings.recovery,
       notes
-    });
+    })).catch(e => console.error('Complete session failed:', e));
+
     clearChecked(key);
     setChecked([]);
     setShowForm(false);
@@ -83,8 +89,10 @@ export default function SessionDetail() {
   };
 
   const handleUncomplete = () => {
-    if (confirm('Mark this session as incomplete? Ratings will be removed.')) {
+    if (confirm('Mark this session as incomplete? This resets it to "not started" and removes your ratings.')) {
       uncompleteSession(key);
+      clearChecked(key);
+      setChecked([]);
     }
   };
 

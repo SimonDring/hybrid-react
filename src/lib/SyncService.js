@@ -316,11 +316,14 @@ export async function completeSession(templateRef, payload) {
 export async function uncompleteSession(templateRef) {
   if (!canSync()) return Database.services.uncompleteSession(templateRef);
   const userId = uid();
-  const session = Database.tables.sessions.find(s => s.template_ref === templateRef);
-  const log = session ? Database.tables.sessionLogs.find(l => l.session_id === session.id) : null;
+  const before = Database.tables.sessions.find(s => s.template_ref === templateRef);
+  const log = before ? Database.tables.sessionLogs.find(l => l.session_id === before.id) : null;
   Database.services.uncompleteSession(templateRef);
+  // Re-read so we push the reverted (pending, started_at null) state, not the
+  // pre-uncomplete snapshot — otherwise the next cloud sync resurrects it as done.
+  const updated = Database.tables.sessions.find(s => s.template_ref === templateRef);
   const ops = [];
-  if (session) ops.push(supabase.from('sessions').upsert(clean(session, userId), { onConflict: 'id' }));
+  if (updated) ops.push(supabase.from('sessions').upsert(clean(updated, userId), { onConflict: 'id' }));
   // Soft-delete the log in Supabase
   if (log) ops.push(
     supabase.from('session_logs')
@@ -349,6 +352,25 @@ export async function cancelSession(templateRef) {
   );
   const results = await Promise.all(ops);
   results.forEach(r => { if (r.error) logError('cancelSession', r.error); });
+}
+
+export async function skipSession(templateRef) {
+  if (!canSync()) return Database.services.skipSession(templateRef);
+  const userId = uid();
+  const before = Database.tables.sessions.find(s => s.template_ref === templateRef);
+  const log = before ? Database.tables.sessionLogs.find(l => l.session_id === before.id) : null;
+  Database.services.skipSession(templateRef);
+  // Re-read so we push the updated (skipped) state, not the pre-skip snapshot.
+  const updated = Database.tables.sessions.find(s => s.template_ref === templateRef);
+  const ops = [];
+  if (updated) ops.push(supabase.from('sessions').upsert(clean(updated, userId), { onConflict: 'id' }));
+  if (log) ops.push(
+    supabase.from('session_logs')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', log.id)
+  );
+  const results = await Promise.all(ops);
+  results.forEach(r => { if (r.error) logError('skipSession', r.error); });
 }
 
 // ---------- Weekly check-ins ----------
@@ -533,7 +555,7 @@ export default {
   runSessionDMigration,
   pullFromSupabase,
   updateProfile, setGoals,
-  startSession, completeSession, uncompleteSession, cancelSession,
+  startSession, completeSession, uncompleteSession, cancelSession, skipSession,
   addCheckin, deleteCheckin,
   upsertDailyMetric,
   setReassessAnswer,
