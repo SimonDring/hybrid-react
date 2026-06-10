@@ -13,6 +13,7 @@ import TabBar from './components/TabBar.jsx';
 import ScreenContainer from './components/ScreenContainer.jsx';
 
 import Home from './screens/Home.jsx';
+import TrainNow from './screens/TrainNow.jsx';
 import Phases from './screens/Phases.jsx';
 import PhaseDetail from './screens/PhaseDetail.jsx';
 import WeekDetail from './screens/WeekDetail.jsx';
@@ -31,6 +32,7 @@ import Coach from './screens/Coach.jsx';
 
 const routeMeta = {
   '/': { title: 'Home', topLevel: true, tab: 'today' },
+  '/train-now': { title: 'Train now', topLevel: false, tab: 'today' },
   '/phases': { title: 'Phases', topLevel: true, tab: 'phases' },
   '/phases/:phaseId': { title: 'Phase', topLevel: false, tab: 'phases' },
   '/phases/:phaseId/weeks/:weekNum': { title: 'Week', topLevel: false, tab: 'phases' },
@@ -124,6 +126,7 @@ export default function App() {
       <ScreenContainer pathname={location.pathname}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/train-now" element={<TrainNow />} />
           <Route path="/phases" element={<Phases />} />
           <Route path="/phases/:phaseId" element={<PhaseDetail />} />
           <Route path="/phases/:phaseId/weeks/:weekNum" element={<WeekDetail />} />

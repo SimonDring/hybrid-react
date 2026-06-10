@@ -308,7 +308,7 @@ function gatesFor(intent, isLast, profile, totalSessions) {
 // Per-week assembly
 // ---------------------------------------------------------------------------
 function buildDisciplineSpecs(discipline, count, ctx, profile) {
-  const common = { intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, taperMult: ctx.taperMult, winp: ctx.winp, weekNum: ctx.weekNum, progress: ctx.progress, level: levelFor(discipline, profile), minutes: ctx.minutes, access: profile.access || [], sex: profile.sex };
+  const common = { intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, taperMult: ctx.taperMult, winp: ctx.winp, weekNum: ctx.weekNum, progress: ctx.progress, phaseWeeks: ctx.phaseWeeks, level: levelFor(discipline, profile), minutes: ctx.minutes, access: profile.access || [], sex: profile.sex };
   // Strength / cross-training pull back during the race taper, like a deload.
   const lighten = ctx.deload || ctx.taper;
   switch (discipline) {
@@ -370,7 +370,7 @@ export function generatePlan(profile = {}) {
       const progress = total > 1 ? Math.min(1, (Math.min(weekNum, lastBuildWeek) - 1) / (total - 1)) : 1;
       // Taper multiplier: race week lightest, the week before easing down.
       const taperMult = !taper ? 1 : (weekNum === total ? 0.5 : 0.65);
-      const ctx = { intent: seg.intent, deload, taper, taperMult, winp, weekNum, minutes, progress };
+      const ctx = { intent: seg.intent, deload, taper, taperMult, winp, weekNum, minutes, progress, phaseWeeks: seg.weeks };
 
       // Gather every discipline's sport sessions, plus any supplemental strength,
       // then schedule them (supplemental folds in as easy-day doubles / rest days).

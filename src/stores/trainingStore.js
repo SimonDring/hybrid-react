@@ -14,6 +14,9 @@ import { create } from 'zustand';
 import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, checkFitbitConnection, syncFitbit } from '../lib/SyncService.js';
 import { nextE1RM } from '../lib/liftProgression.js';
+import { computeReadiness } from '../lib/Readiness.js';
+import { setRuntime } from '../lib/PlanService.js';
+import { setOverride, clearOverride } from '../lib/sessionOverrides.js';
 
 // Read the current state from localStorage into a React-friendly shape.
 // All reads go through here — screens never call Database directly.
@@ -38,6 +41,8 @@ function buildView() {
       : null;
     sessions[s.template_ref] = {
       completed: s.status === 'completed',
+      skipped: s.status === 'skipped',
+      started: !!s.started_at && s.status !== 'completed' && s.status !== 'skipped',
       startedAt: s.started_at || null,
       completedAt: s.completed_at || null,
       quality: log ? log.quality : null,
@@ -47,13 +52,19 @@ function buildView() {
     };
   });
 
+  const dailyMetrics = Database.services.listDailyMetrics();
+
+  // Keep the plan's adaptive reflow current: it reflows this week around what's
+  // been completed + today's readiness. Set before screens read the plan.
+  setRuntime({ sessions, readiness: computeReadiness(dailyMetrics, logs).score });
+
   return {
     logs,
     sessions,
     reassess:     Database.services.getReassessAnswers(),
     profile:      Database.services.getProfile(),
     injuries:     Database.services.listInjuries(),
-    dailyMetrics: Database.services.listDailyMetrics(),
+    dailyMetrics,
     syncing:      false,
     _tick:        Date.now()
   };
@@ -113,20 +124,37 @@ export const useTrainingStore = create((set) => ({
   },
 
   // ----- Session lifecycle -----
-  async startSession(templateRef) {
-    await Sync.startSession(templateRef);
+  // OFFLINE-FIRST: each Sync.* writes localStorage SYNCHRONOUSLY (before its first
+  // await), then syncs to Supabase. We rebuild the view from local state right
+  // away and let the cloud write run in the background — so the UI updates
+  // instantly and can NEVER be blocked or frozen by a slow/hung network request.
+  // Cloud errors are logged, not surfaced (the local cache is the source of truth).
+  startSession(templateRef) {
+    Sync.startSession(templateRef).catch(e => console.error('startSession sync failed:', e));
     set(buildView());
   },
-  async completeSession(templateRef, payload) {
-    await Sync.completeSession(templateRef, payload);
+  completeSession(templateRef, payload) {
+    Sync.completeSession(templateRef, payload).catch(e => console.error('completeSession sync failed:', e));
     set(buildView());
   },
-  async uncompleteSession(templateRef) {
-    await Sync.uncompleteSession(templateRef);
+  uncompleteSession(templateRef) {
+    Sync.uncompleteSession(templateRef).catch(e => console.error('uncompleteSession sync failed:', e));
+    clearOverride(templateRef);   // re-completing later rebuilds from the plan, not the old train-now snapshot
     set(buildView());
   },
-  async cancelSession(templateRef) {
-    await Sync.cancelSession(templateRef);
+  cancelSession(templateRef) {
+    Sync.cancelSession(templateRef).catch(e => console.error('cancelSession sync failed:', e));
+    clearOverride(templateRef);   // started by mistake → drop any train-now adaptation too
+    set(buildView());
+  },
+  skipSession(templateRef) {
+    Sync.skipSession(templateRef).catch(e => console.error('skipSession sync failed:', e));
+    set(buildView());
+  },
+  // "Train now" → pin a generated session onto the slot you're about to do, then
+  // the rest of the week reflows around it. Stored locally (see sessionOverrides).
+  applyTrainNow(sessionKey, snapshot) {
+    setOverride(sessionKey, snapshot);
     set(buildView());
   },
 

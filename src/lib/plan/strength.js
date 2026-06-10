@@ -1,274 +1,75 @@
 /**
  * Strength engine — builds a week of gym sessions from the user's profile.
  *
- * The science (see research notes in the rebuild plan):
- *  • Volume is the main driver of hypertrophy: ~10–20 hard sets per muscle group
- *    per week, with diminishing returns past ~20 (Schoenfeld dose-response).
- *  • Each muscle should be trained ≥2×/week — better growth than 1×, and a
- *    clearer strength benefit (Schoenfeld 2016 frequency meta-analysis).
- *  • Linear vs undulating periodisation barely differ when volume is equated, so
- *    we keep it simple: block phases (base→build→peak) shift rep range + RPE.
- *
- * That "≥2× per muscle" rule is what drives the split by gym-days — the only way
- * to hit everything twice on few days is full-body; more days lets us split:
- *    1–3 days → full body         (everything 2–3×)
- *    4 days   → upper / lower ×2   (each half 2×)
- *    5 days   → upper / lower + push / pull / legs   (hybrid, ~2×)
- *    6 days   → push / pull / legs ×2                (each muscle 2×)
- *
- * Goal "flavour" (strength_style) changes rep scheme + exercise emphasis, NOT
- * the split:
- *    strength      → heavy, low reps, big compounds (powerlifting bias)
- *    bodybuilding  → moderate–high reps, more isolation + volume
- *    functional    → mixed reps, compounds + unilateral + carries + core
+ * As of the adaptive rebuild this is a THIN wrapper: it works out the week's
+ * per-muscle volume target (src/lib/strength/targets.js) and hands it, plus one
+ * "slot" per gym day, to the allocator (src/lib/plan/allocator.js), which fills
+ * each slot with the highest-value work toward that target. The science that
+ * used to live here (movement-pattern coverage, rep/RPE schemes, ≥2×/week
+ * frequency, equipment gating, sex tuning) now lives in those two modules — see
+ * their headers. Keeping buildWeek's signature unchanged means PlanGenerator and
+ * the scheduler are untouched.
  *
  * buildWeek(ctx) → array of session specs (no day assigned yet — the scheduler
  * places them). Each spec:
  *    { discipline:'gym', focus, duration, items, intensity, lowerBody }
  * `intensity` ('hard'|'moderate') and `lowerBody` let the scheduler space heavy
  * leg work away from hard runs (the main concurrent-training conflict).
+ *
+ * The supplemental-strength builder (buildSupport) for endurance athletes who
+ * didn't pick the gym is unchanged and still lives at the bottom of this file.
  */
 
-import { EXERCISES, LEVELS, availableEquip } from '../../data/strengthExercises.js';
-import { matchLift } from '../liftProgression.js';
-
-// ---- split → ordered day blueprints by gym-days ----
-// Each day is a blueprint with a DISTINCT emphasis; together they cover the
-// movement patterns ~2×/week with a slight pull lean for posture. This is what
-// makes consecutive sessions feel different rather than copy-pasted.
-const SPLITS = {
-  1: ['fbA'],
-  2: ['fbA', 'fbB'],
-  3: ['fbA', 'fbB', 'fbC'],
-  4: ['upperPush', 'lowerSquat', 'upperPull', 'lowerHinge'],
-  5: ['upperPush', 'lowerSquat', 'pushDelt', 'pullVert', 'lowerHinge'],
-  6: ['pushChest', 'pullVert', 'lowerSquat', 'pushDelt', 'pullHoriz', 'lowerHinge']
-};
-
-// A blueprint = display focus + leg-day flag + ordered movement-pattern slots.
-// slot.pat: a movement pattern (or 'iso' + muscle). slot.role: primary (heavy
-// compound) | accessory | core | iso. `bb`/`fn` slots appear only for that style.
-const BLUEPRINTS = {
-  fbA: { focus: 'Full body · squat focus', lower: true, slots: [
-    { pat: 'squat', role: 'primary' }, { pat: 'hpush', role: 'accessory' }, { pat: 'hpull', role: 'accessory' },
-    { pat: 'hinge', role: 'accessory' }, { pat: 'core', role: 'core' }, { pat: 'carry', role: 'accessory', fn: true } ] },
-  fbB: { focus: 'Full body · posterior focus', lower: true, slots: [
-    { pat: 'hinge', role: 'primary' }, { pat: 'vpush', role: 'accessory' }, { pat: 'vpull', role: 'accessory' },
-    { pat: 'lunge', role: 'accessory' }, { pat: 'calf', role: 'iso' }, { pat: 'core', role: 'core' } ] },
-  fbC: { focus: 'Full body · push & single-leg', lower: true, slots: [
-    { pat: 'hpush', role: 'primary' }, { pat: 'lunge', role: 'accessory' }, { pat: 'hpull', role: 'accessory' },
-    { pat: 'hinge', role: 'accessory' }, { pat: 'core', role: 'core' }, { pat: 'iso', muscle: 'sidedelt', role: 'iso', bb: true } ] },
-  upperPush: { focus: 'Upper · push focus', lower: false, slots: [
-    { pat: 'hpush', role: 'primary' }, { pat: 'hpull', role: 'accessory' }, { pat: 'vpush', role: 'accessory' },
-    { pat: 'vpull', role: 'accessory' }, { pat: 'iso', muscle: 'reardelt', role: 'iso' }, { pat: 'iso', muscle: 'triceps', role: 'iso', bb: true } ] },
-  upperPull: { focus: 'Upper · pull focus', lower: false, slots: [
-    { pat: 'vpull', role: 'primary' }, { pat: 'vpush', role: 'accessory' }, { pat: 'hpull', role: 'accessory' },
-    { pat: 'hpush', role: 'accessory' }, { pat: 'iso', muscle: 'reardelt', role: 'iso' }, { pat: 'iso', muscle: 'biceps', role: 'iso', bb: true } ] },
-  pushChest: { focus: 'Push · chest focus', lower: false, slots: [
-    { pat: 'hpush', role: 'primary' }, { pat: 'hpush', role: 'accessory' }, { pat: 'vpush', role: 'accessory' },
-    { pat: 'iso', muscle: 'sidedelt', role: 'iso' }, { pat: 'iso', muscle: 'triceps', role: 'iso' } ] },
-  pushDelt: { focus: 'Push · shoulder focus', lower: false, slots: [
-    { pat: 'vpush', role: 'primary' }, { pat: 'hpush', role: 'accessory' }, { pat: 'iso', muscle: 'sidedelt', role: 'iso' },
-    { pat: 'iso', muscle: 'reardelt', role: 'iso' }, { pat: 'iso', muscle: 'triceps', role: 'iso' } ] },
-  pullVert: { focus: 'Pull · width focus', lower: false, slots: [
-    { pat: 'vpull', role: 'primary' }, { pat: 'hpull', role: 'accessory' }, { pat: 'iso', muscle: 'reardelt', role: 'iso' },
-    { pat: 'iso', muscle: 'biceps', role: 'iso' } ] },
-  pullHoriz: { focus: 'Pull · thickness focus', lower: false, slots: [
-    { pat: 'hpull', role: 'primary' }, { pat: 'vpull', role: 'accessory' }, { pat: 'iso', muscle: 'reardelt', role: 'iso' },
-    { pat: 'iso', muscle: 'biceps', role: 'iso' } ] },
-  lowerSquat: { focus: 'Lower · quad focus', lower: true, slots: [
-    { pat: 'squat', role: 'primary' }, { pat: 'lunge', role: 'accessory' }, { pat: 'hinge', role: 'accessory' },
-    { pat: 'calf', role: 'iso' }, { pat: 'iso', muscle: 'quad', role: 'iso', bb: true }, { pat: 'core', role: 'core' } ] },
-  lowerHinge: { focus: 'Lower · posterior focus', lower: true, slots: [
-    { pat: 'hinge', role: 'primary' }, { pat: 'lunge', role: 'accessory' }, { pat: 'iso', muscle: 'ham', role: 'iso' },
-    { pat: 'calf', role: 'iso' }, { pat: 'core', role: 'core' } ] }
-};
-
-// ---- rep/intensity scheme by style + phase intent ----
-// main = primary compound, acc = accessory. Deload overrides everything.
-function scheme(style, intent, deload) {
-  if (deload) return { main: '2 × 5', acc: '2 × 8', mainRpe: 'RPE 6', accRpe: 'RPE 6' };
-  const table = {
-    strength: {
-      base:  { main: '4 × 5', acc: '3 × 8',  mainRpe: 'RPE 7',    accRpe: 'RPE 7' },
-      build: { main: '4 × 4', acc: '3 × 6',  mainRpe: 'RPE 8',    accRpe: 'RPE 7→8' },
-      peak:  { main: '4 × 3', acc: '3 × 5',  mainRpe: 'RPE 8→9',  accRpe: 'RPE 8' }
-    },
-    bodybuilding: {
-      base:  { main: '3 × 12', acc: '3 × 12', mainRpe: 'RPE 7',   accRpe: 'RPE 8' },
-      build: { main: '4 × 10', acc: '3 × 12', mainRpe: 'RPE 8',   accRpe: 'RPE 8→9' },
-      peak:  { main: '4 × 8',  acc: '3 × 10', mainRpe: 'RPE 8→9', accRpe: 'RPE 9' }
-    },
-    functional: {
-      base:  { main: '3 × 8', acc: '3 × 10', mainRpe: 'RPE 7',   accRpe: 'RPE 7' },
-      build: { main: '4 × 6', acc: '3 × 8',  mainRpe: 'RPE 7→8', accRpe: 'RPE 7' },
-      peak:  { main: '3 × 5', acc: '3 × 6',  mainRpe: 'RPE 8',   accRpe: 'RPE 8' }
-    }
-  };
-  return (table[style] || table.functional)[intent] || table.functional.base;
-}
-
-// ---- subtle, evidence-based sex tuning ----
-// The heavy compounds are IDENTICAL between sexes: relative strength/hypertrophy
-// gains are the same (Refalo et al. 2025 meta-analysis), so the split, the main
-// lifts and their loads don't change. The one robust difference is that women
-// fatigue more slowly and recover faster between sets, completing more reps at a
-// given load (biological-sex fatigue studies) — so they can absorb a little more
-// rep volume on the SUPPORTING work. We nudge accessory/isolation reps up a
-// couple, nothing else. Heavy mains, core holds, carries and timed work untouched.
-function femaleRepBump(sex) { return sex === 'female' ? 2 : 0; }
-function bumpReps(sets, d) {
-  if (!d) return sets;
-  // Bump the rep number(s) after the × — but not seconds/metres (holds, carries).
-  return String(sets).replace(/×\s*(\d+(?:–\d+)?)(?!\s*[sm])/, (m, reps) => '× ' + reps.replace(/\d+/g, n => String(Number(n) + d)));
-}
-
-// Progression note shown on the primary lift.
-function mainNote(deload) {
-  return deload
-    ? 'deload — ~65% load, leave 3+ reps in the tank'
-    : '+small load when the last set is ≤ target RPE';
-}
-
-// ---- exercise picking, with a bodyweight fall-back when no weights ----
-// `weights` true when the user has a full gym or home weights.
-function lift(weights, barbell, bodyweight) {
-  return weights ? barbell : bodyweight;
-}
-
-// ---- target working weights from optional 1RMs (squat / bench / deadlift) ----
-// Kept deliberately simple: an Epley-based %1RM from the prescribed reps + reps-
-// in-reserve (from RPE), with a gentle weekly creep within a phase. Lifts the
-// user didn't give a max for show "—" and a cue to log their working set.
-function num(v) { const n = parseFloat(v); return isNaN(n) ? null : n; }
-function round2_5(x) { return Math.round(x / 2.5) * 2.5; }
-function parseReps(sets) { const m = /[×x]\s*(\d+)/.exec(sets || ''); return m ? Number(m[1]) : null; }
-function parseRpe(rpe) { const m = /(\d+)/.exec(rpe || ''); return m ? Number(m[1]) : 7; } // first (lower) number — conservative
-
-// Annotate barbell main lifts with a target weight from the tracked e1RMs.
-// Progression no longer comes from a blind weekly creep — it comes from the
-// athlete logging their top-set RPE (which updates the e1RM in profile.lift_log;
-// see src/lib/liftProgression.js), so targets here just reflect the current e1RM.
-function applyWeights(items, lifts) {
-  if (!lifts) lifts = {};
-  for (const it of items) {
-    const m = matchLift(it.name);
-    if (!m) continue;
-    const oneRM = num(lifts[m.key]);
-    const reps = parseReps(it.sets);
-    if (!oneRM || !reps) continue;
-    const rir = Math.max(0, 10 - parseRpe(it.rpe));
-    const pct = 1 / (1 + (reps + rir) / 30);               // Epley inverse
-    it.weight = `${round2_5(oneRM * m.factor * pct)} kg`;
-  }
-}
-
-// ---- exercise selection from the database ----
-function slotMatches(e, slot) {
-  if (slot.pat === 'iso') return e.pattern === 'iso' && (!slot.muscle || e.muscle === slot.muscle);
-  return e.pattern === slot.pat;
-}
-
-// Pick one exercise for a slot: filter by available equipment + the athlete's
-// level, prefer primary-role lifts for primary slots, avoid repeats within the
-// session, and rotate the choice by week so variations change over time.
-function pickFor(slot, { equip, level, weekNum, used, seed }) {
-  let cands = EXERCISES.filter(e => slotMatches(e, slot) && equip.has(e.equip) && e.level <= level);
-  if (slot.role === 'primary') {
-    const prim = cands.filter(e => e.role === 'primary');
-    if (prim.length) cands = prim;
-    // Anchor the session on a barbell lift when one's available.
-    const barbell = cands.filter(e => e.equip === 'barbell');
-    if (barbell.length) cands = barbell;
-  }
-  // Fallback: relax to any bodyweight option for this pattern if nothing fits.
-  if (!cands.length) cands = EXERCISES.filter(e => slotMatches(e, slot) && e.equip === 'bodyweight' && e.level <= level);
-  if (!cands.length) return null;
-  const fresh = cands.filter(e => !used.has(e.id));
-  const pool = fresh.length ? fresh : cands;
-  const ex = pool[(weekNum + seed) % pool.length];
-  used.add(ex.id);
-  return ex;
-}
-
-// Rep scheme for non-primary slots.
-function coreSets(deload) { return deload ? '2 × 30s' : '3 × 30s'; }
-function isoSets(style) { return style === 'bodybuilding' ? '3 × 12–15' : '3 × 12'; }
-
-// Build a session's items from its blueprint, choosing real exercises.
-function buildSessionItems(bp, { style, s, deload, equip, level, weekNum, maxItems, repBump }) {
-  // Strength style keeps it compound-focused (drop most isolation, keep calves);
-  // bb/fn slots only appear for their style.
-  let slots = bp.slots.filter(sl => (!sl.bb || style === 'bodybuilding') && (!sl.fn || style === 'functional'));
-  if (style === 'strength') slots = slots.filter(sl => sl.role !== 'iso' || sl.pat === 'calf');
-  slots = slots.slice(0, maxItems);
-
-  const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-  const used = new Set();
-  const items = [];
-  slots.forEach((sl, i) => {
-    const ex = pickFor(sl, { equip, level, weekNum, used, seed: i });
-    if (!ex) return;
-    const num = `${letters[Math.min(i, letters.length - 1)]}1`;
-    const per = ex.unilateral ? ' ea.' : '';
-    if (sl.role === 'primary') {
-      items.push({ num, name: ex.name, sets: s.main + per, rpe: s.mainRpe, note: mainNote(deload) });
-    } else if (sl.role === 'core') {
-      const reps = /plank|hold|dead bug|copenhagen/i.test(ex.name) ? coreSets(deload) : '3 × 12' + per;
-      items.push({ num, name: ex.name, sets: reps, rpe: 'RPE 6', tag: 'mobility', note: '' });
-    } else if (sl.role === 'iso') {
-      const t = /calf/i.test(ex.name) ? '3 × 12' : isoSets(style);
-      items.push({ num, name: ex.name, sets: bumpReps(t + per, repBump), rpe: s.accRpe, tag: ex.pattern === 'calf' ? 'mobility' : undefined, note: '' });
-    } else {
-      items.push({ num, name: ex.name, sets: bumpReps(s.acc + per, repBump), rpe: s.accRpe, note: '' });
-    }
-  });
-  return items;
-}
+import { weeklyMuscleTargets } from '../strength/targets.js';
+import { allocateGym } from './allocator.js';
 
 /**
- * Build the week's gym sessions from the exercise database.
+ * Build the week's gym sessions.
  * @param {object} ctx
- *   gymDays   number 1–6 (how many gym sessions this week)
+ *   gymDays   number 1–7 (how many gym sessions this week)
  *   style     'strength' | 'bodybuilding' | 'functional'
  *   intent    'base' | 'build' | 'peak'
  *   deload    boolean
- *   minutes   typical session length (caps the exercise count + sets duration)
- *   access    array of equipment keys; level  experience; weekNum  for rotation
+ *   winp      week-in-phase (1-based); phaseWeeks total weeks in the phase
+ *   minutes   typical session length (caps each slot's exercise/set count)
+ *   access    array of equipment keys; level  experience; sex  for rep tuning
  *   lifts     optional 1RMs for target weights
  * @returns {Array} session specs (no day assigned yet)
  */
 export function buildWeek(ctx = {}) {
-  const gymDays = Math.max(1, Math.min(6, ctx.gymDays || 3));
+  const gymDays = Math.max(1, Math.min(7, ctx.gymDays || 3));
   const style = ctx.style || 'functional';
-  const intent = ctx.intent || 'base';
-  const deload = !!ctx.deload;
   const minutes = ctx.minutes || 60;
-  const equip = availableEquip(ctx.access || []);
-  const level = LEVELS[ctx.level] ?? 0;
-  const weekNum = ctx.weekNum || 1;
+  const deload = !!ctx.deload;
 
-  const s = scheme(style, intent, deload);
-  const days = SPLITS[gymDays] || SPLITS[3];
-  const lo = Math.max(35, minutes - 10);
-  const duration = `${lo}–${minutes} min`;
-  const maxItems = minutes <= 45 ? 5 : minutes <= 60 ? 6 : 7;
-  const repBump = femaleRepBump(ctx.sex);
+  const targets = weeklyMuscleTargets({
+    style, intent: ctx.intent, level: ctx.level,
+    weekInPhase: ctx.winp, phaseWeeks: ctx.phaseWeeks, deload
+  });
 
-  return days.map(bpKey => {
-    const bp = BLUEPRINTS[bpKey] || BLUEPRINTS.fbA;
-    const items = buildSessionItems(bp, { style, s, deload, equip, level, weekNum, maxItems, repBump });
-    applyWeights(items, ctx.lifts); // no-op for bodyweight names
-    return {
-      discipline: 'gym',
-      focus: bp.focus,
-      duration,
-      items,
-      intensity: deload ? 'moderate' : 'hard',
-      lowerBody: bp.lower
-    };
+  // One slot per gym day, all at the planned session length with the athlete's
+  // usual equipment. (Per-slot time/equipment is what the on-demand "train now"
+  // flow will vary later — the allocator already supports it.)
+  const slots = Array.from({ length: gymDays }, () => ({ minutes, equip: ctx.access || [] }));
+
+  return allocateGym({
+    targets, slots,
+    ctx: {
+      style, intent: ctx.intent, deload, weekNum: ctx.weekNum,
+      level: ctx.level, sex: ctx.sex, lifts: ctx.lifts, access: ctx.access || []
+    }
   });
 }
+
+// ---- helpers shared by the supplemental builder below ----
+function femaleRepBump(sex) { return sex === 'female' ? 2 : 0; }
+function bumpReps(sets, d) {
+  if (!d) return sets;
+  return String(sets).replace(/×\s*(\d+(?:–\d+)?)(?!\s*[sm])/, (m, reps) =>
+    '× ' + reps.replace(/\d+/g, n => String(Number(n) + d)));
+}
+// Bodyweight fall-back when the user has no weights.
+function lift(weights, barbell, bodyweight) { return weights ? barbell : bodyweight; }
 
 // ===========================================================================
 // Supplemental strength — short sessions that SUPPORT an endurance athlete who

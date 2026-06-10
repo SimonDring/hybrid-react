@@ -82,6 +82,24 @@ export function nextE1RM({ weight, reps, rpe, targetRpe = 8, factor = 1 }) {
   return round2_5(fresh * (1 + step));
 }
 
+// Annotate a session's barbell main lifts with a target working weight from the
+// tracked e1RMs: weight = e1RM × lift-factor × %1RM(reps, reps-in-reserve). Items
+// that aren't a tracked barbell lift (dumbbell, bodyweight, no max) are left as-is.
+// Mutates + returns `items`. Shared by the strength engine and the allocator.
+export function applyWeights(items = [], lifts = {}) {
+  for (const it of items) {
+    const m = matchLift(it.name);
+    if (!m) continue;
+    const oneRM = Number(lifts[m.key]);
+    const reps = parseReps(it.sets);
+    if (!oneRM || !reps) continue;
+    const rir = Math.max(0, 10 - parseRpe(it.rpe));
+    const pct = 1 / (1 + (reps + rir) / 30);   // Epley inverse
+    it.weight = `${round2_5(oneRM * m.factor * pct)} kg`;
+  }
+  return items;
+}
+
 // The main barbell lifts present in a session (for the top-set logging UI).
 // Returns one entry per lift key (the primary A-slot item).
 export function trackedLiftsInSession(session) {
@@ -97,4 +115,4 @@ export function trackedLiftsInSession(session) {
   return out;
 }
 
-export default { estimateE1RM, resolveLifts, matchLift, nextE1RM, trackedLiftsInSession, parseReps, parseRpe };
+export default { estimateE1RM, resolveLifts, matchLift, applyWeights, nextE1RM, trackedLiftsInSession, parseReps, parseRpe };

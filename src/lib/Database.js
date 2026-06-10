@@ -482,23 +482,35 @@ export const services = {
     }
   },
 
+  // Un-complete a finished session: rewind it all the way to "not started" so the
+  // screen offers "Start session" again (not a mid-session "Complete"). Clears
+  // started_at + completed_at and removes the log — same end state as cancel.
   uncompleteSession(templateRef) {
     const s = tablesApi.sessions.find(x => x.template_ref === templateRef);
     if (!s) return;
     const log = tablesApi.sessionLogs.find(l => l.session_id === s.id);
     if (log) tablesApi.sessionLogs.remove(log.id);
-    tablesApi.sessions.update(s.id, { status: 'pending', completed_at: null });
+    tablesApi.sessions.update(s.id, { status: 'pending', started_at: null, completed_at: null });
   },
 
-  // Cancel a session that was started (or completed) in error — revert it fully
-  // to "not started": clears started_at so a fresh start stamps a new time, and
-  // removes any log. Distinct from uncompleteSession, which keeps started_at.
+  // Cancel a session that was started in error — revert it fully to "not started":
+  // clears started_at so a fresh start stamps a new time, and removes any log.
   cancelSession(templateRef) {
     const s = tablesApi.sessions.find(x => x.template_ref === templateRef);
     if (!s) return;
     const log = tablesApi.sessionLogs.find(l => l.session_id === s.id);
     if (log) tablesApi.sessionLogs.remove(log.id);
     tablesApi.sessions.update(s.id, { status: 'pending', started_at: null, completed_at: null });
+  },
+
+  // Mark a session as MISSED (skipped). Used for sessions a busy week ran over —
+  // it's settled (won't be re-planned) but, unlike completed, banks no volume, so
+  // the rest of the week reflows to recover what it can toward the goal.
+  skipSession(templateRef) {
+    const s = services.findOrCreateSessionByTemplate(templateRef);
+    const log = tablesApi.sessionLogs.find(l => l.session_id === s.id);
+    if (log) tablesApi.sessionLogs.remove(log.id);
+    tablesApi.sessions.update(s.id, { status: 'skipped', started_at: null, completed_at: null });
   },
 
   addCheckin(fields) {
