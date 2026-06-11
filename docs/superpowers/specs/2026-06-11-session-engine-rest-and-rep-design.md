@@ -88,6 +88,25 @@ Sessions previously containing 3+ primaries will have the 3rd+ replaced by acces
 
 ---
 
+## Additional touch-points for `style: 'sport'`
+
+Two existing style guards must be extended or `'sport'` silently falls back to `'functional'`:
+
+1. **`allocateGym()` style validation** (`allocator.js` line 262):
+   ```js
+   // Before
+   const style = ['strength', 'bodybuilding', 'functional'].includes(ctx.style) ? ctx.style : 'functional';
+   // After — add 'sport'
+   const style = ['strength', 'bodybuilding', 'functional', 'sport'].includes(ctx.style) ? ctx.style : 'functional';
+   ```
+
+2. **`STYLE_TOP` in `targets.js`** — `weeklyMuscleTargets()` uses this to set how high volume ramps across the phase. Sport athletes should use the same lean ramp as `strength` (0.6) — they're not chasing volume, just maintaining/building neuromuscular quality:
+   ```js
+   const STYLE_TOP = { strength: 0.6, functional: 1.0, bodybuilding: 1.4, sport: 0.6 };
+   ```
+
+---
+
 ## What is not changing
 
 - `SessionDetail.jsx` and all other UI files — no changes. The `restSec` field is ready on items for a future UI pass.
