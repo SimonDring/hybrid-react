@@ -45,6 +45,9 @@ const roundHalf = (x) => Math.round(x * 2) / 2;
  *   phaseWeeks  total weeks in the current phase
  *   level       'beginner' | 'returning' | 'intermediate' | 'advanced'
  *   deload      boolean — deload weeks sit at ~MEV
+ *   emphasis    {muscle: ×} per-muscle multiplier from the goal (sport prime movers
+ *               ↑, non-essential ↓); 1 = neutral. From resolveProgram (program.js).
+ *   volumeScalar overall × on the week (sport in-season trims toward maintenance).
  * @returns {{ [muscle]: number }} sets/week, rounded to the nearest 0.5
  */
 export function weeklyMuscleTargets(ctx = {}) {
@@ -53,6 +56,8 @@ export function weeklyMuscleTargets(ctx = {}) {
   const levelMult = LEVEL_BIAS[ctx.level] ?? 1.0;
   const phaseWeeks = Math.max(1, ctx.phaseWeeks || 1);
   const wip = clamp(ctx.weekInPhase || 1, 1, phaseWeeks);
+  const emphasis = ctx.emphasis || {};
+  const scalar = ctx.volumeScalar != null ? ctx.volumeScalar : 1;
 
   // 0 at the first week of a phase → 1 at the last. Single-week phase sits mid-band.
   const frac = phaseWeeks > 1 ? (wip - 1) / (phaseWeeks - 1) : 0.5;
@@ -71,12 +76,14 @@ export function weeklyMuscleTargets(ctx = {}) {
     // band unit is (MAV − MEV) and styleTop says how many of those to climb.
     const top = lm.mev + styleTop * (lm.mav - lm.mev);
     const onRamp = lm.mev + frac * (top - lm.mev);
-    const biased = onRamp * levelMult;
-
-    // Never below ~MEV for a worked muscle (unless the landmark MEV is 0, e.g.
-    // core), never above MRV.
+    // Base ramp keeps its MEV floor (a worked muscle shouldn't fall below ~MEV)…
     const floor = lm.mev > 0 ? Math.max(lm.mev * 0.9, lm.mev - 2) : 0;
-    out[m] = roundHalf(clamp(biased, floor, lm.mrv));
+    const base = clamp(onRamp * levelMult, floor, lm.mrv);
+    // …then the GOAL's emphasis + overall scalar adjust it. This may pull a
+    // de-emphasised muscle below MEV (e.g. a runner's chest = maintenance only),
+    // which is intended, so the floor doesn't apply after the goal adjustment.
+    const adjusted = base * (emphasis[m] ?? 1) * scalar;
+    out[m] = roundHalf(clamp(adjusted, 0, lm.mrv));
   }
   return out;
 }

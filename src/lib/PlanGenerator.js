@@ -29,6 +29,7 @@ import * as running from './plan/running.js';
 import * as swimming from './plan/swimming.js';
 import { scheduleWeek } from './plan/scheduler.js';
 import { resolveLifts } from './liftProgression.js';
+import { resolveProgram } from './strength/program.js';
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
@@ -307,13 +308,18 @@ function gatesFor(intent, isLast, profile, totalSessions) {
 // ---------------------------------------------------------------------------
 // Per-week assembly
 // ---------------------------------------------------------------------------
-function buildDisciplineSpecs(discipline, count, ctx, profile) {
+function buildDisciplineSpecs(discipline, count, ctx, profile, program) {
   const common = { intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, taperMult: ctx.taperMult, winp: ctx.winp, weekNum: ctx.weekNum, progress: ctx.progress, phaseWeeks: ctx.phaseWeeks, level: levelFor(discipline, profile), minutes: ctx.minutes, access: profile.access || [], sex: profile.sex };
   // Strength / cross-training pull back during the race taper, like a deload.
   const lighten = ctx.deload || ctx.taper;
   switch (discipline) {
     case 'gym':
-      return strength.buildWeek({ ...common, deload: lighten, gymDays: count, style: strengthStyle(profile), lifts: resolveLifts(profile) });
+      return strength.buildWeek({
+        ...common, deload: lighten, gymDays: count, lifts: resolveLifts(profile),
+        // Goal-resolved programming: style + per-muscle emphasis + overall volume.
+        style: program.style, emphasis: program.emphasis, volumeScalar: program.volumeScalar,
+        power: program.power, sport: program.sport
+      });
     case 'run':
       return running.buildWeek({ ...common, runDays: count, goal: profile.run_goal || { distance: '10k', current: null } });
     case 'swim':
@@ -326,17 +332,18 @@ function buildDisciplineSpecs(discipline, count, ctx, profile) {
 }
 
 export function generatePlan(profile = {}) {
+  const program = resolveProgram(profile);
   const availability = profile.availability || {};
   const totalDays = Math.max(1, Math.min(7, availability.days_per_week || 3));
   const minutes = availability.session_minutes || 60;
 
-  let disciplines = focusToDisciplines(profile.focus || []);
-  // The chosen primary sport leads — it gets the spare day in the allocation.
-  if (profile.primary && disciplines.includes(profile.primary)) {
-    disciplines = [profile.primary, ...disciplines.filter(d => d !== profile.primary)];
-  }
-  const alloc = dayAllocation(profile, disciplines, totalDays);
-  const totalSessions = Object.values(alloc).reduce((a, b) => a + b, 0) || totalDays;
+  // Strength-focused: the plan is ALWAYS a gym plan. A supported sport biases the
+  // gym programming via resolveProgram (emphasis/volume/power), not separate
+  // endurance sessions — so every training day is a gym day. (The run/swim/cycle
+  // builders below remain in the file but are no longer reached.)
+  const disciplines = ['gym'];
+  const alloc = { gym: totalDays };
+  const totalSessions = totalDays;
 
   const allowDoubles = profile.doubles !== false;
   const longRunDay = disciplines.includes('run') ? (profile.long_run_day || 'sat') : null;
@@ -375,7 +382,7 @@ export function generatePlan(profile = {}) {
       // Gather every discipline's sport sessions, plus any supplemental strength,
       // then schedule them (supplemental folds in as easy-day doubles / rest days).
       const sportSpecs = [];
-      Object.keys(alloc).forEach(d => sportSpecs.push(...buildDisciplineSpecs(d, alloc[d], ctx, profile)));
+      Object.keys(alloc).forEach(d => sportSpecs.push(...buildDisciplineSpecs(d, alloc[d], ctx, profile, program)));
 
       // Triathlon: swap one ride for a brick (transition practice) in build/peak.
       if ((profile.focus || []).includes('triathlon') && seg.intent !== 'base' && !deload) {

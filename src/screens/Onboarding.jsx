@@ -12,7 +12,7 @@
 import { useTrainingStore } from '../stores/trainingStore.js';
 import OnboardingWizard from '../components/OnboardingWizard.jsx';
 import {
-  BLANK_ANSWERS, answersToProfilePatch, answersToGoalRows, answersToInjuries
+  BLANK_ANSWERS, answersToProfilePatch, answersToInjuries
 } from '../lib/onboardingModel.js';
 
 export default function Onboarding() {
@@ -26,13 +26,12 @@ export default function Onboarding() {
     name: profile.name || '',
     age: profile.age ?? '',
     sex: profile.sex || '',
-    height_cm: profile.height_cm ?? '',
     bodyweight_kg: profile.bodyweight_kg ?? ''
   };
 
   const handleComplete = async (a) => {
     await updateProfile(answersToProfilePatch(a));
-    await setGoals(answersToGoalRows(a));
+    await setGoals([]);   // strength-focused: no separate ranked goals; clear any legacy ones
     for (const inj of answersToInjuries(a)) await addInjury(inj);
     // onboarded:true is now in the store → App.jsx gate unmounts this screen.
   };
