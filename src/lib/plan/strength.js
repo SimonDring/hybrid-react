@@ -44,7 +44,8 @@ export function buildWeek(ctx = {}) {
 
   const targets = weeklyMuscleTargets({
     style, intent: ctx.intent, level: ctx.level,
-    weekInPhase: ctx.winp, phaseWeeks: ctx.phaseWeeks, deload
+    weekInPhase: ctx.winp, phaseWeeks: ctx.phaseWeeks, deload,
+    emphasis: ctx.emphasis, volumeScalar: ctx.volumeScalar
   });
 
   // One slot per gym day, all at the planned session length with the athlete's

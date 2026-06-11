@@ -20,11 +20,16 @@ rows are marked deleted, not physically removed, so sync stays consistent).
 Key fields: `name`, `email`, `profile` (jsonb), `settings` (jsonb: units, theme,
 default pool length). A trigger auto-creates this row on signup; signup is gated
 by the `allowed_emails` invite list.
-`profile` jsonb holds: `age`, `bodyweight_kg`, `height_cm`, `sex`, ranked
-`goals[]`, and the onboarding capture — `onboarded` (bool), `focus[]` (sport
-keys), `experience{}` (focus→level), `availability{}` (days_per_week,
-session_minutes, days[]), `access[]` (equipment keys), `pool_length_m`,
-`markers` (free text). This is exactly what the AI reads for plan generation.
+`profile` jsonb holds: `age`, `bodyweight_kg`, `sex`, and the onboarding capture —
+`onboarded` (bool), and the strength-focused GOAL model: `goal_type`
+('build' | 'sport'), `strength_style` ('strength' | 'bodybuilding' | 'functional',
+when build), `sport` ('run' | 'cycle' | 'swim', when sport) + `sport_season`
+('in' | 'off'). Plus `experience{ gym: level }`, `availability{ days_per_week,
+session_minutes, days[] }`, `access[]` (equipment keys), `lifts{}` (optional 1RMs),
+`markers` (free text). `focus` is now always `['gym']` (the plan is always a gym
+plan; a supported sport biases the strength program). Legacy fields
+(`height_cm`, ranked `goals[]`, `run_goal`, `swim_goal`, `pool_length_m`,
+`long_run_day`) may persist on older rows but are no longer captured or used.
 
 **training_plans** — a user's plan(s).
 Key fields: `name`, `start_date`, `target_end_date`, `status`

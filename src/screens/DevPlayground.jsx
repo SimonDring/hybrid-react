@@ -25,73 +25,21 @@ import { generatePlan } from '../lib/PlanGenerator.js';
 import { activityFor } from '../data/activityTypes.js';
 import { volumeReport } from '../lib/plan/volume.js';
 import { weeklyMuscleTargets } from '../lib/strength/targets.js';
+import { resolveProgram } from '../lib/strength/program.js';
 import { MUSCLE_LABELS } from '../data/muscleVolume.js';
 
 const NOTES_KEY = 'htp_dev_review_notes';
 
-// A future date `n` weeks out (presets need real target dates to size the plan).
-function inWeeks(n) {
-  const d = new Date();
-  d.setDate(d.getDate() + n * 7);
-  return d.toISOString().slice(0, 10);
-}
-
-// Representative athletes — each is a full answer set merged over BLANK_ANSWERS.
+// Representative athletes for the new strength-focused model — each is a full
+// answer set merged over BLANK_ANSWERS.
 const PRESETS = [
-  {
-    name: 'Hybrid (gym+run+swim)',
-    answers: {
-      ...BLANK_ANSWERS, name: 'Test Hybrid', focus: ['gym', 'run', 'swim'], strengthStyle: 'functional',
-      experience: { gym: 'intermediate', run: 'intermediate', swim: 'beginner' }, primary: 'run',
-      runGoal: { distance: 'half', currentDistance: '5k', currentTime: '22:30' },
-      swimGoal: { distance_m: 2500, currentPace: '', currentDistance: '800' },
-      hasEvent: true, eventDate: inWeeks(14), lifts: { squat: '120', bench: '90', deadlift: '150' },
-      daysPerWeek: 6, sessionMinutes: 60, days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], longRunDay: 'sat', doubles: true, strengthAccess: 'full_gym', poolAccess: true
-    }
-  },
-  {
-    name: 'Half-marathoner',
-    answers: {
-      ...BLANK_ANSWERS, name: 'Test Runner', focus: ['run'], primary: 'run', experience: { run: 'intermediate' },
-      runGoal: { distance: 'half', currentDistance: '10k', currentTime: '50:00' },
-      hasEvent: true, eventDate: inWeeks(16),
-      daysPerWeek: 4, sessionMinutes: 60, days: ['tue', 'thu', 'sat', 'sun'], longRunDay: 'sun', doubles: true, strengthAccess: 'none'
-    }
-  },
-  {
-    name: 'Powerlifter (4-day)',
-    answers: {
-      ...BLANK_ANSWERS, name: 'Test Lifter', focus: ['gym'], primary: 'gym', strengthStyle: 'strength',
-      lifts: { squat: '160', bench: '110', deadlift: '200' },
-      experience: { gym: 'advanced' }, planWeeks: 12, daysPerWeek: 4, sessionMinutes: 75, days: ['mon', 'tue', 'thu', 'fri'],
-      strengthAccess: 'full_gym', otherGoals: ['Get stronger']
-    }
-  },
-  {
-    name: 'Bodybuilder (6-day PPL)',
-    answers: {
-      ...BLANK_ANSWERS, name: 'Test Physique', focus: ['gym'], primary: 'gym', strengthStyle: 'bodybuilding',
-      experience: { gym: 'intermediate' }, planWeeks: 16, daysPerWeek: 6, sessionMinutes: 75,
-      days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], strengthAccess: 'full_gym'
-    }
-  },
-  {
-    name: 'Triathlete',
-    answers: {
-      ...BLANK_ANSWERS, name: 'Test Tri', focus: ['triathlon'], primary: 'run', experience: { triathlon: 'intermediate' },
-      runGoal: { distance: '10k', currentDistance: '10k', currentTime: '55:00' },
-      swimGoal: { distance_m: 1500, currentPace: '1:50', currentDistance: '' },
-      hasEvent: true, eventDate: inWeeks(18),
-      daysPerWeek: 6, sessionMinutes: 60, days: [], longRunDay: 'sat', doubles: true, strengthAccess: 'full_gym', poolAccess: true
-    }
-  },
-  {
-    name: 'Beginner, no equipment',
-    answers: {
-      ...BLANK_ANSWERS, name: 'Test Beginner', focus: ['general_health'], primary: 'general', experience: { general_health: 'beginner' },
-      planWeeks: 12, daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], strengthAccess: 'none'
-    }
-  }
+  { name: 'Strength (4d)', answers: { ...BLANK_ANSWERS, name: 'Test Strength', goalType: 'build', strengthStyle: 'strength', experienceLevel: 'advanced', lifts: { squat: '160', bench: '110', deadlift: '200' }, daysPerWeek: 4, sessionMinutes: 75, days: ['mon', 'tue', 'thu', 'fri'], strengthAccess: 'full_gym' } },
+  { name: 'Muscle (5d)', answers: { ...BLANK_ANSWERS, name: 'Test Muscle', goalType: 'build', strengthStyle: 'bodybuilding', experienceLevel: 'intermediate', daysPerWeek: 5, sessionMinutes: 60, days: ['mon', 'tue', 'wed', 'thu', 'fri'], strengthAccess: 'full_gym' } },
+  { name: 'Functional (3d)', answers: { ...BLANK_ANSWERS, name: 'Test Functional', goalType: 'build', strengthStyle: 'functional', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], strengthAccess: 'home_weights' } },
+  { name: 'Runner support · off', answers: { ...BLANK_ANSWERS, name: 'Test Runner', goalType: 'sport', sport: 'run', sportSeason: 'off', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], strengthAccess: 'full_gym' } },
+  { name: 'Cyclist support · in', answers: { ...BLANK_ANSWERS, name: 'Test Cyclist', goalType: 'sport', sport: 'cycle', sportSeason: 'in', experienceLevel: 'intermediate', daysPerWeek: 2, sessionMinutes: 45, days: ['tue', 'fri'], strengthAccess: 'full_gym' } },
+  { name: 'Swimmer support · off', answers: { ...BLANK_ANSWERS, name: 'Test Swimmer', goalType: 'sport', sport: 'swim', sportSeason: 'off', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], strengthAccess: 'full_gym' } },
+  { name: 'Busy · 20-min bodyweight', answers: { ...BLANK_ANSWERS, name: 'Test Busy', goalType: 'build', strengthStyle: 'functional', experienceLevel: 'beginner', daysPerWeek: 3, sessionMinutes: 20, days: ['mon', 'wed', 'fri'], strengthAccess: 'none' } }
 ];
 
 const card = { background: 'var(--bg-surface)', border: '1px solid var(--hairline)', borderRadius: 14, padding: 16, marginBottom: 14 };
@@ -149,10 +97,11 @@ function fillColor(actual, target) {
 }
 function VolumeReport({ phase, week, profile }) {
   const { rows, skipped } = volumeReport(week.sessions);
+  const prog = resolveProgram(profile);
   const targets = weeklyMuscleTargets({
-    style: profile.strength_style || 'functional', intent: intentOf(phase.title),
+    style: prog.style, intent: intentOf(phase.title),
     weekInPhase: week.num - phase.weekStart + 1, phaseWeeks: phase.weekEnd - phase.weekStart + 1,
-    level: gymLevel(profile), deload: week.deload
+    level: prog.level, deload: week.deload, emphasis: prog.emphasis, volumeScalar: prog.volumeScalar
   });
   const active = rows.filter(r => r.sets > 0 || targets[r.muscle] > 0);
   if (!active.length) return null;

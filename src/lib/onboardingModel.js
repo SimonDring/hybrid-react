@@ -1,14 +1,15 @@
 /**
  * onboardingModel — the pure (non-UI) part of onboarding: the answer shape and
- * the mapping from answers → users.profile shape that the plan engines consume.
+ * the mapping from answers → users.profile shape that the engine consumes.
+ *
+ * The app is strength/gym focused. The plan is ALWAYS a gym plan; the goal forks:
+ *   • Build me   → strength_style (strength | bodybuilding | functional)
+ *   • Support a sport → sport (run | cycle | swim) + season (in | off), which
+ *     biases the strength program (heavier, lower-volume, sport-specific emphasis).
  *
  * Kept separate from OnboardingWizard.jsx (the UI) so it can be unit-tested and
- * reused without React. Both the production Onboarding screen and the /dev
- * tester convert answers through these helpers, so the written profile and the
- * dev-generated plan always agree.
+ * reused (the production Onboarding screen + the /dev tester both go through here).
  */
-
-import { focusToDisciplines } from './PlanGenerator.js';
 
 export function numOrNull(v) {
   if (v === '' || v == null) return null;
@@ -17,87 +18,70 @@ export function numOrNull(v) {
 }
 
 // A complete, empty answer set — every caller seeds from this.
-// `focus` is a single-choice array ([] or [key]) — triathlon expands to 3
-// disciplines downstream. `strengthAccess` (full_gym|home_weights|none) +
-// `poolAccess` are composed into the legacy `access` array in the patch.
 export const BLANK_ANSWERS = {
-  name: '', age: '', sex: '', height_cm: '', bodyweight_kg: '', activityLevel: '',
-  focus: [], primary: '', strengthStyle: 'functional',
+  name: '', age: '', sex: '', bodyweight_kg: '',
+  goalType: '',                 // 'build' | 'sport'
+  strengthStyle: 'strength',    // build: 'strength' | 'bodybuilding' | 'functional'
+  sport: '',                    // sport: 'run' | 'cycle' | 'swim'
+  sportSeason: 'off',           // 'in' | 'off'
+  experienceLevel: 'intermediate',
   lifts: { squat: '', bench: '', deadlift: '' },
-  experience: {},
-  runGoal: { distance: '', targetTime: '', currentDistance: '5k', currentTime: '' },
-  swimGoal: { distance_m: 2000, currentPace: '', currentDistance: '' },
-  otherGoals: [],
-  // Timing: start date + either an event date or a block length (weeks).
-  startDate: '', hasEvent: false, eventDate: '', planWeeks: 16,
-  daysPerWeek: null, sessionMinutes: 60, days: [], allocation: {},
-  longRunDay: 'sat', doubles: true,
-  strengthAccess: '', poolAccess: false, poolLengthM: 25, injuries: [], notes: ''
+  daysPerWeek: null, sessionMinutes: 60, days: [],
+  strengthAccess: '',           // 'full_gym' | 'home_weights' | 'none'
+  injuries: [], notes: ''
 };
-
-// Build the legacy access array the engines expect from the branched answers.
-function composeAccess(a, disciplines) {
-  const access = [];
-  if (a.strengthAccess) access.push(a.strengthAccess);        // full_gym | home_weights | none
-  if (disciplines.includes('swim') && a.poolAccess) access.push('pool');
-  if (disciplines.includes('cycle')) access.push('bike');     // implied for cyclists/triathletes
-  return access;
-}
 
 export function answersToProfilePatch(a) {
   const today = new Date().toISOString().slice(0, 10);
-  const disciplines = focusToDisciplines(a.focus);
-  const hasGym = disciplines.includes('gym');
-  const hasRun = disciplines.includes('run');
-  const hasSwim = disciplines.includes('swim');
-  const multi = disciplines.length > 1;
-  const runTime = (a.runGoal.currentTime || '').trim();
-  const swimPace = (a.swimGoal.currentPace || '').trim();
-  const runCurrent = runTime
-    ? { distance: a.runGoal.currentDistance || a.runGoal.distance || '5k', time: runTime } : null;
-  const swimCurrent = (swimPace || a.swimGoal.currentDistance)
-    ? { pace_per_100: swimPace || null, distance_m: numOrNull(a.swimGoal.currentDistance) } : null;
-  // Event date (if any) anchors the goal target; otherwise the block length drives it.
-  const target = a.hasEvent ? (a.eventDate || '') : '';
-  const access = composeAccess(a, disciplines);
+  const isBuild = a.goalType === 'build';
+  const isSport = a.goalType === 'sport';
+  const hasBarbell = a.strengthAccess === 'full_gym' || a.strengthAccess === 'home_weights';
+  const access = a.strengthAccess ? [a.strengthAccess] : [];
+
   return {
-    plan_start_date: a.startDate || today,
-    plan_weeks: a.hasEvent ? null : (numOrNull(a.planWeeks) || 16),
-    name: a.name.trim(), age: numOrNull(a.age), sex: a.sex || null,
-    height_cm: numOrNull(a.height_cm), bodyweight_kg: numOrNull(a.bodyweight_kg),
-    activity_level: a.activityLevel || null,
-    focus: a.focus,
-    primary: a.primary || disciplines[0] || null,
-    strength_style: hasGym ? a.strengthStyle : null,
-    lifts: hasGym ? { squat: numOrNull(a.lifts.squat), bench: numOrNull(a.lifts.bench), deadlift: numOrNull(a.lifts.deadlift) } : null,
-    experience: a.experience,
-    run_goal: hasRun ? { distance: a.runGoal.distance || null, target_date: target, target_time: (a.runGoal.targetTime || '').trim() || null, current: runCurrent } : null,
-    swim_goal: hasSwim ? { distance_m: a.swimGoal.distance_m, target_date: target, current: swimCurrent } : null,
+    plan_start_date: today,
+    plan_weeks: 16,                          // ongoing periodised block (no event date)
+    name: (a.name || '').trim(), age: numOrNull(a.age), sex: a.sex || null,
+    bodyweight_kg: numOrNull(a.bodyweight_kg),
+
+    // Goal model
+    goal_type: a.goalType || null,
+    focus: ['gym'],                          // the plan is always a gym plan now
+    primary: 'gym',
+    strength_style: isBuild ? (a.strengthStyle || 'strength') : 'strength',
+    sport: isSport ? (a.sport || null) : null,
+    sport_season: isSport ? (a.sportSeason || 'off') : null,
+
+    experience: { gym: a.experienceLevel || 'intermediate' },
+    lifts: hasBarbell
+      ? { squat: numOrNull(a.lifts.squat), bench: numOrNull(a.lifts.bench), deadlift: numOrNull(a.lifts.deadlift) }
+      : null,
+
     availability: {
-      days_per_week: a.daysPerWeek, session_minutes: a.sessionMinutes, days: a.days,
-      allocation: multi ? a.allocation : (disciplines.length === 1 ? { [disciplines[0]]: a.daysPerWeek } : {})
+      days_per_week: a.daysPerWeek,
+      session_minutes: a.sessionMinutes,
+      days: a.days,
+      allocation: { gym: a.daysPerWeek }
     },
-    long_run_day: a.longRunDay || 'sat',
-    doubles: a.doubles !== false,
     access,
-    pool_length_m: access.includes('pool') ? numOrNull(a.poolLengthM) : null,
-    markers: a.notes.trim(),
+    markers: (a.notes || '').trim(),
+
+    // Endurance-era fields explicitly cleared (no longer captured).
+    run_goal: null, swim_goal: null, long_run_day: null, doubles: true,
+    pool_length_m: null, goals: [],
+
     onboarded: true
   };
 }
 
-export function answersToGoalRows(a) {
-  return (a.otherGoals || []).map((label, i) => ({ rank: i + 1, label, target_date: '' }));
-}
-
 export function answersToInjuries(a) {
   const today = new Date().toISOString().slice(0, 10);
-  return a.injuries.filter(i => i.title.trim()).map(inj => ({
+  return (a.injuries || []).filter(i => i.title.trim()).map(inj => ({
     title: inj.title.trim(), body_part: (inj.body_part || '').trim(), status: 'active', date_occurred: today
   }));
 }
 
-// Full profile object (patch + goals merged) — what generatePlan() consumes.
+// Full profile object — what generatePlan() consumes (no separate ranked goals now).
 export function answersToProfile(a) {
-  return { ...answersToProfilePatch(a), goals: answersToGoalRows(a) };
+  return { ...answersToProfilePatch(a), goals: [] };
 }
