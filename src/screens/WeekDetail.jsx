@@ -17,18 +17,15 @@ function dayForSession(title) {
   return null;
 }
 
-// Derive a short type tag from the session title
+// Derive a short type tag from the session title. Gym-relevant; mid-bright colours
+// that read on both light and dark surfaces.
 function sessionType(title) {
   const t = title.toLowerCase();
-  if (t.includes('swim')) return { label: 'SWIM', color: '#4a5d3a' };
-  if (t.includes('run')) return { label: 'RUN', color: '#b04a2e' };
-  if (t.includes('ride') || t.includes('cycle') || t.includes('bike')) return { label: 'RIDE', color: '#3a6d7a' };
-  if (t.includes('upper')) return { label: 'UPPER', color: '#c89a3a' };
-  if (t.includes('lower')) return { label: 'LOWER', color: '#7a5d3a' };
-  if (t.includes('ski')) return { label: 'SKI', color: '#4a5d7a' };
-  if (t.includes('africa') || t.includes('deload')) return { label: 'DELOAD', color: '#b04a2e' };
-  if (t.includes('race') || t.includes('half marathon')) return { label: 'RACE', color: '#b04a2e' };
-  return { label: 'LIFT', color: '#7a5d3a' };
+  if (t.includes('deload')) return { label: 'DELOAD', color: '#c89a3a' };
+  if (t.includes('full body')) return { label: 'FULL', color: '#5a9bb5' };
+  if (t.includes('upper') || t.includes('push') || t.includes('pull')) return { label: 'UPPER', color: '#d98a3e' };
+  if (t.includes('lower') || t.includes('leg') || t.includes('quad') || t.includes('squat') || t.includes('posterior')) return { label: 'LOWER', color: '#d2603a' };
+  return { label: 'LIFT', color: '#cf8a4e' };
 }
 
 export default function WeekDetail() {
@@ -62,7 +59,7 @@ export default function WeekDetail() {
 
       {/* Progress line */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-        <div style={{ flex: 1, height: 4, background: 'var(--border)', borderRadius: 2, overflow: 'hidden' }}>
+        <div style={{ flex: 1, height: 4, background: 'var(--hairline)', borderRadius: 2, overflow: 'hidden' }}>
           <div style={{
             width: `${Math.round(completedCount / week.sessions.length * 100)}%`,
             height: '100%',
@@ -140,8 +137,8 @@ export default function WeekDetail() {
                 padding: '8px 11px',
                 background: isDone
                   ? 'rgba(74,93,58,0.07)'
-                  : 'var(--card-bg)',
-                border: '1px solid var(--border)',
+                  : 'var(--bg-surface)',
+                border: '1px solid var(--hairline)',
                 borderRadius: 11,
                 textAlign: 'left',
                 cursor: 'pointer',
@@ -191,8 +188,8 @@ export default function WeekDetail() {
                     fontSize: 9,
                     fontWeight: 800,
                     letterSpacing: '0.08em',
-                    color: '#4a5d3a',
-                    background: 'rgba(74,93,58,0.12)',
+                    color: 'var(--moss)',
+                    background: 'rgba(120,180,80,0.14)',
                     borderRadius: 6,
                     padding: '3px 7px'
                   }}>
@@ -204,8 +201,8 @@ export default function WeekDetail() {
                     fontSize: 9,
                     fontWeight: 800,
                     letterSpacing: '0.08em',
-                    color: '#b04a2e',
-                    background: 'rgba(176,74,46,0.12)',
+                    color: 'var(--rust)',
+                    background: 'rgba(232,90,50,0.14)',
                     borderRadius: 6,
                     padding: '3px 7px'
                   }}>

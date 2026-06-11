@@ -14,41 +14,32 @@ import ScreenContainer from './components/ScreenContainer.jsx';
 
 import Home from './screens/Home.jsx';
 import TrainNow from './screens/TrainNow.jsx';
-import Phases from './screens/Phases.jsx';
+import PlanScreen from './screens/Plan.jsx';
 import PhaseDetail from './screens/PhaseDetail.jsx';
 import WeekDetail from './screens/WeekDetail.jsx';
 import SessionDetail from './screens/SessionDetail.jsx';
-import Tracking from './screens/Tracking.jsx';
-import Checkin from './screens/Checkin.jsx';
+import Progress from './screens/Progress.jsx';
 import Wearables from './screens/Wearables.jsx';
-import Metrics from './screens/Metrics.jsx';
 import Trends from './screens/Trends.jsx';
-import Log from './screens/Log.jsx';
 import Profile from './screens/Profile.jsx';
 import Injuries from './screens/Injuries.jsx';
-import QuarterlyReview from './screens/QuarterlyReview.jsx';
 import Settings from './screens/Settings.jsx';
 import Coach from './screens/Coach.jsx';
 
 const routeMeta = {
-  '/': { title: 'Home', topLevel: true, tab: 'today' },
+  '/': { title: 'Today', topLevel: true, tab: 'today' },
   '/train-now': { title: 'Train now', topLevel: false, tab: 'today' },
-  '/phases': { title: 'Phases', topLevel: true, tab: 'phases' },
-  '/phases/:phaseId': { title: 'Phase', topLevel: false, tab: 'phases' },
-  '/phases/:phaseId/weeks/:weekNum': { title: 'Week', topLevel: false, tab: 'phases' },
-  '/phases/:phaseId/weeks/:weekNum/sessions/:sessionIdx': { title: 'Session', topLevel: false, tab: 'phases' },
-  '/tracking': { title: 'Tracking', topLevel: true, tab: 'tracking' },
-  '/tracking/checkin': { title: 'Weekly check-in', topLevel: false, tab: 'tracking' },
-  '/tracking/wearables': { title: 'Wearable data', topLevel: false, tab: 'tracking' },
-  '/tracking/metrics': { title: 'Key metrics', topLevel: false, tab: 'tracking' },
-  '/tracking/trends': { title: 'Trends', topLevel: false, tab: 'tracking' },
-  '/tracking/log': { title: 'Log history', topLevel: false, tab: 'tracking' },
-  '/tracking/injuries': { title: 'Injury log', topLevel: false, tab: 'tracking' },
+  '/plan': { title: 'Plan', topLevel: true, tab: 'plan' },
+  '/phases/:phaseId': { title: 'Phase', topLevel: false, tab: 'plan' },
+  '/phases/:phaseId/weeks/:weekNum': { title: 'Week', topLevel: false, tab: 'plan' },
+  '/phases/:phaseId/weeks/:weekNum/sessions/:sessionIdx': { title: 'Session', topLevel: false, tab: 'plan' },
+  '/progress': { title: 'Progress', topLevel: true, tab: 'progress' },
+  '/tracking/wearables': { title: 'Daily metrics', topLevel: false, tab: 'progress' },
+  '/tracking/trends': { title: 'Trends', topLevel: false, tab: 'progress' },
+  '/tracking/injuries': { title: 'Injury log', topLevel: false, tab: 'profile' },
   '/profile': { title: 'Profile', topLevel: true, tab: 'profile' },
   '/profile/injuries': { title: 'Injury log', topLevel: false, tab: 'profile' },
-  '/profile/review': { title: 'Quarterly review', topLevel: false, tab: 'profile' },
-  '/settings': { title: 'Settings', topLevel: false, tab: 'profile' },
-  '/coach': { title: 'Coach', topLevel: true, tab: 'coach' }
+  '/settings': { title: 'Settings', topLevel: false, tab: 'profile' }
 };
 
 function matchRoute(pathname) {
@@ -127,20 +118,18 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/train-now" element={<TrainNow />} />
-          <Route path="/phases" element={<Phases />} />
+          <Route path="/plan" element={<PlanScreen />} />
+          <Route path="/phases" element={<Navigate to="/plan" replace />} />
           <Route path="/phases/:phaseId" element={<PhaseDetail />} />
           <Route path="/phases/:phaseId/weeks/:weekNum" element={<WeekDetail />} />
           <Route path="/phases/:phaseId/weeks/:weekNum/sessions/:sessionIdx" element={<SessionDetail />} />
-          <Route path="/tracking" element={<Tracking />} />
-          <Route path="/tracking/checkin" element={<Checkin />} />
+          <Route path="/progress" element={<Progress />} />
+          <Route path="/tracking" element={<Navigate to="/progress" replace />} />
           <Route path="/tracking/wearables" element={<Wearables />} />
-          <Route path="/tracking/metrics" element={<Metrics />} />
           <Route path="/tracking/trends" element={<Trends />} />
-          <Route path="/tracking/log" element={<Log />} />
           <Route path="/tracking/injuries" element={<Injuries />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/injuries" element={<Injuries />} />
-          <Route path="/profile/review" element={<QuarterlyReview />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/coach" element={<Coach />} />
           <Route path="*" element={<Navigate to="/" replace />} />
