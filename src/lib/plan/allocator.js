@@ -118,24 +118,89 @@ function makeItem(ex, idx, s, style, deload, repBump) {
 // to slot, instead of always picking the same exercise.
 function hash(str) { let h = 0; for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0; return Math.abs(h); }
 
-// Per-slot time budget → roughly how many working sets fit (~3.3 min/set incl.
-// rest + transitions, minus a short warm-up). Clamped to a sane range.
-function slotMaxSets(minutes) {
-  return Math.max(4, Math.min(24, Math.round((minutes - 8) / 3.3)));
+// Wall-clock minutes a set roughly costs, by role. Supersetting compresses the
+// non-primary work (it's performed in another exercise's rest period), so paired
+// accessory / filler sets are cheap — this is exactly what lets a short session
+// still hit real volume instead of "3×8 squats and done" (Iversen et al. 2021).
+function perSetMin(ex) {
+  if (ex.role === 'primary') return 2.8;                                    // heavy main, fuller rest
+  if (ex.role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf') return 1.2; // light filler
+  return 1.5;                                                               // accessory, supersetted
+}
+// Usable minutes after a brief warm-up (time-efficient training skips long warm-ups).
+function slotBudget(minutes) { return Math.max(8, (minutes || 60) - 4); }
+
+// ---- session structuring: supersets, antagonist pairs, rest-gap fillers ----
+// Two exercises share a muscle? (then they compete — don't pair them).
+function shareMuscle(a, b) {
+  const ca = contribOf(a), cb = contribOf(b);
+  for (const m in ca) if (cb[m]) return true;
+  return false;
+}
+// A light "filler" that can slot into a heavy lift's rest without compromising it.
+function isFiller(ex) { return ex.role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf'; }
+// Can these be supersetted? Not two heavy mains; never overlapping muscles (so
+// antagonist push↔pull, or compound↔unrelated isolation, but not squat↔deadlift).
+function canPair(a, b) {
+  if (a.id === b.id) return false;
+  if (a.role === 'primary' && b.role === 'primary') return false;
+  return !shareMuscle(a, b);
+}
+
+// Turn a flat list of picks (each { ex, item }) into a structured session:
+// heavy mains get a non-competing filler in their rest gap; remaining accessories
+// pair into antagonist/non-competing supersets. Emits items renumbered A1/A2…
+// with `superset` + `group` flags for rendering. Volume is unchanged.
+function structureItems(picks) {
+  const LET = 'ABCDEFGH';
+  const mains = [], rest = [];
+  picks.forEach(p => (p.ex.role === 'primary' ? mains : rest).push(p));
+  const usedRest = new Set();
+  const blocks = [];
+
+  for (const m of mains) {
+    let fi = -1;
+    for (let i = 0; i < rest.length; i++) {
+      if (!usedRest.has(i) && isFiller(rest[i].ex) && canPair(m.ex, rest[i].ex)) { fi = i; break; }
+    }
+    if (fi >= 0) { usedRest.add(fi); blocks.push([m, rest[fi]]); } else blocks.push([m]);
+  }
+  const rem = rest.map((p, i) => ({ p, i })).filter(x => !usedRest.has(x.i));
+  const taken = new Set();
+  for (let i = 0; i < rem.length; i++) {
+    if (taken.has(i)) continue;
+    let j = -1;
+    for (let k = i + 1; k < rem.length; k++) {
+      if (!taken.has(k) && canPair(rem[i].p.ex, rem[k].p.ex)) { j = k; break; }
+    }
+    if (j >= 0) { taken.add(i); taken.add(j); blocks.push([rem[i].p, rem[j].p]); }
+    else { taken.add(i); blocks.push([rem[i].p]); }
+  }
+
+  const items = [];
+  blocks.forEach((blk, bi) => {
+    const g = LET[Math.min(bi, 7)];
+    const paired = blk.length > 1;
+    blk.forEach((p, pos) => items.push({ ...p.item, num: `${g}${pos + 1}`, group: g, superset: paired }));
+  });
+  return items;
 }
 
 // Pick the single best exercise to add to a slot right now, or null when nothing
 // left pays down a deficit (within the slot's remaining time). `targets` is the
 // full per-muscle target (for urgency), `deficit` the running remainder.
-function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum) {
+function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, fillersOnly = false) {
   let best = null, bestScore = 0.25; // threshold: ignore near-useless picks
   for (const ex of EXERCISES) {
     if (!slot.equip.has(ex.equip)) continue;
     if (ex.level > slot.level) continue;
     if (slot.exUsed.has(ex.id)) continue;
+    if (fillersOnly && !isFiller(ex)) continue;   // filler pass: only light rest-gap work
     const sets = roleSetCount(ex, s, style);
     if (sets <= 0) continue;
-    if (slot.usedSets > 0 && slot.usedSets + sets > slot.maxSets + 1) continue; // would overflow
+    const cost = sets * perSetMin(ex);
+    // Fillers slot into a main's rest gap, so they don't consume the time budget.
+    if (!fillersOnly && slot.timeUsed > 0 && slot.timeUsed + cost > slot.budget + 2) continue;
 
     const contrib = contribOf(ex);
     let useful = 0;
@@ -152,7 +217,7 @@ function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum) {
 
     let score = useful;
     if (slot.patternsUsed.has(ex.pattern)) score *= 0.6;          // variety within a session
-    if (slot.usedSets < 4) score *= ex.role === 'primary' ? 1.2 : 0.85; // open on a compound
+    if (slot.timeUsed < 5) score *= ex.role === 'primary' ? 1.2 : 0.85; // open on a compound
     if (ex.pattern === 'hpull' || ex.pattern === 'vpull') score *= 1.05; // posture pull-lean
     score += (hash(ex.id) + weekNum + slot.idx) % 7 * 0.001;       // rotation tie-break
 
@@ -212,9 +277,9 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     minutes: slot.minutes || 60,
     equip: availableEquip(slot.equip || ctx.access || []),
     level: LEVELS[ctx.level] ?? 0,
-    maxSets: slotMaxSets(slot.minutes || 60),
-    usedSets: 0,
-    items: [],
+    budget: slotBudget(slot.minutes || 60),
+    timeUsed: 0,
+    picks: [],       // { ex, item } — structured into supersets at finalise
     patternsUsed: new Set(),
     exUsed: new Set(),
     delivered: {},   // muscle → sets delivered IN THIS SLOT (for perSlotCap)
@@ -232,8 +297,8 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
 
   const place = (slot, pick) => {
     const { ex, sets, contrib } = pick;
-    slot.items.push(makeItem(ex, slot.items.length, s, style, deload, repBump));
-    slot.usedSets += sets;
+    slot.picks.push({ ex, item: makeItem(ex, slot.picks.length, s, style, deload, repBump) });
+    slot.timeUsed += sets * perSetMin(ex);
     slot.patternsUsed.add(ex.pattern);
     slot.exUsed.add(ex.id);
     for (const m in contrib) {
@@ -263,7 +328,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   while (progressed) {
     progressed = false;
     for (const slot of work) {
-      if (slot.usedSets >= slot.maxSets) continue;
+      if (slot.timeUsed >= slot.budget) continue;
       const pick = bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum);
       if (!pick) continue;
       place(slot, pick);
@@ -274,37 +339,47 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   // Fallback: if a slot ended up empty (e.g. tiny remaining target on a reflow),
   // give it light maintenance work against the full target so no session is blank.
   for (const slot of work) {
-    if (slot.items.length) continue;
+    if (slot.picks.length) continue;
     const maint = { ...targets };
     let go = true;
-    while (go && slot.usedSets < slot.maxSets) {
+    while (go && slot.timeUsed < slot.budget) {
       const pick = bestExercise(slot, targets, maint, perSlotCap, s, style, weekNum);
       if (!pick) { go = false; break; }
-      slot.items.push(makeItem(pick.ex, slot.items.length, s, style, deload, repBump));
-      slot.usedSets += pick.sets;
-      slot.patternsUsed.add(pick.ex.pattern);
-      slot.exUsed.add(pick.ex.id);
-      for (const m in pick.contrib) {
-        const v = pick.sets * pick.contrib[m];
-        maint[m] -= v; slot.muscleVol[m] = (slot.muscleVol[m] || 0) + v;
-      }
+      place(slot, pick);
+      for (const m in pick.contrib) maint[m] -= pick.sets * pick.contrib[m];
     }
   }
 
-  // Finalise each slot into a session spec.
+  // Filler pass: add light, non-competing work (calves, core, rear delts, cuff)
+  // to use the rest gaps of the heavy lifts — extra volume "for free" toward the
+  // weekly target, even in a powerlifting session (the "calf raises between bench
+  // sets" idea). One filler per main (+1), placed against the biggest deficits.
+  for (const slot of work) {
+    const numMains = Math.max(1, slot.picks.filter(p => p.ex.role === 'primary').length);
+    let added = 0;
+    while (added < numMains + 1) {
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, true);
+      if (!pick) break;
+      place(slot, pick);
+      added++;
+    }
+  }
+
+  // Finalise each slot: structure into supersets/fillers, then a session spec.
   return work.map(slot => {
-    applyWeights(slot.items, ctx.lifts || {});
+    const items = structureItems(slot.picks);
+    applyWeights(items, ctx.lifts || {});
     const total = Object.values(slot.muscleVol).reduce((a, b) => a + b, 0) || 1;
     const lower = (slot.muscleVol.quads || 0) + (slot.muscleVol.hamstrings || 0) +
                   (slot.muscleVol.glutes || 0) + (slot.muscleVol.calves || 0);
     // A single rounded ESTIMATE — the plan prescribes the sets/RPE/rest, so exact
-    // minutes are indicative only (a precise "31–41 min" range reads false).
+    // minutes are indicative only.
     const duration = `~${Math.round(slot.minutes / 5) * 5} min`;
     return {
       discipline: 'gym',
       focus: focusLabel(slot.muscleVol),
       duration,
-      items: slot.items,
+      items,
       intensity: deload ? 'moderate' : 'hard',
       lowerBody: lower >= 0.4 * total
     };

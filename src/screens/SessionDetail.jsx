@@ -109,6 +109,14 @@ export default function SessionDetail() {
         )}
       </p>
 
+      {session.items.some(it => it.superset) && (
+        <div className="callout slate" style={{ marginBottom: 16, fontSize: 13 }}>
+          <strong>Supersets</strong> — exercises that share a letter (A1 + A2) are paired.
+          Alternate them with short rest: it saves time and packs in volume without
+          tiring the main lift.
+        </div>
+      )}
+
       {/* Exercise table — columns driven by each item's activity type */}
       {(() => {
         // Group consecutive items by activity type so each group gets its own
@@ -150,14 +158,14 @@ export default function SessionDetail() {
                   <div
                     key={i}
                     className={`gt-row ${isStarted ? 'checkable' : ''} ${done ? 'is-checked' : ''}`}
-                    style={{ borderLeft: `3px solid ${isTagged ? activity.accent : 'transparent'}` }}
+                    style={{ borderLeft: `3px solid ${item.superset ? 'var(--rust)' : isTagged ? activity.accent : 'transparent'}` }}
                     onClick={isStarted ? () => toggleItem(idx) : undefined}
                     role={isStarted ? 'button' : undefined}
                   >
                     <div className="gt-main" style={{ gridTemplateColumns: gridTemplate }}>
                       <div className="gt-ex">
                         {isStarted && <span className={`gt-check ${done ? 'on' : ''}`} aria-hidden="true">✓</span>}
-                        <span className="gt-num">{item.num}</span>
+                        <span className="gt-num" style={item.superset ? { color: 'var(--rust)' } : undefined}>{item.num}</span>
                         <span className="gt-name">{item.name}</span>
                         <button
                           className="gt-info"

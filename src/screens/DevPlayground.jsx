@@ -56,7 +56,7 @@ function ItemsTable({ session }) {
         const def = activityFor(it);
         return (
           <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'baseline', flexWrap: 'wrap', fontSize: 12, paddingBottom: 5, borderBottom: '1px solid var(--hairline)' }}>
-            <span style={{ fontWeight: 700, color: 'var(--txt-muted)', minWidth: 26 }}>{it.num}</span>
+            <span style={{ fontWeight: 700, color: it.superset ? 'var(--rust)' : 'var(--txt-muted)', minWidth: 26 }}>{it.num}</span>
             <span style={{ fontWeight: 600, color: 'var(--txt-strong)', flex: '1 1 120px' }}>{it.name || it.stroke}</span>
             {def.columns.map(col => {
               const v = col.accessor(it);

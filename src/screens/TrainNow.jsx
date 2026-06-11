@@ -33,7 +33,7 @@ function ItemRow({ item }) {
   const def = activityFor(item);
   return (
     <div style={{ display: 'flex', gap: 8, alignItems: 'baseline', flexWrap: 'wrap', fontSize: 13, padding: '8px 0', borderBottom: '1px solid var(--hairline)' }}>
-      <span style={{ fontWeight: 700, color: 'var(--txt-muted)', minWidth: 24 }}>{item.num}</span>
+      <span style={{ fontWeight: 700, color: item.superset ? 'var(--rust)' : 'var(--txt-muted)', minWidth: 24 }}>{item.num}</span>
       <span style={{ fontWeight: 600, color: 'var(--txt-strong)', flex: '1 1 130px' }}>{item.name}</span>
       {def.columns.map(col => {
         const v = col.accessor(item);
@@ -112,6 +112,11 @@ export default function TrainNow() {
             <div>
               {result.session.items.map((it, i) => <ItemRow key={i} item={it} />)}
             </div>
+            {result.session.items.some(it => it.superset) && (
+              <p style={{ fontSize: 11.5, color: 'var(--txt-muted)', margin: '10px 0 0', lineHeight: 1.4 }}>
+                Items sharing a letter (A1 + A2) are <strong style={{ color: 'var(--rust)' }}>supersets</strong> — alternate with short rest.
+              </p>
+            )}
           </div>
           {result.target ? (
             <>
