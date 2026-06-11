@@ -1,20 +1,22 @@
 import { useNavigate } from 'react-router-dom';
+import { useTrainingStore } from '../stores/trainingStore.js';
+import * as Plan from '../lib/PlanService.js';
 
 const TABS = [
   {
     id: 'today', path: '/',
     icon: <><path d="M3 12l9-9 9 9"></path><path d="M5 10v10h14V10"></path></>,
-    label: 'Home'
+    label: 'Today'
   },
   {
-    id: 'phases', path: '/phases',
+    id: 'plan', path: '/plan',
     icon: <><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="3" y1="10" x2="21" y2="10"></line><line x1="9" y1="4" x2="9" y2="20"></line></>,
-    label: 'Phases'
+    label: 'Plan'
   },
   {
-    id: 'tracking', path: '/tracking',
-    icon: <><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></>,
-    label: 'Tracking'
+    id: 'progress', path: '/progress',
+    icon: <><polyline points="3 17 9 11 13 15 21 7"></polyline><polyline points="15 7 21 7 21 13"></polyline></>,
+    label: 'Progress'
   },
   {
     id: 'profile', path: '/profile',
@@ -25,6 +27,15 @@ const TABS = [
 
 export default function TabBar({ activeTab }) {
   const navigate = useNavigate();
+
+  // Smart primary action: today's (or next) planned session if there's a plan,
+  // otherwise the on-demand Train Now flow — one tap to train from anywhere.
+  const startTrain = () => {
+    const sessions = useTrainingStore.getState().sessions || {};
+    const rec = Plan.getStartDate() ? Plan.recommendedSession(sessions) : null;
+    if (rec && rec.phase) navigate(`/phases/${rec.phase.id}/weeks/${rec.week.num}/sessions/${rec.sessionIdx}`);
+    else navigate('/train-now');
+  };
 
   const renderTab = (tab) => (
     <button
@@ -44,17 +55,13 @@ export default function TabBar({ activeTab }) {
     <nav className="tabbar" id="tabbar">
       <div className="tabbar-inner">
         {TABS.slice(0, 2).map(renderTab)}
-        <button
-          className={`tab-coach ${activeTab === 'coach' ? 'active' : ''}`}
-          onClick={() => navigate('/coach')}
-          aria-label="AI coach"
-        >
-          <span className="tab-coach-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        <button className="tab-train" onClick={startTrain} aria-label="Train">
+          <span className="tab-train-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
             </svg>
           </span>
-          <span className="tab-coach-label">Coach</span>
+          <span className="tab-train-label">Train</span>
         </button>
         {TABS.slice(2).map(renderTab)}
       </div>

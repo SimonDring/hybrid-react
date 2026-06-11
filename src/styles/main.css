@@ -467,7 +467,7 @@ html, body {
   padding: 4px 9px;
   border-radius: 100px;
 }
-.pt-status.current { color: var(--paper); background: var(--moss); }
+.pt-status.current { color: var(--on-success); background: var(--moss); }
 .pt-status.provisional { color: var(--ochre); background: rgba(200,154,58,0.13); }
 .phase-tile .pt-title { font-family: var(--serif); font-size: 19px; font-weight: 600; margin-bottom: 3px; letter-spacing: -0.01em; }
 .phase-tile .pt-range { font-family: var(--mono); font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
@@ -549,7 +549,7 @@ html, body {
   font-weight: 500;
   white-space: nowrap;
 }
-.btn-complete.done { background: var(--moss); color: var(--paper); border-color: var(--moss); }
+.btn-complete.done { background: var(--moss); color: var(--on-success); border-color: var(--moss); }
 .btn-complete:active { transform: scale(0.96); }
 
 .exercise {
@@ -813,7 +813,7 @@ html, body {
   background: var(--paper-3);
   color: var(--muted);
 }
-.ses-badge.done { background: var(--moss); color: var(--paper); }
+.ses-badge.done { background: var(--moss); color: var(--on-success); }
 .ses-badge.in-progress { background: var(--rust); color: var(--paper); }
 .ses-chev { color: var(--muted); display: flex; align-items: center; }
 .ses-chev svg { width: 14px; height: 14px; }
@@ -885,45 +885,66 @@ html, body {
   --hairline-strong: rgba(14,20,16,0.12);
   --topbar-h: 56px;
   --tabbar-h: 68px;
+  /* Semantic accent ROLES — read intent, resolve to the (theme-aware) accent vars */
+  --c-action: var(--rust);    /* primary buttons, CTAs, active nav */
+  --c-success: var(--moss);   /* completed / done / on-target */
+  --c-warn: var(--ochre);     /* caution / missed / deload */
+  --c-info: var(--slate);     /* informational */
+  /* Text that sits ON a filled accent (theme-aware for contrast). */
+  --on-action: #ffffff;       /* on rust / ember */
+  --on-success: #ffffff;      /* on moss (dark green in light theme) */
+  --on-warn: #241b0c;         /* on ochre / amber */
 }
 
-/* Dark theme — same warm identity, deeper surfaces */
-html[data-theme="dark"] {
-  --bg-app: #14110d;
-  --bg-surface: #1d1a16;
-  --bg-surface-2: #232017;
-  --bg-surface-elev: #26221c;
-  --bg-ink: #0a0907;
-  --bg-tab: rgba(20,17,13,0.92);
-  --txt-strong: #f4f1ea;
-  --txt-body: #e8e2d4;
-  --txt-muted: #a8a195;
-  --txt-soft: #807a6f;
-  --hairline: rgba(244,241,234,0.06);
-  --hairline-strong: rgba(244,241,234,0.1);
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
-  --shadow-md: 0 2px 6px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.25);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+/* Dark theme — the bolder ATHLETIC default. Warm near-black surfaces, soft-white
+   text, brighter ember/lime accents (high-energy, gym-readable). */
+html[data-theme="dark"], html[data-theme="dark"] body {
+  --bg-app: #0e0b07;
+  --bg-surface: #211c15;
+  --bg-surface-2: #2b241b;
+  --bg-surface-elev: #342b20;
+  --bg-ink: #090705;
+  --bg-tab: rgba(14,11,7,0.94);
+  --txt-strong: #f8f4ec;
+  --txt-body: #ddd6c8;
+  --txt-muted: #a89f8e;
+  --txt-soft: #847c6e;
+  --hairline: rgba(247,243,235,0.11);
+  --hairline-strong: rgba(247,243,235,0.18);
+  /* Athletic accents — bright on dark */
+  --rust: #e85a32;   /* action / primary — ember */
+  --moss: #8fd24f;   /* success / done — lime */
+  --ochre: #e6ab3e;  /* caution / missed */
+  --slate: #66a8c2;  /* info */
+  --on-success: #0e0b07;  /* bright lime needs dark text */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.4), 0 6px 20px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 36px rgba(0,0,0,0.55);
 }
 
-/* Auto-detect dark preference if user hasn't chosen */
+/* Auto-detect dark preference if user chose "Auto" */
 @media (prefers-color-scheme: dark) {
   html:not([data-theme]) {
-    --bg-app: #14110d;
-    --bg-surface: #1d1a16;
-    --bg-surface-2: #232017;
-    --bg-surface-elev: #26221c;
-    --bg-ink: #0a0907;
-    --bg-tab: rgba(20,17,13,0.92);
-    --txt-strong: #f4f1ea;
-    --txt-body: #e8e2d4;
-    --txt-muted: #a8a195;
-    --txt-soft: #807a6f;
-    --hairline: rgba(244,241,234,0.06);
-    --hairline-strong: rgba(244,241,234,0.1);
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
-    --shadow-md: 0 2px 6px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.25);
-    --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+    --bg-app: #0e0b07;
+    --bg-surface: #211c15;
+    --bg-surface-2: #2b241b;
+    --bg-surface-elev: #342b20;
+    --bg-ink: #090705;
+    --bg-tab: rgba(14,11,7,0.94);
+    --txt-strong: #f8f4ec;
+    --txt-body: #ddd6c8;
+    --txt-muted: #a89f8e;
+    --txt-soft: #847c6e;
+    --hairline: rgba(247,243,235,0.11);
+    --hairline-strong: rgba(247,243,235,0.18);
+    --rust: #e85a32;
+    --moss: #8fd24f;
+    --ochre: #e6ab3e;
+    --slate: #66a8c2;
+    --on-success: #0e0b07;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
+    --shadow-md: 0 2px 8px rgba(0,0,0,0.4), 0 6px 20px rgba(0,0,0,0.3);
+    --shadow-lg: 0 10px 36px rgba(0,0,0,0.55);
   }
 }
 
@@ -1995,7 +2016,8 @@ html[data-theme="dark"] .decision-card .scen { color: #9eb3bf; }
 .rt-reset { color: var(--rust); }
 
 /* Tab-bar centre "Coach" button (placeholder for the future AI coach) */
-.tab-coach {
+/* Centre primary action — the prominent "Train" button (ember). */
+.tab-train {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -2007,28 +2029,28 @@ html[data-theme="dark"] .decision-card .scen { color: #9eb3bf; }
   cursor: pointer;
   padding: 8px 6px;
 }
-.tab-coach:active { transform: scale(0.94); }
-.tab-coach-icon {
+.tab-train:active { transform: scale(0.94); }
+.tab-train-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px; height: 40px;
+  width: 46px; height: 46px;
   border-radius: 50%;
   background: var(--rust);
   color: #fff;
-  margin-top: -8px;
-  box-shadow: var(--shadow-md);
+  margin-top: -12px;
+  box-shadow: var(--shadow-md), 0 4px 14px rgba(232,90,50,0.45);
   transition: transform 0.12s;
 }
-.tab-coach.active .tab-coach-icon { transform: scale(1.06); box-shadow: var(--shadow-md), 0 0 0 3px rgba(176,74,46,0.18); }
-.tab-coach-icon svg { width: 20px; height: 20px; }
-.tab-coach-label {
+.tab-train:active .tab-train-icon { transform: scale(1.06); }
+.tab-train-icon svg { width: 22px; height: 22px; }
+.tab-train-label {
   font-family: var(--sans);
   font-size: 10.5px;
-  font-weight: 600;
-  color: var(--txt-muted);
+  font-weight: 700;
+  color: var(--rust);
+  letter-spacing: 0.02em;
 }
-.tab-coach.active .tab-coach-label { color: var(--txt-strong); }
 
 /* Coach placeholder screen */
 .coach-preview {
@@ -3423,7 +3445,7 @@ html[data-theme="dark"] .st-rpe {
   flex-shrink: 0; font-size: 12px; font-weight: 700; font-family: inherit;
   padding: 7px 12px; border-radius: 9px; cursor: pointer; border: 1px solid var(--hairline);
 }
-.catchup-btn.done { color: #fff; background: var(--moss); border-color: var(--moss); }
+.catchup-btn.done { color: var(--on-success); background: var(--moss); border-color: var(--moss); }
 .catchup-btn.miss { color: var(--txt-muted); background: var(--bg-surface-2); }
 .catchup-btn:active { transform: scale(0.96); }
 

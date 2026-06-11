@@ -5,7 +5,7 @@ import Database from '../lib/Database.js';
 import { runSessionDMigration, getFitbitAuthUrl } from '../lib/SyncService.js';
 
 export default function Settings() {
-  const [theme, setTheme] = useState(localStorage.getItem('htp_theme') || 'auto');
+  const [theme, setTheme] = useState(localStorage.getItem('htp_theme') || 'dark');
   const [migrationStatus, setMigrationStatus] = useState(
     localStorage.getItem('htp_session_d_migrated') ? 'done' : 'idle'
   );
@@ -80,7 +80,7 @@ export default function Settings() {
     const isDark = newTheme === 'dark' ||
       (newTheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', isDark ? '#14110d' : '#f4f1ea');
+    if (meta) meta.setAttribute('content', isDark ? '#100d09' : '#f4f1ea');
   };
 
   const handleMigrate = async () => {

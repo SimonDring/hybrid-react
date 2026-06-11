@@ -20,7 +20,7 @@ export default function PhaseDetail() {
       {phase.status === 'provisional' && (
         <div className="callout amber">
           <strong>Provisional</strong>
-          Scaffolded from assumptions about Phase 1 outcomes. Will be revised at quarterly reassessment.
+          A projection for later in the block — it adapts as you train and we see how the early phases land.
         </div>
       )}
 
