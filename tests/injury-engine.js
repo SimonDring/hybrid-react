@@ -39,3 +39,32 @@ assert(result6.result === 'red_flag', 'T6 radiating pain → red_flag');
 const result7 = assess('core_spine', { location: 'lumbar', neurological: 'no', bowel_bladder: 'no', radiating: 'no', onset: 'gradual' });
 assert(result7.result === 'probable', 'T7 gradual lower back → probable');
 assert(result7.body_part_key === 'lumbar', 'T7 body_part_key is lumbar');
+
+import { getContraindications, recurrenceRisk } from '../src/lib/injury/injuryRules.js';
+
+// T8: knee protect phase blocks squats and runs
+const c8 = getContraindications('knee', 3, 'protect');
+assert(c8.blockedPatterns.some(p => p.test('Squat')), 'T8 knee protect blocks squat');
+assert(c8.blockedPatterns.some(p => p.test('Running interval')), 'T8 knee protect blocks run');
+
+// T9: knee return_to_sport has fewer blocks than protect
+const c9_protect = getContraindications('knee', 3, 'protect');
+const c9_rts = getContraindications('knee', 3, 'return_to_sport');
+assert(c9_rts.blockedPatterns.length < c9_protect.blockedPatterns.length, 'T9 return_to_sport blocks fewer than protect');
+
+// T10: severity 4+ forces protect-level blocks regardless of phase
+const c10 = getContraindications('knee', 4, 'return_to_sport');
+assert(c10.blockedPatterns.some(p => p.test('Squat')), 'T10 severity 4 overrides phase to protect-level');
+
+// T11: severity 1 returns empty blocks
+const c11 = getContraindications('knee', 1, 'loading');
+assert(c11.blockedPatterns.length === 0, 'T11 severity 1 → no blocks');
+
+// T12: lumbar protect blocks deadlifts and squats
+const c12 = getContraindications('lumbar', 3, 'protect');
+assert(c12.blockedPatterns.some(p => p.test('Deadlift')), 'T12 lumbar protect blocks deadlift');
+
+// T13: recurrenceRisk returns true for known diagnoses
+assert(recurrenceRisk('patellar_tendinopathy') === true, 'T13 patellar_tendinopathy has recurrence risk');
+assert(recurrenceRisk('wrist_sprain') === false, 'T13 wrist_sprain has no recurrence risk');
+assert(recurrenceRisk('acl') === true, 'T13 ACL has recurrence risk');
