@@ -36,11 +36,22 @@ import { allocateGym } from './allocator.js';
  *   lifts     optional 1RMs for target weights
  * @returns {Array} session specs (no day assigned yet)
  */
+const FUNCTIONAL_PRIMER = [
+  { num: 'P1', name: '90/90 Hip Flexor Stretch',       sets: '5 × 30s ea.', rpe: 'Easy', tag: 'mobility', note: 'Open hip flexors before loading',         restSec: 20 },
+  { num: 'P2', name: 'Glute Bridge (2s hold)',          sets: '2 × 10',      rpe: 'RPE 4', tag: 'mobility', note: 'Activate glutes — squeeze 2s at top',    restSec: 20 },
+  { num: 'P3', name: 'Band Pull-Apart',                 sets: '2 × 15',      rpe: 'RPE 4', tag: 'mobility', note: 'Retract shoulder blades',                restSec: 20 },
+  { num: 'P4', name: 'Cat-Camel + Thoracic Rotation',  sets: '2 × 8',       rpe: 'Easy',  tag: 'mobility', note: 'Thoracic rotation each side',             restSec: 0  }
+];
+
 export function buildWeek(ctx = {}) {
   const gymDays = Math.max(1, Math.min(7, ctx.gymDays || 3));
   const style = ctx.style || 'functional';
   const minutes = ctx.minutes || 60;
   const deload = !!ctx.deload;
+
+  // Functional sessions open with the 4-exercise activation primer (~7 min).
+  // Deduct that time from the slot budget so the allocator doesn't overfill.
+  const slotMinutes = style === 'functional' ? Math.max(15, minutes - 7) : minutes;
 
   const targets = weeklyMuscleTargets({
     style, intent: ctx.intent, level: ctx.level,
@@ -48,18 +59,23 @@ export function buildWeek(ctx = {}) {
     emphasis: ctx.emphasis, volumeScalar: ctx.volumeScalar
   });
 
-  // One slot per gym day, all at the planned session length with the athlete's
-  // usual equipment. (Per-slot time/equipment is what the on-demand "train now"
-  // flow will vary later — the allocator already supports it.)
-  const slots = Array.from({ length: gymDays }, () => ({ minutes, equip: ctx.access || [] }));
+  const slots = Array.from({ length: gymDays }, () => ({ minutes: slotMinutes, equip: ctx.access || [] }));
 
-  return allocateGym({
+  const sessions = allocateGym({
     targets, slots,
     ctx: {
       style, intent: ctx.intent, deload, weekNum: ctx.weekNum,
-      level: ctx.level, sex: ctx.sex, lifts: ctx.lifts, access: ctx.access || []
+      level: ctx.level, sex: ctx.sex, lifts: ctx.lifts, access: ctx.access || [],
+      exercisePriority: ctx.exercisePriority || []
     }
   });
+
+  if (style !== 'functional') return sessions;
+
+  return sessions.map(session => ({
+    ...session,
+    items: [...FUNCTIONAL_PRIMER, ...session.items]
+  }));
 }
 
 // ---- helpers shared by the supplemental builder below ----
@@ -115,7 +131,23 @@ function supportItems(forSport, variant, weights, deload) {
       { num: 'C2', name: 'Plank', sets: '3 × 40s', rpe: 'RPE 6', note: '', tag: 'mobility' }
     ]
   ];
-  const pool = forSport === 'swim' ? swim : run;
+  const cycle = [
+    [ // A — quad dominance + hip stability
+      { num: 'A1', name: lift(weights, 'Single-leg leg press', 'Bulgarian split squat'), sets: `${sets} × 8 ea.`, rpe: 'RPE 7', note: 'quad focus — knee tracks toe' },
+      { num: 'B1', name: lift(weights, 'Goblet squat', 'Bodyweight squat'), sets: `${sets} × 10`, rpe: 'RPE 7', note: 'full depth, controlled' },
+      { num: 'B2', name: 'Lateral band walk', sets: '3 × 12 ea.', rpe: 'RPE 6', note: 'hip stability, quarter squat throughout', tag: 'mobility' },
+      { num: 'C1', name: lift(weights, 'Romanian deadlift', 'Single-leg hip hinge'), sets: `${sets} × 8`, rpe: 'RPE 7', note: 'hamstring + glute balance' },
+      { num: 'C2', name: 'Pallof press', sets: '3 × 10 ea.', rpe: 'RPE 6', note: 'anti-rotation', tag: 'mobility' }
+    ],
+    [ // B — posterior chain + hip mobility
+      { num: 'A1', name: lift(weights, 'Hip thrust', 'Glute bridge'), sets: `${sets} × 10`, rpe: 'RPE 7', note: 'drive through hips — not lower back' },
+      { num: 'B1', name: lift(weights, 'Single-leg RDL', 'Prone hip extension'), sets: `${sets} × 8 ea.`, rpe: 'RPE 7', note: 'hip hinge, unilateral' },
+      { num: 'B2', name: 'Thoracic foam roller', sets: '2 × 10', rpe: 'Easy', note: 'T5–T8 extension — reverse aero position', tag: 'mobility' },
+      { num: 'C1', name: '90/90 hip flexor stretch', sets: '3 × 30s ea.', rpe: 'Easy', note: 'hip flexors shortened by saddle position', tag: 'mobility' },
+      { num: 'C2', name: 'Copenhagen plank', sets: '3 × 20s ea.', rpe: 'RPE 7', note: 'adductor strength for Q-angle stability', tag: 'mobility' }
+    ]
+  ];
+  const pool = forSport === 'swim' ? swim : forSport === 'cycle' ? cycle : run;
   return pool[variant % pool.length];
 }
 
@@ -131,13 +163,14 @@ function supportItems(forSport, variant, weights, deload) {
  */
 export function buildSupport(ctx = {}) {
   const count = Math.max(1, Math.min(2, ctx.count || 2));
-  const forSport = ctx.for === 'swim' ? 'swim' : 'run';
+  const forSport = ['swim', 'cycle'].includes(ctx.for) ? ctx.for : 'run';
   const deload = !!ctx.deload;
   const access = ctx.access || [];
   const weights = access.includes('full_gym') || access.includes('home_weights') || access.length === 0;
   const base = (ctx.weekNum || 1) - 1;
   const repBump = femaleRepBump(ctx.sex);
-  const focus = forSport === 'swim' ? 'Swim-support strength' : 'Run-support strength';
+  const focusLabels = { run: 'Run-support strength', swim: 'Swim-support strength', cycle: 'Cycle-support strength' };
+  const focus = focusLabels[forSport] || 'Run-support strength';
   return Array.from({ length: count }, (_, i) => ({
     discipline: 'gym',
     focus,
