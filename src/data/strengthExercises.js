@@ -25,35 +25,35 @@ export const LEVELS = { beginner: 0, returning: 1, intermediate: 2, advanced: 3 
 
 export const EXERCISES = [
   // ---------------- SQUAT ----------------
-  { id: 'back_squat',     name: 'Back squat',        pattern: 'squat', equip: 'barbell',   level: 0, role: 'primary', liftKey: 'squat' },
-  { id: 'front_squat',    name: 'Front squat',       pattern: 'squat', equip: 'barbell',   level: 2, role: 'primary', liftKey: 'squat' },
+  { id: 'back_squat',     name: 'Back squat',        pattern: 'squat', equip: 'barbell',   level: 0, role: 'primary', liftKey: 'squat',     minLevelForPrimary: 'returning' },
+  { id: 'front_squat',    name: 'Front squat',       pattern: 'squat', equip: 'barbell',   level: 2, role: 'primary', liftKey: 'squat',     minLevelForPrimary: 'intermediate' },
   { id: 'goblet_squat',   name: 'Goblet squat',      pattern: 'squat', equip: 'dumbbell',  level: 0, role: 'accessory' },
   { id: 'hack_squat',     name: 'Hack / leg-press',  pattern: 'squat', equip: 'machine',   level: 0, role: 'accessory' },
   { id: 'bw_squat',       name: 'Bodyweight squat',  pattern: 'squat', equip: 'bodyweight', level: 0, role: 'accessory' },
   { id: 'tempo_squat',    name: 'Tempo squat (3s down)', pattern: 'squat', equip: 'bodyweight', level: 1, role: 'accessory' },
-  { id: 'box_squat',      name: 'Box squat',         pattern: 'squat', equip: 'barbell',   level: 2, role: 'primary', liftKey: 'squat' },
+  { id: 'box_squat',      name: 'Box squat',         pattern: 'squat', equip: 'barbell',   level: 2, role: 'primary', liftKey: 'squat',     minLevelForPrimary: 'intermediate' },
 
   // ---------------- HINGE ----------------
-  { id: 'deadlift',       name: 'Deadlift',          pattern: 'hinge', equip: 'barbell',   level: 1, role: 'primary', liftKey: 'deadlift' },
+  { id: 'deadlift',       name: 'Deadlift',          pattern: 'hinge', equip: 'barbell',   level: 1, role: 'primary', liftKey: 'deadlift',  minLevelForPrimary: 'returning' },
   { id: 'trap_bar_dl',    name: 'Trap-bar deadlift', pattern: 'hinge', equip: 'barbell',   level: 0, role: 'primary', liftKey: 'deadlift' },
-  { id: 'rdl',            name: 'Romanian deadlift', pattern: 'hinge', equip: 'barbell',   level: 0, role: 'accessory', liftKey: 'deadlift' },
-  { id: 'db_rdl',         name: 'DB Romanian deadlift', pattern: 'hinge', equip: 'dumbbell', level: 0, role: 'accessory' },
-  { id: 'hip_thrust',     name: 'Hip thrust',        pattern: 'hinge', equip: 'barbell',   level: 0, role: 'accessory' },
+  { id: 'rdl',            name: 'Romanian deadlift', pattern: 'hinge', equip: 'barbell',   level: 0, role: 'accessory', liftKey: 'deadlift', sportTags: ['run', 'cycle'],          goalTags: ['strength'] },
+  { id: 'db_rdl',         name: 'DB Romanian deadlift', pattern: 'hinge', equip: 'dumbbell', level: 0, role: 'accessory',                    sportTags: ['run', 'cycle'] },
+  { id: 'hip_thrust',     name: 'Hip thrust',        pattern: 'hinge', equip: 'barbell',   level: 0, role: 'accessory',                      sportTags: ['cycle', 'swim'],          goalTags: ['strength'] },
   { id: 'glute_bridge',   name: 'Glute bridge',      pattern: 'hinge', equip: 'bodyweight', level: 0, role: 'accessory' },
-  { id: 'sl_hinge',       name: 'Single-leg hip hinge', pattern: 'hinge', equip: 'bodyweight', level: 0, role: 'accessory' },
-  { id: 'kb_swing',       name: 'Kettlebell swing',  pattern: 'hinge', equip: 'kettlebell', level: 1, role: 'accessory' },
-  { id: 'good_morning',   name: 'Good morning',      pattern: 'hinge', equip: 'barbell',   level: 2, role: 'accessory' },
+  { id: 'sl_hinge',       name: 'Single-leg hip hinge', pattern: 'hinge', equip: 'bodyweight', level: 0, role: 'accessory',                  sportTags: ['run', 'cycle', 'swim'],   minLevelForPrimary: 'returning' },
+  { id: 'kb_swing',       name: 'Kettlebell swing',  pattern: 'hinge', equip: 'kettlebell', level: 1, role: 'accessory',                     sportTags: ['run'],                    minLevelForPrimary: 'returning' },
+  { id: 'good_morning',   name: 'Good morning',      pattern: 'hinge', equip: 'barbell',   level: 2, role: 'accessory',                                                             minLevelForPrimary: 'intermediate' },
 
   // ---------------- LUNGE / single-leg ----------------
-  { id: 'split_squat',    name: 'Bulgarian split squat', pattern: 'lunge', equip: 'dumbbell', level: 0, role: 'accessory', unilateral: true },
+  { id: 'split_squat',    name: 'Bulgarian split squat', pattern: 'lunge', equip: 'dumbbell', level: 0, role: 'accessory', unilateral: true, sportTags: ['run', 'cycle'] },
   { id: 'bw_split_squat', name: 'Split squat',       pattern: 'lunge', equip: 'bodyweight', level: 0, role: 'accessory', unilateral: true },
-  { id: 'walking_lunge',  name: 'Walking lunge',     pattern: 'lunge', equip: 'dumbbell',  level: 0, role: 'accessory', unilateral: true },
+  { id: 'walking_lunge',  name: 'Walking lunge',     pattern: 'lunge', equip: 'dumbbell',  level: 0, role: 'accessory', unilateral: true, sportTags: ['run'] },
   { id: 'reverse_lunge',  name: 'Reverse lunge',     pattern: 'lunge', equip: 'bodyweight', level: 0, role: 'accessory', unilateral: true },
-  { id: 'step_up',        name: 'Step-up',           pattern: 'lunge', equip: 'bodyweight', level: 0, role: 'accessory', unilateral: true },
+  { id: 'step_up',        name: 'Step-up',           pattern: 'lunge', equip: 'bodyweight', level: 0, role: 'accessory', unilateral: true, sportTags: ['run'] },
   { id: 'cossack_squat',  name: 'Cossack squat',     pattern: 'lunge', equip: 'bodyweight', level: 2, role: 'accessory', unilateral: true },
 
   // ---------------- HORIZONTAL PUSH ----------------
-  { id: 'bench',          name: 'Bench press',       pattern: 'hpush', equip: 'barbell',   level: 0, role: 'primary', liftKey: 'bench' },
+  { id: 'bench',          name: 'Bench press',       pattern: 'hpush', equip: 'barbell',   level: 0, role: 'primary', liftKey: 'bench',     minLevelForPrimary: 'returning' },
   { id: 'db_bench',       name: 'DB bench press',    pattern: 'hpush', equip: 'dumbbell',  level: 0, role: 'primary', liftKey: 'bench' },
   { id: 'incline_bench',  name: 'Incline bench press', pattern: 'hpush', equip: 'barbell', level: 1, role: 'accessory' },
   { id: 'incline_db',     name: 'Incline DB press',  pattern: 'hpush', equip: 'dumbbell',  level: 0, role: 'accessory' },
@@ -62,56 +62,56 @@ export const EXERCISES = [
   { id: 'dip',            name: 'Dip',               pattern: 'hpush', equip: 'bodyweight', level: 2, role: 'accessory' },
 
   // ---------------- VERTICAL PUSH ----------------
-  { id: 'ohp',            name: 'Overhead press',    pattern: 'vpush', equip: 'barbell',   level: 1, role: 'primary' },
+  { id: 'ohp',            name: 'Overhead press',    pattern: 'vpush', equip: 'barbell',   level: 1, role: 'primary',                        minLevelForPrimary: 'intermediate' },
   { id: 'db_ohp',         name: 'DB shoulder press', pattern: 'vpush', equip: 'dumbbell',  level: 0, role: 'accessory' },
   { id: 'pike_pushup',    name: 'Pike push-up',      pattern: 'vpush', equip: 'bodyweight', level: 1, role: 'accessory' },
   { id: 'landmine_press', name: 'Landmine press',    pattern: 'vpush', equip: 'barbell',   level: 1, role: 'accessory' },
 
   // ---------------- HORIZONTAL PULL ----------------
-  { id: 'barbell_row',    name: 'Barbell row',       pattern: 'hpull', equip: 'barbell',   level: 1, role: 'primary' },
-  { id: 'db_row',         name: 'Single-arm DB row', pattern: 'hpull', equip: 'dumbbell',  level: 0, role: 'accessory', unilateral: true },
-  { id: 'cable_row',      name: 'Seated cable row',  pattern: 'hpull', equip: 'cable',     level: 0, role: 'accessory' },
-  { id: 'chest_supported_row', name: 'Chest-supported row', pattern: 'hpull', equip: 'dumbbell', level: 0, role: 'accessory' },
+  { id: 'barbell_row',    name: 'Barbell row',       pattern: 'hpull', equip: 'barbell',   level: 1, role: 'primary',                        minLevelForPrimary: 'intermediate', sportTags: ['swim'] },
+  { id: 'db_row',         name: 'Single-arm DB row', pattern: 'hpull', equip: 'dumbbell',  level: 0, role: 'accessory', unilateral: true,    sportTags: ['swim'] },
+  { id: 'cable_row',      name: 'Seated cable row',  pattern: 'hpull', equip: 'cable',     level: 0, role: 'accessory',                      sportTags: ['swim'] },
+  { id: 'chest_supported_row', name: 'Chest-supported row', pattern: 'hpull', equip: 'dumbbell', level: 0, role: 'accessory',                sportTags: ['swim'] },
   { id: 'inverted_row',   name: 'Inverted row',      pattern: 'hpull', equip: 'bodyweight', level: 0, role: 'accessory' },
   { id: 'band_row',       name: 'Band row',          pattern: 'hpull', equip: 'band',      level: 0, role: 'accessory' },
 
   // ---------------- VERTICAL PULL ----------------
-  { id: 'pullup',         name: 'Pull-up',           pattern: 'vpull', equip: 'bodyweight', level: 2, role: 'primary' },
-  { id: 'lat_pulldown',   name: 'Lat pulldown',      pattern: 'vpull', equip: 'cable',     level: 0, role: 'primary' },
-  { id: 'assisted_pullup', name: 'Band-assisted pull-up', pattern: 'vpull', equip: 'bodyweight', level: 0, role: 'accessory' },
-  { id: 'straight_arm_pd', name: 'Straight-arm pulldown', pattern: 'vpull', equip: 'cable', level: 1, role: 'accessory' },
+  { id: 'pullup',         name: 'Pull-up',           pattern: 'vpull', equip: 'bodyweight', level: 2, role: 'primary',                       minLevelForPrimary: 'intermediate' },
+  { id: 'lat_pulldown',   name: 'Lat pulldown',      pattern: 'vpull', equip: 'cable',     level: 0, role: 'primary',                        minLevelForPrimary: 'returning',    sportTags: ['swim'] },
+  { id: 'assisted_pullup', name: 'Band-assisted pull-up', pattern: 'vpull', equip: 'bodyweight', level: 0, role: 'accessory',               sportTags: ['swim'] },
+  { id: 'straight_arm_pd', name: 'Straight-arm pulldown', pattern: 'vpull', equip: 'cable', level: 1, role: 'accessory',                    sportTags: ['swim'] },
 
   // ---------------- CARRY ----------------
-  { id: 'farmer_carry',   name: 'Farmer carry',      pattern: 'carry', equip: 'dumbbell',  level: 0, role: 'accessory' },
-  { id: 'suitcase_carry', name: 'Suitcase carry',    pattern: 'carry', equip: 'dumbbell',  level: 0, role: 'accessory', unilateral: true },
+  { id: 'farmer_carry',   name: 'Farmer carry',      pattern: 'carry', equip: 'dumbbell',  level: 0, role: 'accessory',                      goalTags: ['functional', 'strength'] },
+  { id: 'suitcase_carry', name: 'Suitcase carry',    pattern: 'carry', equip: 'dumbbell',  level: 0, role: 'accessory', unilateral: true,    goalTags: ['functional'],              sportTags: ['run', 'cycle', 'swim'] },
   { id: 'bw_carry',       name: 'Backpack carry',    pattern: 'carry', equip: 'bodyweight', level: 0, role: 'accessory' },
 
   // ---------------- CORE ----------------
-  { id: 'plank',          name: 'Plank',             pattern: 'core', equip: 'bodyweight', level: 0, role: 'core' },
-  { id: 'pallof',         name: 'Pallof press',      pattern: 'core', equip: 'cable',      level: 0, role: 'core' },
-  { id: 'band_pallof',    name: 'Band Pallof press', pattern: 'core', equip: 'band',       level: 0, role: 'core' },
-  { id: 'dead_bug',       name: 'Dead bug',          pattern: 'core', equip: 'bodyweight', level: 0, role: 'core' },
+  { id: 'plank',          name: 'Plank',             pattern: 'core', equip: 'bodyweight', level: 0, role: 'core', goalTags: ['functional', 'strength'], sportTags: ['run', 'cycle', 'swim'] },
+  { id: 'pallof',         name: 'Pallof press',      pattern: 'core', equip: 'cable',      level: 0, role: 'core', goalTags: ['functional'],             sportTags: ['run', 'cycle', 'swim'] },
+  { id: 'band_pallof',    name: 'Band Pallof press', pattern: 'core', equip: 'band',       level: 0, role: 'core', goalTags: ['functional'],             sportTags: ['run', 'cycle', 'swim'] },
+  { id: 'dead_bug',       name: 'Dead bug',          pattern: 'core', equip: 'bodyweight', level: 0, role: 'core', goalTags: ['functional'],             sportTags: ['run', 'cycle', 'swim'] },
   { id: 'hanging_knee',   name: 'Hanging knee raise', pattern: 'core', equip: 'bodyweight', level: 1, role: 'core' },
-  { id: 'side_plank',     name: 'Side plank',        pattern: 'core', equip: 'bodyweight', level: 0, role: 'core' },
-  { id: 'copenhagen',     name: 'Copenhagen plank',  pattern: 'core', equip: 'bodyweight', level: 2, role: 'core' },
+  { id: 'side_plank',     name: 'Side plank',        pattern: 'core', equip: 'bodyweight', level: 0, role: 'core', goalTags: ['functional'],             sportTags: ['run', 'cycle', 'swim'] },
+  { id: 'copenhagen',     name: 'Copenhagen plank',  pattern: 'core', equip: 'bodyweight', level: 3, role: 'core',                                       sportTags: ['run', 'cycle', 'swim'] },
 
   // ---------------- CALF ----------------
-  { id: 'calf_raise',     name: 'Calf raise',        pattern: 'calf', equip: 'bodyweight', level: 0, role: 'iso' },
-  { id: 'sl_calf',        name: 'Single-leg calf raise', pattern: 'calf', equip: 'bodyweight', level: 0, role: 'iso', unilateral: true },
-  { id: 'seated_calf',    name: 'Seated calf raise', pattern: 'calf', equip: 'machine',    level: 0, role: 'iso' },
+  { id: 'calf_raise',     name: 'Calf raise',        pattern: 'calf', equip: 'bodyweight', level: 0, role: 'iso', sportTags: ['run'] },
+  { id: 'sl_calf',        name: 'Single-leg calf raise', pattern: 'calf', equip: 'bodyweight', level: 0, role: 'iso', sportTags: ['run'], unilateral: true },
+  { id: 'seated_calf',    name: 'Seated calf raise', pattern: 'calf', equip: 'machine',    level: 0, role: 'iso', sportTags: ['run', 'cycle'] },
 
   // ---------------- ISOLATION (bodybuilding accents) ----------------
   { id: 'lateral_raise',  name: 'Lateral raise',     pattern: 'iso', muscle: 'sidedelt', equip: 'dumbbell', level: 0, role: 'iso' },
   { id: 'rear_fly',       name: 'Rear-delt fly',     pattern: 'iso', muscle: 'reardelt', equip: 'dumbbell', level: 0, role: 'iso' },
-  { id: 'face_pull',      name: 'Face pull',         pattern: 'iso', muscle: 'reardelt', equip: 'cable',    level: 0, role: 'iso' },
-  { id: 'band_face_pull', name: 'Band face pull',    pattern: 'iso', muscle: 'reardelt', equip: 'band',     level: 0, role: 'iso' },
+  { id: 'face_pull',      name: 'Face pull',         pattern: 'iso', muscle: 'reardelt', equip: 'cable',    level: 0, role: 'iso', sportTags: ['swim'],          goalTags: ['functional'] },
+  { id: 'band_face_pull', name: 'Band face pull',    pattern: 'iso', muscle: 'reardelt', equip: 'band',     level: 0, role: 'iso', sportTags: ['swim'],          goalTags: ['functional'] },
   { id: 'biceps_curl',    name: 'Biceps curl',       pattern: 'iso', muscle: 'biceps',  equip: 'dumbbell',  level: 0, role: 'iso' },
   { id: 'band_curl',      name: 'Band curl',         pattern: 'iso', muscle: 'biceps',  equip: 'band',      level: 0, role: 'iso' },
   { id: 'triceps_pushdown', name: 'Triceps pushdown', pattern: 'iso', muscle: 'triceps', equip: 'cable',   level: 0, role: 'iso' },
   { id: 'overhead_ext',   name: 'Overhead triceps ext.', pattern: 'iso', muscle: 'triceps', equip: 'dumbbell', level: 0, role: 'iso' },
   { id: 'diamond_pushup', name: 'Close-grip push-up', pattern: 'iso', muscle: 'triceps', equip: 'bodyweight', level: 0, role: 'iso' },
-  { id: 'leg_curl',       name: 'Leg curl',          pattern: 'iso', muscle: 'ham',     equip: 'machine',   level: 0, role: 'iso' },
-  { id: 'nordic_curl',    name: 'Nordic curl',       pattern: 'iso', muscle: 'ham',     equip: 'bodyweight', level: 2, role: 'iso' },
+  { id: 'leg_curl',       name: 'Leg curl',          pattern: 'iso', muscle: 'ham',     equip: 'machine',   level: 0, role: 'iso', sportTags: ['run', 'cycle'] },
+  { id: 'nordic_curl',    name: 'Nordic curl',       pattern: 'iso', muscle: 'ham',     equip: 'bodyweight', level: 3, role: 'iso', sportTags: ['run', 'cycle'] },
   { id: 'leg_ext',        name: 'Leg extension',     pattern: 'iso', muscle: 'quad',    equip: 'machine',   level: 0, role: 'iso' },
   { id: 'chest_fly',      name: 'Chest fly',         pattern: 'iso', muscle: 'chest',   equip: 'dumbbell',  level: 0, role: 'iso' }
 ];
