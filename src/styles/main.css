@@ -3482,3 +3482,32 @@ button.today-hero { width: 100%; display: block; text-align: left; border: none;
 .tw-col::-webkit-scrollbar { display: none; }
 .tw-item { display: flex; align-items: center; justify-content: center; scroll-snap-align: center; font-size: 21px; color: var(--txt-strong); font-variant-numeric: tabular-nums; }
 .tp-done { width: 100%; margin-top: 16px; padding: 14px; border: none; border-radius: 12px; background: var(--rust); color: #fff; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }
+
+/* ── Block check-in ─────────────────────────────────────────────────── */
+.checkin-header { margin-bottom: var(--space-6); text-align: center; }
+.checkin-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--moss);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-3);
+}
+.checkin-step { margin-bottom: var(--space-6); }
+.checkin-progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: var(--space-4);
+}
+.checkin-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--hairline);
+  transition: background 0.2s;
+}
+.checkin-dot.active { background: var(--rust); }
+.option-cards.two-col { grid-template-columns: 1fr 1fr; }
