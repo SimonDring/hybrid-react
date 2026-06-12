@@ -96,36 +96,40 @@ function contribOf(ex) {
 }
 
 // Working-set count an exercise contributes, by its role + the current scheme.
-function roleSetCount(ex, s, style) {
-  if (ex.role === 'primary') return parseSetCount(s.main);
+// effectiveRole overrides ex.role when minLevelForPrimary demotes the exercise.
+function roleSetCount(ex, s, style, effectiveRole) {
+  const role = effectiveRole != null ? effectiveRole : ex.role;
+  if (role === 'primary') return parseSetCount(s.main);
   if (ex.pattern === 'core') return 3;
   if (ex.pattern === 'calf') return parseSetCount('3 × 12');
-  if (ex.role === 'iso') return parseSetCount(isoStr(style));
+  if (role === 'iso') return parseSetCount(isoStr(style));
   return parseSetCount(s.acc);   // accessory
 }
 
 // Rest prescription per role and style — surfaced as `restSec` on every item.
 // The UI reads this field to show a static label and seed the rest timer.
 // Superset B exercises get their value overridden to 20s in structureItems().
-function restForRole(ex, style) {
-  if (ex.role === 'primary') return (style === 'strength' || style === 'sport') ? 180 : 120;
-  if (ex.role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf') return 60;
+function restForRole(ex, style, effectiveRole) {
+  const role = effectiveRole != null ? effectiveRole : ex.role;
+  if (role === 'primary') return (style === 'strength' || style === 'sport') ? 180 : 120;
+  if (role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf') return 60;
   return 75; // accessory compound — supersetted, so actual rest ≈ partner's work time
 }
 
 // Build the rendered item for a chosen exercise at a given position in the slot.
-function makeItem(ex, idx, s, style, deload, repBump) {
+function makeItem(ex, idx, s, style, deload, repBump, effectiveRole) {
+  const role = effectiveRole != null ? effectiveRole : ex.role;
   const per = ex.unilateral ? ' ea.' : '';
   const num = LETTERS[Math.min(idx, LETTERS.length - 1)] + '1';
-  const restSec = restForRole(ex, style);
-  if (ex.role === 'primary') {
+  const restSec = restForRole(ex, style, role);
+  if (role === 'primary') {
     return { num, name: ex.name, sets: s.main + per, rpe: s.mainRpe, note: mainNote(deload), restSec };
   }
   if (ex.pattern === 'core') {
     const hold = /plank|hold|dead bug|copenhagen|hollow|bird dog/i.test(ex.name);
     return { num, name: ex.name, sets: hold ? coreStr(deload) : '3 × 12' + per, rpe: 'RPE 6', tag: 'mobility', note: '', restSec };
   }
-  if (ex.pattern === 'calf' || ex.role === 'iso') {
+  if (ex.pattern === 'calf' || role === 'iso') {
     const str = ex.pattern === 'calf' ? '3 × 12' : isoStr(style);
     return { num, name: ex.name, sets: bumpReps(str + per, repBump), rpe: s.accRpe, tag: ex.pattern === 'calf' ? 'mobility' : undefined, note: '', restSec };
   }
@@ -140,9 +144,10 @@ function hash(str) { let h = 0; for (let i = 0; i < str.length; i++) h = (h * 31
 // non-primary work (it's performed in another exercise's rest period), so paired
 // accessory / filler sets are cheap — this is exactly what lets a short session
 // still hit real volume instead of "3×8 squats and done" (Iversen et al. 2021).
-function perSetMin(ex) {
-  if (ex.role === 'primary') return 2.8;                                    // heavy main, fuller rest
-  if (ex.role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf') return 1.2; // light filler
+function perSetMin(ex, effectiveRole) {
+  const role = effectiveRole != null ? effectiveRole : ex.role;
+  if (role === 'primary') return 2.8;                                    // heavy main, fuller rest
+  if (role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf') return 1.2; // light filler
   return 1.5;                                                               // accessory, supersetted
 }
 // Usable minutes after a brief warm-up (time-efficient training skips long warm-ups).
@@ -210,20 +215,26 @@ function structureItems(picks) {
 // Pick the single best exercise to add to a slot right now, or null when nothing
 // left pays down a deficit (within the slot's remaining time). `targets` is the
 // full per-muscle target (for urgency), `deficit` the running remainder.
-function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, fillersOnly = false) {
+function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, fillersOnly = false, prioritySet = null) {
   let best = null, bestScore = 0.25; // threshold: ignore near-useless picks
   for (const ex of EXERCISES) {
     if (!slot.equip.has(ex.equip)) continue;
     if (ex.level > slot.level) continue;
     if (slot.exUsed.has(ex.id)) continue;
     if (fillersOnly && !isFiller(ex)) continue;   // filler pass: only light rest-gap work
+
+    // Demote complex primaries to accessory when athlete is below minLevelForPrimary.
+    const effectiveRole = (ex.minLevelForPrimary && ex.role === 'primary' &&
+      slot.level < (LEVELS[ex.minLevelForPrimary] ?? 0)) ? 'accessory' : ex.role;
+
     // Cap at 2 primaries per slot — beyond that, extra heavy mains crowd out accessories
     // without adding meaningful variety, and make sessions uncomfortably long.
-    if (!fillersOnly && ex.role === 'primary' &&
-        slot.picks.filter(p => p.ex.role === 'primary').length >= 2) continue;
-    const sets = roleSetCount(ex, s, style);
+    if (!fillersOnly && effectiveRole === 'primary' &&
+        slot.picks.filter(p => p.ex.role === 'primary' && p.effectiveRole === 'primary').length >= 2) continue;
+
+    const sets = roleSetCount(ex, s, style, effectiveRole);
     if (sets <= 0) continue;
-    const cost = sets * perSetMin(ex);
+    const cost = sets * perSetMin(ex, effectiveRole);
     // Fillers slot into a main's rest gap, so they don't consume the time budget.
     if (!fillersOnly && slot.timeUsed > 0 && slot.timeUsed + cost > slot.budget + 2) continue;
 
@@ -242,11 +253,12 @@ function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, fil
 
     let score = useful;
     if (slot.patternsUsed.has(ex.pattern)) score *= 0.6;          // variety within a session
-    if (slot.timeUsed < 5) score *= ex.role === 'primary' ? 1.2 : 0.85; // open on a compound
+    if (slot.timeUsed < 5) score *= effectiveRole === 'primary' ? 1.2 : 0.85; // open on a compound
     if (ex.pattern === 'hpull' || ex.pattern === 'vpull') score *= 1.05; // posture pull-lean
+    if (prioritySet && prioritySet.has(ex.id)) score *= 1.35;     // science-backed priority boost
     score += (hash(ex.id) + weekNum + slot.idx) % 7 * 0.001;       // rotation tie-break
 
-    if (score > bestScore) { bestScore = score; best = { ex, sets, contrib }; }
+    if (score > bestScore) { bestScore = score; best = { ex, sets, contrib, effectiveRole }; }
   }
   return best;
 }
@@ -313,6 +325,9 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
 
   const deficit = { ...targets };
 
+  const prioritySet = ctx.exercisePriority && ctx.exercisePriority.length
+    ? new Set(ctx.exercisePriority) : null;
+
   // Anchor each slot with a fundamental compound, rotated so the week always
   // covers legs + push + pull no matter how few/short the sessions are. This is
   // the blueprint wisdom (guaranteed movement coverage) on top of volume targets,
@@ -321,9 +336,12 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const FUNDAMENTAL = ['squat', 'hpush', 'hinge', 'hpull', 'vpush', 'lunge', 'vpull'];
 
   const place = (slot, pick) => {
-    const { ex, sets, contrib } = pick;
-    slot.picks.push({ ex, item: makeItem(ex, slot.picks.length, s, style, deload, repBump) });
-    slot.timeUsed += sets * perSetMin(ex);
+    const { ex, sets, contrib, effectiveRole } = pick;
+    slot.picks.push({
+      ex, effectiveRole,
+      item: makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole)
+    });
+    slot.timeUsed += sets * perSetMin(ex, effectiveRole);
     slot.patternsUsed.add(ex.pattern);
     slot.exUsed.add(ex.id);
     for (const m in contrib) {
@@ -345,7 +363,9 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const bar = cands.filter(e => e.equip === 'barbell');
     if (bar.length) cands = bar;
     const ex = cands[(weekNum + slot.idx) % cands.length];
-    place(slot, { ex, sets: roleSetCount(ex, s, style), contrib: contribOf(ex) });
+    const anchorEffectiveRole = (ex.minLevelForPrimary && ex.role === 'primary' &&
+      slot.level < (LEVELS[ex.minLevelForPrimary] ?? 0)) ? 'accessory' : ex.role;
+    place(slot, { ex, sets: roleSetCount(ex, s, style, anchorEffectiveRole), contrib: contribOf(ex), effectiveRole: anchorEffectiveRole });
   }
 
   // 2) Round-robin fill: interleaving slots spreads each muscle across sessions.
@@ -354,7 +374,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     progressed = false;
     for (const slot of work) {
       if (slot.timeUsed >= slot.budget) continue;
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum);
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, false, prioritySet);
       if (!pick) continue;
       place(slot, pick);
       progressed = true;
@@ -368,7 +388,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const maint = { ...targets };
     let go = true;
     while (go && slot.timeUsed < slot.budget) {
-      const pick = bestExercise(slot, targets, maint, perSlotCap, s, style, weekNum);
+      const pick = bestExercise(slot, targets, maint, perSlotCap, s, style, weekNum, false, prioritySet);
       if (!pick) { go = false; break; }
       place(slot, pick);
       for (const m in pick.contrib) maint[m] -= pick.sets * pick.contrib[m];
@@ -383,7 +403,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const numMains = Math.max(1, slot.picks.filter(p => p.ex.role === 'primary').length);
     let added = 0;
     while (added < numMains + 1) {
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, true);
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, true, prioritySet);
       if (!pick) break;
       place(slot, pick);
       added++;
