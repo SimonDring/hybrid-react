@@ -84,6 +84,23 @@ const PROFILES = {
   sportTransition: {
     totalWeeks: 4,
     split: [{ intent: 'base', weeks: 4 }]
+  },
+
+  // ── Run discipline overrides ───────────────────────────────────────────
+  // Sprint (100–400m): short power blocks per NSCA sprint periodization model.
+  runSprintOff: {
+    totalWeeks: 6,
+    split: [{ intent: 'base', weeks: 2 }, { intent: 'build', weeks: 3 }, { intent: 'peak', weeks: 1 }]
+  },
+  // Pre-season sprint: quick taper to peak power output.
+  runSprintPre: {
+    totalWeeks: 4,
+    split: [{ intent: 'base', weeks: 2 }, { intent: 'build', weeks: 2 }]
+  },
+  // Middle distance (800m–5K): 10w blocks for running economy + speed endurance blend.
+  runMiddleOff: {
+    totalWeeks: 10,
+    split: [{ intent: 'base', weeks: 4 }, { intent: 'build', weeks: 4 }, { intent: 'peak', weeks: 2 }]
   }
 };
 
@@ -98,10 +115,28 @@ export function resolvePeriodization(profile = {}) {
 
   if (goalType === 'sport' && profile.sport) {
     const season = deriveSeason(profile);
+
+    if (profile.sport === 'run' && profile.run_discipline) {
+      const disc = profile.run_discipline;
+      if (disc === 'sprint') {
+        if (season === 'pre')        return PROFILES.runSprintPre;
+        if (season === 'in')         return PROFILES.sportIn;
+        if (season === 'transition') return PROFILES.sportTransition;
+        return PROFILES.runSprintOff;
+      }
+      if (disc === 'middle') {
+        if (season === 'pre')        return PROFILES.sportPre;
+        if (season === 'in')         return PROFILES.sportIn;
+        if (season === 'transition') return PROFILES.sportTransition;
+        return PROFILES.runMiddleOff;
+      }
+      // 'long' falls through to generic sport logic below
+    }
+
     if (season === 'pre')        return PROFILES.sportPre;
     if (season === 'in')         return PROFILES.sportIn;
     if (season === 'transition') return PROFILES.sportTransition;
-    return PROFILES.sportOff; // 'off' or null → default to off-season
+    return PROFILES.sportOff;
   }
 
   const style = profile.strength_style;
