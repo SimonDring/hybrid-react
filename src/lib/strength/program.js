@@ -10,7 +10,15 @@
  */
 
 const SPORT_EMPHASIS = {
-  run:   { quads: 1.15, hamstrings: 1.25, glutes: 1.2, calves: 1.3, core: 1.2, back: 0.9, shoulders: 0.8, chest: 0.55, biceps: 0.55, triceps: 0.7 },
+  // Run disciplines — separate maps per science (design spec 2026-06-12-run-discipline)
+  // Sprint: glutes/hamstrings for power + shoulders for arm drive (Hicks 2024 scoping review)
+  run_sprint: { quads: 1.20, hamstrings: 1.30, glutes: 1.35, calves: 1.20, core: 1.15, back: 1.00, shoulders: 1.10, chest: 0.90, biceps: 0.70, triceps: 0.80 },
+  // Middle: balanced running economy focus
+  run_middle: { quads: 1.15, hamstrings: 1.30, glutes: 1.25, calves: 1.20, core: 1.20, back: 0.90, shoulders: 0.80, chest: 0.55, biceps: 0.55, triceps: 0.70 },
+  // Long: heaviest calf (achilles tendon loading), minimal chest/shoulders (avoid mass)
+  run_long:   { quads: 1.10, hamstrings: 1.30, glutes: 1.20, calves: 1.40, core: 1.25, back: 0.90, shoulders: 0.70, chest: 0.45, biceps: 0.50, triceps: 0.65 },
+  // Fallback when run_discipline is not set
+  run:        { quads: 1.15, hamstrings: 1.25, glutes: 1.20, calves: 1.30, core: 1.20, back: 0.90, shoulders: 0.80, chest: 0.55, biceps: 0.55, triceps: 0.70 },
   cycle: { quads: 1.3, glutes: 1.25, hamstrings: 1.15, calves: 1.0, core: 1.15, back: 0.9, shoulders: 0.7, chest: 0.55, biceps: 0.55, triceps: 0.7 },
   swim:  { back: 1.3, shoulders: 1.25, triceps: 1.15, biceps: 1.1, core: 1.2, chest: 1.0, quads: 0.7, hamstrings: 0.7, glutes: 0.7, calves: 0.5 }
 };
@@ -23,6 +31,26 @@ const SPORT_EMPHASIS = {
 // Strength: competition lifts + close variants.
 // Functional: Janda crossed syndromes, McGill spine, desk-job counterbalance.
 const SPORT_PRIORITY = {
+  // Sprint (100–400m): power/explosive first. Olympic lifts, plyos, glute power.
+  run_sprint: [
+    'hang_clean', 'power_clean', 'depth_jump', 'broad_jump', 'sled_push',
+    'back_squat', 'hip_thrust', 'nordic_curl', 'bounding_a_skip',
+    'double_leg_pogo', 'sl_pogo_jump', 'split_squat',
+    'glute_bridge_single_leg', 'pallof', 'sl_calf'
+  ],
+  // Middle distance (800m–5K): mixed economy + speed endurance.
+  run_middle: [
+    'nordic_curl', 'split_squat', 'rdl', 'double_leg_pogo', 'sl_pogo_jump',
+    'trap_bar_dl', 'step_up', 'lateral_band_walk', 'copenhagen',
+    'pallof', 'sl_calf', 'sl_hinge', 'tibialis_raise'
+  ],
+  // Long distance (10K+): heavy tendon-loading + injury prevention. No plyos.
+  run_long: [
+    'nordic_curl', 'rdl', 'trap_bar_dl', 'split_squat', 'sl_calf',
+    'tibialis_raise', 'lateral_band_walk', 'copenhagen', 'pallof',
+    'dead_bug', 'sl_hinge', 'glute_bridge_single_leg', 'step_up'
+  ],
+  // Fallback when run_discipline is not set
   run: [
     'nordic_curl', 'double_leg_pogo', 'sl_pogo_jump', 'bounding_a_skip',
     'split_squat', 'rdl', 'trap_bar_dl', 'glute_bridge_single_leg',
@@ -80,12 +108,16 @@ export function resolveProgram(profile = {}) {
   if (goalType === 'sport' && profile.sport) {
     const sport = profile.sport;
     const season = profile.sport_season || 'off';
+    // For run athletes, look up discipline-specific emphasis and priority
+    const emphasisKey = (sport === 'run' && profile.run_discipline)
+      ? `run_${profile.run_discipline}`
+      : sport;
     return {
       goalType: 'sport', style: 'sport',
-      emphasis: SPORT_EMPHASIS[sport] || {},
+      emphasis: SPORT_EMPHASIS[emphasisKey] || {},
       volumeScalar: season === 'in' ? 0.6 : 1.0,
       power: true, sport, season, level,
-      exercisePriority: SPORT_PRIORITY[sport] || []
+      exercisePriority: SPORT_PRIORITY[emphasisKey] || SPORT_PRIORITY[sport] || []
     };
   }
 
