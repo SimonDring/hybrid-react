@@ -113,7 +113,62 @@ export const EXERCISES = [
   { id: 'leg_curl',       name: 'Leg curl',          pattern: 'iso', muscle: 'ham',     equip: 'machine',   level: 0, role: 'iso', sportTags: ['run', 'cycle'] },
   { id: 'nordic_curl',    name: 'Nordic curl',       pattern: 'iso', muscle: 'ham',     equip: 'bodyweight', level: 3, role: 'iso', sportTags: ['run', 'cycle'] },
   { id: 'leg_ext',        name: 'Leg extension',     pattern: 'iso', muscle: 'quad',    equip: 'machine',   level: 0, role: 'iso' },
-  { id: 'chest_fly',      name: 'Chest fly',         pattern: 'iso', muscle: 'chest',   equip: 'dumbbell',  level: 0, role: 'iso' }
+  { id: 'chest_fly',      name: 'Chest fly',         pattern: 'iso', muscle: 'chest',   equip: 'dumbbell',  level: 0, role: 'iso' },
+
+  // ---------------- HYPERTROPHY ACCENTS ----------------
+  { id: 'incline_db_curl',      name: 'Incline DB Curl',                  pattern: 'iso',    muscle: 'biceps',    equip: 'dumbbell',   level: 1, role: 'iso',       minLevelForPrimary: 'returning',    goalTags: ['hypertrophy'] },
+  { id: 'spider_curl',          name: 'Spider Curl',                      pattern: 'iso',    muscle: 'biceps',    equip: 'dumbbell',   level: 1, role: 'iso',       minLevelForPrimary: 'returning',    goalTags: ['hypertrophy'] },
+  { id: 'overhead_cable_ext',   name: 'Overhead Cable Tricep Extension',  pattern: 'iso',    muscle: 'triceps',   equip: 'cable',      level: 1, role: 'iso',       minLevelForPrimary: 'returning',    goalTags: ['hypertrophy'] },
+  { id: 'low_high_cable_fly',   name: 'Low-to-High Cable Fly',            pattern: 'hpush',                       equip: 'cable',      level: 1, role: 'accessory', minLevelForPrimary: 'returning',    goalTags: ['hypertrophy'] },
+  { id: 'seated_leg_curl',      name: 'Seated Leg Curl',                  pattern: 'iso',    muscle: 'ham',       equip: 'machine',    level: 0, role: 'iso',       minLevelForPrimary: 'beginner',     goalTags: ['hypertrophy'] },
+  { id: 'heel_elevated_goblet', name: 'Heel-Elevated Goblet Squat',       pattern: 'squat',                       equip: 'dumbbell',   level: 1, role: 'accessory', minLevelForPrimary: 'returning',    goalTags: ['hypertrophy'] },
+  { id: 'reverse_pec_deck',     name: 'Reverse Pec Deck',                 pattern: 'hpull',                       equip: 'machine',    level: 0, role: 'iso',       minLevelForPrimary: 'beginner',     goalTags: ['hypertrophy'], sportTags: ['swim'] },
+  { id: 'serratus_punch_cable', name: 'Serratus Punch (cable)',           pattern: 'core',                        equip: 'cable',      level: 1, role: 'core',      minLevelForPrimary: 'returning',    goalTags: ['hypertrophy', 'functional'], sportTags: ['swim'] },
+  { id: 'prone_y_raise',        name: 'Prone Y Raise',                    pattern: 'hpull',                       equip: 'dumbbell',   level: 0, role: 'iso',       minLevelForPrimary: 'beginner',     goalTags: ['hypertrophy', 'functional'], sportTags: ['swim', 'functional'] },
+  { id: 'prone_t_raise',        name: 'Prone T Raise',                    pattern: 'hpull',                       equip: 'dumbbell',   level: 0, role: 'iso',       minLevelForPrimary: 'beginner',     goalTags: ['hypertrophy'], sportTags: ['swim'] },
+  { id: 'prone_w_raise',        name: 'Prone W Raise',                    pattern: 'hpull',                       equip: 'dumbbell',   level: 0, role: 'iso',       minLevelForPrimary: 'beginner',     goalTags: ['hypertrophy'], sportTags: ['swim'] },
+  { id: 'db_pullover',          name: 'DB Pullover',                      pattern: 'hpull',                       equip: 'dumbbell',   level: 2, role: 'accessory', minLevelForPrimary: 'intermediate', goalTags: ['hypertrophy'] },
+  { id: 'jm_press',             name: 'JM Press',                         pattern: 'hpush',                       equip: 'barbell',    level: 3, role: 'accessory', minLevelForPrimary: 'advanced',     goalTags: ['strength'] },
+  { id: 'close_grip_bench',     name: 'Close-Grip Bench Press',           pattern: 'hpush',                       equip: 'barbell',    level: 2, role: 'accessory', minLevelForPrimary: 'intermediate', goalTags: ['strength', 'hypertrophy'] },
+  { id: 'ab_wheel',             name: 'Ab Wheel Rollout',                 pattern: 'core',                        equip: 'bodyweight', level: 2, role: 'core',                                          goalTags: ['strength', 'functional'] },
+  { id: 'pause_squat',          name: 'Pause Squat (2-3s)',               pattern: 'squat',                       equip: 'barbell',    level: 2, role: 'primary',   minLevelForPrimary: 'intermediate', goalTags: ['strength'], liftKey: 'squat' },
+  { id: 'rack_pull',            name: 'Rack Pull',                        pattern: 'hinge',                       equip: 'barbell',    level: 2, role: 'accessory', minLevelForPrimary: 'intermediate', goalTags: ['strength'] },
+  { id: 'deficit_deadlift',     name: 'Deficit Deadlift',                 pattern: 'hinge',                       equip: 'barbell',    level: 3, role: 'primary',   minLevelForPrimary: 'advanced',     goalTags: ['strength'], liftKey: 'deadlift' },
+  { id: 'floor_press',          name: 'Floor Press',                      pattern: 'hpush',                       equip: 'barbell',    level: 2, role: 'accessory', minLevelForPrimary: 'intermediate', goalTags: ['strength'] },
+  { id: 'seated_box_jump',      name: 'Seated Box Jump',                  pattern: 'squat',                       equip: 'bodyweight', level: 2, role: 'accessory', minLevelForPrimary: 'intermediate', goalTags: ['strength', 'functional'], sportTags: ['run'] },
+
+  // ---------------- FUNCTIONAL / DESK-JOB COUNTERBALANCE ----------------
+  // activationPrimer:true → prepended to every functional session by buildWeek()
+  { id: 'hip_flexor_90_90',        name: '90/90 Hip Flexor Stretch',       pattern: 'mobility', equip: 'bodyweight', level: 0, role: 'core',  activationPrimer: true,  goalTags: ['functional'] },
+  { id: 'glute_bridge_activation',  name: 'Glute Bridge (2s hold)',         pattern: 'hinge',    equip: 'bodyweight', level: 0, role: 'core',  activationPrimer: true,  goalTags: ['functional'] },
+  { id: 'band_pull_apart',          name: 'Band Pull-Apart',                pattern: 'hpull',    equip: 'band',       level: 0, role: 'iso',   activationPrimer: true,  goalTags: ['functional', 'hypertrophy'], sportTags: ['swim'] },
+  { id: 'cat_camel_thoracic',       name: 'Cat-Camel + Thoracic Rotation', pattern: 'mobility', equip: 'bodyweight', level: 0, role: 'core',  activationPrimer: true,  goalTags: ['functional'] },
+  { id: 'half_kneeling_pallof',     name: 'Half-Kneeling Pallof Press',    pattern: 'core',     equip: 'cable',      level: 1, role: 'core',  activationPrimer: false, goalTags: ['functional'], sportTags: ['run', 'swim'] },
+  { id: 'serratus_wall_slide',      name: 'Serratus Wall Slide',            pattern: 'core',     equip: 'bodyweight', level: 0, role: 'core',  activationPrimer: false, goalTags: ['functional'], sportTags: ['swim'] },
+  { id: 'bird_dog',                 name: 'Bird Dog (5s hold)',             pattern: 'core',     equip: 'bodyweight', level: 0, role: 'core',  activationPrimer: false, goalTags: ['functional', 'strength'] },
+  { id: 'tall_kneeling_landmine',   name: 'Tall-Kneeling Landmine Press',  pattern: 'vpush',    equip: 'barbell',    level: 1, role: 'accessory', minLevelForPrimary: 'returning', activationPrimer: false, goalTags: ['functional'] },
+  { id: 'prone_hip_extension',      name: 'Prone Hip Extension',           pattern: 'hinge',    equip: 'bodyweight', level: 0, role: 'iso',   activationPrimer: false, goalTags: ['functional'], sportTags: ['cycle'] },
+  { id: 'thoracic_foam_roller',     name: 'Thoracic Foam Roller Extension',pattern: 'mobility', equip: 'bodyweight', level: 0, role: 'core',  activationPrimer: false, goalTags: ['functional'], sportTags: ['cycle'] },
+
+  // ---------------- RUN SUPPORT ----------------
+  { id: 'double_leg_pogo',     name: 'Double-Leg Pogo Jump',      pattern: 'squat',  equip: 'bodyweight', level: 1, role: 'accessory', minLevelForPrimary: 'returning',    sportTags: ['run'], goalTags: ['functional'] },
+  { id: 'sl_pogo_jump',        name: 'Single-Leg Pogo Jump',      pattern: 'squat',  equip: 'bodyweight', level: 2, role: 'accessory', minLevelForPrimary: 'intermediate', sportTags: ['run'] },
+  { id: 'bounding_a_skip',     name: 'A-Skip / Bounding',         pattern: 'lunge',  equip: 'bodyweight', level: 2, role: 'accessory', minLevelForPrimary: 'intermediate', sportTags: ['run'] },
+  { id: 'lateral_band_walk',   name: 'Lateral Band Walk',         pattern: 'iso',    muscle: 'glutes', equip: 'band', level: 0, role: 'iso', minLevelForPrimary: 'beginner',  sportTags: ['run', 'cycle'], goalTags: ['functional'] },
+  { id: 'sl_hip_abduction',    name: 'Side-Lying Hip Abduction',  pattern: 'iso',    muscle: 'glutes', equip: 'dumbbell', level: 1, role: 'iso', minLevelForPrimary: 'returning', sportTags: ['run', 'cycle'] },
+  { id: 'sl_squat_to_box',     name: 'Single-Leg Squat to Box',   pattern: 'squat',  equip: 'bodyweight', level: 2, role: 'accessory', minLevelForPrimary: 'intermediate', sportTags: ['run'] },
+  { id: 'tibialis_raise',      name: 'Tibialis Raise',            pattern: 'iso',    muscle: 'quad',  equip: 'bodyweight', level: 0, role: 'iso', minLevelForPrimary: 'beginner',    sportTags: ['run'] },
+  { id: 'glute_bridge_single_leg', name: 'Single-Leg Glute Bridge', pattern: 'hinge', equip: 'bodyweight', level: 1, role: 'accessory', minLevelForPrimary: 'returning', sportTags: ['run', 'cycle'] },
+
+  // ---------------- CYCLE SUPPORT ----------------
+  { id: 'sl_leg_press',  name: 'Single-Leg Leg Press',  pattern: 'squat', equip: 'machine',    level: 1, role: 'accessory', minLevelForPrimary: 'returning',    sportTags: ['cycle'] },
+
+  // ---------------- SWIM SUPPORT ----------------
+  { id: 'sl_ext_rotation',       name: 'Side-Lying External Rotation',   pattern: 'iso', muscle: 'shoulders', equip: 'dumbbell', level: 1, role: 'iso',       minLevelForPrimary: 'returning',    sportTags: ['swim'] },
+  { id: 'cable_ext_rotation_90', name: 'Cable ER at 90° Abduction',      pattern: 'iso', muscle: 'shoulders', equip: 'cable',    level: 1, role: 'iso',       minLevelForPrimary: 'returning',    sportTags: ['swim'] },
+  { id: 'cable_woodchop',        name: 'Cable Woodchop (high-to-low)',   pattern: 'core',                     equip: 'cable',    level: 2, role: 'core',                                          goalTags: ['functional'], sportTags: ['swim'] },
+  { id: 'ankle_plantarflex_band',name: 'Banded Ankle Plantarflexion',    pattern: 'calf',                     equip: 'band',     level: 0, role: 'iso',       minLevelForPrimary: 'beginner',     sportTags: ['swim'] },
+  { id: 'glute_ham_raise',       name: 'Glute-Ham Raise',                pattern: 'hinge',                    equip: 'machine',  level: 3, role: 'primary',   minLevelForPrimary: 'advanced',     sportTags: ['swim'] }
 ];
 
 // Equipment keys an exercise can require.
