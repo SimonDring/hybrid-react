@@ -27,7 +27,7 @@ import { LEVELS } from '../../data/strengthExercises.js';
 //   bodybuilding  → ends past MAV toward MRV (volume is the driver; overreach
 //                   into the back of the block, then deload).
 // 0 = MEV, 1 = MAV, >1 = into the MAV→MRV zone.
-const STYLE_TOP = { strength: 0.6, functional: 1.0, bodybuilding: 1.4 };
+const STYLE_TOP = { strength: 0.6, functional: 1.0, bodybuilding: 1.4, sport: 0.6 };
 
 // Less-experienced trainees grow on (and recover from) less — keep the ramp
 // nearer MEV; advanced trainees can productively sit a touch higher.
