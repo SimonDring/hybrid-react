@@ -158,17 +158,49 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     isBuild && { title: 'What are you building?', subtitle: 'This sets your rep ranges, exercise mix and volume.', valid: () => !!a.strengthStyle,
       render: () => <OptionGrid cols={1}>{STYLES.map(s => <Chip key={s.key} selected={a.strengthStyle === s.key} onClick={() => set({ strengthStyle: s.key })} label={s.label} hint={s.hint} />)}</OptionGrid> },
 
-    isSport && { title: 'Which sport — and where are you?', subtitle: 'We program supportive strength: heavier, lower-volume, tuned to your sport.', valid: () => !!a.sport && !!a.sportSeason,
+    isSport && { title: 'Which sport — and where are you?', subtitle: 'We program supportive strength: heavier, lower-volume, tuned to your sport.', valid: () => !!a.sport && !!a.sportIntent,
       render: () => (
         <div style={{ display: 'grid', gap: 18 }}>
           <div>
             <label style={FIELD_LABEL}>Sport</label>
             <OptionGrid cols={3}>{SPORTS.map(s => <Chip key={s.key} emoji={s.emoji} center selected={a.sport === s.key} onClick={() => set({ sport: s.key })} label={s.label} />)}</OptionGrid>
           </div>
-          <div>
-            <label style={FIELD_LABEL}>Season</label>
-            <OptionGrid cols={1} gap={6}>{SEASONS.map(s => <Chip key={s.key} selected={a.sportSeason === s.key} onClick={() => set({ sportSeason: s.key })} label={s.label} hint={s.hint} />)}</OptionGrid>
+          {/* Sport intent — replaces 'in/off season' */}
+          <div className="field-group">
+            <label className="field-label">How do you train for {a.sport || 'your sport'}?</label>
+            <div className="option-cards">
+              {[
+                { value: 'compete',      label: 'I compete',          desc: 'You have races or events — training stays sport-specific.' },
+                { value: 'recreational', label: 'I play for fun',     desc: 'Recreational — balanced programme with sport-specific support.' },
+                { value: 'build_base',   label: 'Building my base',   desc: 'No events right now — maximise strength and conditioning.' }
+              ].map(opt => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  className={`option-card${a.sportIntent === opt.value ? ' selected' : ''}`}
+                  onClick={() => set({ sportIntent: opt.value })}
+                >
+                  <strong>{opt.label}</strong>
+                  <span>{opt.desc}</span>
+                </button>
+              ))}
+            </div>
           </div>
+          {a.sportIntent === 'compete' && (
+            <div className="field-group">
+              <label className="field-label">Next event date <span className="field-optional">(optional)</span></label>
+              <input
+                type="date"
+                className="text-input"
+                value={a.eventDate || ''}
+                min={new Date().toISOString().slice(0, 10)}
+                onChange={e => set({ eventDate: e.target.value })}
+              />
+              <p className="field-hint">
+                Used to auto-size the block length and track your season. Leave blank if unsure.
+              </p>
+            </div>
+          )}
         </div>
       ) },
 
@@ -223,7 +255,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     { title: 'Ready to go', subtitle: "Here's what we captured. Create your plan and you're in.", valid: () => true,
       render: () => {
         const goalLabel = isSport
-          ? `Support ${SPORTS.find(s => s.key === a.sport)?.label || 'sport'} · ${a.sportSeason === 'in' ? 'in-season' : 'off-season'}`
+          ? `Support ${SPORTS.find(s => s.key === a.sport)?.label || 'sport'} · ${a.sportIntent === 'compete' ? 'competing' : a.sportIntent === 'build_base' ? 'building base' : 'recreational'}`
           : (STYLES.find(s => s.key === a.strengthStyle)?.label || '—');
         const liftBits = hasBarbell ? ['squat', 'bench', 'deadlift'].filter(k => a.lifts[k]).map(k => `${k[0].toUpperCase()}${a.lifts[k]}`) : [];
         return (
