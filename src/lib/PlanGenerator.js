@@ -30,6 +30,7 @@ import * as swimming from './plan/swimming.js';
 import { scheduleWeek } from './plan/scheduler.js';
 import { resolveLifts } from './liftProgression.js';
 import { resolveProgram } from './strength/program.js';
+import { resolvePeriodization } from './plan/periodization.js';
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
@@ -318,7 +319,8 @@ function buildDisciplineSpecs(discipline, count, ctx, profile, program) {
         ...common, deload: lighten, gymDays: count, lifts: resolveLifts(profile),
         // Goal-resolved programming: style + per-muscle emphasis + overall volume.
         style: program.style, emphasis: program.emphasis, volumeScalar: program.volumeScalar,
-        power: program.power, sport: program.sport
+        power: program.power, sport: program.sport,
+        exercisePriority: program.exercisePriority || []
       });
     case 'run':
       return running.buildWeek({ ...common, runDays: count, goal: profile.run_goal || { distance: '10k', current: null } });
@@ -348,8 +350,7 @@ export function generatePlan(profile = {}) {
   const allowDoubles = profile.doubles !== false;
   const longRunDay = disciplines.includes('run') ? (profile.long_run_day || 'sat') : null;
 
-  const total = planLength(profile);
-  const split = phaseSplit(total);
+  const { totalWeeks: total, split } = resolvePeriodization(profile);
 
   // Race taper: when there's a dated goal, the final 1–2 weeks cut volume (but
   // keep some sharpness) so the athlete arrives fresh. Endurance volume plateaus
