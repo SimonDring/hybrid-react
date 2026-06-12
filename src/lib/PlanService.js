@@ -27,6 +27,7 @@ import { countWeeklyVolume } from './plan/volume.js';
 import { resolveLifts } from './liftProgression.js';
 import { MUSCLE_GROUPS, MUSCLE_LABELS } from '../data/muscleVolume.js';
 import { getOverrides } from './sessionOverrides.js';
+import { applyInjuryRules, applyPrevention } from './injury/injuryFilter.js';
 
 let _cache = { sig: null, plan: null };
 
@@ -186,6 +187,28 @@ function adaptedPhases() {
   return phases;
 }
 
+function injuryFilteredPhases() {
+  const phases = adaptedPhases();
+  if (!phases) return null;
+
+  const allInjuries = Database.services.listInjuries();
+  const active = allInjuries.filter(i =>
+    (i.status === 'active' || i.status === 'rehabbing') && i.body_part_key
+  );
+  const history = allInjuries.filter(i => i.body_part_key);
+
+  if (!active.length && !history.length) return phases;
+
+  return phases.map(phase => ({
+    ...phase,
+    weeks: (phase.weeks || []).map(week => {
+      let w = active.length ? applyInjuryRules(week, active) : week;
+      w = history.length ? applyPrevention(w, history) : w;
+      return w;
+    })
+  }));
+}
+
 function profileSignature(profile) {
   return JSON.stringify({
     f: profile.focus, e: profile.experience, g: profile.goals,
@@ -209,8 +232,8 @@ function generated() {
 }
 
 export function getPhases() {
-  const ap = adaptedPhases();
-  return ap ? ap : Legacy.getPhases();
+  const fp = injuryFilteredPhases();
+  return fp ? fp : Legacy.getPhases();
 }
 
 export function getPhase(id) {
