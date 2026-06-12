@@ -2,6 +2,89 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+---
+
+## Execution guide — Subagent-Driven Development
+
+This section tells the coordinating agent exactly how to run this plan. Read it once before touching any tasks.
+
+### Setup (do this first, once)
+
+1. **Read this entire plan file** — extract all 7 tasks with their full step text. Do not make subagents read the file themselves; provide the task text directly in their prompt.
+2. **Verify you are on the right branch** — `git branch` should show `ui-overhaul`. Do not work on `main`.
+3. **Create a TodoWrite task list** with all 7 tasks before dispatching a single subagent.
+
+### Per-task loop
+
+For each task, run these stages in order. Do not skip stages. Do not move to the next task until the current one is fully approved.
+
+**Stage 1 — Dispatch implementer subagent**
+
+Prompt the implementer subagent with:
+- Scene-setting: "You are implementing one task from a larger plan. The repo is a React 18 + Vite hybrid-athlete training PWA. Working branch: `ui-overhaul`. Working directory: `/Users/simondring/Code/hybrid-react`."
+- Full task text (copy verbatim from this plan — every step, every code block).
+- The test command: `node tests/engine-rest-and-rep.js`
+- Instruction: "Follow the steps exactly. Run tests after each step. Commit only at the final step of the task. Report back with status: DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED."
+- Model: use `haiku` for Tasks 1–3 (single-file, mechanical). Use `sonnet` for Tasks 4–7 (allocator is complex, multi-edit).
+
+Handle status responses:
+- **DONE** → proceed to Stage 2.
+- **DONE_WITH_CONCERNS** → read the concerns. If correctness/scope concerns, address before Stage 2. If observations only (e.g. "file is getting large"), note and proceed.
+- **NEEDS_CONTEXT** → answer the question and re-dispatch the same subagent.
+- **BLOCKED** → assess: context problem → add context and re-dispatch; task too complex → upgrade model; plan wrong → stop and escalate to the user.
+
+**Stage 2 — Spec compliance review**
+
+Dispatch a spec-reviewer subagent. Provide:
+- The spec file: `docs/superpowers/specs/2026-06-11-session-engine-rest-and-rep.md` (have the reviewer read it)
+- The task text from this plan for the task just implemented
+- The git diff since the task started: `git diff HEAD~1` (or however many commits the task made)
+- Instruction: "Check only that the implementation matches the spec and this task's requirements — nothing more, nothing less. Report: ✅ compliant OR ❌ issues found (list each gap explicitly)."
+
+If issues found → re-dispatch the original implementer subagent with the gap list. Re-run spec review after fixes. Repeat until ✅.
+
+**Stage 3 — Code quality review**
+
+Only after spec compliance is ✅. Dispatch a code-quality-reviewer subagent. Provide:
+- The same git diff
+- Instruction: "Review for code quality only — not spec compliance (already verified). Look for: unnecessary complexity, missing edge cases, naming clarity, consistency with the existing codebase patterns in `src/lib/plan/allocator.js`. Rate issues as Critical / Important / Minor. Approve or request fixes."
+
+If fixes requested → implementer subagent fixes → re-run quality review. Repeat until approved.
+
+**After both stages pass:** mark the task complete in TodoWrite and move to the next task.
+
+### After all 7 tasks
+
+1. Run the full test suite one final time: `node tests/engine-rest-and-rep.js`
+2. Verify the dev build: `npm run dev` — Vite should start cleanly, no console errors.
+3. Dispatch a final code-reviewer subagent across the entire implementation (all changes combined).
+4. Invoke `superpowers:finishing-a-development-branch` to decide how to integrate (PR vs merge).
+
+### Model guide
+
+| Task | Recommended model | Reason |
+|---|---|---|
+| Task 1 — Write test script | `haiku` | New file, self-contained, no codebase reading |
+| Task 2 — `targets.js` one-liner | `haiku` | Single line change |
+| Task 3 — `program.js` one-liner | `haiku` | Single line change |
+| Task 4 — Allocator: style guard + scheme | `sonnet` | Multi-edit, must preserve existing scheme exactly |
+| Task 5 — Allocator: `restSec` + helper | `sonnet` | Touches every `makeItem()` return path |
+| Task 6 — Allocator: superset B override | `sonnet` | Subtle positional logic in `structureItems()` |
+| Task 7 — Allocator: primary cap (5 edits) | `sonnet` | Most edits; touches `bestExercise`, `place`, two loops, slot init |
+| Spec reviewer | `sonnet` | Needs to read and reason about spec |
+| Quality reviewer | `sonnet` | Needs codebase pattern awareness |
+
+### Key context to give every implementer subagent
+
+- `"type": "module"` is set in `package.json` — all `.js` files are ES modules, run with `node` directly.
+- `npm run dev` runs Vite, not tests. Tests run with `node tests/engine-rest-and-rep.js`.
+- Do not touch `SessionDetail.jsx` or any other UI file — UI changes are out of scope by design.
+- Do not modify `Database.js`, `SyncService.js`, or `Storage.js` — engine-only changes.
+- The codebase uses real theme variables (`--bg-surface`, `--rust`, etc.) — but this plan has no CSS changes.
+- Theme variables are irrelevant to this plan; mention this so the subagent doesn't get distracted.
+
+---
+
 **Goal:** Add evidence-based rest prescriptions to every exercise item, a dedicated sport rep scheme for run/cycle/swim athletes, and a hard cap of 2 primary compound lifts per session.
 
 **Architecture:** All changes are engine-only — three files, no UI changes. `restSec` is added as a first-class field on items in `makeItem()`. The sport scheme is a new row in the existing `scheme()` table. The 2-primary cap is a `primaryCount` counter per slot in `allocateGym()`. The `restSec` field is ready for the UI to consume later without further engine changes.
