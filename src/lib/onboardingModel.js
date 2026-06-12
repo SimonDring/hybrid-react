@@ -1,3 +1,5 @@
+import { resolvePeriodization } from './plan/periodization.js';
+
 /**
  * onboardingModel — the pure (non-UI) part of onboarding: the answer shape and
  * the mapping from answers → users.profile shape that the engine consumes.
@@ -23,7 +25,8 @@ export const BLANK_ANSWERS = {
   goalType: '',                 // 'build' | 'sport'
   strengthStyle: 'strength',    // build: 'strength' | 'bodybuilding' | 'functional'
   sport: '',                    // sport: 'run' | 'cycle' | 'swim'
-  sportSeason: 'off',           // 'in' | 'off'
+  sportIntent: '',              // 'compete' | 'recreational' | 'build_base'
+  eventDate: '',                // optional ISO date YYYY-MM-DD
   experienceLevel: 'intermediate',
   lifts: { squat: '', bench: '', deadlift: '' },
   daysPerWeek: null, sessionMinutes: 60, days: [],
@@ -40,7 +43,16 @@ export function answersToProfilePatch(a) {
 
   return {
     plan_start_date: today,
-    plan_weeks: 16,                          // ongoing periodised block (no event date)
+    plan_weeks: (() => {
+      const pseudo = {
+        goal_type: a.goalType || null,
+        strength_style: isBuild ? (a.strengthStyle || 'strength') : null,
+        sport: isSport ? (a.sport || null) : null,
+        sport_intent: isSport ? (a.sportIntent || 'recreational') : null,
+        event_date: isSport && a.eventDate ? a.eventDate : null
+      };
+      return resolvePeriodization(pseudo).totalWeeks;
+    })(),
     name: (a.name || '').trim(), age: numOrNull(a.age), sex: a.sex || null,
     bodyweight_kg: numOrNull(a.bodyweight_kg),
 
@@ -50,7 +62,9 @@ export function answersToProfilePatch(a) {
     primary: 'gym',
     strength_style: isBuild ? (a.strengthStyle || 'strength') : 'strength',
     sport: isSport ? (a.sport || null) : null,
-    sport_season: isSport ? (a.sportSeason || 'off') : null,
+    sport_intent: isSport ? (a.sportIntent || 'recreational') : null,
+    event_date: isSport && a.eventDate ? a.eventDate : null,
+    sport_season: null,  // no longer set during onboarding; deriveSeason() computes it on demand
 
     experience: { gym: a.experienceLevel || 'intermediate' },
     lifts: hasBarbell
