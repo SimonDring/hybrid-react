@@ -160,6 +160,13 @@ export const EXERCISES = [
   { id: 'tibialis_raise',      name: 'Tibialis Raise',            pattern: 'iso',    muscle: 'quad',  equip: 'bodyweight', level: 0, role: 'iso', minLevelForPrimary: 'beginner',    sportTags: ['run'] },
   { id: 'glute_bridge_single_leg', name: 'Single-Leg Glute Bridge', pattern: 'hinge', equip: 'bodyweight', level: 1, role: 'accessory', minLevelForPrimary: 'returning', sportTags: ['run', 'cycle'] },
 
+  // ── Sprint-specific exercises ────────────────────────────────────────────
+  { id: 'hang_clean',  name: 'Hang Clean',  pattern: 'squat', equip: 'barbell',    level: 2, role: 'primary',   sportTags: ['run_sprint'], minLevelForPrimary: 'intermediate' },
+  { id: 'power_clean', name: 'Power Clean', pattern: 'squat', equip: 'barbell',    level: 3, role: 'primary',   sportTags: ['run_sprint'], minLevelForPrimary: 'advanced' },
+  { id: 'depth_jump',  name: 'Depth Jump',  pattern: 'squat', equip: 'bodyweight', level: 2, role: 'accessory', sportTags: ['run_sprint'], minLevelForPrimary: 'intermediate' },
+  { id: 'broad_jump',  name: 'Broad Jump',  pattern: 'squat', equip: 'bodyweight', level: 1, role: 'accessory', sportTags: ['run_sprint'], minLevelForPrimary: 'returning' },
+  { id: 'sled_push',   name: 'Sled Push',   pattern: 'lunge', equip: 'other',      level: 0, role: 'accessory', sportTags: ['run_sprint'] },
+
   // ---------------- CYCLE SUPPORT ----------------
   { id: 'sl_leg_press',  name: 'Single-Leg Leg Press',  pattern: 'squat', equip: 'machine',    level: 1, role: 'accessory', minLevelForPrimary: 'returning',    sportTags: ['cycle'] },
 
