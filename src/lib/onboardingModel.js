@@ -26,6 +26,7 @@ export const BLANK_ANSWERS = {
   strengthStyle: 'strength',    // build: 'strength' | 'bodybuilding' | 'functional'
   sport: '',                    // sport: 'run' | 'cycle' | 'swim'
   sportIntent: '',              // 'compete' | 'recreational' | 'build_base'
+  runDiscipline: '',            // run only: 'sprint' | 'middle' | 'long'
   eventDate: '',                // optional ISO date YYYY-MM-DD
   experienceLevel: 'intermediate',
   lifts: { squat: '', bench: '', deadlift: '' },
@@ -49,7 +50,8 @@ export function answersToProfilePatch(a) {
         strength_style: isBuild ? (a.strengthStyle || 'strength') : null,
         sport: isSport ? (a.sport || null) : null,
         sport_intent: isSport ? (a.sportIntent || 'recreational') : null,
-        event_date: isSport && a.eventDate ? a.eventDate : null
+        event_date: isSport && a.eventDate ? a.eventDate : null,
+        run_discipline: isSport && a.sport === 'run' ? (a.runDiscipline || null) : null
       };
       return resolvePeriodization(pseudo).totalWeeks;
     })(),
@@ -65,6 +67,7 @@ export function answersToProfilePatch(a) {
     sport_intent: isSport ? (a.sportIntent || 'recreational') : null,
     event_date: isSport && a.eventDate ? a.eventDate : null,
     sport_season: null,  // no longer set during onboarding; deriveSeason() computes it on demand
+    run_discipline: isSport && a.sport === 'run' ? (a.runDiscipline || null) : null,
 
     experience: { gym: a.experienceLevel || 'intermediate' },
     lifts: hasBarbell
