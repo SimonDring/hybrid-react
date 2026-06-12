@@ -36,6 +36,11 @@ const SPORT_INTENT_QUESTION = {
   cycle: 'Why do you cycle?',
   swim:  'Why do you swim?'
 };
+const RUN_DISCIPLINES = [
+  { key: 'sprint', label: 'Sprints',          hint: '100 – 400m' },
+  { key: 'middle', label: 'Middle distance',   hint: '800m – 5K' },
+  { key: 'long',   label: 'Long distance',     hint: '10K+' }
+];
 const LEVELS = [
   { key: 'beginner', label: 'Beginner', hint: 'New to lifting' },
   { key: 'returning', label: 'Returning', hint: 'Back after a break' },
@@ -164,13 +169,25 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     isBuild && { title: 'What are you building?', subtitle: 'This sets your rep ranges, exercise mix and volume.', valid: () => !!a.strengthStyle,
       render: () => <OptionGrid cols={1}>{STYLES.map(s => <Chip key={s.key} selected={a.strengthStyle === s.key} onClick={() => set({ strengthStyle: s.key })} label={s.label} hint={s.hint} />)}</OptionGrid> },
 
-    isSport && { title: 'Which sport — and where are you?', subtitle: 'We program supportive strength: heavier, lower-volume, tuned to your sport.', valid: () => !!a.sport && !!a.sportIntent,
+    isSport && { title: 'Which sport — and where are you?', subtitle: 'We program supportive strength: heavier, lower-volume, tuned to your sport.', valid: () => !!a.sport && !!a.sportIntent && (a.sport !== 'run' || !!a.runDiscipline),
       render: () => (
         <div style={{ display: 'grid', gap: 18 }}>
           <div>
             <label style={FIELD_LABEL}>Sport</label>
-            <OptionGrid cols={3}>{SPORTS.map(s => <Chip key={s.key} emoji={s.emoji} center selected={a.sport === s.key} onClick={() => set({ sport: s.key })} label={s.label} />)}</OptionGrid>
+            <OptionGrid cols={3}>{SPORTS.map(s => <Chip key={s.key} emoji={s.emoji} center selected={a.sport === s.key} onClick={() => set({ sport: s.key, runDiscipline: s.key === 'run' ? a.runDiscipline : '' })} label={s.label} />)}</OptionGrid>
           </div>
+          {a.sport === 'run' && (
+            <div>
+              <label style={FIELD_LABEL}>What distance do you run?</label>
+              <OptionGrid cols={3}>
+                {RUN_DISCIPLINES.map(d => (
+                  <Chip key={d.key} center selected={a.runDiscipline === d.key}
+                    onClick={() => set({ runDiscipline: d.key })}
+                    label={d.label} hint={d.hint} />
+                ))}
+              </OptionGrid>
+            </div>
+          )}
           <div>
             <label style={FIELD_LABEL}>{SPORT_INTENT_QUESTION[a.sport] || 'How do you train?'}</label>
             <OptionGrid cols={1} gap={6}>
@@ -252,6 +269,10 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         return (
           <div style={{ display: 'grid', gap: 6 }}>
             <SummaryRow label="Goal" value={goalLabel} />
+            {isSport && <SummaryRow label="Sport" value={SPORTS.find(s => s.key === a.sport)?.label || '—'} />}
+            {a.sport === 'run' && a.runDiscipline && (
+              <SummaryRow label="Distance" value={RUN_DISCIPLINES.find(d => d.key === a.runDiscipline)?.label || '—'} />
+            )}
             <SummaryRow label="Experience" value={LEVELS.find(l => l.key === a.experienceLevel)?.label || '—'} />
             {liftBits.length > 0 && <SummaryRow label="Maxes" value={liftBits.join(' · ') + ' kg'} />}
             <SummaryRow label="Week" value={a.daysPerWeek ? `${a.daysPerWeek} days · ${a.sessionMinutes === 90 ? '90+' : a.sessionMinutes} min` : '—'} />
