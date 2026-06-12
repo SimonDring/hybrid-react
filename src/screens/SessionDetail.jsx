@@ -24,6 +24,7 @@ export default function SessionDetail() {
   const [checked, setChecked] = useState([]);
   const [infoItem, setInfoItem] = useState(null); // exercise tapped for the form guide
   const [lifts, setLifts] = useState({}); // top-set log: key → { weight, rpe }
+  const [restStart, setRestStart] = useState(null); // { secs, at } — seeds RestTimer on set completion
 
   const phase = Plan.getPhase(Number(phaseId));
   const week = phase ? phase.weeks.find(w => w.num === Number(weekNum)) : null;
@@ -37,6 +38,7 @@ export default function SessionDetail() {
     setNotes('');
     setChecked(getChecked(key));
     setLifts({});
+    setRestStart(null);
   }, [key]);
 
   if (!session) return <div style={{ padding: 24 }}>Session not found</div>;
@@ -50,7 +52,20 @@ export default function SessionDetail() {
 
   const handleStart = () => startSession(key);
 
-  const toggleItem = (idx) => setChecked(toggleChecked(key, idx));
+  const fmtRest = (s) => {
+    if (s < 60) return `Rest ${s}s`;
+    if (s % 60 === 0) return `Rest ${s / 60} min`;
+    return `Rest ${Math.floor(s / 60)} min ${s % 60}s`;
+  };
+
+  const toggleItem = (idx) => {
+    const next = toggleChecked(key, idx);
+    setChecked(next);
+    if (next.includes(idx)) {
+      const item = session.items[idx];
+      if (item?.restSec) setRestStart({ secs: item.restSec, at: Date.now() });
+    }
+  };
 
   const handleCancel = () => {
     if (!confirm('Started this by mistake? This clears the start time and resets it to not started. Your check-offs will be cleared.')) return;
@@ -185,6 +200,7 @@ export default function SessionDetail() {
                       })}
                     </div>
                     {cue && <div className="gt-note">{cue}</div>}
+                    {item.restSec > 0 && <div className="gt-rest">{fmtRest(item.restSec)}</div>}
                   </div>
                 );
               })}
@@ -341,7 +357,7 @@ export default function SessionDetail() {
                     <span className="sl-started">Started {new Date(state.startedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   )}
                 </div>
-                <RestTimer />
+                <RestTimer restStart={restStart} />
               </div>
               <button
                 className="btn-primary"

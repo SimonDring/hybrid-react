@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-const PRESETS = [60, 90, 120];
+const PRESETS = [60, 90, 120, 180];
 
 function fmt(s) {
   const m = Math.floor(s / 60);
@@ -10,10 +10,10 @@ function fmt(s) {
 
 /**
  * RestTimer — a tap-to-run rest countdown for use between sets.
- * Pick a preset to start; tap the time to pause/resume. Vibrates on finish
- * (where supported). Fully self-contained, no persistence.
+ * restStart: { secs, at } — changes trigger an auto-start with the given duration.
+ * Pick a preset to override; tap the time to pause/resume. Vibrates on finish.
  */
-export default function RestTimer() {
+export default function RestTimer({ restStart }) {
   const [secs, setSecs] = useState(0);
   const [running, setRunning] = useState(false);
   const intervalRef = useRef(null);
@@ -37,6 +37,11 @@ export default function RestTimer() {
   const start = (n) => { setSecs(n); setRunning(true); };
   const toggle = () => { if (secs > 0) setRunning(r => !r); };
   const reset = () => { setRunning(false); setSecs(0); };
+
+  // Auto-start when a set is tapped complete — restStart.at changes each time.
+  useEffect(() => {
+    if (restStart?.secs > 0) start(restStart.secs);
+  }, [restStart]);
 
   return (
     <div className="rest-timer">

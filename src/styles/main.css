@@ -3300,6 +3300,15 @@ html[data-theme="dark"] .st-rpe {
   font-style: italic;
 }
 
+.gt-rest {
+  font-size: 11px;
+  color: var(--txt-muted);
+  padding: 0 14px 10px 11px;
+  margin-top: -4px;
+  opacity: 0.75;
+  letter-spacing: 0.02em;
+}
+
 /* ===================================================================
    WEEK DETAIL — compressed session tiles (Round 1)
    Shorter vertically, optimised for mobile glance.
