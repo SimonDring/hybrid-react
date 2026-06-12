@@ -39,7 +39,7 @@ export function resolveProgram(profile = {}) {
     const sport = profile.sport;
     const season = profile.sport_season || 'off';
     return {
-      goalType: 'sport', style: 'strength',
+      goalType: 'sport', style: 'sport',
       emphasis: SPORT_EMPHASIS[sport] || {},
       volumeScalar: season === 'in' ? 0.6 : 0.85,   // maintenance in-season, developmental off-season
       power: true, sport, season, level

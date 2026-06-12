@@ -41,7 +41,10 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 // ---- rep / RPE / intensity scheme by style + phase (moved here from strength.js
 // so the allocator owns the prescription and there's no import cycle) ----
 function scheme(style, intent, deload) {
-  if (deload) return { main: '2 × 5', acc: '2 × 8', mainRpe: 'RPE 6', accRpe: 'RPE 6' };
+  if (deload) {
+    if (style === 'sport') return { main: '2 × 4', acc: '2 × 6', mainRpe: 'RPE 5', accRpe: 'RPE 5' };
+    return { main: '2 × 5', acc: '2 × 8', mainRpe: 'RPE 6', accRpe: 'RPE 6' };
+  }
   const table = {
     strength: {
       base:  { main: '4 × 5', acc: '3 × 8', mainRpe: 'RPE 7',   accRpe: 'RPE 7' },
@@ -57,6 +60,11 @@ function scheme(style, intent, deload) {
       base:  { main: '3 × 8', acc: '3 × 10', mainRpe: 'RPE 7',   accRpe: 'RPE 7' },
       build: { main: '4 × 6', acc: '3 × 8',  mainRpe: 'RPE 7→8', accRpe: 'RPE 7' },
       peak:  { main: '3 × 5', acc: '3 × 6',  mainRpe: 'RPE 8',   accRpe: 'RPE 8' }
+    },
+    sport: {
+      base:  { main: '3 × 5', acc: '3 × 8', mainRpe: 'RPE 7',   accRpe: 'RPE 6' },
+      build: { main: '4 × 4', acc: '3 × 8', mainRpe: 'RPE 8',   accRpe: 'RPE 7' },
+      peak:  { main: '4 × 3', acc: '3 × 6', mainRpe: 'RPE 8→9', accRpe: 'RPE 7→8' }
     }
   };
   return (table[style] || table.functional)[intent] || table.functional.base;
@@ -96,22 +104,32 @@ function roleSetCount(ex, s, style) {
   return parseSetCount(s.acc);   // accessory
 }
 
+// Rest prescription per role and style — surfaced as `restSec` on every item.
+// The UI reads this field to show a static label and seed the rest timer.
+// Superset B exercises get their value overridden to 20s in structureItems().
+function restForRole(ex, style) {
+  if (ex.role === 'primary') return (style === 'strength' || style === 'sport') ? 180 : 120;
+  if (ex.role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf') return 60;
+  return 75; // accessory compound — supersetted, so actual rest ≈ partner's work time
+}
+
 // Build the rendered item for a chosen exercise at a given position in the slot.
 function makeItem(ex, idx, s, style, deload, repBump) {
   const per = ex.unilateral ? ' ea.' : '';
   const num = LETTERS[Math.min(idx, LETTERS.length - 1)] + '1';
+  const restSec = restForRole(ex, style);
   if (ex.role === 'primary') {
-    return { num, name: ex.name, sets: s.main + per, rpe: s.mainRpe, note: mainNote(deload) };
+    return { num, name: ex.name, sets: s.main + per, rpe: s.mainRpe, note: mainNote(deload), restSec };
   }
   if (ex.pattern === 'core') {
     const hold = /plank|hold|dead bug|copenhagen|hollow|bird dog/i.test(ex.name);
-    return { num, name: ex.name, sets: hold ? coreStr(deload) : '3 × 12' + per, rpe: 'RPE 6', tag: 'mobility', note: '' };
+    return { num, name: ex.name, sets: hold ? coreStr(deload) : '3 × 12' + per, rpe: 'RPE 6', tag: 'mobility', note: '', restSec };
   }
   if (ex.pattern === 'calf' || ex.role === 'iso') {
     const str = ex.pattern === 'calf' ? '3 × 12' : isoStr(style);
-    return { num, name: ex.name, sets: bumpReps(str + per, repBump), rpe: s.accRpe, tag: ex.pattern === 'calf' ? 'mobility' : undefined, note: '' };
+    return { num, name: ex.name, sets: bumpReps(str + per, repBump), rpe: s.accRpe, tag: ex.pattern === 'calf' ? 'mobility' : undefined, note: '', restSec };
   }
-  return { num, name: ex.name, sets: bumpReps(s.acc + per, repBump), rpe: s.accRpe, note: '' };
+  return { num, name: ex.name, sets: bumpReps(s.acc + per, repBump), rpe: s.accRpe, note: '', restSec };
 }
 
 // Deterministic small jitter so equally-good choices rotate week to week / slot
@@ -181,7 +199,10 @@ function structureItems(picks) {
   blocks.forEach((blk, bi) => {
     const g = LET[Math.min(bi, 7)];
     const paired = blk.length > 1;
-    blk.forEach((p, pos) => items.push({ ...p.item, num: `${g}${pos + 1}`, group: g, superset: paired }));
+    blk.forEach((p, pos) => {
+      const restSec = (paired && pos > 0) ? 20 : p.item.restSec;
+      items.push({ ...p.item, num: `${g}${pos + 1}`, group: g, superset: paired, restSec });
+    });
   });
   return items;
 }
@@ -196,6 +217,10 @@ function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, fil
     if (ex.level > slot.level) continue;
     if (slot.exUsed.has(ex.id)) continue;
     if (fillersOnly && !isFiller(ex)) continue;   // filler pass: only light rest-gap work
+    // Cap at 2 primaries per slot — beyond that, extra heavy mains crowd out accessories
+    // without adding meaningful variety, and make sessions uncomfortably long.
+    if (!fillersOnly && ex.role === 'primary' &&
+        slot.picks.filter(p => p.ex.role === 'primary').length >= 2) continue;
     const sets = roleSetCount(ex, s, style);
     if (sets <= 0) continue;
     const cost = sets * perSetMin(ex);
@@ -259,7 +284,7 @@ function focusLabel(mv) {
  *          intensity, lowerBody } — one per slot, scheduler/renderer ready.
  */
 export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
-  const style = ['strength', 'bodybuilding', 'functional'].includes(ctx.style) ? ctx.style : 'functional';
+  const style = ['strength', 'bodybuilding', 'functional', 'sport'].includes(ctx.style) ? ctx.style : 'functional';
   const deload = !!ctx.deload;
   const intent = ctx.intent || 'base';
   const weekNum = ctx.weekNum || 1;
