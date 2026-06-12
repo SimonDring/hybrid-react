@@ -25,6 +25,7 @@ import Profile from './screens/Profile.jsx';
 import Injuries from './screens/Injuries.jsx';
 import Settings from './screens/Settings.jsx';
 import Coach from './screens/Coach.jsx';
+import BlockCheckin from './screens/BlockCheckin.jsx';
 
 const routeMeta = {
   '/': { title: 'Today', topLevel: true, tab: 'today' },
@@ -53,6 +54,17 @@ function matchRoute(pathname) {
     if (match) return routeMeta[pattern];
   }
   return { title: 'Hybrid', topLevel: true, tab: 'today' };
+}
+
+// Returns true when the current plan block's end date has passed.
+// plan_start_date and plan_weeks must both be set; if not, returns false
+// so brand-new users are never accidentally shown the check-in.
+function planBlockEnded(profile) {
+  if (!profile.plan_start_date || !profile.plan_weeks) return false;
+  const start = new Date(profile.plan_start_date + 'T00:00:00');
+  if (isNaN(start.getTime())) return false;
+  const end = new Date(start.getTime() + profile.plan_weeks * 7 * 24 * 60 * 60 * 1000);
+  return new Date() >= end;
 }
 
 export default function App() {
@@ -107,6 +119,12 @@ export default function App() {
   }
   if (!isOnboarded) {
     return <Onboarding />;
+  }
+
+  // Block-end check-in — runs once after each completed plan block.
+  // Shows a brief wizard that continues the plan automatically.
+  if (planBlockEnded(profile)) {
+    return <BlockCheckin />;
   }
 
   // Signed in → the app
