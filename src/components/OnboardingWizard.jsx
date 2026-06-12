@@ -196,7 +196,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
       ) },
 
     { title: 'Your lifting experience', subtitle: 'How much strength training have you done?', valid: () => !!a.experienceLevel,
-      render: () => <OptionGrid cols={2} fill>{LEVELS.map(l => <Chip key={l.key} selected={a.experienceLevel === l.key} onClick={() => set({ experienceLevel: l.key })} label={l.label} hint={l.hint} />)}</OptionGrid> },
+      render: () => <OptionGrid cols={2} fill>{LEVELS.map(l => <Chip key={l.key} center selected={a.experienceLevel === l.key} onClick={() => set({ experienceLevel: l.key })} label={l.label} hint={l.hint} />)}</OptionGrid> },
 
     { title: 'How much can you train?', subtitle: "Be realistic — a plan you stick to beats an ideal one you can't.", valid: () => a.daysPerWeek != null && !!a.strengthAccess,
       render: () => (
