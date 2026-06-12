@@ -8,8 +8,8 @@ function assert(cond, msg) {
 }
 
 // Relative date helpers (unambiguous regardless of when tests run)
-const FAR_OUT  = new Date(); FAR_OUT.setMonth(FAR_OUT.getMonth() + 8);
-const PRE_RACE = new Date(); PRE_RACE.setDate(PRE_RACE.getDate() + 60);
+const FAR_OUT  = new Date(); FAR_OUT.setMonth(FAR_OUT.getMonth() + 8);  // ~8 months out → 'off'
+const PRE_RACE = new Date(); PRE_RACE.setDate(PRE_RACE.getDate() + 60); // 60 days out → 'pre'
 function dateStr(d) { return d.toISOString().slice(0, 10); }
 
 // ── T1: deriveSeason unaffected by run_discipline ──────────────────────────
@@ -55,6 +55,7 @@ assert(
 );
 
 // ── T9–T10: resolveProgram — priority list ────────────────────────────────
+// hang_clean is in run_sprint priority list; tibialis_raise is run_long/middle only
 const sprintProg = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'sprint', experience: { gym: 'intermediate' } });
 assert(
   sprintProg.exercisePriority.includes('hang_clean'),
@@ -66,6 +67,7 @@ assert(
 );
 
 // ── T11–T12: resolveProgram — emphasis ────────────────────────────────────
+// long-distance emphasis config: calves: 1.4 (achilles tendon), chest: 0.45 (avoid mass)
 const longProg = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'long', experience: { gym: 'intermediate' } });
 assert(
   longProg.emphasis.calves === 1.4,
