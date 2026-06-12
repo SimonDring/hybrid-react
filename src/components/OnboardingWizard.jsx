@@ -27,10 +27,15 @@ export const SPORTS = [
   { key: 'swim',  label: 'Swimming', emoji: '🏊' }
 ];
 const SPORT_INTENTS = [
-  { key: 'compete',      label: 'I compete',        hint: 'You have races or events — training stays sport-specific.' },
-  { key: 'recreational', label: 'I play for fun',   hint: 'Recreational — balanced programme with sport-specific support.' },
+  { key: 'compete',      label: 'I compete',        hint: 'Races or events — training stays sport-specific.' },
+  { key: 'recreational', label: 'For fitness',      hint: 'No events planned — balanced programme with sport support.' },
   { key: 'build_base',   label: 'Building my base', hint: 'No events right now — maximise strength and conditioning.' }
 ];
+const SPORT_INTENT_QUESTION = {
+  run:   'Why do you run?',
+  cycle: 'Why do you cycle?',
+  swim:  'Why do you swim?'
+};
 const LEVELS = [
   { key: 'beginner', label: 'Beginner', hint: 'New to lifting' },
   { key: 'returning', label: 'Returning', hint: 'Back after a break' },
@@ -167,7 +172,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             <OptionGrid cols={3}>{SPORTS.map(s => <Chip key={s.key} emoji={s.emoji} center selected={a.sport === s.key} onClick={() => set({ sport: s.key })} label={s.label} />)}</OptionGrid>
           </div>
           <div>
-            <label style={FIELD_LABEL}>How do you train for {a.sport || 'your sport'}?</label>
+            <label style={FIELD_LABEL}>{SPORT_INTENT_QUESTION[a.sport] || 'How do you train?'}</label>
             <OptionGrid cols={1} gap={6}>
               {SPORT_INTENTS.map(opt => (
                 <Chip key={opt.key} selected={a.sportIntent === opt.key} onClick={() => set({ sportIntent: opt.key })} label={opt.label} hint={opt.hint} />
