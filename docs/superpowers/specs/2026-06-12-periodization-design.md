@@ -236,7 +236,7 @@ sportInSeason: {
     { name: 'maintenance', label: 'In-Season Maintenance', intent: 'base', weeks: 4, volumeIndex: 0.45, repRange: [6, 10] },
   ],
   deload: {
-    frequencyWeeks: null,      // race-driven, not fixed schedule
+    frequencyWeeks: null,      // race-driven, not fixed schedule; generator treats null as "never auto-deload — deload only via check-in or manual race-week taper"
     volumePct: 0.60,
     intensityPct: 0.90,
     durationDays: 5

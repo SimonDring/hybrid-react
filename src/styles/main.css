@@ -3510,4 +3510,37 @@ button.today-hero { width: 100%; display: block; text-align: left; border: none;
   transition: background 0.2s;
 }
 .checkin-dot.active { background: var(--rust); }
+.option-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
 .option-cards.two-col { grid-template-columns: 1fr 1fr; }
+.option-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1.5px solid var(--hairline);
+  background: var(--bg-surface);
+  color: var(--txt-strong);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+.option-card:hover { border-color: var(--rust); background: rgba(176,74,46,0.05); }
+.option-card strong { font-size: 14px; font-weight: 600; line-height: 1.2; }
+.option-card span { font-size: 11px; color: var(--txt-muted); line-height: 1.3; }
+.field-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  opacity: 0.6;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  color: var(--txt-strong);
+}

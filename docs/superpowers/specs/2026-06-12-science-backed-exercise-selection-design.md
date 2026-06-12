@@ -311,7 +311,7 @@ const cycle = [
   ],
   [ // B — thoracic + knee health
     { num: 'A1', name: 'Bulgarian split squat', sets: `${sets} × 8 ea.`, rpe: 'RPE 7', note: 'hip flexor stretch in rear leg' },
-    { num: 'B1', name: 'Good morning', sets: `${sets} × 8`, rpe: 'RPE 6', note: 'spinal erectors + hamstrings — counters cycling posture' },
+    { num: 'B1', name: 'Single-leg RDL', sets: `${sets} × 8 ea.`, rpe: 'RPE 7', note: 'hamstring hip extension — addresses cycling deficit' },
     { num: 'B2', name: 'Copenhagen plank', sets: '3 × 20s ea.', rpe: 'RPE 7', note: 'adductor health', tag: 'mobility' },
     { num: 'C1', name: 'Seated calf raise', sets: '3 × 15', rpe: 'RPE 6', note: 'soleus loading', tag: 'mobility' },
     { num: 'C2', name: 'Thoracic foam roller extension', sets: '2 × 60s', rpe: 'RPE 2', note: 'reverse the cycling kyphosis', tag: 'mobility' }
@@ -354,5 +354,5 @@ Example:
 - The exercise database additions should be batched by category and reviewed against the level/`minLevelForPrimary` table before merging.
 - `minLevelForPrimary` defaults to `undefined`, which the allocator treats as "same as level" (existing behaviour). No allocator changes are needed for exercises that don't set this field.
 - The `exercisePriority` multiplier (×1.35) is intentionally modest — enough to consistently win ties, not enough to override equipment or level gating.
-- The functional primer adds ~7 minutes to a functional session. The allocator's `slotBudget()` deducts the primer time from the working-set budget so total session length is preserved.
+- The functional primer adds ~7 minutes to a functional session. In `buildWeek()`, reduce the `minutes` passed to `allocateGym()` by 7 when `style === 'functional'` so total session length is preserved (e.g. a 60-min session → 53 min of working sets + 7 min primer = 60 min total).
 - Good morning (corrected to level 3) appears in the cycling support B template with `sets: '3 × 8', rpe: 'RPE 6'` — only shown to intermediate/advanced athletes. The cycling support builder already respects the `level` gate.

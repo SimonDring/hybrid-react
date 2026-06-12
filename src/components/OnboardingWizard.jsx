@@ -26,9 +26,10 @@ export const SPORTS = [
   { key: 'cycle', label: 'Cycling', emoji: '🚴' },
   { key: 'swim',  label: 'Swimming', emoji: '🏊' }
 ];
-const SEASONS = [
-  { key: 'off', label: 'Off-season / base', hint: 'Build strength & power — more volume' },
-  { key: 'in',  label: 'In-season',         hint: 'Maintain — keep it heavy and brief' }
+const SPORT_INTENTS = [
+  { key: 'compete',      label: 'I compete',        hint: 'You have races or events — training stays sport-specific.' },
+  { key: 'recreational', label: 'I play for fun',   hint: 'Recreational — balanced programme with sport-specific support.' },
+  { key: 'build_base',   label: 'Building my base', hint: 'No events right now — maximise strength and conditioning.' }
 ];
 const LEVELS = [
   { key: 'beginner', label: 'Beginner', hint: 'New to lifting' },
@@ -165,40 +166,25 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             <label style={FIELD_LABEL}>Sport</label>
             <OptionGrid cols={3}>{SPORTS.map(s => <Chip key={s.key} emoji={s.emoji} center selected={a.sport === s.key} onClick={() => set({ sport: s.key })} label={s.label} />)}</OptionGrid>
           </div>
-          {/* Sport intent — replaces 'in/off season' */}
-          <div className="field-group">
-            <label className="field-label">How do you train for {a.sport || 'your sport'}?</label>
-            <div className="option-cards">
-              {[
-                { value: 'compete',      label: 'I compete',          desc: 'You have races or events — training stays sport-specific.' },
-                { value: 'recreational', label: 'I play for fun',     desc: 'Recreational — balanced programme with sport-specific support.' },
-                { value: 'build_base',   label: 'Building my base',   desc: 'No events right now — maximise strength and conditioning.' }
-              ].map(opt => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  className={`option-card${a.sportIntent === opt.value ? ' selected' : ''}`}
-                  onClick={() => set({ sportIntent: opt.value })}
-                >
-                  <strong>{opt.label}</strong>
-                  <span>{opt.desc}</span>
-                </button>
+          <div>
+            <label style={FIELD_LABEL}>How do you train for {a.sport || 'your sport'}?</label>
+            <OptionGrid cols={1} gap={6}>
+              {SPORT_INTENTS.map(opt => (
+                <Chip key={opt.key} selected={a.sportIntent === opt.key} onClick={() => set({ sportIntent: opt.key })} label={opt.label} hint={opt.hint} />
               ))}
-            </div>
+            </OptionGrid>
           </div>
           {a.sportIntent === 'compete' && (
-            <div className="field-group">
-              <label className="field-label">Next event date <span className="field-optional">(optional)</span></label>
+            <div>
+              <label style={FIELD_LABEL}>Next event date <span style={{ opacity: 0.5, fontWeight: 400, textTransform: 'none', fontSize: 10, letterSpacing: 0 }}>(optional)</span></label>
               <input
                 type="date"
-                className="text-input"
+                style={INPUT}
                 value={a.eventDate || ''}
                 min={new Date().toISOString().slice(0, 10)}
                 onChange={e => set({ eventDate: e.target.value })}
               />
-              <p className="field-hint">
-                Used to auto-size the block length and track your season. Leave blank if unsure.
-              </p>
+              <div style={HINT}>Used to auto-size the block length and track your season. Leave blank if unsure.</div>
             </div>
           )}
         </div>
