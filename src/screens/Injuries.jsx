@@ -120,7 +120,7 @@ function PhasePicker({ value, onChange }) {
           <button key={p.key} onClick={() => onChange(p.key)} style={{
             textAlign: 'left', padding: '10px 12px', borderRadius: 9,
             border: `1.5px solid ${value === p.key ? 'var(--moss)' : 'var(--hairline)'}`,
-            background: value === p.key ? 'rgba(74,93,58,0.08)' : 'transparent',
+            background: value === p.key ? 'color-mix(in srgb, var(--moss) 8%, transparent)' : 'transparent',
             cursor: 'pointer', fontFamily: 'inherit'
           }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--txt-strong)' }}>{p.label}</div>
@@ -480,7 +480,7 @@ export default function Injuries() {
             total={questions.length + 2}
             title="Tell us about it"
             onCancel={() => setTriage(EMPTY_TRIAGE)}
-            onBack={qIdx > 0 ? () => setT({ symptom_step: qIdx - 1 }) : null}
+            onBack={qIdx > 0 ? () => setT({ symptom_step: qIdx - 1 }) : () => setT({ step: 2 })}
           />
           <p style={{ fontSize: 15, fontWeight: 500, color: 'var(--txt-strong)', marginBottom: 16 }}>{q.text}</p>
           <div style={{ display: 'grid', gap: 8 }}>
