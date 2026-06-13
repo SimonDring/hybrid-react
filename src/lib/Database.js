@@ -628,7 +628,17 @@ export const services = {
       affected_activities: fields.affected_activities || [],
       recovery_log: fields.recovery_log || [],
       prevention_notes: fields.prevention_notes || '',
-      ai_generated: !!fields.ai_generated
+      ai_generated: !!fields.ai_generated,
+      body_region: fields.body_region || null,
+      body_part_key: fields.body_part_key || null,
+      side: fields.side || null,
+      diagnosis_key: fields.diagnosis_key || null,
+      physio_seen: !!fields.physio_seen,
+      rehab_phase: fields.rehab_phase || 'protect',
+      symptom_flags: fields.symptom_flags || {},
+      red_flag_triggered: !!fields.red_flag_triggered,
+      referred_to_professional: !!fields.referred_to_professional,
+      prevention_exercises: fields.prevention_exercises || [],
     });
   },
 
