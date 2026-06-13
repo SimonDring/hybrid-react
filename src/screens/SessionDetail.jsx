@@ -222,9 +222,10 @@ export default function SessionDetail() {
                           }}>Rehab</span>
                         )}
                         {item.prevention && (
-                          <span title={item.preventionNote || 'Prevention exercise'} style={{
-                            fontSize: 11, color: 'var(--txt-muted)', marginLeft: 6, cursor: 'help'
-                          }}>ⓘ</span>
+                          <span style={{
+                            fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
+                            color: 'var(--txt-muted)', background: 'rgba(106,102,93,0.12)', borderRadius: 100, padding: '2px 7px', marginLeft: 6
+                          }}>Prev</span>
                         )}
                       </div>
                       {cols.map(c => {
@@ -239,7 +240,7 @@ export default function SessionDetail() {
                       })}
                     </div>
                     {cue && <div className="gt-note">{cue}</div>}
-                    {item.substituted && (
+                    {item.substituted && item.substituteReason && (
                       <div className="gt-note" style={{ color: 'var(--ochre)', fontStyle: 'italic' }}>
                         {item.substituteReason}
                       </div>
@@ -247,6 +248,11 @@ export default function SessionDetail() {
                     {item.rehab && item.rationale && (
                       <div className="gt-note" style={{ color: 'var(--moss)', fontStyle: 'italic' }}>
                         {item.rationale}
+                      </div>
+                    )}
+                    {item.prevention && item.preventionNote && (
+                      <div className="gt-note" style={{ color: 'var(--txt-muted)', fontStyle: 'italic' }}>
+                        {item.preventionNote}
                       </div>
                     )}
                     {item.restSec > 0 && <div className="gt-rest">{fmtRest(item.restSec)}</div>}
