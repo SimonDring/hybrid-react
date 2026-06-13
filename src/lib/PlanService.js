@@ -237,8 +237,8 @@ export function getPhases() {
 }
 
 export function getPhase(id) {
-  const ap = adaptedPhases();
-  if (ap) return ap.find(p => p.id === id) || null;
+  const fp = injuryFilteredPhases();
+  if (fp) return fp.find(p => p.id === id) || null;
   return Legacy.getPhase(id);
 }
 
