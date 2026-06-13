@@ -37,7 +37,7 @@ const routeMeta = {
   '/progress': { title: 'Progress', topLevel: true, tab: 'progress' },
   '/tracking/wearables': { title: 'Daily metrics', topLevel: false, tab: 'progress' },
   '/tracking/trends': { title: 'Trends', topLevel: false, tab: 'progress' },
-  '/tracking/injuries': { title: 'Injury log', topLevel: false, tab: 'profile' },
+  '/tracking/injuries': { title: 'Injury log', topLevel: false, tab: 'progress' },
   '/profile': { title: 'Profile', topLevel: true, tab: 'profile' },
   '/profile/injuries': { title: 'Injury log', topLevel: false, tab: 'profile' },
   '/settings': { title: 'Settings', topLevel: false, tab: 'profile' }

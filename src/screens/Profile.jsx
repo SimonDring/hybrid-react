@@ -117,18 +117,20 @@ export default function Profile() {
             <div style={{ fontSize: 12, color: 'var(--txt-muted)', marginTop: 2 }}>{next.phase.title} · Week {next.week.num}</div>
           </div>
         )}
+        <div style={{ borderTop: '1px solid var(--hairline)', paddingTop: 10, marginTop: 10 }}>
+          <button
+            onClick={() => navigate('/tracking/injuries')}
+            style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left', width: '100%' }}
+          >
+            <div style={{ fontSize: 9, opacity: 0.55, letterSpacing: '0.1em', marginBottom: 2 }}>INJURIES</div>
+            <div style={{ fontSize: 13, color: activeInjuries.length > 0 ? 'var(--rust)' : 'var(--txt-muted)' }}>
+              {activeInjuries.length === 0
+                ? 'None active'
+                : `${activeInjuries.length} active — ${activeInjuries.map(i => i.title || i.body_part).filter(Boolean).join(', ')}`}
+            </div>
+          </button>
+        </div>
       </Card>
-
-      <div className="link-list" style={{ marginTop: 12 }}>
-        <button className="link-row" onClick={() => navigate('/tracking/injuries')}>
-          <div className="lr-body">
-            <div className="lr-title">{activeInjuries.length === 0 ? 'Injuries' : `${activeInjuries.length} active ${activeInjuries.length === 1 ? 'injury' : 'injuries'}`}</div>
-            <div className="lr-sub">{activeInjuries.length === 0 ? 'Log an injury or niggle to train around' : activeInjuries.map(i => i.title || i.body_part).filter(Boolean).join(' · ')}</div>
-          </div>
-          {activeInjuries.length > 0 && <span className="lr-badge">{activeInjuries.length} active</span>}
-          <svg className="lr-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
-        </button>
-      </div>
     </>
   );
 }

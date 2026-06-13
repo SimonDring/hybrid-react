@@ -47,6 +47,9 @@ export default function Progress() {
   const sessions = useTrainingStore(s => s.sessions);
   const dailyMetrics = useTrainingStore(s => s.dailyMetrics);
   const logs = useTrainingStore(s => s.logs);
+  const injuries = useTrainingStore(s => s.injuries);
+
+  const activeInjuries = (injuries || []).filter(i => ['active', 'rehabbing', 'monitoring'].includes(i.status));
 
   const lifts = resolveLifts(profile);
   const liftLog = profile.lift_log || {};
@@ -112,6 +115,14 @@ export default function Progress() {
       <div className="link-list">
         <LinkRow title="Daily metrics" sub="Sleep, HRV, resting HR, readiness — wearable + manual" onClick={() => navigate('/tracking/wearables')} />
         <LinkRow title="Trends" sub="Recovery & activity over time" onClick={() => navigate('/tracking/trends')} badge={dailyMetrics.length >= 2 ? `${dailyMetrics.length} days` : null} />
+        <LinkRow
+          title="Injuries"
+          sub={activeInjuries.length === 0
+            ? 'No current injuries'
+            : activeInjuries.map(i => i.title || i.body_part || 'Injury').join(' · ')}
+          badge={activeInjuries.length > 0 ? `${activeInjuries.length} active` : null}
+          onClick={() => navigate('/tracking/injuries')}
+        />
       </div>
     </>
   );
