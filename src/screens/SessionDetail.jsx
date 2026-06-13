@@ -23,6 +23,7 @@ export default function SessionDetail() {
   const [notes, setNotes] = useState('');
   const [checked, setChecked] = useState([]);
   const [infoItem, setInfoItem] = useState(null); // exercise tapped for the form guide
+  const [injuryBannerOpen, setInjuryBannerOpen] = useState(false);
   const [lifts, setLifts] = useState({}); // top-set log: key → { weight, rpe }
   const [restStart, setRestStart] = useState(null); // { secs, at } — seeds RestTimer on set completion
 
@@ -126,29 +127,38 @@ export default function SessionDetail() {
 
       {/* Injury modification banner */}
       {session.injuryBanner && (
-        <div style={{
-          borderLeft: '3px solid var(--ochre)', background: 'rgba(200,154,58,0.08)',
-          borderRadius: '0 10px 10px 0', padding: '10px 14px', marginBottom: 16
-        }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ochre)', marginBottom: 3 }}>
-            {session.injuryBanner.fullReplacement ? 'Rehab session' : 'Modified for injury'}
-          </div>
-          <div style={{ fontSize: 12, color: 'var(--txt-body)', lineHeight: 1.4 }}>
-            {session.injuryBanner.message}
-            {!session.injuryBanner.fullReplacement && session.injuryBanner.blockedCount > 0 && (
-              <> · {session.injuryBanner.blockedCount} exercise{session.injuryBanner.blockedCount !== 1 ? 's' : ''} replaced</>
+        <button
+          onClick={() => setInjuryBannerOpen(o => !o)}
+          style={{
+            width: '100%', textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit',
+            background: 'none', border: 'none', padding: 0, marginBottom: 16
+          }}
+        >
+          <div style={{
+            borderLeft: '3px solid var(--ochre)', background: 'rgba(200,154,58,0.08)',
+            borderRadius: '0 10px 10px 0', padding: '10px 14px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ochre)' }}>
+                {session.injuryBanner.fullReplacement ? 'Rehab session' : 'Modified for injury'}
+              </div>
+              <span style={{ fontSize: 11, color: 'var(--ochre)', opacity: 0.7 }}>
+                {injuryBannerOpen ? '▲' : '▼'}
+              </span>
+            </div>
+            {injuryBannerOpen && (
+              <div style={{ fontSize: 12, color: 'var(--txt-body)', lineHeight: 1.6, marginTop: 6 }}>
+                {session.injuryBanner.message}.
+                {!session.injuryBanner.fullReplacement && session.injuryBanner.blockedCount > 0 && (
+                  <> {session.injuryBanner.blockedCount} exercise{session.injuryBanner.blockedCount !== 1 ? 's' : ''} that load this area have been removed and replaced with rehab exercises.</>
+                )}
+                {session.injuryBanner.phase && (
+                  <> Current phase: <strong>{session.injuryBanner.phase}</strong>.</>
+                )}
+              </div>
             )}
-            {session.injuryBanner.phase && <> · Phase: {session.injuryBanner.phase}</>}
           </div>
-        </div>
-      )}
-
-      {session.items.some(it => it.superset) && (
-        <div className="callout slate" style={{ marginBottom: 16, fontSize: 13 }}>
-          <strong>Supersets</strong> — exercises that share a letter (A1 + A2) are paired.
-          Alternate them with short rest: it saves time and packs in volume without
-          tiring the main lift.
-        </div>
+        </button>
       )}
 
       {/* Exercise table — columns driven by each item's activity type */}
@@ -157,7 +167,7 @@ export default function SessionDetail() {
         // header row with the right columns. Most sessions are a single type,
         // but a session can mix (e.g. strength + mobility, or run + swim).
         const groups = [];
-        session.items.forEach((item, gIdx) => {
+        session.items.filter(it => !it.substituted).forEach((item, gIdx) => {
           const activity = activityFor(item);
           const last = groups[groups.length - 1];
           if (last && last.activity.key === activity.key) {
@@ -200,21 +210,12 @@ export default function SessionDetail() {
                       <div className="gt-ex">
                         {isStarted && <span className={`gt-check ${done ? 'on' : ''}`} aria-hidden="true">✓</span>}
                         <span className="gt-num" style={item.superset ? { color: 'var(--rust)' } : undefined}>{item.num}</span>
-                        <span className="gt-name" style={item.substituted ? { textDecoration: 'line-through', opacity: 0.5 } : undefined}>
-                          {item.name}
-                        </span>
+                        <span className="gt-name">{item.name}</span>
                         <button
                           className="gt-info"
                           aria-label={`How to do ${item.name}`}
                           onClick={(e) => { e.stopPropagation(); setInfoItem(item); }}
                         >ⓘ</button>
-                        {/* Injury modification tags */}
-                        {item.substituted && (
-                          <span style={{
-                            fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
-                            color: 'var(--ochre)', background: 'rgba(200,154,58,0.15)', borderRadius: 100, padding: '2px 7px', marginLeft: 6
-                          }}>Replaced</span>
-                        )}
                         {item.rehab && (
                           <span style={{
                             fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
@@ -240,11 +241,6 @@ export default function SessionDetail() {
                       })}
                     </div>
                     {cue && <div className="gt-note">{cue}</div>}
-                    {item.substituted && item.substituteReason && (
-                      <div className="gt-note" style={{ color: 'var(--ochre)', fontStyle: 'italic' }}>
-                        {item.substituteReason}
-                      </div>
-                    )}
                     {item.rehab && item.rationale && (
                       <div className="gt-note" style={{ color: 'var(--moss)', fontStyle: 'italic' }}>
                         {item.rationale}

@@ -242,24 +242,6 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         </div>
       ) },
 
-    { title: 'Anything to train around?', subtitle: 'Current injuries or niggles, and anything else worth knowing. All optional.', valid: () => true,
-      render: () => (
-        <div style={{ display: 'grid', gap: 10 }}>
-          {a.injuries.map((inj, i) => (
-            <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: 8, alignItems: 'center' }}>
-              <input type="text" value={inj.title} placeholder="e.g. Left knee" onChange={e => set({ injuries: a.injuries.map((x, j) => j === i ? { ...x, title: e.target.value } : x) })} style={INPUT} />
-              <input type="text" value={inj.body_part} placeholder="Area (optional)" onChange={e => set({ injuries: a.injuries.map((x, j) => j === i ? { ...x, body_part: e.target.value } : x) })} style={INPUT} />
-              <button onClick={() => set({ injuries: a.injuries.filter((_, j) => j !== i) })} style={{ background: 'none', border: 'none', color: 'var(--txt-muted)', fontSize: 16, cursor: 'pointer', padding: 4 }}>✕</button>
-            </div>
-          ))}
-          <button onClick={() => set({ injuries: [...a.injuries, { title: '', body_part: '' }] })} style={{ padding: 10, borderRadius: 10, border: '1.5px dashed var(--hairline)', background: 'transparent', fontSize: 13, fontWeight: 600, color: 'var(--txt-muted)', cursor: 'pointer', fontFamily: 'inherit' }}>+ Add an injury</button>
-          <div>
-            <label style={FIELD_LABEL}>Anything else? (optional)</label>
-            <textarea rows={3} value={a.notes} onChange={e => set({ notes: e.target.value })} placeholder="Key lifts, health context, preferences…" style={{ ...INPUT, resize: 'vertical' }} />
-          </div>
-        </div>
-      ) },
-
     { title: 'Ready to go', subtitle: "Here's what we captured. Create your plan and you're in.", valid: () => true,
       render: () => {
         const goalLabel = isSport
@@ -277,7 +259,6 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             {liftBits.length > 0 && <SummaryRow label="Maxes" value={liftBits.join(' · ') + ' kg'} />}
             <SummaryRow label="Week" value={a.daysPerWeek ? `${a.daysPerWeek} days · ${a.sessionMinutes === 90 ? '90+' : a.sessionMinutes} min` : '—'} />
             <SummaryRow label="Equipment" value={STRENGTH_ACCESS.find(o => o.key === a.strengthAccess)?.label || '—'} />
-            {a.injuries.filter(i => i.title.trim()).length > 0 && <SummaryRow label="Train around" value={a.injuries.filter(i => i.title.trim()).map(i => i.title.trim()).join(' · ')} />}
           </div>
         );
       } }
