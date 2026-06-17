@@ -4,3 +4,13 @@ dist
 *.log
 .env
 .env.local
+
+# tooling / agent / local state
+.superpowers/
+.claude/
+memory/
+supabase/.temp/
+
+# generated review gallery + scratch scripts (regenerated locally, not app code)
+exercise-demos.html
+_scratch_*.mjs
