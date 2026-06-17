@@ -33,22 +33,23 @@ export default function ExerciseInfo({ name, focus, fallbackCue, onClose }) {
 
   return (
     <div onClick={onClose} style={{
-      position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.45)',
+      position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.5)',
       display: 'flex', alignItems: 'flex-end', justifyContent: 'center'
     }}>
       <div onClick={e => e.stopPropagation()} style={{
-        width: '100%', maxWidth: 560, maxHeight: '88vh', overflowY: 'auto',
-        background: 'var(--bg-surface)', borderRadius: '18px 18px 0 0',
-        padding: '10px 20px calc(24px + env(safe-area-inset-bottom))', boxShadow: '0 -8px 40px rgba(0,0,0,0.3)'
+        width: '100%', maxWidth: 520, maxHeight: '92vh', overflowY: 'auto', WebkitOverflowScrolling: 'touch',
+        background: 'var(--bg-surface)', borderRadius: '20px 20px 0 0', boxShadow: '0 -8px 40px rgba(0,0,0,0.35)'
       }}>
-        {/* grab handle */}
-        <div style={{ width: 38, height: 4, borderRadius: 2, background: 'var(--hairline-strong, var(--hairline))', margin: '0 auto 14px' }} />
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginBottom: 4 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--txt-strong)', margin: 0 }}>{title}</h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 22, lineHeight: 1, color: 'var(--txt-muted)', cursor: 'pointer', padding: 4 }}>✕</button>
+        {/* sticky header — grab handle, title and close stay reachable while scrolling */}
+        <div style={{ position: 'sticky', top: 0, zIndex: 2, background: 'var(--bg-surface)', padding: '8px 18px 10px', borderBottom: '1px solid var(--hairline)' }}>
+          <div style={{ width: 40, height: 4, borderRadius: 2, background: 'var(--hairline)', margin: '0 auto 10px' }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+            <h2 style={{ fontSize: 19, fontWeight: 800, color: 'var(--txt-strong)', margin: 0, lineHeight: 1.2 }}>{title}</h2>
+            <button onClick={onClose} aria-label="Close" style={{ flexShrink: 0, width: 36, height: 36, borderRadius: 18, display: 'grid', placeItems: 'center', background: 'var(--bg-surface-2)', border: 'none', fontSize: 17, color: 'var(--txt-muted)', cursor: 'pointer' }}>✕</button>
+          </div>
         </div>
-        {entry && <p style={{ fontSize: 14, color: 'var(--txt-body)', lineHeight: 1.5, marginTop: 4, marginBottom: 16 }}>{entry.summary}</p>}
+        <div style={{ padding: '14px 18px calc(24px + env(safe-area-inset-bottom))' }}>
+          {entry && <p style={{ fontSize: 14, color: 'var(--txt-body)', lineHeight: 1.5, margin: '0 0 16px' }}>{entry.summary}</p>}
 
         {/* Animated demo when we have one, else a placeholder. */}
         {entry && entry.demo && DEMOS[entry.demo] ? (
@@ -82,6 +83,7 @@ export default function ExerciseInfo({ name, focus, fallbackCue, onClose }) {
               : 'A full form guide for this one is coming soon. For now, focus on controlled, pain-free movement — and ask your coach if you\'re unsure.'}
           </div>
         )}
+        </div>
       </div>
     </div>
   );
