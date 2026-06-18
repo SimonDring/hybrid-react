@@ -19,8 +19,11 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-const url = import.meta.env.VITE_SUPABASE_URL;
-const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Optional chaining so importing this module outside Vite (e.g. a plain-Node
+// test runner, where import.meta.env is undefined) doesn't throw — it just
+// reports "not configured" and the app falls back to local-only mode.
+const url = import.meta.env?.VITE_SUPABASE_URL;
+const anonKey = import.meta.env?.VITE_SUPABASE_ANON_KEY;
 
 export const isSupabaseConfigured = Boolean(url && anonKey);
 

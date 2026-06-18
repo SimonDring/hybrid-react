@@ -31,9 +31,32 @@ export const KEYS = {
   legacyReassess: 'htp_reassess_v3'
 };
 
+// ---- Namespacing ----------------------------------------------------------
+// Every cache key is stored as `${baseKey}_${namespace}` so two accounts on the
+// same browser use physically separate storage and can never read each other's
+// data. `anon` is the namespace used while signed out / in local-only mode.
+let currentNamespace = 'anon';
+
+const NS_MIGRATED_FLAG = 'htp_ns_migrated';          // device-level, NOT namespaced
+const adoptedFlag = (ns) => `htp_adopted_${ns}`;      // per-target, NOT namespaced
+
+// Base keys that hold table/meta data and therefore get namespaced + migrated.
+const ALL_BASE_KEYS = Object.values(KEYS);
+// Just the per-user table caches (used by adoptAnonDataOnce's "is target empty?").
+const TABLE_BASE_KEYS = [
+  KEYS.users, KEYS.plans, KEYS.phases, KEYS.weeks, KEYS.sessions, KEYS.sessionLogs,
+  KEYS.weeklyCheckins, KEYS.reassessments, KEYS.wearableReadings, KEYS.dailyMetrics,
+  KEYS.injuries, KEYS.aiRecommendations
+];
+
+const nsKey = (baseKey) => `${baseKey}_${currentNamespace}`;
+
+export function setNamespace(ns) { currentNamespace = ns || 'anon'; }
+export function getNamespace() { return currentNamespace; }
+
 export function load(k, fb) {
   try {
-    const r = localStorage.getItem(k);
+    const r = localStorage.getItem(nsKey(k));
     return r ? JSON.parse(r) : fb;
   } catch (e) {
     return fb;
@@ -42,7 +65,7 @@ export function load(k, fb) {
 
 export function save(k, v) {
   try {
-    localStorage.setItem(k, JSON.stringify(v));
+    localStorage.setItem(nsKey(k), JSON.stringify(v));
     return true;
   } catch (e) {
     // Common cause: storage quota exceeded, or private browsing mode.
@@ -53,11 +76,59 @@ export function save(k, v) {
 
 export function remove(k) {
   try {
-    localStorage.removeItem(k);
+    localStorage.removeItem(nsKey(k));
   } catch (e) {
     /* swallow — removing a non-existent key shouldn't crash the app */
   }
 }
 
+// Remove every table/meta key for a namespace (used on sign-out).
+export function clearNamespace(ns) {
+  for (const base of ALL_BASE_KEYS) {
+    try { localStorage.removeItem(`${base}_${ns}`); } catch (e) { /* swallow */ }
+  }
+}
+
+// One-time per device: move any pre-namespacing bare keys (`htp_*_v4`) into the
+// given target namespace, so an existing single-user device keeps its history.
+export function migrateUnnamespacedKeysOnce(target) {
+  try {
+    if (localStorage.getItem(NS_MIGRATED_FLAG)) return;
+    for (const base of ALL_BASE_KEYS) {
+      const bare = localStorage.getItem(base);
+      if (bare === null) continue;
+      const dest = `${base}_${target}`;
+      if (localStorage.getItem(dest) === null) localStorage.setItem(dest, bare);
+      localStorage.removeItem(base);
+    }
+    localStorage.setItem(NS_MIGRATED_FLAG, '1');
+  } catch (e) { /* swallow */ }
+}
+
+// One-time per target user: if the target namespace has no table data yet but the
+// anon namespace does, adopt the anon data. Covers "used the app signed-out, then
+// signed in" without stranding that data. Never overwrites existing target data.
+export function adoptAnonDataOnce(target) {
+  try {
+    if (target === 'anon') return;
+    if (localStorage.getItem(adoptedFlag(target))) return;
+    const targetHasData = TABLE_BASE_KEYS.some((base) => {
+      const raw = localStorage.getItem(`${base}_${target}`);
+      if (!raw) return false;
+      try { return Object.keys(JSON.parse(raw) || {}).length > 0; } catch { return false; }
+    });
+    if (targetHasData) { localStorage.setItem(adoptedFlag(target), '1'); return; }
+    for (const base of TABLE_BASE_KEYS) {
+      const anon = localStorage.getItem(`${base}_anon`);
+      if (anon !== null) localStorage.setItem(`${base}_${target}`, anon);
+    }
+    localStorage.setItem(adoptedFlag(target), '1');
+  } catch (e) { /* swallow */ }
+}
+
 // Default export so consumers can also import as `import Storage from ...`
-export default { KEYS, load, save, remove };
+export default {
+  KEYS, load, save, remove,
+  setNamespace, getNamespace, clearNamespace,
+  migrateUnnamespacedKeysOnce, adoptAnonDataOnce
+};

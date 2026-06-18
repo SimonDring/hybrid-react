@@ -2,9 +2,9 @@
  * authStore — tracks Supabase auth session and exposes sign-in / sign-out.
  *
  * Primary auth is email + password + name (signUp / signInWithPassword) with
- * password reset. The older email-OTP methods (signInWithEmail / verifyOtp) are
- * kept as a fallback. This store listens to auth state changes and keeps `user`
- * current. Account creation is gated by a server-side invite allowlist.
+ * password reset, plus Apple/Google OAuth (signInWithOAuth). The older email-OTP
+ * methods (signInWithEmail / verifyOtp) are kept as a fallback. This store listens
+ * to auth state changes and keeps `user` current. Signup is open to anyone.
  *
  * Graceful degradation: if Supabase isn't configured (no env keys), the store
  * reports a "not configured" state and the app can fall back to local-only mode.
@@ -16,7 +16,21 @@
 import { create } from 'zustand';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient.js';
 import Database from '../lib/Database.js';
+import * as Storage from '../lib/Storage.js';
 import { deleteAccount as deleteCloudAccount } from '../lib/SyncService.js';
+
+// Point the on-device cache at the right account, then reload the in-memory
+// Database so the UI only ever sees the active user's data. Runs on first load
+// and on every auth-state change. `session` is null when signed out.
+function applyNamespaceForSession(session) {
+  const target = session?.user?.id || 'anon';
+  Storage.setNamespace(target);
+  // One-time per device: fold any pre-namespacing bare keys into this namespace.
+  Storage.migrateUnnamespacedKeysOnce(target);
+  // One-time per user: adopt anon data if this account has none yet.
+  if (session) Storage.adoptAnonDataOnce(target);
+  Database.services.reloadFromStorage();
+}
 
 // Import lazily to avoid circular dependency (authStore ← trainingStore ← Database)
 function getTrainingStore() {
@@ -81,9 +95,8 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  // Create a new account with email + password + name.
-  // The DB allowlist trigger rejects emails that aren't invited — GoTrue masks
-  // that as a generic "Database error", which we translate to a friendly note.
+  // Create a new account with email + password + name. Signup is open (the invite
+  // allowlist was removed in migration 004), so any email may create an account.
   async signUp(email, password, name) {
     if (!isSupabaseConfigured) {
       set({ errorMessage: 'Supabase is not configured. Add keys to .env.local.' });
@@ -97,12 +110,7 @@ export const useAuthStore = create((set, get) => ({
       options: { data: { name: (name || '').trim() }, emailRedirectTo: redirectTo }
     });
     if (error) {
-      // The allowlist rejection surfaces as a 500 "Database error saving new user".
-      const msg = /database error/i.test(error.message)
-        ? "This email isn't on the invite list yet. Ask Simon to add you."
-        : error.message;
-      if (/database error/i.test(error.message)) console.warn('[authStore] signUp DB error:', error.message);
-      set({ signingUp: false, errorMessage: msg });
+      set({ signingUp: false, errorMessage: error.message });
       return;
     }
     // With email confirmation ON, signUp returns a user but no session.
@@ -131,6 +139,23 @@ export const useAuthStore = create((set, get) => ({
     } else {
       set({ signingIn: false });
     }
+  },
+
+  // Start an OAuth sign-in (Google or Apple). Redirects away and returns to the
+  // app; supabaseClient's detectSessionInUrl finishes the session, and the
+  // onAuthStateChange listener applies the namespace + pulls data.
+  async signInWithOAuth(provider) {
+    if (!isSupabaseConfigured) {
+      set({ errorMessage: 'Supabase is not configured. Add keys to .env.local.' });
+      return;
+    }
+    set({ errorMessage: null });
+    const redirectTo = window.location.origin + import.meta.env.BASE_URL;
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo }
+    });
+    if (error) set({ errorMessage: error.message });
   },
 
   // Email a password-reset link. The link returns to the app where the user
@@ -182,7 +207,13 @@ export const useAuthStore = create((set, get) => ({
 
   async signOut() {
     if (!isSupabaseConfigured) return;
+    const ns = Storage.getNamespace();
     await supabase.auth.signOut();
+    // Belt-and-braces: wipe this account's on-device cache so nothing lingers
+    // before the next sign-in, then point the cache at the anonymous namespace.
+    if (ns && ns !== 'anon') Storage.clearNamespace(ns);
+    Storage.setNamespace('anon');
+    Database.services.reloadFromStorage();
     set({ status: 'signed_out', user: null, linkSentTo: null, recoveryMode: false });
   },
 
@@ -219,6 +250,7 @@ export const useAuthStore = create((set, get) => ({
 
     // Subscribe BEFORE getSession so we can't miss an early PASSWORD_RECOVERY.
     supabase.auth.onAuthStateChange((event, session) => {
+      applyNamespaceForSession(session);
       set((prev) => ({
         status: session ? 'signed_in' : 'signed_out',
         user: session ? session.user : null,
@@ -232,6 +264,7 @@ export const useAuthStore = create((set, get) => ({
     });
 
     const { data } = await supabase.auth.getSession();
+    applyNamespaceForSession(data.session);
     set((prev) => ({
       status: data.session ? 'signed_in' : 'signed_out',
       user: data.session ? data.session.user : null,

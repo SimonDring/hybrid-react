@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import { useAuthStore } from './stores/authStore.js';
 import { useTrainingStore } from './stores/trainingStore.js';
-import Login from './screens/Login.jsx';
+import AuthFlow from './screens/auth/AuthFlow.jsx';
 import SetNewPassword from './screens/SetNewPassword.jsx';
 import Onboarding from './screens/Onboarding.jsx';
 import DevPlayground from './screens/DevPlayground.jsx';
@@ -91,9 +91,9 @@ export default function App() {
     return <Splash />;
   }
 
-  // Signed out (or Supabase not configured) → show Login
+  // Signed out (or Supabase not configured) → show the auth flow (Welcome screen)
   if (authStatus === 'signed_out' || authStatus === 'not_configured') {
-    return <Login />;
+    return <AuthFlow />;
   }
 
   // A password-reset link opened the app → prompt for a new password first
