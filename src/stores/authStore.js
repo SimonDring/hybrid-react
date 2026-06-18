@@ -141,6 +141,23 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  // Start an OAuth sign-in (Google or Apple). Redirects away and returns to the
+  // app; supabaseClient's detectSessionInUrl finishes the session, and the
+  // onAuthStateChange listener applies the namespace + pulls data.
+  async signInWithOAuth(provider) {
+    if (!isSupabaseConfigured) {
+      set({ errorMessage: 'Supabase is not configured. Add keys to .env.local.' });
+      return;
+    }
+    set({ errorMessage: null });
+    const redirectTo = window.location.origin + import.meta.env.BASE_URL;
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo }
+    });
+    if (error) set({ errorMessage: error.message });
+  },
+
   // Email a password-reset link. The link returns to the app where the user
   // can set a new password (recovery handling is wired in init()).
   async sendPasswordReset(email) {
