@@ -13,6 +13,7 @@ export default function Settings() {
   const resetAll = useTrainingStore(state => state.resetAll);
   const fitbitConnection        = useTrainingStore(s => s.fitbitConnection);
   const fitbitSyncing           = useTrainingStore(s => s.fitbitSyncing);
+  const fitbitError             = useTrainingStore(s => s.fitbitError);
   const syncFitbitToday         = useTrainingStore(s => s.syncFitbitToday);
   const refreshFitbitConnection = useTrainingStore(s => s.refreshFitbitConnection);
   const clearPlan = useTrainingStore(state => state.clearPlan);
@@ -207,6 +208,35 @@ export default function Settings() {
             }}
           >
             Already connected? Tap to check status
+          </button>
+        )}
+
+        {/* Sync failed → show the real reason and offer to re-authorise. A
+            connection can show as "linked" while its Google tokens are dead
+            (e.g. the refresh token expired); reconnecting issues fresh tokens. */}
+        {fitbitConnection && fitbitError && (
+          <div style={{
+            marginTop: 10, padding: '10px 12px', borderRadius: 9,
+            background: 'rgba(176,74,46,0.08)', border: '1px solid rgba(176,74,46,0.25)'
+          }}>
+            <div style={{ fontSize: 12, color: 'var(--rust)', fontWeight: 600 }}>
+              Couldn’t sync
+            </div>
+            <div style={{ fontSize: 11, color: 'var(--txt-body)', marginTop: 2, wordBreak: 'break-word' }}>
+              {fitbitError}
+            </div>
+          </div>
+        )}
+
+        {fitbitConnection && (
+          <button
+            onClick={connectFitbit}
+            style={{
+              fontSize: 11, color: 'var(--txt-muted)', background: 'none',
+              border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit', marginTop: 8
+            }}
+          >
+            Not syncing? Tap to reconnect Fitbit
           </button>
         )}
       </div>
