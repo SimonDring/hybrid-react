@@ -35,6 +35,18 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 const DEFAULT_TOKEN_URL = 'https://oauth2.googleapis.com/token'
 const DEFAULT_API_BASE  = 'https://health.googleapis.com'
 
+// CORS — the Supabase gateway forwards the browser's preflight OPTIONS to this
+// function (it skips JWT verification for OPTIONS), so the function itself must
+// answer it with 2xx + these headers, and echo them on every other response.
+// Without this, the browser blocks the request ("Failed to send request to the
+// Edge Function" / "could not connect to the server") before it's ever sent.
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+}
+const jsonHeaders = { ...corsHeaders, 'Content-Type': 'application/json' }
+
 async function getAccessToken(supabase: any, connection: any): Promise<string> {
   const expiresAt = new Date(connection.expires_at).getTime()
   if (expiresAt > Date.now() + 5 * 60 * 1000) return connection.access_token
@@ -215,8 +227,11 @@ function buildRow(date: string, userId: string, raw: Record<string, any>): Recor
 }
 
 Deno.serve(async (req: Request) => {
+  // Answer the browser's CORS preflight before anything else.
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
+
   const authHeader = req.headers.get('Authorization')
-  if (!authHeader) return new Response('Unauthorized', { status: 401 })
+  if (!authHeader) return new Response('Unauthorized', { status: 401, headers: corsHeaders })
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!
   const userClient  = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!, {
@@ -224,7 +239,7 @@ Deno.serve(async (req: Request) => {
   })
 
   const { data: { user }, error: authError } = await userClient.auth.getUser()
-  if (authError || !user) return new Response('Unauthorized', { status: 401 })
+  if (authError || !user) return new Response('Unauthorized', { status: 401, headers: corsHeaders })
 
   const supabase = createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
   const body     = await req.json().catch(() => ({}))
@@ -241,7 +256,7 @@ Deno.serve(async (req: Request) => {
 
   if (connError || !connection) {
     return new Response(JSON.stringify({ error: 'Google Health not connected' }), {
-      status: 400, headers: { 'Content-Type': 'application/json' }
+      status: 400, headers: jsonHeaders
     })
   }
 
@@ -250,7 +265,7 @@ Deno.serve(async (req: Request) => {
     accessToken = await getAccessToken(supabase, connection)
   } catch (e: any) {
     return new Response(JSON.stringify({ error: 'Token refresh failed', detail: e.message }), {
-      status: 400, headers: { 'Content-Type': 'application/json' }
+      status: 400, headers: jsonHeaders
     })
   }
 
@@ -308,6 +323,6 @@ Deno.serve(async (req: Request) => {
     .eq('provider', 'fitbit')
 
   return new Response(JSON.stringify({ ok: true, synced }), {
-    headers: { 'Content-Type': 'application/json' }
+    headers: jsonHeaders
   })
 })
