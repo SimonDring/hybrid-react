@@ -61,6 +61,13 @@ function logError(context, error) {
   console.warn(`[SyncService] ${context}:`, error?.message || error);
 }
 
+// Decide which tables to replace after a cloud pull. A table whose query errored
+// is skipped (we keep whatever is cached rather than blanking it), so one failed
+// query can never strand the previous account's rows for the others.
+export function pullTablesToReplace(results) {
+  return Object.keys(results).filter((key) => !(results[key] && results[key].error));
+}
+
 // Strip fields Supabase doesn't accept on insert/upsert
 // (Supabase generates id server-side via triggers, but we send our own uuid —
 // that's fine. We just need to remove undefined values and ensure user_id.)
@@ -201,27 +208,35 @@ export async function pullFromSupabase() {
       supabase.from('injuries').select('*').eq('user_id', userId).is('deleted_at', null)
     ]);
 
-    // Check for errors
-    const errors = [usersRes, plansRes, sessionsRes, logsRes, checkinsRes, reassessRes, dailyRes, injuriesRes]
-      .map(r => r.error).filter(Boolean);
-    if (errors.length) {
-      logError('pullFromSupabase', errors[0]);
-      return { ok: false, reason: errors[0].message };
+    const resultsByTable = {
+      users: usersRes, plans: plansRes, sessions: sessionsRes, sessionLogs: logsRes,
+      weeklyCheckins: checkinsRes, reassessments: reassessRes, dailyMetrics: dailyRes,
+      injuries: injuriesRes
+    };
+
+    // Log any per-table errors but do NOT abort — replace every table that came
+    // back cleanly so a single failure can't leave another account's rows behind.
+    Object.entries(resultsByTable).forEach(([key, res]) => {
+      if (res && res.error) logError(`pullFromSupabase:${key}`, res.error);
+    });
+
+    const replaceable = pullTablesToReplace(resultsByTable);
+
+    // users: only replace if we actually got the signed-in user's row (never blank
+    // out the active profile on a transient empty/errored fetch).
+    if (replaceable.includes('users') && usersRes.data?.length) {
+      Database.tables.users.replaceAll(usersRes.data);
     }
+    if (replaceable.includes('plans'))          Database.tables.plans.replaceAll(plansRes.data || []);
+    if (replaceable.includes('sessions'))       Database.tables.sessions.replaceAll(sessionsRes.data || []);
+    if (replaceable.includes('sessionLogs'))    Database.tables.sessionLogs.replaceAll(logsRes.data || []);
+    if (replaceable.includes('weeklyCheckins')) Database.tables.weeklyCheckins.replaceAll(checkinsRes.data || []);
+    if (replaceable.includes('reassessments')) Database.tables.reassessments.replaceAll(reassessRes.data || []);
+    if (replaceable.includes('dailyMetrics'))   Database.tables.dailyMetrics.replaceAll(dailyRes.data || []);
+    if (replaceable.includes('injuries'))       Database.tables.injuries.replaceAll(injuriesRes.data || []);
 
-    // Replace local cache with cloud data. ALWAYS replace (even with []) so a
-    // different user's stale rows are cleared on sign-in — e.g. a new account
-    // with no wearable data must not show the previous user's metrics.
-    if (usersRes.data?.length)      Database.tables.users.replaceAll(usersRes.data); // never blank out the signed-in user
-    Database.tables.plans.replaceAll(plansRes.data || []);
-    Database.tables.sessions.replaceAll(sessionsRes.data || []);
-    Database.tables.sessionLogs.replaceAll(logsRes.data || []);
-    Database.tables.weeklyCheckins.replaceAll(checkinsRes.data || []);
-    Database.tables.reassessments.replaceAll(reassessRes.data || []);
-    Database.tables.dailyMetrics.replaceAll(dailyRes.data || []);
-    Database.tables.injuries.replaceAll(injuriesRes.data || []);
-
-    return { ok: true };
+    const failed = Object.keys(resultsByTable).filter((k) => !replaceable.includes(k));
+    return { ok: failed.length === 0, failed };
   } catch (err) {
     logError('pullFromSupabase (exception)', err);
     return { ok: false, reason: err.message };
