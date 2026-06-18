@@ -742,6 +742,21 @@ export const services = {
     ['session_logs', 'sessions', 'weekly_checkins', 'reassessments', 'daily_metrics', 'injuries']
       .forEach(t => { if (tables[t]) { tables[t] = {}; persist(t); } });
     notify();
+  },
+
+  // Re-read all in-memory tables from the CURRENT Storage namespace. Called by
+  // authStore whenever the signed-in user changes, so the cache served to the UI
+  // always belongs to the active account. Additive — does not change any existing
+  // method's behaviour or signature.
+  reloadFromStorage() {
+    Object.keys(tables).forEach((t) => {
+      tables[t] = Storage.load(Storage.KEYS[t], {});
+    });
+    const m = Storage.load(Storage.KEYS.appMeta, { version: null, migrated_from_v3: false });
+    appMeta.version = m.version;
+    appMeta.migrated_from_v3 = m.migrated_from_v3;
+    ensureDefaultUserAndPlan();
+    notify();
   }
 };
 
