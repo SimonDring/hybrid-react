@@ -193,7 +193,11 @@ export async function pullFromSupabase() {
   const userId = uid();
 
   try {
-    // Fetch all tables in parallel
+    // Fetch all tables in parallel.
+    // NOTE: wearable_readings is intentionally NOT pulled — wearable data is
+    // displayed via daily_metrics; wearable_readings is legacy/unused on the
+    // client. It is still namespaced + cleared per user (see Storage), so its
+    // exclusion from the pull is not an isolation gap.
     const [
       usersRes, plansRes, sessionsRes, logsRes,
       checkinsRes, reassessRes, dailyRes, injuriesRes
