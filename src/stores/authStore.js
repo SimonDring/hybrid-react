@@ -2,9 +2,9 @@
  * authStore — tracks Supabase auth session and exposes sign-in / sign-out.
  *
  * Primary auth is email + password + name (signUp / signInWithPassword) with
- * password reset. The older email-OTP methods (signInWithEmail / verifyOtp) are
- * kept as a fallback. This store listens to auth state changes and keeps `user`
- * current. Account creation is gated by a server-side invite allowlist.
+ * password reset, plus Apple/Google OAuth (signInWithOAuth). The older email-OTP
+ * methods (signInWithEmail / verifyOtp) are kept as a fallback. This store listens
+ * to auth state changes and keeps `user` current. Signup is open to anyone.
  *
  * Graceful degradation: if Supabase isn't configured (no env keys), the store
  * reports a "not configured" state and the app can fall back to local-only mode.
@@ -95,9 +95,8 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  // Create a new account with email + password + name.
-  // The DB allowlist trigger rejects emails that aren't invited — GoTrue masks
-  // that as a generic "Database error", which we translate to a friendly note.
+  // Create a new account with email + password + name. Signup is open (the invite
+  // allowlist was removed in migration 004), so any email may create an account.
   async signUp(email, password, name) {
     if (!isSupabaseConfigured) {
       set({ errorMessage: 'Supabase is not configured. Add keys to .env.local.' });
@@ -111,12 +110,7 @@ export const useAuthStore = create((set, get) => ({
       options: { data: { name: (name || '').trim() }, emailRedirectTo: redirectTo }
     });
     if (error) {
-      // The allowlist rejection surfaces as a 500 "Database error saving new user".
-      const msg = /database error/i.test(error.message)
-        ? "This email isn't on the invite list yet. Ask Simon to add you."
-        : error.message;
-      if (/database error/i.test(error.message)) console.warn('[authStore] signUp DB error:', error.message);
-      set({ signingUp: false, errorMessage: msg });
+      set({ signingUp: false, errorMessage: error.message });
       return;
     }
     // With email confirmation ON, signUp returns a user but no session.
