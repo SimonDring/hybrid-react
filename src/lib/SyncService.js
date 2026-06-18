@@ -534,6 +534,32 @@ export async function checkFitbitConnection() {
   return data || null;
 }
 
+// How many days after the last consent we start nudging to reconnect. Google
+// expires refresh tokens ~7 days after consent while the OAuth app is in
+// "Testing" mode, so we warn a little before that.
+const RECONNECT_SOON_DAYS = 6;
+// A sync error mentioning any of these is fixable by re-authorising (reconnect).
+const TOKEN_ERROR_RE = /token|refresh|grant|auth|connect/i;
+
+// Decide whether to nudge the user to reconnect Fitbit. Pure + side-effect free
+// so it's easy to test. Inputs: the connection's connected_at (last consent) and
+// the last sync error reason (if any). Returns one of:
+//   'reconnect_now'  — a sync failed for a reconnect-fixable (token/auth) reason
+//   'reconnect_soon' — no such error, but consent is old enough that the token
+//                      will expire soon (proactive heads-up)
+//   'ok'             — nothing to do
+export function fitbitReconnectState({ connectedAt, errorReason } = {}) {
+  if (errorReason && TOKEN_ERROR_RE.test(errorReason)) return 'reconnect_now';
+  if (connectedAt) {
+    const t = new Date(connectedAt).getTime();
+    if (!isNaN(t)) {
+      const days = (Date.now() - t) / (1000 * 60 * 60 * 24);
+      if (days >= RECONNECT_SOON_DAYS) return 'reconnect_soon';
+    }
+  }
+  return 'ok';
+}
+
 // Pick the most useful message out of an Edge Function's JSON error body.
 // The fitbit-sync function returns { error, detail } — `detail` is the specific
 // cause (e.g. the Google token-refresh failure text), so prefer it.
