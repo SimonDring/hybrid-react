@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import { useAuthStore } from '../stores/authStore.js';
 import Database from '../lib/Database.js';
-import { runSessionDMigration, getFitbitAuthUrl } from '../lib/SyncService.js';
+import { runSessionDMigration, getFitbitAuthUrl, fitbitReconnectState } from '../lib/SyncService.js';
 
 export default function Settings() {
   const [theme, setTheme] = useState(localStorage.getItem('htp_theme') || 'dark');
@@ -68,6 +68,11 @@ export default function Settings() {
   const lastSynced = fitbitConnection?.last_synced_at
     ? new Date(fitbitConnection.last_synced_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     : null;
+
+  // Whether to nudge the user to reconnect Fitbit ('reconnect_now' | 'reconnect_soon' | 'ok').
+  const reconnectState = fitbitConnection
+    ? fitbitReconnectState({ connectedAt: fitbitConnection.connected_at, errorReason: fitbitError })
+    : 'ok';
 
   const handleSetTheme = (newTheme) => {
     setTheme(newTheme);
@@ -211,33 +216,46 @@ export default function Settings() {
           </button>
         )}
 
-        {/* Sync failed → show the real reason and offer to re-authorise. A
-            connection can show as "linked" while its Google tokens are dead
-            (e.g. the refresh token expired); reconnecting issues fresh tokens. */}
-        {fitbitConnection && fitbitError && (
-          <div style={{
-            marginTop: 10, padding: '10px 12px', borderRadius: 9,
-            background: 'rgba(176,74,46,0.08)', border: '1px solid rgba(176,74,46,0.25)'
-          }}>
-            <div style={{ fontSize: 12, color: 'var(--rust)', fontWeight: 600 }}>
-              Couldn’t sync
+        {/* Reconnect nudge. Google expires the refresh token ~7 days after consent
+            while the OAuth app is in Testing mode, so a connection can show as
+            "linked" while its tokens are dead. 'reconnect_now' = a sync failed for
+            a token/auth reason; 'reconnect_soon' = consent is old, warn before it
+            breaks. Reconnecting re-runs consent and issues fresh tokens. */}
+        {fitbitConnection && reconnectState !== 'ok' && (() => {
+          const now = reconnectState === 'reconnect_now';
+          const accent = now ? 'var(--rust)' : 'var(--ochre)';
+          const bg     = now ? 'rgba(176,74,46,0.08)' : 'rgba(200,154,58,0.10)';
+          const border = now ? 'rgba(176,74,46,0.25)' : 'rgba(200,154,58,0.30)';
+          return (
+            <div style={{ marginTop: 10, padding: '10px 12px', borderRadius: 9, background: bg, border: `1px solid ${border}` }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: accent }}>
+                {now ? 'Fitbit needs reconnecting' : 'Fitbit access expires soon'}
+              </div>
+              <div style={{ fontSize: 11, color: 'var(--txt-body)', marginTop: 2 }}>
+                {now
+                  ? 'Your Google sign-in has expired, so syncing has stopped. Reconnect to resume.'
+                  : 'Reconnect now to keep your data syncing without a gap.'}
+              </div>
+              <button
+                onClick={connectFitbit}
+                style={{
+                  marginTop: 8, padding: '7px 12px', borderRadius: 8, border: 'none',
+                  background: accent, color: '#fff', fontSize: 12, fontWeight: 600,
+                  cursor: 'pointer', fontFamily: 'inherit'
+                }}
+              >
+                Reconnect Fitbit
+              </button>
             </div>
-            <div style={{ fontSize: 11, color: 'var(--txt-body)', marginTop: 2, wordBreak: 'break-word' }}>
-              {fitbitError}
-            </div>
-          </div>
-        )}
+          );
+        })()}
 
-        {fitbitConnection && (
-          <button
-            onClick={connectFitbit}
-            style={{
-              fontSize: 11, color: 'var(--txt-muted)', background: 'none',
-              border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit', marginTop: 8
-            }}
-          >
-            Not syncing? Tap to reconnect Fitbit
-          </button>
+        {/* Surface any other sync error (e.g. a transient network issue) so a
+            failure is never silent, without prompting a (pointless) reconnect. */}
+        {fitbitConnection && fitbitError && reconnectState !== 'reconnect_now' && (
+          <div style={{ marginTop: 8, fontSize: 11, color: 'var(--txt-muted)', wordBreak: 'break-word' }}>
+            Last sync error: {fitbitError}
+          </div>
         )}
       </div>
       <p className="sub" style={{ fontSize: 11, marginBottom: 20 }}>
