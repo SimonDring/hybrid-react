@@ -16,7 +16,21 @@
 import { create } from 'zustand';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient.js';
 import Database from '../lib/Database.js';
+import * as Storage from '../lib/Storage.js';
 import { deleteAccount as deleteCloudAccount } from '../lib/SyncService.js';
+
+// Point the on-device cache at the right account, then reload the in-memory
+// Database so the UI only ever sees the active user's data. Runs on first load
+// and on every auth-state change. `session` is null when signed out.
+function applyNamespaceForSession(session) {
+  const target = session?.user?.id || 'anon';
+  Storage.setNamespace(target);
+  // One-time per device: fold any pre-namespacing bare keys into this namespace.
+  Storage.migrateUnnamespacedKeysOnce(target);
+  // One-time per user: adopt anon data if this account has none yet.
+  if (session) Storage.adoptAnonDataOnce(target);
+  Database.services.reloadFromStorage();
+}
 
 // Import lazily to avoid circular dependency (authStore ← trainingStore ← Database)
 function getTrainingStore() {
@@ -182,7 +196,13 @@ export const useAuthStore = create((set, get) => ({
 
   async signOut() {
     if (!isSupabaseConfigured) return;
+    const ns = Storage.getNamespace();
     await supabase.auth.signOut();
+    // Belt-and-braces: wipe this account's on-device cache so nothing lingers
+    // before the next sign-in, then point the cache at the anonymous namespace.
+    if (ns && ns !== 'anon') Storage.clearNamespace(ns);
+    Storage.setNamespace('anon');
+    Database.services.reloadFromStorage();
     set({ status: 'signed_out', user: null, linkSentTo: null, recoveryMode: false });
   },
 
@@ -219,6 +239,7 @@ export const useAuthStore = create((set, get) => ({
 
     // Subscribe BEFORE getSession so we can't miss an early PASSWORD_RECOVERY.
     supabase.auth.onAuthStateChange((event, session) => {
+      applyNamespaceForSession(session);
       set((prev) => ({
         status: session ? 'signed_in' : 'signed_out',
         user: session ? session.user : null,
@@ -232,6 +253,7 @@ export const useAuthStore = create((set, get) => ({
     });
 
     const { data } = await supabase.auth.getSession();
+    applyNamespaceForSession(data.session);
     set((prev) => ({
       status: data.session ? 'signed_in' : 'signed_out',
       user: data.session ? data.session.user : null,
