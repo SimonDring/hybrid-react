@@ -74,6 +74,7 @@ export const useTrainingStore = create((set) => ({
   ...buildView(),
   fitbitConnection: null,   // null = not connected, object = { connected_at, last_synced_at }
   fitbitSyncing: false,
+  fitbitError: null,        // last sync failure reason (null when ok) — drives the UI
 
   // Pull fresh data from Supabase into local cache, then re-render.
   // Call this when the user signs in or the app comes to foreground.
@@ -99,26 +100,26 @@ export const useTrainingStore = create((set) => ({
   },
 
   async syncFitbitToday() {
-    set({ fitbitSyncing: true });
+    set({ fitbitSyncing: true, fitbitError: null });
     const result = await syncFitbit();
     if (result?.ok) {
       // Pull updated daily_metrics from Supabase into local cache
       await pullFromSupabase();
-      set({ ...buildView(), fitbitSyncing: false });
+      set({ ...buildView(), fitbitSyncing: false, fitbitError: null });
     } else {
-      set({ fitbitSyncing: false });
+      set({ fitbitSyncing: false, fitbitError: result?.reason || 'Sync failed' });
     }
     return result;
   },
 
   async syncFitbitRange(dateFrom, dateTo) {
-    set({ fitbitSyncing: true });
+    set({ fitbitSyncing: true, fitbitError: null });
     const result = await syncFitbit(dateFrom, dateTo);
     if (result?.ok) {
       await pullFromSupabase();
-      set({ ...buildView(), fitbitSyncing: false });
+      set({ ...buildView(), fitbitSyncing: false, fitbitError: null });
     } else {
-      set({ fitbitSyncing: false });
+      set({ fitbitSyncing: false, fitbitError: result?.reason || 'Sync failed' });
     }
     return result;
   },

@@ -534,6 +534,16 @@ export async function checkFitbitConnection() {
   return data || null;
 }
 
+// Pick the most useful message out of an Edge Function's JSON error body.
+// The fitbit-sync function returns { error, detail } — `detail` is the specific
+// cause (e.g. the Google token-refresh failure text), so prefer it.
+export function pickFitbitErrorReason(body, fallback) {
+  if (body && typeof body === 'object') {
+    return body.detail || body.error || fallback;
+  }
+  return fallback;
+}
+
 // Trigger the fitbit-sync Edge Function for a date range.
 // date_from / date_to default to today inside the function if omitted.
 export async function syncFitbit(dateFrom, dateTo) {
@@ -543,7 +553,21 @@ export async function syncFitbit(dateFrom, dateTo) {
     if (dateFrom) body.date_from = dateFrom;
     if (dateTo)   body.date_to   = dateTo;
     const { data, error } = await supabase.functions.invoke('fitbit-sync', { body });
-    if (error) { logError('syncFitbit', error); return { ok: false, reason: error.message }; }
+    if (error) {
+      logError('syncFitbit', error);
+      // supabase-js reports a non-2xx as a generic FunctionsHttpError whose real
+      // payload lives in error.context (the raw Response). Read it so the actual
+      // reason — e.g. "Token refresh failed / invalid_grant" — reaches the UI
+      // instead of a useless "non-2xx status code" message.
+      let reason = error.message;
+      try {
+        if (error.context && typeof error.context.json === 'function') {
+          const errBody = await error.context.json();
+          reason = pickFitbitErrorReason(errBody, reason);
+        }
+      } catch { /* keep the generic reason if the body can't be parsed */ }
+      return { ok: false, reason };
+    }
     return data;
   } catch (err) {
     logError('syncFitbit (exception)', err);
