@@ -9,6 +9,66 @@ import ExerciseInfo from '../components/ExerciseInfo.jsx';
 import { getChecked, toggleChecked, clearChecked } from '../lib/SessionProgress.js';
 import { trackedLiftsInSession } from '../lib/liftProgression.js';
 
+function SessionPhysiology({ state, candidates, onUnlink, onLink }) {
+  if (!state || !state.completed) return null;
+  const hasHr = state.avgHr != null || state.maxHr != null;
+  const z = state.hrZones;
+  const lw = state.linkedWorkout;
+  const zoneMax = z ? Math.max(z.z1, z.z2, z.z3, z.z4, z.z5, 1) : 1;
+  const ZONES = [['z1','Z1','--moss'],['z2','Z2','--moss'],['z3','Z3','--ochre'],['z4','Z4','--rust'],['z5','Z5','--rust']];
+
+  return (
+    <div style={{ marginTop: 18, padding: '14px 16px', borderRadius: 12, border: '1px solid var(--hairline)', background: 'var(--bg-surface)' }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt-strong)', marginBottom: 8 }}>Your session</div>
+
+      {!hasHr && (
+        <div style={{ fontSize: 12, color: 'var(--txt-muted)' }}>No HR data for this session yet.</div>
+      )}
+
+      {hasHr && (
+        <div style={{ display: 'flex', gap: 18, marginBottom: z ? 12 : 0 }}>
+          <div><div style={{ fontSize: 11, color: 'var(--txt-muted)' }}>Avg HR</div><div style={{ fontSize: 18, fontWeight: 700, color: 'var(--txt-strong)' }}>{state.avgHr ?? '—'}</div></div>
+          <div><div style={{ fontSize: 11, color: 'var(--txt-muted)' }}>Max HR</div><div style={{ fontSize: 18, fontWeight: 700, color: 'var(--txt-strong)' }}>{state.maxHr ?? '—'}</div></div>
+          {state.calories != null && <div><div style={{ fontSize: 11, color: 'var(--txt-muted)' }}>Calories</div><div style={{ fontSize: 18, fontWeight: 700, color: 'var(--txt-strong)' }}>{Math.round(state.calories)}</div></div>}
+        </div>
+      )}
+
+      {z && (
+        <div>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 56 }}>
+            {ZONES.map(([k, label, col]) => (
+              <div key={k} style={{ flex: 1, textAlign: 'center' }}>
+                <div style={{ height: `${(z[k] / zoneMax) * 44}px`, background: `var(${col})`, borderRadius: 4, minHeight: 2 }} />
+                <div style={{ fontSize: 9, color: 'var(--txt-muted)', marginTop: 3 }}>{label}</div>
+                <div style={{ fontSize: 9, color: 'var(--txt-muted)' }}>{z[k]}m</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: 10, color: 'var(--txt-muted)', marginTop: 6 }}>Zones estimated from your resting & max HR.</div>
+        </div>
+      )}
+
+      {lw ? (
+        <div style={{ marginTop: 12, fontSize: 11, color: 'var(--txt-body)' }}>
+          Linked Strava {lw.type}{lw.distance_m ? ` · ${(lw.distance_m / 1000).toFixed(2)} km` : ''}
+          {' · '}
+          <button onClick={() => onUnlink(lw.id)} style={{ background: 'none', border: 'none', color: 'var(--rust)', fontWeight: 600, cursor: 'pointer', padding: 0, fontFamily: 'inherit', fontSize: 11 }}>unlink</button>
+        </div>
+      ) : candidates.length > 0 && (
+        <div style={{ marginTop: 12 }}>
+          <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginBottom: 4 }}>Link a Strava workout from this day:</div>
+          {candidates.map(w => (
+            <button key={w.id} onClick={() => onLink(w.id)}
+              style={{ display: 'block', width: '100%', textAlign: 'left', background: 'none', border: '1px solid var(--hairline)', borderRadius: 8, padding: '6px 10px', marginTop: 4, color: 'var(--txt-body)', fontSize: 11, cursor: 'pointer', fontFamily: 'inherit' }}>
+              {w.type}{w.distance_m ? ` · ${(w.distance_m / 1000).toFixed(2)} km` : ''}{w.start_time ? ` · ${new Date(w.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function SessionDetail() {
   const { phaseId, weekNum, sessionIdx } = useParams();
   const sessions = useTrainingStore(state => state.sessions);
@@ -17,6 +77,9 @@ export default function SessionDetail() {
   const uncompleteSession = useTrainingStore(state => state.uncompleteSession);
   const cancelSession = useTrainingStore(state => state.cancelSession);
   const logLiftSets = useTrainingStore(state => state.logLiftSets);
+  const unlinkWorkoutFromSession = useTrainingStore(s => s.unlinkWorkoutFromSession);
+  const linkWorkoutToSession     = useTrainingStore(s => s.linkWorkoutToSession);
+  const allWorkouts              = useTrainingStore(s => s.workouts);
 
   const [showForm, setShowForm] = useState(false);
   const [ratings, setRatings] = useState({ quality: null, energy: null, recovery: null });
@@ -299,6 +362,20 @@ export default function SessionDetail() {
           >
             Mark as incomplete
           </button>
+          {isDone && (() => {
+            const day = (state.completedAt || '').split('T')[0];
+            const candidates = (allWorkouts || []).filter(w =>
+              !w.session_id && day && (w.start_time || '').split('T')[0] === day
+            );
+            return (
+              <SessionPhysiology
+                state={state}
+                candidates={candidates}
+                onUnlink={(workoutId) => unlinkWorkoutFromSession(workoutId, state.id)}
+                onLink={(workoutId) => linkWorkoutToSession(workoutId, state.id)}
+              />
+            );
+          })()}
         </>
       )}
 
