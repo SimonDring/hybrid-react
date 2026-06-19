@@ -3580,6 +3580,29 @@ button.today-hero { width: 100%; display: block; text-align: left; border: none;
 .hc-trend { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
 .hc-trend-label { font-size: 12px; color: var(--txt-muted); }
 
+/* ---------- Health: sleep ---------- */
+.sleep-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.sleep-dur { font-size: 28px; font-weight: 600; color: var(--txt-strong); margin-top: 4px; }
+.sleep-score { font-size: 20px; font-weight: 600; color: var(--txt-strong); }
+.sleep-score span { font-size: 11px; color: var(--txt-muted); font-weight: 400; }
+.sleep-bar { display: flex; gap: 2px; height: 10px; border-radius: 5px; overflow: hidden; margin-top: 14px; }
+.sleep-bar .sg { height: 100%; }
+.sleep-bar .deep { background: #97A6FF; }
+.sleep-bar .rem { background: #6FD3C4; }
+.sleep-bar .light { background: #5FB6D4; }
+.sleep-bar .awake { background: rgba(255,255,255,0.12); }
+.sleep-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 9px; font-size: 11px; color: var(--txt-muted); }
+.sleep-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; vertical-align: middle; }
+.sleep-legend .deep { background: #97A6FF; }
+.sleep-legend .rem { background: #6FD3C4; }
+.sleep-legend .light { background: #5FB6D4; }
+
+/* ---------- Health: recovery markers ---------- */
+.marker-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.marker-row.bordered { border-top: 1px solid var(--hairline); margin-top: 12px; padding-top: 14px; }
+.marker-val { font-size: 22px; font-weight: 600; color: var(--txt-strong); margin-top: 2px; }
+.marker-val span { font-size: 12px; color: var(--txt-muted); font-weight: 400; }
+
 /* ---------- Trends ---------- */
 .trend-range { display: flex; gap: 6px; margin-bottom: 16px; }
 .trend-range button { flex: 1; padding: 8px; font-size: 12px; font-family: inherit; border-radius: var(--r-md); border: 1px solid var(--hairline); background: var(--bg-surface); color: var(--txt-muted); cursor: pointer; }

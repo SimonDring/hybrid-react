@@ -1,14 +1,13 @@
 /**
- * Health — recovery + training load in detail. The wearable/recovery and
- * acute:chronic-load content that used to sit low on Progress now lives here as a
- * dedicated tab: a readiness verdict + vitals + trend, the load breakdown, and
- * links to the deep metric/trend/injury screens.
+ * Health — the recovery + training-load detail hub. It deliberately does NOT
+ * repeat the readiness score/verdict (that's the Home hero); instead it shows the
+ * detail behind it: sleep (incl. stages), recovery markers (HRV, resting HR),
+ * training load, and links to the deep metric/trend/injury screens.
  */
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
-import { computeReadiness, fmtSleep } from '../lib/Readiness.js';
-import { readinessVerdict, loadVerdict } from '../lib/verdicts.js';
-import MetricRing from '../components/ui/MetricRing.jsx';
+import { fmtSleep } from '../lib/Readiness.js';
+import { loadVerdict } from '../lib/verdicts.js';
 import Sparkline from '../components/ui/Sparkline.jsx';
 
 function LinkRow({ title, sub, badge, onClick }) {
@@ -24,57 +23,78 @@ function LinkRow({ title, sub, badge, onClick }) {
 export default function Health() {
   const navigate = useNavigate();
   const dailyMetrics = useTrainingStore(s => s.dailyMetrics);
-  const logs = useTrainingStore(s => s.logs);
   const load = useTrainingStore(s => s.load);
   const adaptation = useTrainingStore(s => s.adaptation);
   const injuries = useTrainingStore(s => s.injuries);
 
-  const readiness = computeReadiness(dailyMetrics, logs);
-  const rv = readinessVerdict(readiness);
   const lv = loadVerdict(load, adaptation);
-  const vitals = readiness.vitals || {};
-  const hasVitals = vitals.sleepMin != null || vitals.hrv != null || vitals.rhr != null;
-  const recScores = (dailyMetrics || []).map(m => Number(m.readiness_score)).filter(v => !isNaN(v)).slice(-14);
-  const recAvg = recScores.length ? Math.round(recScores.reduce((a, b) => a + b, 0) / recScores.length) : null;
+  const sorted = [...dailyMetrics].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  const latest = sorted[sorted.length - 1] || {};
+  const series = (field, t) => sorted.map(m => (m[field] == null ? NaN : (t ? t(m[field]) : m[field]))).filter(v => !isNaN(v)).slice(-14);
+  const sleepHrs = series('sleep_duration_min', v => Math.round((v / 60) * 10) / 10);
+  const hrvSeries = series('hrv_ms');
+  const rhrSeries = series('resting_hr');
+  const avgSleep = sleepHrs.length ? Math.round((sleepHrs.reduce((a, b) => a + b, 0) / sleepHrs.length) * 10) / 10 : null;
   const activeInjuries = (injuries || []).filter(i => ['active', 'rehabbing', 'monitoring'].includes(i.status));
+
+  const deep = Number(latest.sleep_deep_min) || 0, rem = Number(latest.sleep_rem_min) || 0, light = Number(latest.sleep_light_min) || 0, awake = Number(latest.sleep_awake_min) || 0;
+  const hasStages = (deep + rem + light) > 0;
 
   return (
     <>
       <h1 className="h1">Health</h1>
-      <p className="sub">Recovery and training load, in detail.</p>
+      <p className="sub">Sleep, recovery markers and training load, in detail.</p>
 
-      {/* RECOVERY */}
-      {dailyMetrics.length === 0 ? (
-        <button className="callout amber" style={{ width: '100%', textAlign: 'left', cursor: 'pointer', display: 'block' }} onClick={() => navigate('/tracking/wearables')}>
-          <strong>No recovery data yet.</strong> Connect a wearable or add today's sleep, HRV and resting HR →
-        </button>
-      ) : (
-        <div className="health-card">
-          <div className="hc-top">
-            <MetricRing value={readiness.score || 0} max={100} size={88} stroke={6} color={rv.color}>
-              <span className="hc-score">{readiness.score != null ? readiness.score : '—'}</span>
-            </MetricRing>
-            <div className="hc-copy">
-              <div className="hc-eyebrow">Readiness{readiness.estimated ? ' · estimate' : ''}</div>
-              <div className="hc-headline">{rv.headline}</div>
-              <div className="hc-note">{rv.note}</div>
+      {/* SLEEP */}
+      <h2 className="h3">Sleep</h2>
+      <div className="health-card">
+        {latest.sleep_duration_min != null ? (
+          <>
+            <div className="sleep-head">
+              <div>
+                <div className="hc-eyebrow">Last night</div>
+                <div className="sleep-dur">{fmtSleep(latest.sleep_duration_min)}</div>
+              </div>
+              {latest.sleep_score != null && <div className="sleep-score">{latest.sleep_score}<span> score</span></div>}
             </div>
-          </div>
-          {hasVitals && (
-            <div className="vitals-row">
-              <div className="vital"><div className="v-label">Sleep</div><div className="v-val">{vitals.sleepMin != null ? fmtSleep(vitals.sleepMin) : '—'}</div></div>
-              <div className="vital"><div className="v-label">HRV</div><div className="v-val">{vitals.hrv != null ? `${vitals.hrv} ms` : '—'}</div></div>
-              <div className="vital"><div className="v-label">Resting HR</div><div className="v-val">{vitals.rhr != null ? `${vitals.rhr} bpm` : '—'}</div></div>
-            </div>
-          )}
-          {recScores.length >= 2 && (
-            <div className="hc-trend">
-              <span className="hc-trend-label">{recScores.length}-day readiness · avg {recAvg}</span>
-              <Sparkline values={recScores} color="var(--accent-2)" />
-            </div>
-          )}
+            {hasStages && (
+              <>
+                <div className="sleep-bar">
+                  {deep > 0 && <span className="sg deep" style={{ flexGrow: deep }} />}
+                  {rem > 0 && <span className="sg rem" style={{ flexGrow: rem }} />}
+                  {light > 0 && <span className="sg light" style={{ flexGrow: light }} />}
+                  {awake > 0 && <span className="sg awake" style={{ flexGrow: awake }} />}
+                </div>
+                <div className="sleep-legend">
+                  <span><i className="deep" />Deep {fmtSleep(deep)}</span>
+                  <span><i className="rem" />REM {fmtSleep(rem)}</span>
+                  <span><i className="light" />Light {fmtSleep(light)}</span>
+                </div>
+              </>
+            )}
+            {sleepHrs.length >= 2 && (
+              <div className="hc-trend"><span className="hc-trend-label">{sleepHrs.length}-day avg {avgSleep} h</span><Sparkline values={sleepHrs} color="var(--accent-2)" /></div>
+            )}
+          </>
+        ) : (
+          <button className="hc-note" style={{ background: 'none', border: 'none', padding: 0, font: 'inherit', cursor: 'pointer', color: 'var(--accent)', textAlign: 'left' }} onClick={() => navigate('/tracking/wearables')}>
+            No sleep data yet — connect a wearable or add it in daily metrics →
+          </button>
+        )}
+      </div>
+
+      {/* RECOVERY MARKERS */}
+      <h2 className="h3" style={{ marginTop: 22 }}>Recovery markers</h2>
+      <div className="health-card">
+        <div className="marker-row">
+          <div><div className="hc-eyebrow">HRV</div><div className="marker-val">{latest.hrv_ms != null ? latest.hrv_ms : '—'}<span> ms</span></div></div>
+          {hrvSeries.length >= 2 && <Sparkline values={hrvSeries} color="#6FD3C4" />}
         </div>
-      )}
+        <div className="marker-row bordered">
+          <div><div className="hc-eyebrow">Resting HR</div><div className="marker-val">{latest.resting_hr != null ? latest.resting_hr : '—'}<span> bpm</span></div></div>
+          {rhrSeries.length >= 2 && <Sparkline values={rhrSeries} color="#E8836F" />}
+        </div>
+      </div>
 
       {/* TRAINING LOAD */}
       <h2 className="h3" style={{ marginTop: 22 }}>Training load</h2>
@@ -94,7 +114,7 @@ export default function Health() {
       <h2 className="h3" style={{ marginTop: 22 }}>Detail</h2>
       <div className="link-list">
         <LinkRow title="Daily metrics" sub="Sleep, HRV, resting HR, readiness — wearable + manual" onClick={() => navigate('/tracking/wearables')} />
-        <LinkRow title="Trends" sub="Recovery & activity over time" onClick={() => navigate('/tracking/trends')} badge={dailyMetrics.length >= 2 ? `${dailyMetrics.length} days` : null} />
+        <LinkRow title="Trends" sub="Fitness age, recovery & activity over time" onClick={() => navigate('/tracking/trends')} badge={dailyMetrics.length >= 2 ? `${dailyMetrics.length} days` : null} />
         <LinkRow title="Training load" sub="Acute vs chronic load & how the plan adapts" onClick={() => navigate('/tracking/load')} badge={load && load.acwr != null ? load.acwr.toFixed(1) : null} />
         <LinkRow title="Injuries" sub={activeInjuries.length === 0 ? 'No current injuries' : activeInjuries.map(i => i.title || i.body_part || 'Injury').join(' · ')} badge={activeInjuries.length > 0 ? `${activeInjuries.length} active` : null} onClick={() => navigate('/tracking/injuries')} />
       </div>

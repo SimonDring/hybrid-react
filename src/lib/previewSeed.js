@@ -10,7 +10,7 @@
 import Database from './Database.js';
 import { answersToProfile, BLANK_ANSWERS } from './onboardingModel.js';
 
-const SEED_VERSION = '2';
+const SEED_VERSION = '4';
 
 // Same answer shape the onboarding wizard / DevPlayground presets use.
 const PREVIEW_ANSWERS = {
@@ -46,23 +46,25 @@ export function seedPreview() {
 
   // Recovery metrics so readiness renders. Today = 82 → "strong" (teal "Primed").
   [
-    { date: dayAgo(0), readiness_score: 82, hrv_ms: 64, resting_hr: 47, sleep_duration_min: 466, sleep_score: 84 },
-    { date: dayAgo(1), readiness_score: 74, hrv_ms: 59, resting_hr: 49, sleep_duration_min: 442, sleep_score: 78 },
-    { date: dayAgo(2), readiness_score: 69, hrv_ms: 55, resting_hr: 50, sleep_duration_min: 420, sleep_score: 72 }
+    { date: dayAgo(0), readiness_score: 82, hrv_ms: 64, resting_hr: 47, sleep_duration_min: 466, sleep_score: 84, sleep_deep_min: 84, sleep_rem_min: 102, sleep_light_min: 264, sleep_awake_min: 16 },
+    { date: dayAgo(1), readiness_score: 74, hrv_ms: 59, resting_hr: 49, sleep_duration_min: 442, sleep_score: 78, sleep_deep_min: 76, sleep_rem_min: 96, sleep_light_min: 254, sleep_awake_min: 16 },
+    { date: dayAgo(2), readiness_score: 69, hrv_ms: 55, resting_hr: 50, sleep_duration_min: 420, sleep_score: 72, sleep_deep_min: 70, sleep_rem_min: 90, sleep_light_min: 246, sleep_awake_min: 14 }
   ].forEach(m => Database.services.upsertDailyMetric({ ...m, source: 'preview' }));
 
   // ~4 weeks of steady training history (unlinked workouts) so the load ring
   // computes a real acute:chronic ratio → a "Balanced" state rather than empty.
-  for (let n = 0; n <= 27; n += 2) {
-    const date = dayAgo(n);
-    Database.tables.workouts.create({
-      provider: 'preview',
-      type: n % 4 === 0 ? 'run' : 'strength',
-      start_time: `${date}T18:00:00.000Z`,
-      end_time: `${date}T18:50:00.000Z`,
-      duration_sec: 3000,
-      session_id: null
-    });
+  if (!Database.tables.workouts.all().some(w => w.provider === 'preview')) {
+    for (let n = 0; n <= 27; n += 2) {
+      const date = dayAgo(n);
+      Database.tables.workouts.create({
+        provider: 'preview',
+        type: n % 4 === 0 ? 'run' : 'strength',
+        start_time: `${date}T18:00:00.000Z`,
+        end_time: `${date}T18:50:00.000Z`,
+        duration_sec: 3000,
+        session_id: null
+      });
+    }
   }
 
   localStorage.setItem('htp_preview_seed', SEED_VERSION);
