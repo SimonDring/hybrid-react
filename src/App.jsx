@@ -27,6 +27,7 @@ import Settings from './screens/Settings.jsx';
 import Integrations from './screens/Integrations.jsx';
 import Coach from './screens/Coach.jsx';
 import BlockCheckin from './screens/BlockCheckin.jsx';
+import TrainingLoad from './screens/TrainingLoad.jsx';
 
 const routeMeta = {
   '/': { title: 'Today', topLevel: true, tab: 'today' },
@@ -39,6 +40,7 @@ const routeMeta = {
   '/tracking/wearables': { title: 'Daily metrics', topLevel: false, tab: 'progress' },
   '/tracking/trends': { title: 'Trends', topLevel: false, tab: 'progress' },
   '/tracking/injuries': { title: 'Injury log', topLevel: false, tab: 'progress' },
+  '/tracking/load': { title: 'Training load', topLevel: false, tab: 'progress' },
   '/profile': { title: 'Profile', topLevel: true, tab: 'profile' },
   '/profile/injuries': { title: 'Injury log', topLevel: false, tab: 'profile' },
   '/settings': { title: 'Settings', topLevel: false, tab: 'profile' },
@@ -148,6 +150,7 @@ export default function App() {
           <Route path="/tracking/wearables" element={<Wearables />} />
           <Route path="/tracking/trends" element={<Trends />} />
           <Route path="/tracking/injuries" element={<Injuries />} />
+          <Route path="/tracking/load" element={<TrainingLoad />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/injuries" element={<Injuries />} />
           <Route path="/settings" element={<Settings />} />
