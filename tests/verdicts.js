@@ -23,3 +23,5 @@ assert(loadVerdict({ acwr: 1.6, band: 'over' }, { reverted: false, reason: 'Easi
 assert(loadVerdict({ acwr: 1.6, band: 'over' }, { reverted: true, reason: 'x' }).note !== 'x', 'T15 reverted adaptation ignored');
 assert(loadVerdict({ acwr: 1.6, band: 'over' }, { reverted: true, reason: 'x' }).note === 'Well above baseline — easing off so you can absorb it.', 'T15b reverted adaptation falls back to base note');
 assert(loadVerdict({ acwr: 1.0, band: 'taper' }).tone === 'neutral', 'T16 unknown band → neutral');
+assert(readinessVerdict({ status: 'strong' }).label === 'Primed', 'T17 strong → label Primed');
+assert(readinessVerdict({ status: 'low' }).label === 'Ease in', 'T18 low → label Ease in');

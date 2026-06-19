@@ -3,8 +3,8 @@ import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
 import { computeReadiness } from '../lib/Readiness.js';
 import TrainingCalendar from '../components/TrainingCalendar.jsx';
-import ReadinessHero from '../components/ui/ReadinessHero.jsx';
-import LoadBand from '../components/ui/LoadBand.jsx';
+import RingTile from '../components/ui/RingTile.jsx';
+import { readinessVerdict, loadVerdict } from '../lib/verdicts.js';
 
 const DISC_LABEL = { gym: 'Gym', run: 'Run', swim: 'Swim', cycle: 'Ride', brick: 'Brick', general: 'Movement' };
 const stripDay = (title) => (title || '').replace(/^[A-Za-z]+\s·\s/, '');
@@ -34,6 +34,8 @@ export default function Home() {
   const now = new Date();
   const dateLabel = now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
   const readiness = computeReadiness(dailyMetrics, logs);
+  const rv = readinessVerdict(readiness);
+  const lv = loadVerdict(load, adaptation);
 
   const openSession = (s) => navigate(`/phases/${s.phaseId}/weeks/${s.weekNum}/sessions/${s.idx}`);
 
@@ -57,8 +59,27 @@ export default function Home() {
         <div className="today-date">{greeting(now)} · {dateLabel}</div>
       </div>
 
-      {/* READINESS — verdict-first hero */}
-      <ReadinessHero readiness={readiness} onOpen={() => navigate('/tracking/wearables')} />
+      {/* TOP — readiness + training load as two rings */}
+      <div className="home-rings">
+        <RingTile
+          eyebrow="Readiness"
+          value={readiness.score != null ? readiness.score : '—'}
+          fill={readiness.score != null ? readiness.score : 0}
+          max={100}
+          color={rv.color}
+          verdict={rv.label}
+          onClick={() => navigate('/tracking/wearables')}
+        />
+        <RingTile
+          eyebrow="Training load"
+          value={load && load.acwr != null ? load.acwr.toFixed(1) : '—'}
+          fill={load && load.acwr != null ? load.acwr : 0}
+          max={2}
+          color={lv.color}
+          verdict={lv.label}
+          onClick={() => navigate('/tracking/load')}
+        />
+      </div>
 
       {/* ADAPTATION — shown when the load engine adjusted this week */}
       {adaptation && (
@@ -83,9 +104,6 @@ export default function Home() {
           <div className="today-meta">{next.session.duration}</div>
         </button>
       ) : null}
-
-      {/* TRAINING LOAD — verdict band */}
-      <LoadBand load={load} adaptation={adaptation} />
 
       {/* CATCH UP — one-tap Done/Missed for past-due sessions */}
       {pastDue.length > 0 && (

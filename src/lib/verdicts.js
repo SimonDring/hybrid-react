@@ -12,10 +12,10 @@ export const TONE = {
 };
 
 const READINESS = {
-  strong:   { tone: 'positive', headline: 'Primed — push today', note: "You're recovered. Good day to go hard." },
-  moderate: { tone: 'caution',  headline: 'Train as planned',    note: 'Solid enough — train as planned and listen to your body.' },
-  low:      { tone: 'strain',   headline: 'Ease in today',       note: "Recovery's down. Keep it light or swap for easy work." },
-  unknown:  { tone: 'neutral',  headline: 'How are you feeling?', note: 'Log a check-in or connect a wearable to see readiness.' }
+  strong:   { tone: 'positive', label: 'Primed', headline: 'Primed — push today', note: "You're recovered. Good day to go hard." },
+  moderate: { tone: 'caution',  label: 'Steady', headline: 'Train as planned',    note: 'Solid enough — train as planned and listen to your body.' },
+  low:      { tone: 'strain',   label: 'Ease in', headline: 'Ease in today',      note: "Recovery's down. Keep it light or swap for easy work." },
+  unknown:  { tone: 'neutral',  label: '—',      headline: 'How are you feeling?', note: 'Log a check-in or connect a wearable to see readiness.' }
 };
 
 export function readinessVerdict(readiness) {
