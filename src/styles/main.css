@@ -3363,7 +3363,7 @@ button:active,
 .trainnow-cta {
   width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 13px 16px; margin-bottom: 18px; border-radius: 14px; cursor: pointer; font-family: inherit;
-  border: 1px solid var(--rust); background: rgba(176,74,46,0.06); box-shadow: var(--shadow-sm);
+  border: 1px solid var(--rust); background: var(--bg-surface); box-shadow: var(--shadow-sm);
 }
 .trainnow-cta:active { transform: scale(0.99); }
 .trainnow-cta .tn-cta-text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
@@ -3510,3 +3510,10 @@ button.today-hero { width: 100%; display: block; text-align: left; border: none;
 .rhero-note { font-size: 13px; color: var(--txt-body); line-height: 1.4; }
 .rhero-evidence { position: relative; display: block; margin-top: var(--s-4); font-size: 12px; color: var(--txt-muted); }
 .lb-note { font-size: 12px; color: var(--txt-body); margin-top: 8px; line-height: 1.45; }
+
+/* ---------- Home adaptation banner ---------- */
+.home-adapt { background: rgba(242,193,78,0.10); border: 1px solid rgba(242,193,78,0.30); border-radius: var(--r-md); padding: 12px 14px; margin-bottom: var(--s-4); }
+.home-adapt.reverted { background: var(--bg-surface-2); border-color: var(--hairline); }
+.ha-title { font-size: 13px; font-weight: 500; color: var(--txt-strong); margin-bottom: 2px; }
+.ha-reason { font-size: 12px; color: var(--txt-body); }
+.ha-action { margin-top: 8px; background: none; border: none; color: var(--accent); font-size: 12px; font-weight: 500; cursor: pointer; padding: 0; font-family: inherit; }
