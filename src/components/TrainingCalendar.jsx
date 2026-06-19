@@ -13,7 +13,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { buildCalendar, localISO } from '../lib/PlanService.js';
 
-const DISC_COLOR = { gym: '#5a8a5a', run: '#c2613f', swim: '#3a8fb0', cycle: '#c89a3a', brick: '#9a6fb0', general: '#7a8a6a' };
+const DISC_COLOR = {
+  gym: 'var(--disc-gym)', run: 'var(--disc-run)', swim: 'var(--disc-swim)',
+  cycle: 'var(--disc-cycle)', brick: 'var(--disc-brick)', general: 'var(--disc-general)'
+};
 const DISC_LABEL = { gym: 'Gym', run: 'Run', swim: 'Swim', cycle: 'Ride', brick: 'Brick', general: 'Movement' };
 const DAY_LETTER = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
