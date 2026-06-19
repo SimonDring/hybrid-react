@@ -35,7 +35,10 @@ export function loadVerdict(load, adaptation) {
   if (!load || load.acwr == null || !load.band) {
     return { tone: 'neutral', label: 'Building baseline', note: 'A few more sessions and your load trend appears here.', color: TONE.neutral };
   }
-  const base = LOAD[load.band] || LOAD.sweet;
+  const base = LOAD[load.band];
+  if (!base) {
+    return { tone: 'neutral', label: 'Steady', note: 'Your training load is steady.', color: TONE.neutral };
+  }
   const note = (adaptation && !adaptation.reverted && adaptation.reason) ? adaptation.reason : base.note;
   return { tone: base.tone, label: base.label, note, color: TONE[base.tone] };
 }
