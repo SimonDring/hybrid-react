@@ -1003,7 +1003,7 @@ body { font-variant-numeric: tabular-nums; }
   text-transform: none;
   z-index: 1;
 }
-.tab.active { color: var(--txt-strong); }
+.tab.active { color: var(--accent); }
 .tab.active::before {
   content: '';
   position: absolute;
@@ -1016,7 +1016,6 @@ body { font-variant-numeric: tabular-nums; }
   border-radius: var(--r-full);
   z-index: 0;
 }
-html[data-theme="dark"] .tab.active::before { background: rgba(244,241,234,0.06); }
 
 /* ---------- TYPOGRAPHY ---------- */
 .h1 {
@@ -2003,8 +2002,8 @@ html[data-theme="dark"] .decision-card .scen { color: #9eb3bf; }
   justify-content: center;
   width: 46px; height: 46px;
   border-radius: 50%;
-  background: var(--rust);
-  color: #fff;
+  background: var(--accent);
+  color: var(--on-action);
   margin-top: -12px;
   box-shadow: var(--shadow-md), 0 4px 14px rgba(232,90,50,0.45);
   transition: transform 0.12s;
@@ -2015,7 +2014,7 @@ html[data-theme="dark"] .decision-card .scen { color: #9eb3bf; }
   font-family: var(--sans);
   font-size: 10.5px;
   font-weight: 700;
-  color: var(--rust);
+  color: var(--accent);
   letter-spacing: 0.02em;
 }
 
