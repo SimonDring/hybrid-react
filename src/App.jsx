@@ -21,6 +21,8 @@ import WeekDetail from './screens/WeekDetail.jsx';
 import SessionDetail from './screens/SessionDetail.jsx';
 import Progress from './screens/Progress.jsx';
 import Health from './screens/Health.jsx';
+import SleepDetail from './screens/SleepDetail.jsx';
+import RecoveryDetail from './screens/RecoveryDetail.jsx';
 import Wearables from './screens/Wearables.jsx';
 import Trends from './screens/Trends.jsx';
 import Profile from './screens/Profile.jsx';
@@ -40,6 +42,8 @@ const routeMeta = {
   '/phases/:phaseId/weeks/:weekNum/sessions/:sessionIdx': { title: 'Session', topLevel: false, tab: 'plan' },
   '/progress': { title: 'Progress', topLevel: true, tab: 'progress' },
   '/health': { title: 'Health', topLevel: true, tab: 'health' },
+  '/tracking/sleep': { title: 'Sleep', topLevel: false, tab: 'health' },
+  '/tracking/recovery': { title: 'Recovery', topLevel: false, tab: 'health' },
   '/tracking/wearables': { title: 'Daily metrics', topLevel: false, tab: 'health' },
   '/tracking/trends': { title: 'Trends', topLevel: false, tab: 'health' },
   '/tracking/injuries': { title: 'Injury log', topLevel: false, tab: 'health' },
@@ -166,6 +170,8 @@ export default function App() {
           <Route path="/progress" element={<Progress />} />
           <Route path="/health" element={<Health />} />
           <Route path="/tracking" element={<Navigate to="/progress" replace />} />
+          <Route path="/tracking/sleep" element={<SleepDetail />} />
+          <Route path="/tracking/recovery" element={<RecoveryDetail />} />
           <Route path="/tracking/wearables" element={<Wearables />} />
           <Route path="/tracking/trends" element={<Trends />} />
           <Route path="/tracking/injuries" element={<Injuries />} />

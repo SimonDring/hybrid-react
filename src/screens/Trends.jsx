@@ -158,6 +158,8 @@ export default function Trends() {
       ) : (
         <div className="callout amber"><strong>Not enough data in this range.</strong> Try a wider range, or sync more days.</div>
       )}
+
+      <button className="trend-add" onClick={() => navigate('/tracking/wearables')}>Add or edit daily metrics →</button>
     </>
   );
 }
