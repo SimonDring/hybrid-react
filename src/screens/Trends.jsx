@@ -119,9 +119,6 @@ export default function Trends() {
 
   return (
     <>
-      <h1 className="h1">Trends</h1>
-      <p className="sub">Recovery and activity from your wearable. {dailyMetrics.length} day{dailyMetrics.length !== 1 ? 's' : ''} recorded.</p>
-
       {fa && (
         <div className="fitage-card">
           <div className="fitage-main">
@@ -134,9 +131,7 @@ export default function Trends() {
               <div className="fitage-vs">vs your age of {fa.age}</div>
             </div>
           </div>
-          <div className="fitage-note">
-            Estimated from your resting HR{fa.rhr ? ` (${fa.rhr} bpm)` : ''} and HRV{fa.hrv ? ` (${fa.hrv} ms)` : ''} versus typical for your age — directional, not medical.
-          </div>
+          <div className="fitage-note">From resting HR + HRV vs typical for your age — an estimate, not medical.</div>
         </div>
       )}
 
@@ -169,7 +164,7 @@ export default function Trends() {
             <span>range {lo}–{hi}{sel.unit}</span>
           </div>
 
-          <div className="trend-range" style={{ margin: '12px 0' }}>
+          <div className="trend-range" style={{ margin: '10px 0' }}>
             {RANGES.map(r => (
               <button key={r.id} className={range === r.id ? 'active' : ''} onClick={() => setRange(r.id)}>{r.label}</button>
             ))}
