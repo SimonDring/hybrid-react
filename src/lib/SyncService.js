@@ -201,7 +201,7 @@ export async function pullFromSupabase() {
     // exclusion from the pull is not an isolation gap.
     const [
       usersRes, plansRes, sessionsRes, logsRes,
-      checkinsRes, reassessRes, dailyRes, injuriesRes
+      checkinsRes, reassessRes, dailyRes, injuriesRes, workoutsRes
     ] = await Promise.all([
       supabase.from('users').select('*').eq('id', userId).is('deleted_at', null),
       supabase.from('training_plans').select('*').eq('user_id', userId).is('deleted_at', null),
@@ -210,13 +210,14 @@ export async function pullFromSupabase() {
       supabase.from('weekly_checkins').select('*').eq('user_id', userId).is('deleted_at', null),
       supabase.from('reassessments').select('*').eq('user_id', userId).is('deleted_at', null),
       supabase.from('daily_metrics').select('*').eq('user_id', userId).is('deleted_at', null),
-      supabase.from('injuries').select('*').eq('user_id', userId).is('deleted_at', null)
+      supabase.from('injuries').select('*').eq('user_id', userId).is('deleted_at', null),
+      supabase.from('workouts').select('*').eq('user_id', userId).is('deleted_at', null)
     ]);
 
     const resultsByTable = {
       users: usersRes, plans: plansRes, sessions: sessionsRes, sessionLogs: logsRes,
       weeklyCheckins: checkinsRes, reassessments: reassessRes, dailyMetrics: dailyRes,
-      injuries: injuriesRes
+      injuries: injuriesRes, workouts: workoutsRes
     };
 
     // Log any per-table errors but do NOT abort — replace every table that came
@@ -239,6 +240,7 @@ export async function pullFromSupabase() {
     if (replaceable.includes('reassessments')) Database.tables.reassessments.replaceAll(reassessRes.data || []);
     if (replaceable.includes('dailyMetrics'))   Database.tables.dailyMetrics.replaceAll(dailyRes.data || []);
     if (replaceable.includes('injuries'))       Database.tables.injuries.replaceAll(injuriesRes.data || []);
+    if (replaceable.includes('workouts'))       Database.tables.workouts.replaceAll(workoutsRes.data || []);
 
     const failed = Object.keys(resultsByTable).filter((k) => !replaceable.includes(k));
     return { ok: failed.length === 0, failed };
@@ -602,6 +604,43 @@ export async function syncFitbit(dateFrom, dateTo) {
   }
 }
 
+// Build the Strava OAuth authorize URL. client_id is public (browser-safe);
+// the secret stays in the Edge Function. scope=activity:read_all reads all
+// activities incl. ones marked private. state carries the Supabase user id.
+export function getStravaAuthUrl(userId) {
+  const clientId    = import.meta.env.VITE_STRAVA_CLIENT_ID;
+  const redirectUri = encodeURIComponent(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/strava-auth-callback`
+  );
+  return `https://www.strava.com/oauth/authorize?client_id=${clientId}` +
+    `&response_type=code&redirect_uri=${redirectUri}` +
+    `&approval_prompt=force&scope=activity:read_all&state=${userId}`;
+}
+
+// Trigger the strava-sync Edge Function. Reads the real failure reason from the
+// function's response body (same approach as syncFitbit).
+export async function syncStrava() {
+  if (!canSync()) return { ok: false, reason: 'not signed in' };
+  try {
+    const { data, error } = await supabase.functions.invoke('strava-sync', { body: {} });
+    if (error) {
+      logError('syncStrava', error);
+      let reason = error.message;
+      try {
+        if (error.context && typeof error.context.json === 'function') {
+          const errBody = await error.context.json();
+          reason = pickFitbitErrorReason(errBody, reason);
+        }
+      } catch { /* keep generic reason */ }
+      return { ok: false, reason };
+    }
+    return data;
+  } catch (err) {
+    logError('syncStrava (exception)', err);
+    return { ok: false, reason: err.message };
+  }
+}
+
 // Read ALL of the user's wearable connections (RLS-scoped). Returns [] when not
 // signed in or on error. Each row: { provider, role, connected_at, last_synced_at }.
 export async function checkConnections() {
@@ -651,6 +690,6 @@ export default {
   upsertDailyMetric,
   setReassessAnswer,
   addInjury, updateInjury, removeInjury, addRecoveryLogEntry,
-  getFitbitAuthUrl, checkFitbitConnection, syncFitbit, checkConnections, setDevicePrimary,
+  getFitbitAuthUrl, checkFitbitConnection, syncFitbit, getStravaAuthUrl, syncStrava, checkConnections, setDevicePrimary,
   resetAll
 };

@@ -31,7 +31,7 @@ export const PROVIDERS = {
     id: 'strava',
     label: 'Strava',
     capabilities: { baseline: false, workouts: true },
-    status: 'coming_soon'
+    status: 'live'
   }
 };
 

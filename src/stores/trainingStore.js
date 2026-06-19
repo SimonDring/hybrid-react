@@ -12,7 +12,7 @@
 
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
-import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, checkConnections, setDevicePrimary } from '../lib/SyncService.js';
+import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, syncStrava, checkConnections, setDevicePrimary } from '../lib/SyncService.js';
 import { nextE1RM } from '../lib/liftProgression.js';
 import { computeReadiness } from '../lib/Readiness.js';
 import { setRuntime } from '../lib/PlanService.js';
@@ -76,6 +76,8 @@ export const useTrainingStore = create((set) => ({
   fitbitConnection: null,   // null = not connected, object = { connected_at, last_synced_at }
   fitbitSyncing: false,
   fitbitError: null,        // last sync failure reason (null when ok) — drives the UI
+  stravaSyncing: false,
+  stravaError: null,        // last Strava sync failure reason (null when ok)
 
   // Pull fresh data from Supabase into local cache, then re-render.
   // Call this when the user signs in or the app comes to foreground.
@@ -90,6 +92,9 @@ export const useTrainingStore = create((set) => ({
     set({ ...buildView(), syncing: false, connections, fitbitConnection });
     if (fitbitConnection) {
       useTrainingStore.getState().syncFitbitToday();
+    }
+    if (connections.some(c => c.provider === 'strava')) {
+      useTrainingStore.getState().syncStrava();
     }
     return result;
   },
@@ -133,6 +138,18 @@ export const useTrainingStore = create((set) => ({
       set({ ...buildView(), fitbitSyncing: false, fitbitError: null });
     } else {
       set({ fitbitSyncing: false, fitbitError: result?.reason || 'Sync failed' });
+    }
+    return result;
+  },
+
+  async syncStrava() {
+    set({ stravaSyncing: true, stravaError: null });
+    const result = await syncStrava();
+    if (result?.ok) {
+      await pullFromSupabase();
+      set({ ...buildView(), stravaSyncing: false, stravaError: null });
+    } else {
+      set({ stravaSyncing: false, stravaError: result?.reason || 'Sync failed' });
     }
     return result;
   },

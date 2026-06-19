@@ -154,6 +154,7 @@ const tables = {
   wearableReadings:  Storage.load(Storage.KEYS.wearableReadings, {}),
   dailyMetrics:      Storage.load(Storage.KEYS.dailyMetrics, {}),
   injuries:          Storage.load(Storage.KEYS.injuries, {}),
+  workouts:          Storage.load(Storage.KEYS.workouts, {}),
   aiRecommendations: Storage.load(Storage.KEYS.aiRecommendations, {})
 };
 const appMeta = Storage.load(Storage.KEYS.appMeta, { version: null, migrated_from_v3: false });
@@ -247,6 +248,7 @@ export const tablesApi = {
   wearableReadings:  table('wearableReadings'),
   dailyMetrics:      table('dailyMetrics'),
   injuries:          table('injuries'),
+  workouts:          table('workouts'),
   aiRecommendations: table('aiRecommendations')
 };
 
