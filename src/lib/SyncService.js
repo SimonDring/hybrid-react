@@ -513,7 +513,11 @@ export async function addRecoveryLogEntry(injuryId, entry) {
 // so a refresh token is always issued (required on first connect and after scope changes).
 export function getFitbitAuthUrl(userId) {
   const clientId    = import.meta.env.VITE_FITBIT_CLIENT_ID;
-  const oauthBase   = import.meta.env.VITE_FITBIT_OAUTH_URL ?? 'https://accounts.google.com/o/oauth2/v2/auth';
+  // Use || not ??: the deployed build can set VITE_FITBIT_OAUTH_URL to an EMPTY
+  // string (an unset GitHub Actions secret renders as ""), and ?? only falls back
+  // on null/undefined. An empty base produced a relative "?..." URL that reloaded
+  // the PWA instead of navigating to Google ("reconnects within the app").
+  const oauthBase   = import.meta.env.VITE_FITBIT_OAUTH_URL || 'https://accounts.google.com/o/oauth2/v2/auth';
   const redirectUri = encodeURIComponent(
     `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fitbit-auth-callback`
   );
