@@ -76,6 +76,7 @@ export const useTrainingStore = create((set) => ({
   fitbitConnection: null,   // null = not connected, object = { connected_at, last_synced_at }
   fitbitSyncing: false,
   fitbitError: null,        // last sync failure reason (null when ok) — drives the UI
+  stravaSyncing: false,
   stravaError: null,        // last Strava sync failure reason (null when ok)
 
   // Pull fresh data from Supabase into local cache, then re-render.
@@ -142,13 +143,13 @@ export const useTrainingStore = create((set) => ({
   },
 
   async syncStrava() {
-    set({ stravaError: null });
+    set({ stravaSyncing: true, stravaError: null });
     const result = await syncStrava();
     if (result?.ok) {
       await pullFromSupabase();
-      set({ ...buildView(), stravaError: null });
+      set({ ...buildView(), stravaSyncing: false, stravaError: null });
     } else {
-      set({ stravaError: result?.reason || 'Sync failed' });
+      set({ stravaSyncing: false, stravaError: result?.reason || 'Sync failed' });
     }
     return result;
   },

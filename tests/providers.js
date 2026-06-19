@@ -7,7 +7,7 @@ function assert(cond, msg) {
 
 assert(PROVIDERS.fitbit.status === 'live', 'T1 fitbit is live');
 assert(PROVIDERS.garmin.status === 'coming_soon', 'T2 garmin is coming_soon');
-assert(PROVIDERS.strava.status === 'coming_soon', 'T3 strava is coming_soon');
+assert(PROVIDERS.strava.status === 'live', 'T3 strava is live');
 
 assert(PROVIDERS.fitbit.capabilities.baseline === true, 'T4 fitbit supplies baseline');
 assert(PROVIDERS.garmin.capabilities.workouts === true, 'T5 garmin supplies workouts');

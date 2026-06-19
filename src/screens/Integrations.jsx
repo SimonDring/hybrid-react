@@ -1,27 +1,34 @@
 /**
  * Integrations — manage connected wearables. One card per provider from the
- * registry. Fitbit is live (connect / sync / reconnect / primary toggle); Garmin
- * and Strava are coming-soon placeholders. The "single primary owns baseline"
- * model is surfaced via the Primary/Secondary control on each connected device.
+ * registry. Fitbit and Strava are live; Garmin is a coming-soon placeholder.
+ * The "single primary owns baseline" model is surfaced via the Primary control
+ * on each connected device that has baseline capability.
  */
 
 import { useTrainingStore } from '../stores/trainingStore.js';
 import { useAuthStore } from '../stores/authStore.js';
 import { listProviders } from '../data/providers.js';
 import { primaryProvider } from '../lib/wearableConnections.js';
-import { getFitbitAuthUrl, fitbitReconnectState } from '../lib/SyncService.js';
+import { getFitbitAuthUrl, getStravaAuthUrl, fitbitReconnectState } from '../lib/SyncService.js';
 
 export default function Integrations() {
-  const user            = useAuthStore(s => s.user);
-  const connections     = useTrainingStore(s => s.connections);
+  const user             = useAuthStore(s => s.user);
+  const connections      = useTrainingStore(s => s.connections);
   const fitbitConnection = useTrainingStore(s => s.fitbitConnection);
-  const fitbitSyncing   = useTrainingStore(s => s.fitbitSyncing);
-  const fitbitError     = useTrainingStore(s => s.fitbitError);
-  const syncFitbitToday = useTrainingStore(s => s.syncFitbitToday);
+  const fitbitSyncing    = useTrainingStore(s => s.fitbitSyncing);
+  const fitbitError      = useTrainingStore(s => s.fitbitError);
+  const stravaSyncing    = useTrainingStore(s => s.stravaSyncing);
+  const stravaError      = useTrainingStore(s => s.stravaError);
+  const syncFitbitToday  = useTrainingStore(s => s.syncFitbitToday);
+  const syncStrava       = useTrainingStore(s => s.syncStrava);
   const setPrimaryDevice = useTrainingStore(s => s.setPrimaryDevice);
 
   const currentPrimary = primaryProvider(connections);
-  const connect = () => { if (user) window.open(getFitbitAuthUrl(user.id), '_blank'); };
+
+  // Per-provider OAuth authorize URL. Top-level redirect (NOT window.open) — the
+  // app is a standalone PWA where popups flash blank and bounce back.
+  const authUrlFor = (id) => id === 'strava' ? getStravaAuthUrl(user.id) : getFitbitAuthUrl(user.id);
+  const connectTo  = (id) => { if (user) window.location.href = authUrlFor(id); };
 
   return (
     <div style={{ padding: '8px 4px 32px' }}>
@@ -33,19 +40,20 @@ export default function Integrations() {
 
       {listProviders().map(p => {
         const conn = connections.find(c => c.provider === p.id) || null;
-        const isPrimary = currentPrimary === p.id;
+        const isStrava = p.id === 'strava';
         return (
           <ProviderCard
             key={p.id}
             provider={p}
             connection={conn}
-            isPrimary={isPrimary}
-            isLiveFitbit={p.id === 'fitbit'}
+            isPrimary={currentPrimary === p.id}
+            isFitbit={p.id === 'fitbit'}
+            canBePrimary={p.capabilities.baseline}
             fitbitConnection={fitbitConnection}
-            fitbitSyncing={fitbitSyncing}
-            fitbitError={fitbitError}
-            onConnect={connect}
-            onSync={syncFitbitToday}
+            syncing={isStrava ? stravaSyncing : fitbitSyncing}
+            error={isStrava ? stravaError : fitbitError}
+            onConnect={() => connectTo(p.id)}
+            onSync={() => isStrava ? syncStrava() : syncFitbitToday()}
             onMakePrimary={() => setPrimaryDevice(p.id)}
           />
         );
@@ -55,8 +63,8 @@ export default function Integrations() {
 }
 
 function ProviderCard({
-  provider, connection, isPrimary, isLiveFitbit, fitbitConnection,
-  fitbitSyncing, fitbitError, onConnect, onSync, onMakePrimary
+  provider, connection, isPrimary, isFitbit, canBePrimary, fitbitConnection,
+  syncing, error, onConnect, onSync, onMakePrimary
 }) {
   const comingSoon = provider.status === 'coming_soon';
   const connected = !!connection;
@@ -65,8 +73,13 @@ function ProviderCard({
     provider.capabilities.workouts ? 'Workouts' : null
   ].filter(Boolean).join(' + ');
 
-  const reconnect = (isLiveFitbit && fitbitConnection)
-    ? fitbitReconnectState({ connectedAt: fitbitConnection.connected_at, errorReason: fitbitError })
+  const lastSynced = connection?.last_synced_at
+    ? new Date(connection.last_synced_at).toLocaleDateString()
+    : null;
+
+  // Reconnect nudge only applies to Fitbit (Strava refresh tokens are long-lived).
+  const reconnect = (isFitbit && fitbitConnection)
+    ? fitbitReconnectState({ connectedAt: fitbitConnection.connected_at, errorReason: error })
     : 'ok';
 
   return (
@@ -80,7 +93,11 @@ function ProviderCard({
             {provider.label}
           </div>
           <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 2 }}>
-            {comingSoon ? `Coming soon · ${caps}` : (connected ? `Connected · ${caps}` : caps)}
+            {comingSoon
+              ? `Coming soon · ${caps}`
+              : connected
+                ? `Connected · ${caps}${lastSynced ? ` · synced ${lastSynced}` : ''}`
+                : caps}
           </div>
         </div>
         {comingSoon ? (
@@ -88,14 +105,14 @@ function ProviderCard({
         ) : !connected ? (
           <button onClick={onConnect} style={btnPrimary}>Connect</button>
         ) : (
-          <button onClick={onSync} disabled={fitbitSyncing} style={btnGhost(fitbitSyncing)}>
-            {fitbitSyncing ? 'Syncing…' : 'Sync now'}
+          <button onClick={onSync} disabled={syncing} style={btnGhost(syncing)}>
+            {syncing ? 'Syncing…' : 'Sync now'}
           </button>
         )}
       </div>
 
-      {/* Primary / Secondary control (live + connected only) */}
-      {!comingSoon && connected && (
+      {/* Primary / Secondary control — only for providers that supply baseline. */}
+      {!comingSoon && connected && canBePrimary && (
         <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
           {isPrimary ? (
             <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--moss)' }}>● Primary device</span>
@@ -110,7 +127,7 @@ function ProviderCard({
         </div>
       )}
 
-      {/* Reconnect nudge (live Fitbit only) */}
+      {/* Reconnect nudge (Fitbit only) */}
       {reconnect !== 'ok' && (() => {
         const now = reconnect === 'reconnect_now';
         const accent = now ? 'var(--rust)' : 'var(--ochre)';
@@ -137,10 +154,21 @@ function ProviderCard({
         );
       })()}
 
-      {/* Non-reconnect sync errors stay visible */}
-      {isLiveFitbit && fitbitError && reconnect !== 'reconnect_now' && (
-        <div style={{ marginTop: 8, fontSize: 11, color: 'var(--txt-muted)', wordBreak: 'break-word' }}>
-          Last sync error: {fitbitError}
+      {/* Non-reconnect sync errors stay visible. Non-Fitbit providers get a
+          reconnect link here (Fitbit uses its dedicated nudge above). */}
+      {connected && error && reconnect !== 'reconnect_now' && (
+        <div style={{ marginTop: 8 }}>
+          <div style={{ fontSize: 11, color: 'var(--txt-muted)', wordBreak: 'break-word' }}>
+            Last sync error: {error}
+          </div>
+          {!isFitbit && (
+            <button onClick={onConnect} style={{
+              marginTop: 6, fontSize: 11, fontWeight: 600, color: 'var(--rust)', background: 'none',
+              border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit'
+            }}>
+              Reconnect {provider.label}
+            </button>
+          )}
         </div>
       )}
     </div>
