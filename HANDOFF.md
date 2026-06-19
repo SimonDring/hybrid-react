@@ -70,10 +70,20 @@ OAuth redirect, empty-OAuth-base fallback, reconnect nudge).
 
 ## What's next
 
-- **E — Progress-tab / data-presentation redesign.** Deliberately deferred until
-  C+D data existed (it now does). Not yet brainstormed/specced. This is the agreed
-  next sub-project: redesign the Progress tab to present session physiology + training
-  load clearly, designed once against the full data.
+- **E — "Midnight" full UI/UX redesign.** Brainstormed + specced + largely BUILT on
+  branch `feat/midnight-redesign` (NOT yet merged; awaiting Simon's review). Spec:
+  `docs/superpowers/specs/2026-06-19-midnight-ui-redesign-design.md`; plans under
+  `docs/superpowers/plans/2026-06-19-midnight-*`. Done: dark-only Midnight design
+  system (tokens/type/shell; `data-theme` branching removed), rule-based `verdicts`
+  translation layer, a strength-first **Goal Engine** (`src/lib/goals.js` +
+  `src/data/strengthStandards.js`, Node-tested), and redesigns of all four tabs —
+  Home (two ring tiles: readiness + load), Program (one-screen week stepper),
+  Progress (goal-momentum), Profile (goals surfaced). Dev preview: `?preview=1`
+  seeds a mock athlete so the real screens render without sign-in (src/lib/previewSeed.js;
+  strip before merge if undesired). Secondary/detail screens (SessionDetail,
+  PhaseDetail, WeekDetail, Settings, Wearables, Trends, Injuries, TrainingLoad,
+  Onboarding, auth) inherit Midnight tokens but were NOT bespoke-redesigned — light
+  follow-up pass + dead-CSS sweep (old `.today-hero`/`.th-*`) outstanding.
 - Beyond the initiative: **Stage 5** (Claude AI plan generation via a server-side Edge
   Function) — D's `loadDecision` is a clean signal an AI layer could consume/override.
 
