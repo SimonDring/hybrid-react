@@ -2,17 +2,17 @@
    DESIGN TOKENS
    ============================================================ */
 :root {
-  --serif: ui-serif, 'Iowan Old Style', 'Apple Garamond', Baskerville, 'Times New Roman', 'Droid Serif', Times, serif;
+  --serif: var(--sans);
   --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;
   --mono: ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   --ink: #0e1410;
   --paper: #f4f1ea;
   --paper-2: #ebe6db;
   --paper-3: #ddd6c5;
-  --rust: #b04a2e;
-  --moss: #4a5d3a;
-  --ochre: #c89a3a;
-  --slate: #2a3a44;
+  --rust: #e8836f;
+  --moss: #6fd3c4;
+  --ochre: #f2c14e;
+  --slate: #97a6ff;
   --line: #cbc3b3;
   --muted: #6a665d;
   --safe-top: env(safe-area-inset-top);
@@ -858,95 +858,61 @@ html, body {
    Cascades over earlier rules. Existing class names preserved.
    =================================================================== */
 
-/* ---------- THEME TOKENS ---------- */
+/* ---------- THEME TOKENS (Midnight, dark-only) ---------- */
 :root {
   /* Spacing scale (4-based) */
   --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px;
   --s-5: 20px; --s-6: 24px; --s-7: 32px; --s-8: 40px; --s-9: 48px;
   /* Radius */
-  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 22px; --r-full: 999px;
-  /* Shadows — soft, warm */
-  --shadow-sm: 0 1px 2px rgba(14,20,16,0.04), 0 1px 4px rgba(14,20,16,0.04);
-  --shadow-md: 0 2px 6px rgba(14,20,16,0.06), 0 4px 16px rgba(14,20,16,0.05);
-  --shadow-lg: 0 8px 32px rgba(14,20,16,0.10);
-  --shadow-inset: inset 0 0 0 1px rgba(14,20,16,0.04);
-  /* Surfaces */
-  --bg-app: #f4f1ea;
-  --bg-surface: #ffffff;
-  --bg-surface-2: #f9f6ef;
-  --bg-surface-elev: #ffffff;
-  --bg-ink: #0e1410;
-  --bg-tab: rgba(244,241,234,0.92);
-  --txt-strong: #0e1410;
-  --txt-body: #2a2a25;
-  --txt-muted: #6a665d;
-  --txt-soft: #918c81;
-  --hairline: rgba(14,20,16,0.08);
-  --hairline-strong: rgba(14,20,16,0.12);
-  --topbar-h: 56px;
-  --tabbar-h: 68px;
-  /* Semantic accent ROLES — read intent, resolve to the (theme-aware) accent vars */
-  --c-action: var(--rust);    /* primary buttons, CTAs, active nav */
-  --c-success: var(--moss);   /* completed / done / on-target */
-  --c-warn: var(--ochre);     /* caution / missed / deload */
-  --c-info: var(--slate);     /* informational */
-  /* Text that sits ON a filled accent (theme-aware for contrast). */
-  --on-action: #ffffff;       /* on rust / ember */
-  --on-success: #ffffff;      /* on moss (dark green in light theme) */
-  --on-warn: #241b0c;         /* on ochre / amber */
-}
-
-/* Dark theme — the bolder ATHLETIC default. Warm near-black surfaces, soft-white
-   text, brighter ember/lime accents (high-energy, gym-readable). */
-html[data-theme="dark"], html[data-theme="dark"] body {
-  --bg-app: #0e0b07;
-  --bg-surface: #211c15;
-  --bg-surface-2: #2b241b;
-  --bg-surface-elev: #342b20;
-  --bg-ink: #090705;
-  --bg-tab: rgba(14,11,7,0.94);
-  --txt-strong: #f8f4ec;
-  --txt-body: #ddd6c8;
-  --txt-muted: #a89f8e;
-  --txt-soft: #847c6e;
-  --hairline: rgba(247,243,235,0.11);
-  --hairline-strong: rgba(247,243,235,0.18);
-  /* Athletic accents — bright on dark */
-  --rust: #e85a32;   /* action / primary — ember */
-  --moss: #8fd24f;   /* success / done — lime */
-  --ochre: #e6ab3e;  /* caution / missed */
-  --slate: #66a8c2;  /* info */
-  --on-success: #0e0b07;  /* bright lime needs dark text */
+  --r-sm: 12px; --r-md: 16px; --r-lg: 20px; --r-xl: 24px; --r-full: 999px;
+  /* Shadows — Midnight leans on hairlines + fills; shadows are subtle */
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
   --shadow-md: 0 2px 8px rgba(0,0,0,0.4), 0 6px 20px rgba(0,0,0,0.3);
   --shadow-lg: 0 10px 36px rgba(0,0,0,0.55);
+  --shadow-inset: inset 0 0 0 1px rgba(255,255,255,0.04);
+  /* Surfaces */
+  --bg-app: #0D1016;
+  --bg-surface: #161B24;
+  --bg-surface-2: #1B2230;
+  --bg-surface-elev: #20283A;
+  --bg-ink: #080B10;
+  --bg-tab: rgba(13,16,22,0.92);
+  /* Text */
+  --txt-strong: #F0F3F7;
+  --txt-body: #C2C9D6;
+  --txt-muted: #7F8A9C;
+  --txt-soft: #5D6675;
+  --txt-faint: #5D6675;
+  --hairline: rgba(255,255,255,0.07);
+  --hairline-strong: rgba(255,255,255,0.12);
+  --topbar-h: 56px;
+  --tabbar-h: 68px;
+  /* Midnight brand accents */
+  --accent: #6FD3C4;       /* teal — primary interactive + positive */
+  --accent-2: #97A6FF;     /* periwinkle — secondary data */
+  --accent-warm: #F2C14E;  /* amber — tertiary / caution */
+  /* Status / verdict ramp (meaning only) */
+  --status-positive: #6FD3C4;
+  --status-caution: #F2C14E;
+  --status-strain: #E8836F;
+  /* Discipline tints (categorical, separate ramp; always with a label/icon) */
+  --disc-gym: #97A6FF;
+  --disc-run: #E0A1B0;
+  --disc-swim: #5FB6D4;
+  --disc-cycle: #C9B273;
+  --disc-brick: #B79BE0;
+  --disc-general: #8A93A3;
+  /* Semantic accent ROLES → Midnight */
+  --c-action: var(--accent);
+  --c-success: var(--status-positive);
+  --c-warn: var(--status-caution);
+  --c-info: var(--accent-2);
+  /* Text that sits ON a filled accent */
+  --on-action: #08130F;
+  --on-success: #08130F;
+  --on-warn: #241B0C;
 }
 
-/* Auto-detect dark preference if user chose "Auto" */
-@media (prefers-color-scheme: dark) {
-  html:not([data-theme]) {
-    --bg-app: #0e0b07;
-    --bg-surface: #211c15;
-    --bg-surface-2: #2b241b;
-    --bg-surface-elev: #342b20;
-    --bg-ink: #090705;
-    --bg-tab: rgba(14,11,7,0.94);
-    --txt-strong: #f8f4ec;
-    --txt-body: #ddd6c8;
-    --txt-muted: #a89f8e;
-    --txt-soft: #847c6e;
-    --hairline: rgba(247,243,235,0.11);
-    --hairline-strong: rgba(247,243,235,0.18);
-    --rust: #e85a32;
-    --moss: #8fd24f;
-    --ochre: #e6ab3e;
-    --slate: #66a8c2;
-    --on-success: #0e0b07;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
-    --shadow-md: 0 2px 8px rgba(0,0,0,0.4), 0 6px 20px rgba(0,0,0,0.3);
-    --shadow-lg: 0 10px 36px rgba(0,0,0,0.55);
-  }
-}
 
 /* ---------- BASE OVERRIDES ---------- */
 html, body {
