@@ -689,7 +689,7 @@ export async function enrichSessions() {
       } catch { /* keep generic */ }
       return { ok: false, reason };
     }
-    return data;
+    return data ?? { ok: true };
   } catch (err) {
     logError('enrichSessions (exception)', err);
     return { ok: false, reason: err.message };

@@ -192,6 +192,8 @@ export const useTrainingStore = create((set) => ({
       const log = Database.tables.sessionLogs.find(l => l.session_id === s.id);
       if (!log) continue;
       await Sync.linkWorkout(match.id, s.id, sessionPhysiologyFromWorkout(match));
+      const mi = workouts.indexOf(match);
+      if (mi >= 0) workouts.splice(mi, 1);   // a workout links to at most one session per pass
       linkedAny = true;
     }
     if (linkedAny) { await pullFromSupabase(); set(buildView()); }
@@ -213,6 +215,8 @@ export const useTrainingStore = create((set) => ({
   async unlinkWorkoutFromSession(workoutId, sessionId) {
     await Sync.unlinkWorkout(workoutId, sessionId);
     await pullFromSupabase();
+    // Instant unlinked feedback now; enrichSessions refills band HR async (it
+    // pulls + rebuilds the view itself on completion). Two-step update is intended.
     useTrainingStore.getState().enrichSessions(); // re-fill from the band
     set(buildView());
   },
