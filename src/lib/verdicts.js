@@ -23,3 +23,19 @@ export function readinessVerdict(readiness) {
   const base = READINESS[status] || READINESS.unknown;
   return { ...base, color: TONE[base.tone] };
 }
+
+const LOAD = {
+  sweet: { tone: 'positive', label: 'Balanced',     note: 'Right where you want to be — the plan stays as written.' },
+  under: { tone: 'caution',  label: 'Light',        note: "Below your usual — there's room to build back up." },
+  high:  { tone: 'caution',  label: 'High',         note: "You've ramped quickly — easing slightly this week." },
+  over:  { tone: 'strain',   label: 'Overreaching', note: 'Well above baseline — easing off so you can absorb it.' }
+};
+
+export function loadVerdict(load, adaptation) {
+  if (!load || load.acwr == null || !load.band) {
+    return { tone: 'neutral', label: 'Building baseline', note: 'A few more sessions and your load trend appears here.', color: TONE.neutral };
+  }
+  const base = LOAD[load.band] || LOAD.sweet;
+  const note = (adaptation && !adaptation.reverted && adaptation.reason) ? adaptation.reason : base.note;
+  return { tone: base.tone, label: base.label, note, color: TONE[base.tone] };
+}
