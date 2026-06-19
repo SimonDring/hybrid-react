@@ -36,6 +36,7 @@ import { supabase, isSupabaseConfigured } from './supabaseClient.js';
 import Database from './Database.js';
 import * as Storage from './Storage.js';
 
+
 // ---------- Helpers ----------
 
 // Get the current Supabase user id. Returns null if not signed in.
@@ -601,6 +602,27 @@ export async function syncFitbit(dateFrom, dateTo) {
   }
 }
 
+// Read ALL of the user's wearable connections (RLS-scoped). Returns [] when not
+// signed in or on error. Each row: { provider, role, connected_at, last_synced_at }.
+export async function checkConnections() {
+  if (!canSync()) return [];
+  const { data, error } = await supabase
+    .from('wearable_connections')
+    .select('provider, role, connected_at, last_synced_at');
+  if (error) { logError('checkConnections', error); return []; }
+  return data || [];
+}
+
+// Make `provider` the user's sole primary device. Done server-side in one atomic
+// statement (see migration 007) so it bypasses the SELECT-only RLS on this
+// token-bearing table safely and never leaves a transient two-primary state.
+export async function setDevicePrimary(provider) {
+  if (!canSync()) return { ok: false, error: 'not signed in' };
+  const { error } = await supabase.rpc('set_device_primary', { p_provider: provider });
+  if (error) { logError('setDevicePrimary', error); return { ok: false, error: error.message }; }
+  return { ok: true };
+}
+
 // ---------- Reset (dangerous — clears both local and cloud) ----------
 
 export async function resetAll() {
@@ -629,6 +651,6 @@ export default {
   upsertDailyMetric,
   setReassessAnswer,
   addInjury, updateInjury, removeInjury, addRecoveryLogEntry,
-  getFitbitAuthUrl, checkFitbitConnection, syncFitbit,
+  getFitbitAuthUrl, checkFitbitConnection, syncFitbit, checkConnections, setDevicePrimary,
   resetAll
 };

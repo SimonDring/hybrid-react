@@ -1,21 +1,18 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import { useAuthStore } from '../stores/authStore.js';
 import Database from '../lib/Database.js';
-import { runSessionDMigration, getFitbitAuthUrl, fitbitReconnectState } from '../lib/SyncService.js';
+import { runSessionDMigration } from '../lib/SyncService.js';
 
 export default function Settings() {
+  const navigate = useNavigate();
   const [theme, setTheme] = useState(localStorage.getItem('htp_theme') || 'dark');
   const [migrationStatus, setMigrationStatus] = useState(
     localStorage.getItem('htp_session_d_migrated') ? 'done' : 'idle'
   );
   const replaceAll = useTrainingStore(state => state.replaceAll);
   const resetAll = useTrainingStore(state => state.resetAll);
-  const fitbitConnection        = useTrainingStore(s => s.fitbitConnection);
-  const fitbitSyncing           = useTrainingStore(s => s.fitbitSyncing);
-  const fitbitError             = useTrainingStore(s => s.fitbitError);
-  const syncFitbitToday         = useTrainingStore(s => s.syncFitbitToday);
-  const refreshFitbitConnection = useTrainingStore(s => s.refreshFitbitConnection);
   const clearPlan = useTrainingStore(state => state.clearPlan);
   const wipeTrainingData = useTrainingStore(state => state.wipeTrainingData);
   const authStatus = useAuthStore(s => s.status);
@@ -60,19 +57,6 @@ export default function Settings() {
       setPwMsg(useAuthStore.getState().errorMessage || 'Could not update password.');
     }
   };
-
-  const connectFitbit = () => {
-    if (!user) return;
-    window.open(getFitbitAuthUrl(user.id), '_blank');
-  };
-  const lastSynced = fitbitConnection?.last_synced_at
-    ? new Date(fitbitConnection.last_synced_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    : null;
-
-  // Whether to nudge the user to reconnect Fitbit ('reconnect_now' | 'reconnect_soon' | 'ok').
-  const reconnectState = fitbitConnection
-    ? fitbitReconnectState({ connectedAt: fitbitConnection.connected_at, errorReason: fitbitError })
-    : 'ok';
 
   const handleSetTheme = (newTheme) => {
     setTheme(newTheme);
@@ -165,101 +149,16 @@ export default function Settings() {
       </div>
 
       <h2 className="h3">Integrations</h2>
-      <div style={{
-        padding: '14px 16px', borderRadius: 12, marginBottom: 8,
-        border: '1px solid var(--hairline)', background: 'var(--bg-surface)'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt-strong)' }}>
-              {fitbitConnection ? 'Fitbit connected' : 'Connect Fitbit'}
-            </div>
-            <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 2 }}>
-              {fitbitConnection
-                ? (lastSynced ? `Last synced today at ${lastSynced}` : 'Not yet synced today')
-                : 'Auto-fills sleep, HR, HRV, steps, and more'}
-            </div>
-          </div>
-          {!fitbitConnection ? (
-            <button onClick={connectFitbit} style={{
-              padding: '8px 14px', borderRadius: 9, border: 'none',
-              background: 'var(--rust)', color: '#fff',
-              fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit'
-            }}>
-              Connect
-            </button>
-          ) : (
-            <button
-              onClick={syncFitbitToday}
-              disabled={fitbitSyncing}
-              style={{
-                padding: '8px 14px', borderRadius: 9,
-                border: '1px solid var(--hairline)', background: 'transparent',
-                color: fitbitSyncing ? 'var(--txt-muted)' : 'var(--txt-strong)',
-                fontSize: 13, fontWeight: 600, cursor: fitbitSyncing ? 'default' : 'pointer',
-                fontFamily: 'inherit'
-              }}
-            >
-              {fitbitSyncing ? 'Syncing…' : 'Sync now'}
-            </button>
-          )}
-        </div>
-        {!fitbitConnection && (
-          <button
-            onClick={refreshFitbitConnection}
-            style={{
-              fontSize: 11, color: 'var(--txt-muted)', background: 'none',
-              border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit', marginTop: 8
-            }}
-          >
-            Already connected? Tap to check status
-          </button>
-        )}
-
-        {/* Reconnect nudge. Google expires the refresh token ~7 days after consent
-            while the OAuth app is in Testing mode, so a connection can show as
-            "linked" while its tokens are dead. 'reconnect_now' = a sync failed for
-            a token/auth reason; 'reconnect_soon' = consent is old, warn before it
-            breaks. Reconnecting re-runs consent and issues fresh tokens. */}
-        {fitbitConnection && reconnectState !== 'ok' && (() => {
-          const now = reconnectState === 'reconnect_now';
-          const accent = now ? 'var(--rust)' : 'var(--ochre)';
-          const bg     = now ? 'rgba(176,74,46,0.08)' : 'rgba(200,154,58,0.10)';
-          const border = now ? 'rgba(176,74,46,0.25)' : 'rgba(200,154,58,0.30)';
-          return (
-            <div style={{ marginTop: 10, padding: '10px 12px', borderRadius: 9, background: bg, border: `1px solid ${border}` }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: accent }}>
-                {now ? 'Fitbit needs reconnecting' : 'Fitbit access expires soon'}
-              </div>
-              <div style={{ fontSize: 11, color: 'var(--txt-body)', marginTop: 2 }}>
-                {now
-                  ? 'Your Google sign-in has expired, so syncing has stopped. Reconnect to resume.'
-                  : 'Reconnect now to keep your data syncing without a gap.'}
-              </div>
-              <button
-                onClick={connectFitbit}
-                style={{
-                  marginTop: 8, padding: '7px 12px', borderRadius: 8, border: 'none',
-                  background: accent, color: '#fff', fontSize: 12, fontWeight: 600,
-                  cursor: 'pointer', fontFamily: 'inherit'
-                }}
-              >
-                Reconnect Fitbit
-              </button>
-            </div>
-          );
-        })()}
-
-        {/* Surface any other sync error (e.g. a transient network issue) so a
-            failure is never silent, without prompting a (pointless) reconnect. */}
-        {fitbitConnection && fitbitError && reconnectState !== 'reconnect_now' && (
-          <div style={{ marginTop: 8, fontSize: 11, color: 'var(--txt-muted)', wordBreak: 'break-word' }}>
-            Last sync error: {fitbitError}
-          </div>
-        )}
-      </div>
+      <button
+        className="settings-row"
+        onClick={() => navigate('/settings/integrations')}
+        style={{ width: '100%', textAlign: 'left' }}
+      >
+        Wearables &amp; apps
+        <span style={{ marginLeft: 'auto', color: 'var(--txt-muted)' }}>›</span>
+      </button>
       <p className="sub" style={{ fontSize: 11, marginBottom: 20 }}>
-        Your synced recovery and activity data appears under Tracking → Daily metrics.
+        Connect Fitbit, Garmin, Strava and choose your primary device.
       </p>
 
       <h2 className="h3">Data</h2>

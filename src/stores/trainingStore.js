@@ -12,7 +12,7 @@
 
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
-import Sync, { pullFromSupabase, runSessionDMigration, checkFitbitConnection, syncFitbit } from '../lib/SyncService.js';
+import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, checkConnections, setDevicePrimary } from '../lib/SyncService.js';
 import { nextE1RM } from '../lib/liftProgression.js';
 import { computeReadiness } from '../lib/Readiness.js';
 import { setRuntime } from '../lib/PlanService.js';
@@ -72,6 +72,7 @@ function buildView() {
 
 export const useTrainingStore = create((set) => ({
   ...buildView(),
+  connections: [],          // all wearable_connections rows: { provider, role, connected_at, last_synced_at }
   fitbitConnection: null,   // null = not connected, object = { connected_at, last_synced_at }
   fitbitSyncing: false,
   fitbitError: null,        // last sync failure reason (null when ok) — drives the UI
@@ -83,9 +84,10 @@ export const useTrainingStore = create((set) => ({
     // Session D: push any pre-auth localStorage data to Supabase (no-op if done)
     await runSessionDMigration();
     const result = await pullFromSupabase();
-    // Check Fitbit connection and sync today's data if connected
-    const fitbitConnection = await checkFitbitConnection();
-    set({ ...buildView(), syncing: false, fitbitConnection });
+    // Load all wearable connections; derive the Fitbit one for existing UI/logic.
+    const connections = await checkConnections();
+    const fitbitConnection = connections.find(c => c.provider === 'fitbit') || null;
+    set({ ...buildView(), syncing: false, connections, fitbitConnection });
     if (fitbitConnection) {
       useTrainingStore.getState().syncFitbitToday();
     }
@@ -93,10 +95,21 @@ export const useTrainingStore = create((set) => ({
   },
 
   // ----- Fitbit -----
+  // Refresh all wearable connections (and the derived Fitbit one).
   async refreshFitbitConnection() {
-    const fitbitConnection = await checkFitbitConnection();
-    set({ fitbitConnection });
+    const connections = await checkConnections();
+    const fitbitConnection = connections.find(c => c.provider === 'fitbit') || null;
+    set({ connections, fitbitConnection });
     return fitbitConnection;
+  },
+
+  // Make `provider` the sole primary device, then refresh connections.
+  async setPrimaryDevice(provider) {
+    const res = await setDevicePrimary(provider);
+    if (!res.ok) return;
+    const connections = await checkConnections();
+    const fitbitConnection = connections.find(c => c.provider === 'fitbit') || null;
+    set({ connections, fitbitConnection });
   },
 
   async syncFitbitToday() {

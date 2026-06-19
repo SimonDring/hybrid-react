@@ -24,6 +24,7 @@ import Trends from './screens/Trends.jsx';
 import Profile from './screens/Profile.jsx';
 import Injuries from './screens/Injuries.jsx';
 import Settings from './screens/Settings.jsx';
+import Integrations from './screens/Integrations.jsx';
 import Coach from './screens/Coach.jsx';
 import BlockCheckin from './screens/BlockCheckin.jsx';
 
@@ -40,7 +41,8 @@ const routeMeta = {
   '/tracking/injuries': { title: 'Injury log', topLevel: false, tab: 'progress' },
   '/profile': { title: 'Profile', topLevel: true, tab: 'profile' },
   '/profile/injuries': { title: 'Injury log', topLevel: false, tab: 'profile' },
-  '/settings': { title: 'Settings', topLevel: false, tab: 'profile' }
+  '/settings': { title: 'Settings', topLevel: false, tab: 'profile' },
+  '/settings/integrations': { title: 'Integrations', topLevel: false, tab: 'profile' }
 };
 
 function matchRoute(pathname) {
@@ -149,6 +151,7 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/injuries" element={<Injuries />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/settings/integrations" element={<Integrations />} />
           <Route path="/coach" element={<Coach />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
