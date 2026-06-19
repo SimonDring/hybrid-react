@@ -30,7 +30,7 @@ function zoneOf(pct: number): number {
 }
 
 // Minutes per HRR zone for samples [{hr,t(ms)}] (mirrors src/lib/hrZones.js).
-function hrZonesHRR(samples: any[], hrRest: number, hrMax: number) {
+function hrZonesHRR(samples: any[], hrRest: number | null, hrMax: number | null) {
   if (hrRest == null || hrMax == null || hrMax <= hrRest) return null
   const reserve = hrMax - hrRest
   const z: any = { z1: 0, z2: 0, z3: 0, z4: 0, z5: 0 }
@@ -66,18 +66,23 @@ async function getAccessToken(supabase: any, connection: any): Promise<string> {
   return t.access_token
 }
 
-// Fetch heart-rate samples [{hr, t(ms)}] for a UTC date (YYYY-MM-DD).
-async function fetchHrSamples(token: string, apiBase: string, date: string): Promise<any[]> {
+// Fetch heart-rate samples [{hr, t(ms)}] — all recent samples (up to pageSize=1500).
+// NOTE: The Google Health intraday heart-rate dataType supports NO date/time filtering.
+// The API always returns the most-recent ~1500 samples regardless of query params.
+// Callers must filter client-side by session window. Historical backfill is not possible.
+async function fetchHrSamples(token: string, apiBase: string): Promise<any[]> {
   const url = `${apiBase}/v4/users/me/dataTypes/heart-rate/dataPoints?pageSize=1500`
   const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } })
-  if (!res.ok) return []
+  if (!res.ok) {
+    console.warn('[enrich-sessions] HR fetch failed:', res.status)
+    return []
+  }
   const json = await res.json()
   const out: any[] = []
   for (const p of (json?.dataPoints ?? [])) {
     const iso = p?.heartRate?.sampleTime?.physicalTime
     const bpm = Number(p?.heartRate?.beatsPerMinute)
     if (!iso || !bpm) continue
-    if (iso.split('T')[0] !== date) continue
     out.push({ hr: bpm, t: new Date(iso).getTime() })
   }
   out.sort((a, b) => a.t - b.t)
@@ -132,7 +137,8 @@ Deno.serve(async (req: Request) => {
 
   const enriched: string[] = []
   const apiBase = Deno.env.get('FITBIT_API_BASE') ?? DEFAULT_API_BASE
-  const samplesByDate: Record<string, any[]> = {}
+  const samples = await fetchHrSamples(token, apiBase)
+  if (!samples.length) console.warn('[enrich-sessions] no HR samples available')
 
   for (const s of (sessions ?? [])) {
     const { data: log } = await supabase.from('session_logs')
@@ -141,19 +147,18 @@ Deno.serve(async (req: Request) => {
 
     const startMs = new Date(s.started_at).getTime()
     const endMs   = new Date(s.completed_at).getTime()
-    const date    = s.completed_at.split('T')[0]
-    if (!samplesByDate[date]) samplesByDate[date] = await fetchHrSamples(token, apiBase, date)
-    const inWindow = samplesByDate[date].filter((p) => p.t >= startMs && p.t <= endMs)
-    if (!inWindow.length) continue
+    const inWindow = samples.filter((p) => p.t >= startMs && p.t <= endMs)
+    if (!inWindow.length) { continue }   // session outside the fetched recent window
 
     const hrs = inWindow.map((p) => p.hr)
     const avg_hr = Math.round(hrs.reduce((a, b) => a + b, 0) / hrs.length)
     const max_hr = Math.max(...hrs)
-    const hr_zones = hrZonesHRR(inWindow, hrRest as number, hrMax as number)
+    const hr_zones = hrZonesHRR(inWindow, hrRest, hrMax)
 
     const { error: upErr } = await supabase.from('session_logs')
       .update({ avg_hr, max_hr, hr_zones, hr_source: 'fitbit' }).eq('id', log.id)
     if (!upErr) enriched.push(s.id)
+    else console.error('[enrich-sessions] update failed for', s.id, upErr)
   }
 
   return new Response(JSON.stringify({ ok: true, enriched }), { headers: jsonHeaders })
