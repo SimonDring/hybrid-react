@@ -1,0 +1,27 @@
+# Supabase CLI config.
+#
+# This file exists primarily to PIN per-function JWT verification so that
+# redeploying a function never silently changes its auth behaviour. Edge
+# Functions default to verify_jwt = true; an OAuth callback is hit by a browser
+# redirect with NO Authorization header, so if its JWT check is on, the gateway
+# returns 401 before the function runs and the whole OAuth flow breaks. We hit
+# exactly this when strava-auth-callback was first deployed.
+#
+# Everything else uses CLI defaults — this project deploys to a linked REMOTE
+# project (see supabase/.temp), not a local stack, so the local-dev sections
+# (db/api/studio/auth/storage) are intentionally omitted.
+project_id = "ggldomlmycvpwtzzjzcd"
+
+# --- OAuth callbacks: PUBLIC (browser redirect, no JWT). Must stay verify_jwt=false. ---
+[functions.fitbit-auth-callback]
+verify_jwt = false
+
+[functions.strava-auth-callback]
+verify_jwt = false
+
+# --- Sync functions: invoked by the app WITH the user's JWT. Keep verification on. ---
+[functions.fitbit-sync]
+verify_jwt = true
+
+[functions.strava-sync]
+verify_jwt = true
