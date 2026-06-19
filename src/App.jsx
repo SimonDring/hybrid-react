@@ -20,6 +20,7 @@ import PhaseDetail from './screens/PhaseDetail.jsx';
 import WeekDetail from './screens/WeekDetail.jsx';
 import SessionDetail from './screens/SessionDetail.jsx';
 import Progress from './screens/Progress.jsx';
+import Health from './screens/Health.jsx';
 import Wearables from './screens/Wearables.jsx';
 import Trends from './screens/Trends.jsx';
 import Profile from './screens/Profile.jsx';
@@ -38,10 +39,11 @@ const routeMeta = {
   '/phases/:phaseId/weeks/:weekNum': { title: 'Week', topLevel: false, tab: 'plan' },
   '/phases/:phaseId/weeks/:weekNum/sessions/:sessionIdx': { title: 'Session', topLevel: false, tab: 'plan' },
   '/progress': { title: 'Progress', topLevel: true, tab: 'progress' },
-  '/tracking/wearables': { title: 'Daily metrics', topLevel: false, tab: 'progress' },
-  '/tracking/trends': { title: 'Trends', topLevel: false, tab: 'progress' },
-  '/tracking/injuries': { title: 'Injury log', topLevel: false, tab: 'progress' },
-  '/tracking/load': { title: 'Training load', topLevel: false, tab: 'progress' },
+  '/health': { title: 'Health', topLevel: true, tab: 'health' },
+  '/tracking/wearables': { title: 'Daily metrics', topLevel: false, tab: 'health' },
+  '/tracking/trends': { title: 'Trends', topLevel: false, tab: 'health' },
+  '/tracking/injuries': { title: 'Injury log', topLevel: false, tab: 'health' },
+  '/tracking/load': { title: 'Training load', topLevel: false, tab: 'health' },
   '/profile': { title: 'Profile', topLevel: true, tab: 'profile' },
   '/profile/injuries': { title: 'Injury log', topLevel: false, tab: 'profile' },
   '/settings': { title: 'Settings', topLevel: false, tab: 'profile' },
@@ -162,6 +164,7 @@ export default function App() {
           <Route path="/phases/:phaseId/weeks/:weekNum" element={<WeekDetail />} />
           <Route path="/phases/:phaseId/weeks/:weekNum/sessions/:sessionIdx" element={<SessionDetail />} />
           <Route path="/progress" element={<Progress />} />
+          <Route path="/health" element={<Health />} />
           <Route path="/tracking" element={<Navigate to="/progress" replace />} />
           <Route path="/tracking/wearables" element={<Wearables />} />
           <Route path="/tracking/trends" element={<Trends />} />
