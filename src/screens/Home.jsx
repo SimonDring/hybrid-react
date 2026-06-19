@@ -27,6 +27,9 @@ export default function Home() {
   const logs = useTrainingStore(state => state.logs);
   const completeSession = useTrainingStore(state => state.completeSession);
   const skipSession = useTrainingStore(state => state.skipSession);
+  const adaptation = useTrainingStore(s => s.adaptation);
+  const revertWeekAdaptation = useTrainingStore(s => s.revertWeekAdaptation);
+  const unrevertWeekAdaptation = useTrainingStore(s => s.unrevertWeekAdaptation);
 
   const now = new Date();
   const dateLabel = now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
@@ -76,6 +79,25 @@ export default function Home() {
         </span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
       </button>
+
+      {/* ADAPTATION BANNER — shown when load engine has adjusted this week's plan */}
+      {adaptation && (
+        <div style={{
+          padding: '12px 14px', borderRadius: 12, marginBottom: 14,
+          background: adaptation.reverted ? 'var(--bg-surface-2)' : 'rgba(200,154,58,0.10)',
+          border: `1px solid ${adaptation.reverted ? 'var(--hairline)' : 'rgba(200,154,58,0.30)'}`
+        }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--txt-strong)', marginBottom: 2 }}>
+            {adaptation.reverted ? 'Following the plan' : 'Plan adjusted'}
+          </div>
+          <div style={{ fontSize: 12, color: 'var(--txt-body)' }}>{adaptation.reason}</div>
+          <button
+            onClick={() => adaptation.reverted ? unrevertWeekAdaptation(adaptation.week) : revertWeekAdaptation(adaptation.week)}
+            style={{ marginTop: 8, background: 'none', border: 'none', color: 'var(--rust)', fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>
+            {adaptation.reverted ? 'Let load adapt this week' : 'Revert to plan'}
+          </button>
+        </div>
+      )}
 
       {/* TRAINING CALENDAR — top of the page */}
       {hasCalendar ? (
