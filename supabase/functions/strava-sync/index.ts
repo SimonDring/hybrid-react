@@ -111,7 +111,7 @@ Deno.serve(async (req: Request) => {
   // Incremental window: since last sync, else last 90 days on first connect.
   const ninetyDaysAgo = Math.floor((Date.now() - 90 * 24 * 60 * 60 * 1000) / 1000)
   const after = connection.last_synced_at
-    ? Math.floor(new Date(connection.last_synced_at).getTime() / 1000)
+    ? Math.floor(new Date(connection.last_synced_at).getTime() / 1000) - 60
     : ninetyDaysAgo
 
   const synced: string[] = []
@@ -131,8 +131,13 @@ Deno.serve(async (req: Request) => {
       const rows = activities.map((a: any) => normalize(a, user.id))
       const { error: upErr } = await supabase
         .from('workouts').upsert(rows, { onConflict: 'user_id,provider,provider_activity_id' })
-      if (upErr) console.error('[strava-sync] upsert failed:', upErr)
-      else rows.forEach(r => synced.push(r.provider_activity_id))
+      if (upErr) {
+        console.error('[strava-sync] upsert failed:', upErr)
+        // Do not advance last_synced_at — return so the next sync re-fetches this
+        // window (upserts are idempotent, so already-saved pages are harmless).
+        return new Response(JSON.stringify({ error: 'Upsert failed', detail: upErr.message }), { status: 400, headers: jsonHeaders })
+      }
+      rows.forEach(r => synced.push(r.provider_activity_id))
 
       if (activities.length < 100) break
       page += 1

@@ -45,6 +45,12 @@ Deno.serve(async (req: Request) => {
   }
 
   const tokens = await tokenRes.json()
+
+  if (!tokens.refresh_token) {
+    console.error('[strava-auth-callback] No refresh token in response')
+    return Response.redirect(`${APP_URL}?strava=error&reason=no_refresh_token`)
+  }
+
   // Strava returns expires_at as an absolute epoch-seconds value.
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
@@ -59,7 +65,7 @@ Deno.serve(async (req: Request) => {
       access_token:     tokens.access_token,
       refresh_token:    tokens.refresh_token,
       expires_at:       new Date(tokens.expires_at * 1000).toISOString(),
-      scope:            url.searchParams.get('scope') ?? null,
+      scope:            tokens.scope ?? null,
       role:             'secondary',
       connected_at:     new Date().toISOString()
     }, { onConflict: 'user_id,provider' })
