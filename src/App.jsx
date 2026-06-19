@@ -7,6 +7,7 @@ import AuthFlow from './screens/auth/AuthFlow.jsx';
 import SetNewPassword from './screens/SetNewPassword.jsx';
 import Onboarding from './screens/Onboarding.jsx';
 import DevPlayground from './screens/DevPlayground.jsx';
+import { seedPreview } from './lib/previewSeed.js';
 
 import TopBar from './components/TopBar.jsx';
 import TabBar from './components/TabBar.jsx';
@@ -81,8 +82,23 @@ export default function App() {
   const profile = useTrainingStore(s => s.profile);
   const syncing = useTrainingStore(s => s.syncing);
 
-  // Check for an existing session once on mount
-  useEffect(() => { initAuth(); }, [initAuth]);
+  // Dev preview flag: ?preview=1 renders the real screens with seeded mock data,
+  // bypassing auth + onboarding. Persisted to localStorage so it survives the
+  // route redirects that strip the query string. No effect on normal use.
+  const isPreview = new URLSearchParams(location.search).get('preview') === '1'
+    || localStorage.getItem('htp_preview') === '1';
+
+  // Check for an existing session once on mount. Skipped in preview so auth
+  // resolving (signed-out) never clears the seeded local cache.
+  useEffect(() => { if (!isPreview) initAuth(); }, [initAuth, isPreview]);
+
+  // Seed the local cache for preview mode, then refresh the store view.
+  useEffect(() => {
+    if (!isPreview) return;
+    localStorage.setItem('htp_preview', '1');
+    seedPreview();
+    useTrainingStore.getState().refresh();
+  }, [isPreview]);
 
   // Hidden developer testing route — bypasses auth + onboarding and never writes
   // to the store/Supabase. Reached by typing /dev only; not linked anywhere.
@@ -91,17 +107,17 @@ export default function App() {
   }
 
   // While checking for a session, show a minimal splash (avoids a flash of Login)
-  if (authStatus === 'loading') {
+  if (!isPreview && authStatus === 'loading') {
     return <Splash />;
   }
 
   // Signed out (or Supabase not configured) → show the auth flow (Welcome screen)
-  if (authStatus === 'signed_out' || authStatus === 'not_configured') {
+  if (!isPreview && (authStatus === 'signed_out' || authStatus === 'not_configured')) {
     return <AuthFlow />;
   }
 
   // A password-reset link opened the app → prompt for a new password first
-  if (recoveryMode) {
+  if (!isPreview && recoveryMode) {
     return <SetNewPassword />;
   }
 
@@ -118,16 +134,16 @@ export default function App() {
   // While the first cloud pull is in flight we can't yet tell a brand-new user
   // from an existing one on a fresh device — hold on the splash to avoid showing
   // either the wizard or the app on the wrong side of the sync.
-  if (!isOnboarded && syncing) {
+  if (!isPreview && !isOnboarded && syncing) {
     return <Splash />;
   }
-  if (!isOnboarded) {
+  if (!isPreview && !isOnboarded) {
     return <Onboarding />;
   }
 
   // Block-end check-in — runs once after each completed plan block.
   // Shows a brief wizard that continues the plan automatically.
-  if (planBlockEnded(profile)) {
+  if (!isPreview && planBlockEnded(profile)) {
     return <BlockCheckin />;
   }
 

@@ -118,6 +118,9 @@ export const useTrainingStore = create((set) => ({
   stravaSyncing: false,
   stravaError: null,        // last Strava sync failure reason (null when ok)
 
+  // Re-read the local cache into the view (used by the dev preview seeder).
+  refresh: () => set(buildView()),
+
   // Pull fresh data from Supabase into local cache, then re-render.
   // Call this when the user signs in or the app comes to foreground.
   async syncFromCloud() {
