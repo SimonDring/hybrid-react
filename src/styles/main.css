@@ -3593,6 +3593,16 @@ button.today-hero { width: 100%; display: block; text-align: left; border: none;
 .trend-val { font-size: 24px; font-weight: 600; color: var(--txt-strong); line-height: 1; white-space: nowrap; }
 .trend-val span { font-size: 12px; color: var(--txt-muted); font-weight: 400; margin-left: 2px; }
 .trend-chart { width: 100%; height: 110px; display: block; margin-top: 12px; }
+
+/* ---------- Trends: fitness age hero ---------- */
+.fitage-card { background: var(--bg-surface); border: 1px solid var(--hairline); border-radius: var(--r-lg); padding: 16px; margin-bottom: 16px; }
+.fitage-main { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.fitage-label { font-size: 12px; letter-spacing: 0.12em; color: var(--txt-muted); }
+.fitage-val { font-size: 40px; font-weight: 600; color: var(--txt-strong); line-height: 1; margin-top: 6px; }
+.fitage-val span { font-size: 14px; color: var(--txt-muted); font-weight: 400; }
+.fitage-delta { font-size: 14px; font-weight: 500; text-align: right; }
+.fitage-vs { font-size: 11px; color: var(--txt-muted); font-weight: 400; margin-top: 2px; }
+.fitage-note { font-size: 11px; color: var(--txt-muted); margin-top: 12px; line-height: 1.45; }
 .lb-note { font-size: 12px; color: var(--txt-body); margin-top: 8px; line-height: 1.45; }
 
 /* ---------- Home adaptation banner ---------- */

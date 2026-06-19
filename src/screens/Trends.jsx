@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
+import { fitnessAge } from '../lib/fitnessAge.js';
 
 // Midnight line chart: subtle grid, soft area fill, emphasised latest point.
 // Canvas can't read CSS vars, so colours are passed as hex.
@@ -73,8 +74,10 @@ const RANGES = [
 export default function Trends() {
   const navigate = useNavigate();
   const dailyMetrics = useTrainingStore(state => state.dailyMetrics);
+  const profile = useTrainingStore(state => state.profile);
   const [range, setRange] = useState('30d');
   const canvasRefs = useRef({});
+  const fa = fitnessAge(profile, dailyMetrics);
 
   const sorted = [...dailyMetrics].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   const days = RANGES.find(r => r.id === range).days;
@@ -106,6 +109,24 @@ export default function Trends() {
     <>
       <h1 className="h1">Trends</h1>
       <p className="sub">Recovery and activity from your wearable. {dailyMetrics.length} day{dailyMetrics.length !== 1 ? 's' : ''} recorded.</p>
+
+      {fa && (
+        <div className="fitage-card">
+          <div className="fitage-main">
+            <div>
+              <div className="fitage-label">Fitness age</div>
+              <div className="fitage-val">{fa.fitnessAge}<span> yrs</span></div>
+            </div>
+            <div className="fitage-delta" style={{ color: fa.color }}>
+              {fa.status === 'younger' ? `${fa.delta} yrs younger` : fa.status === 'older' ? `${Math.abs(fa.delta)} yrs older` : 'On par'}
+              <div className="fitage-vs">vs your age of {fa.age}</div>
+            </div>
+          </div>
+          <div className="fitage-note">
+            Estimated from your resting HR{fa.rhr ? ` (${fa.rhr} bpm)` : ''} and HRV{fa.hrv ? ` (${fa.hrv} ms)` : ''} versus typical for your age — directional, not medical.
+          </div>
+        </div>
+      )}
 
       <div className="trend-range">
         {RANGES.map(r => (
