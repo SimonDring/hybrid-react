@@ -48,6 +48,7 @@ export default function Progress() {
   const dailyMetrics = useTrainingStore(s => s.dailyMetrics);
   const logs = useTrainingStore(s => s.logs);
   const injuries = useTrainingStore(s => s.injuries);
+  const load = useTrainingStore(s => s.load);
 
   const activeInjuries = (injuries || []).filter(i => ['active', 'rehabbing', 'monitoring'].includes(i.status));
 
@@ -123,6 +124,7 @@ export default function Progress() {
           badge={activeInjuries.length > 0 ? `${activeInjuries.length} active` : null}
           onClick={() => navigate('/tracking/injuries')}
         />
+        <LinkRow title="Training load" sub="Acute vs chronic load & how the plan adapts" onClick={() => navigate('/tracking/load')} badge={load && load.acwr != null ? load.acwr.toFixed(2) : null} />
       </div>
     </>
   );
