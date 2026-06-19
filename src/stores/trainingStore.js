@@ -208,6 +208,7 @@ export const useTrainingStore = create((set) => ({
   async linkWorkoutToSession(workoutId, sessionId) {
     const w = Database.tables.workouts.get(workoutId);
     if (!w) return;
+    if (!Database.tables.sessionLogs.find(l => l.session_id === sessionId)) return;
     await Sync.linkWorkout(workoutId, sessionId, sessionPhysiologyFromWorkout(w));
     await pullFromSupabase(); set(buildView());
   },

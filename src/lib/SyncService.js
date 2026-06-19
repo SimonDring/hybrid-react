@@ -666,7 +666,7 @@ export async function unlinkWorkout(workoutId, sessionId) {
   const userId = uid();
   const ops = [
     supabase.from('workouts').update({ session_id: null }).eq('id', workoutId).eq('user_id', userId),
-    supabase.from('session_logs').update({ avg_hr: null, max_hr: null, calories: null, hr_source: null })
+    supabase.from('session_logs').update({ avg_hr: null, max_hr: null, calories: null, hr_source: null, hr_zones: null })
       .eq('session_id', sessionId).eq('user_id', userId)
   ];
   const results = await Promise.all(ops);

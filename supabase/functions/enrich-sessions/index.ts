@@ -124,7 +124,7 @@ Deno.serve(async (req: Request) => {
   const ageRow = await supabase.from('users').select('profile').eq('id', user.id).single()
   const age = Number(ageRow?.data?.profile?.age) || null
   const ageEst = age ? Math.round(208 - 0.7 * age) : null
-  const peak = Math.max(0, ...((wkMax ?? []).map((w: any) => Number(w.max_hr) || 0)))
+  const peak = Math.max(0, ...((wkMax ?? []).map((w: any) => Number(w.max_hr) || 0).filter((v: number) => v <= 220)))
   const hrMax = peak && (!ageEst || peak > ageEst) ? peak : ageEst
 
   // Sessions completed in the last 30 days, with a window, whose log lacks avg_hr.
@@ -142,8 +142,8 @@ Deno.serve(async (req: Request) => {
 
   for (const s of (sessions ?? [])) {
     const { data: log } = await supabase.from('session_logs')
-      .select('id, avg_hr, hr_source').eq('session_id', s.id).is('deleted_at', null).maybeSingle()
-    if (!log || log.avg_hr != null) continue          // already summarised (or by Strava link)
+      .select('id, hr_source, hr_zones').eq('session_id', s.id).is('deleted_at', null).maybeSingle()
+    if (!log || log.hr_zones != null) continue   // already has band zones
 
     const startMs = new Date(s.started_at).getTime()
     const endMs   = new Date(s.completed_at).getTime()
@@ -155,8 +155,12 @@ Deno.serve(async (req: Request) => {
     const max_hr = Math.max(...hrs)
     const hr_zones = hrZonesHRR(inWindow, hrRest, hrMax)
 
-    const { error: upErr } = await supabase.from('session_logs')
-      .update({ avg_hr, max_hr, hr_zones, hr_source: 'fitbit' }).eq('id', log.id)
+    // Zones always come from the band. A Strava-linked session keeps its activity
+    // avg/max/source; otherwise source avg/max from the band too.
+    const update = log.hr_source === 'strava'
+      ? { hr_zones }
+      : { avg_hr, max_hr, hr_zones, hr_source: 'fitbit' }
+    const { error: upErr } = await supabase.from('session_logs').update(update).eq('id', log.id)
     if (!upErr) enriched.push(s.id)
     else console.error('[enrich-sessions] update failed for', s.id, upErr)
   }
