@@ -3488,25 +3488,6 @@ button.today-hero { width: 100%; display: block; text-align: left; border: none;
 .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .ring-arc { transition: stroke-dashoffset 0.6s ease; }
 
-/* ---------- LoadBand ---------- */
-.loadband { background: var(--bg-surface); border: 1px solid var(--hairline); border-radius: var(--r-lg); padding: 14px 16px; margin-bottom: var(--s-5); }
-.lb-head { display: flex; justify-content: space-between; align-items: baseline; }
-.lb-label { font-size: 12px; letter-spacing: 0.08em; color: var(--txt-muted); }
-.lb-verdict { font-size: 13px; font-weight: 500; }
-.lb-bar { display: flex; gap: 3px; margin-top: 9px; }
-.lb-seg { flex: 1; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.08); }
-
-/* ---------- ReadinessHero ---------- */
-.rhero { position: relative; overflow: hidden; display: block; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
-  background: var(--bg-surface); border: 1px solid var(--hairline); border-radius: var(--r-xl); padding: var(--s-5); margin-bottom: var(--s-5); }
-.rhero:active { transform: scale(0.99); }
-.rhero-eyebrow { position: relative; display: block; font-size: 11px; letter-spacing: 0.14em; color: var(--txt-muted); margin-bottom: var(--s-4); }
-.rhero-main { position: relative; display: flex; align-items: center; gap: var(--s-5); }
-.rhero-score { font-size: 30px; font-weight: 600; color: var(--txt-strong); }
-.rhero-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-.rhero-headline { font-size: 19px; font-weight: 500; color: var(--txt-strong); line-height: 1.15; }
-.rhero-note { font-size: 13px; color: var(--txt-body); line-height: 1.4; }
-
 /* ---------- Home top: two ring tiles (readiness + training load) ---------- */
 .home-rings { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin-bottom: var(--s-5); }
 .ring-tile { display: flex; flex-direction: column; align-items: center; gap: var(--s-3); text-align: center; cursor: pointer; font-family: inherit;
