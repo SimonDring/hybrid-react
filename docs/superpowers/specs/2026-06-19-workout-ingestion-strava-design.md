@@ -1,14 +1,9 @@
-# Workout ingestion (Strava-first) — Design [DRAFT — pending Simon's review]
+# Workout ingestion (Strava-first) — Design
 
 **Date:** 2026-06-19
-**Status:** DRAFT — researched while Simon was away; needs review/approval before planning
+**Status:** Approved for planning (direction + key decisions locked 2026-06-19)
 **Scope:** Sub-project B of the multi-device wearable initiative
-**Author:** Simon (review pending) + Claude
-
-> This spec was drafted autonomously from real provider-API research. The
-> brainstorming approval gate is **not yet satisfied** — the "Open questions"
-> section lists the decisions that normally would have been one-at-a-time
-> questions. Review those, adjust, and approve before we write the plan.
+**Author:** Simon + Claude
 
 ## Background
 
@@ -91,8 +86,8 @@ into the response body):
   rotated tokens.
 - Fetch `GET /athlete/activities?after=<last_synced_epoch>&per_page=100`, paging
   until exhausted (Strava paginates with `page`/`per_page`; `after`/`before` are
-  epoch-second filters). First connect imports a bounded window (see Open
-  questions — recommend **last 90 days**).
+  epoch-second filters). First connect imports a bounded window of **the last 90
+  days** (locked decision); subsequent syncs use `after=last_synced`.
 - Normalize each activity → a `workouts` row (pure helper, below) and **upsert**
   on the unique `(user_id, provider, provider_activity_id)` index (idempotent).
 - Update `wearable_connections.last_synced_at`.
@@ -175,21 +170,22 @@ the per-user local cache → (C/D consume it later). Baseline metrics path
   matching using sessions' timestamps.
 - Standalone-PWA OAuth: connect MUST use top-level redirect (the open fix).
 
-## Open questions for Simon (these gate the plan)
+## Decisions (locked 2026-06-19)
 
-1. **Confirm Strava-first, Garmin-deferred.** Garmin direct is blocked (suspended
-   program + legal-entity requirement); Strava carries Garmin workouts. Agree?
-   (Strong recommendation: yes.)
-2. **First-connect import window:** last **90 days** (recommended), last 30, or all
-   history? Affects first-sync time + rate-limit budget.
-3. **Sync trigger:** polling on connect / "Sync now" / app-foreground for B,
-   webhooks later (recommended)? Or invest in webhooks now?
-4. **B's UI surface:** minimal "connected · last synced N" on the card now, full
-   workout list/display deferred to C (recommended)? Or show a basic workout list
-   in B too?
-5. **Strava app ownership:** you'll register the Strava API app and provide
-   `STRAVA_CLIENT_ID` / `STRAVA_CLIENT_SECRET` for the Edge Function env — confirm
-   you're set up to do that (it's self-serve, ~5 min, unlike Garmin).
+1. **Strava-first, Garmin deferred.** Garmin direct is blocked (suspended program
+   + legal-entity requirement); Strava carries Garmin-recorded workouts. Garmin
+   stays a placeholder; the architecture is provider-generic so it can be added if
+   the program reopens.
+2. **First-connect import window: last 90 days.** Bounds first-sync time and stays
+   within Strava rate limits while seeding enough training history.
+3. **Sync trigger: polling** — on connect, on "Sync now", and on app foreground
+   (mirrors Fitbit). Webhooks are a deferred optimization.
+4. **B UI surface: minimal card status** — "Connected · Workouts · last synced N".
+   Workout display, session linking, and training load are C/D.
+5. **Strava app ownership (Simon prerequisite):** Simon registers the Strava API
+   app at `https://www.strava.com/settings/api` and provides `STRAVA_CLIENT_ID` /
+   `STRAVA_CLIENT_SECRET` for the Supabase Edge Function env (self-serve, ~5 min).
+   The Authorization Callback Domain must include the Supabase functions host.
 
 ## What A leaves ready for B
 
