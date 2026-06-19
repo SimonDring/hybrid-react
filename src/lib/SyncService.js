@@ -35,7 +35,7 @@
 import { supabase, isSupabaseConfigured } from './supabaseClient.js';
 import Database from './Database.js';
 import * as Storage from './Storage.js';
-import { computeRoleUpdates } from './wearableConnections.js';
+
 
 // ---------- Helpers ----------
 
@@ -613,20 +613,13 @@ export async function checkConnections() {
   return data || [];
 }
 
-// Make `provider` the user's sole primary device. Demotes any other primary.
+// Make `provider` the user's sole primary device. Done server-side in one atomic
+// statement (see migration 007) so it bypasses the SELECT-only RLS on this
+// token-bearing table safely and never leaves a transient two-primary state.
 export async function setDevicePrimary(provider) {
   if (!canSync()) return { ok: false, error: 'not signed in' };
-  const userId = uid();
-  const connections = await checkConnections();
-  const updates = computeRoleUpdates(connections, provider);
-  for (const u of updates) {
-    const { error } = await supabase
-      .from('wearable_connections')
-      .update({ role: u.role })
-      .eq('user_id', userId)
-      .eq('provider', u.provider);
-    if (error) { logError('setDevicePrimary', error); return { ok: false, error: error.message }; }
-  }
+  const { error } = await supabase.rpc('set_device_primary', { p_provider: provider });
+  if (error) { logError('setDevicePrimary', error); return { ok: false, error: error.message }; }
   return { ok: true };
 }
 

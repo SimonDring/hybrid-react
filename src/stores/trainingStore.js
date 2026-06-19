@@ -12,8 +12,7 @@
 
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
-import Sync, { pullFromSupabase, runSessionDMigration, checkFitbitConnection, syncFitbit, checkConnections, setDevicePrimary } from '../lib/SyncService.js';
-import { primaryProvider } from '../lib/wearableConnections.js';
+import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, checkConnections, setDevicePrimary } from '../lib/SyncService.js';
 import { nextE1RM } from '../lib/liftProgression.js';
 import { computeReadiness } from '../lib/Readiness.js';
 import { setRuntime } from '../lib/PlanService.js';

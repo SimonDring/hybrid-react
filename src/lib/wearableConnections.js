@@ -11,21 +11,4 @@ export function primaryProvider(connections = []) {
   return hit ? hit.provider : null;
 }
 
-// Minimal role changes to make `chosenProvider` the sole primary:
-//   - chosen → 'primary' (unless already)
-//   - any OTHER current primary → 'secondary'
-// Returns [] when nothing needs to change. Pure (no mutation).
-export function computeRoleUpdates(connections = [], chosenProvider) {
-  const updates = [];
-  for (const c of connections) {
-    if (!c) continue;
-    if (c.provider === chosenProvider) {
-      if (c.role !== 'primary') updates.push({ provider: c.provider, role: 'primary' });
-    } else if (c.role === 'primary') {
-      updates.push({ provider: c.provider, role: 'secondary' });
-    }
-  }
-  return updates;
-}
-
-export default { primaryProvider, computeRoleUpdates };
+export default { primaryProvider };
