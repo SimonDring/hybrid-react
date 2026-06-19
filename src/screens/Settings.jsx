@@ -7,7 +7,6 @@ import { runSessionDMigration } from '../lib/SyncService.js';
 
 export default function Settings() {
   const navigate = useNavigate();
-  const [theme, setTheme] = useState(localStorage.getItem('htp_theme') || 'dark');
   const [migrationStatus, setMigrationStatus] = useState(
     localStorage.getItem('htp_session_d_migrated') ? 'done' : 'idle'
   );
@@ -56,21 +55,6 @@ export default function Settings() {
     } else {
       setPwMsg(useAuthStore.getState().errorMessage || 'Could not update password.');
     }
-  };
-
-  const handleSetTheme = (newTheme) => {
-    setTheme(newTheme);
-    localStorage.setItem('htp_theme', newTheme);
-    if (newTheme === 'auto') {
-      document.documentElement.removeAttribute('data-theme');
-    } else {
-      document.documentElement.setAttribute('data-theme', newTheme);
-    }
-    // Update theme-color meta
-    const isDark = newTheme === 'dark' ||
-      (newTheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', isDark ? '#100d09' : '#f4f1ea');
   };
 
   const handleMigrate = async () => {
@@ -134,19 +118,7 @@ export default function Settings() {
   return (
     <>
       <h1 className="h1">Settings</h1>
-      <p className="sub">Appearance, data, and app management.</p>
-
-      <h2 className="h3">Appearance</h2>
-      <div className="settings-group">
-        <div className="settings-row" style={{ display: 'block' }}>
-          <div style={{ marginBottom: 10 }}>Theme</div>
-          <div style={{ display: 'flex', gap: 6 }}>
-            <button className={theme === 'light' ? 'active' : ''} onClick={() => handleSetTheme('light')} style={{ flex: 1, padding: 8, fontSize: 13, borderRadius: 8, border: '1px solid var(--hairline)', background: theme === 'light' ? 'var(--rust)' : 'transparent', color: theme === 'light' ? '#fff' : 'inherit', cursor: 'pointer' }}>Light</button>
-            <button className={theme === 'dark' ? 'active' : ''} onClick={() => handleSetTheme('dark')} style={{ flex: 1, padding: 8, fontSize: 13, borderRadius: 8, border: '1px solid var(--hairline)', background: theme === 'dark' ? 'var(--rust)' : 'transparent', color: theme === 'dark' ? '#fff' : 'inherit', cursor: 'pointer' }}>Dark</button>
-            <button className={theme === 'auto' ? 'active' : ''} onClick={() => handleSetTheme('auto')} style={{ flex: 1, padding: 8, fontSize: 13, borderRadius: 8, border: '1px solid var(--hairline)', background: theme === 'auto' ? 'var(--rust)' : 'transparent', color: theme === 'auto' ? '#fff' : 'inherit', cursor: 'pointer' }}>Auto</button>
-          </div>
-        </div>
-      </div>
+      <p className="sub">Data and app management.</p>
 
       <h2 className="h3">Integrations</h2>
       <button

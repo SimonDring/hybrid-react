@@ -1434,7 +1434,7 @@ body { font-variant-numeric: tabular-nums; }
 
 /* ---------- CALLOUTS ---------- */
 .callout {
-  background: rgba(176,74,46,0.07);
+  background: rgba(176,74,46,0.1);
   border-left-width: 3px;
   border-radius: 0 var(--r-md) var(--r-md) 0;
   padding: 14px 16px;
@@ -1442,12 +1442,8 @@ body { font-variant-numeric: tabular-nums; }
   color: var(--txt-body);
   margin: var(--s-4) 0;
 }
-html[data-theme="dark"] .callout { background: rgba(176,74,46,0.1); }
-.callout.amber { background: rgba(200,154,58,0.10); }
-.callout.slate { background: rgba(42,58,68,0.07); }
-html[data-theme="dark"] .callout.amber { background: rgba(200,154,58,0.13); }
-html[data-theme="dark"] .callout.slate { background: rgba(120,140,150,0.1); border-left-color: #6a8090; }
-html[data-theme="dark"] .callout.slate strong { color: #9eb3bf; }
+.callout.amber { background: rgba(200,154,58,0.13); }
+.callout.slate { background: rgba(120,140,150,0.1); border-left-color: var(--accent-2); }
 
 /* ---------- PHASE TILES ---------- */
 .phase-tile {
@@ -1493,10 +1489,9 @@ html[data-theme="dark"] .callout.slate strong { color: #9eb3bf; }
   color: #f4f1ea;
 }
 .pt-status.provisional {
-  background: rgba(200,154,58,0.15);
-  color: #8b6818;
+  background: rgba(200,154,58,0.2);
+  color: var(--ochre);
 }
-html[data-theme="dark"] .pt-status.provisional { background: rgba(200,154,58,0.2); color: var(--ochre); }
 
 /* ---------- WEEK GRID ---------- */
 .week-list {
@@ -1749,8 +1744,6 @@ html[data-theme="dark"] .pt-status.provisional { background: rgba(200,154,58,0.2
 .decision-card h4 { font-size: 17px; color: var(--txt-strong); line-height: 1.3; }
 .decision-card p { color: var(--txt-body); font-size: 14px; line-height: 1.5; }
 .decision-card .scen { color: var(--slate); font-weight: 700; }
-html[data-theme="dark"] .decision-card { border-left-color: #6a8090; }
-html[data-theme="dark"] .decision-card .scen { color: #9eb3bf; }
 
 .principle {
   padding: var(--s-4) 0;
@@ -2237,8 +2230,8 @@ button.callout:active { transform: scale(0.99); }
   color: var(--txt-strong);
 }
 
-/* ---------- DARK MODE: image/canvas tweaks ---------- */
-html[data-theme="dark"] canvas { filter: brightness(1.05); }
+/* ---------- canvas tweaks ---------- */
+canvas { filter: brightness(1.05); }
 
 /* ---------- RIPPLE-FREE TAP STATES ---------- */
 button { -webkit-tap-highlight-color: transparent; user-select: none; }
@@ -2981,17 +2974,6 @@ button:active,
   }
 }
 
-/* ---------- DARK MODE small refinements ---------- */
-html[data-theme="dark"] .today-card {
-  background: linear-gradient(135deg, #1a1813 0%, #232017 100%);
-}
-html[data-theme="dark"] .quick-tile .qt-icon { color: var(--ochre); }
-html[data-theme="dark"] .ses-card.is-done {
-  background: rgba(74,93,58,0.08);
-}
-html[data-theme="dark"] .ses-card.is-started {
-  background: rgba(176,74,46,0.08);
-}
 
 /* ---------- Tablet+ layout (iPad portrait/landscape) ---------- */
 @media (min-width: 600px) {
@@ -3021,8 +3003,8 @@ html[data-theme="dark"] .ses-card.is-started {
    =================================================================== */
 
 .session-table {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  border: 1px solid var(--hairline);
   border-radius: 16px;
   overflow: hidden;
   margin-bottom: 4px;
@@ -3033,8 +3015,8 @@ html[data-theme="dark"] .ses-card.is-started {
   grid-template-columns: 40px 1fr 80px 60px;
   gap: 8px;
   padding: 9px 14px;
-  background: rgba(14,20,16,0.04);
-  border-bottom: 1px solid var(--border);
+  background: var(--bg-surface-2);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .st-header > div {
@@ -3051,7 +3033,7 @@ html[data-theme="dark"] .ses-card.is-started {
 .st-col-rpe  { text-align: center; }
 
 .st-row {
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--hairline);
   padding: 0 14px 0 14px;
 }
 .st-row:last-child { border-bottom: none; }
@@ -3105,7 +3087,7 @@ html[data-theme="dark"] .ses-card.is-started {
   text-align: center;
   padding: 3px 0;
   border-radius: 6px;
-  background: var(--accent-bg);
+  background: var(--bg-surface-2);
   color: var(--txt-muted);
   letter-spacing: 0.03em;
 }
@@ -3134,14 +3116,6 @@ html[data-theme="dark"] .ses-card.is-started {
   flex: 1;
 }
 
-/* Dark mode adjustments for session table */
-html[data-theme="dark"] .st-header {
-  background: rgba(244,241,234,0.03);
-}
-
-html[data-theme="dark"] .st-rpe {
-  background: rgba(244,241,234,0.07);
-}
 
 /* ===================================================================
    GYM TABLE — glanceable session view (Round 1 redesign)
