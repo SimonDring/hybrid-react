@@ -2,72 +2,66 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 
-// Draws a simple line chart on a canvas given numeric data points
+// Midnight line chart: subtle grid, soft area fill, emphasised latest point.
+// Canvas can't read CSS vars, so colours are passed as hex.
+function hexA(hex, a) {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+}
 function drawChart(canvas, data, color) {
-  if (!canvas || data.length === 0) return;
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
   canvas.width = rect.width * dpr;
   canvas.height = rect.height * dpr;
   ctx.scale(dpr, dpr);
-
-  const w = rect.width;
-  const h = rect.height;
-  const pad = 20;
-
+  const w = rect.width, h = rect.height, pad = 16;
   ctx.clearRect(0, 0, w, h);
-
   const values = data.filter(v => !isNaN(v));
   if (values.length === 0) return;
+  const min = Math.min(...values), max = Math.max(...values), range = (max - min) || 1;
+  const xAt = (i) => pad + (w - 2 * pad) * (values.length > 1 ? i / (values.length - 1) : 0.5);
+  const yAt = (v) => h - pad - (h - 2 * pad) * ((v - min) / range);
 
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = max - min || 1;
-
-  // Background grid
-  ctx.strokeStyle = 'rgba(14,20,16,0.06)';
+  // Grid (light on dark)
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
   ctx.lineWidth = 1;
-  for (let i = 0; i <= 4; i++) {
-    const y = pad + (h - 2 * pad) * (i / 4);
-    ctx.beginPath();
-    ctx.moveTo(pad, y);
-    ctx.lineTo(w - pad, y);
-    ctx.stroke();
+  for (let i = 0; i <= 3; i++) {
+    const y = pad + (h - 2 * pad) * (i / 3);
+    ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(w - pad, y); ctx.stroke();
   }
 
-  // Plot line
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2.5;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
+  // Soft area fill
+  if (values.length > 1) {
+    ctx.beginPath();
+    values.forEach((v, i) => { const x = xAt(i), y = yAt(v); i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+    ctx.lineTo(xAt(values.length - 1), h - pad);
+    ctx.lineTo(xAt(0), h - pad);
+    ctx.closePath();
+    ctx.fillStyle = hexA(color, 0.12);
+    ctx.fill();
+  }
+
+  // Line
+  ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   ctx.beginPath();
-  values.forEach((v, i) => {
-    const x = pad + (w - 2 * pad) * (values.length > 1 ? i / (values.length - 1) : 0.5);
-    const y = h - pad - (h - 2 * pad) * ((v - min) / range);
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  });
+  values.forEach((v, i) => { const x = xAt(i), y = yAt(v); i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
   ctx.stroke();
 
-  // Points
-  ctx.fillStyle = color;
-  values.forEach((v, i) => {
-    const x = pad + (w - 2 * pad) * (values.length > 1 ? i / (values.length - 1) : 0.5);
-    const y = h - pad - (h - 2 * pad) * ((v - min) / range);
-    ctx.beginPath();
-    ctx.arc(x, y, 3, 0, Math.PI * 2);
-    ctx.fill();
-  });
+  // Latest point emphasised
+  const lx = xAt(values.length - 1), ly = yAt(values[values.length - 1]);
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(lx, ly, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = hexA(color, 0.35); ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(lx, ly, 6, 0, Math.PI * 2); ctx.stroke();
 }
 
-// Wearable (daily_metrics) charts. `transform` adapts the stored unit for display.
+// higherIsBetter drives whether an upward delta reads as good (teal) or bad (coral).
 const CHARTS = [
-  { field: 'readiness_score', label: 'Readiness', color: '#4a5d3a' },
-  { field: 'hrv_ms', label: 'HRV (ms)', color: '#4a5d3a' },
-  { field: 'resting_hr', label: 'Resting HR (bpm)', color: '#c89a3a' },
-  { field: 'sleep_duration_min', label: 'Sleep (hours)', color: '#2a3a44', transform: v => Math.round((v / 60) * 10) / 10 },
-  { field: 'steps', label: 'Steps', color: '#b04a2e' }
+  { field: 'readiness_score', label: 'Readiness', unit: '', color: '#6FD3C4', higherIsBetter: true },
+  { field: 'hrv_ms', label: 'HRV', unit: ' ms', color: '#6FD3C4', higherIsBetter: true },
+  { field: 'resting_hr', label: 'Resting HR', unit: ' bpm', color: '#E8836F', higherIsBetter: false },
+  { field: 'sleep_duration_min', label: 'Sleep', unit: ' h', color: '#97A6FF', higherIsBetter: true, transform: v => Math.round((v / 60) * 10) / 10 },
+  { field: 'steps', label: 'Steps', unit: '', color: '#F2C14E', higherIsBetter: true }
 ];
 
 const RANGES = [
@@ -82,62 +76,71 @@ export default function Trends() {
   const [range, setRange] = useState('30d');
   const canvasRefs = useRef({});
 
-  // Oldest → newest, so the line reads left-to-right in time order.
   const sorted = [...dailyMetrics].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   const days = RANGES.find(r => r.id === range).days;
   const displayMetrics = days === Infinity ? sorted : sorted.slice(-days);
 
+  const seriesFor = (c) => displayMetrics
+    .map(m => (m[c.field] == null ? NaN : (c.transform ? c.transform(m[c.field]) : m[c.field])))
+    .filter(v => !isNaN(v));
+
   useEffect(() => {
-    CHARTS.forEach(c => {
-      const canvas = canvasRefs.current[c.field];
-      const data = displayMetrics
-        .map(m => (m[c.field] == null ? NaN : (c.transform ? c.transform(m[c.field]) : m[c.field])))
-        .filter(v => !isNaN(v));
-      drawChart(canvas, data, c.color);
-    });
+    CHARTS.forEach(c => drawChart(canvasRefs.current[c.field], seriesFor(c), c.color));
   }, [displayMetrics, range]);
 
   if (dailyMetrics.length === 0) {
     return (
       <>
         <h1 className="h1">Trends</h1>
-        <p className="sub">No wearable data yet. Sync your Fitbit or add daily metrics to see trends.</p>
-        <button className="full-btn" onClick={() => navigate('/tracking/wearables')}>Add daily metrics</button>
+        <p className="sub">No wearable data yet. Sync your wearable or add daily metrics to see trends.</p>
+        <button className="callout amber" style={{ width: '100%', textAlign: 'left', cursor: 'pointer', display: 'block' }} onClick={() => navigate('/tracking/wearables')}>
+          <strong>Add daily metrics →</strong>
+        </button>
       </>
     );
   }
 
-  const hasAny = CHARTS.some(c => displayMetrics.some(m => m[c.field] != null));
+  const hasAny = CHARTS.some(c => seriesFor(c).length > 0);
 
   return (
     <>
       <h1 className="h1">Trends</h1>
       <p className="sub">Recovery and activity from your wearable. {dailyMetrics.length} day{dailyMetrics.length !== 1 ? 's' : ''} recorded.</p>
 
-      <div className="chart-filter" style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
+      <div className="trend-range">
         {RANGES.map(r => (
           <button key={r.id} className={range === r.id ? 'active' : ''} onClick={() => setRange(r.id)}>{r.label}</button>
         ))}
       </div>
 
       {!hasAny && (
-        <div className="callout">
-          <strong>Not enough data in this range.</strong> Try a wider range, or sync more days from your wearable.
-        </div>
+        <div className="callout amber"><strong>Not enough data in this range.</strong> Try a wider range, or sync more days.</div>
       )}
 
       {CHARTS.map(c => {
-        const data = displayMetrics
-          .map(m => (m[c.field] == null ? NaN : (c.transform ? c.transform(m[c.field]) : m[c.field])))
-          .filter(v => !isNaN(v));
+        const data = seriesFor(c);
         if (data.length === 0) return null;
+        const current = data[data.length - 1];
+        const avg = Math.round((data.reduce((a, b) => a + b, 0) / data.length) * 10) / 10;
+        const delta = data.length > 1 ? Math.round((current - data[0]) * 10) / 10 : null;
+        const improving = delta == null ? null : (c.higherIsBetter ? delta > 0 : delta < 0);
+        const deltaColor = delta == null || delta === 0 ? 'var(--txt-muted)' : (improving ? 'var(--status-positive)' : 'var(--status-strain)');
+        const arrow = delta == null || delta === 0 ? '' : (delta > 0 ? '↑' : '↓');
         return (
-          <div key={c.field} className="chart-card">
-            <h5>{c.label}</h5>
-            <canvas
-              ref={el => canvasRefs.current[c.field] = el}
-              style={{ width: '100%', height: 120, display: 'block' }}
-            />
+          <div key={c.field} className="trend-card">
+            <div className="trend-head">
+              <div>
+                <div className="trend-label">{c.label}</div>
+                <div className="trend-meta">
+                  {delta != null && delta !== 0 && (
+                    <span className="trend-delta" style={{ color: deltaColor }}>{arrow} {Math.abs(delta)}{c.unit}</span>
+                  )}
+                  <span className="trend-avg">avg {avg}{c.unit}</span>
+                </div>
+              </div>
+              <div className="trend-val">{current}<span>{c.unit}</span></div>
+            </div>
+            <canvas className="trend-chart" ref={el => canvasRefs.current[c.field] = el} />
           </div>
         );
       })}
