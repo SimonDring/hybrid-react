@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
-import { fitnessAge } from '../lib/fitnessAge.js';
 
 // Midnight line chart: subtle grid, soft area fill, emphasised latest point.
 function hexA(hex, a) {
@@ -70,11 +69,9 @@ const RANGES = [
 export default function Trends() {
   const navigate = useNavigate();
   const dailyMetrics = useTrainingStore(state => state.dailyMetrics);
-  const profile = useTrainingStore(state => state.profile);
   const [range, setRange] = useState('30d');
   const [metric, setMetric] = useState('readiness_score');
   const canvasRef = useRef(null);
-  const fa = fitnessAge(profile, dailyMetrics);
 
   const sorted = [...dailyMetrics].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   const days = RANGES.find(r => r.id === range).days;
@@ -119,22 +116,6 @@ export default function Trends() {
 
   return (
     <>
-      {fa && (
-        <div className="fitage-card">
-          <div className="fitage-main">
-            <div>
-              <div className="fitage-label">Fitness age</div>
-              <div className="fitage-val">{fa.fitnessAge}<span> yrs</span></div>
-            </div>
-            <div className="fitage-delta" style={{ color: fa.color }}>
-              {fa.status === 'younger' ? `${fa.delta} yrs younger` : fa.status === 'older' ? `${Math.abs(fa.delta)} yrs older` : 'On par'}
-              <div className="fitage-vs">vs your age of {fa.age}</div>
-            </div>
-          </div>
-          <div className="fitage-note">From resting HR + HRV vs typical for your age — an estimate, not medical.</div>
-        </div>
-      )}
-
       {/* METRIC SELECTOR BANNER */}
       <div className="metric-tabs">
         {available.map(c => (

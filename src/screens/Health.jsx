@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import { fmtSleep } from '../lib/Readiness.js';
 import { loadVerdict } from '../lib/verdicts.js';
+import { fitnessAge } from '../lib/fitnessAge.js';
 import Sparkline from '../components/ui/Sparkline.jsx';
 
 function LinkRow({ title, sub, badge, onClick }) {
@@ -22,12 +23,14 @@ function LinkRow({ title, sub, badge, onClick }) {
 
 export default function Health() {
   const navigate = useNavigate();
+  const profile = useTrainingStore(s => s.profile);
   const dailyMetrics = useTrainingStore(s => s.dailyMetrics);
   const load = useTrainingStore(s => s.load);
   const adaptation = useTrainingStore(s => s.adaptation);
   const injuries = useTrainingStore(s => s.injuries);
 
   const lv = loadVerdict(load, adaptation);
+  const fa = fitnessAge(profile, dailyMetrics);
   const sorted = [...dailyMetrics].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   const latest = sorted[sorted.length - 1] || {};
   const series = (field, t) => sorted.map(m => (m[field] == null ? NaN : (t ? t(m[field]) : m[field]))).filter(v => !isNaN(v)).slice(-14);
@@ -44,6 +47,22 @@ export default function Health() {
     <>
       <h1 className="h1">Health</h1>
       <p className="sub">Sleep, recovery markers and training load, in detail.</p>
+
+      {fa && (
+        <div className="fitage-card">
+          <div className="fitage-main">
+            <div>
+              <div className="fitage-label">Fitness age</div>
+              <div className="fitage-val">{fa.fitnessAge}<span> yrs</span></div>
+            </div>
+            <div className="fitage-delta" style={{ color: fa.color }}>
+              {fa.status === 'younger' ? `${fa.delta} yrs younger` : fa.status === 'older' ? `${Math.abs(fa.delta)} yrs older` : 'On par'}
+              <div className="fitage-vs">vs your age of {fa.age}</div>
+            </div>
+          </div>
+          <div className="fitage-note">From resting HR + HRV vs typical for your age — an estimate, not medical.</div>
+        </div>
+      )}
 
       {/* SLEEP */}
       <h2 className="h3">Sleep</h2>
