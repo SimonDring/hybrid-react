@@ -110,8 +110,13 @@ Deno.serve(async (req: Request) => {
 
   // Incremental window: since last sync, else last 90 days on first connect.
   const ninetyDaysAgo = Math.floor((Date.now() - 90 * 24 * 60 * 60 * 1000) / 1000)
+  // Re-fetch a 7-day trailing overlap on every incremental sync. Strava's `after`
+  // filters on activity start_date, and Garmin→Strava propagation can lag hours or
+  // days — a tiny buffer would silently drop late-arriving activities. Upserts are
+  // idempotent, so the overlap is free.
+  const OVERLAP_SEC = 7 * 24 * 60 * 60
   const after = connection.last_synced_at
-    ? Math.floor(new Date(connection.last_synced_at).getTime() / 1000) - 60
+    ? Math.floor(new Date(connection.last_synced_at).getTime() / 1000) - OVERLAP_SEC
     : ninetyDaysAgo
 
   const synced: string[] = []
