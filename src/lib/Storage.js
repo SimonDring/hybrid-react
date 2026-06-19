@@ -22,6 +22,7 @@ export const KEYS = {
   wearableReadings:  'htp_wearable_readings_v4',
   dailyMetrics:      'htp_daily_metrics_v4',
   injuries:          'htp_injuries_v4',
+  workouts:          'htp_workouts_v4',
   aiRecommendations: 'htp_ai_recommendations_v4',
   appMeta:           'htp_app_meta_v4',
   sessionDMigrated:  'htp_session_d_migrated',   // set to true once local→Supabase migration runs
@@ -46,7 +47,7 @@ const ALL_BASE_KEYS = Object.values(KEYS);
 const TABLE_BASE_KEYS = [
   KEYS.users, KEYS.plans, KEYS.phases, KEYS.weeks, KEYS.sessions, KEYS.sessionLogs,
   KEYS.weeklyCheckins, KEYS.reassessments, KEYS.wearableReadings, KEYS.dailyMetrics,
-  KEYS.injuries, KEYS.aiRecommendations
+  KEYS.injuries, KEYS.workouts, KEYS.aiRecommendations
 ];
 
 const nsKey = (baseKey) => `${baseKey}_${currentNamespace}`;

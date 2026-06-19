@@ -201,7 +201,7 @@ export async function pullFromSupabase() {
     // exclusion from the pull is not an isolation gap.
     const [
       usersRes, plansRes, sessionsRes, logsRes,
-      checkinsRes, reassessRes, dailyRes, injuriesRes
+      checkinsRes, reassessRes, dailyRes, injuriesRes, workoutsRes
     ] = await Promise.all([
       supabase.from('users').select('*').eq('id', userId).is('deleted_at', null),
       supabase.from('training_plans').select('*').eq('user_id', userId).is('deleted_at', null),
@@ -210,13 +210,14 @@ export async function pullFromSupabase() {
       supabase.from('weekly_checkins').select('*').eq('user_id', userId).is('deleted_at', null),
       supabase.from('reassessments').select('*').eq('user_id', userId).is('deleted_at', null),
       supabase.from('daily_metrics').select('*').eq('user_id', userId).is('deleted_at', null),
-      supabase.from('injuries').select('*').eq('user_id', userId).is('deleted_at', null)
+      supabase.from('injuries').select('*').eq('user_id', userId).is('deleted_at', null),
+      supabase.from('workouts').select('*').eq('user_id', userId).is('deleted_at', null)
     ]);
 
     const resultsByTable = {
       users: usersRes, plans: plansRes, sessions: sessionsRes, sessionLogs: logsRes,
       weeklyCheckins: checkinsRes, reassessments: reassessRes, dailyMetrics: dailyRes,
-      injuries: injuriesRes
+      injuries: injuriesRes, workouts: workoutsRes
     };
 
     // Log any per-table errors but do NOT abort — replace every table that came
@@ -239,6 +240,7 @@ export async function pullFromSupabase() {
     if (replaceable.includes('reassessments')) Database.tables.reassessments.replaceAll(reassessRes.data || []);
     if (replaceable.includes('dailyMetrics'))   Database.tables.dailyMetrics.replaceAll(dailyRes.data || []);
     if (replaceable.includes('injuries'))       Database.tables.injuries.replaceAll(injuriesRes.data || []);
+    if (replaceable.includes('workouts'))       Database.tables.workouts.replaceAll(workoutsRes.data || []);
 
     const failed = Object.keys(resultsByTable).filter((k) => !replaceable.includes(k));
     return { ok: failed.length === 0, failed };
