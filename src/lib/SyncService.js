@@ -645,6 +645,57 @@ export async function syncStrava() {
   }
 }
 
+// Link a workout to a session: set workouts.session_id and copy the workout's
+// physiology onto the session's log row (cardio path). Writes Supabase + cache.
+export async function linkWorkout(workoutId, sessionId, physiology) {
+  if (!canSync()) return { ok: false, reason: 'not signed in' };
+  const userId = uid();
+  const ops = [
+    supabase.from('workouts').update({ session_id: sessionId }).eq('id', workoutId).eq('user_id', userId),
+    supabase.from('session_logs').update({ ...physiology }).eq('session_id', sessionId).eq('user_id', userId)
+  ];
+  const results = await Promise.all(ops);
+  results.forEach(r => { if (r.error) logError('linkWorkout', r.error); });
+  return { ok: results.every(r => !r.error) };
+}
+
+// Unlink: clear workouts.session_id and the Strava-sourced physiology on the log
+// (so the next enrich re-fills it from the primary band).
+export async function unlinkWorkout(workoutId, sessionId) {
+  if (!canSync()) return { ok: false, reason: 'not signed in' };
+  const userId = uid();
+  const ops = [
+    supabase.from('workouts').update({ session_id: null }).eq('id', workoutId).eq('user_id', userId),
+    supabase.from('session_logs').update({ avg_hr: null, max_hr: null, calories: null, hr_source: null })
+      .eq('session_id', sessionId).eq('user_id', userId)
+  ];
+  const results = await Promise.all(ops);
+  results.forEach(r => { if (r.error) logError('unlinkWorkout', r.error); });
+  return { ok: results.every(r => !r.error) };
+}
+
+// Trigger the enrich-sessions Edge Function (per-session HR window + zones).
+export async function enrichSessions() {
+  if (!canSync()) return { ok: false, reason: 'not signed in' };
+  try {
+    const { data, error } = await supabase.functions.invoke('enrich-sessions', { body: {} });
+    if (error) {
+      logError('enrichSessions', error);
+      let reason = error.message;
+      try {
+        if (error.context && typeof error.context.json === 'function') {
+          reason = pickFitbitErrorReason(await error.context.json(), reason);
+        }
+      } catch { /* keep generic */ }
+      return { ok: false, reason };
+    }
+    return data;
+  } catch (err) {
+    logError('enrichSessions (exception)', err);
+    return { ok: false, reason: err.message };
+  }
+}
+
 // Read ALL of the user's wearable connections (RLS-scoped). Returns [] when not
 // signed in or on error. Each row: { provider, role, connected_at, last_synced_at }.
 export async function checkConnections() {
@@ -695,5 +746,6 @@ export default {
   setReassessAnswer,
   addInjury, updateInjury, removeInjury, addRecoveryLogEntry,
   getFitbitAuthUrl, checkFitbitConnection, syncFitbit, getStravaAuthUrl, syncStrava, checkConnections, setDevicePrimary,
+  linkWorkout, unlinkWorkout, enrichSessions,
   resetAll
 };
