@@ -3495,4 +3495,18 @@ button.today-hero { width: 100%; display: block; text-align: left; border: none;
 .lb-verdict { font-size: 13px; font-weight: 500; }
 .lb-bar { display: flex; gap: 3px; margin-top: 9px; }
 .lb-seg { flex: 1; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.08); }
+
+/* ---------- ReadinessHero ---------- */
+.rhero { position: relative; overflow: hidden; display: block; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
+  background: var(--bg-surface); border: 1px solid var(--hairline); border-radius: var(--r-xl); padding: var(--s-5); margin-bottom: var(--s-5); }
+.rhero:active { transform: scale(0.99); }
+.rhero-glow { position: absolute; top: -70px; right: -50px; width: 210px; height: 210px; border-radius: 50%;
+  background: radial-gradient(circle, var(--tone), transparent 70%); opacity: 0.16; pointer-events: none; }
+.rhero-eyebrow { position: relative; display: block; font-size: 11px; letter-spacing: 0.14em; color: var(--txt-muted); margin-bottom: var(--s-4); }
+.rhero-main { position: relative; display: flex; align-items: center; gap: var(--s-5); }
+.rhero-score { font-size: 30px; font-weight: 600; color: var(--txt-strong); }
+.rhero-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.rhero-headline { font-size: 19px; font-weight: 500; color: var(--txt-strong); line-height: 1.15; }
+.rhero-note { font-size: 13px; color: var(--txt-body); line-height: 1.4; }
+.rhero-evidence { position: relative; display: block; margin-top: var(--s-4); font-size: 12px; color: var(--txt-muted); }
 .lb-note { font-size: 12px; color: var(--txt-body); margin-top: 8px; line-height: 1.45; }
