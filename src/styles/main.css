@@ -3603,6 +3603,22 @@ button.today-hero { width: 100%; display: block; text-align: left; border: none;
 .fitage-delta { font-size: 14px; font-weight: 500; text-align: right; }
 .fitage-vs { font-size: 11px; color: var(--txt-muted); font-weight: 400; margin-top: 2px; }
 .fitage-note { font-size: 11px; color: var(--txt-muted); margin-top: 12px; line-height: 1.45; }
+
+/* ---------- Trends: metric selector + detail ---------- */
+.metric-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 14px; scrollbar-width: none; }
+.metric-tabs::-webkit-scrollbar { display: none; }
+.metric-tab { flex: 0 0 auto; padding: 8px 14px; font-size: 13px; font-family: inherit; border-radius: var(--r-full); border: 1px solid var(--hairline); background: var(--bg-surface); color: var(--txt-muted); cursor: pointer; white-space: nowrap; }
+.metric-tab.active { border-color: var(--accent); color: var(--txt-strong); background: rgba(111,211,196,0.10); }
+.metric-detail { background: var(--bg-surface); border: 1px solid var(--hairline); border-radius: var(--r-lg); padding: 16px; }
+.md-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.md-label { font-size: 13px; color: var(--txt-muted); }
+.md-value { font-size: 32px; font-weight: 600; color: var(--txt-strong); line-height: 1; margin-top: 4px; }
+.md-value span { font-size: 14px; color: var(--txt-muted); font-weight: 400; }
+.md-delta { font-size: 14px; font-weight: 500; text-align: right; }
+.md-delta-sub { font-size: 11px; color: var(--txt-muted); font-weight: 400; margin-top: 2px; }
+.md-stats { display: flex; gap: 16px; font-size: 12px; color: var(--txt-muted); margin-top: 10px; }
+.md-chart { width: 100%; height: 180px; display: block; }
+.md-context { font-size: 13px; color: var(--txt-body); line-height: 1.5; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--hairline); }
 .lb-note { font-size: 12px; color: var(--txt-body); margin-top: 8px; line-height: 1.45; }
 
 /* ---------- Home adaptation banner ---------- */
