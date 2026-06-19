@@ -15,7 +15,8 @@ import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
 import { nextE1RM } from '../lib/liftProgression.js';
 import { computeReadiness } from '../lib/Readiness.js';
-import { setRuntime, sessionDiscipline, getWeek } from '../lib/PlanService.js';
+import { setRuntime, currentAdaptation, sessionDiscipline, getWeek } from '../lib/PlanService.js';
+import { dailyLoads, acuteChronic, acwr, acwrSeries, loadDecision, sessionLoad } from '../lib/plan/trainingLoad.js';
 import { setOverride, clearOverride } from '../lib/sessionOverrides.js';
 import { matchWorkoutToSession, sessionPhysiologyFromWorkout } from '../lib/sessionWorkoutMatch.js';
 
@@ -74,16 +75,35 @@ function buildView() {
 
   // Keep the plan's adaptive reflow current: it reflows this week around what's
   // been completed + today's readiness. Set before screens read the plan.
-  setRuntime({ sessions, readiness: computeReadiness(dailyMetrics, logs).score });
+  const today = new Date().toISOString().split('T')[0];
+  const sessionLogsAll = Database.tables.sessionLogs.all();
+  const workoutsAll = Database.tables.workouts.all();
+  const dl = dailyLoads(sessionLogsAll, workoutsAll);
+  const ac = acuteChronic(dl, today);
+  const acwrVal = acwr(ac);
+  const decision = loadDecision(acwrVal, acwrSeries(dl, today, 4));
+
+  setRuntime({ sessions, readiness: computeReadiness(dailyMetrics, logs).score, loadDecision: decision });
+
+  // Load view-model: acute/chronic/acwr + recent session loads (newest first).
+  const band = acwrVal == null ? null : acwrVal < 0.8 ? 'under' : acwrVal > 1.5 ? 'over' : acwrVal > 1.3 ? 'high' : 'sweet';
+  const loadSessions = sessionLogsAll
+    .filter(l => l.completed_at)
+    .sort((a, b) => (b.completed_at || '').localeCompare(a.completed_at || ''))
+    .slice(0, 14)
+    .map(l => ({ date: (l.completed_at || '').split('T')[0], ...sessionLoad(l) }));
+  const loadView = { acute: Math.round(ac.acute), chronic: Math.round(ac.chronic), acwr: acwrVal, band, sessions: loadSessions };
 
   return {
     logs,
     sessions,
-    workouts:     Database.tables.workouts.all(),
+    workouts:     workoutsAll,
     reassess:     Database.services.getReassessAnswers(),
     profile:      Database.services.getProfile(),
     injuries:     Database.services.listInjuries(),
     dailyMetrics,
+    load:         loadView,
+    adaptation:   currentAdaptation(),
     syncing:      false,
     _tick:        Date.now()
   };
@@ -325,6 +345,26 @@ export const useTrainingStore = create((set) => ({
   },
   async setGoals(goals) {
     await Sync.setGoals(goals);
+    set(buildView());
+  },
+
+  // Pin the current week to the plan (ignore the load adaptation). `weekNum` is
+  // the plan week number (state.adaptation.week).
+  async revertWeekAdaptation(weekNum) {
+    if (weekNum == null) return;
+    const profile = buildView().profile || {};
+    const overrides = { ...(profile.load_overrides || {}), [weekNum]: 'plan' };
+    await Sync.updateProfile({ load_overrides: overrides });
+    set(buildView());
+  },
+
+  // Undo a revert — let load adapt this week again.
+  async unrevertWeekAdaptation(weekNum) {
+    if (weekNum == null) return;
+    const profile = buildView().profile || {};
+    const overrides = { ...(profile.load_overrides || {}) };
+    delete overrides[weekNum];
+    await Sync.updateProfile({ load_overrides: overrides });
     set(buildView());
   },
 
