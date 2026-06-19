@@ -17,8 +17,6 @@
   --muted: #6a665d;
   --safe-top: env(safe-area-inset-top);
   --safe-bottom: env(safe-area-inset-bottom);
-  --topbar-h: 52px;
-  --tabbar-h: 60px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -2005,7 +2003,7 @@ html[data-theme="dark"] .decision-card .scen { color: #9eb3bf; }
   background: var(--accent);
   color: var(--on-action);
   margin-top: -12px;
-  box-shadow: var(--shadow-md), 0 4px 14px rgba(232,90,50,0.45);
+  box-shadow: var(--shadow-md), 0 4px 14px rgba(111,211,196,0.30);
   transition: transform 0.12s;
 }
 .tab-train:active .tab-train-icon { transform: scale(1.06); }
@@ -2013,7 +2011,7 @@ html[data-theme="dark"] .decision-card .scen { color: #9eb3bf; }
 .tab-train-label {
   font-family: var(--sans);
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--accent);
   letter-spacing: 0.02em;
 }
