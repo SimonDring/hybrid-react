@@ -28,6 +28,7 @@ import { resolveLifts } from './liftProgression.js';
 import { MUSCLE_GROUPS, MUSCLE_LABELS } from '../data/muscleVolume.js';
 import { getOverrides } from './sessionOverrides.js';
 import { applyInjuryRules, applyPrevention } from './injury/injuryFilter.js';
+import { combinedMultiplier } from './plan/trainingLoad.js';
 
 let _cache = { sig: null, plan: null };
 
@@ -38,11 +39,33 @@ let _cache = { sig: null, plan: null };
 // reflow can read live completion + readiness without changing any screen's
 // call signature. Future/past weeks are never touched — only the current week.
 // ---------------------------------------------------------------------------
-let _runtime = { sessions: {}, readiness: null };
+let _runtime = { sessions: {}, readiness: null, loadDecision: null };
 let _adaptCache = { key: null, phases: null };
 
 export function setRuntime(rt = {}) {
-  _runtime = { sessions: rt.sessions || {}, readiness: rt.readiness ?? null };
+  _runtime = {
+    sessions: rt.sessions || {},
+    readiness: rt.readiness ?? null,
+    loadDecision: rt.loadDecision ?? null
+  };
+}
+
+// The active load adaptation for the current week, for the UI banner. Returns
+// null when there's no live adaptation. `reverted` = the user pinned this week to
+// the plan (load ignored; readiness still applies).
+export function currentAdaptation() {
+  const cw = currentWeekNumber();
+  if (cw == null) return null;
+  const profile = Database.services.getProfile() || {};
+  const reverted = !!(profile.load_overrides && profile.load_overrides[cw] === 'plan');
+  const d = _runtime.loadDecision;
+  if (reverted) {
+    return (d && d.action && d.action !== 'none')
+      ? { action: 'reverted', reason: 'Following the plan (you reverted this week)', reverted: true, week: cw }
+      : null;
+  }
+  if (!d || !d.action || d.action === 'none') return null;
+  return { action: d.action, reason: d.reason, reverted: false, week: cw };
 }
 
 // Tired → trim the remaining volume; recovered → fill it in full.
@@ -84,7 +107,7 @@ function weekTarget(phase, week, gctx) {
  * by readiness. Completed sessions (and all non-gym sessions) are returned
  * untouched, in place — so completion keys (p{phase}_wk{week}_s{idx}) stay valid.
  */
-function reflowWeek(phase, week, sessionsState, readiness, profile, overrides = {}) {
+function reflowWeek(phase, week, sessionsState, readiness, profile, overrides = {}, loadDecision = null) {
   const gym = [];
   week.sessions.forEach((s, i) => { if (sessionDiscipline(s) === 'gym') gym.push({ i, s }); });
   if (!gym.length) return week;
@@ -120,9 +143,9 @@ function reflowWeek(phase, week, sessionsState, readiness, profile, overrides = 
   const remaining = {};
   for (const m of MUSCLE_GROUPS) remaining[m] = Math.max(0, (target[m] || 0) - (done[m] || 0));
 
-  // Readiness trims the remaining sessions by SHORTENING them (fewer sets fit),
-  // not by lowering the target.
-  const mult = readinessMult(readiness);
+  // Readiness trims remaining sessions; training load (acute:chronic) trims them
+  // further (ease/deload) or restores them (nudge_up). Combined conservatively.
+  const mult = combinedMultiplier(readinessMult(readiness), loadDecision || { action: 'none', multiplier: 1 });
   let specs = [];
   if (incomplete.length) {
     const slots = incomplete.map(() => ({ minutes: Math.round(gctx.minutes * mult), equip: gctx.access }));
@@ -171,16 +194,19 @@ function adaptedPhases() {
     .filter(k => k.includes(`_wk${cw}_`))
     .map(k => `${k}@${overrides[k].createdAt || 0}`)
     .sort().join(',');
-  const key = `${_cache.sig}|${cw}|${stateSig}|${band}|${ovSig}`;
+  const profile = Database.services.getProfile() || {};
+  const reverted = !!(profile.load_overrides && profile.load_overrides[cw] === 'plan');
+  const decision = reverted ? null : _runtime.loadDecision;
+  const loadBand = decision && decision.action ? decision.action : 'none';
+  const key = `${_cache.sig}|${cw}|${stateSig}|${band}|${ovSig}|${loadBand}|${reverted ? 'r' : ''}`;
   if (_adaptCache.key === key) return _adaptCache.phases;
 
-  const profile = Database.services.getProfile() || {};
   const phases = g.phases.map(phase => {
     if (!phase.weeks || !phase.weeks.some(w => w.num === cw)) return phase;
     return {
       ...phase,
       weeks: phase.weeks.map(w =>
-        w.num === cw ? reflowWeek(phase, w, _runtime.sessions, _runtime.readiness, profile, overrides) : w)
+        w.num === cw ? reflowWeek(phase, w, _runtime.sessions, _runtime.readiness, profile, overrides, decision) : w)
     };
   });
   _adaptCache = { key, phases };
@@ -544,4 +570,4 @@ function buildWhy(session, bonus, minutes) {
   return `${lead} — it leans into ${muscles}. Fitted to ~${Math.round(minutes / 5) * 5} min with the kit you picked, at your usual rep ranges and RPE.`;
 }
 
-export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO, setRuntime, weekVolumeProgressFor, currentWeekVolumeProgress, generateTrainNow, sessionDiscipline };
+export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO, setRuntime, currentAdaptation, weekVolumeProgressFor, currentWeekVolumeProgress, generateTrainNow, sessionDiscipline };
