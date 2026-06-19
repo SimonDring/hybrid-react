@@ -368,7 +368,7 @@ export function localISO(d) {
 }
 
 // Which discipline a session belongs to, from its item tags (drives the colour).
-function sessionDiscipline(s) {
+export function sessionDiscipline(s) {
   const tags = new Set((s.items || []).map(it => it.tag).filter(Boolean));
   if (tags.has('swim')) return 'swim';
   if (tags.has('cycle')) return tags.has('run') ? 'brick' : 'cycle';
@@ -544,4 +544,4 @@ function buildWhy(session, bonus, minutes) {
   return `${lead} — it leans into ${muscles}. Fitted to ~${Math.round(minutes / 5) * 5} min with the kit you picked, at your usual rep ranges and RPE.`;
 }
 
-export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO, setRuntime, weekVolumeProgressFor, currentWeekVolumeProgress, generateTrainNow };
+export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO, setRuntime, weekVolumeProgressFor, currentWeekVolumeProgress, generateTrainNow, sessionDiscipline };

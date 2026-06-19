@@ -12,11 +12,21 @@
 
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
-import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, syncStrava, checkConnections, setDevicePrimary } from '../lib/SyncService.js';
+import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
 import { nextE1RM } from '../lib/liftProgression.js';
 import { computeReadiness } from '../lib/Readiness.js';
-import { setRuntime } from '../lib/PlanService.js';
+import { setRuntime, sessionDiscipline, getWeek } from '../lib/PlanService.js';
 import { setOverride, clearOverride } from '../lib/sessionOverrides.js';
+import { matchWorkoutToSession, sessionPhysiologyFromWorkout } from '../lib/sessionWorkoutMatch.js';
+
+// Resolve the plan-template session object (with .items) for a template_ref.
+// Returns {} (→ sessionDiscipline 'gym') when it can't be resolved.
+function planSessionFor(templateRef) {
+  const m = /^p(\d+)_wk(\d+)_s(\d+)$/.exec(templateRef || '');
+  if (!m) return {};
+  const week = getWeek(Number(m[1]), Number(m[2]));
+  return (week && week.sessions && week.sessions[Number(m[3])]) || {};
+}
 
 // Read the current state from localStorage into a React-friendly shape.
 // All reads go through here — screens never call Database directly.
@@ -39,7 +49,9 @@ function buildView() {
     const log = s.status === 'completed'
       ? Database.tables.sessionLogs.find(l => l.session_id === s.id)
       : null;
+    const linkedWorkout = Database.tables.workouts.all().find(w => w.session_id === s.id) || null;
     sessions[s.template_ref] = {
+      id: s.id,                 // session DB id — needed by the UI to link/unlink
       completed: s.status === 'completed',
       skipped: s.status === 'skipped',
       started: !!s.started_at && s.status !== 'completed' && s.status !== 'skipped',
@@ -48,7 +60,13 @@ function buildView() {
       quality: log ? log.quality : null,
       energy: log ? log.energy : null,
       recovery: log ? log.recovery : null,
-      notes: log ? (log.notes || '') : ''
+      notes: log ? (log.notes || '') : '',
+      avgHr: log ? (log.avg_hr ?? null) : null,
+      maxHr: log ? (log.max_hr ?? null) : null,
+      calories: log ? (log.calories ?? null) : null,
+      hrSource: log ? (log.hr_source ?? null) : null,
+      hrZones: log ? (log.hr_zones ?? null) : null,
+      linkedWorkout
     };
   });
 
@@ -61,6 +79,7 @@ function buildView() {
   return {
     logs,
     sessions,
+    workouts:     Database.tables.workouts.all(),
     reassess:     Database.services.getReassessAnswers(),
     profile:      Database.services.getProfile(),
     injuries:     Database.services.listInjuries(),
@@ -95,6 +114,11 @@ export const useTrainingStore = create((set) => ({
     }
     if (connections.some(c => c.provider === 'strava')) {
       useTrainingStore.getState().syncStrava();
+    }
+    // Link cardio workouts to sessions, then enrich HR for windowed sessions.
+    await useTrainingStore.getState().autoLinkWorkouts();
+    if (connections.some(c => c.provider === 'fitbit')) {
+      useTrainingStore.getState().enrichSessions();
     }
     return result;
   },
@@ -152,6 +176,50 @@ export const useTrainingStore = create((set) => ({
       set({ stravaSyncing: false, stravaError: result?.reason || 'Sync failed' });
     }
     return result;
+  },
+
+  // Auto-link each completed cardio session to its best-matching Strava workout.
+  async autoLinkWorkouts() {
+    const workouts = Database.tables.workouts.all().filter(w => !w.session_id);
+    if (!workouts.length) { return; }
+    let linkedAny = false;
+    for (const s of Database.tables.sessions.all()) {
+      if (s.status !== 'completed' || !s.started_at || !s.completed_at) continue;
+      if (Database.tables.workouts.all().some(w => w.session_id === s.id)) continue; // already linked
+      const discipline = sessionDiscipline(planSessionFor(s.template_ref));
+      const match = matchWorkoutToSession({ startedAt: s.started_at, completedAt: s.completed_at, discipline }, workouts);
+      if (!match) continue;
+      const log = Database.tables.sessionLogs.find(l => l.session_id === s.id);
+      if (!log) continue;
+      await Sync.linkWorkout(match.id, s.id, sessionPhysiologyFromWorkout(match));
+      const mi = workouts.indexOf(match);
+      if (mi >= 0) workouts.splice(mi, 1);   // a workout links to at most one session per pass
+      linkedAny = true;
+    }
+    if (linkedAny) { await pullFromSupabase(); set(buildView()); }
+  },
+
+  async enrichSessions() {
+    const result = await enrichSessions();
+    if (result?.ok) { await pullFromSupabase(); set(buildView()); }
+    return result;
+  },
+
+  async linkWorkoutToSession(workoutId, sessionId) {
+    const w = Database.tables.workouts.get(workoutId);
+    if (!w) return;
+    if (!Database.tables.sessionLogs.find(l => l.session_id === sessionId)) return;
+    await Sync.linkWorkout(workoutId, sessionId, sessionPhysiologyFromWorkout(w));
+    await pullFromSupabase(); set(buildView());
+  },
+
+  async unlinkWorkoutFromSession(workoutId, sessionId) {
+    await Sync.unlinkWorkout(workoutId, sessionId);
+    await pullFromSupabase();
+    // Instant unlinked feedback now; enrichSessions refills band HR async (it
+    // pulls + rebuilds the view itself on completion). Two-step update is intended.
+    useTrainingStore.getState().enrichSessions(); // re-fill from the band
+    set(buildView());
   },
 
   // ----- Session lifecycle -----
