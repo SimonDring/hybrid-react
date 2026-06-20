@@ -1,8 +1,8 @@
 /**
- * Plan (Program) — one low-click surface for the whole block. The calendar is the
- * fast path (≤2 taps to any session); below it a horizontal WEEK STEPPER lets you
- * scan every week across phases and tap one to see its sessions inline — no more
- * Plan → Phase → Week page drilling. A session is one tap from here.
+ * Plan (Program) — one low-click surface for browsing the whole block, on one
+ * screen. A horizontal WEEK STEPPER (current week pinned) selects a week; its
+ * sessions show inline below — a session is one tap from here. The day-by-day
+ * calendar lives on Today (Home), so it isn't duplicated here.
  */
 
 import { useState, useRef, useEffect } from 'react';
@@ -10,18 +10,15 @@ import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
 import * as Utils from '../lib/Utils.js';
-import TrainingCalendar from '../components/TrainingCalendar.jsx';
 import SessionRow from '../components/ui/SessionRow.jsx';
 
 export default function PlanScreen() {
   const navigate = useNavigate();
   const sessions = useTrainingStore(s => s.sessions);
   const phases = Plan.getPhases();
-  const hasCalendar = !!Plan.getStartDate();
   const totalWeeks = phases.reduce((m, p) => Math.max(m, p.weekEnd || 0), 0);
   const currentWeek = Plan.currentWeekNumber();
 
-  // Flatten weeks across phases, carrying phase context.
   const weeks = [];
   phases.forEach(p => (p.weeks || []).forEach(w => weeks.push({ ...w, phaseId: p.id, phaseTitle: p.title })));
 
@@ -31,8 +28,6 @@ export default function PlanScreen() {
   useEffect(() => {
     if (selRef.current) selRef.current.scrollIntoView({ inline: 'center', block: 'nearest' });
   }, []);
-
-  const openSession = (s) => navigate(`/phases/${s.phaseId}/weeks/${s.weekNum}/sessions/${s.idx}`);
 
   const weekProgress = (w) => {
     const total = w.sessions.length;
@@ -49,16 +44,12 @@ export default function PlanScreen() {
       <h1 className="h1">Your plan</h1>
       <p className="sub">
         {totalWeeks
-          ? `A ${totalWeeks}-week block${currentWeek ? ` · week ${currentWeek} now` : ''}, periodised and adapting as you go.`
+          ? `A ${totalWeeks}-week block${currentWeek ? ` · week ${currentWeek} now` : ''} — tap a week to see its sessions.`
           : 'Your training block.'}
       </p>
 
-      {hasCalendar && <TrainingCalendar sessions={sessions} onOpen={openSession} />}
-
       {weeks.length > 0 && (
         <>
-          <h2 className="h3" style={{ marginTop: 20 }}>The block</h2>
-
           <div className="wk-stepper">
             {weeks.map(w => {
               const { done, total } = weekProgress(w);

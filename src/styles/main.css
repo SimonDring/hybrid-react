@@ -3516,10 +3516,10 @@ button.today-hero { width: 100%; display: block; text-align: left; border: none;
 .wk-prog-bar { flex: 1; height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
 .wk-prog-bar span { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
 .wk-prog-label { font-size: 11px; color: var(--txt-muted); white-space: nowrap; }
-.wk-sessions { display: flex; flex-direction: column; gap: 8px; }
+.wk-sessions { display: flex; flex-direction: column; gap: 7px; }
 
 .session-row { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
-  background: var(--bg-surface-2); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 11px 13px; }
+  background: var(--bg-surface-2); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 9px 13px; }
 .session-row.done { opacity: 0.6; }
 .sr-accent { width: 3px; align-self: stretch; border-radius: 2px; flex-shrink: 0; }
 .sr-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
