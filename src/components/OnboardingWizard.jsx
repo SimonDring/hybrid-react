@@ -73,8 +73,8 @@ function Chip({ selected, onClick, label, hint, emoji, center }) {
       width: '100%', height: '100%', boxSizing: 'border-box',
       minHeight: emoji ? 62 : (hint ? 58 : 46),
       padding: emoji ? '12px 14px' : '10px 12px', borderRadius: 12, cursor: 'pointer', fontFamily: 'inherit',
-      border: `1.5px solid ${selected ? 'var(--rust)' : 'var(--hairline)'}`,
-      background: selected ? 'rgba(176,74,46,0.08)' : 'var(--bg-surface)', color: 'var(--txt-strong)',
+      border: `1.5px solid ${selected ? 'var(--accent)' : 'var(--hairline)'}`,
+      background: selected ? 'rgba(111,211,196,0.12)' : 'var(--bg-surface)', color: 'var(--txt-strong)',
       transition: 'border-color 0.12s, background 0.12s',
       display: 'flex', alignItems: 'center', justifyContent: center && !emoji ? 'center' : 'flex-start', gap: emoji ? 12 : 0,
       textAlign: center && !emoji ? 'center' : 'left'
@@ -136,7 +136,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     { hero: true, valid: () => true,
       render: () => (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: '0 8px' }}>
-          <div style={{ width: 84, height: 84, borderRadius: 24, marginBottom: 26, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 38, background: 'linear-gradient(145deg, var(--rust), #7d2f1c)', boxShadow: '0 12px 34px rgba(176,74,46,0.34)' }}>🏋️</div>
+          <div style={{ width: 84, height: 84, borderRadius: 24, marginBottom: 26, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 38, background: 'linear-gradient(145deg, #6FD3C4, #3BA89A)', boxShadow: '0 12px 34px rgba(111,211,196,0.30)' }}>🏋️</div>
           <h1 style={{ fontFamily: 'var(--serif, Georgia, serif)', fontSize: 34, fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--txt-strong)', margin: '0 0 10px' }}>Welcome</h1>
           <p style={{ fontSize: 16, fontWeight: 600, color: 'var(--txt-strong)', margin: '0 0 8px' }}>Strength training, built around you.</p>
           <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--txt-muted)', maxWidth: 320, margin: 0 }}>
@@ -286,7 +286,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
       {devTools && (
         <div style={{ display: 'flex', gap: 6, overflowX: 'auto', padding: '4px 2px', marginBottom: 6 }}>
           {steps.map((s, i) => (
-            <button key={i} onClick={() => setStep(i)} title={s.title || 'Welcome'} style={{ flexShrink: 0, padding: '5px 9px', borderRadius: 8, fontSize: 11, fontWeight: 700, border: '1px solid var(--hairline)', cursor: 'pointer', fontFamily: 'inherit', background: i === safeStep ? 'var(--rust)' : 'var(--bg-surface-2)', color: i === safeStep ? '#fff' : 'var(--txt-muted)', whiteSpace: 'nowrap' }}>{i + 1}. {s.title || 'Welcome'}</button>
+            <button key={i} onClick={() => setStep(i)} title={s.title || 'Welcome'} style={{ flexShrink: 0, padding: '5px 9px', borderRadius: 8, fontSize: 11, fontWeight: 700, border: '1px solid var(--hairline)', cursor: 'pointer', fontFamily: 'inherit', background: i === safeStep ? 'var(--accent)' : 'var(--bg-surface-2)', color: i === safeStep ? 'var(--on-action)' : 'var(--txt-muted)', whiteSpace: 'nowrap' }}>{i + 1}. {s.title || 'Welcome'}</button>
           ))}
         </div>
       )}
@@ -294,7 +294,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
       {!isHero && (
         <div style={{ flexShrink: 0, padding: `${devTools ? 4 : 22}px ${PAD}px 0` }}>
           <div style={{ display: 'flex', gap: 5, marginBottom: 18 }}>
-            {steps.map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= safeStep ? 'var(--rust)' : 'var(--bg-surface-2)', transition: 'background 0.2s' }} />)}
+            {steps.map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= safeStep ? 'var(--accent)' : 'var(--bg-surface-2)', transition: 'background 0.2s' }} />)}
           </div>
           <h1 className="h1" style={{ marginBottom: 6 }}>{cur.title}</h1>
           <p className="sub" style={{ marginBottom: 16 }}>{cur.subtitle}</p>
@@ -307,7 +307,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
 
       <div style={{ flexShrink: 0, display: 'flex', gap: 10, padding: `12px ${PAD}px calc(14px + env(safe-area-inset-bottom))`, borderTop: isHero ? 'none' : '1px solid var(--hairline)', background: 'var(--bg-surface)' }}>
         {safeStep > 0 && !isHero && <button onClick={back} disabled={saving} style={{ padding: '14px 20px', borderRadius: 12, border: '1px solid var(--hairline)', background: 'transparent', color: 'var(--txt-muted)', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Back</button>}
-        <button onClick={isLast ? finish : next} disabled={!canNext || saving} style={{ flex: 1, padding: 15, borderRadius: 12, border: 'none', background: (canNext && !saving) ? 'var(--rust)' : 'var(--bg-surface-2)', color: (canNext && !saving) ? '#fff' : 'var(--txt-muted)', fontSize: 15, fontWeight: 600, cursor: (canNext && !saving) ? 'pointer' : 'default', fontFamily: 'inherit' }}>
+        <button onClick={isLast ? finish : next} disabled={!canNext || saving} style={{ flex: 1, padding: 15, borderRadius: 12, border: 'none', background: (canNext && !saving) ? 'var(--accent)' : 'var(--bg-surface-2)', color: (canNext && !saving) ? 'var(--on-action)' : 'var(--txt-muted)', fontSize: 15, fontWeight: 600, cursor: (canNext && !saving) ? 'pointer' : 'default', fontFamily: 'inherit' }}>
           {saving ? 'Setting up…' : isLast ? completeLabel : isHero ? 'Get started' : 'Continue'}
         </button>
       </div>

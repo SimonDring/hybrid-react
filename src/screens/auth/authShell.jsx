@@ -13,8 +13,8 @@ export const INPUT = {
 
 export const BTN_PRIMARY = (active) => ({
   width: '100%', padding: 15, borderRadius: 12, border: 'none',
-  background: active ? 'var(--rust)' : 'var(--bg-surface-2)',
-  color: active ? '#fff' : 'var(--txt-muted)',
+  background: active ? 'var(--accent)' : 'var(--bg-surface-2)',
+  color: active ? 'var(--on-action)' : 'var(--txt-muted)',
   fontSize: 15, fontWeight: 600, cursor: active ? 'pointer' : 'default',
   fontFamily: 'inherit', transition: 'background 0.15s'
 });
@@ -35,7 +35,7 @@ export const BTN_SOCIAL = {
 };
 
 export const LINK_BTN = {
-  background: 'none', border: 'none', color: 'var(--rust)', fontSize: 13,
+  background: 'none', border: 'none', color: 'var(--accent)', fontSize: 13,
   fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', padding: 0
 };
 
@@ -53,7 +53,7 @@ export function Shell({ heading, sub, children }) {
       justifyContent: 'center', padding: '32px 24px', maxWidth: 440, margin: '0 auto'
     }}>
       <div style={{ marginBottom: 28 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: 10 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--txt-muted)', marginBottom: 10 }}>
           Hybrid Training
         </div>
         <h1 className="h1" style={{ marginBottom: 8 }}>{heading}</h1>
