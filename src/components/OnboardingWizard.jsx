@@ -52,11 +52,25 @@ const DAYS = [
   { key: 'thu', label: 'Thu' }, { key: 'fri', label: 'Fri' }, { key: 'sat', label: 'Sat' }, { key: 'sun', label: 'Sun' }
 ];
 const SESSION_LENGTHS = [20, 30, 45, 60, 75, 90];
-const STRENGTH_ACCESS = [
-  { key: 'full_gym', label: 'Full gym', hint: 'Barbells, machines, cables' },
-  { key: 'home_weights', label: 'Home / free weights', hint: 'Dumbbells, maybe a barbell' },
-  { key: 'none', label: 'Bodyweight only', hint: 'No equipment' }
+// Quick presets that fill the equipment set in one tap…
+const EQUIPMENT_PRESETS = [
+  { key: 'full_gym', label: 'Full gym', hint: 'Barbells, machines, cables', equip: ['barbell', 'dumbbell', 'machine', 'cable', 'band', 'kettlebell', 'bodyweight'] },
+  { key: 'home_weights', label: 'Home / free weights', hint: 'Dumbbells, maybe a barbell', equip: ['barbell', 'dumbbell', 'kettlebell', 'band', 'bodyweight'] },
+  { key: 'dumbbells', label: 'Dumbbells only', hint: 'A pair of dumbbells', equip: ['dumbbell', 'bodyweight'] },
+  { key: 'bands', label: 'Bands only', hint: 'Resistance bands', equip: ['band', 'bodyweight'] },
+  { key: 'bodyweight', label: 'Bodyweight only', hint: 'No equipment', equip: ['bodyweight'] }
 ];
+// …or fine-tune the exact kit.
+const EQUIPMENT_ITEMS = [
+  { key: 'barbell', label: 'Barbell' }, { key: 'dumbbell', label: 'Dumbbells' },
+  { key: 'machine', label: 'Machines' }, { key: 'cable', label: 'Cables' },
+  { key: 'band', label: 'Bands' }, { key: 'kettlebell', label: 'Kettlebell' },
+  { key: 'bodyweight', label: 'Bodyweight' }
+];
+const sameSet = (a = [], b = []) => a.length === b.length && a.every(x => b.includes(x));
+const equipLabel = (equip = []) =>
+  EQUIPMENT_PRESETS.find(p => sameSet(equip, p.equip))?.label
+  || (equip.length ? equip.map(k => EQUIPMENT_ITEMS.find(i => i.key === k)?.label || k).join(', ') : '—');
 
 // ---- shared styles ----
 const INPUT = {
@@ -130,7 +144,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
 
   const isBuild = a.goalType === 'build';
   const isSport = a.goalType === 'sport';
-  const hasBarbell = a.strengthAccess === 'full_gym' || a.strengthAccess === 'home_weights';
+  const hasBarbell = (a.equipment || []).includes('barbell');
 
   const steps = [
     { hero: true, valid: () => true,
@@ -215,12 +229,21 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     { title: 'Your lifting experience', subtitle: 'How much strength training have you done?', valid: () => !!a.experienceLevel,
       render: () => <OptionGrid cols={2} fill>{LEVELS.map(l => <Chip key={l.key} center selected={a.experienceLevel === l.key} onClick={() => set({ experienceLevel: l.key })} label={l.label} hint={l.hint} />)}</OptionGrid> },
 
-    { title: 'How much can you train?', subtitle: "Be realistic — a plan you stick to beats an ideal one you can't.", valid: () => a.daysPerWeek != null && !!a.strengthAccess,
+    { title: 'How much can you train?', subtitle: "Be realistic — a plan you stick to beats an ideal one you can't.", valid: () => a.daysPerWeek != null && (a.equipment || []).length > 0,
       render: () => (
         <div style={{ display: 'grid', gap: 20 }}>
           <div><label style={FIELD_LABEL}>Days per week</label><OptionGrid cols={4}>{[1, 2, 3, 4, 5, 6, 7].map(n => <Chip key={n} center selected={a.daysPerWeek === n} onClick={() => set({ daysPerWeek: n })} label={String(n)} />)}</OptionGrid></div>
           <div><label style={FIELD_LABEL}>Typical session length</label><OptionGrid cols={3}>{SESSION_LENGTHS.map(m => <Chip key={m} center selected={a.sessionMinutes === m} onClick={() => set({ sessionMinutes: m })} label={m === 90 ? '90+ min' : `${m} min`} />)}</OptionGrid></div>
-          <div><label style={FIELD_LABEL}>Equipment</label><OptionGrid cols={1} gap={6}>{STRENGTH_ACCESS.map(o => <Chip key={o.key} selected={a.strengthAccess === o.key} onClick={() => set({ strengthAccess: o.key })} label={o.label} hint={o.hint} />)}</OptionGrid></div>
+          <div>
+            <label style={FIELD_LABEL}>Equipment</label>
+            <OptionGrid cols={1} gap={6}>
+              {EQUIPMENT_PRESETS.map(o => <Chip key={o.key} selected={sameSet(a.equipment, o.equip)} onClick={() => set({ equipment: [...o.equip] })} label={o.label} hint={o.hint} />)}
+            </OptionGrid>
+            <div style={{ ...HINT, marginTop: 8 }}>Or pick exactly what you've got:</div>
+            <OptionGrid cols={4}>
+              {EQUIPMENT_ITEMS.map(it => <Chip key={it.key} center selected={(a.equipment || []).includes(it.key)} onClick={() => toggle(it.key, 'equipment')} label={it.label} />)}
+            </OptionGrid>
+          </div>
           <div><label style={FIELD_LABEL}>Which days suit you? (optional)</label><OptionGrid cols={4}>{DAYS.map(d => <Chip key={d.key} center selected={a.days.includes(d.key)} onClick={() => toggle(d.key, 'days')} label={d.label} />)}</OptionGrid></div>
         </div>
       ) },
@@ -258,7 +281,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             <SummaryRow label="Experience" value={LEVELS.find(l => l.key === a.experienceLevel)?.label || '—'} />
             {liftBits.length > 0 && <SummaryRow label="Maxes" value={liftBits.join(' · ') + ' kg'} />}
             <SummaryRow label="Week" value={a.daysPerWeek ? `${a.daysPerWeek} days · ${a.sessionMinutes === 90 ? '90+' : a.sessionMinutes} min` : '—'} />
-            <SummaryRow label="Equipment" value={STRENGTH_ACCESS.find(o => o.key === a.strengthAccess)?.label || '—'} />
+            <SummaryRow label="Equipment" value={equipLabel(a.equipment)} />
           </div>
         );
       } }

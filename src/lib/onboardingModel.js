@@ -31,16 +31,29 @@ export const BLANK_ANSWERS = {
   experienceLevel: 'intermediate',
   lifts: { squat: '', bench: '', deadlift: '' },
   daysPerWeek: null, sessionMinutes: 60, days: [],
-  strengthAccess: '',           // 'full_gym' | 'home_weights' | 'none'
+  strengthAccess: '',           // legacy access tier — still accepted, superseded by `equipment`
+  equipment: [],                // equipment keys: barbell/dumbbell/machine/cable/band/kettlebell/bodyweight
   injuries: [], notes: ''
+};
+
+// Legacy access tiers → equipment sets (kept so older answer seeds + saved
+// profiles still resolve). Mirrors availableEquip() in data/strengthExercises.js.
+const TIER_EQUIP = {
+  full_gym: ['barbell', 'dumbbell', 'machine', 'cable', 'band', 'kettlebell', 'bodyweight'],
+  home_weights: ['barbell', 'dumbbell', 'kettlebell', 'band', 'bodyweight'],
+  none: ['bodyweight', 'band']
 };
 
 export function answersToProfilePatch(a) {
   const today = new Date().toISOString().slice(0, 10);
   const isBuild = a.goalType === 'build';
   const isSport = a.goalType === 'sport';
-  const hasBarbell = a.strengthAccess === 'full_gym' || a.strengthAccess === 'home_weights';
-  const access = a.strengthAccess ? [a.strengthAccess] : [];
+  // Prefer the granular equipment array; fall back to the legacy tier for older seeds.
+  const equipment = (a.equipment && a.equipment.length)
+    ? a.equipment
+    : (a.strengthAccess ? (TIER_EQUIP[a.strengthAccess] || []) : []);
+  const hasBarbell = equipment.includes('barbell');
+  const access = equipment;
 
   return {
     plan_start_date: today,
