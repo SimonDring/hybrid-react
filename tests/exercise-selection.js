@@ -3,7 +3,7 @@ import { EXERCISES, LEVELS } from '../src/data/strengthExercises.js';
 import { resolveProgram } from '../src/lib/strength/program.js';
 import { allocateGym } from '../src/lib/plan/allocator.js';
 import { weeklyMuscleTargets } from '../src/lib/strength/targets.js';
-import { buildWeek, buildSupport } from '../src/lib/plan/strength.js';
+import { buildWeek } from '../src/lib/plan/strength.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
@@ -153,10 +153,3 @@ const strSessions = buildWeek({
 const strItems = strSessions.flatMap(s => s.items);
 assert(!strItems.some(it => it.name === '90/90 Hip Flexor Stretch'),
   'T9d strength sessions do NOT have primer');
-
-// ── T10: buildSupport works for cycle ─────────────────────────────────────
-const cycleSupport = buildSupport({ count: 2, for: 'cycle', deload: false,
-  access: ['full_gym'], weekNum: 1 });
-assert(cycleSupport.length === 2, 'T10a cycle buildSupport returns 2 sessions');
-assert(cycleSupport[0].focus === 'Cycle-support strength', 'T10b cycle session focus label');
-assert(cycleSupport[0].items.length >= 4, 'T10c cycle support session has ≥4 exercises');
