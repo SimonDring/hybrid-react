@@ -43,15 +43,23 @@ const FUNCTIONAL_PRIMER = [
   { num: 'P4', name: 'Cat-Camel + Thoracic Rotation',  sets: '2 × 8',       rpe: 'Easy',  tag: 'mobility', note: 'Thoracic rotation each side',             restSec: 0  }
 ];
 
+// Functional sessions open with the 4-exercise activation primer (~7 min); deduct
+// that from the slot budget so the allocator doesn't overfill. These two helpers
+// are shared with the PlanService reflow so the baseline plan and the adapted
+// (actually-trained) weeks stay identical in style — no drift.
+export function functionalSlotMinutes(style, minutes) {
+  return style === 'functional' ? Math.max(15, (minutes || 60) - 7) : (minutes || 60);
+}
+export function applyFunctionalPrimer(sessions, style) {
+  if (style !== 'functional') return sessions;
+  return sessions.map(s => ({ ...s, items: [...FUNCTIONAL_PRIMER, ...s.items] }));
+}
+
 export function buildWeek(ctx = {}) {
   const gymDays = Math.max(1, Math.min(7, ctx.gymDays || 3));
   const style = ctx.style || 'functional';
   const minutes = ctx.minutes || 60;
   const deload = !!ctx.deload;
-
-  // Functional sessions open with the 4-exercise activation primer (~7 min).
-  // Deduct that time from the slot budget so the allocator doesn't overfill.
-  const slotMinutes = style === 'functional' ? Math.max(15, minutes - 7) : minutes;
 
   const targets = weeklyMuscleTargets({
     style, intent: ctx.intent, level: ctx.level,
@@ -59,7 +67,7 @@ export function buildWeek(ctx = {}) {
     emphasis: ctx.emphasis, volumeScalar: ctx.volumeScalar
   });
 
-  const slots = Array.from({ length: gymDays }, () => ({ minutes: slotMinutes, equip: ctx.access || [] }));
+  const slots = Array.from({ length: gymDays }, () => ({ minutes: functionalSlotMinutes(style, minutes), equip: ctx.access || [] }));
 
   const sessions = allocateGym({
     targets, slots,
@@ -70,12 +78,7 @@ export function buildWeek(ctx = {}) {
     }
   });
 
-  if (style !== 'functional') return sessions;
-
-  return sessions.map(session => ({
-    ...session,
-    items: [...FUNCTIONAL_PRIMER, ...session.items]
-  }));
+  return applyFunctionalPrimer(sessions, style);
 }
 
 // ---- helpers shared by the supplemental builder below ----

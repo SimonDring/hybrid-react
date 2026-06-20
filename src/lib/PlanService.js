@@ -23,6 +23,8 @@ import * as Legacy from '../data/Plan.js';
 import { generatePlan } from './PlanGenerator.js';
 import { weeklyMuscleTargets } from './strength/targets.js';
 import { allocateGym } from './plan/allocator.js';
+import { functionalSlotMinutes, applyFunctionalPrimer } from './plan/strength.js';
+import { resolveProgram } from './strength/program.js';
 import { countWeeklyVolume } from './plan/volume.js';
 import { distributeAcrossSlots, WINDOW_DAYS } from './plan/rollingVolume.js';
 import { resolveLifts } from './liftProgression.js';
@@ -80,12 +82,20 @@ function readinessMult(score) {
 
 // Gym programming context derived from the profile (mirrors PlanGenerator).
 function gymCtx(profile) {
-  const style = profile.strength_style
-    || ((profile.focus || []).includes('strength_physique') ? 'bodybuilding' : 'functional');
+  // The goal's full programming (style, per-muscle emphasis, volume scalar,
+  // exercise priority) — the SAME source the baseline generator uses, so the
+  // reflowed weeks the athlete actually trains carry the goal tuning, not a
+  // generic strength session. For sport goals program.style is 'sport'.
+  const program = resolveProgram(profile);
   const e = profile.experience || {};
   const level = e.gym || e.strength_functional || e.strength_physique || 'beginner';
   const minutes = (profile.availability && profile.availability.session_minutes) || 60;
-  return { style, level, minutes, access: profile.access || [], sex: profile.sex, lifts: resolveLifts(profile) };
+  return {
+    style: program.style, level, minutes,
+    access: profile.access || [], sex: profile.sex, lifts: resolveLifts(profile),
+    emphasis: program.emphasis, volumeScalar: program.volumeScalar,
+    exercisePriority: program.exercisePriority || []
+  };
 }
 
 const intentOfTitle = (title) => {
@@ -114,7 +124,8 @@ function weekTarget(phase, week, gctx) {
   return weeklyMuscleTargets({
     style: gctx.style, intent: intentOfTitle(phase.title), level: gctx.level,
     weekInPhase: week.num - phase.weekStart + 1,
-    phaseWeeks: phase.weekEnd - phase.weekStart + 1, deload: !!week.deload
+    phaseWeeks: phase.weekEnd - phase.weekStart + 1, deload: !!week.deload,
+    emphasis: gctx.emphasis, volumeScalar: gctx.volumeScalar
   });
 }
 
@@ -240,13 +251,14 @@ function adaptedPhases() {
   slots.forEach((s, idx) => {
     const spec = allocateGym({
       targets: perSlot[idx],
-      slots: [{ minutes: Math.round(gctx.minutes * mult), equip: gctx.access }],
+      slots: [{ minutes: Math.round(functionalSlotMinutes(gctx.style, gctx.minutes) * mult), equip: gctx.access }],
       ctx: {
         style: gctx.style, intent: intentOfTitle(s.phase.title), deload: !!s.week.deload,
-        weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access
+        weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,
+        exercisePriority: gctx.exercisePriority
       }
     })[0];
-    if (spec) specByKey[s.key] = spec;
+    if (spec) specByKey[s.key] = applyFunctionalPrimer([spec], gctx.style)[0];
   });
 
   // ---- rebuild in place: horizon specs + train-now snapshots; everything else as-is ----
@@ -311,7 +323,11 @@ function profileSignature(profile) {
     ss: profile.strength_style, rg: profile.run_goal, sg: profile.swim_goal,
     pr: profile.primary, db: profile.doubles, lrd: profile.long_run_day,
     sup: profile.supplemental_strength, lf: profile.lifts, ll: profile.lift_log,
-    bw: profile.bodyweight_kg, sx: profile.sex
+    bw: profile.bodyweight_kg, sx: profile.sex,
+    // Goal fields that drive resolveProgram + resolvePeriodization — without these
+    // a goal change (build↔sport, run discipline, season/event) wouldn't regenerate.
+    gt: profile.goal_type, sp: profile.sport, si: profile.sport_intent,
+    rd: profile.run_discipline, ed: profile.event_date, sps: profile.sport_season
   });
 }
 
@@ -619,10 +635,10 @@ export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
 
   const specs = allocateGym({
     targets: fillTarget,
-    slots: [{ minutes, equip: equipArr }],
-    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr }
+    slots: [{ minutes: functionalSlotMinutes(gctx.style, minutes), equip: equipArr }],
+    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, exercisePriority: gctx.exercisePriority }
   });
-  const session = specs[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
+  const session = applyFunctionalPrimer(specs, gctx.style)[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
   return { session, why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };
 }
 
