@@ -32,7 +32,7 @@
  */
 
 import { EXERCISES, LEVELS, availableEquip } from '../../data/strengthExercises.js';
-import { PATTERN_CONTRIB, ISO_MUSCLE_GROUP, MUSCLE_LABELS } from '../../data/muscleVolume.js';
+import { PATTERN_CONTRIB, ISO_MUSCLE_GROUP, MUSCLE_LABELS, VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
 import { parseSetCount } from './volume.js';
 import { applyWeights } from '../liftProgression.js';
 
@@ -307,7 +307,16 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   // sessions (frequency). With 2+ slots, no slot gets more than ~half a muscle.
   const freq = Math.min(2, Math.max(1, slots.length));
   const perSlotCap = {};
-  for (const m in targets) perSlotCap[m] = Math.ceil((targets[m] || 0) / freq) || Infinity;
+  for (const m in targets) {
+    const even = Math.ceil((targets[m] || 0) / freq) || Infinity;
+    // Hard ceiling, independent of the caller: no single session may exceed ~half a
+    // muscle's weekly sweet-spot (MAV). This is the backstop that stops a catch-up
+    // from ever becoming a monster session even when only one slot is left to fill
+    // (freq = 1, so `even` would otherwise be the WHOLE remaining deficit).
+    const lm = VOLUME_LANDMARKS[m];
+    const ceiling = lm ? Math.ceil(lm.mav / 2) : Infinity;
+    perSlotCap[m] = Math.min(even, ceiling);
+  }
 
   const work = slots.map((slot, idx) => ({
     idx,
