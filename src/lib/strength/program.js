@@ -9,6 +9,12 @@
  *     Based on the strongest evidence for each goal (see design spec 2026-06-12).
  */
 
+import { deriveSeason } from '../plan/periodization.js';
+
+// Strength-support volume by season (× on the weekly target). In-season is a
+// maintenance dose (Rønnestad 2011, ~2×/wk); off-season builds a full base.
+const SEASON_VOLUME = { off: 1.0, pre: 0.85, in: 0.6, transition: 0.7 };
+
 const SPORT_EMPHASIS = {
   // Run disciplines — separate maps per science (design spec 2026-06-12-run-discipline)
   // Sprint: glutes/hamstrings for power + shoulders for arm drive (Hicks 2024 scoping review)
@@ -107,7 +113,9 @@ export function resolveProgram(profile = {}) {
 
   if (goalType === 'sport' && profile.sport) {
     const sport = profile.sport;
-    const season = profile.sport_season || 'off';
+    // Derive the season from event date / intent (an explicit override still wins).
+    // Previously read profile.sport_season, which onboarding never set → always 'off'.
+    const season = profile.sport_season || deriveSeason(profile) || 'off';
     // For run athletes, look up discipline-specific emphasis and priority
     const emphasisKey = (sport === 'run' && profile.run_discipline)
       ? `run_${profile.run_discipline}`
@@ -115,7 +123,7 @@ export function resolveProgram(profile = {}) {
     return {
       goalType: 'sport', style: 'sport',
       emphasis: SPORT_EMPHASIS[emphasisKey] || {},
-      volumeScalar: season === 'in' ? 0.6 : 1.0,
+      volumeScalar: SEASON_VOLUME[season] ?? 1.0,
       power: true, sport, season, level,
       exercisePriority: SPORT_PRIORITY[emphasisKey] || SPORT_PRIORITY[sport] || []
     };
