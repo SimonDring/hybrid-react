@@ -40,7 +40,7 @@ const labelStyle = {
 };
 const btnStyle = (bg) => ({
   width: '100%', padding: 13, borderRadius: 11, border: 'none', background: bg,
-  color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', marginBottom: 8
+  color: 'var(--on-action)', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', marginBottom: 8
 });
 const cancelStyle = {
   width: '100%', padding: 11, marginTop: 4, borderRadius: 11,
@@ -93,9 +93,9 @@ function SeverityPicker({ value, onChange }) {
         {[1, 2, 3, 4, 5].map(n => (
           <button key={n} onClick={() => onChange(n)} style={{
             flex: 1, padding: '8px 0', borderRadius: 8,
-            border: `1.5px solid ${value === n ? 'var(--rust)' : 'var(--hairline)'}`,
-            background: value === n ? 'var(--rust)' : 'transparent',
-            color: value === n ? '#fff' : 'var(--txt-muted)',
+            border: `1.5px solid ${value === n ? 'var(--accent)' : 'var(--hairline)'}`,
+            background: value === n ? 'rgba(111,211,196,0.15)' : 'transparent',
+            color: value === n ? 'var(--accent)' : 'var(--txt-muted)',
             fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit'
           }}>{n}</button>
         ))}
@@ -314,7 +314,7 @@ export default function Injuries() {
           </p>
           <div style={{ display: 'flex', gap: 10 }}>
             <button onClick={() => setT({ step: 2, physio_seen: true })} style={btnStyle('var(--moss)')}>Yes, I have</button>
-            <button onClick={() => setT({ step: 2, physio_seen: false })} style={btnStyle('var(--rust)')}>Not yet</button>
+            <button onClick={() => setT({ step: 2, physio_seen: false })} style={btnStyle('var(--accent)')}>Not yet</button>
           </div>
           <button onClick={() => setTriage(EMPTY_TRIAGE)} style={cancelStyle}>Cancel</button>
         </div>
@@ -401,7 +401,7 @@ export default function Injuries() {
           <StepHeader step={6} total={7} title="Severity & phase" onCancel={() => setTriage(EMPTY_TRIAGE)} onBack={() => setT({ step: 5 })} />
           <SeverityPicker value={triage.severity} onChange={v => setT({ severity: v })} />
           <PhasePicker value={triage.rehab_phase} onChange={v => setT({ rehab_phase: v })} />
-          <button onClick={() => setT({ step: 7 })} style={btnStyle('var(--rust)')}>Next</button>
+          <button onClick={() => setT({ step: 7 })} style={btnStyle('var(--accent)')}>Next</button>
         </div>
       );
     }
@@ -414,7 +414,7 @@ export default function Injuries() {
           <FormField label="Title / diagnosis name" value={triage.title} onChange={v => setT({ title: v })} placeholder="e.g. Patellar tendinopathy" />
           <FormField label="Date occurred" type="date" value={triage.date_occurred} onChange={v => setT({ date_occurred: v })} />
           <FormTextarea label="Physio's notes or protocol" value={triage.rehab_plan} onChange={v => setT({ rehab_plan: v })} placeholder="Exercises, frequency, restrictions…" />
-          <button onClick={submitInjury} style={btnStyle('var(--rust)')}>Save injury</button>
+          <button onClick={submitInjury} style={btnStyle('var(--accent)')}>Save injury</button>
         </div>
       );
     }
@@ -464,7 +464,7 @@ export default function Injuries() {
             )}
             <div style={{ display: 'flex', gap: 10, marginBottom: 12 }}>
               <button onClick={() => setT({ step: 'self_severity' })} style={btnStyle('var(--moss)')}>Yes, sounds right</button>
-              <button onClick={() => setT({ step: 'self_severity', diagnosis_key: null })} style={btnStyle('var(--rust)')}>Not sure / different</button>
+              <button onClick={() => setT({ step: 'self_severity', diagnosis_key: null })} style={btnStyle('var(--accent)')}>Not sure / different</button>
             </div>
           </div>
         );
@@ -508,7 +508,7 @@ export default function Injuries() {
           <SeverityPicker value={triage.severity} onChange={v => setT({ severity: v })} />
           <FormField label="Brief description (optional)" value={triage.description} onChange={v => setT({ description: v })} placeholder="How it happened, how it feels…" />
           <FormField label="Date occurred" type="date" value={triage.date_occurred} onChange={v => setT({ date_occurred: v })} />
-          <button onClick={submitInjury} style={btnStyle('var(--rust)')}>Save injury</button>
+          <button onClick={submitInjury} style={btnStyle('var(--accent)')}>Save injury</button>
         </div>
       );
     }
@@ -636,8 +636,8 @@ export default function Injuries() {
                   style={{ flex: 1, fontSize: 13, padding: '8px 10px', borderRadius: 8, border: '1px solid var(--hairline)', background: 'transparent', fontFamily: 'inherit', color: 'var(--txt-strong)' }}
                 />
                 <button onClick={() => submitLogEntry(inj.id)} style={{
-                  padding: '8px 12px', borderRadius: 8, border: 'none', background: 'var(--rust)',
-                  color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit'
+                  padding: '8px 12px', borderRadius: 8, border: 'none', background: 'var(--accent)',
+                  color: 'var(--on-action)', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit'
                 }}>Add</button>
               </div>
             </div>
@@ -682,7 +682,7 @@ export default function Injuries() {
       {triage.step === 0 && (
         <button onClick={() => setT({ step: 1 })} style={{
           width: '100%', padding: 12, borderRadius: 12, border: '1.5px dashed var(--hairline)',
-          background: 'transparent', fontSize: 14, fontWeight: 600, color: 'var(--rust)',
+          background: 'transparent', fontSize: 14, fontWeight: 600, color: 'var(--accent)',
           cursor: 'pointer', fontFamily: 'inherit', marginBottom: 20
         }}>+ Log an injury</button>
       )}

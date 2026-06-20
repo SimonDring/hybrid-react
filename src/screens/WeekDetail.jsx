@@ -17,15 +17,14 @@ function dayForSession(title) {
   return null;
 }
 
-// Derive a short type tag from the session title. Gym-relevant; mid-bright colours
-// that read on both light and dark surfaces.
+// Derive a short type tag from the session title. Uses Midnight design tokens.
 function sessionType(title) {
   const t = title.toLowerCase();
-  if (t.includes('deload')) return { label: 'DELOAD', color: '#c89a3a' };
-  if (t.includes('full body')) return { label: 'FULL', color: '#5a9bb5' };
-  if (t.includes('upper') || t.includes('push') || t.includes('pull')) return { label: 'UPPER', color: '#d98a3e' };
-  if (t.includes('lower') || t.includes('leg') || t.includes('quad') || t.includes('squat') || t.includes('posterior')) return { label: 'LOWER', color: '#d2603a' };
-  return { label: 'LIFT', color: '#cf8a4e' };
+  if (t.includes('deload')) return { label: 'DELOAD', color: '#F2C14E' };
+  if (t.includes('full body')) return { label: 'FULL', color: '#97A6FF' };
+  if (t.includes('upper') || t.includes('push') || t.includes('pull')) return { label: 'UPPER', color: '#B0BBFF' };
+  if (t.includes('lower') || t.includes('leg') || t.includes('quad') || t.includes('squat') || t.includes('posterior')) return { label: 'LOWER', color: '#7A8FEE' };
+  return { label: 'LIFT', color: '#97A6FF' };
 }
 
 export default function WeekDetail() {
@@ -63,7 +62,7 @@ export default function WeekDetail() {
           <div style={{
             width: `${Math.round(completedCount / week.sessions.length * 100)}%`,
             height: '100%',
-            background: 'var(--rust)',
+            background: 'var(--accent)',
             borderRadius: 2,
             transition: 'width 0.3s ease'
           }} />

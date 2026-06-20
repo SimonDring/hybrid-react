@@ -25,21 +25,21 @@ const KITS = [
 
 const chip = (active) => ({
   padding: '9px 14px', borderRadius: 10, fontSize: 14, fontWeight: 600, fontFamily: 'inherit',
-  cursor: 'pointer', border: '1px solid var(--hairline)',
-  background: active ? 'var(--rust)' : 'var(--bg-surface)', color: active ? '#fff' : 'var(--txt-strong)'
+  cursor: 'pointer', border: `1px solid ${active ? 'var(--accent)' : 'var(--hairline)'}`,
+  background: active ? 'rgba(111,211,196,0.15)' : 'var(--bg-surface)', color: active ? 'var(--accent)' : 'var(--txt-strong)'
 });
 
 function ItemRow({ item }) {
   const def = activityFor(item);
   return (
     <div style={{ display: 'flex', gap: 8, alignItems: 'baseline', flexWrap: 'wrap', fontSize: 13, padding: '8px 0', borderBottom: '1px solid var(--hairline)' }}>
-      <span style={{ fontWeight: 700, color: item.superset ? 'var(--rust)' : 'var(--txt-muted)', minWidth: 24 }}>{item.num}</span>
+      <span style={{ fontWeight: 700, color: item.superset ? 'var(--accent)' : 'var(--txt-muted)', minWidth: 24 }}>{item.num}</span>
       <span style={{ fontWeight: 600, color: 'var(--txt-strong)', flex: '1 1 130px' }}>{item.name}</span>
       {def.columns.map(col => {
         const v = col.accessor(item);
         if (v === '' || v == null || v === '—') return null;
         return (
-          <span key={col.key} style={{ color: col.accent ? 'var(--rust)' : 'var(--txt-body)', fontWeight: col.emphasis ? 700 : 400 }}>
+          <span key={col.key} style={{ color: col.accent ? 'var(--accent)' : 'var(--txt-body)', fontWeight: col.emphasis ? 700 : 400 }}>
             <span style={{ opacity: 0.5 }}>{col.label}:</span> {v}
           </span>
         );
@@ -114,7 +114,7 @@ export default function TrainNow() {
             </div>
             {result.session.items.some(it => it.superset) && (
               <p style={{ fontSize: 11.5, color: 'var(--txt-muted)', margin: '10px 0 0', lineHeight: 1.4 }}>
-                Items sharing a letter (A1 + A2) are <strong style={{ color: 'var(--rust)' }}>supersets</strong> — alternate with short rest.
+                Items sharing a letter (A1 + A2) are <strong style={{ color: 'var(--accent)' }}>supersets</strong> — alternate with short rest.
               </p>
             )}
           </div>

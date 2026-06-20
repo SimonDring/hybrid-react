@@ -163,7 +163,7 @@ function ProviderCard({
           </div>
           {!isFitbit && (
             <button onClick={onConnect} style={{
-              marginTop: 6, fontSize: 11, fontWeight: 600, color: 'var(--rust)', background: 'none',
+              marginTop: 6, fontSize: 11, fontWeight: 600, color: 'var(--accent)', background: 'none',
               border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit'
             }}>
               Reconnect {provider.label}
@@ -176,8 +176,8 @@ function ProviderCard({
 }
 
 const btnPrimary = {
-  padding: '8px 14px', borderRadius: 9, border: 'none', background: 'var(--rust)',
-  color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit'
+  padding: '8px 14px', borderRadius: 9, border: 'none', background: 'var(--accent)',
+  color: 'var(--on-action)', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit'
 };
 const btnGhost = (busy) => ({
   padding: '8px 14px', borderRadius: 9, border: '1px solid var(--hairline)',

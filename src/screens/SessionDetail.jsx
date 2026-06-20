@@ -182,7 +182,7 @@ export default function SessionDetail() {
       <p className="sub" style={{ marginBottom: 20 }}>
         {session.duration}
         {session._trainNow && (
-          <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 700, color: 'var(--rust)', background: 'rgba(176,74,46,0.12)', borderRadius: 6, padding: '2px 7px' }}>
+          <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 700, color: 'var(--accent)', background: 'rgba(111,211,196,0.12)', borderRadius: 6, padding: '2px 7px' }}>
             ADAPTED
           </span>
         )}
@@ -265,14 +265,14 @@ export default function SessionDetail() {
                   <div
                     key={i}
                     className={`gt-row ${isStarted ? 'checkable' : ''} ${done ? 'is-checked' : ''}`}
-                    style={{ borderLeft: `3px solid ${item.superset ? 'var(--rust)' : isTagged ? activity.accent : 'transparent'}` }}
+                    style={{ borderLeft: `3px solid ${item.superset ? 'var(--accent)' : isTagged ? activity.accent : 'transparent'}` }}
                     onClick={isStarted ? () => toggleItem(idx) : undefined}
                     role={isStarted ? 'button' : undefined}
                   >
                     <div className="gt-main" style={{ gridTemplateColumns: gridTemplate }}>
                       <div className="gt-ex">
                         {isStarted && <span className={`gt-check ${done ? 'on' : ''}`} aria-hidden="true">✓</span>}
-                        <span className="gt-num" style={item.superset ? { color: 'var(--rust)' } : undefined}>{item.num}</span>
+                        <span className="gt-num" style={item.superset ? { color: 'var(--accent)' } : undefined}>{item.num}</span>
                         <span className="gt-name">{item.name}</span>
                         <button
                           className="gt-info"

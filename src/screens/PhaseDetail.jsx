@@ -57,7 +57,7 @@ export default function PhaseDetail() {
               <div className="wt-tag">{wk.deload ? 'DELOAD' : 'BUILD'}</div>
               <div className="wt-theme">{wk.theme}</div>
               <div className="wt-progress">
-                <div className="wt-bar"><div style={{ width: `${pct}%`, height: '100%', background: 'var(--rust)' }}></div></div>
+                <div className="wt-bar"><div style={{ width: `${pct}%`, height: '100%', background: 'var(--accent)' }}></div></div>
                 <span style={{ fontSize: 10, marginTop: 4, display: 'block', opacity: 0.7 }}>{weekCompleted}/{wk.sessions.length}</span>
               </div>
             </button>
