@@ -58,6 +58,7 @@ function buildView() {
       started: !!s.started_at && s.status !== 'completed' && s.status !== 'skipped',
       startedAt: s.started_at || null,
       completedAt: s.completed_at || null,
+      createdAt: s.created_at || null,   // when the user first acted on this slot — used to scope settled state to the current plan epoch (see PlanService.withinEpoch)
       quality: log ? log.quality : null,
       energy: log ? log.energy : null,
       recovery: log ? log.recovery : null,

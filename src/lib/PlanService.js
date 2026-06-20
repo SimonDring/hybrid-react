@@ -24,6 +24,7 @@ import { generatePlan } from './PlanGenerator.js';
 import { weeklyMuscleTargets } from './strength/targets.js';
 import { allocateGym } from './plan/allocator.js';
 import { countWeeklyVolume } from './plan/volume.js';
+import { distributeAcrossSlots, WINDOW_DAYS } from './plan/rollingVolume.js';
 import { resolveLifts } from './liftProgression.js';
 import { MUSCLE_GROUPS, MUSCLE_LABELS } from '../data/muscleVolume.js';
 import { getOverrides } from './sessionOverrides.js';
@@ -41,6 +42,7 @@ let _cache = { sig: null, plan: null };
 // ---------------------------------------------------------------------------
 let _runtime = { sessions: {}, readiness: null, loadDecision: null };
 let _adaptCache = { key: null, phases: null };
+let _lastForgiven = null;   // per-muscle sets left unscheduled last reflow (over the safe ceiling)
 
 export function setRuntime(rt = {}) {
   _runtime = {
@@ -93,6 +95,20 @@ const intentOfTitle = (title) => {
 
 const sessionKey = (phaseId, weekNum, idx) => `p${phaseId}_wk${weekNum}_s${idx}`;
 
+// A settled session (completed/started/skipped) only counts toward the CURRENT
+// plan if it was acted on within this plan's epoch — i.e. created on/after the
+// plan's start date. Session completion is keyed by POSITION (p1_wk1_s0…), so
+// after "clear plan & start over" the old rows survive as history but reuse the
+// same keys; without this guard they'd silently mark the new plan's identical
+// slots done/missed and trigger a phantom catch-up. Legacy plans (no start date)
+// have no epoch, so everything counts (unchanged behaviour).
+function withinEpoch(st) {
+  if (!st) return false;
+  const start = getStartDate();
+  if (!start) return true;
+  return !st.createdAt || st.createdAt >= localISO(start);
+}
+
 // This week's per-muscle set target (the "training debt").
 function weekTarget(phase, week, gctx) {
   return weeklyMuscleTargets({
@@ -102,116 +118,169 @@ function weekTarget(phase, week, gctx) {
   });
 }
 
-/**
- * Reflow ONE week's incomplete gym sessions to fill the volume still owed, scaled
- * by readiness. Completed sessions (and all non-gym sessions) are returned
- * untouched, in place — so completion keys (p{phase}_wk{week}_s{idx}) stay valid.
- */
-function reflowWeek(phase, week, sessionsState, readiness, profile, overrides = {}, loadDecision = null) {
-  const gym = [];
-  week.sessions.forEach((s, i) => { if (sessionDiscipline(s) === 'gym') gym.push({ i, s }); });
-  if (!gym.length) return week;
-
-  const stOf = (i) => sessionsState[sessionKey(phase.id, week.num, i)] || {};
-  const ovOf = (i) => overrides[sessionKey(phase.id, week.num, i)] || null;
-
-  // A "train now" override pins a session to a fixed snapshot — committed, never
-  // reflowed. Otherwise, only genuinely-pending sessions reflow; completed /
-  // started / missed are settled and their content is locked.
-  const incomplete = gym.filter(g => {
-    const st = stOf(g.i);
-    return !ovOf(g.i) && !st.completed && !st.skipped && !st.started;
-  });
-  const hasOverride = gym.some(g => ovOf(g.i));
-  if (!incomplete.length && !hasOverride) return week;   // nothing to (re)plan
-
-  const gctx = gymCtx(profile);
-  const target = weekTarget(phase, week, gctx);
-
-  // Committed volume = completed + started work + every override snapshot. A
-  // MISSED (skipped) session banks nothing — its volume stays "owed" and the
-  // pending sessions below recover what they can toward the goal.
-  const committed = [];
-  gym.forEach(g => {
-    const ov = ovOf(g.i); const st = stOf(g.i);
-    if (st.skipped) return;                       // missed banks nothing, override or not
-    if (ov) committed.push({ items: ov.items });  // a pinned train-now session is committed
-    else if (st.completed || st.started) committed.push(g.s);
-  });
-  const done = countWeeklyVolume(committed).counts;
-
-  const remaining = {};
-  for (const m of MUSCLE_GROUPS) remaining[m] = Math.max(0, (target[m] || 0) - (done[m] || 0));
-
-  // Readiness trims remaining sessions; training load (acute:chronic) trims them
-  // further (ease/deload) or restores them (nudge_up). Combined conservatively.
-  const mult = combinedMultiplier(readinessMult(readiness), loadDecision || { action: 'none', multiplier: 1 });
-  let specs = [];
-  if (incomplete.length) {
-    const slots = incomplete.map(() => ({ minutes: Math.round(gctx.minutes * mult), equip: gctx.access }));
-    specs = allocateGym({
-      targets: remaining, slots,
-      ctx: {
-        style: gctx.style, intent: intentOfTitle(phase.title), deload: !!week.deload,
-        weekNum: week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access
-      }
-    });
+// All gym sessions across the plan, each with its real scheduled date + key. Reads
+// BASELINE items — completed/locked sessions are never reflowed, so their baseline
+// items equal what was actually done, which is what the rolling ledger counts.
+function gymSessionsWithDates(phases) {
+  const out = [];
+  for (const phase of phases) {
+    for (const week of (phase.weeks || [])) {
+      week.sessions.forEach((s, i) => {
+        if (sessionDiscipline(s) !== 'gym') return;
+        out.push({ phase, week, i, s, key: sessionKey(phase.id, week.num, i), date: dateForSession(week.num, s.title) });
+      });
+    }
   }
-
-  // Rebuild in place, preserving each session's weekday prefix + array position
-  // (= its completion key). Overrides take their snapshot; pending take the reflow.
-  const newSessions = week.sessions.slice();
-  const swap = (i, focus, duration, items, flag) => {
-    const dayPrefix = (newSessions[i].title.split('·')[0] || '').trim();
-    newSessions[i] = { ...newSessions[i], title: dayPrefix ? `${dayPrefix} · ${focus}` : focus, duration, items, ...flag };
-  };
-  gym.forEach(g => { const ov = ovOf(g.i); if (ov) swap(g.i, ov.focus, ov.duration, ov.items, { _trainNow: true }); });
-  incomplete.forEach((g, k) => { const spec = specs[k]; if (spec) swap(g.i, spec.focus, spec.duration, spec.items, { _trainNow: false }); });
-  return { ...week, sessions: newSessions, _adapted: true };
+  return out;
 }
 
-// The plan phases with the current week reflowed (memoised on completion +
-// readiness so it only recomputes when those actually change). Returns null when
-// there's no generated plan (legacy plans don't reflow).
+// Per-muscle baseline volume of gym sessions in the trailing window that were
+// MISSED — skipped, or past their date and never completed/started — and that
+// belong to the current plan (on/after its start date, in-epoch). This concrete
+// shortfall is what the upcoming sessions recover (spread + capped); using it
+// instead of "window target − banked" avoids double-counting normal forward
+// programming (which the per-slot normal share already covers).
+function missedWindowVolume(gymList, overrides, today) {
+  const start = getStartDate();
+  const windowStartMs = today.getTime() - WINDOW_DAYS * 86400000;
+  const missed = [];
+  for (const g of gymList) {
+    if (!g.date) continue;
+    const ms = g.date.getTime();
+    if (ms >= today.getTime() || ms < windowStartMs) continue;   // only past sessions inside the window
+    if (start && g.date < start) continue;                       // never "missed" before the plan began
+    const st = _runtime.sessions[g.key];
+    if (st && withinEpoch(st) && (st.completed || st.started)) continue; // did it → banked, not missed
+    const ov = overrides[g.key];
+    missed.push(ov ? { items: ov.items } : g.s);
+  }
+  return countWeeklyVolume(missed).counts;
+}
+
+// Pending gym slots whose scheduled date falls in [today, today + WINDOW_DAYS] —
+// the sessions we may (re)shape now. Settled (completed/started/skipped in-epoch)
+// and train-now-pinned slots are excluded; they're locked. Returned in date order.
+function horizonSlots(gymList, overrides, today) {
+  const endMs = today.getTime() + WINDOW_DAYS * 86400000;
+  const slots = [];
+  for (const g of gymList) {
+    if (!g.date) continue;
+    const ms = g.date.getTime();
+    if (ms < today.getTime() || ms > endMs) continue;
+    if (overrides[g.key]) continue;
+    const st = _runtime.sessions[g.key];
+    if (st && withinEpoch(st) && (st.completed || st.skipped || st.started)) continue;
+    slots.push(g);
+  }
+  slots.sort((a, b) => a.date - b.date);
+  return slots;
+}
+
+/**
+ * Adaptive plan view. The plan is a pure projection; we reshape only the PENDING
+ * gym sessions inside a rolling WINDOW_DAYS horizon (current week + the start of
+ * next) so volume you're behind on is spread smoothly across them — capped per
+ * session, with anything past the recoverable ceiling forgiven (never crammed,
+ * never silently dropped). Completed / started / missed / train-now-pinned
+ * sessions, all non-gym sessions, and everything outside the horizon are returned
+ * untouched, in place — so completion keys (p{phase}_wk{week}_s{idx}) stay valid.
+ * Returns null for legacy plans (no start date → no reflow).
+ */
 function adaptedPhases() {
   const g = generated();
   if (!g) return null;
   const cw = currentWeekNumber();
-  if (cw == null) return g.phases;               // no start date → no reflow
+  if (cw == null) return g.phases;
 
-  // Signature of every current-week session's settled state (completed/skipped/
-  // started) — reflow output depends on all three, so recompute when any change.
+  const profile = Database.services.getProfile() || {};
+  const overrides = getOverrides();
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const weeksTouched = [cw, cw + 1];               // the horizon spans at most two weeks
+
+  // ---- memo key: recompute when settled state, readiness, load, overrides, the
+  // generated plan, or the DAY (the rolling window slides) changes ----
+  const inWeeks = (k) => weeksTouched.some(w => k.includes(`_wk${w}_`));
   const stateSig = Object.keys(_runtime.sessions)
-    .filter(k => k.includes(`_wk${cw}_`))
-    .map(k => { const s = _runtime.sessions[k] || {}; return `${k}:${s.completed ? 'c' : ''}${s.skipped ? 's' : ''}${s.started ? 'p' : ''}`; })
+    .filter(inWeeks)
+    .map(k => { const s = _runtime.sessions[k] || {}; return `${k}:${s.completed ? 'c' : ''}${s.skipped ? 's' : ''}${s.started ? 'p' : ''}${withinEpoch(s) ? '' : 'x'}`; })
     .filter(x => !x.endsWith(':'))
     .sort().join(',');
   const band = _runtime.readiness == null ? 'n'
     : _runtime.readiness >= 70 ? 'h' : _runtime.readiness >= 50 ? 'm' : 'l';
-  // Train-now overrides also drive the reflow — recompute when one is set/cleared.
-  const overrides = getOverrides();
-  const ovSig = Object.keys(overrides)
-    .filter(k => k.includes(`_wk${cw}_`))
-    .map(k => `${k}@${overrides[k].createdAt || 0}`)
-    .sort().join(',');
-  const profile = Database.services.getProfile() || {};
+  const ovSig = Object.keys(overrides).filter(inWeeks).map(k => `${k}@${overrides[k].createdAt || 0}`).sort().join(',');
   const reverted = !!(profile.load_overrides && profile.load_overrides[cw] === 'plan');
   const decision = reverted ? null : _runtime.loadDecision;
   const loadBand = decision && decision.action ? decision.action : 'none';
-  const key = `${_cache.sig}|${cw}|${stateSig}|${band}|${ovSig}|${loadBand}|${reverted ? 'r' : ''}`;
+  const key = `${_cache.sig}|${cw}|${localISO(today)}|${stateSig}|${band}|${ovSig}|${loadBand}|${reverted ? 'r' : ''}`;
   if (_adaptCache.key === key) return _adaptCache.phases;
 
+  // ---- rolling ledger: the per-muscle volume MISSED in the trailing window
+  // (skipped or past-due, never done) — the concrete shortfall to spread forward ----
+  const gctx = gymCtx(profile);
+  const gymList = gymSessionsWithDates(g.phases);
+  const deficit = missedWindowVolume(gymList, overrides, today);
+
+  // ---- spread across the horizon's pending slots, each carrying its week's share ----
+  const slots = horizonSlots(gymList, overrides, today);
+  const gymCountByWeek = {};
+  gymList.forEach(x => { const k = `${x.phase.id}_${x.week.num}`; gymCountByWeek[k] = (gymCountByWeek[k] || 0) + 1; });
+  const slotInputs = slots.map(s => {
+    const wt = weekTarget(s.phase, s.week, gctx);
+    const n = gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1;
+    const normalShare = {};
+    for (const m of MUSCLE_GROUPS) normalShare[m] = (wt[m] || 0) / n;
+    return { normalShare };
+  });
+  const { perSlot, forgiven } = distributeAcrossSlots({ slots: slotInputs, deficit, windowDays: WINDOW_DAYS });
+  _lastForgiven = forgiven;
+
+  // Readiness trims session length; load (acute:chronic) trims/restores. Conservative.
+  const mult = combinedMultiplier(readinessMult(_runtime.readiness), decision || { action: 'none', multiplier: 1 });
+  const specByKey = {};
+  slots.forEach((s, idx) => {
+    const spec = allocateGym({
+      targets: perSlot[idx],
+      slots: [{ minutes: Math.round(gctx.minutes * mult), equip: gctx.access }],
+      ctx: {
+        style: gctx.style, intent: intentOfTitle(s.phase.title), deload: !!s.week.deload,
+        weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access
+      }
+    })[0];
+    if (spec) specByKey[s.key] = spec;
+  });
+
+  // ---- rebuild in place: horizon specs + train-now snapshots; everything else as-is ----
   const phases = g.phases.map(phase => {
-    if (!phase.weeks || !phase.weeks.some(w => w.num === cw)) return phase;
+    if (!phase.weeks || !phase.weeks.some(w => weeksTouched.includes(w.num))) return phase;
     return {
       ...phase,
-      weeks: phase.weeks.map(w =>
-        w.num === cw ? reflowWeek(phase, w, _runtime.sessions, _runtime.readiness, profile, overrides, decision) : w)
+      weeks: phase.weeks.map(week => {
+        if (!weeksTouched.includes(week.num)) return week;
+        let changed = false;
+        const newSessions = week.sessions.slice();
+        const swap = (i, focus, duration, items, flag) => {
+          const dayPrefix = (newSessions[i].title.split('·')[0] || '').trim();
+          newSessions[i] = { ...newSessions[i], title: dayPrefix ? `${dayPrefix} · ${focus}` : focus, duration, items, ...flag };
+          changed = true;
+        };
+        week.sessions.forEach((s, i) => {
+          const k = sessionKey(phase.id, week.num, i);
+          const ov = overrides[k];
+          if (ov) { swap(i, ov.focus, ov.duration, ov.items, { _trainNow: true }); return; }
+          const spec = specByKey[k];
+          if (spec) swap(i, spec.focus, spec.duration, spec.items, { _trainNow: false });
+        });
+        return changed ? { ...week, sessions: newSessions, _adapted: true } : week;
+      })
     };
   });
   _adaptCache = { key, phases };
   return phases;
 }
+
+// Per-muscle sets left unscheduled in the last reflow (over the recoverable
+// ceiling) — exposed for dev tooling so forgiveness is visible, not silent.
+export function lastForgiven() { return _lastForgiven; }
 
 function injuryFilteredPhases() {
   const phases = adaptedPhases();
@@ -285,7 +354,8 @@ export function findNextSession(sessions = {}) {
     for (const week of full.weeks) {
       for (let i = 0; i < week.sessions.length; i++) {
         const key = `p${phase.id}_wk${week.num}_s${i}`;
-        if (!sessions[key] || !sessions[key].completed) {
+        const st = sessions[key];
+        if (!st || !st.completed || !withinEpoch(st)) {
           return { phase, week, session: week.sessions[i], sessionIdx: i, key };
         }
       }
@@ -370,8 +440,10 @@ export function recommendedSession(sessions = {}) {
 
   if (target) {
     const { phase, week } = target;
-    const done = (i) => sessions[`p${phase.id}_wk${week.num}_s${i}`] &&
-                        sessions[`p${phase.id}_wk${week.num}_s${i}`].completed;
+    const done = (i) => {
+      const st = sessions[`p${phase.id}_wk${week.num}_s${i}`];
+      return !!(st && st.completed && withinEpoch(st));
+    };
     const todayIdx = todayMondayIndex();
     let idx = week.sessions.findIndex((s, i) => weekdayOfTitle(s.title) === todayIdx && !done(i));
     if (idx < 0) idx = week.sessions.findIndex((_, i) => !done(i));  // first unfinished this week
@@ -456,7 +528,7 @@ export function weekVolumeProgressFor(phase, week) {
     if (sessionDiscipline(s) !== 'gym') return;
     all.push(s);
     const st = _runtime.sessions[sessionKey(phase.id, week.num, i)];
-    if (st && st.completed) completed.push(s);
+    if (st && st.completed && withinEpoch(st)) completed.push(s);
   });
   if (!all.length) return null;
 
@@ -507,7 +579,8 @@ function nextPendingGymTarget() {
       for (let i = 0; i < week.sessions.length; i++) {
         if (sessionDiscipline(week.sessions[i]) !== 'gym') continue;
         const st = _runtime.sessions[sessionKey(phase.id, week.num, i)] || {};
-        if (!st.completed && !st.skipped) {
+        const settled = withinEpoch(st) && (st.completed || st.skipped);
+        if (!settled) {
           return { phaseId: phase.id, weekNum: week.num, idx: i, key: sessionKey(phase.id, week.num, i) };
         }
       }
@@ -521,33 +594,28 @@ export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
   const gctx = gymCtx(profile);
   const equipArr = (equip && equip.length) ? equip : gctx.access;
 
-  // Current week's gap (target − banked) when there's a live plan; else a fresh target.
-  let target = null, done = {}, intent = 'base';
+  // The biggest gaps RIGHT NOW = volume MISSED across the trailing window. If
+  // nothing's owed you're on track, so this becomes a balanced bonus session
+  // toward the current week's target. Same ledger the weekly reflow uses.
+  let weeklyTgt = null, missed = {}, intent = 'base';
   const cw = currentWeekNumber();
   if (cw != null) {
-    const ap = adaptedPhases();
+    const g = generated();
+    const today = new Date(); today.setHours(0, 0, 0, 0);
     let phase = null, week = null;
-    for (const p of ap || []) { const w = (p.weeks || []).find(w => w.num === cw); if (w) { phase = p; week = w; break; } }
+    for (const p of (g ? g.phases : [])) { const w = (p.weeks || []).find(w => w.num === cw); if (w) { phase = p; week = w; break; } }
     if (phase && week) {
       intent = intentOfTitle(phase.title);
-      target = weekTarget(phase, week, gctx);
-      const banked = [];
-      week.sessions.forEach((s, i) => {
-        if (sessionDiscipline(s) !== 'gym') return;
-        const st = _runtime.sessions[sessionKey(phase.id, week.num, i)] || {};
-        if (st.completed || st.started) banked.push(s);
-      });
-      done = countWeeklyVolume(banked).counts;
+      weeklyTgt = weekTarget(phase, week, gctx);
+      missed = missedWindowVolume(gymSessionsWithDates(g.phases), getOverrides(), today);
     }
   }
-  if (!target) target = weeklyMuscleTargets({ style: gctx.style, intent, level: gctx.level, weekInPhase: 1, phaseWeeks: 1 });
+  if (!weeklyTgt) weeklyTgt = weeklyMuscleTargets({ style: gctx.style, intent, level: gctx.level, weekInPhase: 1, phaseWeeks: 1 });
 
-  const remaining = {};
-  for (const m of MUSCLE_GROUPS) remaining[m] = Math.max(0, (target[m] || 0) - (done[m] || 0));
-  // Week basically met → this is a balanced BONUS session rather than nothing.
-  const totalRem = Object.values(remaining).reduce((a, b) => a + b, 0);
-  const bonus = totalRem <= 5;
-  const fillTarget = bonus ? target : remaining;
+  // On track (nothing meaningful missed) → balanced bonus toward the week target.
+  const totalMissed = Object.values(missed).reduce((a, b) => a + (b || 0), 0);
+  const bonus = totalMissed <= 5;
+  const fillTarget = bonus ? weeklyTgt : missed;
 
   const specs = allocateGym({
     targets: fillTarget,
@@ -565,9 +633,9 @@ function buildWhy(session, bonus, minutes) {
     .map(m => MUSCLE_LABELS[m].toLowerCase());
   const muscles = top.length > 1 ? `${top.slice(0, -1).join(', ')} and ${top[top.length - 1]}` : (top[0] || 'full body');
   const lead = bonus
-    ? "You're on track for the week, so this is a balanced bonus session"
-    : 'Built around the muscle groups furthest behind this week';
+    ? "You're on track across the last few days, so this is a balanced bonus session"
+    : "Built around the muscle groups you're furthest behind on";
   return `${lead} — it leans into ${muscles}. Fitted to ~${Math.round(minutes / 5) * 5} min with the kit you picked, at your usual rep ranges and RPE.`;
 }
 
-export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO, setRuntime, currentAdaptation, weekVolumeProgressFor, currentWeekVolumeProgress, generateTrainNow, sessionDiscipline };
+export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO, setRuntime, currentAdaptation, weekVolumeProgressFor, currentWeekVolumeProgress, generateTrainNow, sessionDiscipline, lastForgiven };
