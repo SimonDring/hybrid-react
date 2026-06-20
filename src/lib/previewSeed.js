@@ -10,7 +10,7 @@
 import Database from './Database.js';
 import { answersToProfile, BLANK_ANSWERS } from './onboardingModel.js';
 
-const SEED_VERSION = '4';
+const SEED_VERSION = '6';
 
 // Same answer shape the onboarding wizard / DevPlayground presets use.
 const PREVIEW_ANSWERS = {
@@ -44,12 +44,27 @@ export function seedPreview() {
   const iso = (d) => d.toISOString().slice(0, 10);
   const dayAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n); return iso(d); };
 
-  // Recovery metrics so readiness renders. Today = 82 → "strong" (teal "Primed").
-  [
-    { date: dayAgo(0), readiness_score: 82, hrv_ms: 64, resting_hr: 47, sleep_duration_min: 466, sleep_score: 84, sleep_deep_min: 84, sleep_rem_min: 102, sleep_light_min: 264, sleep_awake_min: 16 },
-    { date: dayAgo(1), readiness_score: 74, hrv_ms: 59, resting_hr: 49, sleep_duration_min: 442, sleep_score: 78, sleep_deep_min: 76, sleep_rem_min: 96, sleep_light_min: 254, sleep_awake_min: 16 },
-    { date: dayAgo(2), readiness_score: 69, hrv_ms: 55, resting_hr: 50, sleep_duration_min: 420, sleep_score: 72, sleep_deep_min: 70, sleep_rem_min: 90, sleep_light_min: 246, sleep_awake_min: 14 }
-  ].forEach(m => Database.services.upsertDailyMetric({ ...m, source: 'preview' }));
+  // ~4 weeks of recovery metrics that gently improve (HRV up, resting HR down,
+  // sleep up) so readiness, recovery, sleep and the fitness-age trend all read
+  // as "improving as you train".
+  const stages = (min) => ({
+    sleep_deep_min: Math.round(min * 0.18), sleep_rem_min: Math.round(min * 0.22),
+    sleep_light_min: Math.round(min * 0.57), sleep_awake_min: Math.round(min * 0.03)
+  });
+  for (let n = 27; n >= 0; n--) {
+    const t = (27 - n) / 27;              // 0 = oldest, 1 = today
+    const noise = ((n * 7) % 5) - 2;      // deterministic -2..2 wobble
+    const sleepMin = Math.round(424 + t * 42 + noise * 3);
+    Database.services.upsertDailyMetric({
+      date: dayAgo(n), source: 'preview',
+      readiness_score: Math.max(50, Math.min(92, Math.round(66 + t * 16 + noise))),
+      hrv_ms: Math.round(50 + t * 15 + noise),
+      resting_hr: Math.round(53 - t * 6 - (noise > 1 ? 1 : 0)),
+      sleep_duration_min: sleepMin,
+      sleep_score: Math.round(70 + t * 14),
+      ...stages(sleepMin)
+    });
+  }
 
   // ~4 weeks of steady training history (unlinked workouts) so the load ring
   // computes a real acute:chronic ratio → a "Balanced" state rather than empty.

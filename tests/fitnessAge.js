@@ -1,4 +1,4 @@
-import { fitnessAge } from '../src/lib/fitnessAge.js';
+import { fitnessAge, fitnessAgeSeries } from '../src/lib/fitnessAge.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
@@ -26,3 +26,11 @@ assert(hrvOnly && hrvOnly.fitnessAge < 40 && hrvOnly.rhr === null, 'T6 HRV-only 
 // Averages across days; clamps floor at 18.
 const youngFloor = fitnessAge({ age: 19 }, [{ hrv_ms: 100, resting_hr: 38, date: '2026-06-19' }]);
 assert(youngFloor.fitnessAge >= 18, 'T7 floor at 18');
+
+// Series: one point per day, trends younger as markers improve.
+const days = [];
+for (let i = 0; i < 20; i++) days.push({ date: `2026-05-${String(i + 1).padStart(2, '0')}`, hrv_ms: 48 + i, resting_hr: 56 - i * 0.3 });
+const s = fitnessAgeSeries({ age: 40 }, days);
+assert(Array.isArray(s) && s.length === 20, 'T8 series has one point per day');
+assert(s[s.length - 1].fitnessAge <= s[0].fitnessAge, 'T9 improving markers → fitness age trends younger');
+assert(fitnessAgeSeries({}, days).length === 0, 'T10 no age → empty series');

@@ -48,7 +48,7 @@ export default function Health() {
           value={fa ? `${fa.fitnessAge} yrs` : '—'}
           valueColor={fa ? fa.color : undefined}
           sub={fa ? (fa.status === 'younger' ? `${fa.delta} yrs younger` : fa.status === 'older' ? `${Math.abs(fa.delta)} yrs older` : 'on par') : 'add HRV + resting HR'}
-          onClick={() => navigate('/tracking/trends')}
+          onClick={() => navigate('/tracking/fitness-age')}
         />
         <Tile
           label="Sleep"

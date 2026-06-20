@@ -38,3 +38,16 @@ export function fitnessAge(profile = {}, dailyMetrics = []) {
 
   return { age, fitnessAge: fAge, delta, status, color, hrv: hrv != null ? Math.round(hrv) : null, rhr: rhr != null ? Math.round(rhr) : null };
 }
+
+// Fitness age over time: for each day, compute it from the trailing window up to
+// that day, so the line shows how it shifts as the person trains. One point per
+// day that has enough data to estimate.
+export function fitnessAgeSeries(profile = {}, dailyMetrics = []) {
+  const sorted = [...(dailyMetrics || [])].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  const out = [];
+  for (let i = 0; i < sorted.length; i++) {
+    const fa = fitnessAge(profile, sorted.slice(0, i + 1));
+    if (fa) out.push({ date: sorted[i].date, fitnessAge: fa.fitnessAge });
+  }
+  return out;
+}
