@@ -59,8 +59,13 @@ export function weeklyMuscleTargets(ctx = {}) {
   const emphasis = ctx.emphasis || {};
   const scalar = ctx.volumeScalar != null ? ctx.volumeScalar : 1;
 
-  // 0 at the first week of a phase → 1 at the last. Single-week phase sits mid-band.
-  const frac = phaseWeeks > 1 ? (wip - 1) / (phaseWeeks - 1) : 0.5;
+  // Volume ramp position 0→1. Prefer a BLOCK-continuous fraction (across the whole
+  // plan, deload dips aside) when supplied, so volume progresses through the block
+  // instead of sawtoothing back to MEV at every phase boundary. Falls back to the
+  // per-phase ramp when blockFrac isn't given.
+  const frac = (ctx.blockFrac != null)
+    ? clamp(ctx.blockFrac, 0, 1)
+    : (phaseWeeks > 1 ? (wip - 1) / (phaseWeeks - 1) : 0.5);
 
   const out = {};
   for (const m of MUSCLE_GROUPS) {

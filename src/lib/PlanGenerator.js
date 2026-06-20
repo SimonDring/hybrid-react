@@ -310,7 +310,7 @@ function gatesFor(intent, isLast, profile, totalSessions) {
 // Per-week assembly
 // ---------------------------------------------------------------------------
 function buildDisciplineSpecs(discipline, count, ctx, profile, program) {
-  const common = { intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, taperMult: ctx.taperMult, winp: ctx.winp, weekNum: ctx.weekNum, progress: ctx.progress, phaseWeeks: ctx.phaseWeeks, level: levelFor(discipline, profile), minutes: ctx.minutes, access: profile.access || [], sex: profile.sex };
+  const common = { intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, taperMult: ctx.taperMult, winp: ctx.winp, weekNum: ctx.weekNum, progress: ctx.progress, phaseWeeks: ctx.phaseWeeks, blockFrac: ctx.blockFrac, level: levelFor(discipline, profile), minutes: ctx.minutes, access: profile.access || [], sex: profile.sex };
   // Strength / cross-training pull back during the race taper, like a deload.
   const lighten = ctx.deload || ctx.taper;
   switch (discipline) {
@@ -358,7 +358,12 @@ export function generatePlan(profile = {}) {
   // at the last pre-taper week rather than peaking on race week.
   const start = profile.plan_start_date ? new Date(profile.plan_start_date + 'T00:00:00') : new Date();
   start.setHours(0, 0, 0, 0);
-  const isRace = allGoalDates(profile).some(d => d > start);
+  // Taper only when a dated event lands within (or just past) THIS block — an event
+  // months out shapes the season/length via deriveSeason, not a taper right now.
+  const eventDate = profile.event_date ? new Date(profile.event_date + 'T00:00:00') : null;
+  const planEnd = new Date(start.getTime() + total * 7 * 86400000);
+  const eventInBlock = !!(eventDate && !isNaN(eventDate.getTime()) && eventDate > start && eventDate <= new Date(planEnd.getTime() + 7 * 86400000));
+  const isRace = eventInBlock || allGoalDates(profile).some(d => d > start);
   const taperWeeks = isRace ? (total >= 12 ? 2 : 1) : 0;
   const lastBuildWeek = total - taperWeeks;
 
@@ -379,7 +384,10 @@ export function generatePlan(profile = {}) {
       const progress = total > 1 ? Math.min(1, (Math.min(weekNum, lastBuildWeek) - 1) / (total - 1)) : 1;
       // Taper multiplier: race week lightest, the week before easing down.
       const taperMult = !taper ? 1 : (weekNum === total ? 0.5 : 0.65);
-      const ctx = { intent: seg.intent, deload, taper, taperMult, winp, weekNum, minutes, progress, phaseWeeks: seg.weeks };
+      // Block-continuous volume ramp position (0→1 across the whole plan). Deload
+      // weeks still drop to MEV in targets.js; this just stops the per-phase reset.
+      const blockFrac = total > 1 ? (weekNum - 1) / (total - 1) : 0.5;
+      const ctx = { intent: seg.intent, deload, taper, taperMult, winp, weekNum, minutes, progress, phaseWeeks: seg.weeks, blockFrac };
 
       // Gather every discipline's sport sessions, plus any supplemental strength,
       // then schedule them (supplemental folds in as easy-day doubles / rest days).

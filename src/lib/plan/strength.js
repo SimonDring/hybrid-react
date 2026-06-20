@@ -64,7 +64,7 @@ export function buildWeek(ctx = {}) {
   const targets = weeklyMuscleTargets({
     style, intent: ctx.intent, level: ctx.level,
     weekInPhase: ctx.winp, phaseWeeks: ctx.phaseWeeks, deload,
-    emphasis: ctx.emphasis, volumeScalar: ctx.volumeScalar
+    emphasis: ctx.emphasis, volumeScalar: ctx.volumeScalar, blockFrac: ctx.blockFrac
   });
 
   const slots = Array.from({ length: gymDays }, () => ({ minutes: functionalSlotMinutes(style, minutes), equip: ctx.access || [] }));

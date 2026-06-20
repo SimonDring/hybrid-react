@@ -56,5 +56,5 @@ const specs = allocateGym({
 });
 assert(specs.length === 1 && specs[0].items.length > 0, 'T11 allocator returns a real session under a flooded target');
 const got = countWeeklyVolume([specs[0]]).counts;
-const over = MUSCLE_GROUPS.filter(m => got[m] > VOLUME_LANDMARKS[m].mav + 1);
-assert(over.length === 0, `T12 no muscle exceeds its weekly MAV in one session (offenders: ${over.join(', ') || 'none'})`);
+const over = MUSCLE_GROUPS.filter(m => got[m] > VOLUME_LANDMARKS[m].mrv + 1);
+assert(over.length === 0, `T12 no muscle exceeds its weekly MRV in one session (offenders: ${over.join(', ') || 'none'})`);

@@ -121,11 +121,15 @@ function withinEpoch(st) {
 
 // This week's per-muscle set target (the "training debt").
 function weekTarget(phase, week, gctx) {
+  // Block-continuous ramp position — must match PlanGenerator's formula so the
+  // reflowed (trained) weeks stay in parity with the baseline plan.
+  const tw = totalWeeks();
+  const blockFrac = tw > 1 ? (week.num - 1) / (tw - 1) : 0.5;
   return weeklyMuscleTargets({
     style: gctx.style, intent: intentOfTitle(phase.title), level: gctx.level,
     weekInPhase: week.num - phase.weekStart + 1,
     phaseWeeks: phase.weekEnd - phase.weekStart + 1, deload: !!week.deload,
-    emphasis: gctx.emphasis, volumeScalar: gctx.volumeScalar
+    emphasis: gctx.emphasis, volumeScalar: gctx.volumeScalar, blockFrac
   });
 }
 

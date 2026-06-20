@@ -310,11 +310,12 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   for (const m in targets) {
     const even = Math.ceil((targets[m] || 0) / freq) || Infinity;
     // Hard ceiling, independent of the caller: no single session may exceed ~half a
-    // muscle's weekly sweet-spot (MAV). This is the backstop that stops a catch-up
-    // from ever becoming a monster session even when only one slot is left to fill
-    // (freq = 1, so `even` would otherwise be the WHOLE remaining deficit).
+    // muscle's weekly MAX-RECOVERABLE volume (MRV). This is the "no-monster" backstop
+    // — it stops a catch-up from absorbing a whole week even when one slot is left —
+    // while still leaving room for high-volume goals (bodybuilding near MRV) to be
+    // delivered across a few sessions, which a tighter MAV/2 cap was clipping.
     const lm = VOLUME_LANDMARKS[m];
-    const ceiling = lm ? Math.ceil(lm.mav / 2) : Infinity;
+    const ceiling = lm ? Math.ceil(lm.mrv / 2) : Infinity;
     perSlotCap[m] = Math.min(even, ceiling);
   }
 
