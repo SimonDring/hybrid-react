@@ -52,55 +52,65 @@ const PROFILES = {
   // RP hypertrophy mesocycle (Israetel): 4-week accumulation + 1 week peak + 1 deload
   hypertrophy: {
     totalWeeks: 6,
-    split: [{ intent: 'base', weeks: 2 }, { intent: 'build', weeks: 3 }, { intent: 'peak', weeks: 1 }]
+    split: [{ intent: 'base', weeks: 2 }, { intent: 'build', weeks: 3 }, { intent: 'peak', weeks: 1 }],
+    deloads: [6]   // 5 weeks accumulation → 1 deload (RP mesocycle)
   },
   // Block periodization strength (Issurin): accumulation + transmutation + realisation
   strength: {
     totalWeeks: 12,
-    split: [{ intent: 'base', weeks: 5 }, { intent: 'build', weeks: 5 }, { intent: 'peak', weeks: 2 }]
+    split: [{ intent: 'base', weeks: 5 }, { intent: 'build', weeks: 5 }, { intent: 'peak', weeks: 2 }],
+    deloads: [5, 10]   // end of accumulation + end of transmutation; peak realises
   },
   // Functional / desk-job balance: neural + structural adaptation + movement quality
   functional: {
     totalWeeks: 8,
-    split: [{ intent: 'base', weeks: 3 }, { intent: 'build', weeks: 4 }, { intent: 'peak', weeks: 1 }]
+    split: [{ intent: 'base', weeks: 3 }, { intent: 'build', weeks: 4 }, { intent: 'peak', weeks: 1 }],
+    deloads: [4, 8]
   },
   // Sport off-season: genuine strength base (Rønnestad 2015 — max-strength transfer)
   sportOff: {
     totalWeeks: 12,
-    split: [{ intent: 'base', weeks: 5 }, { intent: 'build', weeks: 5 }, { intent: 'peak', weeks: 2 }]
+    split: [{ intent: 'base', weeks: 5 }, { intent: 'build', weeks: 5 }, { intent: 'peak', weeks: 2 }],
+    deloads: [5, 10]
   },
   // Sport pre-season: transition to sport-specific work (Bosquet 2007 taper model)
   sportPre: {
     totalWeeks: 6,
-    split: [{ intent: 'base', weeks: 3 }, { intent: 'build', weeks: 3 }]
+    split: [{ intent: 'base', weeks: 3 }, { intent: 'build', weeks: 3 }],
+    deloads: [6]   // taper week before the race window
   },
   // Sport in-season: maintenance dose — 4-week rolling, no long phases
   // Never auto-deloads (deload only via check-in answer or race-week taper).
   sportIn: {
     totalWeeks: 4,
-    split: [{ intent: 'build', weeks: 4 }]
+    split: [{ intent: 'build', weeks: 4 }],
+    deloads: []   // maintenance — no auto-deload (only check-in / race-week taper)
   },
   // Post-event transition: active recovery, rebuild base
   sportTransition: {
     totalWeeks: 4,
-    split: [{ intent: 'base', weeks: 4 }]
+    split: [{ intent: 'base', weeks: 4 }],
+    deloads: []   // already an active-recovery block — kept light throughout
   },
 
   // ── Run discipline overrides ───────────────────────────────────────────
   // Sprint (100–400m): short power blocks per NSCA sprint periodization model.
   runSprintOff: {
     totalWeeks: 6,
-    split: [{ intent: 'base', weeks: 2 }, { intent: 'build', weeks: 3 }, { intent: 'peak', weeks: 1 }]
+    split: [{ intent: 'base', weeks: 2 }, { intent: 'build', weeks: 3 }, { intent: 'peak', weeks: 1 }],
+    deloads: [6]
   },
   // Pre-season sprint: quick taper to peak power output.
   runSprintPre: {
     totalWeeks: 4,
-    split: [{ intent: 'base', weeks: 2 }, { intent: 'build', weeks: 2 }]
+    split: [{ intent: 'base', weeks: 2 }, { intent: 'build', weeks: 2 }],
+    deloads: []   // short power taper — stays sharp, no deload
   },
   // Middle distance (800m–5K): 10w blocks for running economy + speed endurance blend.
   runMiddleOff: {
     totalWeeks: 10,
-    split: [{ intent: 'base', weeks: 4 }, { intent: 'build', weeks: 4 }, { intent: 'peak', weeks: 2 }]
+    split: [{ intent: 'base', weeks: 4 }, { intent: 'build', weeks: 4 }, { intent: 'peak', weeks: 2 }],
+    deloads: [4, 8]
   }
 };
 

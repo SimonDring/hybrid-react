@@ -350,7 +350,8 @@ export function generatePlan(profile = {}) {
   const allowDoubles = profile.doubles !== false;
   const longRunDay = disciplines.includes('run') ? (profile.long_run_day || 'sat') : null;
 
-  const { totalWeeks: total, split } = resolvePeriodization(profile);
+  const { totalWeeks: total, split, deloads } = resolvePeriodization(profile);
+  const deloadSet = new Set(deloads || []);
 
   // Race taper: when there's a dated goal, the final 1–2 weeks cut volume (but
   // keep some sharpness) so the athlete arrives fresh. Endurance volume plateaus
@@ -371,7 +372,7 @@ export function generatePlan(profile = {}) {
 
     for (let winp = 1; winp <= seg.weeks; winp++) {
       weekNum++;
-      const deload = winp % 4 === 0;
+      const deload = deloadSet.has(weekNum);   // periodisation-defined (see periodization.js PROFILES)
       const taper = isRace && weekNum > lastBuildWeek;
       // Global progress (0→1) ramps endurance volume; it plateaus at the last
       // pre-taper week so the longest sessions aren't on race week.
