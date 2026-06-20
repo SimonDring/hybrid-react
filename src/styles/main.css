@@ -1251,128 +1251,6 @@ body { font-variant-numeric: tabular-nums; }
   color: var(--txt-muted);
 }
 
-.today-hero {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(150deg, #20140f 0%, var(--bg-ink) 58%);
-  color: #f4f1ea;
-  border-radius: var(--r-xl);
-  padding: var(--s-5) var(--s-5) var(--s-4);
-  margin-bottom: var(--s-5);
-  box-shadow: var(--shadow-md);
-}
-/* Status-tinted glow in the corner — ochre default, moss strong, rust low */
-.today-hero::before {
-  content: '';
-  position: absolute;
-  top: -70px; right: -50px;
-  width: 210px; height: 210px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(200,154,58,0.22), transparent 70%);
-  pointer-events: none;
-}
-.today-hero[data-status="strong"]::before { background: radial-gradient(circle, rgba(74,93,58,0.32), transparent 70%); }
-.today-hero[data-status="low"]::before    { background: radial-gradient(circle, rgba(176,74,46,0.32), transparent 70%); }
-
-.th-eyebrow {
-  position: relative;
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ochre);
-  margin-bottom: var(--s-4);
-}
-.th-main {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: var(--s-5);
-}
-.th-ring {
-  position: relative;
-  width: 90px; height: 90px;
-  flex-shrink: 0;
-}
-.th-ring svg { width: 90px; height: 90px; display: block; }
-.th-ring circle { transition: stroke-dashoffset 0.6s ease; }
-.th-ring-text {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--serif);
-  font-size: 32px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-.th-copy { flex: 1; min-width: 0; }
-.th-headline {
-  font-family: var(--serif);
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.015em;
-  margin-bottom: var(--s-2);
-}
-.th-note {
-  font-size: 13px;
-  line-height: 1.42;
-  color: rgba(244,241,234,0.68);
-}
-
-.vital-row {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--s-2);
-  margin-top: var(--s-5);
-}
-.vital-chip {
-  background: rgba(244,241,234,0.07);
-  border: 1px solid rgba(244,241,234,0.10);
-  border-radius: var(--r-md);
-  padding: var(--s-3);
-}
-.vc-label {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(244,241,234,0.55);
-  margin-bottom: 5px;
-}
-.vc-value {
-  font-family: var(--serif);
-  font-size: 22px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-.vc-value span {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 400;
-  color: rgba(244,241,234,0.55);
-  margin-left: 2px;
-}
-
-.th-prompt {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  margin-top: var(--s-4);
-  background: var(--ochre);
-  color: var(--bg-ink);
-  border: none;
-  border-radius: var(--r-full);
-  padding: 10px 16px;
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.th-prompt:active { transform: scale(0.97); }
 
 /* Readiness-aware nudge inside the recommended-session card */
 .today-readiness-note {
@@ -1972,42 +1850,6 @@ body { font-variant-numeric: tabular-nums; }
 .rt-preset:active { transform: scale(0.97); }
 .rt-reset { color: var(--rust); }
 
-/* Tab-bar centre "Coach" button (placeholder for the future AI coach) */
-/* Centre primary action — the prominent "Train" button (ember). */
-.tab-train {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 8px 6px;
-}
-.tab-train:active { transform: scale(0.94); }
-.tab-train-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 46px; height: 46px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--on-action);
-  margin-top: -12px;
-  box-shadow: var(--shadow-md), 0 4px 14px rgba(111,211,196,0.30);
-  transition: transform 0.12s;
-}
-.tab-train:active .tab-train-icon { transform: scale(1.06); }
-.tab-train-icon svg { width: 22px; height: 22px; }
-.tab-train-label {
-  font-family: var(--sans);
-  font-size: 10.5px;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 0.02em;
-}
 
 /* Coach placeholder screen */
 .coach-preview {
@@ -3396,9 +3238,6 @@ button:active,
 .catchup-btn.miss { color: var(--txt-muted); background: var(--bg-surface-2); }
 .catchup-btn:active { transform: scale(0.96); }
 
-/* Readiness panel as a tappable hero */
-button.today-hero { width: 100%; display: block; text-align: left; border: none; font-family: inherit; cursor: pointer; }
-.readiness-tap .th-note { opacity: 0.85; }
 
 /* ============================================================
    TIME PICKER (scroll-wheel time input)
@@ -3530,13 +3369,6 @@ button.today-hero { width: 100%; display: block; text-align: left; border: none;
 .sr-chev { width: 16px; height: 16px; color: var(--txt-muted); flex-shrink: 0; }
 
 /* ---------- Progress: momentum hero, goal rows, insights, recovery ---------- */
-.prog-hero { background: var(--bg-surface); border: 1px solid var(--hairline); border-radius: var(--r-lg); padding: 16px; }
-.prog-hero-title { font-size: 16px; font-weight: 500; color: var(--txt-strong); }
-.prog-hero-sub { font-size: 12px; color: var(--txt-muted); margin-top: 3px; line-height: 1.4; }
-.prog-rings { display: flex; justify-content: space-between; margin-top: 16px; }
-.goal-ring { display: flex; flex-direction: column; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; }
-.gr-pct { font-size: 14px; font-weight: 600; color: var(--txt-strong); }
-.gr-cap { font-size: 11px; color: var(--txt-muted); }
 
 .goal-rows { display: flex; flex-direction: column; gap: 9px; }
 .goal-row-r { display: flex; align-items: center; gap: 12px; background: var(--bg-surface); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 11px 13px; }
@@ -3579,10 +3411,6 @@ button.today-hero { width: 100%; display: block; text-align: left; border: none;
 .hc-headline { font-size: 17px; font-weight: 500; color: var(--txt-strong); margin-top: 3px; }
 .hc-note { font-size: 13px; color: var(--txt-body); margin-top: 3px; line-height: 1.4; }
 .hc-load-label { font-size: 16px; font-weight: 500; }
-.vitals-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
-.vital { background: var(--bg-surface-2); border-radius: var(--r-md); padding: 10px 12px; }
-.v-label { font-size: 10px; letter-spacing: 0.1em; color: var(--txt-muted); }
-.v-val { font-size: 15px; font-weight: 600; color: var(--txt-strong); margin-top: 4px; }
 .hc-trend { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
 .hc-trend-label { font-size: 12px; color: var(--txt-muted); }
 
@@ -3613,15 +3441,6 @@ button.today-hero { width: 100%; display: block; text-align: left; border: none;
 .trend-range { display: flex; gap: 6px; margin-bottom: 16px; }
 .trend-range button { flex: 1; padding: 8px; font-size: 12px; font-family: inherit; border-radius: var(--r-md); border: 1px solid var(--hairline); background: var(--bg-surface); color: var(--txt-muted); cursor: pointer; }
 .trend-range button.active { border-color: var(--accent); color: var(--txt-strong); background: rgba(111,211,196,0.10); }
-.trend-card { background: var(--bg-surface); border: 1px solid var(--hairline); border-radius: var(--r-lg); padding: 14px 16px; margin-bottom: 12px; }
-.trend-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-.trend-label { font-size: 13px; color: var(--txt-muted); }
-.trend-meta { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
-.trend-delta { font-size: 12px; font-weight: 500; }
-.trend-avg { font-size: 12px; color: var(--txt-muted); }
-.trend-val { font-size: 24px; font-weight: 600; color: var(--txt-strong); line-height: 1; white-space: nowrap; }
-.trend-val span { font-size: 12px; color: var(--txt-muted); font-weight: 400; margin-left: 2px; }
-.trend-chart { width: 100%; height: 110px; display: block; margin-top: 12px; }
 
 /* ---------- Trends: fitness age hero ---------- */
 .fitage-card { background: var(--bg-surface); border: 1px solid var(--hairline); border-radius: var(--r-lg); padding: 12px 14px; margin-bottom: 12px; }
