@@ -3539,6 +3539,12 @@ button.today-hero { width: 100%; display: block; text-align: left; border: none;
 .gr-cap { font-size: 11px; color: var(--txt-muted); }
 
 .goal-rows { display: flex; flex-direction: column; gap: 9px; }
+.goal-row-r { display: flex; align-items: center; gap: 12px; background: var(--bg-surface); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 11px 13px; }
+.grr-pct { font-size: 12px; font-weight: 600; color: var(--txt-strong); }
+.grr-body { flex: 1; min-width: 0; }
+.grr-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.grr-name { font-size: 14px; font-weight: 500; color: var(--txt-strong); }
+.grr-sub { font-size: 12px; color: var(--txt-muted); margin-top: 3px; }
 .goal-row { background: var(--bg-surface); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 13px 14px; }
 .goal-row-head { display: flex; justify-content: space-between; align-items: baseline; }
 .grw-name { font-size: 14px; font-weight: 500; color: var(--txt-strong); }
