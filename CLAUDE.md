@@ -1,10 +1,21 @@
 App Overview:
-A personalised hybrid-athlete training planner. A 52-week, 5-phase plan
-covering strength, running, and swimming, built around one athlete's goals
-(1:40 half-marathon, 2.5km continuous swim, ski readiness, longevity). It
-tracks training sessions, weekly check-ins, daily recovery metrics, and
-injuries, with a quarterly reassessment. It's a PWA today; the long-term aim
-is an AI-coached native iOS app.
+A dynamic, personalised gym-plan generator. From a short onboarding
+questionnaire it builds a multi-week, periodised strength programme tailored to
+each user's OWN goal — getting stronger, building muscle, functional fitness, or
+strength support for a sport they train (running, cycling, swimming). The target
+user is a busy person who wants to trust they're getting the best possible
+training for their goal and the time they have. It tracks training sessions,
+weekly check-ins, daily recovery metrics, and injuries, and reassesses at the end
+of each training block. It's a PWA today; the long-term aim is an AI-coached
+native iOS app.
+
+Scope note (important): the engine is GYM-ONLY today. When a user picks a sport,
+it biases the gym programming (per-muscle emphasis, priority lifts, periodisation
+season) to SUPPORT that sport — it does NOT yet generate endurance/aerobic
+sessions (actual run/cycle/swim workouts). Users currently do their own sport
+training (wearables track it). Programming real endurance sessions is a planned
+future stage, not current scope. The user's onboarding goal drives the training —
+no goals are hard-coded into the app.
 
 The long term aim of this app is to be an app that is designed to be a fitness companion where it can react to daily life in adjusting workout programming and regime based on dynamic goals and time available. It should create detail from initial input, with AI learning integrated to adjust the plan. Wearable integration will provide data from workouts to determine how hard each user is working, injuries, illness, and ability to meet the plan, and adjust to maximise a persons ability to reach their goals.
 

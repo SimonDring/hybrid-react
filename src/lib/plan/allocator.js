@@ -40,7 +40,21 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
 // ---- rep / RPE / intensity scheme by style + phase (moved here from strength.js
 // so the allocator owns the prescription and there's no import cycle) ----
-function scheme(style, intent, deload) {
+function scheme(style, intent, deload, taper) {
+  // Event taper (peaking): cut VOLUME hard (2 sets, lean accessories) but KEEP
+  // intensity high — load/RPE stay near peak so the athlete sharpens, not detrains.
+  // This is the opposite of a deload (which drops intensity too). Evidence: Bosquet
+  // 2007 (endurance) + Travis & Mujika 2020 (maximal strength) — reduce volume
+  // ~40–60%, maintain intensity. Taper takes precedence over deload.
+  if (taper) {
+    const t = {
+      strength:     { main: '2 × 3', acc: '2 × 4', mainRpe: 'RPE 8', accRpe: 'RPE 7' },
+      bodybuilding: { main: '2 × 6', acc: '2 × 8', mainRpe: 'RPE 8', accRpe: 'RPE 8' },
+      functional:   { main: '2 × 4', acc: '2 × 6', mainRpe: 'RPE 8', accRpe: 'RPE 7' },
+      sport:        { main: '2 × 3', acc: '2 × 5', mainRpe: 'RPE 8', accRpe: 'RPE 7' }
+    };
+    return t[style] || t.functional;
+  }
   if (deload) {
     if (style === 'sport') return { main: '2 × 4', acc: '2 × 6', mainRpe: 'RPE 5', accRpe: 'RPE 5' };
     return { main: '2 × 5', acc: '2 × 8', mainRpe: 'RPE 6', accRpe: 'RPE 6' };
@@ -71,10 +85,11 @@ function scheme(style, intent, deload) {
 }
 
 const isoStr = (style) => (style === 'bodybuilding' ? '3 × 12–15' : '3 × 12');
-const coreStr = (deload) => (deload ? '2 × 30s' : '3 × 30s');
-const mainNote = (deload) =>
-  deload ? 'deload — ~65% load, leave 3+ reps in the tank'
-         : '+small load when the last set is ≤ target RPE';
+const coreStr = (light) => (light ? '2 × 30s' : '3 × 30s');
+const mainNote = (deload, taper) =>
+  taper ? 'taper — keep the load, just fewer sets. Arrive fresh.'
+    : deload ? 'deload — ~65% load, leave 3+ reps in the tank'
+      : '+small load when the last set is ≤ target RPE';
 
 // Subtle, evidence-based sex tuning: women recover faster between sets and can
 // absorb a little more rep volume on supporting work — nudge accessory/iso reps
@@ -117,17 +132,17 @@ function restForRole(ex, style, effectiveRole) {
 }
 
 // Build the rendered item for a chosen exercise at a given position in the slot.
-function makeItem(ex, idx, s, style, deload, repBump, effectiveRole) {
+function makeItem(ex, idx, s, style, deload, repBump, effectiveRole, taper) {
   const role = effectiveRole != null ? effectiveRole : ex.role;
   const per = ex.unilateral ? ' ea.' : '';
   const num = LETTERS[Math.min(idx, LETTERS.length - 1)] + '1';
   const restSec = restForRole(ex, style, role);
   if (role === 'primary') {
-    return { num, name: ex.name, sets: s.main + per, rpe: s.mainRpe, note: mainNote(deload), restSec };
+    return { num, name: ex.name, sets: s.main + per, rpe: s.mainRpe, note: mainNote(deload, taper), restSec };
   }
   if (ex.pattern === 'core') {
     const hold = /plank|hold|dead bug|copenhagen|hollow|bird dog/i.test(ex.name);
-    return { num, name: ex.name, sets: hold ? coreStr(deload) : '3 × 12' + per, rpe: 'RPE 6', tag: 'mobility', note: '', restSec };
+    return { num, name: ex.name, sets: hold ? coreStr(deload || taper) : '3 × 12' + per, rpe: 'RPE 6', tag: 'mobility', note: '', restSec };
   }
   if (ex.pattern === 'calf' || role === 'iso') {
     const str = ex.pattern === 'calf' ? '3 × 12' : isoStr(style);
@@ -200,6 +215,15 @@ function structureItems(picks) {
     else { taken.add(i); blocks.push([rem[i].p]); }
   }
 
+  // Keep the anchor (the slot's first pick — a fundamental compound for build, the
+  // sport-priority opener for sport) as the session's first block, so a swimmer's
+  // session leads with a pull rather than a press the role-ordering promoted.
+  const anchorId = picks[0] && picks[0].ex.id;
+  if (anchorId) {
+    const ai = blocks.findIndex(blk => blk.some(p => p.ex.id === anchorId));
+    if (ai > 0) blocks.unshift(blocks.splice(ai, 1)[0]);
+  }
+
   const items = [];
   blocks.forEach((blk, bi) => {
     const g = LET[Math.min(bi, 7)];
@@ -212,10 +236,14 @@ function structureItems(picks) {
   return items;
 }
 
+// How hard to discourage volume that overshoots the remaining target. Higher = the
+// actual allocated volume tracks the evidence-based target more tightly (less junk).
+const OVERSHOOT_PENALTY = 0.1;
+
 // Pick the single best exercise to add to a slot right now, or null when nothing
 // left pays down a deficit (within the slot's remaining time). `targets` is the
 // full per-muscle target (for urgency), `deficit` the running remainder.
-function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, fillersOnly = false, prioritySet = null) {
+function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null) {
   let best = null, bestScore = 0.25; // threshold: ignore near-useless picks
   for (const ex of EXERCISES) {
     if (!slot.equip.has(ex.equip)) continue;
@@ -239,15 +267,29 @@ function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, fil
     if (!fillersOnly && slot.timeUsed > 0 && slot.timeUsed + cost > slot.budget + 2) continue;
 
     const contrib = contribOf(ex);
-    let useful = 0;
+    // Never let a pick push any muscle past its weekly MRV ceiling (counting
+    // synergist credit). This is the backstop that keeps high-frequency plans in
+    // a recoverable range.
+    let exceedsMRV = false;
+    for (const m in contrib) {
+      if ((weeklyDelivered[m] || 0) + sets * contrib[m] > (weeklyCeiling[m] ?? Infinity) + 0.01) { exceedsMRV = true; break; }
+    }
+    if (exceedsMRV) continue;
+
+    let useful = 0, waste = 0;
     for (const m in contrib) {
       const cap = (perSlotCap[m] ?? Infinity) - (slot.delivered[m] || 0);
-      const room = Math.min(Math.max(0, deficit[m] || 0), Math.max(0, cap));
+      const weeklyRoom = (weeklyCeiling[m] ?? Infinity) - (weeklyDelivered[m] || 0);
+      const room = Math.min(Math.max(0, deficit[m] || 0), Math.max(0, cap), Math.max(0, weeklyRoom));
       // Urgency: a muscle far from its target (e.g. calves at 0%) gets weighted
       // up so single-muscle isolation can compete with multi-muscle compounds,
       // instead of always being crowded out and starved.
       const urgency = targets[m] > 0 ? Math.max(0, Math.min(1, (deficit[m] || 0) / targets[m])) : 0;
       useful += Math.min(sets * contrib[m], room) * (0.6 + 0.9 * urgency);
+      // Volume this pick dumps PAST the remaining target — junk sets that overshoot
+      // the evidence-based target (e.g. a squat piling quads onto a swimmer whose leg
+      // target is already met). Penalised below so actual volume tracks the target.
+      waste += Math.max(0, sets * contrib[m] - Math.max(0, deficit[m] || 0));
     }
     if (useful <= 0) continue;
 
@@ -256,6 +298,7 @@ function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, fil
     if (slot.timeUsed < 5) score *= effectiveRole === 'primary' ? 1.2 : 0.85; // open on a compound
     if (ex.pattern === 'hpull' || ex.pattern === 'vpull') score *= 1.05; // posture pull-lean
     if (prioritySet && prioritySet.has(ex.id)) score *= 1.35;     // science-backed priority boost
+    score -= OVERSHOOT_PENALTY * waste;                            // prefer picks that fit the remaining target
     score += (hash(ex.id) + weekNum + slot.idx) % 7 * 0.001;       // rotation tie-break
 
     if (score > bestScore) { bestScore = score; best = { ex, sets, contrib, effectiveRole }; }
@@ -263,26 +306,36 @@ function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, fil
   return best;
 }
 
-// A human focus label from a slot's volume distribution.
-function focusLabel(mv) {
+// Muscles that make up each region — used to label sessions honestly.
+const GROUP_MUSCLES = {
+  'Lower body':     ['quads', 'hamstrings', 'glutes', 'calves'],
+  'Upper · push':   ['chest', 'shoulders', 'triceps'],
+  'Upper · pull':   ['back', 'biceps'],
+  'Core & carries': ['core']
+};
+
+// A human focus label from a slot's volume distribution. Mislabelling was the bug:
+// a squat-led session with a bit more pressing volume read "Upper · push · chest
+// focus". So: a session with meaningful work in BOTH the lower and the upper body
+// is "Full body"; a specific "X focus" only shows when one region clearly leads,
+// and the focus muscle is always chosen FROM that region so it can't contradict
+// the region label.
+export function focusLabel(mv) {
   const total = Object.values(mv).reduce((a, b) => a + b, 0);
   if (!total) return 'Full body';
-  const grp = {
-    lower: (mv.quads || 0) + (mv.hamstrings || 0) + (mv.glutes || 0) + (mv.calves || 0),
-    push:  (mv.chest || 0) + (mv.shoulders || 0) + (mv.triceps || 0),
-    pull:  (mv.back || 0) + (mv.biceps || 0),
-    core:  (mv.core || 0)
-  };
-  const [[, v1], [, v2]] = Object.entries(grp).sort((a, b) => b[1] - a[1]);
-  if (v2 > 0 && v2 >= v1 * 0.7) return 'Full body';
-  // Base the label on the TOP muscle's own group, so it never contradicts itself.
-  const top = Object.entries(mv).sort((a, b) => b[1] - a[1])[0][0];
-  const GROUP = {
-    quads: 'Lower body', hamstrings: 'Lower body', glutes: 'Lower body', calves: 'Lower body',
-    chest: 'Upper · push', shoulders: 'Upper · push', triceps: 'Upper · push',
-    back: 'Upper · pull', biceps: 'Upper · pull', core: 'Core & carries'
-  };
-  return `${GROUP[top] || 'Full body'} · ${MUSCLE_LABELS[top].toLowerCase()} focus`;
+  const grp = {};
+  for (const g in GROUP_MUSCLES) grp[g] = GROUP_MUSCLES[g].reduce((a, m) => a + (mv[m] || 0), 0);
+  const lower = grp['Lower body'];
+  const upper = grp['Upper · push'] + grp['Upper · pull'];
+  // Genuinely mixed (meaningful lower AND upper) → Full body.
+  const minRegion = 0.25 * total;
+  if (lower >= minRegion && upper >= minRegion) return 'Full body';
+  const [topGroup, topVal] = Object.entries(grp).sort((a, b) => b[1] - a[1])[0];
+  if (topVal < 0.5 * total) return 'Full body';            // no region clearly leads
+  if (topGroup === 'Core & carries') return 'Core & carries';
+  // Top muscle WITHIN the leading region — never contradicts the region label.
+  const top = [...GROUP_MUSCLES[topGroup]].sort((a, b) => (mv[b] || 0) - (mv[a] || 0))[0];
+  return `${topGroup} · ${MUSCLE_LABELS[top].toLowerCase()} focus`;
 }
 
 /**
@@ -298,10 +351,11 @@ function focusLabel(mv) {
 export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const style = ['strength', 'bodybuilding', 'functional', 'sport'].includes(ctx.style) ? ctx.style : 'functional';
   const deload = !!ctx.deload;
+  const taper = !!ctx.taper;
   const intent = ctx.intent || 'base';
   const weekNum = ctx.weekNum || 1;
   const repBump = femaleRepBump(ctx.sex);
-  const s = scheme(style, intent, deload);
+  const s = scheme(style, intent, deload, taper);
 
   // Cap how much of a muscle's target lands in ONE slot, so volume spreads across
   // sessions (frequency). With 2+ slots, no slot gets more than ~half a muscle.
@@ -318,6 +372,16 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const ceiling = lm ? Math.ceil(lm.mrv / 2) : Infinity;
     perSlotCap[m] = Math.min(even, ceiling);
   }
+
+  // Hard WEEKLY ceiling: the actual allocated volume for a muscle (counting the
+  // synergist contributions that compounds credit) may never exceed its MRV across
+  // the whole week. The per-slot cap above only bounds a single session — without
+  // this, high-frequency/functional plans piled posterior-chain work past MRV
+  // (back hit ~57 vs MRV 25). Defined for every muscle so synergist-only volume
+  // (e.g. back from hinges) is capped too.
+  const weeklyCeiling = {};
+  for (const m in VOLUME_LANDMARKS) weeklyCeiling[m] = VOLUME_LANDMARKS[m].mrv;
+  const weeklyDelivered = {};   // muscle → fractional sets delivered across ALL slots
 
   const work = slots.map((slot, idx) => ({
     idx,
@@ -349,7 +413,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const { ex, sets, contrib, effectiveRole } = pick;
     slot.picks.push({
       ex, effectiveRole,
-      item: makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole)
+      item: makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole, taper)
     });
     slot.timeUsed += sets * perSetMin(ex, effectiveRole);
     slot.patternsUsed.add(ex.pattern);
@@ -359,20 +423,35 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       deficit[m] = (deficit[m] || 0) - v;
       slot.delivered[m] = (slot.delivered[m] || 0) + v;
       slot.muscleVol[m] = (slot.muscleVol[m] || 0) + v;
+      weeklyDelivered[m] = (weeklyDelivered[m] || 0) + v;   // weekly MRV accounting
     }
   };
 
-  // 1) Anchor each slot with its fundamental compound (best primary for the
-  //    pattern: prefer a barbell main, fall back to whatever the kit allows).
+  // 1) Anchor each slot. SPORT plans lead with the sport's priority work (so a
+  //    swimmer opens on a pull, a sprinter on a power/posterior lift), rotated per
+  //    session — far more specific than always opening on a generic squat/hinge.
+  //    Everything else (and any sport gap) uses the fundamental-pattern anchor for
+  //    guaranteed legs+push+pull coverage. Fillers are excluded so the opener is a
+  //    substantial lift, not a face pull.
+  const sportAnchors = style === 'sport'
+    ? (ctx.exercisePriority || []).map(id => EXERCISES.find(e => e.id === id)).filter(e => e && !isFiller(e))
+    : [];
   for (const slot of work) {
-    const pat = FUNDAMENTAL[slot.idx % FUNDAMENTAL.length];
-    let cands = EXERCISES.filter(e => e.pattern === pat && slot.equip.has(e.equip) && e.level <= slot.level);
-    if (!cands.length) continue; // equipment can't cover it — greedy will fill
-    const prim = cands.filter(e => e.role === 'primary');
-    if (prim.length) cands = prim;
-    const bar = cands.filter(e => e.equip === 'barbell');
-    if (bar.length) cands = bar;
-    const ex = cands[(weekNum + slot.idx) % cands.length];
+    let ex = null;
+    if (sportAnchors.length) {
+      const fit = sportAnchors.filter(e => slot.equip.has(e.equip) && e.level <= slot.level);
+      if (fit.length) ex = fit[(weekNum + slot.idx) % fit.length];
+    }
+    if (!ex) {
+      const pat = FUNDAMENTAL[slot.idx % FUNDAMENTAL.length];
+      let cands = EXERCISES.filter(e => e.pattern === pat && slot.equip.has(e.equip) && e.level <= slot.level);
+      if (!cands.length) continue; // equipment can't cover it — greedy will fill
+      const prim = cands.filter(e => e.role === 'primary');
+      if (prim.length) cands = prim;
+      const bar = cands.filter(e => e.equip === 'barbell');
+      if (bar.length) cands = bar;
+      ex = cands[(weekNum + slot.idx) % cands.length];
+    }
     const anchorEffectiveRole = (ex.minLevelForPrimary && ex.role === 'primary' &&
       slot.level < (LEVELS[ex.minLevelForPrimary] ?? 0)) ? 'accessory' : ex.role;
     place(slot, { ex, sets: roleSetCount(ex, s, style, anchorEffectiveRole), contrib: contribOf(ex), effectiveRole: anchorEffectiveRole });
@@ -384,7 +463,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     progressed = false;
     for (const slot of work) {
       if (slot.timeUsed >= slot.budget) continue;
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, false, prioritySet);
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet);
       if (!pick) continue;
       place(slot, pick);
       progressed = true;
@@ -398,7 +477,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const maint = { ...targets };
     let go = true;
     while (go && slot.timeUsed < slot.budget) {
-      const pick = bestExercise(slot, targets, maint, perSlotCap, s, style, weekNum, false, prioritySet);
+      const pick = bestExercise(slot, targets, maint, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet);
       if (!pick) { go = false; break; }
       place(slot, pick);
       for (const m in pick.contrib) maint[m] -= pick.sets * pick.contrib[m];
@@ -412,8 +491,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   for (const slot of work) {
     const numMains = Math.max(1, slot.picks.filter(p => p.ex.role === 'primary').length);
     let added = 0;
-    while (added < numMains + 1) {
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, true, prioritySet);
+    // Fillers go in rest gaps, but still respect the session's time budget so 1–2-day
+    // plans can't quietly pack a 90-minute session into a "~60 min" slot (F5).
+    while (added < numMains + 1 && slot.timeUsed < slot.budget) {
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet);
       if (!pick) break;
       place(slot, pick);
       added++;
@@ -427,9 +508,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const total = Object.values(slot.muscleVol).reduce((a, b) => a + b, 0) || 1;
     const lower = (slot.muscleVol.quads || 0) + (slot.muscleVol.hamstrings || 0) +
                   (slot.muscleVol.glutes || 0) + (slot.muscleVol.calves || 0);
-    // A single rounded ESTIMATE — the plan prescribes the sets/RPE/rest, so exact
-    // minutes are indicative only.
-    const duration = `~${Math.round(slot.minutes / 5) * 5} min`;
+    // A single rounded ESTIMATE from the REALISED work (sets × per-set minutes,
+    // supersets already compressed in perSetMin), not the requested slot length —
+    // so a packed 1-day session no longer mislabels 90 min of work as "~60 min" (F5).
+    const duration = `~${Math.max(15, Math.round(slot.timeUsed / 5) * 5)} min`;
     return {
       discipline: 'gym',
       focus: focusLabel(slot.muscleVol),

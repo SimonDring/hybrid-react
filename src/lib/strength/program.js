@@ -17,8 +17,10 @@ const SEASON_VOLUME = { off: 1.0, pre: 0.85, in: 0.6, transition: 0.7 };
 
 const SPORT_EMPHASIS = {
   // Run disciplines — separate maps per science (design spec 2026-06-12-run-discipline)
-  // Sprint: glutes/hamstrings for power + shoulders for arm drive (Hicks 2024 scoping review)
-  run_sprint: { quads: 1.20, hamstrings: 1.30, glutes: 1.35, calves: 1.20, core: 1.15, back: 1.00, shoulders: 1.10, chest: 0.90, biceps: 0.70, triceps: 0.80 },
+  // Sprint: glutes/hamstrings for power + shoulders for arm drive (Hicks 2024 scoping
+  // review). Chest/triceps trimmed — non-specific pressing volume was crowding the
+  // limited training time without aiding sprint transfer.
+  run_sprint: { quads: 1.20, hamstrings: 1.30, glutes: 1.35, calves: 1.20, core: 1.15, back: 1.00, shoulders: 1.10, chest: 0.70, biceps: 0.70, triceps: 0.70 },
   // Middle: balanced running economy focus
   run_middle: { quads: 1.15, hamstrings: 1.30, glutes: 1.25, calves: 1.20, core: 1.20, back: 0.90, shoulders: 0.80, chest: 0.55, biceps: 0.55, triceps: 0.70 },
   // Long: heaviest calf (achilles tendon loading), minimal chest/shoulders (avoid mass)

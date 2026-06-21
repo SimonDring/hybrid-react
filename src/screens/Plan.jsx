@@ -63,7 +63,7 @@ export default function PlanScreen() {
                   onClick={() => setSelNum(w.num)}
                 >
                   <span className="wk-chip-num">{w.num}</span>
-                  <span className="wk-chip-tag">{w.deload ? 'Deload' : isCur ? 'Now' : ''}</span>
+                  <span className="wk-chip-tag">{w.taper ? 'Taper' : w.deload ? 'Deload' : isCur ? 'Now' : ''}</span>
                   <span className="wk-chip-prog">{done}/{total}</span>
                 </button>
               );
@@ -77,7 +77,7 @@ export default function PlanScreen() {
                   <div className="wk-panel-eyebrow">Phase {sel.phaseId} · {sel.phaseTitle}</div>
                   <div className="wk-panel-title">Week {sel.num}{sel.theme ? ` · ${sel.theme}` : ''}</div>
                 </div>
-                {sel.deload && <span className="wk-deload">Deload</span>}
+                {(sel.taper || sel.deload) && <span className="wk-deload">{sel.taper ? 'Taper' : 'Deload'}</span>}
               </div>
 
               {(() => {
