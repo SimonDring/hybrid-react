@@ -2,8 +2,6 @@
 // Pure functions — no side effects.
 // Contraindication rules per body_part_key + severity + rehab_phase.
 
-import { hasRecurrenceRisk } from '../../data/injuryTaxonomy.js';
-
 // ── Blocked exercise name patterns per body part and phase ────────────────
 // Each phase entry is an array of RegExp patterns matched against item.name.
 // Severity >= 4: always use 'protect' patterns regardless of declared phase.
@@ -203,12 +201,4 @@ export function getContraindications(body_part_key, severity = 3, rehab_phase = 
   return { blockedPatterns: patterns, forcedPhase: effectivePhase };
 }
 
-/**
- * Whether a diagnosis key has documented high recurrence risk.
- * Uses the taxonomy's recurrence_risk flag.
- */
-export function recurrenceRisk(diagnosis_key) {
-  return hasRecurrenceRisk(diagnosis_key);
-}
-
-export default { getContraindications, recurrenceRisk };
+export default { getContraindications };

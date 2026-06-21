@@ -132,14 +132,9 @@ export const DIAGNOSES = {
   ]
 };
 
-// Quick lookup: is a diagnosis flagged as high-risk (auto-refer)?
-export function isHighRisk(diagnosis_key) {
-  return Object.values(DIAGNOSES).flat().some(d => d.key === diagnosis_key && d.high_risk);
-}
-
 // Does a diagnosis have documented high recurrence risk?
 export function hasRecurrenceRisk(diagnosis_key) {
   return Object.values(DIAGNOSES).flat().some(d => d.key === diagnosis_key && d.recurrence_risk);
 }
 
-export default { REGIONS, DIAGNOSES, isHighRisk, hasRecurrenceRisk };
+export default { REGIONS, DIAGNOSES, hasRecurrenceRisk };
