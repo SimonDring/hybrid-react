@@ -31,7 +31,7 @@ import { resolveLifts } from './liftProgression.js';
 import { MUSCLE_GROUPS, MUSCLE_LABELS } from '../data/muscleVolume.js';
 import { getOverrides } from './sessionOverrides.js';
 import { applyInjuryRules, applyPrevention } from './injury/injuryFilter.js';
-import { combinedMultiplier } from './plan/trainingLoad.js';
+import { combinedMultiplier, deloadRecommendation } from './plan/trainingLoad.js';
 
 let _cache = { sig: null, plan: null };
 
@@ -120,15 +120,16 @@ function withinEpoch(st) {
 }
 
 // This week's per-muscle set target (the "training debt").
-function weekTarget(phase, week, gctx) {
+function weekTarget(phase, week, gctx, deloadOverride) {
   // Block-continuous ramp position — must match PlanGenerator's formula so the
   // reflowed (trained) weeks stay in parity with the baseline plan.
   const tw = totalWeeks();
   const blockFrac = tw > 1 ? (week.num - 1) / (tw - 1) : 0.5;
+  const lighten = deloadOverride != null ? deloadOverride : (!!week.deload || !!week.taper);
   return weeklyMuscleTargets({
     style: gctx.style, intent: intentOfTitle(phase.title), level: gctx.level,
     weekInPhase: week.num - phase.weekStart + 1,
-    phaseWeeks: phase.weekEnd - phase.weekStart + 1, deload: !!week.deload || !!week.taper,
+    phaseWeeks: phase.weekEnd - phase.weekStart + 1, deload: lighten,
     emphasis: gctx.emphasis, volumeScalar: gctx.volumeScalar, blockFrac
   });
 }
@@ -226,8 +227,30 @@ function adaptedPhases() {
   const reverted = !!(profile.load_overrides && profile.load_overrides[cw] === 'plan');
   const decision = reverted ? null : _runtime.loadDecision;
   const loadBand = decision && decision.action ? decision.action : 'none';
-  const key = `${_cache.sig}|${cw}|${localISO(today)}|${stateSig}|${band}|${ovSig}|${loadBand}|${reverted ? 'r' : ''}`;
+
+  // ---- adaptive deload (F9): promote fatigue signals into a TRUE deload on the
+  // current week, or DEFER a planned one when the athlete is clearly fresh ----
+  const recVals = Object.values(_runtime.sessions)
+    .filter(s => s.completed && s.recovery != null && withinEpoch(s))
+    .sort((a, b) => String(b.completedAt || '').localeCompare(String(a.completedAt || '')))
+    .slice(0, 4).map(s => s.recovery);
+  const recentRecovery = recVals.length ? recVals.reduce((a, b) => a + b, 0) / recVals.length : null;
+  const cwWeek = g.phases.flatMap(p => p.weeks || []).find(w => w.num === cw) || {};
+  const rec = reverted ? { action: 'none', reason: null } : deloadRecommendation({
+    loadDecision: decision, readiness: _runtime.readiness, recentRecovery, scheduledDeload: !!cwWeek.deload
+  });
+  const recBand = recentRecovery == null ? 'n' : recentRecovery <= 2 ? 'l' : recentRecovery >= 4 ? 'h' : 'm';
+
+  const key = `${_cache.sig}|${cw}|${localISO(today)}|${stateSig}|${band}|${ovSig}|${loadBand}|${recBand}|${rec.action}|${reverted ? 'r' : ''}`;
   if (_adaptCache.key === key) return _adaptCache.phases;
+
+  // Effective deload for a week — the force/defer decision applies to the current week only.
+  const effDeload = (week) => {
+    if (week.num !== cw) return !!week.deload;
+    if (rec.action === 'force') return true;
+    if (rec.action === 'defer') return false;
+    return !!week.deload;
+  };
 
   // ---- rolling ledger: the per-muscle volume MISSED in the trailing window
   // (skipped or past-due, never done) — the concrete shortfall to spread forward ----
@@ -240,7 +263,7 @@ function adaptedPhases() {
   const gymCountByWeek = {};
   gymList.forEach(x => { const k = `${x.phase.id}_${x.week.num}`; gymCountByWeek[k] = (gymCountByWeek[k] || 0) + 1; });
   const slotInputs = slots.map(s => {
-    const wt = weekTarget(s.phase, s.week, gctx);
+    const wt = weekTarget(s.phase, s.week, gctx, effDeload(s.week) || !!s.week.taper);
     const n = gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1;
     const normalShare = {};
     for (const m of MUSCLE_GROUPS) normalShare[m] = (wt[m] || 0) / n;
@@ -257,7 +280,7 @@ function adaptedPhases() {
       targets: perSlot[idx],
       slots: [{ minutes: Math.round(functionalSlotMinutes(gctx.style, gctx.minutes) * mult), equip: gctx.access }],
       ctx: {
-        style: gctx.style, intent: intentOfTitle(s.phase.title), deload: !!s.week.deload, taper: !!s.week.taper,
+        style: gctx.style, intent: intentOfTitle(s.phase.title), deload: effDeload(s.week), taper: !!s.week.taper,
         weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,
         exercisePriority: gctx.exercisePriority
       }
@@ -286,7 +309,14 @@ function adaptedPhases() {
           const spec = specByKey[k];
           if (spec) swap(i, spec.focus, spec.duration, spec.items, { _trainNow: false });
         });
-        return changed ? { ...week, sessions: newSessions, _adapted: true } : week;
+        // Surface an adaptive deload (or its deferral) on the current week.
+        const forceDl = week.num === cw && rec.action === 'force';
+        const deferDl = week.num === cw && rec.action === 'defer';
+        if (!changed && !forceDl && !deferDl) return week;
+        const out = { ...week, sessions: newSessions, _adapted: changed };
+        if (forceDl) { out.deload = true; out.autoDeload = true; out.deloadReason = rec.reason; }
+        if (deferDl) { out.deload = false; out.deloadDeferred = true; }
+        return out;
       })
     };
   });

@@ -99,7 +99,37 @@ export function combinedMultiplier(rm, decision = { action: 'none', multiplier: 
   return Math.max(0.5, Math.min(rm, decision.multiplier));
 }
 
+// Adaptive deload decision for the CURRENT week. Promotes the existing load signals
+// into a TRUE deload (lighter scheme + MEV volume + banner), or DEFERS a planned
+// deload when the athlete is clearly fresh — so deloads track real fatigue instead
+// of only firing on fixed weeks. Pure; driven by the same readiness + ACWR load the
+// reflow already computes, plus recent session recovery feedback.
+//   loadDecision    from loadDecision() — action 'deload' = sustained high ACWR
+//   readiness       0–100 (today) or null
+//   recentRecovery  mean of recent session 'recovery' ratings (1–5) or null
+//   scheduledDeload is the current week already a planned deload?
+// → { action: 'force' | 'defer' | 'none', reason }
+export function deloadRecommendation({ loadDecision: dec = null, readiness = null, recentRecovery = null, scheduledDeload = false } = {}) {
+  const loadDeload = !!(dec && dec.action === 'deload');
+  const lowReadiness = readiness != null && readiness < 50;
+  const poorRecovery = recentRecovery != null && recentRecovery <= 2;
+  // Fatigued: sustained high load, OR low readiness backed by poor recovery feedback.
+  const fatigued = loadDeload || (lowReadiness && poorRecovery);
+  // Fresh: high readiness, good recovery, and load not elevated.
+  const fresh = readiness != null && readiness >= 70
+    && (recentRecovery == null || recentRecovery >= 4)
+    && (!dec || (dec.action !== 'deload' && dec.action !== 'ease'));
+
+  if (!scheduledDeload && fatigued) {
+    return { action: 'force', reason: loadDeload ? (dec.reason || 'Sustained high load — deload this week') : 'Low readiness and recovery — deload this week' };
+  }
+  if (scheduledDeload && fresh) {
+    return { action: 'defer', reason: 'Recovered and fresh — pushing the planned deload' };
+  }
+  return { action: 'none', reason: null };
+}
+
 export default {
   sessionLoad, workoutLoad, dailyLoads, acuteChronic, acwr, acwrSeries,
-  loadDecision, combinedMultiplier, EASE_FROM, HIGH, SWEET_LOW
+  loadDecision, combinedMultiplier, deloadRecommendation, EASE_FROM, HIGH, SWEET_LOW
 };
