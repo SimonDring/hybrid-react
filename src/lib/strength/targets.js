@@ -73,7 +73,9 @@ export function weeklyMuscleTargets(ctx = {}) {
     if (!lm) { out[m] = 0; continue; }
 
     if (ctx.deload) {
-      out[m] = roundHalf(lm.mev);          // recover; hold the adaptation
+      // Recover at ~MEV, scaled by the season volume scalar so in-season deloads/
+      // tapers drop BELOW the (already-scaled) working weeks instead of above them.
+      out[m] = roundHalf(lm.mev * scalar);
       continue;
     }
 

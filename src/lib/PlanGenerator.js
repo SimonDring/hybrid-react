@@ -81,12 +81,12 @@ function gatesFor(intent, totalSessions) {
   return [{ label: 'Sharp and recovered through the taper', required: true }];
 }
 
-// Build the week's gym sessions from the resolved program. Taper weeks lighten
-// like a deload. Goal tuning (style/emphasis/volume/priority) comes from program.
+// Build the week's gym sessions from the resolved program. Deload and taper are
+// passed SEPARATELY: both cut volume, but a taper keeps intensity high (peaking)
+// whereas a deload drops it (recovery). Goal tuning comes from program.
 function buildGymWeek(count, ctx, profile, program) {
-  const lighten = ctx.deload || ctx.taper;
   return strength.buildWeek({
-    intent: ctx.intent, deload: lighten, winp: ctx.winp, weekNum: ctx.weekNum,
+    intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, winp: ctx.winp, weekNum: ctx.weekNum,
     phaseWeeks: ctx.phaseWeeks, blockFrac: ctx.blockFrac, minutes: ctx.minutes,
     level: gymLevelFor(profile), access: profile.access || [], sex: profile.sex,
     gymDays: count, lifts: resolveLifts(profile),
@@ -136,7 +136,7 @@ export function generatePlan(profile = {}) {
       const dayNames = chooseDays(availability, sportSpecs.length);
       const sessions = scheduleWeek({ sportSpecs, dayNames });
 
-      weeks.push({ num: weekNum, deload: deload || taper, theme: themeFor(seg.intent, deload, taper, isRace && weekNum === total), sessions, provisional: pi > 0 });
+      weeks.push({ num: weekNum, deload, taper, theme: themeFor(seg.intent, deload, taper, isRace && weekNum === total), sessions, provisional: pi > 0 });
     }
 
     phases.push({

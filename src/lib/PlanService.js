@@ -128,7 +128,7 @@ function weekTarget(phase, week, gctx) {
   return weeklyMuscleTargets({
     style: gctx.style, intent: intentOfTitle(phase.title), level: gctx.level,
     weekInPhase: week.num - phase.weekStart + 1,
-    phaseWeeks: phase.weekEnd - phase.weekStart + 1, deload: !!week.deload,
+    phaseWeeks: phase.weekEnd - phase.weekStart + 1, deload: !!week.deload || !!week.taper,
     emphasis: gctx.emphasis, volumeScalar: gctx.volumeScalar, blockFrac
   });
 }
@@ -257,7 +257,7 @@ function adaptedPhases() {
       targets: perSlot[idx],
       slots: [{ minutes: Math.round(functionalSlotMinutes(gctx.style, gctx.minutes) * mult), equip: gctx.access }],
       ctx: {
-        style: gctx.style, intent: intentOfTitle(s.phase.title), deload: !!s.week.deload,
+        style: gctx.style, intent: intentOfTitle(s.phase.title), deload: !!s.week.deload, taper: !!s.week.taper,
         weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,
         exercisePriority: gctx.exercisePriority
       }

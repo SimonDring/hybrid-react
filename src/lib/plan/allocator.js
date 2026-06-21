@@ -40,7 +40,21 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
 // ---- rep / RPE / intensity scheme by style + phase (moved here from strength.js
 // so the allocator owns the prescription and there's no import cycle) ----
-function scheme(style, intent, deload) {
+function scheme(style, intent, deload, taper) {
+  // Event taper (peaking): cut VOLUME hard (2 sets, lean accessories) but KEEP
+  // intensity high — load/RPE stay near peak so the athlete sharpens, not detrains.
+  // This is the opposite of a deload (which drops intensity too). Evidence: Bosquet
+  // 2007 (endurance) + Travis & Mujika 2020 (maximal strength) — reduce volume
+  // ~40–60%, maintain intensity. Taper takes precedence over deload.
+  if (taper) {
+    const t = {
+      strength:     { main: '2 × 3', acc: '2 × 4', mainRpe: 'RPE 8', accRpe: 'RPE 7' },
+      bodybuilding: { main: '2 × 6', acc: '2 × 8', mainRpe: 'RPE 8', accRpe: 'RPE 8' },
+      functional:   { main: '2 × 4', acc: '2 × 6', mainRpe: 'RPE 8', accRpe: 'RPE 7' },
+      sport:        { main: '2 × 3', acc: '2 × 5', mainRpe: 'RPE 8', accRpe: 'RPE 7' }
+    };
+    return t[style] || t.functional;
+  }
   if (deload) {
     if (style === 'sport') return { main: '2 × 4', acc: '2 × 6', mainRpe: 'RPE 5', accRpe: 'RPE 5' };
     return { main: '2 × 5', acc: '2 × 8', mainRpe: 'RPE 6', accRpe: 'RPE 6' };
@@ -71,10 +85,11 @@ function scheme(style, intent, deload) {
 }
 
 const isoStr = (style) => (style === 'bodybuilding' ? '3 × 12–15' : '3 × 12');
-const coreStr = (deload) => (deload ? '2 × 30s' : '3 × 30s');
-const mainNote = (deload) =>
-  deload ? 'deload — ~65% load, leave 3+ reps in the tank'
-         : '+small load when the last set is ≤ target RPE';
+const coreStr = (light) => (light ? '2 × 30s' : '3 × 30s');
+const mainNote = (deload, taper) =>
+  taper ? 'taper — keep the load, just fewer sets. Arrive fresh.'
+    : deload ? 'deload — ~65% load, leave 3+ reps in the tank'
+      : '+small load when the last set is ≤ target RPE';
 
 // Subtle, evidence-based sex tuning: women recover faster between sets and can
 // absorb a little more rep volume on supporting work — nudge accessory/iso reps
@@ -117,17 +132,17 @@ function restForRole(ex, style, effectiveRole) {
 }
 
 // Build the rendered item for a chosen exercise at a given position in the slot.
-function makeItem(ex, idx, s, style, deload, repBump, effectiveRole) {
+function makeItem(ex, idx, s, style, deload, repBump, effectiveRole, taper) {
   const role = effectiveRole != null ? effectiveRole : ex.role;
   const per = ex.unilateral ? ' ea.' : '';
   const num = LETTERS[Math.min(idx, LETTERS.length - 1)] + '1';
   const restSec = restForRole(ex, style, role);
   if (role === 'primary') {
-    return { num, name: ex.name, sets: s.main + per, rpe: s.mainRpe, note: mainNote(deload), restSec };
+    return { num, name: ex.name, sets: s.main + per, rpe: s.mainRpe, note: mainNote(deload, taper), restSec };
   }
   if (ex.pattern === 'core') {
     const hold = /plank|hold|dead bug|copenhagen|hollow|bird dog/i.test(ex.name);
-    return { num, name: ex.name, sets: hold ? coreStr(deload) : '3 × 12' + per, rpe: 'RPE 6', tag: 'mobility', note: '', restSec };
+    return { num, name: ex.name, sets: hold ? coreStr(deload || taper) : '3 × 12' + per, rpe: 'RPE 6', tag: 'mobility', note: '', restSec };
   }
   if (ex.pattern === 'calf' || role === 'iso') {
     const str = ex.pattern === 'calf' ? '3 × 12' : isoStr(style);
@@ -198,6 +213,15 @@ function structureItems(picks) {
     }
     if (j >= 0) { taken.add(i); taken.add(j); blocks.push([rem[i].p, rem[j].p]); }
     else { taken.add(i); blocks.push([rem[i].p]); }
+  }
+
+  // Keep the anchor (the slot's first pick — a fundamental compound for build, the
+  // sport-priority opener for sport) as the session's first block, so a swimmer's
+  // session leads with a pull rather than a press the role-ordering promoted.
+  const anchorId = picks[0] && picks[0].ex.id;
+  if (anchorId) {
+    const ai = blocks.findIndex(blk => blk.some(p => p.ex.id === anchorId));
+    if (ai > 0) blocks.unshift(blocks.splice(ai, 1)[0]);
   }
 
   const items = [];
@@ -318,10 +342,11 @@ export function focusLabel(mv) {
 export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const style = ['strength', 'bodybuilding', 'functional', 'sport'].includes(ctx.style) ? ctx.style : 'functional';
   const deload = !!ctx.deload;
+  const taper = !!ctx.taper;
   const intent = ctx.intent || 'base';
   const weekNum = ctx.weekNum || 1;
   const repBump = femaleRepBump(ctx.sex);
-  const s = scheme(style, intent, deload);
+  const s = scheme(style, intent, deload, taper);
 
   // Cap how much of a muscle's target lands in ONE slot, so volume spreads across
   // sessions (frequency). With 2+ slots, no slot gets more than ~half a muscle.
@@ -379,7 +404,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const { ex, sets, contrib, effectiveRole } = pick;
     slot.picks.push({
       ex, effectiveRole,
-      item: makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole)
+      item: makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole, taper)
     });
     slot.timeUsed += sets * perSetMin(ex, effectiveRole);
     slot.patternsUsed.add(ex.pattern);
@@ -393,17 +418,31 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     }
   };
 
-  // 1) Anchor each slot with its fundamental compound (best primary for the
-  //    pattern: prefer a barbell main, fall back to whatever the kit allows).
+  // 1) Anchor each slot. SPORT plans lead with the sport's priority work (so a
+  //    swimmer opens on a pull, a sprinter on a power/posterior lift), rotated per
+  //    session — far more specific than always opening on a generic squat/hinge.
+  //    Everything else (and any sport gap) uses the fundamental-pattern anchor for
+  //    guaranteed legs+push+pull coverage. Fillers are excluded so the opener is a
+  //    substantial lift, not a face pull.
+  const sportAnchors = style === 'sport'
+    ? (ctx.exercisePriority || []).map(id => EXERCISES.find(e => e.id === id)).filter(e => e && !isFiller(e))
+    : [];
   for (const slot of work) {
-    const pat = FUNDAMENTAL[slot.idx % FUNDAMENTAL.length];
-    let cands = EXERCISES.filter(e => e.pattern === pat && slot.equip.has(e.equip) && e.level <= slot.level);
-    if (!cands.length) continue; // equipment can't cover it — greedy will fill
-    const prim = cands.filter(e => e.role === 'primary');
-    if (prim.length) cands = prim;
-    const bar = cands.filter(e => e.equip === 'barbell');
-    if (bar.length) cands = bar;
-    const ex = cands[(weekNum + slot.idx) % cands.length];
+    let ex = null;
+    if (sportAnchors.length) {
+      const fit = sportAnchors.filter(e => slot.equip.has(e.equip) && e.level <= slot.level);
+      if (fit.length) ex = fit[(weekNum + slot.idx) % fit.length];
+    }
+    if (!ex) {
+      const pat = FUNDAMENTAL[slot.idx % FUNDAMENTAL.length];
+      let cands = EXERCISES.filter(e => e.pattern === pat && slot.equip.has(e.equip) && e.level <= slot.level);
+      if (!cands.length) continue; // equipment can't cover it — greedy will fill
+      const prim = cands.filter(e => e.role === 'primary');
+      if (prim.length) cands = prim;
+      const bar = cands.filter(e => e.equip === 'barbell');
+      if (bar.length) cands = bar;
+      ex = cands[(weekNum + slot.idx) % cands.length];
+    }
     const anchorEffectiveRole = (ex.minLevelForPrimary && ex.role === 'primary' &&
       slot.level < (LEVELS[ex.minLevelForPrimary] ?? 0)) ? 'accessory' : ex.role;
     place(slot, { ex, sets: roleSetCount(ex, s, style, anchorEffectiveRole), contrib: contribOf(ex), effectiveRole: anchorEffectiveRole });

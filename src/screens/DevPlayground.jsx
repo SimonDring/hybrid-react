@@ -146,7 +146,7 @@ function WeekBlock({ phase, week, profile }) {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8
       }}>
         <span style={{ fontSize: 13, fontWeight: 700 }}>
-          Week {week.num} {week.deload && <span style={{ color: 'var(--ochre)', fontWeight: 600 }}>· deload</span>}
+          Week {week.num} {week.taper ? <span style={{ color: 'var(--ochre)', fontWeight: 600 }}>· taper</span> : week.deload ? <span style={{ color: 'var(--ochre)', fontWeight: 600 }}>· deload</span> : null}
         </span>
         <span style={{ fontSize: 11, color: 'var(--txt-muted)' }}>{week.sessions.length} sessions · {open ? '▾' : '▸'}</span>
       </button>

@@ -94,10 +94,12 @@ export function buildWeek(ctx = {}) {
   const style = ctx.style || 'functional';
   const minutes = ctx.minutes || 60;
   const deload = !!ctx.deload;
+  const taper = !!ctx.taper;
 
   const targets = weeklyMuscleTargets({
     style, intent: ctx.intent, level: ctx.level,
-    weekInPhase: ctx.winp, phaseWeeks: ctx.phaseWeeks, deload,
+    weekInPhase: ctx.winp, phaseWeeks: ctx.phaseWeeks,
+    deload: deload || taper,   // both cut weekly VOLUME; taper keeps intensity (scheme)
     emphasis: ctx.emphasis, volumeScalar: ctx.volumeScalar, blockFrac: ctx.blockFrac
   });
 
@@ -106,7 +108,7 @@ export function buildWeek(ctx = {}) {
   const sessions = allocateGym({
     targets, slots,
     ctx: {
-      style, intent: ctx.intent, deload, weekNum: ctx.weekNum,
+      style, intent: ctx.intent, deload, taper, weekNum: ctx.weekNum,
       level: ctx.level, sex: ctx.sex, lifts: ctx.lifts, access: ctx.access || [],
       exercisePriority: ctx.exercisePriority || []
     }
