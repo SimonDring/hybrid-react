@@ -1,25 +1,20 @@
 /**
- * PlanService — the single entry point screens use for plan content.
+ * PlanService — the single entry point screens use for plan content
+ * (getPhases, getPhase, getWeek, findNextSession).
  *
- * It mirrors the public API of src/data/Plan.js (getPhases, getPhase, getWeek,
- * findNextSession) but chooses the source per user:
- *
- *   • Onboarded users (profile.focus set) → a plan generated from their answers
- *     by PlanGenerator. This is what makes plans per-user.
- *   • Everyone else (e.g. the original hand-built plan, pre-onboarding state) →
- *     the legacy static Plan.js ("hybrid_v1"), unchanged.
+ * The plan is ALWAYS generated from the user's own profile/goal by PlanGenerator —
+ * there is no hand-built fallback. Before a user has onboarded (no profile.focus)
+ * there is simply no plan, and the app gates the plan screens behind onboarding.
  *
  * Generation is a pure function of the profile, so we memoise on a signature of
  * the relevant fields and only regenerate when they change. Session keys follow
- * the same p{phase}_wk{week}_s{idx} scheme either way, so completion state maps
- * correctly regardless of source.
+ * the p{phase}_wk{week}_s{idx} scheme so completion state maps correctly.
  *
- * Screens import THIS instead of data/Plan.js. When the AI coach lands (Stage 5)
- * it edits the generated plan (or a persisted copy) behind this same interface.
+ * Screens import THIS for all plan content. When the AI coach lands (Stage 5) it
+ * edits the generated plan (or a persisted copy) behind this same interface.
  */
 
 import Database from './Database.js';
-import * as Legacy from '../data/Plan.js';
 import { generatePlan } from './PlanGenerator.js';
 import { weeklyMuscleTargets } from './strength/targets.js';
 import { allocateGym } from './plan/allocator.js';
@@ -110,8 +105,8 @@ const sessionKey = (phaseId, weekNum, idx) => `p${phaseId}_wk${weekNum}_s${idx}`
 // plan's start date. Session completion is keyed by POSITION (p1_wk1_s0…), so
 // after "clear plan & start over" the old rows survive as history but reuse the
 // same keys; without this guard they'd silently mark the new plan's identical
-// slots done/missed and trigger a phantom catch-up. Legacy plans (no start date)
-// have no epoch, so everything counts (unchanged behaviour).
+// slots done/missed and trigger a phantom catch-up. A plan with no start date has
+// no epoch, so everything counts (defensive fallback).
 function withinEpoch(st) {
   if (!st) return false;
   const start = getStartDate();
@@ -377,14 +372,14 @@ function generated() {
 }
 
 export function getPhases() {
-  const fp = injuryFilteredPhases();
-  return fp ? fp : Legacy.getPhases();
+  // The plan is always generated from the user's own profile/goal — no plan until
+  // they've onboarded (the app gates the plan screens behind onboarding).
+  return injuryFilteredPhases() || [];
 }
 
 export function getPhase(id) {
   const fp = injuryFilteredPhases();
-  if (fp) return fp.find(p => p.id === id) || null;
-  return Legacy.getPhase(id);
+  return fp ? (fp.find(p => p.id === id) || null) : null;
 }
 
 export function getWeek(pid, wkNum) {
@@ -394,7 +389,6 @@ export function getWeek(pid, wkNum) {
 
 /**
  * First not-yet-completed session across the whole plan — the "up next".
- * Same contract as Plan.findNextSession.
  * @returns {{ phase, week, session, sessionIdx, key }|null}
  */
 export function findNextSession(sessions = {}) {
@@ -417,8 +411,8 @@ export function findNextSession(sessions = {}) {
 // ---------------------------------------------------------------------------
 // Calendar anchoring. Generated plans store plan_start_date at onboarding so we
 // can map abstract week numbers onto real dates and surface "today's session".
-// Weeks are Monday-aligned to the start date's week. Legacy plans (no start
-// date) skip all of this and keep the plain "next incomplete" behaviour.
+// Weeks are Monday-aligned to the start date's week. A plan with no start date
+// skips all of this and keeps the plain "next incomplete" behaviour.
 // ---------------------------------------------------------------------------
 const DAY_IDX = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
 
@@ -445,7 +439,7 @@ function totalWeeks() {
   // before/after reflow, and going through getPhases()/adaptedPhases() here would
   // recurse (adaptedPhases → currentWeekNumber → totalWeeks → getPhases → …).
   const g = generated();
-  const phases = g ? g.phases : Legacy.getPhases();
+  const phases = g ? g.phases : [];
   let max = 0;
   phases.forEach(p => (p.weeks || []).forEach(w => { if (w.num > max) max = w.num; }));
   return max;
