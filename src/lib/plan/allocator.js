@@ -215,7 +215,7 @@ function structureItems(picks) {
 // Pick the single best exercise to add to a slot right now, or null when nothing
 // left pays down a deficit (within the slot's remaining time). `targets` is the
 // full per-muscle target (for urgency), `deficit` the running remainder.
-function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, fillersOnly = false, prioritySet = null) {
+function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null) {
   let best = null, bestScore = 0.25; // threshold: ignore near-useless picks
   for (const ex of EXERCISES) {
     if (!slot.equip.has(ex.equip)) continue;
@@ -239,10 +239,20 @@ function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, fil
     if (!fillersOnly && slot.timeUsed > 0 && slot.timeUsed + cost > slot.budget + 2) continue;
 
     const contrib = contribOf(ex);
+    // Never let a pick push any muscle past its weekly MRV ceiling (counting
+    // synergist credit). This is the backstop that keeps high-frequency plans in
+    // a recoverable range.
+    let exceedsMRV = false;
+    for (const m in contrib) {
+      if ((weeklyDelivered[m] || 0) + sets * contrib[m] > (weeklyCeiling[m] ?? Infinity) + 0.01) { exceedsMRV = true; break; }
+    }
+    if (exceedsMRV) continue;
+
     let useful = 0;
     for (const m in contrib) {
       const cap = (perSlotCap[m] ?? Infinity) - (slot.delivered[m] || 0);
-      const room = Math.min(Math.max(0, deficit[m] || 0), Math.max(0, cap));
+      const weeklyRoom = (weeklyCeiling[m] ?? Infinity) - (weeklyDelivered[m] || 0);
+      const room = Math.min(Math.max(0, deficit[m] || 0), Math.max(0, cap), Math.max(0, weeklyRoom));
       // Urgency: a muscle far from its target (e.g. calves at 0%) gets weighted
       // up so single-muscle isolation can compete with multi-muscle compounds,
       // instead of always being crowded out and starved.
@@ -329,6 +339,16 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     perSlotCap[m] = Math.min(even, ceiling);
   }
 
+  // Hard WEEKLY ceiling: the actual allocated volume for a muscle (counting the
+  // synergist contributions that compounds credit) may never exceed its MRV across
+  // the whole week. The per-slot cap above only bounds a single session — without
+  // this, high-frequency/functional plans piled posterior-chain work past MRV
+  // (back hit ~57 vs MRV 25). Defined for every muscle so synergist-only volume
+  // (e.g. back from hinges) is capped too.
+  const weeklyCeiling = {};
+  for (const m in VOLUME_LANDMARKS) weeklyCeiling[m] = VOLUME_LANDMARKS[m].mrv;
+  const weeklyDelivered = {};   // muscle → fractional sets delivered across ALL slots
+
   const work = slots.map((slot, idx) => ({
     idx,
     minutes: slot.minutes || 60,
@@ -369,6 +389,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       deficit[m] = (deficit[m] || 0) - v;
       slot.delivered[m] = (slot.delivered[m] || 0) + v;
       slot.muscleVol[m] = (slot.muscleVol[m] || 0) + v;
+      weeklyDelivered[m] = (weeklyDelivered[m] || 0) + v;   // weekly MRV accounting
     }
   };
 
@@ -394,7 +415,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     progressed = false;
     for (const slot of work) {
       if (slot.timeUsed >= slot.budget) continue;
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, false, prioritySet);
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet);
       if (!pick) continue;
       place(slot, pick);
       progressed = true;
@@ -408,7 +429,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const maint = { ...targets };
     let go = true;
     while (go && slot.timeUsed < slot.budget) {
-      const pick = bestExercise(slot, targets, maint, perSlotCap, s, style, weekNum, false, prioritySet);
+      const pick = bestExercise(slot, targets, maint, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet);
       if (!pick) { go = false; break; }
       place(slot, pick);
       for (const m in pick.contrib) maint[m] -= pick.sets * pick.contrib[m];
@@ -422,8 +443,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   for (const slot of work) {
     const numMains = Math.max(1, slot.picks.filter(p => p.ex.role === 'primary').length);
     let added = 0;
-    while (added < numMains + 1) {
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, true, prioritySet);
+    // Fillers go in rest gaps, but still respect the session's time budget so 1–2-day
+    // plans can't quietly pack a 90-minute session into a "~60 min" slot (F5).
+    while (added < numMains + 1 && slot.timeUsed < slot.budget) {
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet);
       if (!pick) break;
       place(slot, pick);
       added++;
@@ -437,9 +460,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const total = Object.values(slot.muscleVol).reduce((a, b) => a + b, 0) || 1;
     const lower = (slot.muscleVol.quads || 0) + (slot.muscleVol.hamstrings || 0) +
                   (slot.muscleVol.glutes || 0) + (slot.muscleVol.calves || 0);
-    // A single rounded ESTIMATE — the plan prescribes the sets/RPE/rest, so exact
-    // minutes are indicative only.
-    const duration = `~${Math.round(slot.minutes / 5) * 5} min`;
+    // A single rounded ESTIMATE from the REALISED work (sets × per-set minutes,
+    // supersets already compressed in perSetMin), not the requested slot length —
+    // so a packed 1-day session no longer mislabels 90 min of work as "~60 min" (F5).
+    const duration = `~${Math.max(15, Math.round(slot.timeUsed / 5) * 5)} min`;
     return {
       discipline: 'gym',
       focus: focusLabel(slot.muscleVol),
