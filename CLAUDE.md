@@ -25,7 +25,7 @@ Where things live
 src/screens/ — one file per screen (19 screens)
 src/components/ — shared shell: TopBar, TabBar, ScreenContainer
 src/lib/ — data layer: Database.js, Storage.js, SyncService.js,
-supabaseClient.js, Utils.js, SessionHelper.js
+supabaseClient.js, Utils.js
 src/stores/ — trainingStore.js (app data), authStore.js (auth session)
 src/data/ — Plan.js (52-week plan content), activityTypes.js (registry)
 src/styles/main.css — all styles
