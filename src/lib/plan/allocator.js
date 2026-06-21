@@ -236,6 +236,10 @@ function structureItems(picks) {
   return items;
 }
 
+// How hard to discourage volume that overshoots the remaining target. Higher = the
+// actual allocated volume tracks the evidence-based target more tightly (less junk).
+const OVERSHOOT_PENALTY = 0.1;
+
 // Pick the single best exercise to add to a slot right now, or null when nothing
 // left pays down a deficit (within the slot's remaining time). `targets` is the
 // full per-muscle target (for urgency), `deficit` the running remainder.
@@ -272,7 +276,7 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     }
     if (exceedsMRV) continue;
 
-    let useful = 0;
+    let useful = 0, waste = 0;
     for (const m in contrib) {
       const cap = (perSlotCap[m] ?? Infinity) - (slot.delivered[m] || 0);
       const weeklyRoom = (weeklyCeiling[m] ?? Infinity) - (weeklyDelivered[m] || 0);
@@ -282,6 +286,10 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
       // instead of always being crowded out and starved.
       const urgency = targets[m] > 0 ? Math.max(0, Math.min(1, (deficit[m] || 0) / targets[m])) : 0;
       useful += Math.min(sets * contrib[m], room) * (0.6 + 0.9 * urgency);
+      // Volume this pick dumps PAST the remaining target — junk sets that overshoot
+      // the evidence-based target (e.g. a squat piling quads onto a swimmer whose leg
+      // target is already met). Penalised below so actual volume tracks the target.
+      waste += Math.max(0, sets * contrib[m] - Math.max(0, deficit[m] || 0));
     }
     if (useful <= 0) continue;
 
@@ -290,6 +298,7 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     if (slot.timeUsed < 5) score *= effectiveRole === 'primary' ? 1.2 : 0.85; // open on a compound
     if (ex.pattern === 'hpull' || ex.pattern === 'vpull') score *= 1.05; // posture pull-lean
     if (prioritySet && prioritySet.has(ex.id)) score *= 1.35;     // science-backed priority boost
+    score -= OVERSHOOT_PENALTY * waste;                            // prefer picks that fit the remaining target
     score += (hash(ex.id) + weekNum + slot.idx) % 7 * 0.001;       // rotation tie-break
 
     if (score > bestScore) { bestScore = score; best = { ex, sets, contrib, effectiveRole }; }
