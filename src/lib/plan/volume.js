@@ -69,6 +69,7 @@ export function countWeeklyVolume(sessions = []) {
 
   for (const s of sessions) {
     for (const it of s.items || []) {
+      if (it.tag === 'mobility') continue; // activation/mobility primer (RPE 4) isn't working volume
       const sets = parseSetCount(it.sets);
       if (!sets) continue; // warm-ups / time-based rows aren't counted as volume
       const contrib = exerciseMuscles(it.name);

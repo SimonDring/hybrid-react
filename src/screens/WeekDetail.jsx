@@ -74,11 +74,19 @@ export default function WeekDetail() {
 
       <p className="sub" style={{ marginBottom: 14 }}>{week.theme}</p>
 
-      {week.deload && (
+      {week.taper ? (
+        <div className="callout amber" style={{ marginBottom: 14 }}>
+          <strong>Taper week</strong> — Volume cut, intensity kept. Sharpen and arrive fresh.
+        </div>
+      ) : week.autoDeload ? (
+        <div className="callout amber" style={{ marginBottom: 14 }}>
+          <strong>Auto-deload</strong> — {week.deloadReason || 'Fatigue is running high'}. Volume cut so you recover.
+        </div>
+      ) : week.deload ? (
         <div className="callout amber" style={{ marginBottom: 14 }}>
           <strong>Deload week</strong> — Volume reduced. Mandatory.
         </div>
-      )}
+      ) : null}
 
       {/* Day strip */}
       <div className="week-strip" style={{ marginBottom: 20 }}>

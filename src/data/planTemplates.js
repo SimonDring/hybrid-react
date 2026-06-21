@@ -3,7 +3,7 @@
  *
  * Each builder takes a context (day, role, level, phase intent, week-in-phase,
  * deload, equipment access, pool length) and returns a session in the SAME
- * shape the screens already render (see src/data/Plan.js):
+ * shape the screens already render (a generated plan session):
  *
  *   { title: 'Monday · Easy run', duration: '30 min', items: [ ...exercises ] }
  *

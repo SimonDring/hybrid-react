@@ -1,25 +1,20 @@
 /**
- * PlanService — the single entry point screens use for plan content.
+ * PlanService — the single entry point screens use for plan content
+ * (getPhases, getPhase, getWeek, findNextSession).
  *
- * It mirrors the public API of src/data/Plan.js (getPhases, getPhase, getWeek,
- * findNextSession) but chooses the source per user:
- *
- *   • Onboarded users (profile.focus set) → a plan generated from their answers
- *     by PlanGenerator. This is what makes plans per-user.
- *   • Everyone else (e.g. the original hand-built plan, pre-onboarding state) →
- *     the legacy static Plan.js ("hybrid_v1"), unchanged.
+ * The plan is ALWAYS generated from the user's own profile/goal by PlanGenerator —
+ * there is no hand-built fallback. Before a user has onboarded (no profile.focus)
+ * there is simply no plan, and the app gates the plan screens behind onboarding.
  *
  * Generation is a pure function of the profile, so we memoise on a signature of
  * the relevant fields and only regenerate when they change. Session keys follow
- * the same p{phase}_wk{week}_s{idx} scheme either way, so completion state maps
- * correctly regardless of source.
+ * the p{phase}_wk{week}_s{idx} scheme so completion state maps correctly.
  *
- * Screens import THIS instead of data/Plan.js. When the AI coach lands (Stage 5)
- * it edits the generated plan (or a persisted copy) behind this same interface.
+ * Screens import THIS for all plan content. When the AI coach lands (Stage 5) it
+ * edits the generated plan (or a persisted copy) behind this same interface.
  */
 
 import Database from './Database.js';
-import * as Legacy from '../data/Plan.js';
 import { generatePlan } from './PlanGenerator.js';
 import { weeklyMuscleTargets } from './strength/targets.js';
 import { allocateGym } from './plan/allocator.js';
@@ -31,7 +26,7 @@ import { resolveLifts } from './liftProgression.js';
 import { MUSCLE_GROUPS, MUSCLE_LABELS } from '../data/muscleVolume.js';
 import { getOverrides } from './sessionOverrides.js';
 import { applyInjuryRules, applyPrevention } from './injury/injuryFilter.js';
-import { combinedMultiplier } from './plan/trainingLoad.js';
+import { combinedMultiplier, deloadRecommendation } from './plan/trainingLoad.js';
 
 let _cache = { sig: null, plan: null };
 
@@ -110,8 +105,8 @@ const sessionKey = (phaseId, weekNum, idx) => `p${phaseId}_wk${weekNum}_s${idx}`
 // plan's start date. Session completion is keyed by POSITION (p1_wk1_s0…), so
 // after "clear plan & start over" the old rows survive as history but reuse the
 // same keys; without this guard they'd silently mark the new plan's identical
-// slots done/missed and trigger a phantom catch-up. Legacy plans (no start date)
-// have no epoch, so everything counts (unchanged behaviour).
+// slots done/missed and trigger a phantom catch-up. A plan with no start date has
+// no epoch, so everything counts (defensive fallback).
 function withinEpoch(st) {
   if (!st) return false;
   const start = getStartDate();
@@ -120,15 +115,16 @@ function withinEpoch(st) {
 }
 
 // This week's per-muscle set target (the "training debt").
-function weekTarget(phase, week, gctx) {
+function weekTarget(phase, week, gctx, deloadOverride) {
   // Block-continuous ramp position — must match PlanGenerator's formula so the
   // reflowed (trained) weeks stay in parity with the baseline plan.
   const tw = totalWeeks();
   const blockFrac = tw > 1 ? (week.num - 1) / (tw - 1) : 0.5;
+  const lighten = deloadOverride != null ? deloadOverride : (!!week.deload || !!week.taper);
   return weeklyMuscleTargets({
     style: gctx.style, intent: intentOfTitle(phase.title), level: gctx.level,
     weekInPhase: week.num - phase.weekStart + 1,
-    phaseWeeks: phase.weekEnd - phase.weekStart + 1, deload: !!week.deload,
+    phaseWeeks: phase.weekEnd - phase.weekStart + 1, deload: lighten,
     emphasis: gctx.emphasis, volumeScalar: gctx.volumeScalar, blockFrac
   });
 }
@@ -226,8 +222,30 @@ function adaptedPhases() {
   const reverted = !!(profile.load_overrides && profile.load_overrides[cw] === 'plan');
   const decision = reverted ? null : _runtime.loadDecision;
   const loadBand = decision && decision.action ? decision.action : 'none';
-  const key = `${_cache.sig}|${cw}|${localISO(today)}|${stateSig}|${band}|${ovSig}|${loadBand}|${reverted ? 'r' : ''}`;
+
+  // ---- adaptive deload (F9): promote fatigue signals into a TRUE deload on the
+  // current week, or DEFER a planned one when the athlete is clearly fresh ----
+  const recVals = Object.values(_runtime.sessions)
+    .filter(s => s.completed && s.recovery != null && withinEpoch(s))
+    .sort((a, b) => String(b.completedAt || '').localeCompare(String(a.completedAt || '')))
+    .slice(0, 4).map(s => s.recovery);
+  const recentRecovery = recVals.length ? recVals.reduce((a, b) => a + b, 0) / recVals.length : null;
+  const cwWeek = g.phases.flatMap(p => p.weeks || []).find(w => w.num === cw) || {};
+  const rec = reverted ? { action: 'none', reason: null } : deloadRecommendation({
+    loadDecision: decision, readiness: _runtime.readiness, recentRecovery, scheduledDeload: !!cwWeek.deload
+  });
+  const recBand = recentRecovery == null ? 'n' : recentRecovery <= 2 ? 'l' : recentRecovery >= 4 ? 'h' : 'm';
+
+  const key = `${_cache.sig}|${cw}|${localISO(today)}|${stateSig}|${band}|${ovSig}|${loadBand}|${recBand}|${rec.action}|${reverted ? 'r' : ''}`;
   if (_adaptCache.key === key) return _adaptCache.phases;
+
+  // Effective deload for a week — the force/defer decision applies to the current week only.
+  const effDeload = (week) => {
+    if (week.num !== cw) return !!week.deload;
+    if (rec.action === 'force') return true;
+    if (rec.action === 'defer') return false;
+    return !!week.deload;
+  };
 
   // ---- rolling ledger: the per-muscle volume MISSED in the trailing window
   // (skipped or past-due, never done) — the concrete shortfall to spread forward ----
@@ -240,7 +258,7 @@ function adaptedPhases() {
   const gymCountByWeek = {};
   gymList.forEach(x => { const k = `${x.phase.id}_${x.week.num}`; gymCountByWeek[k] = (gymCountByWeek[k] || 0) + 1; });
   const slotInputs = slots.map(s => {
-    const wt = weekTarget(s.phase, s.week, gctx);
+    const wt = weekTarget(s.phase, s.week, gctx, effDeload(s.week) || !!s.week.taper);
     const n = gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1;
     const normalShare = {};
     for (const m of MUSCLE_GROUPS) normalShare[m] = (wt[m] || 0) / n;
@@ -257,12 +275,12 @@ function adaptedPhases() {
       targets: perSlot[idx],
       slots: [{ minutes: Math.round(functionalSlotMinutes(gctx.style, gctx.minutes) * mult), equip: gctx.access }],
       ctx: {
-        style: gctx.style, intent: intentOfTitle(s.phase.title), deload: !!s.week.deload,
+        style: gctx.style, intent: intentOfTitle(s.phase.title), deload: effDeload(s.week), taper: !!s.week.taper,
         weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,
         exercisePriority: gctx.exercisePriority
       }
     })[0];
-    if (spec) specByKey[s.key] = applyFunctionalPrimer([spec], gctx.style)[0];
+    if (spec) specByKey[s.key] = applyFunctionalPrimer([spec], gctx.style, gctx.minutes, gctx.access)[0];
   });
 
   // ---- rebuild in place: horizon specs + train-now snapshots; everything else as-is ----
@@ -286,7 +304,14 @@ function adaptedPhases() {
           const spec = specByKey[k];
           if (spec) swap(i, spec.focus, spec.duration, spec.items, { _trainNow: false });
         });
-        return changed ? { ...week, sessions: newSessions, _adapted: true } : week;
+        // Surface an adaptive deload (or its deferral) on the current week.
+        const forceDl = week.num === cw && rec.action === 'force';
+        const deferDl = week.num === cw && rec.action === 'defer';
+        if (!changed && !forceDl && !deferDl) return week;
+        const out = { ...week, sessions: newSessions, _adapted: changed };
+        if (forceDl) { out.deload = true; out.autoDeload = true; out.deloadReason = rec.reason; }
+        if (deferDl) { out.deload = false; out.deloadDeferred = true; }
+        return out;
       })
     };
   });
@@ -347,14 +372,14 @@ function generated() {
 }
 
 export function getPhases() {
-  const fp = injuryFilteredPhases();
-  return fp ? fp : Legacy.getPhases();
+  // The plan is always generated from the user's own profile/goal — no plan until
+  // they've onboarded (the app gates the plan screens behind onboarding).
+  return injuryFilteredPhases() || [];
 }
 
 export function getPhase(id) {
   const fp = injuryFilteredPhases();
-  if (fp) return fp.find(p => p.id === id) || null;
-  return Legacy.getPhase(id);
+  return fp ? (fp.find(p => p.id === id) || null) : null;
 }
 
 export function getWeek(pid, wkNum) {
@@ -364,7 +389,6 @@ export function getWeek(pid, wkNum) {
 
 /**
  * First not-yet-completed session across the whole plan — the "up next".
- * Same contract as Plan.findNextSession.
  * @returns {{ phase, week, session, sessionIdx, key }|null}
  */
 export function findNextSession(sessions = {}) {
@@ -387,8 +411,8 @@ export function findNextSession(sessions = {}) {
 // ---------------------------------------------------------------------------
 // Calendar anchoring. Generated plans store plan_start_date at onboarding so we
 // can map abstract week numbers onto real dates and surface "today's session".
-// Weeks are Monday-aligned to the start date's week. Legacy plans (no start
-// date) skip all of this and keep the plain "next incomplete" behaviour.
+// Weeks are Monday-aligned to the start date's week. A plan with no start date
+// skips all of this and keeps the plain "next incomplete" behaviour.
 // ---------------------------------------------------------------------------
 const DAY_IDX = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
 
@@ -415,7 +439,7 @@ function totalWeeks() {
   // before/after reflow, and going through getPhases()/adaptedPhases() here would
   // recurse (adaptedPhases → currentWeekNumber → totalWeeks → getPhases → …).
   const g = generated();
-  const phases = g ? g.phases : Legacy.getPhases();
+  const phases = g ? g.phases : [];
   let max = 0;
   phases.forEach(p => (p.weeks || []).forEach(w => { if (w.num > max) max = w.num; }));
   return max;
@@ -642,7 +666,7 @@ export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
     slots: [{ minutes: functionalSlotMinutes(gctx.style, minutes), equip: equipArr }],
     ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, exercisePriority: gctx.exercisePriority }
   });
-  const session = applyFunctionalPrimer(specs, gctx.style)[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
+  const session = applyFunctionalPrimer(specs, gctx.style, minutes, equipArr)[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
   return { session, why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };
 }
 
