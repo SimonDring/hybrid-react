@@ -1,19 +1,22 @@
 /**
- * Profile — a tight Midnight snapshot of you + your plan, with your strength GOALS
- * surfaced prominently (they drive Progress), plus the single path to Settings.
- * Read-only: details come from onboarding; rebuild via Settings → Clear plan.
+ * Profile — the account & setup hub, reached from the home-screen avatar. Owns
+ * everything that isn't training or progress: who you are (editable photo + name),
+ * your setup, plan status, wearable connections and app settings. Strength
+ * progress now lives in Atlas.
  */
 
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
+import { useAuthStore } from '../stores/authStore.js';
 import * as Plan from '../lib/PlanService.js';
-import { liftGoal } from '../lib/goals.js';
+import Avatar from '../components/ui/Avatar.jsx';
+import { processAvatar } from '../lib/avatarUpload.js';
 
 const STYLE_LABELS = { strength: 'Get stronger', bodybuilding: 'Build muscle', functional: 'Functional fitness' };
 const SPORT_LABELS = { run: 'Running', cycle: 'Cycling', swim: 'Swimming' };
 const LEVEL_LABELS = { beginner: 'Beginner', returning: 'Returning', intermediate: 'Intermediate', advanced: 'Advanced' };
 const ACCESS_LABELS = { full_gym: 'Full gym', home_weights: 'Home / free weights', none: 'Bodyweight only' };
-const PILL = { on_track: 'On track', building: 'Building', behind: 'Behind', nodata: '—' };
 
 function Stat({ label, value, suffix }) {
   const has = value !== '' && value != null;
@@ -43,6 +46,14 @@ export default function Profile() {
   const profile = useTrainingStore(s => s.profile);
   const injuries = useTrainingStore(s => s.injuries);
   const sessions = useTrainingStore(s => s.sessions);
+  const connections = useTrainingStore(s => s.connections);
+  const updateProfile = useTrainingStore(s => s.updateProfile);
+  const user = useAuthStore(s => s.user);
+
+  const fileRef = useRef(null);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [editName, setEditName] = useState(false);
+  const [nameDraft, setNameDraft] = useState(profile.name || '');
 
   const experience = profile.experience || {};
   const availability = profile.availability || {};
@@ -58,56 +69,68 @@ export default function Profile() {
   const totalWeeks = Plan.getPhases().reduce((m, p) => Math.max(m, p.weekEnd || 0), 0);
   const currentWeek = Plan.currentWeekNumber();
   const activeInjuries = injuries.filter(i => ['active', 'rehabbing', 'monitoring'].includes(i.status));
-  const hasBaseline = [profile.name, profile.age, profile.bodyweight_kg].some(v => v !== '' && v != null);
-  const liftGoals = ['squat', 'bench', 'deadlift'].map(k => liftGoal(k, profile));
-  const haveLiftData = liftGoals.some(g => g.status !== 'nodata');
+  const hasBaseline = [profile.age, profile.bodyweight_kg].some(v => v !== '' && v != null);
+  const connectedCount = (connections || []).filter(c => c.connected_at).length;
+
+  const onPickPhoto = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    setPhotoBusy(true);
+    try {
+      const url = await processAvatar(file, user && user.id);
+      await updateProfile({ avatar: { ...(profile.avatar || {}), url } });
+    } catch (err) {
+      alert(err.message || 'Could not update your photo.');
+    }
+    setPhotoBusy(false);
+  };
+
+  const saveName = async () => {
+    const name = nameDraft.trim();
+    setEditName(false);
+    if (name && name !== profile.name) await updateProfile({ name });
+  };
 
   return (
     <>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-        <h1 className="h1" style={{ marginBottom: 0 }}>Profile</h1>
-        <button className="btn-icon" aria-label="Settings" onClick={() => navigate('/settings')}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          </svg>
-        </button>
+      {/* IDENTITY — editable photo + name */}
+      <div className="profile-id">
+        <div className="profile-avatar-wrap">
+          <Avatar name={profile.name} avatar={profile.avatar} size={72} />
+          <button className="profile-cam" onClick={() => fileRef.current && fileRef.current.click()} aria-label="Change photo" disabled={photoBusy}>
+            {photoBusy ? <span className="profile-cam-busy" /> : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" />
+              </svg>
+            )}
+          </button>
+          <input ref={fileRef} type="file" accept="image/*" onChange={onPickPhoto} style={{ display: 'none' }} />
+        </div>
+        <div className="profile-id-text">
+          {editName ? (
+            <input className="profile-name-input" autoFocus value={nameDraft}
+              onChange={e => setNameDraft(e.target.value)}
+              onBlur={saveName} onKeyDown={e => e.key === 'Enter' && saveName()}
+              placeholder="Your name" />
+          ) : (
+            <button className="profile-name" onClick={() => { setNameDraft(profile.name || ''); setEditName(true); }}>
+              {profile.name || 'Add your name'}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z" /></svg>
+            </button>
+          )}
+          <div className="profile-id-sub">{goalText}{level ? ` · ${LEVEL_LABELS[level] || level}` : ''}</div>
+          {user && user.email && <div className="profile-id-email">{user.email}</div>}
+        </div>
       </div>
-      <p className="sub">Your setup, goals and plan — captured at onboarding. Rebuild it in Settings.</p>
 
       <Card title="YOU">
         {hasBaseline ? (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px 28px' }}>
-            <Stat label="Name" value={profile.name || ''} />
             <Stat label="Age" value={profile.age} suffix="yrs" />
             <Stat label="Bodyweight" value={profile.bodyweight_kg} suffix="kg" />
           </div>
         ) : <Empty>Captured when you set up your plan.</Empty>}
-      </Card>
-
-      <Card title="STRENGTH GOALS">
-        {haveLiftData ? (
-          <>
-            <div className="goal-rows">
-              {liftGoals.map(g => (
-                <div key={g.key} className="goal-row">
-                  <div className="goal-row-head">
-                    <span className="grw-name">{g.label}</span>
-                    <span className={`grw-pill ${g.status}`}>{g.mode === 'target' ? 'Your target' : PILL[g.status]}</span>
-                  </div>
-                  <div className="grw-sub">
-                    <span>{g.current != null ? `${g.current} kg` : 'Log a set'}</span>
-                    <span>{g.target ? `Target ${g.target} kg` : ''}{g.sub ? `${g.target ? ' · ' : ''}${g.sub}` : ''}</span>
-                  </div>
-                  {g.pct != null && <div className="grw-bar"><span style={{ width: `${g.pct}%`, background: g.color }} /></div>}
-                </div>
-              ))}
-            </div>
-            <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 10, lineHeight: 1.45 }}>
-              Targets auto-set from strength standards for your bodyweight. Custom targets coming soon.
-            </div>
-          </>
-        ) : <Empty>Log a top set after a main lift and your strength goals appear here.</Empty>}
       </Card>
 
       <Card title="TRAINING">
@@ -145,6 +168,23 @@ export default function Profile() {
             </div>
           </button>
         </div>
+      </Card>
+
+      <Card title="CONNECTIONS & SETTINGS">
+        <button className="profile-link" onClick={() => navigate('/settings/integrations')}>
+          <span className="pl-main">
+            <span className="pl-title">Wearables &amp; apps</span>
+            <span className="pl-sub">Fitbit, Garmin, Strava · pick your primary device</span>
+          </span>
+          <span className="pl-meta">{connectedCount > 0 ? `${connectedCount} connected` : ''} ›</span>
+        </button>
+        <button className="profile-link" onClick={() => navigate('/settings')}>
+          <span className="pl-main">
+            <span className="pl-title">Settings</span>
+            <span className="pl-sub">Account, data &amp; app</span>
+          </span>
+          <span className="pl-meta">›</span>
+        </button>
       </Card>
     </>
   );

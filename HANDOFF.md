@@ -18,6 +18,42 @@ run/cycle/swim workouts); that's a planned future stage. No goals are hard-coded
 the user's onboarding goal drives everything. (CLAUDE.md reflects this; the old
 personal half-marathon/2.5km-swim goals were removed.)
 
+## Latest work — sport-companion repositioning: home + Atlas (2026-06-21)
+
+On branch **`feat/sport-companion-home-atlas`** (not yet merged). Repositions the app
+from a generic gym-plan generator toward a **sport-specific training companion**.
+Built in three phases, each verified at an iPhone viewport via the preview MCP; the
+pure helpers are covered by `tests/atlas-and-coachnote.js` (40 assertions, all pass).
+
+- **Home redesign** (`src/screens/Home.jsx`): identity header (avatar + name →
+  `/profile`, day + date) → auto-generated **coach note** (`src/lib/coachNote.js` —
+  what/why/how-it-helps-your-sport, read from `resolveProgram` + plan position) →
+  **week schedule** as the hero (`src/components/WeekSchedule.jsx`) → catch-up →
+  readiness + load tiles. **Train Now button removed.**
+- **Nav**: 5 tabs → **4 — Home · Plan · Health · Atlas** (`TabBar.jsx`). Profile is no
+  longer a tab (reached from the home avatar). The old **Progress** screen folds into
+  Atlas; `/progress` now redirects to `/atlas` (`Progress.jsx` orphaned, safe to delete).
+- **Avatar**: `src/components/ui/Avatar.jsx` (photo or initials). Upload =
+  `src/lib/avatarUpload.js` (canvas square-crop/downscale → Supabase Storage when
+  signed in, else a local data-URL fallback). **Needs migration applied:**
+  `supabase/migrations/009_avatars_storage.sql` (public `avatars` bucket + own-folder
+  RLS). URL saved to `profile.avatar.url` (existing JSONB — no schema change).
+- **Profile** (`src/screens/Profile.jsx`) is now the account/setup hub: editable photo
+  + name, YOU/TRAINING/PLAN cards, **Connections & Settings** rows → integrations +
+  settings. Strength-goal card moved out (now in Atlas).
+- **Atlas** (`src/screens/Atlas.jsx`) — the new feature. Radar (`RadarChart.jsx`, SVG,
+  no chart lib) of sport-specific pillars vs **estimated** top-5%/elite, ranked
+  worst-gap-first bars, a "biggest gap" note tied to `resolveProgram.emphasis`, and the
+  folded strength-progress rings. Powered by an **extensible** stack: signal providers
+  (`src/lib/atlas/signals.js`) → pillar library (`src/data/athletePillars.js`) →
+  per-sport registry (`src/data/sports/` — run sprint/middle/long, cycle, swim, + build
+  default; "how to add a sport" header). Adding a sport (hurling, GAA, soccer, rugby,
+  field hockey…) is a config drop-in — `computePillars`, the radar and the screen don't change.
+
+Follow-ups: real top-5%/elite benchmark data (current values are estimates);
+per-pillar trend once history accrues; delete orphaned `Progress.jsx`; team-sport
+onboarding + engine emphasis maps.
+
 ## Latest work — decision-engine evaluation + hardening (2026-06-21)
 
 The engine was put through an **exhaustive evaluation** (~60k generated plans swept

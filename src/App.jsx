@@ -19,7 +19,7 @@ import PlanScreen from './screens/Plan.jsx';
 import PhaseDetail from './screens/PhaseDetail.jsx';
 import WeekDetail from './screens/WeekDetail.jsx';
 import SessionDetail from './screens/SessionDetail.jsx';
-import Progress from './screens/Progress.jsx';
+import Atlas from './screens/Atlas.jsx';
 import Health from './screens/Health.jsx';
 import SleepDetail from './screens/SleepDetail.jsx';
 import RecoveryDetail from './screens/RecoveryDetail.jsx';
@@ -35,13 +35,14 @@ import BlockCheckin from './screens/BlockCheckin.jsx';
 import TrainingLoad from './screens/TrainingLoad.jsx';
 
 const routeMeta = {
-  '/': { title: 'Today', topLevel: true, tab: 'today' },
-  '/train-now': { title: 'Train now', topLevel: false, tab: 'today' },
+  '/': { title: '', topLevel: true, tab: 'home' },
+  '/train-now': { title: 'Train now', topLevel: false, tab: 'home' },
   '/plan': { title: 'Plan', topLevel: true, tab: 'plan' },
   '/phases/:phaseId': { title: 'Phase', topLevel: false, tab: 'plan' },
   '/phases/:phaseId/weeks/:weekNum': { title: 'Week', topLevel: false, tab: 'plan' },
   '/phases/:phaseId/weeks/:weekNum/sessions/:sessionIdx': { title: 'Session', topLevel: false, tab: 'plan' },
-  '/progress': { title: 'Progress', topLevel: true, tab: 'progress' },
+  '/atlas': { title: 'Atlas', topLevel: true, tab: 'atlas' },
+  '/progress': { title: 'Progress', topLevel: false, tab: 'atlas' },
   '/health': { title: 'Health', topLevel: true, tab: 'health' },
   '/tracking/sleep': { title: 'Sleep', topLevel: false, tab: 'health' },
   '/tracking/recovery': { title: 'Recovery', topLevel: false, tab: 'health' },
@@ -169,7 +170,8 @@ export default function App() {
           <Route path="/phases/:phaseId" element={<PhaseDetail />} />
           <Route path="/phases/:phaseId/weeks/:weekNum" element={<WeekDetail />} />
           <Route path="/phases/:phaseId/weeks/:weekNum/sessions/:sessionIdx" element={<SessionDetail />} />
-          <Route path="/progress" element={<Progress />} />
+          <Route path="/atlas" element={<Atlas />} />
+          <Route path="/progress" element={<Navigate to="/atlas" replace />} />
           <Route path="/health" element={<Health />} />
           <Route path="/tracking" element={<Navigate to="/progress" replace />} />
           <Route path="/tracking/sleep" element={<SleepDetail />} />
