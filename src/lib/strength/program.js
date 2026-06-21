@@ -10,6 +10,7 @@
  */
 
 import { deriveSeason } from '../plan/periodization.js';
+import { getGymLevel } from '../Utils.js';
 
 // Strength-support volume by season (× on the weekly target). In-season is a
 // maintenance dose (Rønnestad 2011, ~2×/wk); off-season builds a full base.
@@ -104,13 +105,9 @@ const GOAL_PRIORITY = {
   ]
 };
 
-function gymLevel(profile) {
-  const e = profile.experience || {};
-  return e.gym || e.strength_functional || e.strength_physique || 'intermediate';
-}
-
 export function resolveProgram(profile = {}) {
-  const level = gymLevel(profile);
+  // Programme resolution defaults an unset experience to 'intermediate'.
+  const level = getGymLevel(profile, 'intermediate');
   const goalType = profile.goal_type || (profile.sport ? 'sport' : 'build');
 
   if (goalType === 'sport' && profile.sport) {

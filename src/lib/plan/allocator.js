@@ -32,7 +32,8 @@
  */
 
 import { EXERCISES, LEVELS, availableEquip } from '../../data/strengthExercises.js';
-import { PATTERN_CONTRIB, ISO_MUSCLE_GROUP, MUSCLE_LABELS, VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
+import { MUSCLE_LABELS, VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
+import { muscleContribution } from './contributions.js';
 import { parseSetCount } from './volume.js';
 import { applyWeights } from '../liftProgression.js';
 
@@ -101,15 +102,6 @@ function bumpReps(sets, d) {
     '× ' + reps.replace(/\d+/g, n => String(Number(n) + d)));
 }
 
-// How much one set of an exercise contributes to each muscle group.
-function contribOf(ex) {
-  if (ex.pattern === 'iso') {
-    const g = ISO_MUSCLE_GROUP[ex.muscle];
-    return g ? { [g]: 1.0 } : {};
-  }
-  return PATTERN_CONTRIB[ex.pattern] || {};
-}
-
 // Working-set count an exercise contributes, by its role + the current scheme.
 // effectiveRole overrides ex.role when minLevelForPrimary demotes the exercise.
 function roleSetCount(ex, s, style, effectiveRole) {
@@ -171,7 +163,7 @@ function slotBudget(minutes) { return Math.max(8, (minutes || 60) - 4); }
 // ---- session structuring: supersets, antagonist pairs, rest-gap fillers ----
 // Two exercises share a muscle? (then they compete — don't pair them).
 function shareMuscle(a, b) {
-  const ca = contribOf(a), cb = contribOf(b);
+  const ca = muscleContribution(a), cb = muscleContribution(b);
   for (const m in ca) if (cb[m]) return true;
   return false;
 }
@@ -266,7 +258,7 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     // Fillers slot into a main's rest gap, so they don't consume the time budget.
     if (!fillersOnly && slot.timeUsed > 0 && slot.timeUsed + cost > slot.budget + 2) continue;
 
-    const contrib = contribOf(ex);
+    const contrib = muscleContribution(ex);
     // Never let a pick push any muscle past its weekly MRV ceiling (counting
     // synergist credit). This is the backstop that keeps high-frequency plans in
     // a recoverable range.
@@ -454,7 +446,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     }
     const anchorEffectiveRole = (ex.minLevelForPrimary && ex.role === 'primary' &&
       slot.level < (LEVELS[ex.minLevelForPrimary] ?? 0)) ? 'accessory' : ex.role;
-    place(slot, { ex, sets: roleSetCount(ex, s, style, anchorEffectiveRole), contrib: contribOf(ex), effectiveRole: anchorEffectiveRole });
+    place(slot, { ex, sets: roleSetCount(ex, s, style, anchorEffectiveRole), contrib: muscleContribution(ex), effectiveRole: anchorEffectiveRole });
   }
 
   // 2) Round-robin fill: interleaving slots spreads each muscle across sessions.
