@@ -262,7 +262,7 @@ function adaptedPhases() {
         exercisePriority: gctx.exercisePriority
       }
     })[0];
-    if (spec) specByKey[s.key] = applyFunctionalPrimer([spec], gctx.style)[0];
+    if (spec) specByKey[s.key] = applyFunctionalPrimer([spec], gctx.style, gctx.minutes, gctx.access)[0];
   });
 
   // ---- rebuild in place: horizon specs + train-now snapshots; everything else as-is ----
@@ -642,7 +642,7 @@ export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
     slots: [{ minutes: functionalSlotMinutes(gctx.style, minutes), equip: equipArr }],
     ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, exercisePriority: gctx.exercisePriority }
   });
-  const session = applyFunctionalPrimer(specs, gctx.style)[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
+  const session = applyFunctionalPrimer(specs, gctx.style, minutes, equipArr)[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
   return { session, why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };
 }
 

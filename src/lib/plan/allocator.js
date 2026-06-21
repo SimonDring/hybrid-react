@@ -263,26 +263,36 @@ function bestExercise(slot, targets, deficit, perSlotCap, s, style, weekNum, fil
   return best;
 }
 
-// A human focus label from a slot's volume distribution.
-function focusLabel(mv) {
+// Muscles that make up each region — used to label sessions honestly.
+const GROUP_MUSCLES = {
+  'Lower body':     ['quads', 'hamstrings', 'glutes', 'calves'],
+  'Upper · push':   ['chest', 'shoulders', 'triceps'],
+  'Upper · pull':   ['back', 'biceps'],
+  'Core & carries': ['core']
+};
+
+// A human focus label from a slot's volume distribution. Mislabelling was the bug:
+// a squat-led session with a bit more pressing volume read "Upper · push · chest
+// focus". So: a session with meaningful work in BOTH the lower and the upper body
+// is "Full body"; a specific "X focus" only shows when one region clearly leads,
+// and the focus muscle is always chosen FROM that region so it can't contradict
+// the region label.
+export function focusLabel(mv) {
   const total = Object.values(mv).reduce((a, b) => a + b, 0);
   if (!total) return 'Full body';
-  const grp = {
-    lower: (mv.quads || 0) + (mv.hamstrings || 0) + (mv.glutes || 0) + (mv.calves || 0),
-    push:  (mv.chest || 0) + (mv.shoulders || 0) + (mv.triceps || 0),
-    pull:  (mv.back || 0) + (mv.biceps || 0),
-    core:  (mv.core || 0)
-  };
-  const [[, v1], [, v2]] = Object.entries(grp).sort((a, b) => b[1] - a[1]);
-  if (v2 > 0 && v2 >= v1 * 0.7) return 'Full body';
-  // Base the label on the TOP muscle's own group, so it never contradicts itself.
-  const top = Object.entries(mv).sort((a, b) => b[1] - a[1])[0][0];
-  const GROUP = {
-    quads: 'Lower body', hamstrings: 'Lower body', glutes: 'Lower body', calves: 'Lower body',
-    chest: 'Upper · push', shoulders: 'Upper · push', triceps: 'Upper · push',
-    back: 'Upper · pull', biceps: 'Upper · pull', core: 'Core & carries'
-  };
-  return `${GROUP[top] || 'Full body'} · ${MUSCLE_LABELS[top].toLowerCase()} focus`;
+  const grp = {};
+  for (const g in GROUP_MUSCLES) grp[g] = GROUP_MUSCLES[g].reduce((a, m) => a + (mv[m] || 0), 0);
+  const lower = grp['Lower body'];
+  const upper = grp['Upper · push'] + grp['Upper · pull'];
+  // Genuinely mixed (meaningful lower AND upper) → Full body.
+  const minRegion = 0.25 * total;
+  if (lower >= minRegion && upper >= minRegion) return 'Full body';
+  const [topGroup, topVal] = Object.entries(grp).sort((a, b) => b[1] - a[1])[0];
+  if (topVal < 0.5 * total) return 'Full body';            // no region clearly leads
+  if (topGroup === 'Core & carries') return 'Core & carries';
+  // Top muscle WITHIN the leading region — never contradicts the region label.
+  const top = [...GROUP_MUSCLES[topGroup]].sort((a, b) => (mv[b] || 0) - (mv[a] || 0))[0];
+  return `${topGroup} · ${MUSCLE_LABELS[top].toLowerCase()} focus`;
 }
 
 /**

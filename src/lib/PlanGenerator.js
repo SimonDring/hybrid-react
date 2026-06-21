@@ -55,7 +55,7 @@ function chooseDays(availability, n) {
 }
 
 const PHASE_META = {
-  base:  { title: 'Base', tagline: 'Build the aerobic engine and movement quality.', tags: ['Base', 'Aerobic'],
+  base:  { title: 'Base', tagline: 'Build the foundation — volume, technique and work capacity.', tags: ['Base', 'Foundation'],
            summary: 'Lay the foundation — consistent volume, solid technique, no chasing intensity yet.' },
   build: { title: 'Build', tagline: 'Add intensity and goal-specific work.', tags: ['Build', 'Intensity'],
            summary: 'Progressively harder sessions appear. Hold form and let recovery keep pace.' },
@@ -67,7 +67,7 @@ function themeFor(intent, deload, taper, isRaceWeek) {
   if (isRaceWeek) return 'Race week — taper hard, stay sharp, arrive fresh.';
   if (taper) return 'Taper — volume drops, a little sharpness stays. Bank the rest.';
   if (deload) return 'Deload — volume cut. Recover and absorb the work.';
-  return intent === 'base' ? 'Build aerobic base and movement quality.'
+  return intent === 'base' ? 'Build base volume and movement quality.'
     : intent === 'build' ? 'Progress the intensity. Keep form honest.'
     : 'Sharpen and taper toward your goal.';
 }

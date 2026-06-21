@@ -32,12 +32,13 @@ const NOTES_KEY = 'htp_dev_review_notes';
 
 // Representative athletes for the new strength-focused model — each is a full
 // answer set merged over BLANK_ANSWERS.
+const daysFromNow = (n) => { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
 const PRESETS = [
   { name: 'Strength (4d)', answers: { ...BLANK_ANSWERS, name: 'Test Strength', goalType: 'build', strengthStyle: 'strength', experienceLevel: 'advanced', lifts: { squat: '160', bench: '110', deadlift: '200' }, daysPerWeek: 4, sessionMinutes: 75, days: ['mon', 'tue', 'thu', 'fri'], strengthAccess: 'full_gym' } },
   { name: 'Muscle (5d)', answers: { ...BLANK_ANSWERS, name: 'Test Muscle', goalType: 'build', strengthStyle: 'bodybuilding', experienceLevel: 'intermediate', daysPerWeek: 5, sessionMinutes: 60, days: ['mon', 'tue', 'wed', 'thu', 'fri'], strengthAccess: 'full_gym' } },
   { name: 'Functional (3d)', answers: { ...BLANK_ANSWERS, name: 'Test Functional', goalType: 'build', strengthStyle: 'functional', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], strengthAccess: 'home_weights' } },
   { name: 'Runner support · off', answers: { ...BLANK_ANSWERS, name: 'Test Runner', goalType: 'sport', sport: 'run', sportSeason: 'off', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], strengthAccess: 'full_gym' } },
-  { name: 'Cyclist support · in', answers: { ...BLANK_ANSWERS, name: 'Test Cyclist', goalType: 'sport', sport: 'cycle', sportSeason: 'in', experienceLevel: 'intermediate', daysPerWeek: 2, sessionMinutes: 45, days: ['tue', 'fri'], strengthAccess: 'full_gym' } },
+  { name: 'Cyclist support · in', answers: { ...BLANK_ANSWERS, name: 'Test Cyclist', goalType: 'sport', sport: 'cycle', sportIntent: 'compete', eventDate: daysFromNow(35), experienceLevel: 'intermediate', daysPerWeek: 2, sessionMinutes: 45, days: ['tue', 'fri'], strengthAccess: 'full_gym' } },
   { name: 'Swimmer support · off', answers: { ...BLANK_ANSWERS, name: 'Test Swimmer', goalType: 'sport', sport: 'swim', sportSeason: 'off', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], strengthAccess: 'full_gym' } },
   { name: 'Busy · 20-min bodyweight', answers: { ...BLANK_ANSWERS, name: 'Test Busy', goalType: 'build', strengthStyle: 'functional', experienceLevel: 'beginner', daysPerWeek: 3, sessionMinutes: 20, days: ['mon', 'wed', 'fri'], strengthAccess: 'none' } }
 ];

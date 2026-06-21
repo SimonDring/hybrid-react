@@ -20,24 +20,58 @@
 
 import { weeklyMuscleTargets } from '../strength/targets.js';
 import { allocateGym } from './allocator.js';
+import { availableEquip } from '../../data/strengthExercises.js';
 
+// The functional activation primer. Each item carries the `equip` it needs so we
+// can swap anything the user can't do — e.g. Band Pull-Apart → a no-kit scapular
+// wall slide when there's no band (previously it was prescribed regardless, which
+// left bodyweight/dumbbell-only users with an exercise they couldn't perform).
+const SCAP_SLIDE = { name: 'Scapular Wall Slide', sets: '2 × 10', rpe: 'RPE 4', tag: 'mobility', note: 'Slide arms up the wall — blades down and back', restSec: 20, equip: 'bodyweight' };
 const FUNCTIONAL_PRIMER = [
-  { num: 'P1', name: '90/90 Hip Flexor Stretch',       sets: '5 × 30s ea.', rpe: 'Easy', tag: 'mobility', note: 'Open hip flexors before loading',         restSec: 20 },
-  { num: 'P2', name: 'Glute Bridge (2s hold)',          sets: '2 × 10',      rpe: 'RPE 4', tag: 'mobility', note: 'Activate glutes — squeeze 2s at top',    restSec: 20 },
-  { num: 'P3', name: 'Band Pull-Apart',                 sets: '2 × 15',      rpe: 'RPE 4', tag: 'mobility', note: 'Retract shoulder blades',                restSec: 20 },
-  { num: 'P4', name: 'Cat-Camel + Thoracic Rotation',  sets: '2 × 8',       rpe: 'Easy',  tag: 'mobility', note: 'Thoracic rotation each side',             restSec: 0  }
+  { num: 'P1', name: '90/90 Hip Flexor Stretch',       sets: '5 × 30s ea.', rpe: 'Easy', tag: 'mobility', note: 'Open hip flexors before loading',         restSec: 20, equip: 'bodyweight' },
+  { num: 'P2', name: 'Glute Bridge (2s hold)',          sets: '2 × 10',      rpe: 'RPE 4', tag: 'mobility', note: 'Activate glutes — squeeze 2s at top',    restSec: 20, equip: 'bodyweight' },
+  { num: 'P3', name: 'Band Pull-Apart',                 sets: '2 × 15',      rpe: 'RPE 4', tag: 'mobility', note: 'Retract shoulder blades',                restSec: 20, equip: 'band', alt: SCAP_SLIDE },
+  { num: 'P4', name: 'Cat-Camel + Thoracic Rotation',  sets: '2 × 8',       rpe: 'Easy',  tag: 'mobility', note: 'Thoracic rotation each side',             restSec: 0,  equip: 'bodyweight' }
 ];
+// Short sessions (≤30 min) get a 2-item primer (glute activation + scapular set)
+// so the warm-up doesn't eat a third of the session.
+const SHORT_PRIMER_IDS = ['P2', 'P3'];
+const PRIMER_FULL_MIN = 7;
+const PRIMER_SHORT_MIN = 3;
 
-// Functional sessions open with the 4-exercise activation primer (~7 min); deduct
-// that from the slot budget so the allocator doesn't overfill. These two helpers
-// are shared with the PlanService reflow so the baseline plan and the adapted
-// (actually-trained) weeks stay identical in style — no drift.
-export function functionalSlotMinutes(style, minutes) {
-  return style === 'functional' ? Math.max(15, (minutes || 60) - 7) : (minutes || 60);
+// Minutes the primer costs for this session length (0 for non-functional styles).
+function primerMinutes(style, minutes) {
+  if (style !== 'functional') return 0;
+  return (minutes || 60) <= 30 ? PRIMER_SHORT_MIN : PRIMER_FULL_MIN;
 }
-export function applyFunctionalPrimer(sessions, style) {
+
+// Resolve the primer items for a session: trim for short sessions, then swap any
+// item whose kit the user lacks for its no-equipment alternative.
+function resolvePrimer(minutes, access) {
+  // Resolve against the engine's real equipment set (handles legacy tier keys like
+  // 'full_gym' and the bodyweight/band minimum) so the swap matches the allocator.
+  const have = availableEquip(access || []);
+  const base = (minutes || 60) <= 30
+    ? FUNCTIONAL_PRIMER.filter(p => SHORT_PRIMER_IDS.includes(p.num))
+    : FUNCTIONAL_PRIMER;
+  return base.map(p => (
+    p.equip && p.equip !== 'bodyweight' && !have.has(p.equip) && p.alt
+      ? { num: p.num, ...p.alt }
+      : p
+  ));
+}
+
+// Functional sessions open with the activation primer; deduct its minutes from the
+// slot budget so the allocator doesn't overfill. These two helpers are shared with
+// the PlanService reflow so the baseline plan and the adapted (actually-trained)
+// weeks stay identical in style — no drift.
+export function functionalSlotMinutes(style, minutes) {
+  return style === 'functional' ? Math.max(15, (minutes || 60) - primerMinutes(style, minutes)) : (minutes || 60);
+}
+export function applyFunctionalPrimer(sessions, style, minutes = 60, access = []) {
   if (style !== 'functional') return sessions;
-  return sessions.map(s => ({ ...s, items: [...FUNCTIONAL_PRIMER, ...s.items] }));
+  const primer = resolvePrimer(minutes, access);
+  return sessions.map(s => ({ ...s, items: [...primer, ...s.items] }));
 }
 
 /**
@@ -78,7 +112,7 @@ export function buildWeek(ctx = {}) {
     }
   });
 
-  return applyFunctionalPrimer(sessions, style);
+  return applyFunctionalPrimer(sessions, style, minutes, ctx.access || []);
 }
 
 export default { buildWeek, functionalSlotMinutes, applyFunctionalPrimer };
