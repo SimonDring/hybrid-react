@@ -16,13 +16,13 @@
  */
 
 import { MUSCLE_GROUPS, VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
+import { roundHalf } from '../Utils.js';
 
 // The trailing window we account volume over. 10 days = absorbs one bad week
 // without panic, short enough that fatigue doesn't quietly pile up. Tunable.
 export const WINDOW_DAYS = 10;
 
 const zero = () => { const o = {}; MUSCLE_GROUPS.forEach(m => (o[m] = 0)); return o; };
-const half = (x) => Math.round(x * 2) / 2;
 
 /**
  * The window's per-muscle set target = daily rate (weeklyTarget / 7) × windowDays.
@@ -64,12 +64,12 @@ export function distributeAcrossSlots({ slots = [], deficit = {}, windowDays = W
     for (let i = 0; i < N; i++) {
       const want = ((slots[i].normalShare && slots[i].normalShare[m]) || 0) + catchPer;
       const allowed = Math.max(0, windowCeiling - planned);
-      const give = half(Math.min(want, allowed));
+      const give = roundHalf(Math.min(want, allowed));
       perSlot[i][m] = give;
       planned += give;
       forgiven[m] += Math.max(0, want - give);
     }
-    forgiven[m] = half(forgiven[m]);
+    forgiven[m] = roundHalf(forgiven[m]);
   }
   return { perSlot, forgiven };
 }

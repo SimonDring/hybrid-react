@@ -40,7 +40,8 @@ const result7 = assess('core_spine', { location: 'lumbar', neurological: 'no', b
 assert(result7.result === 'probable', 'T7 gradual lower back → probable');
 assert(result7.body_part_key === 'lumbar', 'T7 body_part_key is lumbar');
 
-import { getContraindications, recurrenceRisk } from '../src/lib/injury/injuryRules.js';
+import { getContraindications } from '../src/lib/injury/injuryRules.js';
+import { hasRecurrenceRisk } from '../src/data/injuryTaxonomy.js';
 
 // T8: knee protect phase blocks squats and runs
 const c8 = getContraindications('knee', 3, 'protect');
@@ -64,10 +65,10 @@ assert(c11.blockedPatterns.length === 0, 'T11 severity 1 → no blocks');
 const c12 = getContraindications('lumbar', 3, 'protect');
 assert(c12.blockedPatterns.some(p => p.test('Deadlift')), 'T12 lumbar protect blocks deadlift');
 
-// T13: recurrenceRisk returns true for known diagnoses
-assert(recurrenceRisk('patellar_tendinopathy') === true, 'T13 patellar_tendinopathy has recurrence risk');
-assert(recurrenceRisk('wrist_sprain') === false, 'T13 wrist_sprain has no recurrence risk');
-assert(recurrenceRisk('acl') === true, 'T13 ACL has recurrence risk');
+// T13: hasRecurrenceRisk returns true for known diagnoses
+assert(hasRecurrenceRisk('patellar_tendinopathy') === true, 'T13 patellar_tendinopathy has recurrence risk');
+assert(hasRecurrenceRisk('wrist_sprain') === false, 'T13 wrist_sprain has no recurrence risk');
+assert(hasRecurrenceRisk('acl') === true, 'T13 ACL has recurrence risk');
 
 import { applyInjuryRules, applyPrevention } from '../src/lib/injury/injuryFilter.js';
 

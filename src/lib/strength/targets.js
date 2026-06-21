@@ -19,6 +19,7 @@
 
 import { MUSCLE_GROUPS, VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
 import { LEVELS } from '../../data/strengthExercises.js';
+import { roundHalf } from '../Utils.js';
 
 // Every style STARTS a block near MEV (conservative, room to progress). Style
 // only changes where the ramp ENDS, as a fraction of the productive band:
@@ -34,7 +35,6 @@ const STYLE_TOP = { strength: 0.6, functional: 1.0, bodybuilding: 1.4, sport: 0.
 const LEVEL_BIAS = { beginner: 0.85, returning: 0.92, intermediate: 1.0, advanced: 1.05 };
 
 const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
-const roundHalf = (x) => Math.round(x * 2) / 2;
 
 /**
  * Weekly set target per muscle group.

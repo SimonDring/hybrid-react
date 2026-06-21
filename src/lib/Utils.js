@@ -17,6 +17,19 @@ export function escapeHtml(s) {
 
 export const chevronRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
 
+/** Round to the nearest half (…, 4.5, 5, 5.5). Used for weekly set-count targets. */
+export const roundHalf = (x) => Math.round(x * 2) / 2;
+
+/**
+ * Resolve a profile's gym experience level, tolerating legacy focus keys
+ * (strength_functional / strength_physique). The `fallback` differs by caller:
+ * programme resolution defaults to 'intermediate', everywhere else 'beginner'.
+ */
+export function getGymLevel(profile, fallback = 'beginner') {
+  const e = (profile && profile.experience) || {};
+  return e.gym || e.strength_functional || e.strength_physique || fallback;
+}
+
 /**
  * Build the canonical key for a specific session within a week.
  * Used as the link between the static plan template and stored session records.
@@ -110,4 +123,4 @@ export function parseExercise(item) {
 }
 
 // Default export for namespace-style imports
-export default { escapeHtml, chevronRight, weekKey, countCompleted, formatDuration, parseExercise };
+export default { escapeHtml, chevronRight, roundHalf, getGymLevel, weekKey, countCompleted, formatDuration, parseExercise };

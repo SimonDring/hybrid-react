@@ -26,6 +26,7 @@ import { scheduleWeek } from './plan/scheduler.js';
 import { resolveLifts } from './liftProgression.js';
 import { resolveProgram } from './strength/program.js';
 import { resolvePeriodization } from './plan/periodization.js';
+import { getGymLevel } from './Utils.js';
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
@@ -35,12 +36,6 @@ const DEFAULT_DAYS = {
   4: ['mon', 'tue', 'thu', 'sat'], 5: ['mon', 'tue', 'wed', 'fri', 'sat'],
   6: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], 7: [...DAY_ORDER]
 };
-
-// Gym experience level, with sensible fall-backs (handles legacy focus keys).
-function gymLevelFor(profile) {
-  const e = profile.experience || {};
-  return e.gym || e.strength_functional || e.strength_physique || 'beginner';
-}
 
 // Choose the weekday slots for `n` sessions, honouring the user's preferred days.
 function chooseDays(availability, n) {
@@ -88,7 +83,7 @@ function buildGymWeek(count, ctx, profile, program) {
   return strength.buildWeek({
     intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, winp: ctx.winp, weekNum: ctx.weekNum,
     phaseWeeks: ctx.phaseWeeks, blockFrac: ctx.blockFrac, minutes: ctx.minutes,
-    level: gymLevelFor(profile), access: profile.access || [], sex: profile.sex,
+    level: getGymLevel(profile), access: profile.access || [], sex: profile.sex,
     gymDays: count, lifts: resolveLifts(profile),
     style: program.style, emphasis: program.emphasis, volumeScalar: program.volumeScalar,
     power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || []

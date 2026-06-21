@@ -83,7 +83,6 @@ const GRADE_COLOR = {
   under: 'var(--rust)', low: 'var(--ochre)', ideal: 'var(--moss)',
   high: 'var(--ochre)', over: 'var(--rust)'
 };
-const gymLevel = (p) => (p.experience && (p.experience.gym || p.experience.strength_functional || p.experience.strength_physique)) || 'beginner';
 const intentOf = (title) => {
   const t = (title || '').toLowerCase();
   return t.includes('peak') ? 'peak' : t.includes('build') ? 'build' : 'base';

@@ -15,6 +15,8 @@
  * Pure functions here; the store writes the log and the engine reads e1RMs.
  */
 
+import { getGymLevel } from './Utils.js';
+
 // Bodyweight multipliers for an approx e1RM (male reference); female scaled below.
 const STANDARDS = {
   squat:    { beginner: 0.9, returning: 1.2, intermediate: 1.5, advanced: 1.85 },
@@ -38,13 +40,11 @@ export function estimateE1RM(key, level, bodyweightKg, sex) {
   return round2_5(e);
 }
 
-const gymLevel = (profile) => (profile.experience && (profile.experience.gym || profile.experience.strength_functional || profile.experience.strength_physique)) || 'beginner';
-
 // Effective e1RMs for the three main lifts: logged → entered max → estimate.
 export function resolveLifts(profile = {}) {
   const log = profile.lift_log || {};
   const inputs = profile.lifts || {};
-  const level = gymLevel(profile);
+  const level = getGymLevel(profile);
   const out = {};
   ['squat', 'bench', 'deadlift'].forEach(k => {
     const logged = log[k] && Number(log[k].e1rm);

@@ -18,25 +18,17 @@
  */
 
 import { EXERCISES } from '../../data/strengthExercises.js';
-import {
-  MUSCLE_GROUPS, VOLUME_LANDMARKS, PATTERN_CONTRIB, ISO_MUSCLE_GROUP
-} from '../../data/muscleVolume.js';
+import { MUSCLE_GROUPS, VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
+import { muscleContribution } from './contributions.js';
+import { roundHalf } from '../Utils.js';
 
 // ---- exercise name → muscle contributions, built once from the database ----
 // e.g. "bench press" → { chest: 1, triceps: 0.5, shoulders: 0.5 }.
-function contributionsFor(ex) {
-  if (ex.pattern === 'iso') {
-    const grp = ISO_MUSCLE_GROUP[ex.muscle];
-    return grp ? { [grp]: 1.0 } : {};
-  }
-  return PATTERN_CONTRIB[ex.pattern] || {};
-}
-
 let _index = null;
 function muscleIndex() {
   if (_index) return _index;
   _index = new Map();
-  for (const ex of EXERCISES) _index.set(ex.name.toLowerCase(), contributionsFor(ex));
+  for (const ex of EXERCISES) _index.set(ex.name.toLowerCase(), muscleContribution(ex));
   return _index;
 }
 
@@ -80,7 +72,7 @@ export function countWeeklyVolume(sessions = []) {
   }
 
   // Round to the nearest half set so display reads cleanly (12, 12.5, …).
-  MUSCLE_GROUPS.forEach(m => { counts[m] = Math.round(counts[m] * 2) / 2; });
+  MUSCLE_GROUPS.forEach(m => { counts[m] = roundHalf(counts[m]); });
   return { counts, matched, skipped };
 }
 
