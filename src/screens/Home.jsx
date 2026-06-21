@@ -2,25 +2,22 @@ import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
 import { computeReadiness } from '../lib/Readiness.js';
-import TrainingCalendar from '../components/TrainingCalendar.jsx';
+import WeekSchedule from '../components/WeekSchedule.jsx';
 import RingTile from '../components/ui/RingTile.jsx';
+import Avatar from '../components/ui/Avatar.jsx';
 import { readinessVerdict, loadVerdict } from '../lib/verdicts.js';
+import { buildCoachNote } from '../lib/coachNote.js';
 
 const DISC_LABEL = { gym: 'Gym', run: 'Run', swim: 'Swim', cycle: 'Ride', brick: 'Brick', general: 'Movement' };
 const stripDay = (title) => (title || '').replace(/^[A-Za-z]+\s·\s/, '');
 
-function greeting(d) {
-  const h = d.getHours();
-  if (h < 12) return 'Good morning';
-  if (h < 18) return 'Good afternoon';
-  return 'Good evening';
-}
 function shortDate(iso) {
   return new Date(iso + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
 }
 
 export default function Home() {
   const navigate = useNavigate();
+  const profile = useTrainingStore(s => s.profile);
   const sessions = useTrainingStore(s => s.sessions);
   const dailyMetrics = useTrainingStore(s => s.dailyMetrics);
   const logs = useTrainingStore(s => s.logs);
@@ -32,7 +29,6 @@ export default function Home() {
   const unrevertWeekAdaptation = useTrainingStore(s => s.unrevertWeekAdaptation);
 
   const now = new Date();
-  const dateLabel = now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
   const readiness = computeReadiness(dailyMetrics, logs);
   const rv = readinessVerdict(readiness);
   const lv = loadVerdict(load, adaptation);
@@ -41,6 +37,18 @@ export default function Home() {
 
   const hasCalendar = !!Plan.getStartDate();
   const next = hasCalendar ? null : Plan.recommendedSession(sessions);
+
+  // Coach-note context — where we are in the plan (for the educator summary).
+  const cw = Plan.currentWeekNumber();
+  const phases = Plan.getPhases();
+  const totalWeeks = phases.reduce((m, p) => Math.max(m, p.weekEnd || 0), 0);
+  let curPhase = null, curWeek = null;
+  for (const p of phases) { const w = (p.weeks || []).find(w => w.num === cw); if (w) { curPhase = p; curWeek = w; break; } }
+  const coach = buildCoachNote(profile, {
+    phaseTitle: curPhase ? (curPhase.title || `Phase ${curPhase.id}`) : null,
+    weekNum: cw, totalWeeks,
+    isDeload: !!(curWeek && (curWeek.deload || curWeek.taper))
+  });
 
   const todayISO = Plan.localISO(now);
   const cal = hasCalendar ? Plan.buildCalendar(sessions) : null;
@@ -55,30 +63,33 @@ export default function Home() {
 
   return (
     <>
-      <div className="today-greeting">
-        <div className="today-date">{greeting(now)} · {dateLabel}</div>
+      {/* IDENTITY — avatar + name (→ profile) on the left, day + date on the right */}
+      <div className="home-head">
+        <button className="home-id" onClick={() => navigate('/profile')} aria-label="Your profile">
+          <Avatar name={profile.name} avatar={profile.avatar} size={42} />
+          <span className="home-id-text">
+            <span className="home-name">{profile.name || 'Your profile'}</span>
+            {coach.tag && <span className="home-sub">{coach.tag}</span>}
+          </span>
+        </button>
+        <div className="home-date">
+          <span className="home-dow">{now.toLocaleDateString(undefined, { weekday: 'long' })}</span>
+          <span className="home-dom">{now.toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}</span>
+        </div>
       </div>
 
-      {/* TOP — readiness + training load as two rings */}
-      <div className="home-rings">
-        <RingTile
-          eyebrow="Readiness"
-          value={readiness.score != null ? readiness.score : '—'}
-          fill={readiness.score != null ? readiness.score : 0}
-          max={100}
-          color={rv.color}
-          verdict={rv.label}
-          onClick={() => navigate('/tracking/wearables')}
-        />
-        <RingTile
-          eyebrow="Training load"
-          value={load && load.acwr != null ? load.acwr.toFixed(1) : '—'}
-          fill={load && load.acwr != null ? load.acwr : 0}
-          max={2}
-          color={lv.color}
-          verdict={lv.label}
-          onClick={() => navigate('/tracking/load')}
-        />
+      {/* COACH NOTE — what we're working on, why, and how it helps your sport */}
+      <div className="coachnote">
+        <div className="cn-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" /><polygon points="14.5 9.5 9.5 11.5 9.5 14.5 14.5 12.5" />
+          </svg>
+          {coach.eyebrow}
+        </div>
+        <div className="cn-headline">{coach.headline}</div>
+        <div className="cn-body">{coach.body}</div>
+        {coach.translatesTo && <div className="cn-translates">{coach.translatesTo}</div>}
+        {coach.footer && <div className="cn-footer">{coach.footer}</div>}
       </div>
 
       {/* ADAPTATION — shown when the load engine adjusted this week */}
@@ -93,9 +104,9 @@ export default function Home() {
         </div>
       )}
 
-      {/* TODAY + WEEK STRIP */}
+      {/* THIS WEEK — the schedule is the hero */}
       {hasCalendar ? (
-        <TrainingCalendar sessions={sessions} onOpen={openSession} />
+        <WeekSchedule sessions={sessions} onOpen={openSession} />
       ) : next ? (
         <button className="today-card" onClick={() => navigate(`/phases/${next.phase.id}/weeks/${next.week.num}/sessions/${next.sessionIdx}`)}
           style={{ width: '100%', textAlign: 'left', fontFamily: 'inherit', border: 'none', cursor: 'pointer' }}>
@@ -122,14 +133,27 @@ export default function Home() {
         </div>
       )}
 
-      {/* TRAIN NOW — on-demand "got a gap" session (demoted to the bottom) */}
-      <button onClick={() => navigate('/train-now')} className="trainnow-cta">
-        <span className="tn-cta-text">
-          <span className="tn-cta-title">Train now</span>
-          <span className="tn-cta-sub">Got a gap? A session for your time &amp; kit</span>
-        </span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
-      </button>
+      {/* SUPPORTING SIGNALS — readiness + training load, demoted to the bottom */}
+      <div className="home-rings">
+        <RingTile
+          eyebrow="Readiness"
+          value={readiness.score != null ? readiness.score : '—'}
+          fill={readiness.score != null ? readiness.score : 0}
+          max={100}
+          color={rv.color}
+          verdict={rv.label}
+          onClick={() => navigate('/tracking/wearables')}
+        />
+        <RingTile
+          eyebrow="Training load"
+          value={load && load.acwr != null ? load.acwr.toFixed(1) : '—'}
+          fill={load && load.acwr != null ? load.acwr : 0}
+          max={2}
+          color={lv.color}
+          verdict={lv.label}
+          onClick={() => navigate('/tracking/load')}
+        />
+      </div>
     </>
   );
 }
