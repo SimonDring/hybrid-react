@@ -33,15 +33,40 @@ Base path: /hybrid-react/
 
 Where things live
 
-src/screens/ — one file per screen (19 screens)
-src/components/ — shared shell: TopBar, TabBar, ScreenContainer
-src/lib/ — data layer: Database.js, Storage.js, SyncService.js,
-supabaseClient.js, Utils.js
+src/screens/ — one file per screen (~23, plus the auth/ subdir)
+src/components/ — shared shell (TopBar, TabBar, ScreenContainer) + ui/ primitives
+src/lib/ — data layer: Database.js, Storage.js, SyncService.js, supabaseClient.js, Utils.js
+src/lib/ — the DECISION ENGINE (the app's core — see next section)
 src/stores/ — trainingStore.js (app data), authStore.js (auth session)
-src/data/ — Plan.js (52-week plan content), activityTypes.js (registry)
-src/styles/main.css — all styles
+src/data/ — exercise + science tables: strengthExercises.js, muscleVolume.js
+(MEV/MAV/MRV landmarks), strengthStandards.js, activityTypes.js (column registry),
+rehabExercises.js, injuryTaxonomy.js, exerciseDemos.js
+src/styles/main.css — all styles (dark-only "Midnight" design system)
 supabase/ — schema.sql, runbook
-docs/SCHEMA.md — human-readable data model summary
+docs/SCHEMA.md — data model summary · docs/decision-engine-evaluation.md — engine audit
+HANDOFF.md — current state of play (keep updated at the end of each session)
+
+The decision engine (core — generates the gym plan)
+
+generatePlan(profile) in src/lib/PlanGenerator.js is a PURE function — the same
+profile always produces the same plan. Pipeline:
+- resolveProgram (src/lib/strength/program.js) — goal → style, per-muscle emphasis,
+  volume scalar, exercise-priority list.
+- resolvePeriodization (src/lib/plan/periodization.js) — block length, phase split,
+  deload weeks.
+- weeklyMuscleTargets (src/lib/strength/targets.js) — MEV→MAV volume ramp per muscle.
+- allocateGym (src/lib/plan/allocator.js) — greedy fill: pattern anchors, deficit
+  pay-down, weekly MRV ceiling, supersets, rep/RPE scheme, session titles + durations.
+- scheduler (src/lib/plan/scheduler.js) — lays the sessions onto weekdays.
+
+PlanService.js wraps the engine for screens (getPhases/getPhase/getWeek) and runs the
+adaptive RUNTIME reflow: the CURRENT week reflows around what's actually been done +
+readiness + training-load (ACWR), including adaptive deloads (force/defer). The pure
+generator is never mutated. Volume accounting lives in src/lib/plan/volume.js +
+src/data/muscleVolume.js; injuries filter sessions via src/lib/injury/.
+
+Try it: the /dev route (DevPlayground) generates a plan from any onboarding answers
+with a live actual-vs-target volume readout. Engine tests: node tests/*.js.
 
 How data flows (IMPORTANT)
 Screens → trainingStore (Zustand) → SyncService → Supabase (primary)
@@ -81,21 +106,26 @@ first when something "doesn't save".
 
 Known issues / current state
 
-Sync layer (SyncService) is newly built and lightly tested. Sessions and
-weekly check-ins sync; injuries, daily metrics, and reassessments are wired
-but not independently verified end-to-end.
-Session D (one-time migration of existing localStorage data into Supabase)
-is NOT done yet. Real training history may still live only in localStorage.
-Run-type sessions render under the Strength column layout (acceptable for
-now; add a run entry to activityTypes.js to fix properly).
-AI features (virtual physio, AI plan adjustment, quarterly AI assessment)
-are PLACEHOLDERS only. Real AI is Stage 5 and needs a server-side Edge
-Function holding the API key — never call Claude with a key in the browser.
+Decision engine is mature + evidence-based — exhaustively evaluated 2026-06-21
+(docs/decision-engine-evaluation.md). Shipped: weekly MRV ceiling, real event taper
+(keeps intensity, cuts volume), adaptive deloads (fatigue/ACWR-driven), sport-specific
+session anchors, honest durations. It is GYM-ONLY — sport selection biases the gym
+plan; it does not yet program run/cycle/swim sessions (a future stage).
+Sync layer (SyncService) handles sessions, weekly check-ins, injuries, and daily
+metrics; the store is offline-first (instant local write, background cloud sync).
+Wearable + training-load (Strava ingest → HR zones → ACWR → plan adaptation) is live.
+AI features (virtual physio, AI plan adjustment, quarterly AI assessment) are
+PLACEHOLDERS only. Real AI is Stage 5 and needs a server-side Edge Function holding
+the API key — never call Claude with a key in the browser.
 Apple Sign-In, HealthKit, push notifications, native app = Stage 6, future.
 
 Roadmap (for context)
-Stage 3 (current): Supabase backend + auth + sync. Sessions A-C done; D pending.
-Stage 4: richer auth.
-Stage 5: Claude AI plan generation via Supabase Edge Function.
-Stage 6: React Native / Expo native iOS app + HealthKit + App Store.
+Stage 3 (DONE): Supabase backend + auth + sync; wearable + training-load (ACWR);
+gym decision-engine rebuild + hardening; "Midnight" dark UI.
+Stage 4 (DONE): richer auth — Apple/Google OAuth, open signup, per-user cache isolation.
+Stage 5 (NEXT): Claude AI plan generation/adjustment via a Supabase Edge Function —
+the deterministic engine + the loadDecision/deloadRecommendation signals are clean
+inputs an AI layer can consume or override behind PlanService.
+Stage 6 (future): real endurance session programming (run/cycle/swim workouts);
+React Native / Expo native iOS app + HealthKit + App Store.
 
