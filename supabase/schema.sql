@@ -348,27 +348,23 @@ end $$;
 -- When someone signs up via Supabase Auth, automatically create their
 -- public.users profile row so the app always has one to read.
 -- ============================================================================
--- Invite allowlist (see migration 002). Only emails listed here may sign up.
-create table if not exists public.allowed_emails (
-  email      text primary key,
-  note       text,
-  created_at timestamptz not null default now()
-);
-
+-- Signup is OPEN — no invite allowlist (see migration 004). This trigger only
+-- copies the new account's email + name into its public.users profile row. The
+-- name falls back to the OAuth `full_name` claim so Google/Apple sign-ups are
+-- named too.
 create or replace function handle_new_user()
 returns trigger as $$
 begin
-  -- Enforce the invite allowlist. Raising here rolls the signup back.
-  if not exists (
-    select 1 from public.allowed_emails
-    where lower(email) = lower(new.email)
-  ) then
-    raise exception 'email % is not on the invite list', new.email
-      using errcode = 'check_violation';
-  end if;
-
   insert into public.users (id, email, name)
-  values (new.id, new.email, coalesce(new.raw_user_meta_data->>'name', ''))
+  values (
+    new.id,
+    new.email,
+    coalesce(
+      new.raw_user_meta_data->>'name',
+      new.raw_user_meta_data->>'full_name',
+      ''
+    )
+  )
   on conflict (id) do nothing;
   return new;
 end;

@@ -29,7 +29,7 @@ export default function SetNewPassword() {
   const [password, setPassword] = useState('');
   const [saving, setSaving] = useState(false);
 
-  const valid = password.length >= 6;
+  const valid = password.length >= 8;
   const submit = async () => {
     if (!valid || saving) return;
     setSaving(true);
@@ -50,7 +50,7 @@ export default function SetNewPassword() {
         <p className="sub" style={{ marginBottom: 0 }}>Choose a new password for your account.</p>
       </div>
       <input type="password" autoComplete="new-password"
-        placeholder="New password (min 6 characters)" value={password}
+        placeholder="New password (min 8 characters)" value={password}
         onChange={e => setPassword(e.target.value)}
         onKeyDown={e => e.key === 'Enter' && submit()} style={INPUT} autoFocus />
       <button onClick={submit} disabled={!valid || saving} style={BTN(valid && !saving)}>

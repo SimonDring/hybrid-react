@@ -21,7 +21,7 @@ export default function CreateAccount({ onBack }) {
   const [password, setPassword] = useState('');
 
   const validEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim());
-  const validPassword = password.length >= 6;
+  const validPassword = password.length >= 8;
   const validName = name.trim().length > 0;
   const canSignUp = validName && validEmail && validPassword && !signingUp;
   const submit = () => { if (canSignUp) signUp(email, password, name); };
@@ -43,7 +43,7 @@ export default function CreateAccount({ onBack }) {
         placeholder="you@example.com" value={email}
         onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === 'Enter' && submit()} style={INPUT} />
       <input type="password" autoComplete="new-password"
-        placeholder="Choose a password (min 6 characters)" value={password}
+        placeholder="Choose a password (min 8 characters)" value={password}
         onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && submit()} style={INPUT} />
       <button onClick={submit} disabled={!canSignUp} style={BTN_PRIMARY(canSignUp)}>
         {signingUp ? 'Creating…' : 'Create account'}

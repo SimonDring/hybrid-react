@@ -45,7 +45,7 @@ and the privacy/audit layer needed before publication isn't in place yet.
 | 6 | Third-Party Integration & OAuth | **68** | Tokens server-side (good); but OAuth `state` = user_id (no CSRF nonce), no PKCE. |
 | 7 | Network & Transport | **80** | All HTTPS, no mixed content, no Claude key in browser. No response headers (Pages limit). |
 | 8 | Dependency & Supply Chain | **80** | Pinned lockfile, official pinned CI actions, current prod deps. Dev-only esbuild/vite vuln. |
-| 9 | Privacy & Data Governance | **55** | Excellent account deletion; no privacy policy, consent capture, data export, or retention policy. |
+| 9 | Privacy & Data Governance | **60** | Account deletion + data export both present; gaps are privacy policy, consent capture, and retention policy. |
 | 10 | Logging, Monitoring & Auditability | **38** | Errors only `console.error`'d; no audit trail / alerting / error reporting. |
 | 11 | Build & Deployment | **88** | Sourcemaps off, minimal CI permissions, secrets via GH Secrets, pinned actions. |
 
@@ -237,7 +237,10 @@ requirement.
 **Findings (these matter because the app holds health data)**
 - 🟠 **No privacy policy / data-processing notice.**
 - 🟠 **No explicit consent** for special-category health data (GDPR Art. 9).
-- 🟠 **No data export** ("download my data") to match deletion (GDPR Art. 20).
+- 🟢 **Data export is present** — Settings → "Export data" downloads all 12 tables
+  as JSON via `Database.services.exportAll()` (`Settings.jsx:75`), the GDPR Art. 20
+  portability complement to deletion. *(Corrected: an earlier draft wrongly listed
+  this as missing.)*
 - 🟡 **No documented retention policy.**
 
 ### 10 · Logging, Monitoring & Auditability — 38
@@ -313,7 +316,7 @@ ATS-compatible, no client secrets beyond public keys, read-only health scopes.
 - [ ] **HealthKit** (future): entitlement + usage-description strings + privacy
       policy; no HealthKit data for advertising.
 - [ ] **Universal/deep-link validation** in the native wrapper.
-- [ ] **Data export** ("download my data") to complement deletion.
+- [x] **Data export** ("download my data") — already implemented (Settings → Export data).
 - [ ] **Scrub PII** from logs / crash reports before shipping any logging.
 - [ ] Optional native hardening: certificate pinning, jailbreak detection.
 
@@ -369,7 +372,7 @@ ATS-compatible, no client secrets beyond public keys, read-only health scopes.
 
 ### P3 — Publication / governance *(App Store + GDPR)*
 14. **Privacy policy** + **health-data consent**; complete Apple privacy labels.
-15. **Data export** to match the existing deletion.
+15. ~~Data export~~ — **already implemented** (Settings → Export data).
 16. Documented **retention policy**.
 17. **Audit logging / error reporting** (Sentry or a Supabase table) for auth +
     sync-failure + validation-rejection events; **scrub PII** from logs.
