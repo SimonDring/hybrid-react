@@ -25,14 +25,14 @@ assert(okProfile.ok === true, 'P1 valid profile passes');
 const badAge = validateProfile({ age: 999 });
 assert(badAge.ok === false && badAge.errors.age, 'P2 out-of-range age rejected with message');
 
-const passthrough = validateProfile({ lift_log: { squat: { e1rm: 150 } }, focus: ['gym'], strength_style: null });
-assert(passthrough.ok === true && passthrough.value.lift_log.squat.e1rm === 150, 'P3 unrecognised keys pass through untouched');
+const passthrough = validateProfile({ lift_log: { squat: { e1rm: 150 } }, load_overrides: { 3: 'plan' }, focus: ['gym'], strength_style: null });
+assert(passthrough.ok === true && passthrough.value.lift_log.squat.e1rm === 150 && passthrough.value.load_overrides[3] === 'plan' && passthrough.value.focus[0] === 'gym', 'P3 unrecognised keys pass through untouched');
 
 const longName = validateProfile({ name: 'n'.repeat(200) });
 assert(longName.value.name.length === TEXT_MAX.name && longName.ok === true, 'P4 name trimmed/capped, not an error');
 
 const badLift = validateProfile({ lifts: { squat: 9999, bench: 100, deadlift: 180 } });
-assert(badLift.ok === false && badLift.errors['lifts.squat'], 'P5 absurd lift rejected, valid ones kept');
+assert(badLift.ok === false && badLift.errors['lifts.squat'] && badLift.value.lifts.bench === 100 && badLift.value.lifts.deadlift === 180, 'P5 absurd lift rejected, valid ones kept');
 
 const junkAvatar = validateProfile({ avatar: { url: 'http://evil.example/x.js', color: 'red' } });
 assert(junkAvatar.value.avatar.url === null && junkAvatar.value.avatar.color === 'red', 'P6 untrusted avatar URL dropped');
