@@ -106,3 +106,59 @@ export function validateProfile(patch = {}) {
 
   return { ok: Object.keys(errors).length === 0, value, errors };
 }
+
+const METRIC_SPECS = {
+  resting_hr: [LIMITS.resting_hr, 'Resting HR'],
+  hrv_ms: [LIMITS.hrv_ms, 'HRV'],
+  spo2_pct: [LIMITS.spo2_pct, 'SpO₂'],
+  sleep_score: [LIMITS.sleep_score, 'Sleep score'],
+  sleep_duration_min: [LIMITS.sleep_duration_min, 'Sleep duration'],
+  energy: [LIMITS.rating, 'Energy'],
+  soreness: [LIMITS.rating, 'Soreness'],
+  mood: [LIMITS.rating, 'Mood'],
+};
+
+export function validateDailyMetric(fields = {}) {
+  const value = { ...fields };
+  const errors = {};
+  for (const [key, [spec, label]] of Object.entries(METRIC_SPECS)) {
+    if (key in fields) {
+      const r = num(fields[key], spec, label);
+      if (r.ok) value[key] = r.value; else errors[key] = r.error;
+    }
+  }
+  if ('notes' in fields) value.notes = text(fields.notes, TEXT_MAX.notes);
+  return { ok: Object.keys(errors).length === 0, value, errors };
+}
+
+export function validateSessionLog(payload = {}) {
+  const value = { ...payload };
+  const errors = {};
+  for (const k of ['quality', 'energy', 'recovery']) {
+    if (k in payload) {
+      const r = num(payload[k], LIMITS.rating, cap(k));
+      if (r.ok) value[k] = r.value; else errors[k] = r.error;
+    }
+  }
+  if ('notes' in payload) value.notes = text(payload.notes, TEXT_MAX.notes);
+  return { ok: Object.keys(errors).length === 0, value, errors };
+}
+
+export function validateInjury(fields = {}) {
+  const value = { ...fields };
+  const errors = {};
+  if ('severity' in fields) {
+    const r = num(fields.severity, LIMITS.rating, 'Severity');
+    if (r.ok) value.severity = r.value; else errors.severity = r.error;
+  }
+  if ('status' in fields) {
+    const r = oneOf(fields.status, ENUMS.injury_status, 'Status');
+    if (r.ok) { if (r.value !== null) value.status = r.value; } else errors.status = r.error;
+  }
+  if ('title' in fields)     value.title = text(fields.title, TEXT_MAX.title);
+  if ('body_part' in fields) value.body_part = text(fields.body_part, TEXT_MAX.title);
+  for (const k of ['description', 'rehab_plan', 'prevention_notes']) {
+    if (k in fields) value[k] = text(fields[k], TEXT_MAX.notes);
+  }
+  return { ok: Object.keys(errors).length === 0, value, errors };
+}

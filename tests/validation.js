@@ -1,5 +1,5 @@
 // tests/validation.js — pure input-validation rulebook.
-import { num, oneOf, text, validateProfile } from '../src/lib/validation/validate.js';
+import { num, oneOf, text, validateProfile, validateDailyMetric, validateSessionLog, validateInjury } from '../src/lib/validation/validate.js';
 import { LIMITS, ENUMS, TEXT_MAX } from '../src/lib/validation/rules.js';
 
 function assert(cond, msg) {
@@ -39,3 +39,17 @@ assert(junkAvatar.value.avatar.url === null && junkAvatar.value.avatar.color ===
 
 const dataAvatar = validateProfile({ avatar: { url: 'data:image/jpeg;base64,abc' } });
 assert(dataAvatar.value.avatar.url === 'data:image/jpeg;base64,abc', 'P7 data-image avatar URL kept');
+
+// ---- daily metric / session log / injury ---------------------------------
+assert(validateDailyMetric({ resting_hr: 52, energy: 4 }).ok === true, 'D1 valid daily metric passes');
+assert(validateDailyMetric({ energy: 50 }).ok === false, 'D2 out-of-range rating rejected');
+assert(validateDailyMetric({ resting_hr: -10 }).ok === false, 'D3 negative HR rejected');
+
+assert(validateSessionLog({ quality: 4, energy: 3, recovery: 5, notes: 'good' }).ok === true, 'S1 valid session log passes');
+assert(validateSessionLog({ quality: 999 }).ok === false, 'S2 rating overflow rejected');
+assert(validateSessionLog({ notes: 'x'.repeat(9000) }).value.notes.length === TEXT_MAX.notes, 'S3 session notes capped');
+
+assert(validateInjury({ severity: 3, status: 'active', title: 'Tweaked knee' }).ok === true, 'I1 valid injury passes');
+assert(validateInjury({ severity: 12 }).ok === false, 'I2 severity overflow rejected');
+assert(validateInjury({ status: 'EXPLODED' }).ok === false, 'I3 unknown status rejected');
+assert(validateInjury({ title: 't'.repeat(500) }).value.title.length === TEXT_MAX.title, 'I4 injury title capped');
