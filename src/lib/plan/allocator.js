@@ -32,7 +32,7 @@
  */
 
 import { EXERCISES, LEVELS, availableEquip } from '../../data/strengthExercises.js';
-import { MUSCLE_LABELS, VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
+import { VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
 import { muscleContribution } from './contributions.js';
 import { parseSetCount } from './volume.js';
 import { applyWeights } from '../liftProgression.js';
@@ -308,36 +308,33 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
   return best;
 }
 
-// Muscles that make up each region — used to label sessions honestly.
-const GROUP_MUSCLES = {
-  'Lower body':     ['quads', 'hamstrings', 'glutes', 'calves'],
-  'Upper · push':   ['chest', 'shoulders', 'triceps'],
-  'Upper · pull':   ['back', 'biceps'],
-  'Core & carries': ['core']
+// Muscles that make up each region — used to label sessions.
+const REGION = {
+  lower: ['quads', 'hamstrings', 'glutes', 'calves'],
+  push:  ['chest', 'shoulders', 'triceps'],
+  pull:  ['back', 'biceps'],
+  core:  ['core']
 };
 
-// A human focus label from a slot's volume distribution. Mislabelling was the bug:
-// a squat-led session with a bit more pressing volume read "Upper · push · chest
-// focus". So: a session with meaningful work in BOTH the lower and the upper body
-// is "Full body"; a specific "X focus" only shows when one region clearly leads,
-// and the focus muscle is always chosen FROM that region so it can't contradict
-// the region label.
+// A SIMPLE focus label from a slot's realised volume — the plain name of what the
+// session actually trains: Upper / Lower / Push / Pull / Full body / Core. Kept
+// honest (read from delivered volume, not assumed) but deliberately jargon-free so
+// it's obvious at a glance. An upper session that does both pressing and pulling is
+// "Upper"; a dedicated press day is "Push", a dedicated row/pull day is "Pull".
 export function focusLabel(mv) {
   const total = Object.values(mv).reduce((a, b) => a + b, 0);
   if (!total) return 'Full body';
-  const grp = {};
-  for (const g in GROUP_MUSCLES) grp[g] = GROUP_MUSCLES[g].reduce((a, m) => a + (mv[m] || 0), 0);
-  const lower = grp['Lower body'];
-  const upper = grp['Upper · push'] + grp['Upper · pull'];
-  // Genuinely mixed (meaningful lower AND upper) → Full body.
-  const minRegion = 0.25 * total;
-  if (lower >= minRegion && upper >= minRegion) return 'Full body';
-  const [topGroup, topVal] = Object.entries(grp).sort((a, b) => b[1] - a[1])[0];
-  if (topVal < 0.5 * total) return 'Full body';            // no region clearly leads
-  if (topGroup === 'Core & carries') return 'Core & carries';
-  // Top muscle WITHIN the leading region — never contradicts the region label.
-  const top = [...GROUP_MUSCLES[topGroup]].sort((a, b) => (mv[b] || 0) - (mv[a] || 0))[0];
-  return `${topGroup} · ${MUSCLE_LABELS[top].toLowerCase()} focus`;
+  const sum = (ms) => ms.reduce((a, m) => a + (mv[m] || 0), 0);
+  const lower = sum(REGION.lower), push = sum(REGION.push), pull = sum(REGION.pull), core = sum(REGION.core);
+  const upper = push + pull;
+  const meaningful = 0.25 * total;
+  // Meaningful work in BOTH halves of the body → Full body.
+  if (lower >= meaningful && upper >= meaningful) return 'Full body';
+  if (core >= 0.5 * total) return 'Core';
+  if (lower >= upper) return 'Lower';
+  // Upper-dominant: name the actual movement focus.
+  if (push >= meaningful && pull >= meaningful) return 'Upper';
+  return pull > push ? 'Pull' : 'Push';
 }
 
 /**
