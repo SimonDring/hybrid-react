@@ -8,7 +8,8 @@ function assert(cond, msg) {
 }
 
 // ---- generic helpers -----------------------------------------------------
-assert(num('', LIMITS.age, 'Age').value === null, 'H1 empty number → null, no error');
+const h1 = num('', LIMITS.age, 'Age');
+assert(h1.ok === true && h1.value === null, 'H1 empty number → null, no error');
 assert(num(30, LIMITS.age, 'Age').ok === true, 'H2 in-range number passes');
 assert(num(999, LIMITS.age, 'Age').ok === false, 'H3 out-of-range number rejected');
 assert(num(12.5, LIMITS.age, 'Age').ok === false, 'H4 non-integer rejected when int required');
