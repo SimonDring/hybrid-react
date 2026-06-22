@@ -18,6 +18,34 @@ run/cycle/swim workouts); that's a planned future stage. No goals are hard-coded
 the user's onboarding goal drives everything. (CLAUDE.md reflects this; the old
 personal half-marathon/2.5km-swim goals were removed.)
 
+**Structure + direction (2026-06-22):** the repo is now a **monorepo** (npm workspaces) —
+the app lives in `apps/mobile/`, with `apps/web/` (coach dashboard, not built) and
+`packages/{shared,engine}/` reserved; `supabase/` + `docs/` sit at the root. Run
+`npm run dev` from the **repo root**. The product **North Star** is now set: open
+**elite S&C** to teams and budget-constrained individuals, as two packages — **Individual**
+(what's here today) and **Team** (player mobile + coach web; the near-term priority, not
+built). Full vision: `docs/strategy/VISION.md`; team blueprint + data-isolation rules:
+`docs/product/TEAM-ARCHITECTURE.md`.
+
+## Latest work — monorepo restructure (2026-06-22)
+
+Merged to **`main`** (commit `1125f5d`), GitHub Pages deploy green. The app moved **as one
+unit** into `apps/mobile/` and the repo became an **npm-workspaces monorepo**:
+
+- `apps/mobile/` — the app (src, public, tests, index.html, vite.config.js, .env.local).
+- `apps/web/` — reserved for the coach dashboard + marketing site (Next.js; not built).
+- `packages/{shared,engine}/` — reserved (the engine stays in `apps/mobile/src/lib/` for now).
+- `supabase/` + `docs/` at the repo root (shared backend; docs gained `strategy/`, `product/`,
+  `prompts/`).
+- Root `package.json` defines the workspaces + delegating scripts — **run `npm run dev` /
+  `npm run build` from the repo root.** CI (`.github/workflows/deploy.yml`) now publishes
+  `apps/mobile/dist`. Repo name + Vite base `/hybrid-react/` are unchanged, so the live URL is
+  unaffected.
+
+All 226 relative imports survived (the app moved as a unit); `npm install` (4 workspaces,
+hoisted), build, engine tests, and the dev server were all verified, and the Pages deploy
+succeeded. Docs (CLAUDE.md, the new vision/team docs) were refreshed in the same session.
+
 ## Latest work — five tracked lifts + a target weight on every exercise (2026-06-22)
 
 On **`main`** (committed only when asked). Two linked changes so the athlete logs just
@@ -156,8 +184,6 @@ session-titles, adaptive-deload). Determinism + full build/sport sweeps clean.
 
 ## Non-blocking follow-ups (your call)
 
-- **CLAUDE.md staleness:** the "Where things live" list still says `src/data/ — Plan.js
-  (52-week plan content)`, but `Plan.js` was deleted. One-line fix.
 - **Stale remote branches** safe to delete: `engine-fixes`, `chore/remove-dead-code`
   (both merged), plus older merged/dormant ones (`fix/pwa-oauth-redirect`,
   `strength-refocus`, `adaptive-gym-engine`, `ui-overhaul`, etc.).
@@ -169,12 +195,23 @@ session-titles, adaptive-deload). Determinism + full build/sport sweeps clean.
 
 ## What's next
 
-- **Stage 5 — Claude AI plan generation/adjustment via a server-side Edge Function.**
-  The deterministic engine (`generatePlan`) + the `loadDecision` / `deloadRecommendation`
-  signals are clean inputs an AI layer can consume or override behind PlanService's
-  existing interface (never call Claude with a key in the browser).
-- **Future stage — real endurance session programming** (run/cycle/swim workouts), so
-  sport goals get actual cardio sessions, not just gym support.
+- **Stage 5 (current priority) — the TEAM PACKAGE.** Coach-facing web (`apps/web`) alongside
+  the existing player mobile (`apps/mobile`). Full blueprint + the binding data-isolation
+  rules: `docs/product/TEAM-ARCHITECTURE.md`. First sub-steps, in order:
+  1. **Data + RLS spine** — `teams` + `team_members` + a derived `player_status` surface + an
+     `is_coach_of()` helper, in a versioned migration, with RLS tests proving a coach sees
+     their team's *derived* status only (never raw vitals) and players can't see each other.
+  2. **`apps/web` scaffold** — coach dashboard shell (auth + team list).
+  3. **Team schedule entry** → persisted on `teams.schedule`.
+  4. **Constraints into the engine** — feed the schedule into `scheduler.js` / `PlanService.js`
+     so player plans avoid sport-load clashes (the pure `generatePlan` stays untouched).
+  5. **Coach loading overview** — aggregate `player_status` into a plain-English team view
+     built on the existing `verdicts` + ACWR layer.
+- **Following — Claude AI plan generation/adjustment** via a server-side Edge Function. The
+  deterministic engine (`generatePlan`) + `loadDecision` / `deloadRecommendation` are clean
+  inputs an AI layer can consume or override behind PlanService (never a key in the browser).
+- **Later — real endurance session programming** (run/cycle/swim workouts), so sport goals
+  get actual cardio sessions, not just gym support.
 
 ## How work is run here
 

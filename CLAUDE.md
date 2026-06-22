@@ -9,6 +9,20 @@ weekly check-ins, daily recovery metrics, and injuries, and reassesses at the en
 of each training block. It's a PWA today; the long-term aim is an AI-coached
 native iOS app.
 
+Product North Star:
+The platform opens ELITE strength & conditioning to clubs, teams, and people who
+can't afford an elite S&C coach. It ships as two packages:
+1. INDIVIDUAL — what exists today: one person onboards and gets a tailored plan,
+   no external oversight.
+2. TEAM (the near-term priority, NOT built yet) — a player-facing mobile app
+   (apps/mobile, same treatment as an individual) PLUS a coach-facing web dashboard
+   (apps/web). The coach supplies the team's fixed schedule (matches, pitch / pool /
+   track sessions) as CONSTRAINTS that feed each player's plan so gym work doesn't
+   clash with sport load, and gets a plain-English view of team recovery + loading
+   ("doing too much / too little") aimed at coaches who are NOT S&C specialists.
+Full vision: docs/strategy/VISION.md. Team build blueprint + the data-isolation
+rules that protect player data: docs/product/TEAM-ARCHITECTURE.md.
+
 Scope note (important): the engine is GYM-ONLY today. When a user picks a sport,
 it biases the gym programming (per-muscle emphasis, priority lifts, periodisation
 season) to SUPPORT that sport — it does NOT yet generate endurance/aerobic
@@ -33,18 +47,25 @@ Base path: /hybrid-react/
 
 Where things live
 
-src/screens/ — one file per screen (~23, plus the auth/ subdir)
-src/components/ — shared shell (TopBar, TabBar, ScreenContainer) + ui/ primitives
-src/lib/ — data layer: Database.js, Storage.js, SyncService.js, supabaseClient.js, Utils.js
-src/lib/ — the DECISION ENGINE (the app's core — see next section)
-src/stores/ — trainingStore.js (app data), authStore.js (auth session)
-src/data/ — exercise + science tables: strengthExercises.js, muscleVolume.js
-(MEV/MAV/MRV landmarks), strengthStandards.js, activityTypes.js (column registry),
-rehabExercises.js, injuryTaxonomy.js, exerciseDemos.js
-src/styles/main.css — all styles (dark-only "Midnight" design system)
-supabase/ — schema.sql, runbook
-docs/SCHEMA.md — data model summary · docs/decision-engine-evaluation.md — engine audit
-HANDOFF.md — current state of play (keep updated at the end of each session)
+Monorepo — npm workspaces. Run `npm run dev` / `npm run build` from the REPO ROOT
+(they delegate to apps/mobile). Top level:
+  apps/mobile/ — the app today (React + Vite PWA; the Individual package + the player surface)
+  apps/web/ — RESERVED: coach dashboard + marketing site (Next.js; not built yet)
+  packages/{shared,engine}/ — RESERVED: shared utils + a future engine extraction (empty)
+  supabase/ — schema.sql, migrations, edge functions, runbook (shared backend, at the root)
+  docs/ — SCHEMA.md, decision-engine-evaluation.md, SECURITY-AUDIT.md, strategy/, product/, prompts/
+  HANDOFF.md — current state of play (keep updated at the end of each session)
+
+Inside apps/mobile/ — NOTE: every `src/...` path elsewhere in this doc is relative to here:
+  src/screens/ — one file per screen (~23, plus the auth/ subdir)
+  src/components/ — shared shell (TopBar, TabBar, ScreenContainer) + ui/ primitives
+  src/lib/ — data layer: Database.js, Storage.js, SyncService.js, supabaseClient.js, Utils.js
+  src/lib/ — the DECISION ENGINE (the app's core — see next section)
+  src/stores/ — trainingStore.js (app data), authStore.js (auth session)
+  src/data/ — exercise + science tables: strengthExercises.js, muscleVolume.js
+  (MEV/MAV/MRV landmarks), strengthStandards.js, activityTypes.js (column registry),
+  rehabExercises.js, injuryTaxonomy.js, exerciseDemos.js
+  src/styles/main.css — all styles (dark-only "Midnight" design system)
 
 The decision engine (core — generates the gym plan)
 
@@ -83,6 +104,15 @@ Hard rules — do not break these
 NEVER commit .env.local. It holds Supabase keys. It is gitignored.
 NEVER put the Supabase service_role key in app code. Only the anon key
 belongs in the browser, protected by Row Level Security.
+TEAM DATA ISOLATION (binding once the Team package is built). Players see ONLY
+their own rows. Coach access is ADDITIVE and TEAM-SCOPED — a coach can read their
+own team's players, never another team's; players can never see each other. RAW
+wearable/health vitals (daily_metrics health columns, wearable_readings) are NEVER
+readable by a coach: they roll UP into a derived readiness/load signal, and the
+coach sees only that derived signal + plan/adherence + injury status/availability —
+never the underlying HRV / sleep / resting-HR. Any cross-user access goes through
+deliberate, tested RLS that EXTENDS auth.uid() = user_id (never service_role in the
+browser). Design + RLS pattern: docs/product/TEAM-ARCHITECTURE.md.
 ALL data writes go through SyncService (via the store actions). Never write
 to Database.js directly from a screen.
 Use the REAL theme variables, never invented ones:
@@ -115,17 +145,24 @@ Sync layer (SyncService) handles sessions, weekly check-ins, injuries, and daily
 metrics; the store is offline-first (instant local write, background cloud sync).
 Wearable + training-load (Strava ingest → HR zones → ACWR → plan adaptation) is live.
 AI features (virtual physio, AI plan adjustment, quarterly AI assessment) are
-PLACEHOLDERS only. Real AI is Stage 5 and needs a server-side Edge Function holding
-the API key — never call Claude with a key in the browser.
-Apple Sign-In, HealthKit, push notifications, native app = Stage 6, future.
+PLACEHOLDERS only. Real AI is a later stage and needs a server-side Edge Function
+holding the API key — never call Claude with a key in the browser.
+Apple Sign-In, HealthKit, push notifications, native app = a later stage, future.
 
 Roadmap (for context)
 Stage 3 (DONE): Supabase backend + auth + sync; wearable + training-load (ACWR);
 gym decision-engine rebuild + hardening; "Midnight" dark UI.
 Stage 4 (DONE): richer auth — Apple/Google OAuth, open signup, per-user cache isolation.
-Stage 5 (NEXT): Claude AI plan generation/adjustment via a Supabase Edge Function —
-the deterministic engine + the loadDecision/deloadRecommendation signals are clean
-inputs an AI layer can consume or override behind PlanService.
-Stage 6 (future): real endurance session programming (run/cycle/swim workouts);
+Stage 4.5 (DONE): monorepo restructure — app → apps/mobile, npm workspaces, apps/web +
+packages/{shared,engine} reserved, supabase/ at root (2026-06-22).
+Stage 5 (NEXT — current priority): TEAM PACKAGE — coach-facing web (apps/web) alongside
+the existing player mobile (apps/mobile). The coach's team schedule becomes constraints on
+each player's plan; a plain-English team-loading overview reuses the existing verdicts +
+training-load (ACWR) layer; a teams/team_members data model with additive, privacy-preserving
+RLS keeps raw vitals private (see docs/product/TEAM-ARCHITECTURE.md).
+Stage 6: Claude AI plan generation/adjustment via a Supabase Edge Function — the
+deterministic engine + the loadDecision/deloadRecommendation signals are clean inputs an
+AI layer can consume or override behind PlanService (never call Claude with a key in the browser).
+Stage 7 (future): real endurance session programming (run/cycle/swim workouts);
 React Native / Expo native iOS app + HealthKit + App Store.
 
