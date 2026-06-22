@@ -8,9 +8,43 @@ import { VitePWA } from 'vite-plugin-pwa';
 // For a custom domain or yourname.github.io root, use base: '/'
 const REPO_NAME = 'hybrid-react';
 
+// Content-Security-Policy, injected as a <meta> tag at BUILD time only (GitHub
+// Pages can't set response headers, and a meta CSP must not run in dev where
+// Vite's HMR uses inline scripts + eval + a websocket). Notes:
+//  - style-src needs 'unsafe-inline' because the UI uses inline style={{…}}.
+//  - connect-src allows Supabase REST/Edge-Functions (https) + realtime (wss).
+//  - img-src allows the public avatars bucket + data:/blob: previews.
+//  - frame-ancestors is intentionally omitted — it is ignored in a meta CSP.
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com data:",
+  "img-src 'self' data: blob: https://*.supabase.co",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+  "worker-src 'self'",
+  "manifest-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'"
+].join('; ');
+
+function cspMetaPlugin() {
+  return {
+    name: 'inject-csp-meta',
+    apply: 'build',
+    transformIndexHtml(html) {
+      return html.replace(
+        '</title>',
+        `</title>\n<meta http-equiv="Content-Security-Policy" content="${CSP}">`
+      );
+    }
+  };
+}
+
 export default defineConfig({
   base: `/${REPO_NAME}/`,
   plugins: [
+    cspMetaPlugin(),
     react(),
     VitePWA({
       registerType: 'autoUpdate',
