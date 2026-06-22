@@ -32,7 +32,7 @@ jobs:
           VITE_STRAVA_CLIENT_ID: ${{ secrets.VITE_STRAVA_CLIENT_ID }}
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./apps/mobile/dist
 
   deploy:
     needs: build

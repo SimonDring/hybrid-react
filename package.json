@@ -1,24 +1,15 @@
 {
-  "name": "hybrid-react",
+  "name": "performance-os",
   "private": true,
-  "version": "2.0.0",
-  "type": "module",
+  "version": "0.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "node tests/data-layer.js"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.45.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.28.0",
-    "zustand": "^5.0.2"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.3",
-    "vite": "^5.4.10",
-    "vite-plugin-pwa": "^0.21.1"
+    "dev": "npm run dev -w hybrid-react",
+    "build": "npm run build -w hybrid-react",
+    "preview": "npm run preview -w hybrid-react",
+    "test": "npm run test -w hybrid-react"
   }
 }
