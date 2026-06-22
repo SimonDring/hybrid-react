@@ -19,6 +19,14 @@ export function numOrNull(v) {
   return isNaN(n) ? null : n;
 }
 
+// LOCAL YYYY-MM-DD for a date (defaults to now). Mirrors PlanService.localISO —
+// the rest of the engine compares against local dates, so plan_start_date must be
+// the local day too. Using toISOString().slice(0,10) here stored the UTC day,
+// which near midnight is off by one and made "today's" first session look missed.
+export function localISODate(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 // A complete, empty answer set — every caller seeds from this.
 export const BLANK_ANSWERS = {
   name: '', age: '', sex: '', bodyweight_kg: '',
@@ -45,7 +53,7 @@ const TIER_EQUIP = {
 };
 
 export function answersToProfilePatch(a) {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localISODate();
   const isBuild = a.goalType === 'build';
   const isSport = a.goalType === 'sport';
   // Prefer the granular equipment array; fall back to the legacy tier for older seeds.
@@ -105,7 +113,7 @@ export function answersToProfilePatch(a) {
 }
 
 export function answersToInjuries(a) {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localISODate();
   return (a.injuries || []).filter(i => i.title.trim()).map(inj => ({
     title: inj.title.trim(), body_part: (inj.body_part || '').trim(), status: 'active', date_occurred: today
   }));

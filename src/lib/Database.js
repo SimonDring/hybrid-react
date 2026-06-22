@@ -413,8 +413,20 @@ export const services = {
   },
 
   findOrCreateSessionByTemplate(templateRef) {
-    let s = tablesApi.sessions.find(x => x.template_ref === templateRef);
-    if (s) return s;
+    const existing = tablesApi.sessions.find(x => x.template_ref === templateRef);
+    if (existing) {
+      // Reclaim a slot left over from a PREVIOUS plan. Session state is keyed by
+      // POSITION (p1_wk1_s0…), so a new plan reuses the old plan's keys. If the row
+      // we found was created before the current plan started, it belongs to that old
+      // plan: soft-delete it (its session_log survives as load history) and fall
+      // through to create a fresh, in-epoch row — so acting on the slot now lands in
+      // the current plan instead of silently reusing stale settled state. Mirrors the
+      // read-side guard PlanService.withinEpoch (in-epoch = created_at >= start date).
+      const startDate = (services.getProfile() || {}).plan_start_date;
+      const outOfEpoch = startDate && existing.created_at && existing.created_at < startDate;
+      if (!outOfEpoch) return existing;
+      tablesApi.sessions.remove(existing.id);
+    }
     return tablesApi.sessions.create({
       week_id: null,
       order: null,

@@ -19,6 +19,7 @@ import { generatePlan } from './PlanGenerator.js';
 import { weeklyMuscleTargets } from './strength/targets.js';
 import { allocateGym } from './plan/allocator.js';
 import { functionalSlotMinutes, applyFunctionalPrimer } from './plan/strength.js';
+import { resolveSplit } from './plan/split.js';
 import { resolveProgram } from './strength/program.js';
 import { countWeeklyVolume } from './plan/volume.js';
 import { distributeAcrossSlots, WINDOW_DAYS } from './plan/rollingVolume.js';
@@ -107,7 +108,7 @@ const sessionKey = (phaseId, weekNum, idx) => `p${phaseId}_wk${weekNum}_s${idx}`
 // same keys; without this guard they'd silently mark the new plan's identical
 // slots done/missed and trigger a phantom catch-up. A plan with no start date has
 // no epoch, so everything counts (defensive fallback).
-function withinEpoch(st) {
+export function withinEpoch(st) {
   if (!st) return false;
   const start = getStartDate();
   if (!start) return true;
@@ -260,9 +261,14 @@ function adaptedPhases() {
   const slotInputs = slots.map(s => {
     const wt = weekTarget(s.phase, s.week, gctx, effDeload(s.week) || !!s.week.taper);
     const n = gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1;
+    // Use the SAME split as the baseline generator so the reflowed current week keeps
+    // its curated structure (an Upper day stays Upper). Sport's split is even, so its
+    // share stays wt/n and its sessions are unchanged.
+    const day = resolveSplit({ gymDays: n, style: gctx.style })[s.i] || {};
+    const weights = day.weights;
     const normalShare = {};
-    for (const m of MUSCLE_GROUPS) normalShare[m] = (wt[m] || 0) / n;
-    return { normalShare };
+    for (const m of MUSCLE_GROUPS) normalShare[m] = weights ? (wt[m] || 0) * (weights[m] || 0) : (wt[m] || 0) / n;
+    return { normalShare, anchors: day.anchors || null, focus: gctx.style === 'sport' ? null : (weights || null) };
   });
   const { perSlot, forgiven } = distributeAcrossSlots({ slots: slotInputs, deficit, windowDays: WINDOW_DAYS });
   _lastForgiven = forgiven;
@@ -273,7 +279,8 @@ function adaptedPhases() {
   slots.forEach((s, idx) => {
     const spec = allocateGym({
       targets: perSlot[idx],
-      slots: [{ minutes: Math.round(functionalSlotMinutes(gctx.style, gctx.minutes) * mult), equip: gctx.access }],
+      slots: [{ minutes: Math.round(functionalSlotMinutes(gctx.style, gctx.minutes) * mult), equip: gctx.access,
+                anchors: slotInputs[idx].anchors, focus: slotInputs[idx].focus }],
       ctx: {
         style: gctx.style, intent: intentOfTitle(s.phase.title), deload: effDeload(s.week), taper: !!s.week.taper,
         weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,

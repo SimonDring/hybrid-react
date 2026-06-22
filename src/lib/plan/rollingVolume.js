@@ -59,10 +59,18 @@ export function distributeAcrossSlots({ slots = [], deficit = {}, windowDays = W
     const lm = VOLUME_LANDMARKS[m];
     // Don't plan more than the MRV rate across the window — the "don't hammer" line.
     const windowCeiling = lm ? (lm.mrv / 7) * windowDays : Infinity;
-    const catchPer = (deficit[m] || 0) / N;   // even spread is the gentlest recovery
+    // Recover a missed muscle on the days that actually TRAIN it (a split's lower
+    // muscle on its lower days), not smeared across every session — otherwise the
+    // catch-up turns a curated split back into identical full-body days. The spread
+    // is proportional to each slot's normal share; when no slot trains the muscle
+    // (all shares 0) fall back to an even spread (the gentlest default).
+    const d = deficit[m] || 0;
+    const totalShare = slots.reduce((a, sl) => a + ((sl.normalShare && sl.normalShare[m]) || 0), 0);
     let planned = 0;
     for (let i = 0; i < N; i++) {
-      const want = ((slots[i].normalShare && slots[i].normalShare[m]) || 0) + catchPer;
+      const share = (slots[i].normalShare && slots[i].normalShare[m]) || 0;
+      const catchPer = d <= 0 ? 0 : (totalShare > 0 ? d * (share / totalShare) : d / N);
+      const want = share + catchPer;
       const allowed = Math.max(0, windowCeiling - planned);
       const give = roundHalf(Math.min(want, allowed));
       perSlot[i][m] = give;
