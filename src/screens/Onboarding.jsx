@@ -9,6 +9,7 @@
  * never drift. This file owns ONLY the persistence side-effect.
  */
 
+import { useState } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import OnboardingWizard from '../components/OnboardingWizard.jsx';
 import {
@@ -29,12 +30,25 @@ export default function Onboarding() {
     bodyweight_kg: profile.bodyweight_kg ?? ''
   };
 
+  const [submitError, setSubmitError] = useState(null);
+
   const handleComplete = async (a) => {
-    await updateProfile(answersToProfilePatch(a));
+    setSubmitError(null);
+    const res = await updateProfile(answersToProfilePatch(a));
+    if (!res || res.ok === false) {
+      const first = res && res.errors ? Object.values(res.errors)[0] : null;
+      setSubmitError(first || 'Please check your details and try again.');
+      return; // block: profile not saved, onboarding stays open
+    }
     await setGoals([]);   // strength-focused: no separate ranked goals; clear any legacy ones
     for (const inj of answersToInjuries(a)) await addInjury(inj);
     // onboarded:true is now in the store → App.jsx gate unmounts this screen.
   };
 
-  return <OnboardingWizard initialAnswers={initialAnswers} onComplete={handleComplete} />;
+  return (
+    <>
+      {submitError && <div className="onboard-error" role="alert">{submitError}</div>}
+      <OnboardingWizard initialAnswers={initialAnswers} onComplete={handleComplete} />
+    </>
+  );
 }
