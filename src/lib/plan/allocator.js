@@ -290,6 +290,16 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     if (slot.timeUsed < 5) score *= effectiveRole === 'primary' ? 1.2 : 0.85; // open on a compound
     if (ex.pattern === 'hpull' || ex.pattern === 'vpull') score *= 1.05; // posture pull-lean
     if (prioritySet && prioritySet.has(ex.id)) score *= 1.35;     // science-backed priority boost
+    // Split FOCUS bias: steer this day toward the muscles its split assigns (an
+    // Upper day prefers chest/back/shoulders, a Lower day quads/hams/glutes), so the
+    // week reads as a curated split rather than identical full-body days. The shared
+    // weekly deficit still controls TOTAL volume — this only reorders which day gets
+    // what. A null focus (sport even-split, or a direct call) applies no bias.
+    if (slot.focus) {
+      let c = 0, inFocus = 0;
+      for (const m in contrib) { c += contrib[m]; if ((slot.focus[m] || 0) > 0) inFocus += contrib[m]; }
+      score *= 0.35 + 1.35 * (c > 0 ? inFocus / c : 1);
+    }
     score -= OVERSHOOT_PENALTY * waste;                            // prefer picks that fit the remaining target
     score += (hash(ex.id) + weekNum + slot.idx) % 7 * 0.001;       // rotation tie-break
 
@@ -349,31 +359,25 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const repBump = femaleRepBump(ctx.sex);
   const s = scheme(style, intent, deload, taper);
 
-  // Cap how much of a muscle's target lands in ONE slot, so volume spreads across
-  // sessions (frequency). With 2+ slots, no slot gets more than ~half a muscle.
+  // Hard WEEKLY ceiling: the actual allocated volume for a muscle (counting the
+  // synergist contributions that compounds credit) may never exceed its MRV across
+  // the whole week. This is the no-overtraining backstop, shared across all slots
+  // (so synergist-only volume — e.g. back from hinges — is capped too).
+  const weeklyCeiling = {};
+  for (const m in VOLUME_LANDMARKS) weeklyCeiling[m] = VOLUME_LANDMARKS[m].mrv;
+  const weeklyDelivered = {};   // muscle → fractional sets delivered across ALL slots
+
+  // Cap how much of a muscle's weekly target lands in ONE slot, so volume spreads
+  // across sessions (frequency). With 2+ slots, no slot gets more than ~half a
+  // muscle; never more than ~half its MRV (the "no-monster" backstop).
   const freq = Math.min(2, Math.max(1, slots.length));
   const perSlotCap = {};
   for (const m in targets) {
     const even = Math.ceil((targets[m] || 0) / freq) || Infinity;
-    // Hard ceiling, independent of the caller: no single session may exceed ~half a
-    // muscle's weekly MAX-RECOVERABLE volume (MRV). This is the "no-monster" backstop
-    // — it stops a catch-up from absorbing a whole week even when one slot is left —
-    // while still leaving room for high-volume goals (bodybuilding near MRV) to be
-    // delivered across a few sessions, which a tighter MAV/2 cap was clipping.
     const lm = VOLUME_LANDMARKS[m];
     const ceiling = lm ? Math.ceil(lm.mrv / 2) : Infinity;
     perSlotCap[m] = Math.min(even, ceiling);
   }
-
-  // Hard WEEKLY ceiling: the actual allocated volume for a muscle (counting the
-  // synergist contributions that compounds credit) may never exceed its MRV across
-  // the whole week. The per-slot cap above only bounds a single session — without
-  // this, high-frequency/functional plans piled posterior-chain work past MRV
-  // (back hit ~57 vs MRV 25). Defined for every muscle so synergist-only volume
-  // (e.g. back from hinges) is capped too.
-  const weeklyCeiling = {};
-  for (const m in VOLUME_LANDMARKS) weeklyCeiling[m] = VOLUME_LANDMARKS[m].mrv;
-  const weeklyDelivered = {};   // muscle → fractional sets delivered across ALL slots
 
   const work = slots.map((slot, idx) => ({
     idx,
@@ -386,19 +390,20 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     patternsUsed: new Set(),
     exUsed: new Set(),
     delivered: {},   // muscle → sets delivered IN THIS SLOT (for perSlotCap)
-    muscleVol: {}    // muscle → total fractional sets in this slot (for label/flags)
+    muscleVol: {},   // muscle → total fractional sets in this slot (for label/flags)
+    focus: slot.focus || null,       // split day's muscle weights — biases selection (null = no bias)
+    anchors: slot.anchors || null    // split day's opening pattern(s)
   }));
 
+  // SHARED weekly deficit — the single volume controller. Each slot pays it down;
+  // the split steers WHICH slot gets WHAT (anchors + focus bias), never the total.
   const deficit = { ...targets };
 
   const prioritySet = ctx.exercisePriority && ctx.exercisePriority.length
     ? new Set(ctx.exercisePriority) : null;
 
-  // Anchor each slot with a fundamental compound, rotated so the week always
-  // covers legs + push + pull no matter how few/short the sessions are. This is
-  // the blueprint wisdom (guaranteed movement coverage) on top of volume targets,
-  // and it stops the greedy fill from ever skipping a major pattern (e.g. quads)
-  // when time is tight. Lower/upper are interleaved so 2 slots → squat + push.
+  // Fallback anchor: a fundamental compound, rotated so the week always covers
+  // legs + push + pull no matter how few/short the sessions are.
   const FUNDAMENTAL = ['squat', 'hpush', 'hinge', 'hpull', 'vpush', 'lunge', 'vpull'];
 
   const place = (slot, pick) => {
@@ -419,12 +424,26 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     }
   };
 
-  // 1) Anchor each slot. SPORT plans lead with the sport's priority work (so a
-  //    swimmer opens on a pull, a sprinter on a power/posterior lift), rotated per
-  //    session — far more specific than always opening on a generic squat/hinge.
-  //    Everything else (and any sport gap) uses the fundamental-pattern anchor for
-  //    guaranteed legs+push+pull coverage. Fillers are excluded so the opener is a
-  //    substantial lift, not a face pull.
+  // Pick a fundamental-pattern anchor for a slot from candidate patterns (the
+  // split's day patterns, or the rotating FUNDAMENTAL fallback).
+  const patternAnchor = (slot, patterns) => {
+    for (const pat of patterns) {
+      let cands = EXERCISES.filter(e => e.pattern === pat && slot.equip.has(e.equip) && e.level <= slot.level);
+      if (!cands.length) continue;
+      const prim = cands.filter(e => e.role === 'primary');
+      if (prim.length) cands = prim;
+      const bar = cands.filter(e => e.equip === 'barbell');
+      if (bar.length) cands = bar;
+      return cands[(weekNum + slot.idx) % cands.length];
+    }
+    return null;
+  };
+
+  // 1) Anchor each slot. SPORT plans lead with the sport's priority work (a swimmer
+  //    opens on a pull, a sprinter on a power lift); when the day has a focus we
+  //    prefer a priority lift that hits it. BUILD plans open on the split day's
+  //    fundamental pattern (an Upper day on a press/row, a Lower day on a squat/
+  //    hinge). Anything uncovered falls back to the rotating fundamental anchor.
   const sportAnchors = style === 'sport'
     ? (ctx.exercisePriority || []).map(id => EXERCISES.find(e => e.id === id)).filter(e => e && !isFiller(e))
     : [];
@@ -432,18 +451,15 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     let ex = null;
     if (sportAnchors.length) {
       const fit = sportAnchors.filter(e => slot.equip.has(e.equip) && e.level <= slot.level);
-      if (fit.length) ex = fit[(weekNum + slot.idx) % fit.length];
+      const focused = slot.focus
+        ? fit.filter(e => { const c = muscleContribution(e); return Object.keys(c).some(m => (slot.focus[m] || 0) > 0); })
+        : fit;
+      const pool = focused.length ? focused : fit;
+      if (pool.length) ex = pool[(weekNum + slot.idx) % pool.length];
     }
-    if (!ex) {
-      const pat = FUNDAMENTAL[slot.idx % FUNDAMENTAL.length];
-      let cands = EXERCISES.filter(e => e.pattern === pat && slot.equip.has(e.equip) && e.level <= slot.level);
-      if (!cands.length) continue; // equipment can't cover it — greedy will fill
-      const prim = cands.filter(e => e.role === 'primary');
-      if (prim.length) cands = prim;
-      const bar = cands.filter(e => e.equip === 'barbell');
-      if (bar.length) cands = bar;
-      ex = cands[(weekNum + slot.idx) % cands.length];
-    }
+    if (!ex) ex = patternAnchor(slot, slot.anchors || [FUNDAMENTAL[slot.idx % FUNDAMENTAL.length]]);
+    if (!ex && slot.anchors) ex = patternAnchor(slot, FUNDAMENTAL);   // split pattern unavailable → guarantee coverage
+    if (!ex) continue; // equipment can't cover it — the fill pass populates the slot
     const anchorEffectiveRole = (ex.minLevelForPrimary && ex.role === 'primary' &&
       slot.level < (LEVELS[ex.minLevelForPrimary] ?? 0)) ? 'accessory' : ex.role;
     place(slot, { ex, sets: roleSetCount(ex, s, style, anchorEffectiveRole), contrib: muscleContribution(ex), effectiveRole: anchorEffectiveRole });
@@ -477,14 +493,11 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   }
 
   // Filler pass: add light, non-competing work (calves, core, rear delts, cuff)
-  // to use the rest gaps of the heavy lifts — extra volume "for free" toward the
-  // weekly target, even in a powerlifting session (the "calf raises between bench
-  // sets" idea). One filler per main (+1), placed against the biggest deficits.
+  // into the rest gaps of the heavy lifts — extra volume "for free" toward the
+  // weekly target. One filler per main (+1), placed against the biggest deficits.
   for (const slot of work) {
     const numMains = Math.max(1, slot.picks.filter(p => p.ex.role === 'primary').length);
     let added = 0;
-    // Fillers go in rest gaps, but still respect the session's time budget so 1–2-day
-    // plans can't quietly pack a 90-minute session into a "~60 min" slot (F5).
     while (added < numMains + 1 && slot.timeUsed < slot.budget) {
       const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet);
       if (!pick) break;

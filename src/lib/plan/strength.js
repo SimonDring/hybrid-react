@@ -20,6 +20,7 @@
 
 import { weeklyMuscleTargets } from '../strength/targets.js';
 import { allocateGym } from './allocator.js';
+import { resolveSplit } from './split.js';
 import { availableEquip } from '../../data/strengthExercises.js';
 
 // The functional activation primer. Each item carries the `equip` it needs so we
@@ -103,7 +104,21 @@ export function buildWeek(ctx = {}) {
     emphasis: ctx.emphasis, volumeScalar: ctx.volumeScalar, blockFrac: ctx.blockFrac
   });
 
-  const slots = Array.from({ length: gymDays }, () => ({ minutes: functionalSlotMinutes(style, minutes), equip: ctx.access || [] }));
+  // The training SPLIT decides which region each day trains + the pattern it opens
+  // on. We pass each day its FOCUS (the split's per-muscle weights) and ANCHORS to
+  // the allocator, which biases selection toward that day's region — so the week
+  // reads as a curated split (Upper / Lower / …) instead of near-identical full-body
+  // days. The shared weekly deficit still controls total volume, so the MEV→MAV ramp
+  // and MRV ceiling are untouched.
+  const split = resolveSplit({ gymDays, style });
+  const slotMin = functionalSlotMinutes(style, minutes);
+  // Focus bias is for body-part splits (build goals). Sport plans use an even split
+  // (no per-region bias — emphasis already shapes them) and differentiate via their
+  // sport-priority anchors, so they pass focus:null and keep their on-target volume.
+  const slots = split.map(day => ({
+    minutes: slotMin, equip: ctx.access || [], anchors: day.anchors,
+    focus: style === 'sport' ? null : day.weights
+  }));
 
   const sessions = allocateGym({
     targets, slots,
