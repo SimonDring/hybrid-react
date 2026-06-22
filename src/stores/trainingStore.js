@@ -19,6 +19,7 @@ import { setRuntime, currentAdaptation, sessionDiscipline, getWeek } from '../li
 import { dailyLoads, acuteChronic, acwr, acwrSeries, loadDecision, sessionLoad } from '../lib/plan/trainingLoad.js';
 import { setOverride, clearOverride } from '../lib/sessionOverrides.js';
 import { matchWorkoutToSession, sessionPhysiologyFromWorkout } from '../lib/sessionWorkoutMatch.js';
+import { validateProfile, validateDailyMetric, validateSessionLog, validateInjury } from '../lib/validation/validate.js';
 
 // Resolve the plan-template session object (with .items) for a template_ref.
 // Returns {} (→ sessionDiscipline 'gym') when it can't be resolved.
@@ -257,8 +258,11 @@ export const useTrainingStore = create((set) => ({
     set(buildView());
   },
   completeSession(templateRef, payload) {
-    Sync.completeSession(templateRef, payload).catch(e => console.error('completeSession sync failed:', e));
+    const { ok, value, errors } = validateSessionLog(payload || {});
+    if (!ok) return { ok: false, errors };
+    Sync.completeSession(templateRef, value).catch(e => console.error('completeSession sync failed:', e));
     set(buildView());
+    return { ok: true };
   },
   uncompleteSession(templateRef) {
     Sync.uncompleteSession(templateRef).catch(e => console.error('uncompleteSession sync failed:', e));
@@ -303,8 +307,11 @@ export const useTrainingStore = create((set) => ({
 
   // ----- Profile -----
   async updateProfile(patch) {
-    await Sync.updateProfile(patch);
+    const { ok, value, errors } = validateProfile(patch);
+    if (!ok) return { ok: false, errors };
+    await Sync.updateProfile(value);
     set(buildView());
+    return { ok: true };
   },
 
   // Log top-set results for the main lifts → updates the tracked e1RMs so next
@@ -374,8 +381,11 @@ export const useTrainingStore = create((set) => ({
 
   // ----- Injuries -----
   async addInjury(fields) {
-    await Sync.addInjury(fields);
+    const { ok, value, errors } = validateInjury(fields);
+    if (!ok) return { ok: false, errors };
+    await Sync.addInjury(value);
     set(buildView());
+    return { ok: true };
   },
   async updateInjury(id, patch) {
     await Sync.updateInjury(id, patch);
@@ -392,8 +402,11 @@ export const useTrainingStore = create((set) => ({
 
   // ----- Daily metrics -----
   async upsertDailyMetric(fields) {
-    await Sync.upsertDailyMetric(fields);
+    const { ok, value, errors } = validateDailyMetric(fields);
+    if (!ok) return { ok: false, errors };
+    await Sync.upsertDailyMetric(value);
     set(buildView());
+    return { ok: true };
   },
 
   // ----- Bulk operations -----
