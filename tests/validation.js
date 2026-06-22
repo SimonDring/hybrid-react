@@ -34,6 +34,15 @@ assert(longName.value.name.length === TEXT_MAX.name && longName.ok === true, 'P4
 const badLift = validateProfile({ lifts: { squat: 9999, bench: 100, deadlift: 180 } });
 assert(badLift.ok === false && badLift.errors['lifts.squat'] && badLift.value.lifts.bench === 100 && badLift.value.lifts.deadlift === 180, 'P5 absurd lift rejected, valid ones kept');
 
+const okFiveLifts = validateProfile({ lifts: { squat: 140, bench: 100, deadlift: 180, ohp: 60, pull: 80 } });
+assert(okFiveLifts.ok === true && okFiveLifts.value.lifts.ohp === 60 && okFiveLifts.value.lifts.pull === 80, 'P8 ohp + pull accepted as lifts');
+
+const badOhp = validateProfile({ lifts: { ohp: 9999, pull: 80 } });
+assert(badOhp.ok === false && badOhp.errors['lifts.ohp'] && badOhp.value.lifts.pull === 80, 'P9 absurd ohp rejected, valid pull kept');
+
+const liftsSource = validateProfile({ lifts_source: { squat: 'entered', ohp: 'tested', pull: 'estimated' } });
+assert(liftsSource.ok === true && liftsSource.value.lifts_source.ohp === 'tested', 'P10 lifts_source passes through untouched');
+
 const junkAvatar = validateProfile({ avatar: { url: 'http://evil.example/x.js', color: 'red' } });
 assert(junkAvatar.value.avatar.url === null && junkAvatar.value.avatar.color === 'red', 'P6 untrusted avatar URL dropped');
 

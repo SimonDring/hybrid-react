@@ -69,7 +69,7 @@ export function validateProfile(patch = {}) {
 
   if (patch.lifts && typeof patch.lifts === 'object') {
     const lifts = { ...patch.lifts };
-    for (const k of ['squat', 'bench', 'deadlift']) {
+    for (const k of ['squat', 'bench', 'deadlift', 'ohp', 'pull']) {
       if (k in patch.lifts) {
         const r = num(patch.lifts[k], LIMITS.lift, `${cap(k)} 1RM`);
         if (r.ok) lifts[k] = r.value; else errors[`lifts.${k}`] = r.error;

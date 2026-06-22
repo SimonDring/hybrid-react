@@ -34,7 +34,14 @@ const cg = consistencyGoal({ availability: { days_per_week: 4 } }, sessions, 2);
 assert(cg.target === 4 && cg.current === 4 && cg.pct === 100, 'T11 8 done / 2 wk = 4/wk = 100% of 4');
 assert(consistencyGoal({}, sessions, 2).status === 'nodata', 'T12 no availability → nodata');
 
-// Momentum summary.
+// Momentum summary — now five tracked lifts (squat/bench/deadlift/ohp/pull) + consistency.
 const m = goalMomentum(A, sessions, 2);
-assert(m.goals.length === 4, 'T13 momentum has 3 lifts + consistency');
+assert(m.goals.length === 6, 'T13 momentum has 5 lifts + consistency');
 assert(typeof m.onTrack === 'number' && typeof m.tracked === 'number', 'T14 onTrack/tracked counts present');
+const keys = m.goals.map(g => g.key);
+assert(keys.includes('ohp') && keys.includes('pull'), 'T15 ohp + pull are tracked goals');
+
+// OHP + pull milestones place against their own standards.
+const F = { bodyweight_kg: 80, sex: 'male', lifts: { ohp: '60', pull: '90' } };
+assert(liftGoal('ohp', F).current === 60 && liftGoal('ohp', F).status !== 'nodata', 'T16 ohp milestone reads the entered max');
+assert(liftGoal('pull', F).current === 90 && liftGoal('pull', F).status !== 'nodata', 'T17 pull milestone reads the entered max');

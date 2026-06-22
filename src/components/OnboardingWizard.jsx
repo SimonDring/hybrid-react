@@ -10,6 +10,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { BLANK_ANSWERS } from '../lib/onboardingModel.js';
+import { epley1RM, pullupE1RM } from '../lib/liftProgression.js';
 
 // ---- Option catalogues ----
 export const GOAL_TYPES = [
@@ -128,6 +129,38 @@ function SummaryRow({ label, value }) {
     </div>
   );
 }
+// Small inline pill toggle (used for the pull-up vs lat-pulldown choice).
+function MiniToggle({ on, onClick, label }) {
+  return (
+    <button onClick={onClick} style={{
+      fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit',
+      border: `1.5px solid ${on ? 'var(--accent)' : 'var(--hairline)'}`,
+      background: on ? 'rgba(111,211,196,0.12)' : 'var(--bg-surface)', color: 'var(--txt-strong)'
+    }}>{label}</button>
+  );
+}
+// A quick-test row: a weight + reps (or reps only for pull-ups) with a live e1RM readout.
+function TestRow({ label, weight, reps, onWeight, onReps, e1rm, repsOnly }) {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: repsOnly ? '1fr auto' : '1fr 1fr auto', gap: 8, alignItems: 'end' }}>
+      <div>
+        <label style={FIELD_LABEL}>{label}</label>
+        {repsOnly
+          ? <input type="number" inputMode="numeric" placeholder="reps" value={reps ?? ''} onChange={e => onReps(e.target.value)} style={INPUT} />
+          : <input type="number" inputMode="decimal" placeholder="kg" value={weight ?? ''} onChange={e => onWeight(e.target.value)} style={INPUT} />}
+      </div>
+      {!repsOnly && (
+        <div>
+          <label style={FIELD_LABEL}>Reps</label>
+          <input type="number" inputMode="numeric" placeholder="reps" value={reps ?? ''} onChange={e => onReps(e.target.value)} style={INPUT} />
+        </div>
+      )}
+      <div style={{ fontSize: 12, color: 'var(--txt-muted)', paddingBottom: 12, minWidth: 62, textAlign: 'right' }}>
+        {e1rm ? <span><b style={{ color: 'var(--txt-strong)' }}>{e1rm}</b> kg</span> : '—'}
+      </div>
+    </div>
+  );
+}
 
 export default function OnboardingWizard({ initialAnswers, onComplete, onAnswersChange, devTools = false, completeLabel = 'Create my plan' }) {
   const [a, setA] = useState({ ...BLANK_ANSWERS, ...(initialAnswers || {}) });
@@ -138,6 +171,16 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
   const set = (patch) => setA(prev => ({ ...prev, ...patch }));
   const toggle = (key, listName) => set({ [listName]: a[listName].includes(key) ? a[listName].filter(k => k !== key) : [...a[listName], key] });
 
+  // Quick-test scratch (raw weight/reps the user types); the COMPUTED e1RM lands in
+  // a.lifts via setLift, tagged 'tested' so the model doesn't re-normalise it.
+  const [test, setTest] = useState({});
+  const setLift = (key, value, source) => setA(prev => {
+    const lifts = { ...prev.lifts, [key]: value };
+    const liftsSource = { ...(prev.liftsSource || {}) };
+    if (source) liftsSource[key] = source; else delete liftsSource[key];
+    return { ...prev, lifts, liftsSource };
+  });
+
   const changeRef = useRef(onAnswersChange);
   changeRef.current = onAnswersChange;
   useEffect(() => { if (changeRef.current) changeRef.current(a); }, [a]);
@@ -145,6 +188,9 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
   const isBuild = a.goalType === 'build';
   const isSport = a.goalType === 'sport';
   const hasBarbell = (a.equipment || []).includes('barbell');
+  const hasCable = (a.equipment || []).includes('cable');
+  const hasBodyweight = (a.equipment || []).includes('bodyweight');
+  const showLifts = hasBarbell || hasCable || hasBodyweight;
 
   const steps = [
     { hero: true, valid: () => true,
@@ -248,29 +294,87 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         </div>
       ) },
 
-    hasBarbell && { title: 'Know your main lifts?', subtitle: 'Add your best single rep for real target weights — totally optional.', valid: () => true,
-      render: () => (
-        <div>
-          <label style={FIELD_LABEL}>1-rep maxes (kg)</label>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
-            {['squat', 'bench', 'deadlift'].map(k => (
-              <div key={k}>
-                <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginBottom: 4, textAlign: 'center' }}>{k[0].toUpperCase() + k.slice(1)}</div>
-                <input type="number" inputMode="decimal" placeholder="—" value={a.lifts[k]}
-                  onChange={e => set({ lifts: { ...a.lifts, [k]: e.target.value } })} style={{ ...INPUT, padding: '12px 8px', textAlign: 'center' }} />
-              </div>
-            ))}
+    showLifts && { title: 'Your main lifts', subtitle: 'Real numbers give every exercise a real target weight — optional, but worth it.', valid: () => true,
+      render: () => {
+        const bw = parseFloat(a.bodyweight_kg) || null;
+        const barbellLifts = [['squat', 'Squat'], ['bench', 'Bench'], ['deadlift', 'Deadlift'], ['ohp', 'Overhead press']];
+        const pullLabel = a.pullMode === 'kg' ? 'Lat pulldown 1RM' : 'Pull-ups (max reps)';
+        const isTest = a.liftsMode === 'test';
+        const calc = (key, t) => {
+          if (key === 'pull' && a.pullMode === 'reps') return t.reps ? pullupE1RM(t.reps, bw, a.sex) : null;
+          return (t.weight && t.reps) ? epley1RM(t.weight, t.reps) : null;
+        };
+        const onTest = (key, patch) => {
+          const t = { ...(test[key] || {}), ...patch };
+          setTest(prev => ({ ...prev, [key]: t }));
+          const e = calc(key, t);
+          setLift(key, e != null ? e : '', e != null ? 'tested' : null);
+        };
+        const pullToggle = (
+          <div style={{ display: 'flex', gap: 6 }}>
+            <MiniToggle on={a.pullMode === 'reps'} onClick={() => set({ pullMode: 'reps' })} label="Pull-ups" />
+            <MiniToggle on={a.pullMode === 'kg'} onClick={() => set({ pullMode: 'kg' })} label="Lat pulldown" />
           </div>
-          <div style={HINT}>No idea? Leave them blank — log a working set after week 1 and targets build from there.</div>
-        </div>
-      ) },
+        );
+        return (
+          <div style={{ display: 'grid', gap: 16 }}>
+            <OptionGrid cols={2}>
+              <Chip center selected={!isTest} onClick={() => set({ liftsMode: 'known' })} label="I know my maxes" />
+              <Chip center selected={isTest} onClick={() => set({ liftsMode: 'test' })} label="Help me test" />
+            </OptionGrid>
+
+            {isTest ? (
+              <div style={{ display: 'grid', gap: 12 }}>
+                <div style={HINT}>Pick a weight you can lift for a few hard reps, enter how many you managed, and we'll work out your max.</div>
+                {hasBarbell && barbellLifts.map(([k, label]) => (
+                  <TestRow key={k} label={label} weight={test[k]?.weight} reps={test[k]?.reps}
+                    onWeight={v => onTest(k, { weight: v })} onReps={v => onTest(k, { reps: v })} e1rm={calc(k, test[k] || {})} />
+                ))}
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>{pullToggle}</div>
+                <TestRow label={pullLabel} weight={test.pull?.weight} reps={test.pull?.reps} repsOnly={a.pullMode === 'reps'}
+                  onWeight={v => onTest('pull', { weight: v })} onReps={v => onTest('pull', { reps: v })} e1rm={calc('pull', test.pull || {})} />
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gap: 14 }}>
+                {hasBarbell && (
+                  <div>
+                    <label style={FIELD_LABEL}>1-rep maxes (kg)</label>
+                    <OptionGrid cols={2}>
+                      {barbellLifts.map(([k, label]) => (
+                        <Field key={k} label={label} type="number" value={a.lifts[k]} placeholder="—"
+                          onChange={v => setLift(k, v, null)} suffix="kg" />
+                      ))}
+                    </OptionGrid>
+                  </div>
+                )}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                    <label style={{ ...FIELD_LABEL, marginBottom: 0 }}>Pull strength</label>
+                    {pullToggle}
+                  </div>
+                  <Field label={pullLabel} type="number" value={a.lifts.pull} placeholder="—"
+                    onChange={v => setLift('pull', v, null)} suffix={a.pullMode === 'kg' ? 'kg' : 'reps'} />
+                </div>
+              </div>
+            )}
+            <div style={HINT}>No idea? Leave them blank — we'll estimate from your level, and you can log a real set after week 1.</div>
+          </div>
+        );
+      } },
 
     { title: 'Ready to go', subtitle: "Here's what we captured. Create your plan and you're in.", valid: () => true,
       render: () => {
         const goalLabel = isSport
           ? `Support ${SPORTS.find(s => s.key === a.sport)?.label || 'sport'} · ${a.sportIntent === 'compete' ? 'competing' : a.sportIntent === 'build_base' ? 'building base' : 'recreational'}`
           : (STYLES.find(s => s.key === a.strengthStyle)?.label || '—');
-        const liftBits = hasBarbell ? ['squat', 'bench', 'deadlift'].filter(k => a.lifts[k]).map(k => `${k[0].toUpperCase()}${a.lifts[k]}`) : [];
+        const liftBits = [];
+        for (const [k, lab] of [['squat', 'Sq'], ['bench', 'Bn'], ['deadlift', 'Dl'], ['ohp', 'OHP']]) {
+          if (a.lifts[k]) liftBits.push(`${lab} ${a.lifts[k]}`);
+        }
+        if (a.lifts.pull) {
+          const asReps = a.pullMode === 'reps' && (a.liftsSource || {}).pull !== 'tested';
+          liftBits.push(`Pull ${a.lifts.pull}${asReps ? ' reps' : ' kg'}`);
+        }
         return (
           <div style={{ display: 'grid', gap: 6 }}>
             <SummaryRow label="Goal" value={goalLabel} />
@@ -279,7 +383,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
               <SummaryRow label="Distance" value={RUN_DISCIPLINES.find(d => d.key === a.runDiscipline)?.label || '—'} />
             )}
             <SummaryRow label="Experience" value={LEVELS.find(l => l.key === a.experienceLevel)?.label || '—'} />
-            {liftBits.length > 0 && <SummaryRow label="Maxes" value={liftBits.join(' · ') + ' kg'} />}
+            {liftBits.length > 0 && <SummaryRow label="Maxes" value={liftBits.join(' · ')} />}
             <SummaryRow label="Week" value={a.daysPerWeek ? `${a.daysPerWeek} days · ${a.sessionMinutes === 90 ? '90+' : a.sessionMinutes} min` : '—'} />
             <SummaryRow label="Equipment" value={equipLabel(a.equipment)} />
           </div>

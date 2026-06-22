@@ -1,4 +1,5 @@
 import { resolvePeriodization } from './plan/periodization.js';
+import { pullupE1RM } from './liftProgression.js';
 
 /**
  * onboardingModel — the pure (non-UI) part of onboarding: the answer shape and
@@ -19,6 +20,18 @@ export function numOrNull(v) {
   return isNaN(n) ? null : n;
 }
 
+// The pull lift is captured as EITHER max pull-up reps OR a lat-pulldown 1RM (kg).
+// Both normalise to a single kg e1RM stored at profile.lifts.pull, so the engine has
+// one number to drive vertical-pull working weights + place it on the strength scale.
+export function normalizePullToKg(value, mode, bodyweightKg, sex) {
+  if (value === '' || value == null) return null;
+  if (mode === 'reps') {
+    const reps = numOrNull(value);
+    return reps ? pullupE1RM(reps, bodyweightKg, sex) : null;
+  }
+  return numOrNull(value);   // 'kg' → lat-pulldown 1RM entered directly
+}
+
 // LOCAL YYYY-MM-DD for a date (defaults to now). Mirrors PlanService.localISO —
 // the rest of the engine compares against local dates, so plan_start_date must be
 // the local day too. Using toISOString().slice(0,10) here stored the UTC day,
@@ -37,7 +50,12 @@ export const BLANK_ANSWERS = {
   runDiscipline: '',            // run only: 'sprint' | 'middle' | 'long'
   eventDate: '',                // optional ISO date YYYY-MM-DD
   experienceLevel: 'intermediate',
-  lifts: { squat: '', bench: '', deadlift: '' },
+  // Five tracked lifts. pull is entered as EITHER max pull-up reps OR a lat-pulldown
+  // 1RM (kg) — pullMode says which; normalizePullToKg() converts to a kg e1RM.
+  lifts: { squat: '', bench: '', deadlift: '', ohp: '', pull: '' },
+  pullMode: 'reps',             // 'reps' (pull-ups) | 'kg' (lat-pulldown 1RM)
+  liftsMode: 'known',           // 'known' (enter maxes) | 'test' (quick AMRAP test)
+  liftsSource: {},              // per-lift provenance: { [key]: 'entered'|'tested' }
   daysPerWeek: null, sessionMinutes: 60, days: [],
   strengthAccess: '',           // legacy access tier — still accepted, superseded by `equipment`
   equipment: [],                // equipment keys: barbell/dumbbell/machine/cable/band/kettlebell/bodyweight
@@ -62,6 +80,30 @@ export function answersToProfilePatch(a) {
     : (a.strengthAccess ? (TIER_EQUIP[a.strengthAccess] || []) : []);
   const hasBarbell = equipment.includes('barbell');
   const access = equipment;
+
+  // Five tracked lifts. Barbell lifts (squat/bench/deadlift/ohp) only make sense with a
+  // barbell; pull is normalised from reps-or-kg. If nothing was entered we store null
+  // (preserves the old "skip" behaviour → resolveLifts estimates from level/bodyweight).
+  const bw = numOrNull(a.bodyweight_kg);
+  const liftsRaw = {
+    squat: hasBarbell ? numOrNull(a.lifts.squat) : null,
+    bench: hasBarbell ? numOrNull(a.lifts.bench) : null,
+    deadlift: hasBarbell ? numOrNull(a.lifts.deadlift) : null,
+    ohp: hasBarbell ? numOrNull(a.lifts.ohp) : null,
+    // A 'tested' pull is already a computed kg e1RM (the quick test did the Epley);
+    // only the user-entered reps/kg path needs normalising.
+    pull: (a.liftsSource && a.liftsSource.pull === 'tested')
+      ? numOrNull(a.lifts.pull)
+      : normalizePullToKg(a.lifts.pull, a.pullMode, bw, a.sex)
+  };
+  const anyLift = Object.values(liftsRaw).some(v => v != null);
+  const lifts = anyLift ? liftsRaw : null;
+  // Provenance per lift: a provided value is 'entered' (or 'tested' if the quick test
+  // produced it); a blank is 'estimated' (resolveLifts will fill it in).
+  const lifts_source = anyLift
+    ? Object.fromEntries(Object.keys(liftsRaw).map(k =>
+        [k, liftsRaw[k] != null ? ((a.liftsSource && a.liftsSource[k]) || 'entered') : 'estimated']))
+    : null;
 
   return {
     plan_start_date: today,
@@ -91,9 +133,8 @@ export function answersToProfilePatch(a) {
     run_discipline: isSport && a.sport === 'run' ? (a.runDiscipline || null) : null,
 
     experience: { gym: a.experienceLevel || 'intermediate' },
-    lifts: hasBarbell
-      ? { squat: numOrNull(a.lifts.squat), bench: numOrNull(a.lifts.bench), deadlift: numOrNull(a.lifts.deadlift) }
-      : null,
+    lifts,
+    lifts_source,
 
     availability: {
       days_per_week: a.daysPerWeek,

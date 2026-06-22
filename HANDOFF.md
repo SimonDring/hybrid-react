@@ -1,6 +1,6 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-06-21. Keep this current at the end of each work session so the
+_Last updated: 2026-06-22. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
 
 ## What this app is now
@@ -17,6 +17,44 @@ swim) biases the gym programming (emphasis, priority lifts, periodisation season
 run/cycle/swim workouts); that's a planned future stage. No goals are hard-coded —
 the user's onboarding goal drives everything. (CLAUDE.md reflects this; the old
 personal half-marathon/2.5km-swim goals were removed.)
+
+## Latest work — five tracked lifts + a target weight on every exercise (2026-06-22)
+
+On **`main`** (committed only when asked). Two linked changes so the athlete logs just
+their **five** main lifts and every other exercise gets a realistic, auto-progressing
+target weight. TDD throughout; `node tests/*.js` = **35 files green** (added
+`tests/onboarding-lifts.js`, `tests/exercise-load.js`; extended `tests/validation.js`).
+
+- **Onboarding now captures 5 lifts** (was squat/bench/deadlift): adds **OHP** + a
+  **pull** movement entered as either pull-up max-reps **or** lat-pulldown 1RM (a toggle;
+  reps → kg e1RM via Epley using bodyweight). New "Your main lifts" step
+  (`OnboardingWizard.jsx`) shows whenever barbell **or** cable **or** bodyweight is
+  available (not just barbell), with a **"Help me test"** mode — enter weight + reps-to-
+  failure → live e1RM (blanks only). Per-lift provenance stored in `profile.lifts_source`
+  (`entered`/`tested`/`estimated`). Model + normalisation in `onboardingModel.js`
+  (`normalizePullToKg`); Epley helpers `epley1RM`/`pullupE1RM` exported from
+  `liftProgression.js`. `strengthStandards.js` gained ohp/pull ÷BW bands. `validation`
+  extended to the five lifts (+ `pullupReps` limit).
+- **Atlas + Progress translate the new lifts per sport** (`atlas/signals.js`, `goals.js`):
+  `LIFT_MUSCLES` now maps `ohp→[shoulders,triceps]` and `pull→[back,biceps]`, so a
+  swimmer's `upper_pull` + `shoulder_health` pillars become **real** (driven by actual
+  pull-up/OHP strength) instead of level estimates. The overall `strength` score is now
+  **sport-weighted** via `resolveProgram().emphasis` (`SPORT_EMPHASIS`) — swimmers' pull/OHP
+  count more, sprinters' squat/deadlift count more; `build` stays a neutral average. The
+  Atlas stays a sport-relevant **pillar** radar (not a generic 5-lift chart). `goals.js`
+  `LIFTS` adds Overhead press + Pull → 5 milestone cards on Progress / Atlas "Your lifts".
+  Tests extended in `tests/atlas-and-coachnote.js` (T15–T19) + `tests/goals.js` (T13–T17).
+- **Every loadable exercise gets a suggested weight** — new pure
+  `src/lib/strength/exerciseLoad.js`: `anchorFor(exercise)` maps each exercise to one of
+  the 5 e1RMs + a research-calibrated coefficient (StrengthLevel accessory↔main ratios,
+  e.g. lateral raise ≈0.20×OHP, leg ext ≈0.74×squat, leg curl ≈0.42×deadlift; isolation
+  coefficients scale with level, dumbbells are per-hand). `applyWeights` (in
+  `liftProgression.js`) now weights **all** items via this, not just the matched main;
+  `matchLift` is now only for the top-set **log** form (the 5 mains). Bodyweight/band/core
+  keep their natural cues (no kg). Weights climb automatically as the mains' e1RMs climb.
+  Audited: 120/120 loadable items in a full plan get a sane weight, 0 absurd isolations.
+- Design + research notes: `docs/superpowers/specs/`-style plan lives at
+  `~/.claude/plans/polished-sprouting-zephyr.md` (sources: StrengthLevel comparison pages).
 
 ## Latest work — sport-companion repositioning: home + Atlas (2026-06-21)
 

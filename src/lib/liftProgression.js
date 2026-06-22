@@ -16,18 +16,38 @@
  */
 
 import { getGymLevel } from './Utils.js';
+import { anchorForName, effectiveCoefficient, formatLoad } from './strength/exerciseLoad.js';
 
 // Bodyweight multipliers for an approx e1RM (male reference); female scaled below.
+// ohp = barbell overhead press 1RM ÷ BW; pull = vertical-pull e1RM ÷ BW (a pull-up
+// total-system 1RM or a lat-pulldown 1RM — see normalizePullToKg in onboardingModel).
 const STANDARDS = {
-  squat:    { beginner: 0.9, returning: 1.2, intermediate: 1.5, advanced: 1.85 },
-  bench:    { beginner: 0.6, returning: 0.85, intermediate: 1.1, advanced: 1.35 },
-  deadlift: { beginner: 1.1, returning: 1.45, intermediate: 1.8, advanced: 2.15 }
+  squat:    { beginner: 0.9,  returning: 1.2,  intermediate: 1.5,  advanced: 1.85 },
+  bench:    { beginner: 0.6,  returning: 0.85, intermediate: 1.1,  advanced: 1.35 },
+  deadlift: { beginner: 1.1,  returning: 1.45, intermediate: 1.8,  advanced: 2.15 },
+  ohp:      { beginner: 0.4,  returning: 0.55, intermediate: 0.7,  advanced: 0.9  },
+  pull:     { beginner: 1.0,  returning: 1.2,  intermediate: 1.4,  advanced: 1.65 }
 };
 // Women's lifts ≈ this fraction of men's at the same level (upper lower than lower).
-const FEMALE_FACTOR = { squat: 0.75, bench: 0.6, deadlift: 0.8 };
+const FEMALE_FACTOR = { squat: 0.75, bench: 0.6, deadlift: 0.8, ohp: 0.65, pull: 0.8 };
 const DEFAULT_BW = { male: 78, female: 64, other: 72 };
 
 const round2_5 = (x) => Math.round(x / 2.5) * 2.5;
+
+// Estimated 1RM from a top set (Epley): weight × (1 + reps/30), rounded to 2.5kg.
+// Shared by the onboarding quick-test, pull-up reps→e1RM, and the e1RM autoreg below.
+export function epley1RM(weight, reps) {
+  const w = Number(weight); const r = Number(reps);
+  if (!w || !r) return 0;
+  return round2_5(w * (1 + r / 30));
+}
+
+// A bodyweight pull-up's "total-system" e1RM: the system load is bodyweight, so a
+// max-reps set converts via Epley with bodyweight as the load.
+export function pullupE1RM(reps, bodyweightKg, sex) {
+  const bw = Number(bodyweightKg) || DEFAULT_BW[sex] || DEFAULT_BW.other;
+  return epley1RM(bw, reps);
+}
 
 // Estimate a starting e1RM when the user didn't give a max.
 export function estimateE1RM(key, level, bodyweightKg, sex) {
@@ -46,7 +66,7 @@ export function resolveLifts(profile = {}) {
   const inputs = profile.lifts || {};
   const level = getGymLevel(profile);
   const out = {};
-  ['squat', 'bench', 'deadlift'].forEach(k => {
+  ['squat', 'bench', 'deadlift', 'ohp', 'pull'].forEach(k => {
     const logged = log[k] && Number(log[k].e1rm);
     const input = Number(inputs[k]);
     out[k] = logged || input || estimateE1RM(k, level, profile.bodyweight_kg, profile.sex) || null;
@@ -59,6 +79,8 @@ export function resolveLifts(profile = {}) {
 export function matchLift(name) {
   const n = (name || '').toLowerCase();
   if (/\bdb\b|dumbbell|goblet|kettlebell|\bband\b/.test(n)) return null;
+  if (/overhead press/.test(n)) return { key: 'ohp', factor: 1 };
+  if (/lat pulldown/.test(n)) return { key: 'pull', factor: 1 };
   if (/bench press/.test(n)) return { key: 'bench', factor: 1 };
   if (/romanian deadlift/.test(n)) return { key: 'deadlift', factor: 0.8 };
   if (/trap-bar|hex deadlift|deadlift/.test(n) && !/romanian/.test(n)) return { key: 'deadlift', factor: 1 };
@@ -82,20 +104,24 @@ export function nextE1RM({ weight, reps, rpe, targetRpe = 8, factor = 1 }) {
   return round2_5(fresh * (1 + step));
 }
 
-// Annotate a session's barbell main lifts with a target working weight from the
-// tracked e1RMs: weight = e1RM × lift-factor × %1RM(reps, reps-in-reserve). Items
-// that aren't a tracked barbell lift (dumbbell, bodyweight, no max) are left as-is.
+// Annotate EVERY loadable item with a suggested target weight derived from the five
+// tracked e1RMs: weight = anchorE1RM × coefficient × %1RM(reps, reps-in-reserve), where
+// the coefficient (and its anchor lift) come from exerciseLoad. So accessories — rows,
+// presses, curls, leg machines — get a number too, and it climbs with the mains. Items
+// with no loadable anchor (bodyweight, band, core, mobility, or no e1RM) are left as-is.
+// `level` scales isolation loads; superset items get a small short-rest fatigue nudge.
 // Mutates + returns `items`. Shared by the strength engine and the allocator.
-export function applyWeights(items = [], lifts = {}) {
+export function applyWeights(items = [], lifts = {}, level = 'intermediate') {
   for (const it of items) {
-    const m = matchLift(it.name);
-    if (!m) continue;
-    const oneRM = Number(lifts[m.key]);
+    const a = anchorForName(it.name);
+    if (!a) continue;
+    const oneRM = Number(lifts[a.key]);
     const reps = parseReps(it.sets);
     if (!oneRM || !reps) continue;
     const rir = Math.max(0, 10 - parseRpe(it.rpe));
-    const pct = 1 / (1 + (reps + rir) / 30);   // Epley inverse
-    it.weight = `${round2_5(oneRM * m.factor * pct)} kg`;
+    const pct = 1 / (1 + (reps + rir) / 30);   // Epley inverse → %1RM at this rep target
+    const c = effectiveCoefficient(a, { level, superset: it.superset });
+    it.weight = formatLoad(oneRM * c * pct, { perHand: a.perHand });
   }
   return items;
 }
@@ -115,4 +141,4 @@ export function trackedLiftsInSession(session) {
   return out;
 }
 
-export default { estimateE1RM, resolveLifts, matchLift, applyWeights, nextE1RM, trackedLiftsInSession, parseReps, parseRpe };
+export default { estimateE1RM, resolveLifts, matchLift, applyWeights, nextE1RM, trackedLiftsInSession, parseReps, parseRpe, epley1RM, pullupE1RM };

@@ -506,7 +506,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   // Finalise each slot: structure into supersets/fillers, then a session spec.
   return work.map(slot => {
     const items = structureItems(slot.picks);
-    applyWeights(items, ctx.lifts || {});
+    applyWeights(items, ctx.lifts || {}, ctx.level);
     const total = Object.values(slot.muscleVol).reduce((a, b) => a + b, 0) || 1;
     const lower = (slot.muscleVol.quads || 0) + (slot.muscleVol.hamstrings || 0) +
                   (slot.muscleVol.glutes || 0) + (slot.muscleVol.calves || 0);
