@@ -13,7 +13,9 @@ import STANDARDS, { BANDS } from '../data/strengthStandards.js';
 const LIFTS = [
   { key: 'squat', label: 'Squat' },
   { key: 'bench', label: 'Bench' },
-  { key: 'deadlift', label: 'Deadlift' }
+  { key: 'deadlift', label: 'Deadlift' },
+  { key: 'ohp', label: 'Overhead press' },
+  { key: 'pull', label: 'Pull' }
 ];
 
 const STATUS_COLOR = {

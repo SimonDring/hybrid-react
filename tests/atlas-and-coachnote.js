@@ -5,6 +5,7 @@
 import { buildCoachNote } from '../src/lib/coachNote.js';
 import { computePillars } from '../src/lib/atlas/pillars.js';
 import { SPORTS } from '../src/data/sports/index.js';
+import { strength } from '../src/lib/atlas/signals.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
@@ -61,3 +62,26 @@ assert(sprint.includes('explosive') && sprint.includes('speed_strength'), 'T11 s
 assert(swim.includes('upper_pull') && swim.includes('shoulder_health'), 'T12 swim has its upper-body pillars');
 assert(long.includes('aerobic') && long.includes('durability'), 'T13 distance running leads with aerobic + durability');
 assert(JSON.stringify(sprint) !== JSON.stringify(swim), 'T14 different sports get different pillar sets');
+
+// ---- pull + OHP translate into the sport's capability pillars ------------
+// A swimmer's most sport-critical pillars (upper-body pull + shoulder health) were
+// ESTIMATES until pull/OHP were tracked — back/biceps had no lift. Tracking them makes
+// those pillars REAL, driven by the athlete's actual pulling/overhead strength.
+const swimBig3 = { ...base, goal_type: 'sport', sport: 'swim', lifts: { squat: 140, bench: 100, deadlift: 180 } };
+const swimFive = { ...swimBig3, lifts: { ...swimBig3.lifts, ohp: 70, pull: 130 } };
+const upNo = computePillars(swimBig3, data).pillars.find(p => p.id === 'upper_pull').score;
+const upYes = computePillars(swimFive, data).pillars.find(p => p.id === 'upper_pull').score;
+assert(upYes > upNo + 10, `T15 tracking pull makes a swimmer's upper_pull pillar real & higher (${upNo}→${upYes})`);
+const shNo = computePillars(swimBig3, data).pillars.find(p => p.id === 'shoulder_health').score;
+const shYes = computePillars(swimFive, data).pillars.find(p => p.id === 'shoulder_health').score;
+assert(shYes > shNo, `T16 tracking OHP lifts a swimmer's shoulder_health pillar (${shNo}→${shYes})`);
+
+// ---- the overall strength score is RELATIVE TO THE SPORT ------------------
+// Same lifts, different sport → the score weights the lifts that matter for that sport.
+const upperDominant = { ...base, bodyweight_kg: 75, sex: 'male', lifts: { squat: 60, deadlift: 80, bench: 120, ohp: 80, pull: 130 } };
+const lowerDominant = { ...base, bodyweight_kg: 75, sex: 'male', lifts: { squat: 200, deadlift: 250, bench: 50, ohp: 30, pull: 50 } };
+const asSwim = (p) => strength({ ...p, goal_type: 'sport', sport: 'swim' });
+const asSprint = (p) => strength({ ...p, goal_type: 'sport', sport: 'run', run_discipline: 'sprint' });
+assert(asSwim(upperDominant) > asSprint(upperDominant), 'T17 upper-dominant athlete scores higher as a swimmer (upper lifts weighted)');
+assert(asSprint(lowerDominant) > asSwim(lowerDominant), 'T18 lower-dominant athlete scores higher as a sprinter (leg lifts weighted)');
+assert(strength({ ...base, sex: 'male', bodyweight_kg: 75, lifts: { ohp: 60, pull: 90 } }) != null, 'T19 strength counts ohp/pull even without the big-3');
