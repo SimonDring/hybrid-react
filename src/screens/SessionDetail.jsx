@@ -111,8 +111,10 @@ export default function SessionDetail() {
   const trackedLifts = trackedLiftsInSession(session);
   const targetKg = (t) => { const m = /([\d.]+)/.exec(t || ''); return m ? Number(m[1]) : null; };
 
+  // completed/started come epoch-gated from the store view, so a stale row left over
+  // from a previous plan reads as fresh (offers Start) instead of done/in-progress.
   const isDone = state && state.completed;
-  const isStarted = state && state.startedAt && !state.completed;
+  const isStarted = state && state.started;
 
   const handleStart = () => startSession(key);
 

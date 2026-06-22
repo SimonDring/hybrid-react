@@ -309,28 +309,41 @@ export async function deleteAccount() {
 
 // ---------- Sessions ----------
 
+// When acting on a slot reclaims it from a previous plan (Database soft-deletes the
+// stale row and creates a fresh one — see findOrCreateSessionByTemplate), the local
+// row id changes. Mirror the old row's soft-delete to Supabase so the next cloud
+// pull doesn't resurrect the stale "done/missed" row. No-op when nothing was reclaimed.
+function reclaimDeleteOp(ops, before, current) {
+  if (before && current && before.id !== current.id) {
+    ops.push(supabase.from('sessions').update({ deleted_at: new Date().toISOString() }).eq('id', before.id));
+  }
+}
+
 export async function startSession(templateRef) {
   if (!canSync()) return Database.services.startSession(templateRef);
   const userId = uid();
   // Ensure local session record exists first
+  const before = Database.tables.sessions.find(s => s.template_ref === templateRef);
   Database.services.startSession(templateRef);
   const local = Database.tables.sessions.find(s => s.template_ref === templateRef);
   if (!local) return;
-  const { error } = await supabase
-    .from('sessions')
-    .upsert(clean(local, userId), { onConflict: 'id' });
-  if (error) logError('startSession', error);
+  const ops = [supabase.from('sessions').upsert(clean(local, userId), { onConflict: 'id' })];
+  reclaimDeleteOp(ops, before, local);
+  const results = await Promise.all(ops);
+  results.forEach(r => { if (r.error) logError('startSession', r.error); });
 }
 
 export async function completeSession(templateRef, payload) {
   if (!canSync()) return Database.services.completeSession(templateRef, payload);
   const userId = uid();
+  const before = Database.tables.sessions.find(s => s.template_ref === templateRef);
   Database.services.completeSession(templateRef, payload);
   const session = Database.tables.sessions.find(s => s.template_ref === templateRef);
   const log = session ? Database.tables.sessionLogs.find(l => l.session_id === session.id) : null;
   const ops = [];
   if (session) ops.push(supabase.from('sessions').upsert(clean(session, userId), { onConflict: 'id' }));
   if (log)     ops.push(supabase.from('session_logs').upsert(clean(log, userId), { onConflict: 'id' }));
+  reclaimDeleteOp(ops, before, session);
   const results = await Promise.all(ops);
   results.forEach(r => { if (r.error) logError('completeSession', r.error); });
 }
@@ -391,6 +404,7 @@ export async function skipSession(templateRef) {
       .update({ deleted_at: new Date().toISOString() })
       .eq('id', log.id)
   );
+  reclaimDeleteOp(ops, before, updated);
   const results = await Promise.all(ops);
   results.forEach(r => { if (r.error) logError('skipSession', r.error); });
 }

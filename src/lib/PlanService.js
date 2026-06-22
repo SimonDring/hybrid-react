@@ -107,7 +107,7 @@ const sessionKey = (phaseId, weekNum, idx) => `p${phaseId}_wk${weekNum}_s${idx}`
 // same keys; without this guard they'd silently mark the new plan's identical
 // slots done/missed and trigger a phantom catch-up. A plan with no start date has
 // no epoch, so everything counts (defensive fallback).
-function withinEpoch(st) {
+export function withinEpoch(st) {
   if (!st) return false;
   const start = getStartDate();
   if (!start) return true;

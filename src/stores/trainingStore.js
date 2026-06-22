@@ -15,7 +15,7 @@ import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
 import { nextE1RM } from '../lib/liftProgression.js';
 import { computeReadiness } from '../lib/Readiness.js';
-import { setRuntime, currentAdaptation, sessionDiscipline, getWeek } from '../lib/PlanService.js';
+import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch } from '../lib/PlanService.js';
 import { dailyLoads, acuteChronic, acwr, acwrSeries, loadDecision, sessionLoad } from '../lib/plan/trainingLoad.js';
 import { setOverride, clearOverride } from '../lib/sessionOverrides.js';
 import { matchWorkoutToSession, sessionPhysiologyFromWorkout } from '../lib/sessionWorkoutMatch.js';
@@ -48,15 +48,24 @@ function buildView() {
   const sessions = {};
   Database.tables.sessions.all().forEach(s => {
     if (!s.template_ref) return;
-    const log = s.status === 'completed'
+    // Session state is keyed by POSITION (p1_wk1_s0…), so a new plan reuses the
+    // old plan's keys. Only count settled state that was acted on in the CURRENT
+    // plan's epoch — otherwise a stale "completed"/"skipped" row leaks onto the new
+    // plan's identical slot (phantom Done/Missed, hidden Start button). One guard
+    // here keeps every consumer (calendar, week strip, SessionDetail) consistent.
+    const inEpoch = withinEpoch({ createdAt: s.created_at });
+    const completed = inEpoch && s.status === 'completed';
+    const skipped = inEpoch && s.status === 'skipped';
+    const started = inEpoch && !!s.started_at && s.status !== 'completed' && s.status !== 'skipped';
+    const log = completed
       ? Database.tables.sessionLogs.find(l => l.session_id === s.id)
       : null;
     const linkedWorkout = Database.tables.workouts.all().find(w => w.session_id === s.id) || null;
     sessions[s.template_ref] = {
       id: s.id,                 // session DB id — needed by the UI to link/unlink
-      completed: s.status === 'completed',
-      skipped: s.status === 'skipped',
-      started: !!s.started_at && s.status !== 'completed' && s.status !== 'skipped',
+      completed,
+      skipped,
+      started,
       startedAt: s.started_at || null,
       completedAt: s.completed_at || null,
       createdAt: s.created_at || null,   // when the user first acted on this slot — used to scope settled state to the current plan epoch (see PlanService.withinEpoch)
