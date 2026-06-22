@@ -6,7 +6,8 @@
 export const LIMITS = {
   age:                { min: 13, max: 120, int: true },
   bodyweight_kg:      { min: 30, max: 300 },
-  lift:               { min: 0,  max: 500 },          // squat / bench / deadlift (kg)
+  lift:               { min: 0,  max: 500 },          // squat / bench / deadlift / ohp / pull (kg e1RM)
+  pullupReps:         { min: 0,  max: 100, int: true }, // max pull-up reps (UI-side, before → kg e1RM)
   daysPerWeek:        { min: 1,  max: 7, int: true },
   rating:             { min: 1,  max: 5, int: true }, // quality/energy/recovery/soreness/mood/severity
   rpe:                { min: 1,  max: 10 },
