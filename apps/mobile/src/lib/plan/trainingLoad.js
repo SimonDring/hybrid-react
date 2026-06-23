@@ -1,11 +1,19 @@
 /**
  * Training load (pure, no IO). Per-session Edwards zone-TRIMP → EWMA acute/chronic
  * → ACWR → a week-level load decision, plus the combined readiness×load multiplier.
- * Thresholds are the only tunables; they live here as constants.
+ *
+ * The thresholds are sourced from the evidence knowledge base (src/lib/knowledge/),
+ * where they carry their provenance + confidence — the ACWR bands are tagged
+ * confidence:'low' because the ratio is mathematically contested (Impellizzeri 2019/
+ * 2020; Lolli). Behaviour is unchanged by this sourcing; demoting ACWR from a gate to
+ * a soft input is a later, deliberate step (roadmap Phase 3).
  */
+import kb from '../knowledge/kb.js';
 
 const DAY_MS = 86400000;
-export const EASE_FROM = 1.3, HIGH = 1.5, SWEET_LOW = 0.8;
+const _T = kb.value('load.acwr.thresholds');
+const _P = kb.value('load.acwr.policy');
+export const SWEET_LOW = _T.sweetLow, EASE_FROM = _T.easeFrom, HIGH = _T.high;
 
 // Edwards TRIMP from HR-zone minutes; fallback to a moderate duration proxy.
 export function sessionLoad(log) {
@@ -80,14 +88,14 @@ export function acwrSeries(dl, asOf, n = 4) {
 // Decide the week-level adaptation from today's ACWR + a short recent series.
 export function loadDecision(acwrVal, recentAcwr = []) {
   if (acwrVal == null) return { action: 'none', multiplier: 1, reason: null };
-  const sustainedHigh = recentAcwr.filter(v => v != null && v > HIGH).length >= 3;
-  const sustainedLow  = recentAcwr.filter(v => v != null && v < SWEET_LOW).length >= 3;
-  if (acwrVal > HIGH && sustainedHigh) return { action: 'deload', multiplier: 0.5, reason: 'Sustained high load — deload this week' };
+  const sustainedHigh = recentAcwr.filter(v => v != null && v > HIGH).length >= _P.sustainedDays;
+  const sustainedLow  = recentAcwr.filter(v => v != null && v < SWEET_LOW).length >= _P.sustainedDays;
+  if (acwrVal > HIGH && sustainedHigh) return { action: 'deload', multiplier: _P.deloadMultiplier, reason: 'Sustained high load — deload this week' };
   if (acwrVal > EASE_FROM) {
     const t = Math.min(1, (acwrVal - EASE_FROM) / (HIGH - EASE_FROM));
-    return { action: 'ease', multiplier: Math.round((1.0 - 0.3 * t) * 100) / 100, reason: 'Load high — eased this week' };
+    return { action: 'ease', multiplier: Math.round((1.0 - _P.easeSlope * t) * 100) / 100, reason: 'Load high — eased this week' };
   }
-  if (acwrVal < SWEET_LOW && sustainedLow) return { action: 'nudge_up', multiplier: 1.0, reason: 'Load low — building back toward plan' };
+  if (acwrVal < SWEET_LOW && sustainedLow) return { action: 'nudge_up', multiplier: _P.nudgeUp, reason: 'Load low — building back toward plan' };
   return { action: 'none', multiplier: 1, reason: null };
 }
 
@@ -96,32 +104,42 @@ export function loadDecision(acwrVal, recentAcwr = []) {
 // to the full plan only when readiness is adequate; otherwise readiness wins.
 export function combinedMultiplier(rm, decision = { action: 'none', multiplier: 1 }) {
   if (decision.action === 'nudge_up') return rm >= 0.9 ? 1.0 : rm;
-  return Math.max(0.5, Math.min(rm, decision.multiplier));
+  return Math.max(_P.combinedFloor, Math.min(rm, decision.multiplier));
 }
 
-// Adaptive deload decision for the CURRENT week. Promotes the existing load signals
-// into a TRUE deload (lighter scheme + MEV volume + banner), or DEFERS a planned
-// deload when the athlete is clearly fresh — so deloads track real fatigue instead
-// of only firing on fixed weeks. Pure; driven by the same readiness + ACWR load the
-// reflow already computes, plus recent session recovery feedback.
-//   loadDecision    from loadDecision() — action 'deload' = sustained high ACWR
-//   readiness       0–100 (today) or null
+// Adaptive deload decision for the CURRENT week. Promotes real fatigue into a TRUE
+// deload (lighter scheme + MEV volume + banner), or DEFERS a planned deload when the
+// athlete is clearly fresh — so deloads track real fatigue instead of only firing on
+// fixed weeks. Pure.
+//
+// ACWR DEMOTED (Impellizzeri 2019/2020; Lolli — knowledge base load.acwr.validity):
+// sustained high load no longer FORCES a deload on its own (it's a coupled, low-
+// confidence signal). It only CORROBORATES — a deload is forced by illness, or by low
+// readiness + poor recovery, or by a high-load signal BACKED BY low readiness/poor
+// recovery. This makes the strongest behavioural call the most-evidenced one.
+//   loadAction      'deload'|'ease'|'nudge_up'|'none' from the load module (ACWR-derived)
+//   readiness       0–100 blended recovery score (today) or null
 //   recentRecovery  mean of recent session 'recovery' ratings (1–5) or null
+//   illness         athlete flagged ill today
 //   scheduledDeload is the current week already a planned deload?
 // → { action: 'force' | 'defer' | 'none', reason }
-export function deloadRecommendation({ loadDecision: dec = null, readiness = null, recentRecovery = null, scheduledDeload = false } = {}) {
-  const loadDeload = !!(dec && dec.action === 'deload');
+export function deloadRecommendation({ loadAction = null, readiness = null, recentRecovery = null, illness = false, scheduledDeload = false } = {}) {
+  const loadDeload = loadAction === 'deload';
   const lowReadiness = readiness != null && readiness < 50;
   const poorRecovery = recentRecovery != null && recentRecovery <= 2;
-  // Fatigued: sustained high load, OR low readiness backed by poor recovery feedback.
-  const fatigued = loadDeload || (lowReadiness && poorRecovery);
+  // Fatigued: illness, OR low readiness backed by poor recovery, OR a high-load signal
+  // CORROBORATED by low readiness / poor recovery (ACWR alone is not enough).
+  const fatigued = illness || (lowReadiness && poorRecovery) || (loadDeload && (lowReadiness || poorRecovery));
   // Fresh: high readiness, good recovery, and load not elevated.
   const fresh = readiness != null && readiness >= 70
     && (recentRecovery == null || recentRecovery >= 4)
-    && (!dec || (dec.action !== 'deload' && dec.action !== 'ease'));
+    && loadAction !== 'deload' && loadAction !== 'ease';
 
   if (!scheduledDeload && fatigued) {
-    return { action: 'force', reason: loadDeload ? (dec.reason || 'Sustained high load — deload this week') : 'Low readiness and recovery — deload this week' };
+    const reason = illness ? 'Illness — deload and recover this week'
+      : loadDeload ? 'Sustained high load with low recovery — deload this week'
+        : 'Low readiness and recovery — deload this week';
+    return { action: 'force', reason };
   }
   if (scheduledDeload && fresh) {
     return { action: 'defer', reason: 'Recovered and fresh — pushing the planned deload' };

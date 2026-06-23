@@ -1,0 +1,84 @@
+// src/lib/recovery/recovery.js
+/**
+ * recovery — turns the day's recovery signals into a normalized RecoveryOutput that
+ * the programming engine consumes. It blends OBJECTIVE wearable readiness
+ * (sleep / HRV / RHR, already computed by Readiness.js) with SUBJECTIVE wellness
+ * (energy / soreness / mood / stress / sleep quality), weighting the subjective at
+ * LEAST as heavily as the objective — Saw, Main & Gastin 2016 (BJSM) found subjective
+ * self-report MORE sensitive to the training response than HRV/RHR (knowledge base:
+ * readiness.subjective_priority). Illness / travel raise a session override.
+ *
+ * Pure, no IO. The orchestrator (PlanService) consumes the contract; it never reaches
+ * back into wearable internals. See docs/engine/01-PANEL-REVIEW.md §3.3 / §6 / §9.
+ *
+ * @typedef {Object} RecoveryOutput
+ * @property {'high'|'moderate'|'low'|'unknown'} readinessLevel
+ * @property {number} volumeModifier     0.78..1.0 — scales the session's volume / length
+ * @property {number} intensityModifier  0.85..1.0 — scales load/RPE (1.0 today; reserved)
+ * @property {null|'easy'|'rest'|'deload'} sessionOverride
+ * @property {number|null} score          0..100 blended readiness (bands + diagnostics)
+ */
+
+/**
+ * Subjective wellness → 0..100. Each item is 1–5 where 5 = best, INCLUDING soreness
+ * (5 = no soreness) and stress (5 = calm). Averages the present items; null if none.
+ */
+export function subjectiveScore(s = {}) {
+  const vals = ['sleepQuality', 'soreness', 'mood', 'stress', 'energy']
+    .map(k => s[k])
+    .filter(v => v != null && !Number.isNaN(Number(v)))
+    .map(Number);
+  if (!vals.length) return null;
+  const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+  return Math.round(((mean - 1) / 4) * 100);   // 1 → 0, 5 → 100
+}
+
+function bandFromScore(score) {
+  if (score == null) return 'unknown';
+  if (score >= 70) return 'high';
+  if (score >= 50) return 'moderate';
+  return 'low';
+}
+
+// Volume modifier preserves the engine's prior readiness mapping (1 / 0.9 / 0.78), so
+// behaviour is unchanged when only an objective score is present.
+function volumeFromScore(score) {
+  if (score == null) return 1;
+  if (score >= 70) return 1;
+  if (score >= 50) return 0.9;
+  return 0.78;
+}
+
+/**
+ * @param {Object} inputs
+ * @param {number|null} inputs.objectiveScore  0..100 wearable readiness (Readiness.js)
+ * @param {Object|null} inputs.subjective       { sleepQuality, soreness, mood, stress, energy } (1–5)
+ * @param {boolean} inputs.illness
+ * @param {boolean} inputs.travel
+ * @returns {RecoveryOutput}
+ */
+export function assessRecovery({ objectiveScore = null, subjective = null, illness = false, travel = false } = {}) {
+  const subj = subjective ? subjectiveScore(subjective) : null;
+  // Blend: subjective weighted ≥ objective (Saw 2016). Use whichever is present.
+  let score = null;
+  if (subj != null && objectiveScore != null) score = Math.round(0.6 * subj + 0.4 * objectiveScore);
+  else if (subj != null) score = subj;
+  else if (objectiveScore != null) score = objectiveScore;
+
+  // Session override: illness > travel. Pure fatigue (low readiness + poor session
+  // recovery) and rock-bottom readiness are composed downstream with session-recovery
+  // feedback, so behaviour is unchanged when no illness/travel flag is set.
+  let sessionOverride = null;
+  if (illness) sessionOverride = 'rest';
+  else if (travel) sessionOverride = 'easy';
+
+  return {
+    readinessLevel: bandFromScore(score),
+    volumeModifier: volumeFromScore(score),
+    intensityModifier: 1,   // reserved — readiness does not yet scale intensity
+    sessionOverride,
+    score
+  };
+}
+
+export default { assessRecovery, subjectiveScore };

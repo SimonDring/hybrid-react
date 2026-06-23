@@ -38,15 +38,17 @@ let _cache = { sig: null, plan: null };
 // reflow can read live completion + readiness without changing any screen's
 // call signature. Future/past weeks are never touched — only the current week.
 // ---------------------------------------------------------------------------
-let _runtime = { sessions: {}, readiness: null, loadDecision: null };
+// recovery = RecoveryOutput (src/lib/recovery), load = LoadOutput (src/lib/load) —
+// the store computes both each buildView and the reflow consumes the contracts here.
+let _runtime = { sessions: {}, recovery: null, load: null };
 let _adaptCache = { key: null, phases: null };
 let _lastForgiven = null;   // per-muscle sets left unscheduled last reflow (over the safe ceiling)
 
 export function setRuntime(rt = {}) {
   _runtime = {
     sessions: rt.sessions || {},
-    readiness: rt.readiness ?? null,
-    loadDecision: rt.loadDecision ?? null
+    recovery: rt.recovery ?? null,
+    load: rt.load ?? null
   };
 }
 
@@ -58,22 +60,15 @@ export function currentAdaptation() {
   if (cw == null) return null;
   const profile = Database.services.getProfile() || {};
   const reverted = !!(profile.load_overrides && profile.load_overrides[cw] === 'plan');
-  const d = _runtime.loadDecision;
+  const load = _runtime.load;
+  const action = load && load.inputs ? load.inputs.action : null;
   if (reverted) {
-    return (d && d.action && d.action !== 'none')
+    return (action && action !== 'none')
       ? { action: 'reverted', reason: 'Following the plan (you reverted this week)', reverted: true, week: cw }
       : null;
   }
-  if (!d || !d.action || d.action === 'none') return null;
-  return { action: d.action, reason: d.reason, reverted: false, week: cw };
-}
-
-// Tired → trim the remaining volume; recovered → fill it in full.
-function readinessMult(score) {
-  if (score == null) return 1;
-  if (score >= 70) return 1;
-  if (score >= 50) return 0.9;
-  return 0.78;
+  if (!action || action === 'none') return null;
+  return { action, reason: load.loadRecommendation, reverted: false, week: cw };
 }
 
 // Gym programming context derived from the profile (mirrors PlanGenerator).
@@ -217,15 +212,18 @@ function adaptedPhases() {
     .map(k => { const s = _runtime.sessions[k] || {}; return `${k}:${s.completed ? 'c' : ''}${s.skipped ? 's' : ''}${s.started ? 'p' : ''}${withinEpoch(s) ? '' : 'x'}`; })
     .filter(x => !x.endsWith(':'))
     .sort().join(',');
-  const band = _runtime.readiness == null ? 'n'
-    : _runtime.readiness >= 70 ? 'h' : _runtime.readiness >= 50 ? 'm' : 'l';
+  const recovery = _runtime.recovery;                  // RecoveryOutput (or null)
+  const level = recovery ? recovery.readinessLevel : null;
+  const band = level === 'high' ? 'h' : level === 'moderate' ? 'm' : level === 'low' ? 'l' : 'n';
+  const override = recovery ? recovery.sessionOverride : null;   // illness('rest') / travel('easy')
   const ovSig = Object.keys(overrides).filter(inWeeks).map(k => `${k}@${overrides[k].createdAt || 0}`).sort().join(',');
   const reverted = !!(profile.load_overrides && profile.load_overrides[cw] === 'plan');
-  const decision = reverted ? null : _runtime.loadDecision;
-  const loadBand = decision && decision.action ? decision.action : 'none';
+  const load = reverted ? null : _runtime.load;        // LoadOutput (or null when reverted)
+  const loadAction = load && load.inputs ? load.inputs.action : 'none';
 
   // ---- adaptive deload (F9): promote fatigue signals into a TRUE deload on the
-  // current week, or DEFER a planned one when the athlete is clearly fresh ----
+  // current week, or DEFER a planned one when the athlete is clearly fresh. ACWR is
+  // demoted — it only corroborates (see deloadRecommendation). ----
   const recVals = Object.values(_runtime.sessions)
     .filter(s => s.completed && s.recovery != null && withinEpoch(s))
     .sort((a, b) => String(b.completedAt || '').localeCompare(String(a.completedAt || '')))
@@ -233,11 +231,12 @@ function adaptedPhases() {
   const recentRecovery = recVals.length ? recVals.reduce((a, b) => a + b, 0) / recVals.length : null;
   const cwWeek = g.phases.flatMap(p => p.weeks || []).find(w => w.num === cw) || {};
   const rec = reverted ? { action: 'none', reason: null } : deloadRecommendation({
-    loadDecision: decision, readiness: _runtime.readiness, recentRecovery, scheduledDeload: !!cwWeek.deload
+    loadAction, readiness: recovery ? recovery.score : null, recentRecovery,
+    illness: override === 'rest', scheduledDeload: !!cwWeek.deload
   });
   const recBand = recentRecovery == null ? 'n' : recentRecovery <= 2 ? 'l' : recentRecovery >= 4 ? 'h' : 'm';
 
-  const key = `${_cache.sig}|${cw}|${localISO(today)}|${stateSig}|${band}|${ovSig}|${loadBand}|${recBand}|${rec.action}|${reverted ? 'r' : ''}`;
+  const key = `${_cache.sig}|${cw}|${localISO(today)}|${stateSig}|${band}|${ovSig}|${loadAction}|${recBand}|${rec.action}|${override || ''}|${reverted ? 'r' : ''}`;
   if (_adaptCache.key === key) return _adaptCache.phases;
 
   // Effective deload for a week — the force/defer decision applies to the current week only.
@@ -273,8 +272,13 @@ function adaptedPhases() {
   const { perSlot, forgiven } = distributeAcrossSlots({ slots: slotInputs, deficit, windowDays: WINDOW_DAYS });
   _lastForgiven = forgiven;
 
-  // Readiness trims session length; load (acute:chronic) trims/restores. Conservative.
-  const mult = combinedMultiplier(readinessMult(_runtime.readiness), decision || { action: 'none', multiplier: 1 });
+  // Recovery trims session length; load (ACWR, demoted) gently trims/restores; a
+  // travel 'easy' override trims further. Conservative — take the smallest sensible cut.
+  let mult = combinedMultiplier(
+    recovery ? recovery.volumeModifier : 1,
+    { action: loadAction, multiplier: load ? load.loadModifier : 1 }
+  );
+  if (!reverted && override === 'easy') mult = Math.min(mult, 0.7);
   const specByKey = {};
   slots.forEach((s, idx) => {
     const spec = allocateGym({

@@ -116,6 +116,7 @@ const METRIC_SPECS = {
   energy: [LIMITS.rating, 'Energy'],
   soreness: [LIMITS.rating, 'Soreness'],
   mood: [LIMITS.rating, 'Mood'],
+  stress: [LIMITS.rating, 'Stress'],
 };
 
 export function validateDailyMetric(fields = {}) {

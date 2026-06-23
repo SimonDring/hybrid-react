@@ -604,6 +604,9 @@ export const services = {
       energy: numeric(fields.energy),
       soreness: numeric(fields.soreness),
       mood: numeric(fields.mood),
+      stress: numeric(fields.stress),
+      illness: fields.illness === true,
+      travel: fields.travel === true,
       notes: fields.notes || ''
     };
     if (existing) {
