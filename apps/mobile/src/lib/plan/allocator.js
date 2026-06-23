@@ -290,15 +290,16 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     if (slot.timeUsed < 5) score *= effectiveRole === 'primary' ? 1.2 : 0.85; // open on a compound
     if (ex.pattern === 'hpull' || ex.pattern === 'vpull') score *= 1.05; // posture pull-lean
     if (prioritySet && prioritySet.has(ex.id)) score *= 1.35;     // science-backed priority boost
-    // Split FOCUS bias: steer this day toward the muscles its split assigns (an
-    // Upper day prefers chest/back/shoulders, a Lower day quads/hams/glutes), so the
-    // week reads as a curated split rather than identical full-body days. The shared
-    // weekly deficit still controls TOTAL volume — this only reorders which day gets
-    // what. A null focus (sport even-split, or a direct call) applies no bias.
+    // Split FOCUS bias: steer this day toward the muscles its split assigns (an Upper
+    // day prefers chest/back/shoulders, a Lower day quads/hams/glutes), so the week
+    // reads as a curated split rather than identical days. The multiplier only ever
+    // SUPPRESSES off-focus work (≤1, never a boost) — it reorders which day gets what
+    // without lowering the pick threshold, so the shared weekly deficit still controls
+    // total volume (no overshoot). A null focus (direct call) applies no bias.
     if (slot.focus) {
       let c = 0, inFocus = 0;
       for (const m in contrib) { c += contrib[m]; if ((slot.focus[m] || 0) > 0) inFocus += contrib[m]; }
-      score *= 0.35 + 1.35 * (c > 0 ? inFocus / c : 1);
+      score *= 0.4 + 0.6 * (c > 0 ? inFocus / c : 1);
     }
     score -= OVERSHOOT_PENALTY * waste;                            // prefer picks that fit the remaining target
     score += (hash(ex.id) + weekNum + slot.idx) % 7 * 0.001;       // rotation tie-break
@@ -520,7 +521,8 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       duration,
       items,
       intensity: deload ? 'moderate' : 'hard',
-      lowerBody: lower >= 0.4 * total
+      lowerBody: lower >= 0.4 * total,
+      muscleVol: slot.muscleVol   // realised per-muscle volume — lets the scheduler space same-muscle days
     };
   });
 }

@@ -29,6 +29,25 @@ const legTaxingRun = (s) => s.discipline === 'run' && (s.intensity === 'hard' ||
 const isLongRun = (s) => s.discipline === 'run' && /^Long/.test(s.focus || '');
 const gap = (a, b) => ((b - a) % 7 + 7) % 7;
 
+// The muscle groups a session works HARD (within half of its biggest) — its
+// recovery footprint. Drives the muscle-spacing penalty so we don't program, say,
+// chest/shoulders hard two days running.
+function heavyMuscles(s) {
+  const mv = s.muscleVol;
+  if (!mv) return null;
+  const rows = Object.entries(mv).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
+  if (!rows.length) return null;
+  const cut = rows[0][1] * 0.5;
+  return new Set(rows.filter(([, v]) => v >= cut).map(([m]) => m));
+}
+function sharedHeavyCount(a, b) {
+  const A = heavyMuscles(a), B = heavyMuscles(b);
+  if (!A || !B) return 0;
+  let n = 0;
+  for (const m of A) if (B.has(m)) n += 1;
+  return n;
+}
+
 // Penalty for one full sport assignment (lower is better). `placed` is
 // [{idx, spec}] sorted by weekday; ctx.lrIdx is the preferred long-run weekday.
 function score(placed, ctx) {
@@ -42,12 +61,19 @@ function score(placed, ctx) {
     const nxt = placed[(i + 1) % n];
     const g = gap(cur.idx, nxt.idx);
     if (g === 0) continue;
+    // Muscle recovery: penalise the SAME muscle group worked hard on near-consecutive
+    // days (don't bench heavy two days running). This is the lever that arranges a
+    // split's same-region days onto non-adjacent weekdays — weighted heavily so it
+    // dominates the (constant, all-gym-is-hard) generic spacing term.
+    const shared = sharedHeavyCount(cur.spec, nxt.spec);
     if (g <= 1) {
+      pen += 14 * shared;
       if (isHard(cur.spec) && isHard(nxt.spec)) pen += 10;
       if ((legStrength(cur.spec) && legTaxingRun(nxt.spec)) ||
           (legStrength(nxt.spec) && legTaxingRun(cur.spec))) pen += 8;
-    } else if (g === 2 && isHard(cur.spec) && isHard(nxt.spec)) {
-      pen += 2;
+    } else if (g === 2) {
+      pen += 3 * shared;
+      if (isHard(cur.spec) && isHard(nxt.spec)) pen += 2;
     }
   }
   return pen;
