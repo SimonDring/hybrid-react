@@ -1,6 +1,6 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-06-22. Keep this current at the end of each work session so the
+_Last updated: 2026-06-23. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
 
 ## What this app is now
@@ -26,6 +26,45 @@ built**, on mock data) and `packages/{shared,engine}/` reserved; `supabase/` + `
 (what's here today) and **Team** (player mobile + coach web; the near-term priority, not
 built). Full vision: `docs/strategy/VISION.md`; team blueprint + data-isolation rules:
 `docs/product/TEAM-ARCHITECTURE.md`.
+
+## Latest work — decision-engine evidence-architecture refactor (2026-06-23)
+
+On branch **`feat/decision-engine-evidence-architecture`** (PR open, not merged). A
+multidisciplinary review of the decision engine (`docs/engine/01-PANEL-REVIEW.md` +
+`02-REFACTOR-ROADMAP.md`) plus a staged, low-regression refactor toward an
+**orchestrator architecture** where specialist knowledge is modular, pluggable, and
+evidence-traceable. Six themed commits; `node tests/*.js` = **42 files green**; build
+clean; runtime paths preview-verified.
+
+- **Phase 0 — golden-master safety net** (`tests/golden-master.js`): snapshots
+  `generatePlan` across 19 archetypes + an in-process determinism check, so the
+  pure-engine refactors below are proven **byte-identical** (`UPDATE=1` regenerates).
+- **Phase 1 — evidence knowledge base** (`src/lib/knowledge/`): every scientific
+  constant becomes an auditable entry (`evidenceLevel`/`source`/`confidence`/
+  `lastReviewed`). Volume landmarks (`muscleVolume`) + ACWR thresholds (`trainingLoad`)
+  read from it; contested science tagged `confidence:low/moderate`.
+- **Phase 2 — pluggable sport modules** (`src/lib/sports/`): sport emphasis/priority/
+  periodisation extracted behind a `SportModule` registry; `resolveProgram` /
+  `resolvePeriodization` are thin lookups. **rugby/soccer/gaa** scaffolds prove a new
+  sport = one data file, zero core edits. Plans byte-identical for run/cycle/swim.
+- **Phase 3 — recovery + load contracts** (`src/lib/recovery/`, `src/lib/load/`): clean
+  `RecoveryOutput`/`LoadOutput` consumed by `PlanService` + the store. **ACWR demoted**
+  to a soft, low-confidence input (Impellizzeri/Lolli) — no longer cuts volume below
+  0.85 or forces a deload alone (now needs corroboration). **Subjective wellness**
+  blended ≥ objective (Saw 2016) + illness/travel overrides, captured via a new **Home
+  daily check-in card** → `daily_metrics`. *Intentionally changes runtime behaviour*
+  (verified in-app: illness → forced deload). **New migration** below.
+- **Phase 4 — data-driven injury profiles** (`src/lib/injury/`): per-region
+  contraindications relocated from the inline regex table into structured,
+  evidence-tagged `InjuryProfile` data behind a registry; `injuryRules` is a thin
+  accessor with **identical output** (parity green). Each profile carries risk factors,
+  return-to-performance, and a dosed prevention protocol (Copenhagen/Nordic/FIFA-11+)
+  linked to KB entries. (Matching stays name-based — items carry only a name; the
+  knowledge is what became data-driven.)
+
+**Frozen throughout:** the PlanOutput shape screens consume + the full test suite.
+**Remaining (optional) — Phase 5:** physically extract the engine into
+`packages/engine` (architecture is ready; see the extraction note below).
 
 ## Latest work — coach web dashboard, first version (2026-06-22)
 
@@ -209,7 +248,9 @@ session-titles, adaptive-deload). Determinism + full build/sport sweeps clean.
 | Edge Functions: `fitbit-auth-callback`, `fitbit-sync`, `strava-auth-callback`, `strava-sync`, `enrich-sessions` | ✅ deployed (`config.toml` pins `verify_jwt` per fn) |
 | Secrets: `STRAVA_CLIENT_ID`/`SECRET`, `VITE_STRAVA_CLIENT_ID`, Google/Fitbit OAuth | ✅ set |
 
-**No outstanding manual steps.** The engine work added no migration/function/secret.
+**Pending on the engine branch:** migration `20260623_daily_metrics_subjective.sql`
+(adds `stress`/`illness`/`travel` to `daily_metrics` for the subjective check-in) —
+apply when `feat/decision-engine-evidence-architecture` merges. No new functions/secrets.
 
 ## Known limitations / expectations (not bugs)
 
