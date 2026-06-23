@@ -2,12 +2,12 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
-import * as Utils from '../lib/Utils.js';
+import * as Utils from '@performance-os/engine/lib/Utils.js';
 import { activityFor } from '../data/activityTypes.js';
 import RestTimer from '../components/RestTimer.jsx';
 import ExerciseInfo from '../components/ExerciseInfo.jsx';
 import { getChecked, toggleChecked, clearChecked } from '../lib/SessionProgress.js';
-import { trackedLiftsInSession } from '../lib/liftProgression.js';
+import { trackedLiftsInSession } from '@performance-os/engine/lib/liftProgression.js';
 
 function SessionPhysiology({ state, candidates, onUnlink, onLink }) {
   if (!state || !state.completed) return null;

@@ -1,6 +1,6 @@
 // tests/run-discipline.js
-import { resolvePeriodization, deriveSeason } from '../src/lib/plan/periodization.js';
-import { resolveProgram } from '../src/lib/strength/program.js';
+import { resolvePeriodization, deriveSeason } from '@performance-os/engine/lib/plan/periodization.js';
+import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

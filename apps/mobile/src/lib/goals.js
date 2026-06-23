@@ -7,7 +7,7 @@
  * Endurance goals (run/swim/cycle) are intentionally NOT here yet — the data model
  * + UI can extend to them later; today the app is a strength companion.
  */
-import { resolveLifts } from './liftProgression.js';
+import { resolveLifts } from '@performance-os/engine/lib/liftProgression.js';
 import STANDARDS, { BANDS } from '../data/strengthStandards.js';
 
 const LIFTS = [

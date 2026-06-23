@@ -1,9 +1,9 @@
 // tests/taper.js
 // F4: an event taper must CUT VOLUME but KEEP INTENSITY (Bosquet 2007; Travis &
 // Mujika 2020) — not behave like a deload (which drops intensity too).
-import { generatePlan } from '../src/lib/PlanGenerator.js';
+import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
-import { volumeReport } from '../src/lib/plan/volume.js';
+import { volumeReport } from '@performance-os/engine/lib/plan/volume.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

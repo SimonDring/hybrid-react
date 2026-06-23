@@ -1,5 +1,5 @@
-import { resolvePeriodization } from './plan/periodization.js';
-import { pullupE1RM } from './liftProgression.js';
+import { resolvePeriodization } from '@performance-os/engine/lib/plan/periodization.js';
+import { pullupE1RM } from '@performance-os/engine/lib/liftProgression.js';
 
 /**
  * onboardingModel — the pure (non-UI) part of onboarding: the answer shape and

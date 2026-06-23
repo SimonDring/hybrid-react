@@ -1,7 +1,7 @@
 import {
   sessionLoad, workoutLoad, dailyLoads, acuteChronic, acwr, acwrSeries,
   loadDecision, combinedMultiplier
-} from '../src/lib/plan/trainingLoad.js';
+} from '@performance-os/engine/lib/plan/trainingLoad.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

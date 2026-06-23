@@ -2,11 +2,11 @@
 // F8: sport sessions must LEAD with the sport's priority work (swimmer → a pull,
 // sprinter → power/plyo), not the generic squat/hinge anchor. Plus: sprint no
 // longer accrues a pile of non-specific chest volume.
-import { generatePlan } from '../src/lib/PlanGenerator.js';
+import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
-import { resolveProgram } from '../src/lib/strength/program.js';
-import { volumeReport } from '../src/lib/plan/volume.js';
-import { EXERCISES } from '../src/data/strengthExercises.js';
+import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
+import { volumeReport } from '@performance-os/engine/lib/plan/volume.js';
+import { EXERCISES } from '@performance-os/engine/data/strengthExercises.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

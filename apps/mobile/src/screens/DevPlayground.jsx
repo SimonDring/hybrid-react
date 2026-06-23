@@ -21,12 +21,12 @@
 import { useState, useEffect } from 'react';
 import OnboardingWizard from '../components/OnboardingWizard.jsx';
 import { BLANK_ANSWERS, answersToProfile } from '../lib/onboardingModel.js';
-import { generatePlan } from '../lib/PlanGenerator.js';
+import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { activityFor } from '../data/activityTypes.js';
-import { volumeReport } from '../lib/plan/volume.js';
-import { weeklyMuscleTargets } from '../lib/strength/targets.js';
-import { resolveProgram } from '../lib/strength/program.js';
-import { MUSCLE_LABELS } from '../data/muscleVolume.js';
+import { volumeReport } from '@performance-os/engine/lib/plan/volume.js';
+import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets.js';
+import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
+import { MUSCLE_LABELS } from '@performance-os/engine/data/muscleVolume.js';
 
 const NOTES_KEY = 'htp_dev_review_notes';
 

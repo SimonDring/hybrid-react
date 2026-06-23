@@ -2,11 +2,11 @@
 // The allocator's ACTUAL volume should track its evidence-based target — no large
 // overshoot (the base-week "actual ≫ target" the evaluation flagged). The overshoot
 // penalty keeps even the low-volume base week within a tight band of target.
-import { generatePlan } from '../src/lib/PlanGenerator.js';
+import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
-import { volumeReport } from '../src/lib/plan/volume.js';
-import { weeklyMuscleTargets } from '../src/lib/strength/targets.js';
-import { resolveProgram } from '../src/lib/strength/program.js';
+import { volumeReport } from '@performance-os/engine/lib/plan/volume.js';
+import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets.js';
+import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

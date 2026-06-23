@@ -17,8 +17,8 @@
 import { PILLARS } from '../../data/athletePillars.js';
 import { sportConfigFor } from '../../data/sports/index.js';
 import { muscleCapabilities } from './signals.js';
-import { resolveProgram } from '../strength/program.js';
-import { MUSCLE_LABELS } from '../../data/muscleVolume.js';
+import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
+import { MUSCLE_LABELS } from '@performance-os/engine/data/muscleVolume.js';
 
 const clamp = (n, lo = 0, hi = 100) => Math.max(lo, Math.min(hi, n));
 

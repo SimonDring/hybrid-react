@@ -1,9 +1,9 @@
 // tests/exercise-selection.js
-import { EXERCISES, LEVELS } from '../src/data/strengthExercises.js';
-import { resolveProgram } from '../src/lib/strength/program.js';
-import { allocateGym } from '../src/lib/plan/allocator.js';
-import { weeklyMuscleTargets } from '../src/lib/strength/targets.js';
-import { buildWeek } from '../src/lib/plan/strength.js';
+import { EXERCISES, LEVELS } from '@performance-os/engine/data/strengthExercises.js';
+import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
+import { allocateGym } from '@performance-os/engine/lib/plan/allocator.js';
+import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets.js';
+import { buildWeek } from '@performance-os/engine/lib/plan/strength.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

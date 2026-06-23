@@ -1,10 +1,10 @@
 // tests/volume-ceiling.js
 // F1: the allocator must never prescribe more than a muscle's MRV across a week,
 // even for high-frequency / limited-equipment plans (the worst over-MRV offenders).
-import { generatePlan } from '../src/lib/PlanGenerator.js';
+import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
-import { volumeReport } from '../src/lib/plan/volume.js';
-import { VOLUME_LANDMARKS } from '../src/data/muscleVolume.js';
+import { volumeReport } from '@performance-os/engine/lib/plan/volume.js';
+import { VOLUME_LANDMARKS } from '@performance-os/engine/data/muscleVolume.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

@@ -10,7 +10,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { BLANK_ANSWERS } from '../lib/onboardingModel.js';
-import { epley1RM, pullupE1RM } from '../lib/liftProgression.js';
+import { epley1RM, pullupE1RM } from '@performance-os/engine/lib/liftProgression.js';
 
 // ---- Option catalogues ----
 export const GOAL_TYPES = [

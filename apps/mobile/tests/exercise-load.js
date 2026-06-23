@@ -1,7 +1,7 @@
 // tests/exercise-load.js — every loadable exercise gets a realistic, research-calibrated
 // target weight derived from the five tracked lifts; bodyweight/band/core get none.
-import { anchorForName, effectiveCoefficient, formatLoad } from '../src/lib/strength/exerciseLoad.js';
-import { applyWeights } from '../src/lib/liftProgression.js';
+import { anchorForName, effectiveCoefficient, formatLoad } from '@performance-os/engine/lib/strength/exerciseLoad.js';
+import { applyWeights } from '@performance-os/engine/lib/liftProgression.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

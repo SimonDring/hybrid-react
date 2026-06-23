@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
-import { computeReadiness } from '../lib/Readiness.js';
+import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
 import WeekSchedule from '../components/WeekSchedule.jsx';
+import DailyCheckin from '../components/DailyCheckin.jsx';
 import RingTile from '../components/ui/RingTile.jsx';
 import Avatar from '../components/ui/Avatar.jsx';
 import { readinessVerdict, loadVerdict } from '../lib/verdicts.js';
@@ -132,6 +133,9 @@ export default function Home() {
           ))}
         </div>
       )}
+
+      {/* MORNING CHECK-IN — subjective wellness feeds the recovery readiness blend */}
+      <DailyCheckin />
 
       {/* SUPPORTING SIGNALS — readiness + training load, demoted to the bottom */}
       <div className="home-rings">

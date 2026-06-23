@@ -12,7 +12,13 @@
  *  Sport pre-season 6 wk: Bosquet 2007 (volume taper window before competition)
  *  Sport in-season 4 wk rolling: maintenance dose (Ronnestad 2011, 2 ×/wk)
  *  Post-event transition 4 wk: deload + active recovery, Mujika 2010
+ *
+ *  Sport block templates + the run-discipline branching now live in the pluggable
+ *  sport modules (src/lib/sports/); this file owns the BUILD profiles + season
+ *  derivation and looks sports up via the registry. Adding a sport needs no edit here.
  */
+import sports from '../sports/index.js';
+import { SPORT_BLOCKS } from '../sports/_schema.js';
 
 /**
  * Derive the current training season from the athlete's profile.
@@ -48,6 +54,8 @@ export function deriveSeason(profile = {}) {
 // 'intent' maps to PHASE_META in PlanGenerator (base | build | peak).
 // deload is inserted automatically by PlanGenerator every 4th week within a phase.
 
+// BUILD profiles only. Sport block templates moved to src/lib/sports/_schema.js
+// (SPORT_BLOCKS) and the run-discipline variants to src/lib/sports/running.js.
 const PROFILES = {
   // RP hypertrophy mesocycle (Israetel): 4-week accumulation + 1 week peak + 1 deload
   hypertrophy: {
@@ -66,51 +74,6 @@ const PROFILES = {
     totalWeeks: 8,
     split: [{ intent: 'base', weeks: 3 }, { intent: 'build', weeks: 4 }, { intent: 'peak', weeks: 1 }],
     deloads: [4, 8]
-  },
-  // Sport off-season: genuine strength base (Rønnestad 2015 — max-strength transfer)
-  sportOff: {
-    totalWeeks: 12,
-    split: [{ intent: 'base', weeks: 5 }, { intent: 'build', weeks: 5 }, { intent: 'peak', weeks: 2 }],
-    deloads: [5, 10]
-  },
-  // Sport pre-season: transition to sport-specific work (Bosquet 2007 taper model)
-  sportPre: {
-    totalWeeks: 6,
-    split: [{ intent: 'base', weeks: 3 }, { intent: 'build', weeks: 3 }],
-    deloads: [6]   // taper week before the race window
-  },
-  // Sport in-season: maintenance dose — 4-week rolling, no long phases
-  // Never auto-deloads (deload only via check-in answer or race-week taper).
-  sportIn: {
-    totalWeeks: 4,
-    split: [{ intent: 'build', weeks: 4 }],
-    deloads: []   // maintenance — no auto-deload (only check-in / race-week taper)
-  },
-  // Post-event transition: active recovery, rebuild base
-  sportTransition: {
-    totalWeeks: 4,
-    split: [{ intent: 'base', weeks: 4 }],
-    deloads: []   // already an active-recovery block — kept light throughout
-  },
-
-  // ── Run discipline overrides ───────────────────────────────────────────
-  // Sprint (100–400m): short power blocks per NSCA sprint periodization model.
-  runSprintOff: {
-    totalWeeks: 6,
-    split: [{ intent: 'base', weeks: 2 }, { intent: 'build', weeks: 3 }, { intent: 'peak', weeks: 1 }],
-    deloads: [6]
-  },
-  // Pre-season sprint: quick taper to peak power output.
-  runSprintPre: {
-    totalWeeks: 4,
-    split: [{ intent: 'base', weeks: 2 }, { intent: 'build', weeks: 2 }],
-    deloads: []   // short power taper — stays sharp, no deload
-  },
-  // Middle distance (800m–5K): 10w blocks for running economy + speed endurance blend.
-  runMiddleOff: {
-    totalWeeks: 10,
-    split: [{ intent: 'base', weeks: 4 }, { intent: 'build', weeks: 4 }, { intent: 'peak', weeks: 2 }],
-    deloads: [4, 8]
   }
 };
 
@@ -124,29 +87,16 @@ export function resolvePeriodization(profile = {}) {
   const goalType = profile.goal_type || (profile.sport ? 'sport' : 'build');
 
   if (goalType === 'sport' && profile.sport) {
-    const season = deriveSeason(profile);
-
-    if (profile.sport === 'run' && profile.run_discipline) {
-      const disc = profile.run_discipline;
-      if (disc === 'sprint') {
-        if (season === 'pre')        return PROFILES.runSprintPre;
-        if (season === 'in')         return PROFILES.sportIn;
-        if (season === 'transition') return PROFILES.sportTransition;
-        return PROFILES.runSprintOff;
-      }
-      if (disc === 'middle') {
-        if (season === 'pre')        return PROFILES.sportPre;
-        if (season === 'in')         return PROFILES.sportIn;
-        if (season === 'transition') return PROFILES.sportTransition;
-        return PROFILES.runMiddleOff;
-      }
-      // 'long' falls through to generic sport logic below
-    }
-
-    if (season === 'pre')        return PROFILES.sportPre;
-    if (season === 'in')         return PROFILES.sportIn;
-    if (season === 'transition') return PROFILES.sportTransition;
-    return PROFILES.sportOff;
+    const mod = sports.get(profile.sport);   // undefined for an unknown sport → generic blocks
+    const season = deriveSeason(profile) || 'off';
+    // Run sub-disciplines (sprint/middle) override the season block; a season the
+    // discipline doesn't override (and 'long' / no discipline) falls back to the
+    // module's generic SPORT_BLOCKS — matching the prior branching exactly.
+    const disc = profile.sport === 'run' ? profile.run_discipline : null;
+    const byD = disc && mod && mod.byDiscipline ? mod.byDiscipline[disc] : null;
+    return (byD && byD.periodization && byD.periodization[season])
+      || (mod && mod.periodization && mod.periodization[season])
+      || SPORT_BLOCKS[season] || SPORT_BLOCKS.off;
   }
 
   const style = profile.strength_style;

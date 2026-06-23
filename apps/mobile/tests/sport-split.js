@@ -4,11 +4,11 @@
 // days (e.g. a pull day, a press/shoulder day, a posterior/legs day), trains its
 // emphasised muscles ~2×/week and its de-emphasised ones ~1×, and still leads every
 // session with sport-priority work.
-import { generatePlan } from '../src/lib/PlanGenerator.js';
+import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
-import { resolveProgram } from '../src/lib/strength/program.js';
-import { volumeReport } from '../src/lib/plan/volume.js';
-import { EXERCISES } from '../src/data/strengthExercises.js';
+import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
+import { volumeReport } from '@performance-os/engine/lib/plan/volume.js';
+import { EXERCISES } from '@performance-os/engine/data/strengthExercises.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
@@ -46,7 +46,7 @@ assert(allLed, `S4 every swim session leads with a sport-priority exercise (lead
 // S5: weekly volume still tracks the target (split redistributes, never inflates).
 const tg = resolveProgram(prof);
 let target = 0, actual = 0;
-const tgts = (await import('../src/lib/strength/targets.js')).weeklyMuscleTargets({
+const tgts = (await import('@performance-os/engine/lib/strength/targets.js')).weeklyMuscleTargets({
   style: tg.style, intent: 'base', level: tg.level, weekInPhase: 1, phaseWeeks: 4,
   emphasis: tg.emphasis, volumeScalar: tg.volumeScalar, blockFrac: 0 });
 volumeReport(wk.sessions).rows.forEach(r => { actual += r.sets; target += (tgts[r.muscle] || 0); });

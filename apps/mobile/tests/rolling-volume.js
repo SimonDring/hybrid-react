@@ -1,7 +1,7 @@
-import { rollingTarget, distributeAcrossSlots, WINDOW_DAYS } from '../src/lib/plan/rollingVolume.js';
-import { allocateGym } from '../src/lib/plan/allocator.js';
-import { countWeeklyVolume } from '../src/lib/plan/volume.js';
-import { VOLUME_LANDMARKS, MUSCLE_GROUPS } from '../src/data/muscleVolume.js';
+import { rollingTarget, distributeAcrossSlots, WINDOW_DAYS } from '@performance-os/engine/lib/plan/rollingVolume.js';
+import { allocateGym } from '@performance-os/engine/lib/plan/allocator.js';
+import { countWeeklyVolume } from '@performance-os/engine/lib/plan/volume.js';
+import { VOLUME_LANDMARKS, MUSCLE_GROUPS } from '@performance-os/engine/data/muscleVolume.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

@@ -22,7 +22,13 @@
  * NOTE: "back" here lumps lats + mid-back + traps together, and "shoulders"
  * lumps side + rear delts (front delts get plenty from pressing). Splitting them
  * finer is a later refinement; this granularity is enough to drive decisions.
+ *
+ * The landmark numbers themselves now live in the evidence knowledge base
+ * (src/lib/knowledge/) with their provenance + confidence — VOLUME_LANDMARKS below
+ * is sourced from there so the science is auditable and editable in one place.
  */
+
+import kb from '../lib/knowledge/kb.js';
 
 // The muscle groups we account for. Front delts are deliberately omitted — they
 // are well covered by horizontal/vertical pressing and rarely the limiter.
@@ -39,18 +45,8 @@ export const MUSCLE_LABELS = {
 };
 
 // Weekly hard-set landmarks per muscle group (general-trainee mid-range).
-export const VOLUME_LANDMARKS = {
-  chest:      { mev: 8,  mav: 16, mrv: 22 },
-  back:       { mev: 10, mav: 18, mrv: 25 },
-  shoulders:  { mev: 8,  mav: 18, mrv: 26 },
-  biceps:     { mev: 6,  mav: 14, mrv: 20 },
-  triceps:    { mev: 6,  mav: 14, mrv: 20 },
-  quads:      { mev: 8,  mav: 16, mrv: 20 },
-  hamstrings: { mev: 6,  mav: 13, mrv: 18 },
-  glutes:     { mev: 6,  mav: 14, mrv: 20 },
-  calves:     { mev: 6,  mav: 13, mrv: 20 },
-  core:       { mev: 0,  mav: 16, mrv: 25 }
-};
+// Sourced from the evidence knowledge base (provenance + confidence live there).
+export const VOLUME_LANDMARKS = kb.value('volume.landmarks');
 
 /**
  * How much a working set of a given movement PATTERN contributes to each muscle.

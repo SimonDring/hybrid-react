@@ -210,8 +210,11 @@ create table if not exists public.daily_metrics (
   calories_out          numeric,
   -- subjective
   energy                numeric,  -- 1-5
-  soreness              numeric,  -- 1-5
+  soreness              numeric,  -- 1-5 (5 = fresh)
   mood                  numeric,  -- 1-5
+  stress                numeric,  -- 1-5 (5 = calm)
+  illness               boolean default false,
+  travel                boolean default false,
   notes                 text default '',
   created_at            timestamptz not null default now(),
   updated_at            timestamptz not null default now(),

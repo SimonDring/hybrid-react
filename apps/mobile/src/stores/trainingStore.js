@@ -13,10 +13,12 @@
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
-import { nextE1RM } from '../lib/liftProgression.js';
-import { computeReadiness } from '../lib/Readiness.js';
+import { nextE1RM } from '@performance-os/engine/lib/liftProgression.js';
+import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch } from '../lib/PlanService.js';
-import { dailyLoads, acuteChronic, acwr, acwrSeries, loadDecision, sessionLoad } from '../lib/plan/trainingLoad.js';
+import { dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad } from '@performance-os/engine/lib/plan/trainingLoad.js';
+import { assessRecovery } from '@performance-os/engine/lib/recovery/recovery.js';
+import { assessLoad } from '@performance-os/engine/lib/load/load.js';
 import { setOverride, clearOverride } from '../lib/sessionOverrides.js';
 import { matchWorkoutToSession, sessionPhysiologyFromWorkout } from '../lib/sessionWorkoutMatch.js';
 import { validateProfile, validateDailyMetric, validateSessionLog, validateInjury } from '../lib/validation/validate.js';
@@ -92,9 +94,20 @@ function buildView() {
   const dl = dailyLoads(sessionLogsAll, workoutsAll);
   const ac = acuteChronic(dl, today);
   const acwrVal = acwr(ac);
-  const decision = loadDecision(acwrVal, acwrSeries(dl, today, 4));
+  // Load contract (ACWR demoted to a soft input). Recovery contract blends objective
+  // wearable readiness with subjective wellness (latest daily_metrics: energy/soreness/
+  // mood — dormant until captured) + illness/travel flags. See src/lib/{load,recovery}/.
+  const loadOut = assessLoad({ acwrVal, recentAcwr: acwrSeries(dl, today, 4) });
+  const objectiveScore = computeReadiness(dailyMetrics, logs).score;
+  const latestMetric = [...dailyMetrics].sort((a, b) => (b.date || '').localeCompare(a.date || ''))[0] || {};
+  const recoveryOut = assessRecovery({
+    objectiveScore,
+    subjective: { sleepQuality: latestMetric.sleep_quality, soreness: latestMetric.soreness, mood: latestMetric.mood, stress: latestMetric.stress, energy: latestMetric.energy },
+    illness: !!latestMetric.illness,
+    travel: !!latestMetric.travel
+  });
 
-  setRuntime({ sessions, readiness: computeReadiness(dailyMetrics, logs).score, loadDecision: decision });
+  setRuntime({ sessions, recovery: recoveryOut, load: loadOut });
 
   // Load view-model: acute/chronic/acwr + recent session loads (newest first).
   const band = acwrVal == null ? null : acwrVal < 0.8 ? 'under' : acwrVal > 1.5 ? 'over' : acwrVal > 1.3 ? 'high' : 'sweet';

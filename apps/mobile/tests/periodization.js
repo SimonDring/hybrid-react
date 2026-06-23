@@ -1,6 +1,6 @@
 // tests/periodization.js
-import { resolvePeriodization, deriveSeason, continueBlock } from '../src/lib/plan/periodization.js';
-import { generatePlan } from '../src/lib/PlanGenerator.js';
+import { resolvePeriodization, deriveSeason, continueBlock } from '@performance-os/engine/lib/plan/periodization.js';
+import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

@@ -10,7 +10,7 @@
  *   ctx = { phaseTitle, weekNum, totalWeeks, isDeload }  (all optional)
  */
 
-import { resolveProgram } from './strength/program.js';
+import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 
 const SPORT_NOUN = { run: 'running', cycle: 'cycling', swim: 'swimming' };
 const SPORT_TITLE = { run: 'Running', cycle: 'Cycling', swim: 'Swimming' };

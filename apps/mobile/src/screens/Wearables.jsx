@@ -9,7 +9,7 @@
  */
 
 import { useTrainingStore } from '../stores/trainingStore.js';
-import { computeReadiness, readinessFor, sleepScoreFor, fmtSleep } from '../lib/Readiness.js';
+import { computeReadiness, readinessFor, sleepScoreFor, fmtSleep } from '@performance-os/engine/lib/Readiness.js';
 
 // A value box that shows "est" when the number is derived rather than measured.
 function ScoreBox({ label, result, suffix }) {
