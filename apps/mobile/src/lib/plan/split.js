@@ -18,11 +18,12 @@
  *   6 days → push / pull / legs ×2
  *   7 days → PPL ×2 + a full-body day
  *
- * SPORT plans are deliberately NOT forced into a body-part split: the per-muscle
- * emphasis (program.js) already shapes a sport-appropriate dose (a swimmer leans
- * upper-pull, a cyclist lower) and shouldn't be handed two dedicated leg days. Each
- * sport day trains the whole body at an even share and opens on the sport's priority
- * work (the allocator owns that anchor); emphasis + fill-to-time give the texture.
+ * SPORT plans get an EMPHASIS-WEIGHTED split: the number of push / pull / lower days
+ * is allocated from the sport's per-muscle emphasis (program.js), so a swimmer leans
+ * pull (back 2×/wk) with a press/shoulder day and a single legs day, a cyclist leans
+ * lower — varied, sport-appropriate days rather than four full-body clones, while
+ * still leading each session with the sport's priority work (the allocator owns that
+ * anchor). The de-emphasised regions still get their (small) dose, ~1×/week.
  *
  * Pure function → reproducible splits → stable sessions.
  */
@@ -85,6 +86,55 @@ function template(days) {
   }
 }
 
+// ---- Sport: emphasis-weighted region-day allocation ----
+const REGION_DAY = {
+  push:  ()  => day('Push',  [...UPPER_PUSH, ...CORE], ['hpush', 'vpush']),
+  pull:  ()  => day('Pull',  [...UPPER_PULL, ...CORE], ['vpull', 'hpull']),
+  lower: (i) => day('Lower', [...LOWER, ...CORE], (i % 2) ? ['hinge'] : ['squat'])
+};
+
+// Split `days` across push/pull/lower. Floors guarantee balance/injury prevention
+// (≥1 push & pull at 2+ days; ≥1 lower at 3+ days so legs/posterior aren't dropped);
+// the rest go to the highest-emphasis regions, with score/(count+1) giving diminishing
+// returns so a second day only goes where the emphasis truly warrants it.
+function allocateSportDays(days, score) {
+  const regions = ['push', 'pull', 'lower'];
+  const counts = { push: 0, pull: 0, lower: 0 };
+  let left = days;
+  if (days >= 2) { counts.push = 1; counts.pull = 1; left -= 2; }
+  if (days >= 3) { counts.lower = 1; left -= 1; }
+  while (left > 0) {
+    let best = regions[0], bestVal = -Infinity;
+    for (const r of regions) { const v = score[r] / (counts[r] + 1); if (v > bestVal) { bestVal = v; best = r; } }
+    counts[best]++; left -= 1;
+  }
+  return counts;
+}
+
+function sportTemplate(days, emphasis = {}) {
+  if (days <= 1) return [day('Full body', ALL, ['hpull', 'squat', 'hpush'])];
+  const mean = (ms) => ms.reduce((a, m) => a + (emphasis[m] ?? 1), 0) / ms.length;
+  const score = { push: mean(UPPER_PUSH), pull: mean(UPPER_PULL), lower: mean(LOWER) };
+  const counts = allocateSportDays(days, score);
+  const pools = { push: [], pull: [], lower: [] };
+  for (let i = 0; i < counts.push; i++) pools.push.push(REGION_DAY.push());
+  for (let i = 0; i < counts.pull; i++) pools.pull.push(REGION_DAY.pull());
+  for (let i = 0; i < counts.lower; i++) pools.lower.push(REGION_DAY.lower(i));
+  // Interleave so the same region isn't emitted back-to-back where avoidable (the
+  // scheduler then spaces them onto non-adjacent weekdays).
+  const regions = ['push', 'pull', 'lower'];
+  const out = [];
+  let last = null;
+  while (out.length < days) {
+    const avail = regions.filter(r => pools[r].length)
+      .sort((a, b) => pools[b].length - pools[a].length || score[b] - score[a]);
+    const pick = avail.find(r => r !== last) || avail[0];
+    out.push(pools[pick].shift());
+    last = pick;
+  }
+  return out;
+}
+
 // Turn day descriptors into per-day per-muscle weights (sum to 1 per muscle).
 function withWeights(tmpl) {
   const freq = {};
@@ -97,15 +147,12 @@ function withWeights(tmpl) {
 }
 
 /**
- * @param {object} ctx  { gymDays, style }
+ * @param {object} ctx  { gymDays, style, emphasis }
  * @returns {Array<{ focus, anchors, weights:{ [muscle]:number } }>} one per day
  */
-export function resolveSplit({ gymDays = 3, style = 'functional' } = {}) {
+export function resolveSplit({ gymDays = 3, style = 'functional', emphasis = {} } = {}) {
   const days = Math.max(1, Math.min(7, gymDays));
-  if (style === 'sport') {
-    const even = Object.fromEntries(MUSCLE_GROUPS.map(m => [m, 1 / days]));
-    return Array.from({ length: days }, () => ({ focus: null, anchors: null, weights: { ...even } }));
-  }
+  if (style === 'sport') return withWeights(sportTemplate(days, emphasis));
   return withWeights(template(days));
 }
 

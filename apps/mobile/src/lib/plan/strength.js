@@ -110,14 +110,16 @@ export function buildWeek(ctx = {}) {
   // reads as a curated split (Upper / Lower / …) instead of near-identical full-body
   // days. The shared weekly deficit still controls total volume, so the MEV→MAV ramp
   // and MRV ceiling are untouched.
-  const split = resolveSplit({ gymDays, style });
+  // Build splits are body-part based; sport splits are emphasis-weighted (push/pull/
+  // lower day counts from the sport's muscle emphasis). Both pass each day its FOCUS
+  // (per-muscle weights) so the allocator biases that day toward its region and the
+  // week reads as curated, varied days — sport days are now non-uniform, so the focus
+  // bias steers them without the old even-split overshoot. Shared deficit still owns
+  // total volume (ramp + MRV untouched).
+  const split = resolveSplit({ gymDays, style, emphasis: ctx.emphasis });
   const slotMin = functionalSlotMinutes(style, minutes);
-  // Focus bias is for body-part splits (build goals). Sport plans use an even split
-  // (no per-region bias — emphasis already shapes them) and differentiate via their
-  // sport-priority anchors, so they pass focus:null and keep their on-target volume.
   const slots = split.map(day => ({
-    minutes: slotMin, equip: ctx.access || [], anchors: day.anchors,
-    focus: style === 'sport' ? null : day.weights
+    minutes: slotMin, equip: ctx.access || [], anchors: day.anchors, focus: day.weights
   }));
 
   const sessions = allocateGym({
