@@ -11,76 +11,17 @@
 
 import { deriveSeason } from '../plan/periodization.js';
 import { getGymLevel } from '../Utils.js';
+import sports from '../sports/index.js';
+import { DEFAULT_SEASON_VOLUME } from '../sports/_schema.js';
 
-// Strength-support volume by season (× on the weekly target). In-season is a
-// maintenance dose (Rønnestad 2011, ~2×/wk); off-season builds a full base.
-const SEASON_VOLUME = { off: 1.0, pre: 0.85, in: 0.6, transition: 0.7 };
-
-const SPORT_EMPHASIS = {
-  // Run disciplines — separate maps per science (design spec 2026-06-12-run-discipline)
-  // Sprint: glutes/hamstrings for power + shoulders for arm drive (Hicks 2024 scoping
-  // review). Chest/triceps trimmed — non-specific pressing volume was crowding the
-  // limited training time without aiding sprint transfer.
-  run_sprint: { quads: 1.20, hamstrings: 1.30, glutes: 1.35, calves: 1.20, core: 1.15, back: 1.00, shoulders: 1.10, chest: 0.70, biceps: 0.70, triceps: 0.70 },
-  // Middle: balanced running economy focus
-  run_middle: { quads: 1.15, hamstrings: 1.30, glutes: 1.25, calves: 1.20, core: 1.20, back: 0.90, shoulders: 0.80, chest: 0.55, biceps: 0.55, triceps: 0.70 },
-  // Long: heaviest calf (achilles tendon loading), minimal chest/shoulders (avoid mass)
-  run_long:   { quads: 1.10, hamstrings: 1.30, glutes: 1.20, calves: 1.40, core: 1.25, back: 0.90, shoulders: 0.70, chest: 0.45, biceps: 0.50, triceps: 0.65 },
-  // Fallback when run_discipline is not set
-  run:        { quads: 1.15, hamstrings: 1.25, glutes: 1.20, calves: 1.30, core: 1.20, back: 0.90, shoulders: 0.80, chest: 0.55, biceps: 0.55, triceps: 0.70 },
-  cycle: { quads: 1.3, glutes: 1.25, hamstrings: 1.15, calves: 1.0, core: 1.15, back: 0.9, shoulders: 0.7, chest: 0.55, biceps: 0.55, triceps: 0.7 },
-  swim:  { back: 1.3, shoulders: 1.25, triceps: 1.15, biceps: 1.1, core: 1.2, chest: 1.0, quads: 0.7, hamstrings: 0.7, glutes: 0.7, calves: 0.5 }
-};
-
-// Science-backed priority lists.
-// Run: Blagrove 2018 (heavy RT + economy), Petersen 2011 (nordic), Berryman 2018 (plyos).
-// Cycle: Rønnestad 2010/2015 (SL strength, posterior chain), hip stability for Q-angle.
-// Swim: Batalha 2012/2015 (ER:IR ratio deficit), shoulder health, lat/core.
-// Hypertrophy (RP / Israetel): stretched-position isolation, compounds near MRV.
-// Strength: competition lifts + close variants.
-// Functional: Janda crossed syndromes, McGill spine, desk-job counterbalance.
-const SPORT_PRIORITY = {
-  // Sprint (100–400m): power/explosive first. Olympic lifts, plyos, glute power.
-  run_sprint: [
-    'hang_clean', 'power_clean', 'depth_jump', 'broad_jump', 'sled_push',
-    'back_squat', 'hip_thrust', 'nordic_curl', 'bounding_a_skip',
-    'double_leg_pogo', 'sl_pogo_jump', 'split_squat',
-    'glute_bridge_single_leg', 'pallof', 'sl_calf'
-  ],
-  // Middle distance (800m–5K): mixed economy + speed endurance.
-  run_middle: [
-    'nordic_curl', 'split_squat', 'rdl', 'double_leg_pogo', 'sl_pogo_jump',
-    'trap_bar_dl', 'step_up', 'lateral_band_walk', 'copenhagen',
-    'pallof', 'sl_calf', 'sl_hinge', 'tibialis_raise'
-  ],
-  // Long distance (10K+): heavy tendon-loading + injury prevention. No plyos.
-  run_long: [
-    'nordic_curl', 'rdl', 'trap_bar_dl', 'split_squat', 'sl_calf',
-    'tibialis_raise', 'lateral_band_walk', 'copenhagen', 'pallof',
-    'dead_bug', 'sl_hinge', 'glute_bridge_single_leg', 'step_up'
-  ],
-  // Fallback when run_discipline is not set
-  run: [
-    'nordic_curl', 'double_leg_pogo', 'sl_pogo_jump', 'bounding_a_skip',
-    'split_squat', 'rdl', 'trap_bar_dl', 'glute_bridge_single_leg',
-    'tibialis_raise', 'lateral_band_walk', 'sl_hip_abduction',
-    'copenhagen', 'pallof', 'sl_calf', 'sl_hinge', 'step_up'
-  ],
-  cycle: [
-    'sl_leg_press', 'split_squat', 'hip_thrust', 'glute_bridge_single_leg',
-    'lateral_band_walk', 'rdl', 'sl_hinge', 'goblet_squat',
-    'copenhagen', 'thoracic_foam_roller', 'hip_flexor_90_90',
-    'prone_hip_extension', 'pallof'
-  ],
-  swim: [
-    'face_pull', 'band_face_pull', 'sl_ext_rotation', 'cable_ext_rotation_90',
-    'reverse_pec_deck', 'prone_y_raise', 'prone_t_raise', 'prone_w_raise',
-    'serratus_punch_cable', 'serratus_wall_slide', 'band_pull_apart',
-    'straight_arm_pd', 'lat_pulldown', 'cable_woodchop',
-    'hip_thrust', 'cable_woodchop', 'glute_ham_raise', 'plank', 'side_plank'
-  ]
-};
-
+// Sport emphasis vectors, priority-exercise lists and season volume scalars now live
+// in the pluggable sport modules (src/lib/sports/) behind a registry — adding a sport
+// no longer touches this file. The build-style priority lists stay here (below).
+//
+// Build-style priority lists (science-backed):
+//   Hypertrophy (RP / Israetel): stretched-position isolation, compounds near MRV.
+//   Strength: competition lifts + close variants.
+//   Functional: Janda crossed syndromes, McGill spine, desk-job counterbalance.
 const GOAL_PRIORITY = {
   bodybuilding: [
     'incline_db_curl', 'spider_curl', 'overhead_cable_ext', 'low_high_cable_fly',
@@ -112,19 +53,18 @@ export function resolveProgram(profile = {}) {
 
   if (goalType === 'sport' && profile.sport) {
     const sport = profile.sport;
-    // Derive the season from event date / intent (an explicit override still wins).
-    // Previously read profile.sport_season, which onboarding never set → always 'off'.
+    const mod = sports.get(sport);   // undefined for an unknown sport → generic defaults
+    // Season: an explicit override wins, else derive from event date / intent.
     const season = profile.sport_season || deriveSeason(profile) || 'off';
-    // For run athletes, look up discipline-specific emphasis and priority
-    const emphasisKey = (sport === 'run' && profile.run_discipline)
-      ? `run_${profile.run_discipline}`
-      : sport;
+    // Run sub-disciplines (sprint/middle/long) override the module's defaults.
+    const disc = sport === 'run' ? profile.run_discipline : null;
+    const byD = disc && mod && mod.byDiscipline ? mod.byDiscipline[disc] : null;
     return {
       goalType: 'sport', style: 'sport',
-      emphasis: SPORT_EMPHASIS[emphasisKey] || {},
-      volumeScalar: SEASON_VOLUME[season] ?? 1.0,
-      power: true, sport, season, level,
-      exercisePriority: SPORT_PRIORITY[emphasisKey] || SPORT_PRIORITY[sport] || []
+      emphasis: (byD && byD.emphasis) || (mod && mod.emphasis) || {},
+      volumeScalar: ((mod && mod.seasonModifiers) || DEFAULT_SEASON_VOLUME)[season] ?? 1.0,
+      power: mod ? !!mod.power : true, sport, season, level,
+      exercisePriority: (byD && byD.priorityExercises) || (mod && mod.priorityExercises) || []
     };
   }
 
