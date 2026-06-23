@@ -1,5 +1,26 @@
 {
   "name": "@performance-os/web",
   "version": "0.0.0",
-  "private": true
+  "private": true,
+  "description": "Coach-facing web dashboard (Stage 5 Team package). Next.js App Router.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.13.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^20.16.11",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.6.3"
+  }
 }

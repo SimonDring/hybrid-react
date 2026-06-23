@@ -1,0 +1,42 @@
+name: Web CI (apps/web)
+
+# Type-checks and builds the coach dashboard (apps/web) on PRs and on main.
+# Only runs when the web app or its dependencies change, so mobile-only PRs
+# aren't affected.
+
+on:
+  pull_request:
+    paths:
+      - "apps/web/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/web-ci.yml"
+  push:
+    branches: [main]
+    paths:
+      - "apps/web/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/web-ci.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: web-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Type-check
+        run: npm run typecheck -w @performance-os/web
+      - name: Build
+        run: npm run build -w @performance-os/web

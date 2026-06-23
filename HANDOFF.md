@@ -19,13 +19,54 @@ the user's onboarding goal drives everything. (CLAUDE.md reflects this; the old
 personal half-marathon/2.5km-swim goals were removed.)
 
 **Structure + direction (2026-06-22):** the repo is now a **monorepo** (npm workspaces) —
-the app lives in `apps/mobile/`, with `apps/web/` (coach dashboard, not built) and
-`packages/{shared,engine}/` reserved; `supabase/` + `docs/` sit at the root. Run
+the app lives in `apps/mobile/`, with `apps/web/` (coach dashboard — **first version now
+built**, on mock data) and `packages/{shared,engine}/` reserved; `supabase/` + `docs/` sit at the root. Run
 `npm run dev` from the **repo root**. The product **North Star** is now set: open
 **elite S&C** to teams and budget-constrained individuals, as two packages — **Individual**
 (what's here today) and **Team** (player mobile + coach web; the near-term priority, not
 built). Full vision: `docs/strategy/VISION.md`; team blueprint + data-isolation rules:
 `docs/product/TEAM-ARCHITECTURE.md`.
+
+## Latest work — coach web dashboard, first version (2026-06-22)
+
+On branch **`feat/coach-web-dashboard`** (not yet merged). Filled the reserved `apps/web/`
+slot with the **first version of the coach-facing dashboard** — the Stage 5 Team package's
+coach surface. **Next.js 14 (App Router) · TypeScript · Tailwind v4 · Recharts**, a new
+workspace alongside `apps/mobile`. Runs on **realistic mock data** (24 players); no backend
+or auth yet, but structured so both slot in without touching the UI.
+
+- **Decision-led, not a data dump.** Every player becomes a RAG status (ready / monitor /
+  adjust / no-data) with plain-English meaning + a recommended coach action + player action +
+  reason + confidence (from data completeness) + next review. Reuses the mobile engine's
+  verdict vocabulary (`verdicts.js`, `trainingLoad.js` ACWR bands, `Readiness.js` scoring).
+- **Privacy boundary enforced in code.** `types/dashboard.ts` splits `PlayerPrivateSource`
+  (raw vitals — mock-only) from `CoachVisiblePlayer` (derived, maps 1:1 to the planned
+  `player_status` table). `lib/derive.ts` is the roll-up; raw vitals never reach a component
+  (`grep -rE "sleepHours|hrv|soreness" components/` = nothing). Honours the CLAUDE.md hard rule.
+- **The swap point for going live is one file:** `data/mockApi.ts` (async `getTeam` /
+  `getPlayers` / `getLoadTrend`). Replace bodies with Supabase `player_status` queries; the
+  roll-up moves server-side. See `apps/web/README.md` for the API-migration + auth + extend guide.
+- Sections: header (team context + 2 CTAs), 6 overview cards, readiness split, match-week
+  panel, prioritised attention list (with the spotlight recommendation card — the
+  differentiator), coach actions, filter/sort/search squad table, Recharts load-trend chart,
+  adherence heatmap, and a player-detail slide-over drawer.
+- **Verified:** `tsc --noEmit` clean, `next build` green (`/dashboard` prerenders), and
+  browser-checked on desktop + tablet (filter, sort, search, row→drawer, Escape-to-close all work).
+- **Run:** `npm run dev -w @performance-os/web` → http://localhost:3000/dashboard.
+
+**Update — tabbed restructure + Constraints (same branch).** The single long page became a
+**collapsible left sidebar + four routed views**: **Home** (`/dashboard`), **Focus**
+(`/dashboard/focus` — team training direction + the flagged players it affects), **Squad**
+(`/dashboard/squad` — table + chart + heatmap), and **Constraints** (`/dashboard/constraints`).
+A shared `DashboardProvider` (client context in `components/dashboard/`) holds cross-view state
+(selected player + drawer, editable constraints, toast); `app/dashboard/layout.tsx` fetches data
+once and the layout stays mounted across view switches. The new **Constraints** view is a working
+form (sport, season, weekly training pattern, fixtures → `TeamConstraints`, shaped for the future
+`teams.schedule` jsonb) plus a plain-English cascade explainer (team constraints → each player's
+onboarding → personalised plan); editing the season updates the Focus direction live via context.
+Old `DashboardShell`/`DashboardHeader` were removed. Verified: `next build` green (all 4 routes
+prerender), `tsc` clean, browser-checked (each view renders; client soft-nav keeps provider state;
+constraints edit→save→commit cycle works).
 
 ## Latest work — monorepo restructure (2026-06-22)
 
@@ -184,6 +225,12 @@ session-titles, adaptive-deload). Determinism + full build/sport sweeps clean.
 
 ## Non-blocking follow-ups (your call)
 
+- **Engine extraction — decision recorded** in `packages/engine/README.md`. Short
+  version: **don't extract yet** (only `apps/mobile` consumes it; the core is already
+  pure; the slot is reserved). Extract on the **second runtime that runs the engine** —
+  the Stage 6 AI Edge Function, or `apps/web` generating/previewing plans (not just
+  reading derived `player_status`). Prerequisite for a clean cut: split `PlanService`
+  into a pure reflow function + a thin app adapter. Full trigger + procedure in the README.
 - **Stale remote branches** safe to delete: `engine-fixes`, `chore/remove-dead-code`
   (both merged), plus older merged/dormant ones (`fix/pwa-oauth-redirect`,
   `strength-refocus`, `adaptive-gym-engine`, `ui-overhaul`, etc.).
