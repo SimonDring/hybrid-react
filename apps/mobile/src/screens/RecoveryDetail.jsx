@@ -4,7 +4,7 @@
  */
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
-import { computeReadiness } from '../lib/Readiness.js';
+import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
 import { readinessVerdict } from '../lib/verdicts.js';
 import MetricRing from '../components/ui/MetricRing.jsx';
 import Sparkline from '../components/ui/Sparkline.jsx';

@@ -15,19 +15,19 @@
  */
 
 import Database from './Database.js';
-import { generatePlan } from './PlanGenerator.js';
-import { weeklyMuscleTargets } from './strength/targets.js';
-import { allocateGym } from './plan/allocator.js';
-import { functionalSlotMinutes, applyFunctionalPrimer } from './plan/strength.js';
-import { resolveSplit } from './plan/split.js';
-import { resolveProgram } from './strength/program.js';
-import { countWeeklyVolume } from './plan/volume.js';
-import { distributeAcrossSlots, WINDOW_DAYS } from './plan/rollingVolume.js';
-import { resolveLifts } from './liftProgression.js';
-import { MUSCLE_GROUPS, MUSCLE_LABELS } from '../data/muscleVolume.js';
+import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
+import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets.js';
+import { allocateGym } from '@performance-os/engine/lib/plan/allocator.js';
+import { functionalSlotMinutes, applyFunctionalPrimer } from '@performance-os/engine/lib/plan/strength.js';
+import { resolveSplit } from '@performance-os/engine/lib/plan/split.js';
+import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
+import { countWeeklyVolume } from '@performance-os/engine/lib/plan/volume.js';
+import { distributeAcrossSlots, WINDOW_DAYS } from '@performance-os/engine/lib/plan/rollingVolume.js';
+import { resolveLifts } from '@performance-os/engine/lib/liftProgression.js';
+import { MUSCLE_GROUPS, MUSCLE_LABELS } from '@performance-os/engine/data/muscleVolume.js';
 import { getOverrides } from './sessionOverrides.js';
-import { applyInjuryRules, applyPrevention } from './injury/injuryFilter.js';
-import { combinedMultiplier, deloadRecommendation } from './plan/trainingLoad.js';
+import { applyInjuryRules, applyPrevention } from '@performance-os/engine/lib/injury/injuryFilter.js';
+import { combinedMultiplier, deloadRecommendation } from '@performance-os/engine/lib/plan/trainingLoad.js';
 
 let _cache = { sig: null, plan: null };
 

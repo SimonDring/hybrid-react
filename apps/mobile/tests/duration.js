@@ -1,7 +1,7 @@
 // tests/duration.js
 // F5: the session duration estimate must reflect the realised work, and the time
 // budget must bind so 1–2-day plans don't silently pack 90 min into "~60 min".
-import { generatePlan } from '../src/lib/PlanGenerator.js';
+import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
 
 function assert(cond, msg) {

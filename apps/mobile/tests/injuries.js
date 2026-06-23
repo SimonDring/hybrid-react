@@ -3,10 +3,10 @@
 // contract, getContraindications keeps its exact behaviour (parity with the prior regex
 // table), prevention protocols are evidence-tagged to the knowledge base, and a new
 // region plugs in via data alone. (End-to-end filtering is covered by injury-engine.js.)
-import injury from '../src/lib/injury/index.js';
-import { validateInjuryProfile } from '../src/lib/injury/_schema.js';
-import { getContraindications } from '../src/lib/injury/injuryRules.js';
-import kb from '../src/lib/knowledge/kb.js';
+import injury from '@performance-os/engine/lib/injury/index.js';
+import { validateInjuryProfile } from '@performance-os/engine/lib/injury/_schema.js';
+import { getContraindications } from '@performance-os/engine/lib/injury/injuryRules.js';
+import kb from '@performance-os/engine/lib/knowledge/kb.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

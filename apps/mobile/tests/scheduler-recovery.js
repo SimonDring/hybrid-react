@@ -3,10 +3,10 @@
 // muscle group on consecutive weekdays (e.g. benching heavy two days running). It
 // arranges the week's sessions so a worked region gets ~48h before it's hit hard
 // again.
-import { generatePlan } from '../src/lib/PlanGenerator.js';
+import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
-import { volumeReport } from '../src/lib/plan/volume.js';
-import { scheduleWeek } from '../src/lib/plan/scheduler.js';
+import { volumeReport } from '@performance-os/engine/lib/plan/volume.js';
+import { scheduleWeek } from '@performance-os/engine/lib/plan/scheduler.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

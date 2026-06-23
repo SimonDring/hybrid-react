@@ -2,8 +2,8 @@
 // PHASE 3 — the recovery + load contract modules. Recovery blends objective wearable
 // readiness with subjective wellness (weighted ≥ objective; Saw 2016) and raises
 // illness/travel overrides. Load wraps ACWR but DEMOTES it (soft, gentle floor).
-import { assessRecovery, subjectiveScore } from '../src/lib/recovery/recovery.js';
-import { assessLoad } from '../src/lib/load/load.js';
+import { assessRecovery, subjectiveScore } from '@performance-os/engine/lib/recovery/recovery.js';
+import { assessLoad } from '@performance-os/engine/lib/load/load.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

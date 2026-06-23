@@ -13,12 +13,12 @@
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
-import { nextE1RM } from '../lib/liftProgression.js';
-import { computeReadiness } from '../lib/Readiness.js';
+import { nextE1RM } from '@performance-os/engine/lib/liftProgression.js';
+import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch } from '../lib/PlanService.js';
-import { dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad } from '../lib/plan/trainingLoad.js';
-import { assessRecovery } from '../lib/recovery/recovery.js';
-import { assessLoad } from '../lib/load/load.js';
+import { dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad } from '@performance-os/engine/lib/plan/trainingLoad.js';
+import { assessRecovery } from '@performance-os/engine/lib/recovery/recovery.js';
+import { assessLoad } from '@performance-os/engine/lib/load/load.js';
 import { setOverride, clearOverride } from '../lib/sessionOverrides.js';
 import { matchWorkoutToSession, sessionPhysiologyFromWorkout } from '../lib/sessionWorkoutMatch.js';
 import { validateProfile, validateDailyMetric, validateSessionLog, validateInjury } from '../lib/validation/validate.js';

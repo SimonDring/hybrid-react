@@ -63,8 +63,15 @@ clean; runtime paths preview-verified.
   knowledge is what became data-driven.)
 
 **Frozen throughout:** the PlanOutput shape screens consume + the full test suite.
-**Remaining (optional) — Phase 5:** physically extract the engine into
-`packages/engine` (architecture is ready; see the extraction note below).
+
+- **Phase 5 — engine extracted to `packages/engine`** (`@performance-os/engine`): the
+  self-contained pure tree (39 modules: `PlanGenerator`, `strength`/`plan`/`sports`/
+  `knowledge`/`recovery`/`load`/`injury`, `liftProgression`, `Utils`, `Readiness` + 4
+  data tables) moved via `git mv` (renames preserved) into `packages/engine/src`,
+  mirroring structure so internal imports survive. Barrel `index.js` + `./lib/*` /
+  `./data/*` subpath exports; `apps/mobile` consumes it as a workspace dep (113 import
+  sites repointed). **PlanService stays** as the thin app adapter (Database/store/
+  overrides). golden-master **byte-identical**, suite 42/42, build clean, app verified.
 
 ## Latest work — coach web dashboard, first version (2026-06-22)
 
@@ -266,12 +273,11 @@ apply when `feat/decision-engine-evidence-architecture` merges. No new functions
 
 ## Non-blocking follow-ups (your call)
 
-- **Engine extraction — decision recorded** in `packages/engine/README.md`. Short
-  version: **don't extract yet** (only `apps/mobile` consumes it; the core is already
-  pure; the slot is reserved). Extract on the **second runtime that runs the engine** —
-  the Stage 6 AI Edge Function, or `apps/web` generating/previewing plans (not just
-  reading derived `player_status`). Prerequisite for a clean cut: split `PlanService`
-  into a pure reflow function + a thin app adapter. Full trigger + procedure in the README.
+- **Engine extraction — DONE (2026-06-23).** The engine now lives in
+  `packages/engine` (`@performance-os/engine`); see its README. The one remaining
+  refinement (optional): split `PlanService`'s current-week reflow into a pure engine
+  function + a thin adapter, so a second runtime can reflow, not just generate. Not
+  required — generation, periodisation, recovery/load, and injury all run from the package today.
 - **Stale remote branches** safe to delete: `engine-fixes`, `chore/remove-dead-code`
   (both merged), plus older merged/dormant ones (`fix/pwa-oauth-redirect`,
   `strength-refocus`, `adaptive-gym-engine`, `ui-overhaul`, etc.).

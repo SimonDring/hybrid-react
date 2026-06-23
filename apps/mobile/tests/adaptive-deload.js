@@ -2,7 +2,7 @@
 // The adaptive-deload decision — promote real fatigue into a deload, or defer a planned
 // one when fresh. ACWR is DEMOTED (Impellizzeri/Lolli): a high-load signal no longer
 // forces a deload on its own — it only corroborates a readiness/recovery signal.
-import { deloadRecommendation } from '../src/lib/plan/trainingLoad.js';
+import { deloadRecommendation } from '@performance-os/engine/lib/plan/trainingLoad.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

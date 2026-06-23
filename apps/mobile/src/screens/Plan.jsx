@@ -9,7 +9,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
-import * as Utils from '../lib/Utils.js';
+import * as Utils from '@performance-os/engine/lib/Utils.js';
 import SessionRow from '../components/ui/SessionRow.jsx';
 
 export default function PlanScreen() {

@@ -2,7 +2,7 @@
 // Epley helpers, pull normalisation, and the answers→profile mapping + lifts_source.
 import {
   epley1RM, pullupE1RM, matchLift, resolveLifts
-} from '../src/lib/liftProgression.js';
+} from '@performance-os/engine/lib/liftProgression.js';
 import {
   BLANK_ANSWERS, answersToProfilePatch, normalizePullToKg
 } from '../src/lib/onboardingModel.js';

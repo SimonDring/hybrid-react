@@ -18,8 +18,8 @@
 import { useState } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import { ACTIVITY_TYPES } from '../data/activityTypes.js';
-import { REGIONS, DIAGNOSES } from '../data/injuryTaxonomy.js';
-import { getQuestions, assess } from '../lib/injury/symptomAssessment.js';
+import { REGIONS, DIAGNOSES } from '@performance-os/engine/data/injuryTaxonomy.js';
+import { getQuestions, assess } from '@performance-os/engine/lib/injury/symptomAssessment.js';
 
 const STATUS_OPTIONS = [
   { key: 'active', label: 'Active', color: '#b04a2e' },

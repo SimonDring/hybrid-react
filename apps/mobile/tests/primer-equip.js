@@ -1,7 +1,7 @@
 // tests/primer-equip.js
 // F2: the functional activation primer must respect the user's equipment (no
 // "Band Pull-Apart" for band-less users). F6: short sessions get a trimmed primer.
-import { buildWeek } from '../src/lib/plan/strength.js';
+import { buildWeek } from '@performance-os/engine/lib/plan/strength.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

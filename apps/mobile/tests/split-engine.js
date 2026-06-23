@@ -5,9 +5,9 @@
 // the MEV→MAV ramp (no overshoot — see volume-tracking.js), so a longer session is
 // a ceiling, not a quota; what "more time" buys is the ability to fit the target a
 // short session can't (time-capping).
-import { generatePlan } from '../src/lib/PlanGenerator.js';
+import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
-import { volumeReport } from '../src/lib/plan/volume.js';
+import { volumeReport } from '@performance-os/engine/lib/plan/volume.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

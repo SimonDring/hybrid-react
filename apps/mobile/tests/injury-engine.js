@@ -1,5 +1,5 @@
 // tests/injury-engine.js
-import { getQuestions, assess } from '../src/lib/injury/symptomAssessment.js';
+import { getQuestions, assess } from '@performance-os/engine/lib/injury/symptomAssessment.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
@@ -40,8 +40,8 @@ const result7 = assess('core_spine', { location: 'lumbar', neurological: 'no', b
 assert(result7.result === 'probable', 'T7 gradual lower back → probable');
 assert(result7.body_part_key === 'lumbar', 'T7 body_part_key is lumbar');
 
-import { getContraindications } from '../src/lib/injury/injuryRules.js';
-import { hasRecurrenceRisk } from '../src/data/injuryTaxonomy.js';
+import { getContraindications } from '@performance-os/engine/lib/injury/injuryRules.js';
+import { hasRecurrenceRisk } from '@performance-os/engine/data/injuryTaxonomy.js';
 
 // T8: knee protect phase blocks squats and runs
 const c8 = getContraindications('knee', 3, 'protect');
@@ -70,7 +70,7 @@ assert(hasRecurrenceRisk('patellar_tendinopathy') === true, 'T13 patellar_tendin
 assert(hasRecurrenceRisk('wrist_sprain') === false, 'T13 wrist_sprain has no recurrence risk');
 assert(hasRecurrenceRisk('acl') === true, 'T13 ACL has recurrence risk');
 
-import { applyInjuryRules, applyPrevention } from '../src/lib/injury/injuryFilter.js';
+import { applyInjuryRules, applyPrevention } from '@performance-os/engine/lib/injury/injuryFilter.js';
 
 const mockSession = {
   title: 'Monday · Gym — Lower body',

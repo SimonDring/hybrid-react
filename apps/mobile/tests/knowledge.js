@@ -2,9 +2,9 @@
 // PHASE 1 — the evidence knowledge base is valid, covers the migrated domains, the
 // engine reads its constants FROM the KB (consistency), and contested science is
 // honestly tagged. See docs/engine/01-PANEL-REVIEW.md §13.
-import kb from '../src/lib/knowledge/kb.js';
-import { VOLUME_LANDMARKS } from '../src/data/muscleVolume.js';
-import { SWEET_LOW, EASE_FROM, HIGH } from '../src/lib/plan/trainingLoad.js';
+import kb from '@performance-os/engine/lib/knowledge/kb.js';
+import { VOLUME_LANDMARKS } from '@performance-os/engine/data/muscleVolume.js';
+import { SWEET_LOW, EASE_FROM, HIGH } from '@performance-os/engine/lib/plan/trainingLoad.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

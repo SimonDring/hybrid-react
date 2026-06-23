@@ -1,7 +1,7 @@
 // tests/session-titles.js
 // Session titles must be SIMPLE and reflect what the session actually trains:
 // Upper / Lower / Push / Pull / Full body / Core — no jargon, no per-muscle suffix.
-import { focusLabel } from '../src/lib/plan/allocator.js';
+import { focusLabel } from '@performance-os/engine/lib/plan/allocator.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
