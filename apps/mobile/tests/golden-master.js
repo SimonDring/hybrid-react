@@ -39,6 +39,9 @@ const A = (o) => ({ ...BLANK_ANSWERS, ...o });
 // (incl. 20-min edge) × equipment (full/dumbbell/bodyweight); sport run
 // sprint/middle/long + cycle + swim across off/in(taper)/pre/transition seasons;
 // entered vs absent lifts; a female archetype.
+// NOTE: session length is no longer a user input — the engine ignores any
+// `sessionMinutes` here and sizes sessions by volume ÷ day count, capped at the
+// internal 75-min ceiling. The minutes in the archetype keys are historical labels.
 const MATRIX = {
   'build·strength·beginner·3d·45·full': A({ goalType: 'build', strengthStyle: 'strength', experienceLevel: 'beginner', daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {} }),
   'build·strength·intermediate·4d·60·full': A({ goalType: 'build', strengthStyle: 'strength', experienceLevel: 'intermediate', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: { squat: 140, bench: 100, deadlift: 180 } }),

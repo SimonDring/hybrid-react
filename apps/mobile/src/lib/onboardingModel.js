@@ -76,7 +76,7 @@ export const BLANK_ANSWERS = {
   pullMode: 'reps',             // 'reps' (pull-ups) | 'kg' (lat-pulldown 1RM)
   liftsMode: 'known',           // 'known' (enter maxes) | 'test' (quick AMRAP test)
   liftsSource: {},              // per-lift provenance: { [key]: 'entered'|'tested' }
-  daysPerWeek: null, sessionMinutes: 60, days: [],
+  daysPerWeek: null, days: [],
   startWhen: 'today',           // 'today' | 'tomorrow' | 'monday' | 'date'
   startDate: '',                // ISO YYYY-MM-DD, used only when startWhen === 'date'
   strengthAccess: '',           // legacy access tier — still accepted, superseded by `equipment`
@@ -160,7 +160,6 @@ export function answersToProfilePatch(a) {
 
     availability: {
       days_per_week: a.daysPerWeek,
-      session_minutes: a.sessionMinutes,
       days: a.days,
       allocation: { gym: a.daysPerWeek }
     },

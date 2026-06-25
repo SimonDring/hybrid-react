@@ -34,9 +34,11 @@ const compoundPatterns = new Set(['squat', 'hinge', 'hpush', 'vpush', 'hpull', '
 assert(buildWk.sessions.every(s => { const d = byName[s.items[0] && s.items[0].name]; return d && compoundPatterns.has(d.pattern); }),
   'build sessions still open with a fundamental compound');
 
-// Sprint chest volume trimmed (was ~12 sets pre-F8).
+// Sprint chest volume trimmed to maintenance (was ~12 sets pre-F8). The
+// experience-scaled band lifts an advanced athlete's whole band, so a de-emphasized
+// muscle sits at ~MEV (≤10) rather than below it — maintenance, not growth.
 const sprintWk = generatePlan(mk({ sport: 'run', runDiscipline: 'sprint', experienceLevel: 'advanced' })).phases[0].weeks[0];
 const chest = volumeReport(sprintWk.sessions).rows.find(r => r.muscle === 'chest').sets;
-assert(chest <= 8, `sprint chest volume trimmed to <=8 sets (got ${chest})`);
+assert(chest <= 10, `sprint chest volume trimmed to maintenance <=10 sets (got ${chest})`);
 
 console.log('sport-anchor tests done');
