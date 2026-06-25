@@ -35,17 +35,20 @@ const build6 = week1({ goalType: 'build', strengthStyle: 'bodybuilding', experie
 assert(new Set(build6.sessions.map(exKey)).size >= 4,
   `S2 6-day build days are differentiated (distinct=${new Set(build6.sessions.map(exKey)).size}/6)`);
 
-// ── S3: the engine delivers its target — short sessions time-cap below long ──
-// (under-delivery used to make even a roomy plan thin; a 20-min day can't fit what
-// a 60-min day can, so total work must be strictly greater at 60 min.)
-const swim = (m) => week1({ goalType: 'sport', sport: 'swim', sportIntent: 'recreational',
-  experienceLevel: 'intermediate', daysPerWeek: 4, sessionMinutes: m, lifts: {} });
-assert(delivered(swim(60)) > delivered(swim(20)),
-  `S3 more session time fits more of the target (60→${delivered(swim(60)).toFixed(0)} sets, 20→${delivered(swim(20)).toFixed(0)} sets)`);
+// ── S3: the engine delivers more of its target with more DAYS ────────────────
+// Session length is volume-driven now (capped at the ceiling), so FREQUENCY is the
+// capacity lever: too few days cap out at the ceiling and under-deliver the weekly
+// target. A high-volume goal (advanced hypertrophy) can't fit into 2 days, so 5
+// days must deliver strictly more total work than 2.
+const bbDays = (days) => week1({ goalType: 'build', strengthStyle: 'bodybuilding',
+  experienceLevel: 'advanced', daysPerWeek: days, lifts: {} });
+assert(delivered(bbDays(5)) > delivered(bbDays(2)),
+  `S3 more training days fit more of the target (5d→${delivered(bbDays(5)).toFixed(0)} sets, 2d→${delivered(bbDays(2)).toFixed(0)} sets)`);
 
 // ── S4: swim days are differentiated (varied work, not clones) ──────────────
-const swim45 = swim(45);
+const swim45 = week1({ goalType: 'sport', sport: 'swim', sportIntent: 'recreational',
+  experienceLevel: 'intermediate', daysPerWeek: 4, lifts: {} });
 assert(new Set(swim45.sessions.map(exKey)).size >= 3,
-  `S4 swim 4×45 days are differentiated (distinct=${new Set(swim45.sessions.map(exKey)).size}/4)`);
+  `S4 swim 4-day days are differentiated (distinct=${new Set(swim45.sessions.map(exKey)).size}/4)`);
 
 console.log('split-engine tests done');

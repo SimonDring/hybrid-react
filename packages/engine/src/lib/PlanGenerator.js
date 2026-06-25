@@ -28,6 +28,7 @@ import { resolveProgram } from './strength/program.js';
 import { resolvePeriodization } from './plan/periodization.js';
 import { getGymLevel } from './Utils.js';
 import { deriveConstraints, suggestGymDays } from './plan/constraints.js';
+import { SESSION_CEILING_MIN } from './plan/allocator.js';
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
@@ -104,7 +105,7 @@ export function generatePlan(profile = {}) {
   const { busyDays, sportMuscles } = deriveConstraints(profile);
   const availability = profile.availability || {};
   const totalDays = Math.max(1, Math.min(7, availability.days_per_week || 3));
-  const minutes = availability.session_minutes || 60;
+  const minutes = SESSION_CEILING_MIN;   // session length is volume-driven; this is only the ceiling
   const totalSessions = totalDays;
 
   const { totalWeeks: total, split, deloads } = resolvePeriodization(profile);

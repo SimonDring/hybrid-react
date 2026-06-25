@@ -17,7 +17,7 @@
 import Database from './Database.js';
 import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets.js';
-import { allocateGym } from '@performance-os/engine/lib/plan/allocator.js';
+import { allocateGym, SESSION_CEILING_MIN } from '@performance-os/engine/lib/plan/allocator.js';
 import { functionalSlotMinutes, applyFunctionalPrimer } from '@performance-os/engine/lib/plan/strength.js';
 import { resolveSplit } from '@performance-os/engine/lib/plan/split.js';
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
@@ -81,7 +81,7 @@ function gymCtx(profile) {
   const program = resolveProgram(profile);
   const e = profile.experience || {};
   const level = e.gym || e.strength_functional || e.strength_physique || 'beginner';
-  const minutes = (profile.availability && profile.availability.session_minutes) || 60;
+  const minutes = SESSION_CEILING_MIN;   // volume-driven; user no longer picks a session length
   return {
     style: program.style, level, minutes,
     access: profile.access || [], sex: profile.sex, lifts: resolveLifts(profile),
