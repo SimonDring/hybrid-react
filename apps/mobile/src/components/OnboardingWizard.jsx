@@ -8,10 +8,11 @@
  * src/lib/onboardingModel.js. Used by the production Onboarding screen + /dev tester.
  */
 
-import { useState, useEffect, useRef } from 'react';
-import { BLANK_ANSWERS, localISODate, resolveStartDate } from '../lib/onboardingModel.js';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { BLANK_ANSWERS, localISODate, resolveStartDate, answersToProfile } from '../lib/onboardingModel.js';
 import { epley1RM, pullupE1RM } from '@performance-os/engine/lib/liftProgression.js';
 import { suggestGymDays } from '@performance-os/engine/lib/plan/constraints.js';
+import { suggestOptimalFrequency } from '@performance-os/engine/lib/plan/frequency.js';
 
 // ---- Option catalogues ----
 export const GOAL_TYPES = [
@@ -59,7 +60,6 @@ const START_OPTIONS = [
   { key: 'monday', label: 'Next Monday' },
   { key: 'date', label: 'Pick a date' }
 ];
-const SESSION_LENGTHS = [20, 30, 45, 60, 75, 90];
 // Quick presets that fill the equipment set in one tap…
 const EQUIPMENT_PRESETS = [
   { key: 'full_gym', label: 'Full gym', hint: 'Barbells, machines, cables', equip: ['barbell', 'dumbbell', 'machine', 'cable', 'band', 'kettlebell', 'bodyweight'] },
@@ -194,6 +194,18 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
 
   const isBuild = a.goalType === 'build';
   const isSport = a.goalType === 'sport';
+
+  // Engine's recommended day count from goal + experience; the slider defaults here.
+  const optimalDays = useMemo(() => {
+    try { return suggestOptimalFrequency(answersToProfile(a)).optimalDays; }
+    catch { return 3; }
+  }, [a.goalType, a.strengthStyle, a.sport, a.runDiscipline, a.sportIntent, a.experienceLevel]);
+
+  // Default the slider to the optimum once, when the user first lands without a pick.
+  useEffect(() => {
+    if (a.daysPerWeek == null) set({ daysPerWeek: optimalDays });
+  }, [optimalDays]);
+
   const hasBarbell = (a.equipment || []).includes('barbell');
   const hasCable = (a.equipment || []).includes('cable');
   const hasBodyweight = (a.equipment || []).includes('bodyweight');
@@ -314,8 +326,25 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     { title: 'How much can you train?', subtitle: "Be realistic — a plan you stick to beats an ideal one you can't.", valid: () => a.daysPerWeek != null && (a.equipment || []).length > 0,
       render: () => (
         <div style={{ display: 'grid', gap: 20 }}>
-          <div><label style={FIELD_LABEL}>Days per week</label><OptionGrid cols={4}>{[1, 2, 3, 4, 5, 6, 7].map(n => <Chip key={n} center selected={a.daysPerWeek === n} onClick={() => set({ daysPerWeek: n })} label={String(n)} />)}</OptionGrid></div>
-          <div><label style={FIELD_LABEL}>Typical session length</label><OptionGrid cols={3}>{SESSION_LENGTHS.map(m => <Chip key={m} center selected={a.sessionMinutes === m} onClick={() => set({ sessionMinutes: m })} label={m === 90 ? '90+ min' : `${m} min`} />)}</OptionGrid></div>
+          <div>
+            <label style={FIELD_LABEL}>Days per week</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <input type="range" min={2} max={7} step={1}
+                value={a.daysPerWeek ?? optimalDays}
+                onChange={e => set({ daysPerWeek: Number(e.target.value) })}
+                style={{ flex: 1, accentColor: 'var(--accent)' }} />
+              <div style={{ minWidth: 64, textAlign: 'right', fontSize: 22, fontWeight: 700, color: 'var(--txt-strong)' }}>
+                {a.daysPerWeek ?? optimalDays}<span style={{ fontSize: 12, fontWeight: 600, color: 'var(--txt-muted)' }}> days</span>
+              </div>
+            </div>
+            <div style={{ ...HINT, marginTop: 8 }}>
+              {(a.daysPerWeek ?? optimalDays) === optimalDays
+                ? `We recommend ${optimalDays} days for your goal and experience.`
+                : (a.daysPerWeek ?? optimalDays) > optimalDays
+                  ? `More than the ${optimalDays} days we'd recommend — extra days add fatigue without more progress for this goal.`
+                  : `Fewer than the ${optimalDays} days we'd recommend — you'll likely fall short of the ideal dose for your goal.`}
+            </div>
+          </div>
           <div>
             <label style={FIELD_LABEL}>Equipment</label>
             <OptionGrid cols={1} gap={6}>
@@ -441,7 +470,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             )}
             <SummaryRow label="Experience" value={LEVELS.find(l => l.key === a.experienceLevel)?.label || '—'} />
             {liftBits.length > 0 && <SummaryRow label="Maxes" value={liftBits.join(' · ')} />}
-            <SummaryRow label="Week" value={a.daysPerWeek ? `${a.daysPerWeek} days · ${a.sessionMinutes === 90 ? '90+' : a.sessionMinutes} min` : '—'} />
+            <SummaryRow label="Week" value={a.daysPerWeek ? `${a.daysPerWeek} days / week` : '—'} />
             <SummaryRow label="Starts" value={resolveStartDate(a.startWhen, a.startDate)} />
             <SummaryRow label="Equipment" value={equipLabel(a.equipment)} />
             {isSport && a.sportDays.length > 0 && (
