@@ -50,4 +50,19 @@ export function suggestGymDays({ sportDays = [], gymDays = 3 } = {}) {
   return [...free, ...onSport].sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
 }
 
-export default { DAY_ORDER, weekdayIndex, deriveConstraints, suggestGymDays };
+// Lighten a session's working volume by dropping one set from each working-set item
+// (min 1). Mobility/primer rows (tag 'mobility') and non-set rows ("5 min") are left
+// alone. Pure — returns a new array. Used when a gym session is forced onto a sport
+// day: recovery beats volume on a clash day.
+export function lightenItems(items = []) {
+  return items.map(it => {
+    if (it.tag === 'mobility') return it;
+    const m = /^(\d+)(\s*[×x].*)$/.exec(it.sets || '');
+    if (!m) return it;
+    const n = Number(m[1]);
+    if (n <= 1) return it;
+    return { ...it, sets: `${n - 1}${m[2]}` };
+  });
+}
+
+export default { DAY_ORDER, weekdayIndex, deriveConstraints, suggestGymDays, lightenItems };

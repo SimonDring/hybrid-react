@@ -45,3 +45,20 @@ assert(overlap.length === 1, 'C13 packed week reuses the minimum number of sport
 // No sport days → just a spread of gymDays.
 const noSport = suggestGymDays({ sportDays: [], gymDays: 3 });
 assert(noSport.length === 3, 'C14 no sport days → spread of gymDays');
+
+// ---- lightenItems ----
+import { lightenItems } from '@performance-os/engine/lib/plan/constraints.js';
+const items = [
+  { name: 'Bench press', sets: '3 × 8', rpe: 'RPE 7' },
+  { name: 'Glute Bridge', sets: '2 × 10', tag: 'mobility' },   // primer — untouched
+  { name: 'Plank', sets: '3 × 30s' },                           // time-based reps, still 3 sets
+  { name: 'Warm-up', sets: '5 min' },                           // no set count — untouched
+  { name: 'Curl', sets: '1 × 12' }                              // already 1 set — floor
+];
+const lit = lightenItems(items);
+assert(lit[0].sets === '2 × 8', 'C15 working sets reduced by one (3→2)');
+assert(lit[1].sets === '2 × 10', 'C16 mobility/primer rows untouched');
+assert(lit[2].sets === '2 × 30s', 'C17 time-rep set count still reduced (3→2)');
+assert(lit[3].sets === '5 min', 'C18 non-set rows untouched');
+assert(lit[4].sets === '1 × 12', 'C19 single-set items are floored, not zeroed');
+assert(items[0].sets === '3 × 8', 'C20 input is not mutated');
