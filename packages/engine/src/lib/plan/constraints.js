@@ -26,4 +26,28 @@ export function deriveConstraints(profile = {}) {
   return { busyDays, sportMuscles };
 }
 
-export default { DAY_ORDER, weekdayIndex, deriveConstraints };
+// Pick k items from arr (preserving order), spread as evenly as possible.
+function spreadPick(arr, k) {
+  if (k <= 0) return [];
+  if (k >= arr.length) return arr.slice();
+  const out = [];
+  const denom = k - 1 || 1;
+  for (let i = 0; i < k; i++) out.push(arr[Math.round(i * (arr.length - 1) / denom)]);
+  return [...new Set(out)];
+}
+
+// Suggest `gymDays` weekday keys around the sport days: prefer non-sport days
+// (spread for recovery); only land on sport days when the week is too packed to
+// avoid it. Returned in week order. The onboarding UI pre-fills the gym-day picker
+// with this; the user can override.
+export function suggestGymDays({ sportDays = [], gymDays = 3 } = {}) {
+  const n = Math.max(1, Math.min(7, gymDays || 3));
+  const sport = new Set((sportDays || []).filter(d => DAY_ORDER.includes(d)));
+  const free = DAY_ORDER.filter(d => !sport.has(d));
+  if (free.length >= n) return spreadPick(free, n);
+  // Packed: take every free day + the fewest sport days needed, spread.
+  const onSport = spreadPick(DAY_ORDER.filter(d => sport.has(d)), n - free.length);
+  return [...free, ...onSport].sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
+}
+
+export default { DAY_ORDER, weekdayIndex, deriveConstraints, suggestGymDays };

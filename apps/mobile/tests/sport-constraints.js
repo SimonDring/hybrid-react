@@ -25,3 +25,23 @@ assert(eq(build.busyDays, []) && eq(build.sportMuscles, []), 'C7 non-sport goal 
 
 const unknownSport = deriveConstraints({ sport: 'curling', sport_days: ['mon'] });
 assert(eq(unknownSport.busyDays, [0]) && eq(unknownSport.sportMuscles, []), 'C8 unknown sport → busyDays kept, no muscles');
+
+// ---- suggestGymDays ----
+import { suggestGymDays } from '@performance-os/engine/lib/plan/constraints.js';
+const WEEK = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+// Simon: swim Tue/Thu, wants 4 gym days → all 4 avoid Tue/Thu, spread out.
+const s = suggestGymDays({ sportDays: ['tue', 'thu'], gymDays: 4 });
+assert(s.length === 4, 'C9 suggests exactly gymDays days');
+assert(!s.includes('tue') && !s.includes('thu'), 'C10 avoids sport days when there is room');
+assert(eq(s, [...s].sort((a, b) => WEEK.indexOf(a) - WEEK.indexOf(b))), 'C11 returned in week order');
+
+// Packed week: 6 gym days + swim Tue/Thu (only 5 free) → must reuse 1 sport day.
+const packed = suggestGymDays({ sportDays: ['tue', 'thu'], gymDays: 6 });
+assert(packed.length === 6, 'C12 packed week still returns gymDays days');
+const overlap = packed.filter(d => d === 'tue' || d === 'thu');
+assert(overlap.length === 1, 'C13 packed week reuses the minimum number of sport days');
+
+// No sport days → just a spread of gymDays.
+const noSport = suggestGymDays({ sportDays: [], gymDays: 3 });
+assert(noSport.length === 3, 'C14 no sport days → spread of gymDays');
