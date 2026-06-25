@@ -26,3 +26,15 @@ assert(upperDay === 'Thursday', `SC1 upper (swim-muscle) session avoids the day 
 // Control: with no busyDays the placement is unconstrained (still returns both).
 const ctrl = scheduleWeek({ sportSpecs: [upper, lower], dayNames: ['Monday', 'Thursday'] });
 assert(ctrl.length === 2, 'SC2 no constraints → both sessions still scheduled');
+
+// A single gym day that is ALSO a sport day (packed week, forced overlap) → the
+// session that lands on the sport day is lightened.
+const heavy = { discipline: 'gym', focus: 'Full body', duration: '~45 min', intensity: 'hard', lowerBody: false,
+  muscleVol: { back: 6 }, items: [{ name: 'Bench press', sets: '3 × 8' }, { name: 'Row', sets: '4 × 10' }] };
+const forced = scheduleWeek({ sportSpecs: [heavy], dayNames: ['Tuesday'], busyDays: [1], sportMuscles: ['back'] });
+assert(forced[0].lightened === true, 'SC3 session on a sport day is flagged lightened');
+assert(forced[0].items[0].sets === '2 × 8' && forced[0].items[1].sets === '3 × 10', 'SC4 working sets dropped by one on the forced day');
+
+// A session NOT on a sport day is untouched.
+const offday = scheduleWeek({ sportSpecs: [heavy], dayNames: ['Wednesday'], busyDays: [1], sportMuscles: ['back'] });
+assert(!offday[0].lightened && offday[0].items[0].sets === '3 × 8', 'SC5 off-sport-day session is not lightened');

@@ -19,6 +19,8 @@
  * stable completion keys.
  */
 
+import { lightenItems } from './constraints.js';
+
 const DAY_IDX = { Monday: 0, Tuesday: 1, Wednesday: 2, Thursday: 3, Friday: 4, Saturday: 5, Sunday: 6 };
 const IDX_DAY = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const KEY_IDX = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
@@ -172,7 +174,17 @@ export function scheduleWeek({ sportSpecs = [], supSpecs = [], dayNames = [], al
     ...placedSup.map(p => ({ idx: p.idx, spec: p.spec, ord: 1 }))
   ].sort((a, b) => a.idx - b.idx || a.ord - b.ord);
 
-  return all.map(x => ({ title: `${IDX_DAY[x.idx]} · ${x.spec.focus}`, duration: x.spec.duration, items: x.spec.items }));
+  const busy = new Set(busyDays);
+  return all.map(x => {
+    const onSportDay = x.spec.discipline === 'gym' && busy.has(x.idx);
+    const items = onSportDay ? lightenItems(x.spec.items) : x.spec.items;
+    return {
+      title: `${IDX_DAY[x.idx]} · ${x.spec.focus}`,
+      duration: x.spec.duration,
+      items,
+      ...(onSportDay ? { lightened: true } : {})
+    };
+  });
 }
 
 export default { scheduleWeek };
