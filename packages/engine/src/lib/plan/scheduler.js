@@ -19,6 +19,8 @@
  * stable completion keys.
  */
 
+import { lightenItems } from './constraints.js';
+
 const DAY_IDX = { Monday: 0, Tuesday: 1, Wednesday: 2, Thursday: 3, Friday: 4, Saturday: 5, Sunday: 6 };
 const IDX_DAY = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const KEY_IDX = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
@@ -48,6 +50,19 @@ function sharedHeavyCount(a, b) {
   return n;
 }
 
+// Circular distance (0–3) between two weekday indices.
+function dayDistance(a, b) { const g = ((a - b) % 7 + 7) % 7; return Math.min(g, 7 - g); }
+
+// How hard a session loads the sport's key muscles — its risk of pre-fatiguing the
+// sport. Sum of the session's volume on those muscles.
+function sportMuscleLoad(spec, sportMuscles) {
+  const mv = spec.muscleVol;
+  if (!mv || !sportMuscles || !sportMuscles.length) return 0;
+  let v = 0;
+  for (const m of sportMuscles) v += mv[m] || 0;
+  return v;
+}
+
 // Penalty for one full sport assignment (lower is better). `placed` is
 // [{idx, spec}] sorted by weekday; ctx.lrIdx is the preferred long-run weekday.
 function score(placed, ctx) {
@@ -57,6 +72,19 @@ function score(placed, ctx) {
     const cur = placed[i];
     // Preferred long-run day.
     if (ctx.lrIdx != null && isLongRun(cur.spec) && cur.idx !== ctx.lrIdx) pen += 12;
+    // Keep gym work that taxes the sport's muscles AWAY from sport days. Each gym
+    // session on a day next to (or on) a sport day pays a penalty scaled by how much
+    // it loads those muscles — so the permutation pushes the heaviest sport-muscle
+    // session onto the day furthest from the athlete's sport.
+    if (ctx.busyDays && ctx.busyDays.length) {
+      let nearest = 99;
+      for (const b of ctx.busyDays) nearest = Math.min(nearest, dayDistance(cur.idx, b));
+      const proximity = nearest === 0 ? 3 : nearest === 1 ? 2 : 0;
+      if (proximity) {
+        pen += proximity * sportMuscleLoad(cur.spec, ctx.sportMuscles);
+        if (isHard(cur.spec)) pen += proximity; // small nudge for any hard day
+      }
+    }
     if (n < 2) continue;
     const nxt = placed[(i + 1) % n];
     const g = gap(cur.idx, nxt.idx);
@@ -95,7 +123,7 @@ function permutations(n) {
 }
 
 // Best sport→day assignment as [{ idx, spec }] (weekday index + session spec).
-function placeSport(sportSpecs, dayNames, lrIdx) {
+function placeSport(sportSpecs, dayNames, lrIdx, busyDays = [], sportMuscles = []) {
   const days = dayNames.slice(0, sportSpecs.length);
   const order = days.map((d, i) => ({ idx: DAY_IDX[d] ?? i, i })).sort((a, b) => a.idx - b.idx);
   if (!sportSpecs.length) return [];
@@ -103,7 +131,7 @@ function placeSport(sportSpecs, dayNames, lrIdx) {
   let best = perms[0], bestPen = Infinity;
   for (const perm of perms) {
     const placed = order.map((slot, k) => ({ idx: slot.idx, spec: sportSpecs[perm[k]] }));
-    const pen = score(placed, { lrIdx });
+    const pen = score(placed, { lrIdx, busyDays, sportMuscles });
     if (pen < bestPen) { bestPen = pen; best = perm; if (pen === 0) break; }
   }
   return order.map((slot, k) => ({ idx: slot.idx, spec: sportSpecs[best[k]] }));
@@ -118,9 +146,9 @@ function placeSport(sportSpecs, dayNames, lrIdx) {
  *   longRunDay   preferred weekday key for the long run ('sat' etc.) or null
  * @returns {Array} sessions { title, duration, items } in weekday order
  */
-export function scheduleWeek({ sportSpecs = [], supSpecs = [], dayNames = [], allowDoubles = true, longRunDay = null }) {
+export function scheduleWeek({ sportSpecs = [], supSpecs = [], dayNames = [], allowDoubles = true, longRunDay = null, busyDays = [], sportMuscles = [] }) {
   const lrIdx = longRunDay != null ? KEY_IDX[longRunDay] : null;
-  const placedSport = placeSport(sportSpecs, dayNames, lrIdx);
+  const placedSport = placeSport(sportSpecs, dayNames, lrIdx, busyDays, sportMuscles);
 
   // Supplemental placement. NEVER share the long-run day (legs need to be fresh)
   // — it's only used as an absolute last resort. Doubles → prefer easy sport
@@ -146,7 +174,17 @@ export function scheduleWeek({ sportSpecs = [], supSpecs = [], dayNames = [], al
     ...placedSup.map(p => ({ idx: p.idx, spec: p.spec, ord: 1 }))
   ].sort((a, b) => a.idx - b.idx || a.ord - b.ord);
 
-  return all.map(x => ({ title: `${IDX_DAY[x.idx]} · ${x.spec.focus}`, duration: x.spec.duration, items: x.spec.items }));
+  const busy = new Set(busyDays);
+  return all.map(x => {
+    const onSportDay = x.spec.discipline === 'gym' && busy.has(x.idx);
+    const items = onSportDay ? lightenItems(x.spec.items) : x.spec.items;
+    return {
+      title: `${IDX_DAY[x.idx]} · ${x.spec.focus}`,
+      duration: x.spec.duration,
+      items,
+      ...(onSportDay ? { lightened: true } : {})
+    };
+  });
 }
 
 export default { scheduleWeek };

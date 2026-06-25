@@ -27,6 +27,7 @@ import { resolveLifts } from './liftProgression.js';
 import { resolveProgram } from './strength/program.js';
 import { resolvePeriodization } from './plan/periodization.js';
 import { getGymLevel } from './Utils.js';
+import { deriveConstraints, suggestGymDays } from './plan/constraints.js';
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
@@ -37,14 +38,22 @@ const DEFAULT_DAYS = {
   6: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'], 7: [...DAY_ORDER]
 };
 
-// Choose the weekday slots for `n` sessions, honouring the user's preferred days.
-function chooseDays(availability, n) {
+// Choose the weekday slots for `n` sessions, honouring the user's preferred days and
+// keeping gym off the athlete's sport days when there's room (suggestGymDays). If the
+// user explicitly picked gym days we respect them; otherwise we suggest around sport.
+function chooseDays(availability, n, sportDays = []) {
   let days = (availability?.days || []).filter(d => DAY_ORDER.includes(d));
   days = [...new Set(days)].sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
   if (days.length >= n) days = days.slice(0, n);
-  else {
-    const def = DEFAULT_DAYS[n] || DAY_ORDER.slice(0, n);
-    days = [...new Set([...days, ...def])].sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b)).slice(0, n);
+  else if (days.length === 0 && sportDays.length) {
+    days = suggestGymDays({ sportDays, gymDays: n });   // no explicit picks → suggest around sport
+  } else {
+    // Fill from rest-spaced defaults, preferring non-sport days first.
+    const sport = new Set(sportDays);
+    const def = (DEFAULT_DAYS[n] || DAY_ORDER.slice(0, n)).filter(d => !sport.has(d));
+    const defSport = (DEFAULT_DAYS[n] || DAY_ORDER.slice(0, n)).filter(d => sport.has(d));
+    days = [...new Set([...days, ...def, ...defSport])]
+      .sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b)).slice(0, n);
   }
   return days.map(d => DAY_NAMES[d]);
 }
@@ -92,6 +101,7 @@ function buildGymWeek(count, ctx, profile, program) {
 
 export function generatePlan(profile = {}) {
   const program = resolveProgram(profile);
+  const { busyDays, sportMuscles } = deriveConstraints(profile);
   const availability = profile.availability || {};
   const totalDays = Math.max(1, Math.min(7, availability.days_per_week || 3));
   const minutes = availability.session_minutes || 60;
@@ -128,8 +138,8 @@ export function generatePlan(profile = {}) {
       const ctx = { intent: seg.intent, deload, taper, winp, weekNum, minutes, phaseWeeks: seg.weeks, blockFrac };
 
       const sportSpecs = buildGymWeek(totalDays, ctx, profile, program);
-      const dayNames = chooseDays(availability, sportSpecs.length);
-      const sessions = scheduleWeek({ sportSpecs, dayNames });
+      const dayNames = chooseDays(availability, sportSpecs.length, profile.sport_days || []);
+      const sessions = scheduleWeek({ sportSpecs, dayNames, busyDays, sportMuscles });
 
       weeks.push({ num: weekNum, deload, taper, theme: themeFor(seg.intent, deload, taper, isRace && weekNum === total), sessions, provisional: pi > 0 });
     }
