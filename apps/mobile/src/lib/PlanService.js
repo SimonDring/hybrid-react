@@ -28,6 +28,7 @@ import { MUSCLE_GROUPS, MUSCLE_LABELS } from '@performance-os/engine/data/muscle
 import { getOverrides } from './sessionOverrides.js';
 import { applyInjuryRules, applyPrevention } from '@performance-os/engine/lib/injury/injuryFilter.js';
 import { combinedMultiplier, deloadRecommendation } from '@performance-os/engine/lib/plan/trainingLoad.js';
+import { deriveConstraints, lightenItems } from '@performance-os/engine/lib/plan/constraints.js';
 
 let _cache = { sig: null, plan: null };
 
@@ -250,6 +251,7 @@ function adaptedPhases() {
   // ---- rolling ledger: the per-muscle volume MISSED in the trailing window
   // (skipped or past-due, never done) — the concrete shortfall to spread forward ----
   const gctx = gymCtx(profile);
+  const { busyDays: sportBusy } = deriveConstraints(profile);
   const gymList = gymSessionsWithDates(g.phases);
   const deficit = missedWindowVolume(gymList, overrides, today);
 
@@ -291,7 +293,13 @@ function adaptedPhases() {
         exercisePriority: gctx.exercisePriority
       }
     })[0];
-    if (spec) specByKey[s.key] = applyFunctionalPrimer([spec], gctx.style, gctx.minutes, gctx.access)[0];
+    if (spec) {
+      let built = applyFunctionalPrimer([spec], gctx.style, gctx.minutes, gctx.access)[0];
+      // Lighten a reshaped session that lands on a sport day (JS Sun=0 → Mon=0 index).
+      const wd = s.date ? (s.date.getDay() === 0 ? 6 : s.date.getDay() - 1) : null;
+      if (wd != null && sportBusy.includes(wd)) built = { ...built, items: lightenItems(built.items), lightened: true };
+      specByKey[s.key] = built;
+    }
   });
 
   // ---- rebuild in place: horizon specs + train-now snapshots; everything else as-is ----
@@ -370,7 +378,8 @@ function profileSignature(profile) {
     // Goal fields that drive resolveProgram + resolvePeriodization — without these
     // a goal change (build↔sport, run discipline, season/event) wouldn't regenerate.
     gt: profile.goal_type, sp: profile.sport, si: profile.sport_intent,
-    rd: profile.run_discipline, ed: profile.event_date, sps: profile.sport_season
+    rd: profile.run_discipline, ed: profile.event_date, sps: profile.sport_season,
+    spd: profile.sport_days
   });
 }
 
@@ -581,6 +590,20 @@ export function buildCalendar(sessions = {}) {
         if (!max || d > max) max = d;
       });
     });
+  }
+  // Sport-day markers — non-clickable badges so the week reads correctly (gym-only
+  // app: these mark the athlete's own sport sessions, not generated workouts).
+  const profile = Database.services.getProfile() || {};
+  const { busyDays: sportBusy } = deriveConstraints(profile);
+  if (sportBusy.length && min) {
+    const sportDisc = profile.sport === 'run' ? 'run' : profile.sport === 'cycle' ? 'cycle' : profile.sport === 'swim' ? 'swim' : 'general';
+    const label = profile.sport === 'run' ? 'Run' : profile.sport === 'cycle' ? 'Ride' : profile.sport === 'swim' ? 'Swim' : 'Sport';
+    for (let d = new Date(min); d <= max; d.setDate(d.getDate() + 1)) {
+      const wd = d.getDay() === 0 ? 6 : d.getDay() - 1;     // Mon=0 index
+      if (!sportBusy.includes(wd)) continue;
+      const iso = localISO(d);
+      (byDate[iso] = byDate[iso] || []).push({ sportMarker: true, discipline: sportDisc, title: label });
+    }
   }
   return min ? { byDate, start: min, end: max } : null;
 }
