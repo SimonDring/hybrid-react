@@ -62,7 +62,8 @@ export default function TrainingCalendar({ sessions, onOpen }) {
   const selDate = new Date(selected + 'T00:00:00');
   const isToday = selected === todayISO;
   const heading = isToday ? 'Today' : selDate.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'short' });
-  const allDone = todays.length > 0 && todays.every(s => s.completed);
+  const sessions = todays.filter(s => !s.sportMarker);
+  const allDone = sessions.length > 0 && sessions.every(s => s.completed);
 
   return (
     <div className="cal cal-card">
@@ -94,13 +95,22 @@ export default function TrainingCalendar({ sessions, onOpen }) {
 
       <div className="cal-detail">
         <div className={`cal-detail-head${allDone ? ' done' : ''}`}>
-          {todays.length === 0
-            ? `${heading} · rest day`
+          {sessions.length === 0
+            ? (todays.length === 0 ? `${heading} · rest day` : heading)
             : allDone ? `${heading} · all done ✓` : heading}
         </div>
         {todays.length === 0
           ? <div className="cal-rest">Recovery day — let the work land.</div>
-          : todays.map(s => <SessionBlock key={s.key} s={s} onOpen={onOpen} />)}
+          : todays.map((s, i) => s.sportMarker
+              ? (
+                <div key={`m${i}`} className="cal-session" style={{ borderLeftColor: DISC_COLOR[s.discipline] || '#888', opacity: 0.85, cursor: 'default' }}>
+                  <span className="cal-session-body">
+                    <span className="cal-session-title">{s.title}</span>
+                    <span className="cal-session-meta">Your own {(DISC_LABEL[s.discipline] || 'sport').toLowerCase()} session</span>
+                  </span>
+                </div>
+              )
+              : <SessionBlock key={s.key} s={s} onOpen={onOpen} />)}
       </div>
     </div>
   );
