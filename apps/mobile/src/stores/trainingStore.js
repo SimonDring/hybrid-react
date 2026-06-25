@@ -15,11 +15,11 @@ import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
 import { nextE1RM } from '@performance-os/engine/lib/liftProgression.js';
 import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
-import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch } from '../lib/PlanService.js';
+import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch, adaptedSessionByKey } from '../lib/PlanService.js';
 import { dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad } from '@performance-os/engine/lib/plan/trainingLoad.js';
 import { assessRecovery } from '@performance-os/engine/lib/recovery/recovery.js';
 import { assessLoad } from '@performance-os/engine/lib/load/load.js';
-import { setOverride, clearOverride } from '../lib/sessionOverrides.js';
+import { setOverride, clearOverride, getOverride } from '../lib/sessionOverrides.js';
 import { matchWorkoutToSession, sessionPhysiologyFromWorkout } from '../lib/sessionWorkoutMatch.js';
 import { validateProfile, validateDailyMetric, validateSessionLog, validateInjury } from '../lib/validation/validate.js';
 
@@ -276,6 +276,23 @@ export const useTrainingStore = create((set) => ({
   // instantly and can NEVER be blocked or frozen by a slow/hung network request.
   // Cloud errors are logged, not surfaced (the local cache is the source of truth).
   startSession(templateRef) {
+    // Starting a session must NEVER change it. The plan reflows dynamically while a
+    // session is PENDING (on app open / refresh) — that's intended. But the moment
+    // you commit to it at the rack, we lock it to exactly what's on screen by pinning
+    // the current adapted session as a local override (the same snapshot mechanism
+    // Train Now uses). Without this, marking it "started" drops it out of the reflow
+    // horizon and it silently reverts to the baseline plan — different exercises.
+    // Don't clobber an existing pin (e.g. a Train Now session). Only gym sessions
+    // reflow, so only they can change on start.
+    if (!getOverride(templateRef)) {
+      const s = adaptedSessionByKey(templateRef);
+      if (s && sessionDiscipline(s) === 'gym') {
+        const focus = (s.title || '').includes('·')
+          ? s.title.split('·').slice(1).join('·').trim()
+          : (s.focus || s.title || '');
+        setOverride(templateRef, { focus, duration: s.duration, items: s.items, pinnedAtStart: true });
+      }
+    }
     Sync.startSession(templateRef).catch(e => console.error('startSession sync failed:', e));
     set(buildView());
   },
