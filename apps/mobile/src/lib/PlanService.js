@@ -311,7 +311,10 @@ function adaptedPhases() {
         week.sessions.forEach((s, i) => {
           const k = sessionKey(phase.id, week.num, i);
           const ov = overrides[k];
-          if (ov) { swap(i, ov.focus, ov.duration, ov.items, { _trainNow: true }); return; }
+          // A Train Now override is a genuinely on-demand session (show the ADAPTED
+          // badge); a pin-on-start override is just the normal session frozen at the
+          // moment of starting (no badge — nothing was swapped out from under them).
+          if (ov) { swap(i, ov.focus, ov.duration, ov.items, { _trainNow: !ov.pinnedAtStart }); return; }
           const spec = specByKey[k];
           if (spec) swap(i, spec.focus, spec.duration, spec.items, { _trainNow: false });
         });
@@ -396,6 +399,21 @@ export function getPhase(id) {
 export function getWeek(pid, wkNum) {
   const phase = getPhase(pid);
   return phase && phase.weeks ? phase.weeks.find(w => w.num === wkNum) : null;
+}
+
+// The CURRENT adapted (reflowed) session for a slot key, BEFORE injury filtering —
+// or null. Used at Start to snapshot exactly what the athlete is looking at so that
+// starting a session never changes it. We read the pre-injury session (like Train
+// Now does) so injury rules still re-apply on top at render time. Key format:
+// p{phase}_wk{week}_s{idx}.
+export function adaptedSessionByKey(key) {
+  const m = /^p(\d+)_wk(\d+)_s(\d+)$/.exec(key || '');
+  if (!m) return null;
+  const phases = adaptedPhases();
+  if (!phases) return null;
+  const phase = phases.find(p => p.id === Number(m[1]));
+  const week = phase && (phase.weeks || []).find(w => w.num === Number(m[2]));
+  return week ? (week.sessions[Number(m[3])] || null) : null;
 }
 
 /**
@@ -693,4 +711,4 @@ function buildWhy(session, bonus, minutes) {
   return `${lead} — it leans into ${muscles}. Fitted to ~${Math.round(minutes / 5) * 5} min with the kit you picked, at your usual rep ranges and RPE.`;
 }
 
-export default { getPhases, getPhase, getWeek, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO, setRuntime, currentAdaptation, weekVolumeProgressFor, currentWeekVolumeProgress, generateTrainNow, sessionDiscipline, lastForgiven };
+export default { getPhases, getPhase, getWeek, adaptedSessionByKey, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO, setRuntime, currentAdaptation, weekVolumeProgressFor, currentWeekVolumeProgress, generateTrainNow, sessionDiscipline, lastForgiven };
