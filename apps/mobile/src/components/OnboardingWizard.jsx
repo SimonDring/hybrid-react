@@ -11,6 +11,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { BLANK_ANSWERS } from '../lib/onboardingModel.js';
 import { epley1RM, pullupE1RM } from '@performance-os/engine/lib/liftProgression.js';
+import { suggestGymDays } from '@performance-os/engine/lib/plan/constraints.js';
 
 // ---- Option catalogues ----
 export const GOAL_TYPES = [
@@ -272,6 +273,35 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         </div>
       ) },
 
+    isSport && { title: 'When do you train your sport?', subtitle: 'We’ll build your gym days around these so they don’t clash.',
+      valid: () => true,
+      render: () => (
+        <div style={{ display: 'grid', gap: 16 }}>
+          <div>
+            <label style={FIELD_LABEL}>Sport days (optional)</label>
+            <OptionGrid cols={4}>
+              {DAYS.map(d => (
+                <Chip key={d.key} center selected={a.sportDays.includes(d.key)}
+                  onClick={() => {
+                    const sportDays = a.sportDays.includes(d.key)
+                      ? a.sportDays.filter(k => k !== d.key)
+                      : [...a.sportDays, d.key];
+                    const patch = { sportDays };
+                    // Only auto-fill gym days the user hasn't customised yet.
+                    if ((a.days || []).length === 0 && a.daysPerWeek) {
+                      patch.days = suggestGymDays({ sportDays, gymDays: a.daysPerWeek });
+                    }
+                    set(patch);
+                  }} label={d.label} />
+              ))}
+            </OptionGrid>
+          </div>
+          <div style={HINT}>
+            Tell us the days you swim/run/ride and we’ll keep heavy gym work off them — and lighten anything that has to share a day.
+          </div>
+        </div>
+      ) },
+
     { title: 'Your lifting experience', subtitle: 'How much strength training have you done?', valid: () => !!a.experienceLevel,
       render: () => <OptionGrid cols={2} fill>{LEVELS.map(l => <Chip key={l.key} center selected={a.experienceLevel === l.key} onClick={() => set({ experienceLevel: l.key })} label={l.label} hint={l.hint} />)}</OptionGrid> },
 
@@ -386,6 +416,9 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             {liftBits.length > 0 && <SummaryRow label="Maxes" value={liftBits.join(' · ')} />}
             <SummaryRow label="Week" value={a.daysPerWeek ? `${a.daysPerWeek} days · ${a.sessionMinutes === 90 ? '90+' : a.sessionMinutes} min` : '—'} />
             <SummaryRow label="Equipment" value={equipLabel(a.equipment)} />
+            {isSport && a.sportDays.length > 0 && (
+              <SummaryRow label="Sport days" value={a.sportDays.map(k => DAYS.find(d => d.key === k)?.label).join(' · ')} />
+            )}
           </div>
         );
       } }
