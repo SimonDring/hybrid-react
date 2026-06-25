@@ -48,6 +48,7 @@ export const BLANK_ANSWERS = {
   sport: '',                    // sport: 'run' | 'cycle' | 'swim'
   sportIntent: '',              // 'compete' | 'recreational' | 'build_base'
   runDiscipline: '',            // run only: 'sprint' | 'middle' | 'long'
+  sportDays: [],                // sport goals: weekday keys the athlete trains their sport
   eventDate: '',                // optional ISO date YYYY-MM-DD
   experienceLevel: 'intermediate',
   // Five tracked lifts. pull is entered as EITHER max pull-up reps OR a lat-pulldown
@@ -131,6 +132,7 @@ export function answersToProfilePatch(a) {
     event_date: isSport && a.eventDate ? a.eventDate : null,
     sport_season: null,  // no longer set during onboarding; deriveSeason() computes it on demand
     run_discipline: isSport && a.sport === 'run' ? (a.runDiscipline || null) : null,
+    sport_days: isSport ? (a.sportDays || []) : null,
 
     experience: { gym: a.experienceLevel || 'intermediate' },
     lifts,
