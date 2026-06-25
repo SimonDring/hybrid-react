@@ -30,9 +30,11 @@ import { roundHalf } from '../Utils.js';
 // 0 = MEV, 1 = MAV, >1 = into the MAV→MRV zone.
 const STYLE_TOP = { strength: 0.6, functional: 1.0, bodybuilding: 1.4, sport: 0.6 };
 
-// Less-experienced trainees grow on (and recover from) less — keep the ramp
-// nearer MEV; advanced trainees can productively sit a touch higher.
-const LEVEL_BIAS = { beginner: 0.85, returning: 0.92, intermediate: 1.0, advanced: 1.05 };
+// Experience scales the BAND, not a flat multiplier. LEVEL_START = how far up the
+// MEV→top ramp week 1 begins (an adapted athlete never starts at a novice's MEV).
+// LEVEL_TOP_BONUS = extra band height for advanced (ramps deeper toward MRV).
+const LEVEL_START     = { beginner: 0.00, returning: 0.20, intermediate: 0.40, advanced: 0.60 };
+const LEVEL_TOP_BONUS = { beginner: 0,    returning: 0,    intermediate: 0,    advanced: 0.30 };
 
 const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
 
@@ -52,8 +54,8 @@ const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
  */
 export function weeklyMuscleTargets(ctx = {}) {
   const style = STYLE_TOP[ctx.style] != null ? ctx.style : 'functional';
-  const styleTop = STYLE_TOP[style];
-  const levelMult = LEVEL_BIAS[ctx.level] ?? 1.0;
+  const styleTop = STYLE_TOP[style] + (LEVEL_TOP_BONUS[ctx.level] ?? 0);
+  const startFrac = LEVEL_START[ctx.level] ?? 0;
   const phaseWeeks = Math.max(1, ctx.phaseWeeks || 1);
   const wip = clamp(ctx.weekInPhase || 1, 1, phaseWeeks);
   const emphasis = ctx.emphasis || {};
@@ -79,13 +81,15 @@ export function weeklyMuscleTargets(ctx = {}) {
       continue;
     }
 
-    // Ramp from ~MEV (week 1) to the style's top-of-band (last week), where the
-    // band unit is (MAV − MEV) and styleTop says how many of those to climb.
+    // Ramp from a level-scaled START up to a level-scaled TOP of band, where the
+    // band unit is (MAV − MEV) and styleTop says how many of those to climb. An
+    // adapted athlete begins partway up the band instead of at a novice's MEV.
     const top = lm.mev + styleTop * (lm.mav - lm.mev);
-    const onRamp = lm.mev + frac * (top - lm.mev);
+    const effFrac = startFrac + frac * (1 - startFrac);
+    const onRamp = lm.mev + effFrac * (top - lm.mev);
     // Base ramp keeps its MEV floor (a worked muscle shouldn't fall below ~MEV)…
     const floor = lm.mev > 0 ? Math.max(lm.mev * 0.9, lm.mev - 2) : 0;
-    const base = clamp(onRamp * levelMult, floor, lm.mrv);
+    const base = clamp(onRamp, floor, lm.mrv);   // no level multiplier — level is in start/top now
     // …then the GOAL's emphasis + overall scalar adjust it. This may pull a
     // de-emphasised muscle below MEV (e.g. a runner's chest = maintenance only),
     // which is intended, so the floor doesn't apply after the goal adjustment.
