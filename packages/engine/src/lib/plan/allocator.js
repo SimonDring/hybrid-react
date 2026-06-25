@@ -138,7 +138,7 @@ function makeItem(ex, idx, s, style, deload, repBump, effectiveRole, taper) {
   }
   if (ex.pattern === 'calf' || role === 'iso') {
     const str = ex.pattern === 'calf' ? '3 × 12' : isoStr(style);
-    return { num, name: ex.name, sets: bumpReps(str + per, repBump), rpe: s.accRpe, tag: ex.pattern === 'calf' ? 'mobility' : undefined, note: '', restSec };
+    return { num, name: ex.name, sets: bumpReps(str + per, repBump), rpe: s.accRpe, note: '', restSec };
   }
   return { num, name: ex.name, sets: bumpReps(s.acc + per, repBump), rpe: s.accRpe, note: '', restSec };
 }
