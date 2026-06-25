@@ -9,7 +9,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { BLANK_ANSWERS } from '../lib/onboardingModel.js';
+import { BLANK_ANSWERS, localISODate, resolveStartDate } from '../lib/onboardingModel.js';
 import { epley1RM, pullupE1RM } from '@performance-os/engine/lib/liftProgression.js';
 
 // ---- Option catalogues ----
@@ -51,6 +51,12 @@ const LEVELS = [
 const DAYS = [
   { key: 'mon', label: 'Mon' }, { key: 'tue', label: 'Tue' }, { key: 'wed', label: 'Wed' },
   { key: 'thu', label: 'Thu' }, { key: 'fri', label: 'Fri' }, { key: 'sat', label: 'Sat' }, { key: 'sun', label: 'Sun' }
+];
+const START_OPTIONS = [
+  { key: 'today', label: 'Today' },
+  { key: 'tomorrow', label: 'Tomorrow' },
+  { key: 'monday', label: 'Next Monday' },
+  { key: 'date', label: 'Pick a date' }
 ];
 const SESSION_LENGTHS = [20, 30, 45, 60, 75, 90];
 // Quick presets that fill the equipment set in one tap…
@@ -294,6 +300,27 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         </div>
       ) },
 
+    { title: 'When do you want to start?', subtitle: 'Your plan is laid out on the calendar from this day.',
+      valid: () => a.startWhen !== 'date' || (!!a.startDate && a.startDate >= localISODate()),
+      render: () => (
+        <div style={{ display: 'grid', gap: 16 }}>
+          <OptionGrid cols={2}>
+            {START_OPTIONS.map(o => (
+              <Chip key={o.key} center selected={a.startWhen === o.key}
+                onClick={() => set({ startWhen: o.key })} label={o.label} />
+            ))}
+          </OptionGrid>
+          {a.startWhen === 'date' && (
+            <div>
+              <label style={FIELD_LABEL}>Pick a date</label>
+              <input type="date" style={INPUT} value={a.startDate || ''}
+                min={localISODate()} onChange={e => set({ startDate: e.target.value })} />
+            </div>
+          )}
+          <div style={HINT}>Weeks run Mon–Sun. Starting mid-week gives a shorter first week — pick “Next Monday” for a full first week.</div>
+        </div>
+      ) },
+
     showLifts && { title: 'Your main lifts', subtitle: 'Real numbers give every exercise a real target weight — optional, but worth it.', valid: () => true,
       render: () => {
         const bw = parseFloat(a.bodyweight_kg) || null;
@@ -385,6 +412,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             <SummaryRow label="Experience" value={LEVELS.find(l => l.key === a.experienceLevel)?.label || '—'} />
             {liftBits.length > 0 && <SummaryRow label="Maxes" value={liftBits.join(' · ')} />}
             <SummaryRow label="Week" value={a.daysPerWeek ? `${a.daysPerWeek} days · ${a.sessionMinutes === 90 ? '90+' : a.sessionMinutes} min` : '—'} />
+            <SummaryRow label="Starts" value={resolveStartDate(a.startWhen, a.startDate)} />
             <SummaryRow label="Equipment" value={equipLabel(a.equipment)} />
           </div>
         );

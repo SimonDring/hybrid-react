@@ -40,6 +40,25 @@ export function localISODate(d = new Date()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
+// Map the onboarding "when do you want to start?" choice to a local ISO date.
+// 'monday' = the soonest Monday today-or-later. 'date' uses the picked day, clamped
+// to today if it's blank/invalid/in the past. Anything unknown → today (so old
+// answer seeds with no startWhen keep their previous behaviour).
+export function resolveStartDate(option, customDate, now = new Date()) {
+  const base = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // local midnight today
+  if (option === 'tomorrow') { base.setDate(base.getDate() + 1); return localISODate(base); }
+  if (option === 'monday') {
+    base.setDate(base.getDate() + ((8 - base.getDay()) % 7)); // 0 if today is Monday
+    return localISODate(base);
+  }
+  if (option === 'date') {
+    const picked = customDate ? new Date(customDate + 'T00:00:00') : null;
+    if (!picked || isNaN(picked.getTime()) || picked < base) return localISODate(base);
+    return localISODate(picked);
+  }
+  return localISODate(base); // 'today' and any unknown/blank value
+}
+
 // A complete, empty answer set — every caller seeds from this.
 export const BLANK_ANSWERS = {
   name: '', age: '', sex: '', bodyweight_kg: '',
@@ -57,6 +76,8 @@ export const BLANK_ANSWERS = {
   liftsMode: 'known',           // 'known' (enter maxes) | 'test' (quick AMRAP test)
   liftsSource: {},              // per-lift provenance: { [key]: 'entered'|'tested' }
   daysPerWeek: null, sessionMinutes: 60, days: [],
+  startWhen: 'today',           // 'today' | 'tomorrow' | 'monday' | 'date'
+  startDate: '',                // ISO YYYY-MM-DD, used only when startWhen === 'date'
   strengthAccess: '',           // legacy access tier — still accepted, superseded by `equipment`
   equipment: [],                // equipment keys: barbell/dumbbell/machine/cable/band/kettlebell/bodyweight
   injuries: [], notes: ''
@@ -71,7 +92,6 @@ const TIER_EQUIP = {
 };
 
 export function answersToProfilePatch(a) {
-  const today = localISODate();
   const isBuild = a.goalType === 'build';
   const isSport = a.goalType === 'sport';
   // Prefer the granular equipment array; fall back to the legacy tier for older seeds.
@@ -106,7 +126,7 @@ export function answersToProfilePatch(a) {
     : null;
 
   return {
-    plan_start_date: today,
+    plan_start_date: resolveStartDate(a.startWhen, a.startDate),
     plan_weeks: (() => {
       const pseudo = {
         goal_type: a.goalType || null,
