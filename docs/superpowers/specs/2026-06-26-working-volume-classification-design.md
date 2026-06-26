@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-26
 **Status:** Draft for review
-**Scope:** packages/engine — exercise data + volume accounting (allocator + volume counter)
+**Scope:** packages/engine — exercise data + volume accounting (allocator + volume counter) + supportive-work sequencing & finisher
 
 ## Problem
 
@@ -47,6 +47,21 @@ logic (confirmed by grep). The only volume gate is the blunt
    nothing, but are still placed for sport athletes via the existing
    priority-anchor path (a swimmer keeps prone Y/T/W as uncounted shoulder-health
    work; real back work still fills the back target).
+6. **Supportive work is sequenced last.** Working sets first, then accessories /
+   isolation, then core (`isoCore`), then health / prehab / mobility finishers at
+   the very end — never pre-fatigue the core before the heavy lifts; finish on
+   prehab.
+7. **A supportive finisher rounds out short sessions (factor-0, not junk volume).**
+   `factor: 0` means "doesn't count toward the weekly ledger," NOT "never
+   programmed." Sport/goal-appropriate supportive work (tibialis/calf prehab for a
+   runner, cuff/scapular for a swimmer, core/mobility for a build goal) is selected
+   via the `sportTags`/`goalTags` metadata (today dead) and appended to round out a
+   session. The amount **scales inversely to the counted working dose** — a short
+   session (a beginner's) gets a fuller finisher toward a sensible session length;
+   an advanced athlete's already-long session gets little or none, capped so a
+   session is never mostly prehab. This is the honest resolution of the
+   short-session UX deferred in the session-length work: round out with real
+   supportive work, never fake the training dose.
 
 ## The model
 
@@ -94,6 +109,37 @@ table.
 item, so the counter needs no `level`. Warm-up primer rows still contribute zero
 (their names aren't in the exercise DB, so `exerciseMuscles` returns null).
 
+### 3. Session sequencing (allocator.js `structureItems`)
+
+Order blocks by class so supportive work lands last: working sets (loaded /
+bodyweightStrength) → `isoCore` → `health`/prehab/mobility. The existing
+anchor-first rule still applies within the working block; core and health blocks
+are pushed to the tail. This keeps heavy lifts unfatigued and finishes on prehab.
+
+### 4. Supportive finisher (allocator.js, new pass)
+
+After the working volume is allocated (and the existing counted filler pass runs),
+a finisher pass appends **factor-0** supportive work selected by sport/goal:
+
+- **Selection** — activate the dead `sportTags`/`goalTags`: pick health/prehab/
+  mobility/core-activation exercises whose tags match the athlete's sport
+  (`profile.sport`, incl. the `run_<discipline>` tags) or build style. Reuse the
+  sport priority list where present (a runner's tibialis/calf/hip prehab is already
+  enumerated there).
+- **Amount (inverse to working dose)** — fill the gap between the session's
+  realised working duration and an internal "complete session" floor
+  (`FINISHER_TARGET_MIN`, e.g. ~30 min), with a hard cap on finisher volume
+  (`FINISHER_CAP_MIN`, e.g. ~15 min) so a session is never mostly prehab. A long
+  working dose leaves no gap → no finisher. Because the working dose already
+  encodes level + goal, the inverse-scaling falls out without extra level logic.
+- **Accounting** — finisher items carry `volumeFactor: 0`: they count nothing, pay
+  no deficit, and never affect the MRV ceiling. They render tagged `mobility` and
+  sequence last (per §3).
+
+This is distinct from the existing in-rest "filler pass," which adds *counted*
+working volume toward the weekly target; the finisher adds *uncounted* supportive
+work only to round out an otherwise-short session.
+
 ### Data corrections (strengthExercises.js)
 
 - Tag `loadClass` on the bodyweight / isometric-core / health exercises (most
@@ -124,8 +170,9 @@ item, so the counter needs no `level`. Warm-up primer rows still contribute zero
 | `CLASS_FACTOR` + `stimulusFactor` (`strength/stimulus.js`, new, pure) | class × level → factor | LEVELS |
 | `strengthExercises.js` | `loadClass` per exercise | — |
 | `muscleContribution` (`contributions.js`) | structural muscle map (unchanged) | — |
-| `allocateGym` (`allocator.js`) | apply factor in scoring + accounting; stamp `item.volumeFactor`; derive tag | stimulus, contributions |
+| `allocateGym` (`allocator.js`) | apply factor in scoring + accounting; stamp `item.volumeFactor`; sequence supportive work last; run the finisher pass | stimulus, contributions |
 | `countWeeklyVolume` (`volume.js`) | tally `sets × contribution × item.volumeFactor` | — |
+| supportive-work selector (`allocator.js`, consumes `sportTags`/`goalTags`) | pick sport/goal-appropriate factor-0 work for the finisher | exercise data |
 
 `stimulusFactor` is pure and unit-checkable. `muscleContribution` stays pure and
 structural.
@@ -140,27 +187,43 @@ structural.
 - Selection: an advanced athlete's plan no longer contains bird dogs / bodyweight
   squats when loaded options exist; a swimmer still gets prone Y/T/W (priority
   path) but they don't count toward back, so real back work still fills the target.
-- `profile-review`: core reads accurately (not ~0); no phantom back volume.
-- Golden master regenerated (selection + item tags shift deliberately). Update
-  `volume-tracking`, `session-density`, `sport-anchor`, `split-engine`,
+- Sequencing: in a built session, core blocks precede health blocks and both
+  follow the working sets.
+- Finisher: a short (beginner) session gains sport/goal-appropriate factor-0
+  supportive work (a runner gets tibialis/calf prehab) and reaches the session
+  floor; the finisher items count **zero** toward weekly volume; an advanced
+  athlete's long session gains little or none; the finisher never exceeds its cap.
+- `profile-review`: core reads accurately (not ~0); no phantom back volume; short
+  sessions are rounded out without their counted volume changing.
+- Golden master regenerated (selection + item tags + finisher shift deliberately).
+  Update `volume-tracking`, `session-density`, `sport-anchor`, `split-engine`,
   `primer-equip` where their expectations shift.
 - Confirm **no** change to `suggestOptimalFrequency` (reads targets, not counts).
 
-## Open items for review
+## Settled in review (2026-06-26)
 
-- **Decay-curve numbers** in `CLASS_FACTOR` — initial values above; tune against
-  the profile-review archetypes (e.g. is advanced bodyweight-squat 0.2 too
-  generous? is isoCore-advanced 0.15 effectively 0?).
-- **`isoCore` vs `health` for bird dog / dead bug** — placed in `isoCore`
-  (0.5-decaying); arguable they're `health` (always 0) for all but rank novices.
-- **Calf / banded plantarflexion** — calf raises are `loaded`; banded ankle
-  plantarflexion is borderline tibialis prehab (could be `health`). Flagged so the
-  recent calf-counting fix isn't silently undone.
+- **Decay-curve numbers** in `CLASS_FACTOR` — approved as listed.
+- **Bird dog / dead bug** — stay `isoCore` (0.5-decaying), sequenced late as core.
+- **Banded ankle plantarflexion** — `health` (factor 0, doesn't count) but selected
+  for runners via the finisher. Loaded calf work stays `loaded` (counts), preserving
+  the recent calf-counting fix.
+
+## Open items (implementation calibration)
+
+- **Finisher constants** — `FINISHER_TARGET_MIN` (~30) and `FINISHER_CAP_MIN`
+  (~15); tune against the profile archetypes so a beginner session feels complete
+  without becoming mostly prehab.
+- **`loadClass` audit completeness** — the rule + decided classes are fixed; the
+  per-exercise pass over the full library (~118 exercises) happens during
+  implementation, defaulting anything unclassified to `loaded`.
 
 ## Out of scope (YAGNI)
 
-- **Piece B** — goal-appropriate *selection* (no Olympic lifts / hang cleans in a
-  hypertrophy plan; compounds-first CNS sequencing). Separate spec. (Prone-Y
+- **Piece B** — goal-appropriate selection *of working exercises* (no Olympic
+  lifts / hang cleans in a hypertrophy plan) and CNS sequencing *of the heavy
+  working sets* (compound count, heavy-first ordering). Separate spec. NOTE the
+  boundary: this spec sequences *supportive* work last and selects *supportive
+  (factor-0)* work by sport/goal; Piece B governs the *working* exercises. (Prone-Y
   dropping from hypertrophy plans is a side effect here, not the goal.)
 - **Core MEV** stays 0 — core is already programmed via emphasis + the ramp; this
   fix only makes its *count* accurate. Changing the landmark is separate tuning.
