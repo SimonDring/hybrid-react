@@ -86,7 +86,7 @@ function gymCtx(profile) {
     style: program.style, level, minutes,
     access: profile.access || [], sex: profile.sex, lifts: resolveLifts(profile),
     emphasis: program.emphasis, volumeScalar: program.volumeScalar,
-    exercisePriority: program.exercisePriority || [], sport: profile.sport || null
+    exercisePriority: program.exercisePriority || [], sport: profile.sport || null, power: !!program.power
   };
 }
 
@@ -290,7 +290,7 @@ function adaptedPhases() {
       ctx: {
         style: gctx.style, intent: intentOfTitle(s.phase.title), deload: effDeload(s.week), taper: !!s.week.taper,
         weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,
-        exercisePriority: gctx.exercisePriority, sport: gctx.sport
+        exercisePriority: gctx.exercisePriority, sport: gctx.sport, power: gctx.power
       }
     })[0];
     if (spec) {

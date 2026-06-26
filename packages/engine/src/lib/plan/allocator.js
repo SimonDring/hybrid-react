@@ -51,6 +51,29 @@ export const SESSION_CEILING_MIN = 75;
 const FINISHER_TARGET_MIN = 30;
 const FINISHER_CAP_MIN = 15;
 
+// Goal's primary training quality, derived from the style.
+function primaryQuality(style) {
+  if (style === 'strength' || style === 'sport') return 'strength';
+  if (style === 'bodybuilding') return 'hypertrophy';
+  return null;   // functional = balanced
+}
+// Map the build style to its goalTag value (bodybuilding is tagged 'hypertrophy').
+const styleGoalTag = (style) => (style === 'bodybuilding' ? 'hypertrophy' : style);
+// Hard gate: a power-quality exercise is allowed only when the goal wants power AND
+// it's contextually relevant (in the resolved priority list, or goal-tagged).
+function powerAllowed(ex, power, prioritySet, style) {
+  if ((ex.quality || 'general') !== 'power') return true;
+  if (!power) return false;
+  return (prioritySet && prioritySet.has(ex.id)) || (ex.goalTags || []).includes(styleGoalTag(style));
+}
+// Soft steer: prefer on-quality work, de-prioritise the off-quality strength/
+// hypertrophy pair; general + (gated-in) power stay neutral.
+function qualityMult(ex, goalPrimary) {
+  const q = ex.quality || 'general';
+  if (!goalPrimary || q === 'general' || q === 'power') return 1.0;
+  return q === goalPrimary ? 1.15 : 0.7;
+}
+
 // ---- rep / RPE / intensity scheme by style + phase (moved here from strength.js
 // so the allocator owns the prescription and there's no import cycle) ----
 function scheme(style, intent, deload, taper) {
@@ -267,12 +290,13 @@ const OVERSHOOT_PENALTY = 0.1;
 // Pick the single best exercise to add to a slot right now, or null when nothing
 // left pays down a deficit (within the slot's remaining time). `targets` is the
 // full per-muscle target (for urgency), `deficit` the running remainder.
-function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null, levelName = 'intermediate') {
+function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null, levelName = 'intermediate', power = false, goalPrimary = null) {
   let best = null, bestScore = 0.25; // threshold: ignore near-useless picks
   for (const ex of EXERCISES) {
     if (!slot.equip.has(ex.equip)) continue;
     if (ex.level > slot.level) continue;
     if (slot.exUsed.has(ex.id)) continue;
+    if (!powerAllowed(ex, power, prioritySet, style)) continue;   // power gate
     if (fillersOnly && !isFiller(ex)) continue;   // filler pass: only light rest-gap work
 
     // Demote complex primaries to accessory when athlete is below minLevelForPrimary.
@@ -417,6 +441,8 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const weekNum = ctx.weekNum || 1;
   const repBump = femaleRepBump(ctx.sex);
   const levelName = ctx.level || 'intermediate';
+  const power = !!ctx.power;
+  const goalPrimary = primaryQuality(style);
   const s = scheme(style, intent, deload, taper);
 
   // Hard WEEKLY ceiling: the actual allocated volume for a muscle (counting the
@@ -489,7 +515,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   // split's day patterns, or the rotating FUNDAMENTAL fallback).
   const patternAnchor = (slot, patterns) => {
     for (const pat of patterns) {
-      let cands = EXERCISES.filter(e => e.pattern === pat && slot.equip.has(e.equip) && e.level <= slot.level);
+      let cands = EXERCISES.filter(e => e.pattern === pat && slot.equip.has(e.equip) && e.level <= slot.level && powerAllowed(e, power, prioritySet, style));
       if (!cands.length) continue;
       const prim = cands.filter(e => e.role === 'primary');
       if (prim.length) cands = prim;
@@ -532,7 +558,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     progressed = false;
     for (const slot of work) {
       if (slot.timeUsed >= slot.budget) continue;
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName);
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName, power, goalPrimary);
       if (!pick) continue;
       place(slot, pick);
       progressed = true;
@@ -546,7 +572,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const maint = { ...targets };
     let go = true;
     while (go && slot.timeUsed < slot.budget) {
-      const pick = bestExercise(slot, targets, maint, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName);
+      const pick = bestExercise(slot, targets, maint, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName, power, goalPrimary);
       if (!pick) { go = false; break; }
       place(slot, pick);
       for (const m in pick.contrib) maint[m] -= pick.sets * pick.contrib[m];
@@ -560,7 +586,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const numMains = Math.max(1, slot.picks.filter(p => p.ex.role === 'primary').length);
     let added = 0;
     while (added < numMains + 1 && slot.timeUsed < slot.budget) {
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet, levelName);
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet, levelName, power, goalPrimary);
       if (!pick) break;
       place(slot, pick);
       added++;
