@@ -51,11 +51,14 @@ export const SESSION_CEILING_MIN = 75;
 const FINISHER_TARGET_MIN = 30;
 const FINISHER_CAP_MIN = 15;
 
-// Goal's primary training quality, derived from the style.
+// Goal's primary training quality, derived from the style — drives the soft
+// strength↔hypertrophy steer. Only the BUILD styles steer; sport + functional are
+// balanced (their selection is already governed by sport priority + emphasis, and
+// steering sport toward strength nudges it into synergist-volume overshoot).
 function primaryQuality(style) {
-  if (style === 'strength' || style === 'sport') return 'strength';
+  if (style === 'strength') return 'strength';
   if (style === 'bodybuilding') return 'hypertrophy';
-  return null;   // functional = balanced
+  return null;   // sport + functional = balanced (no steer)
 }
 // Map the build style to its goalTag value (bodybuilding is tagged 'hypertrophy').
 const styleGoalTag = (style) => (style === 'bodybuilding' ? 'hypertrophy' : style);
@@ -306,7 +309,7 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     // Cap at 2 primaries per slot — beyond that, extra heavy mains crowd out accessories
     // without adding meaningful variety, and make sessions uncomfortably long.
     if (!fillersOnly && effectiveRole === 'primary' &&
-        slot.picks.filter(p => p.ex.role === 'primary' && p.effectiveRole === 'primary').length >= 2) continue;
+        slot.picks.filter(p => p.ex.role === 'primary' && p.effectiveRole === 'primary').length >= (style === 'strength' ? 3 : 2)) continue;
 
     const sets = roleSetCount(ex, s, style, effectiveRole);
     if (sets <= 0) continue;
@@ -351,6 +354,7 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     if (slot.timeUsed < 5) score *= effectiveRole === 'primary' ? 1.2 : 0.85; // open on a compound
     if (ex.pattern === 'hpull' || ex.pattern === 'vpull') score *= 1.05; // posture pull-lean
     if (prioritySet && prioritySet.has(ex.id)) score *= 1.35;     // science-backed priority boost
+    score *= qualityMult(ex, goalPrimary);                        // goal-quality steer
     // Split FOCUS bias: steer this day toward the muscles its split assigns (an Upper
     // day prefers chest/back/shoulders, a Lower day quads/hams/glutes), so the week
     // reads as a curated split rather than identical days. The multiplier only ever

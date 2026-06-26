@@ -56,7 +56,8 @@ const longSessions = allocateGym({
 });
 const maxPrimaries = Math.max(...longSessions.map(s =>
   s.items.filter(it => it.restSec >= 120).length));
-assert(maxPrimaries <= 2, `T6 no session has >2 primaries (got ${maxPrimaries})`);
+// Strength flexes to a 3-primary cap (others stay at 2) — see the primary cap in allocator.js.
+assert(maxPrimaries <= 3, `T6 strength session capped at 3 primaries (got ${maxPrimaries})`);
 
 // ── T7: superset B items get restSec 20 ───────────────────────────────────
 const paired = allItems.filter(it => it.superset);
