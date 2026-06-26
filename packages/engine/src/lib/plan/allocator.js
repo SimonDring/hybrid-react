@@ -192,12 +192,16 @@ function structureItems(picks) {
   const mains = [], rest = [];
   picks.forEach(p => (p.ex.role === 'primary' ? mains : rest).push(p));
   const usedRest = new Set();
-  const blocks = [];
+  let blocks = [];
+
+  // Core + health/mobility work is never supersetted into another block — it forms
+  // its own singleton blocks so it can be sequenced cleanly at the end of the session.
+  const isSupportive = (p) => p.ex.loadClass === 'health' || p.ex.pattern === 'core' || (p.item && p.item.tag === 'mobility');
 
   for (const m of mains) {
     let fi = -1;
     for (let i = 0; i < rest.length; i++) {
-      if (!usedRest.has(i) && isFiller(rest[i].ex) && canPair(m.ex, rest[i].ex)) { fi = i; break; }
+      if (!usedRest.has(i) && isFiller(rest[i].ex) && !isSupportive(rest[i]) && canPair(m.ex, rest[i].ex)) { fi = i; break; }
     }
     if (fi >= 0) { usedRest.add(fi); blocks.push([m, rest[fi]]); } else blocks.push([m]);
   }
@@ -205,9 +209,10 @@ function structureItems(picks) {
   const taken = new Set();
   for (let i = 0; i < rem.length; i++) {
     if (taken.has(i)) continue;
+    if (isSupportive(rem[i].p)) { taken.add(i); blocks.push([rem[i].p]); continue; }
     let j = -1;
     for (let k = i + 1; k < rem.length; k++) {
-      if (!taken.has(k) && canPair(rem[i].p.ex, rem[k].p.ex)) { j = k; break; }
+      if (!taken.has(k) && !isSupportive(rem[k].p) && canPair(rem[i].p.ex, rem[k].p.ex)) { j = k; break; }
     }
     if (j >= 0) { taken.add(i); taken.add(j); blocks.push([rem[i].p, rem[j].p]); }
     else { taken.add(i); blocks.push([rem[i].p]); }
@@ -221,6 +226,21 @@ function structureItems(picks) {
     const ai = blocks.findIndex(blk => blk.some(p => p.ex.id === anchorId));
     if (ai > 0) blocks.unshift(blocks.splice(ai, 1)[0]);
   }
+
+  // Sequence supportive work last: working sets → isoCore → health/mobility. A
+  // block's rank is the max of its picks' classes (a superset with any core/health
+  // trails). Stable by original index, preserving the anchor-first ordering.
+  const classRank = (p) => {
+    const lc = p.ex.loadClass;
+    if (lc === 'health' || (p.item && p.item.tag === 'mobility')) return 2;
+    if (lc === 'isoCore') return 1;
+    return 0;
+  };
+  const blockRank = (blk) => Math.max(...blk.map(classRank));
+  blocks = blocks
+    .map((blk, i) => ({ blk, i, r: blockRank(blk) }))
+    .sort((a, b) => a.r - b.r || a.i - b.i)
+    .map(x => x.blk);
 
   const items = [];
   blocks.forEach((blk, bi) => {
