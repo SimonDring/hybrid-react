@@ -60,14 +60,16 @@ for (const id of NEW_IDS) {
   assert(!!byId(id), `T4 new exercise exists: ${id}`);
 }
 
-// ── T5: activationPrimer exercises are tagged ─────────────────────────────
+// ── T5: activation/primer exercises don't count as working volume ─────────
+// (the activationPrimer flag was retired — non-counting is now expressed via
+// loadClass 'health' or a 'mobility' pattern, both of which tally zero.)
 const primerIds = ['hip_flexor_90_90','glute_bridge_activation','band_pull_apart','cat_camel_thoracic'];
 for (const id of primerIds) {
-  assert(byId(id)?.activationPrimer === true, `T5 ${id} has activationPrimer:true`);
+  const e = byId(id);
+  const nonCounting = e && (e.loadClass === 'health' || e.pattern === 'mobility');
+  assert(nonCounting, `T5 ${id} is non-counting (health or mobility)`);
 }
-// no other exercise should have activationPrimer:true
-const wrongPrimer = EXERCISES.filter(e => e.activationPrimer === true && !primerIds.includes(e.id));
-assert(wrongPrimer.length === 0, `T5b no unexpected activationPrimer flags (found: ${wrongPrimer.map(e=>e.id)})`);
+assert(!EXERCISES.some(e => 'activationPrimer' in e), 'T5b activationPrimer flag fully retired');
 
 // ── T6: resolveProgram emits exercisePriority ─────────────────────────────
 const runProg = resolveProgram({ goal_type: 'sport', sport: 'run', sport_season: 'off',

@@ -61,13 +61,15 @@ export function countWeeklyVolume(sessions = []) {
 
   for (const s of sessions) {
     for (const it of s.items || []) {
-      if (it.tag === 'mobility') continue; // activation/mobility primer (RPE 4) isn't working volume
+      if (it.tag === 'mobility') continue; // health/activation (factor 0) + warm-up primer
       const sets = parseSetCount(it.sets);
       if (!sets) continue; // warm-ups / time-based rows aren't counted as volume
+      const vf = it.volumeFactor == null ? 1 : it.volumeFactor; // stimulus credit (0.5 isoCore, 1 loaded)
+      if (vf === 0) continue;
       const contrib = exerciseMuscles(it.name);
       if (!contrib) { skipped.push(it.name); continue; }
       matched++;
-      for (const muscle in contrib) counts[muscle] += sets * contrib[muscle];
+      for (const muscle in contrib) counts[muscle] += sets * contrib[muscle] * vf;
     }
   }
 

@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useDashboard } from "./DashboardProvider";
+import { AccountMenu } from "./AccountMenu";
 import { Button } from "@/components/ui/Button";
 import { MenuIcon } from "@/components/ui/icons";
 import { CTA } from "@/content/dashboardCopy";
@@ -33,7 +34,9 @@ export function TopBar({ onOpenMobileNav }: { onOpenMobileNav: () => void }) {
       </button>
 
       <div className="min-w-0 flex-1">
-        <h1 className="truncate text-base font-semibold text-strong">{meta.title}</h1>
+        <h1 className="truncate font-display text-base font-semibold text-strong">
+          {meta.title}
+        </h1>
         <p className="hidden truncate text-xs text-muted sm:block">{meta.sub}</p>
       </div>
 
@@ -47,6 +50,7 @@ export function TopBar({ onOpenMobileNav }: { onOpenMobileNav: () => void }) {
       >
         {CTA.exportReport}
       </Button>
+      <AccountMenu />
     </header>
   );
 }

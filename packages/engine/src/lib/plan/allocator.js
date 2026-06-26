@@ -36,6 +36,7 @@ import { VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
 import { muscleContribution } from './contributions.js';
 import { parseSetCount } from './volume.js';
 import { applyWeights } from '../liftProgression.js';
+import { stimulusFactor } from '../strength/stimulus.js';
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
@@ -43,6 +44,12 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 // ~6–10 hard sets/muscle (the within-session stimulus cap) ≈ 75 min of productive
 // work. The allocator stops a slot here; volume ÷ day count sizes the rest.
 export const SESSION_CEILING_MIN = 75;
+
+// Supportive finisher: round a short session out toward FINISHER_TARGET_MIN with
+// sport/goal-appropriate factor-0 work (prehab/mobility/core-activation), but never
+// add more than FINISHER_CAP_MIN — a session is never mostly prehab.
+const FINISHER_TARGET_MIN = 30;
+const FINISHER_CAP_MIN = 15;
 
 // ---- rep / RPE / intensity scheme by style + phase (moved here from strength.js
 // so the allocator owns the prescription and there's no import cycle) ----
@@ -139,7 +146,7 @@ function makeItem(ex, idx, s, style, deload, repBump, effectiveRole, taper) {
   }
   if (ex.pattern === 'core') {
     const hold = /plank|hold|dead bug|copenhagen|hollow|bird dog/i.test(ex.name);
-    return { num, name: ex.name, sets: hold ? coreStr(deload || taper) : '3 × 12' + per, rpe: 'RPE 6', tag: 'mobility', note: '', restSec };
+    return { num, name: ex.name, sets: hold ? coreStr(deload || taper) : '3 × 12' + per, rpe: 'RPE 6', note: '', restSec };
   }
   if (ex.pattern === 'calf' || role === 'iso') {
     const str = ex.pattern === 'calf' ? '3 × 12' : isoStr(style);
@@ -191,12 +198,16 @@ function structureItems(picks) {
   const mains = [], rest = [];
   picks.forEach(p => (p.ex.role === 'primary' ? mains : rest).push(p));
   const usedRest = new Set();
-  const blocks = [];
+  let blocks = [];
+
+  // Core + health/mobility work is never supersetted into another block — it forms
+  // its own singleton blocks so it can be sequenced cleanly at the end of the session.
+  const isSupportive = (p) => p.ex.loadClass === 'health' || p.ex.pattern === 'core' || (p.item && p.item.tag === 'mobility');
 
   for (const m of mains) {
     let fi = -1;
     for (let i = 0; i < rest.length; i++) {
-      if (!usedRest.has(i) && isFiller(rest[i].ex) && canPair(m.ex, rest[i].ex)) { fi = i; break; }
+      if (!usedRest.has(i) && isFiller(rest[i].ex) && !isSupportive(rest[i]) && canPair(m.ex, rest[i].ex)) { fi = i; break; }
     }
     if (fi >= 0) { usedRest.add(fi); blocks.push([m, rest[fi]]); } else blocks.push([m]);
   }
@@ -204,9 +215,10 @@ function structureItems(picks) {
   const taken = new Set();
   for (let i = 0; i < rem.length; i++) {
     if (taken.has(i)) continue;
+    if (isSupportive(rem[i].p)) { taken.add(i); blocks.push([rem[i].p]); continue; }
     let j = -1;
     for (let k = i + 1; k < rem.length; k++) {
-      if (!taken.has(k) && canPair(rem[i].p.ex, rem[k].p.ex)) { j = k; break; }
+      if (!taken.has(k) && !isSupportive(rem[k].p) && canPair(rem[i].p.ex, rem[k].p.ex)) { j = k; break; }
     }
     if (j >= 0) { taken.add(i); taken.add(j); blocks.push([rem[i].p, rem[j].p]); }
     else { taken.add(i); blocks.push([rem[i].p]); }
@@ -220,6 +232,21 @@ function structureItems(picks) {
     const ai = blocks.findIndex(blk => blk.some(p => p.ex.id === anchorId));
     if (ai > 0) blocks.unshift(blocks.splice(ai, 1)[0]);
   }
+
+  // Sequence supportive work last: working sets → isoCore → health/mobility. A
+  // block's rank is the max of its picks' classes (a superset with any core/health
+  // trails). Stable by original index, preserving the anchor-first ordering.
+  const classRank = (p) => {
+    const lc = p.ex.loadClass;
+    if (lc === 'health' || (p.item && p.item.tag === 'mobility')) return 2;
+    if (lc === 'isoCore') return 1;
+    return 0;
+  };
+  const blockRank = (blk) => Math.max(...blk.map(classRank));
+  blocks = blocks
+    .map((blk, i) => ({ blk, i, r: blockRank(blk) }))
+    .sort((a, b) => a.r - b.r || a.i - b.i)
+    .map(x => x.blk);
 
   const items = [];
   blocks.forEach((blk, bi) => {
@@ -240,7 +267,7 @@ const OVERSHOOT_PENALTY = 0.1;
 // Pick the single best exercise to add to a slot right now, or null when nothing
 // left pays down a deficit (within the slot's remaining time). `targets` is the
 // full per-muscle target (for urgency), `deficit` the running remainder.
-function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null) {
+function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null, levelName = 'intermediate') {
   let best = null, bestScore = 0.25; // threshold: ignore near-useless picks
   for (const ex of EXERCISES) {
     if (!slot.equip.has(ex.equip)) continue;
@@ -264,17 +291,22 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     if (!fillersOnly && slot.timeUsed > 0 && slot.timeUsed + cost > slot.budget + 2) continue;
 
     const contrib = muscleContribution(ex);
+    // Stimulus credit: a set's counted volume scales by load class × level (a bird
+    // dog ≈ 0 for an advanced athlete; health work = 0). The factor applies to ALL
+    // the volume math so selection, the MRV ceiling and the count stay coherent.
+    const vf = stimulusFactor(ex, levelName);
     // Never let a pick push any muscle past its weekly MRV ceiling (counting
     // synergist credit). This is the backstop that keeps high-frequency plans in
     // a recoverable range.
     let exceedsMRV = false;
     for (const m in contrib) {
-      if ((weeklyDelivered[m] || 0) + sets * contrib[m] > (weeklyCeiling[m] ?? Infinity) + 0.01) { exceedsMRV = true; break; }
+      if ((weeklyDelivered[m] || 0) + sets * contrib[m] * vf > (weeklyCeiling[m] ?? Infinity) + 0.01) { exceedsMRV = true; break; }
     }
     if (exceedsMRV) continue;
 
     let useful = 0, waste = 0;
     for (const m in contrib) {
+      const eff = sets * contrib[m] * vf;   // stimulus-weighted volume this pick delivers
       const cap = (perSlotCap[m] ?? Infinity) - (slot.delivered[m] || 0);
       const weeklyRoom = (weeklyCeiling[m] ?? Infinity) - (weeklyDelivered[m] || 0);
       const room = Math.min(Math.max(0, deficit[m] || 0), Math.max(0, cap), Math.max(0, weeklyRoom));
@@ -282,11 +314,11 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
       // up so single-muscle isolation can compete with multi-muscle compounds,
       // instead of always being crowded out and starved.
       const urgency = targets[m] > 0 ? Math.max(0, Math.min(1, (deficit[m] || 0) / targets[m])) : 0;
-      useful += Math.min(sets * contrib[m], room) * (0.6 + 0.9 * urgency);
+      useful += Math.min(eff, room) * (0.6 + 0.9 * urgency);
       // Volume this pick dumps PAST the remaining target — junk sets that overshoot
       // the evidence-based target (e.g. a squat piling quads onto a swimmer whose leg
       // target is already met). Penalised below so actual volume tracks the target.
-      waste += Math.max(0, sets * contrib[m] - Math.max(0, deficit[m] || 0));
+      waste += Math.max(0, eff - Math.max(0, deficit[m] || 0));
     }
     if (useful <= 0) continue;
 
@@ -321,6 +353,30 @@ const REGION = {
   pull:  ['back', 'biceps'],
   core:  ['core']
 };
+
+// Sport/goal-appropriate supportive work for the finisher: factor-0 (health) or
+// mobility-pattern exercises the athlete can do, ranked by relevance (priority-list
+// membership / sport tag / build goal) then variety. Returns ordered candidates.
+function finisherPool(slot, ctx, levelName) {
+  const sport = ctx.sport || null;
+  const goal = ctx.style;                        // strength | bodybuilding | functional | sport
+  const prio = new Set(ctx.exercisePriority || []);
+  const cands = EXERCISES.filter(ex => {
+    if (!slot.equip.has(ex.equip)) return false;
+    if (ex.level > slot.level) return false;
+    if (slot.exUsed.has(ex.id)) return false;
+    return stimulusFactor(ex, levelName) === 0 || ex.pattern === 'mobility';  // health (0) or mobility
+  });
+  const relevance = (ex) => {
+    let r = 0;
+    if (prio.has(ex.id)) r += 3;
+    if (sport && (ex.sportTags || []).includes(sport)) r += 2;
+    if (!sport && (ex.goalTags || []).includes(goal)) r += 1;
+    if (ex.pattern === 'mobility') r += 0.5;     // general mobility is a safe fallback
+    return r;
+  };
+  return cands.sort((a, b) => relevance(b) - relevance(a) || (hash(a.id) % 5) - (hash(b.id) % 5));
+}
 
 // A SIMPLE focus label from a slot's realised volume — the plain name of what the
 // session actually trains: Upper / Lower / Push / Pull / Full body / Core. Kept
@@ -360,6 +416,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const intent = ctx.intent || 'base';
   const weekNum = ctx.weekNum || 1;
   const repBump = femaleRepBump(ctx.sex);
+  const levelName = ctx.level || 'intermediate';
   const s = scheme(style, intent, deload, taper);
 
   // Hard WEEKLY ceiling: the actual allocated volume for a muscle (counting the
@@ -411,15 +468,16 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
 
   const place = (slot, pick) => {
     const { ex, sets, contrib, effectiveRole } = pick;
-    slot.picks.push({
-      ex, effectiveRole,
-      item: makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole, taper)
-    });
+    const vf = stimulusFactor(ex, levelName);
+    const item = makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole, taper);
+    item.volumeFactor = vf;
+    if (vf === 0) item.tag = 'mobility';   // health/activation — render + count as zero
+    slot.picks.push({ ex, effectiveRole, item });
     slot.timeUsed += sets * perSetMin(ex, effectiveRole);
     slot.patternsUsed.add(ex.pattern);
     slot.exUsed.add(ex.id);
     for (const m in contrib) {
-      const v = sets * contrib[m];
+      const v = sets * contrib[m] * vf;   // stimulus-weighted volume toward the ledger
       deficit[m] = (deficit[m] || 0) - v;
       slot.delivered[m] = (slot.delivered[m] || 0) + v;
       slot.muscleVol[m] = (slot.muscleVol[m] || 0) + v;
@@ -474,7 +532,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     progressed = false;
     for (const slot of work) {
       if (slot.timeUsed >= slot.budget) continue;
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet);
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName);
       if (!pick) continue;
       place(slot, pick);
       progressed = true;
@@ -488,7 +546,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const maint = { ...targets };
     let go = true;
     while (go && slot.timeUsed < slot.budget) {
-      const pick = bestExercise(slot, targets, maint, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet);
+      const pick = bestExercise(slot, targets, maint, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName);
       if (!pick) { go = false; break; }
       place(slot, pick);
       for (const m in pick.contrib) maint[m] -= pick.sets * pick.contrib[m];
@@ -502,10 +560,30 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const numMains = Math.max(1, slot.picks.filter(p => p.ex.role === 'primary').length);
     let added = 0;
     while (added < numMains + 1 && slot.timeUsed < slot.budget) {
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet);
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet, levelName);
       if (!pick) break;
       place(slot, pick);
       added++;
+    }
+  }
+
+  // Supportive finisher: round out a short session with sport/goal-appropriate
+  // factor-0 work (counts nothing). The amount scales inversely to the realised
+  // working dose — a long session has no gap and gets nothing.
+  for (const slot of work) {
+    let gap = FINISHER_TARGET_MIN - slot.timeUsed;
+    if (gap <= 2) continue;
+    let added = 0;
+    for (const ex of finisherPool(slot, ctx, levelName)) {
+      if (gap <= 2 || added >= FINISHER_CAP_MIN) break;
+      const effectiveRole = ex.role;
+      const item = makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole, taper);
+      item.volumeFactor = 0;
+      item.tag = 'mobility';
+      slot.picks.push({ ex, effectiveRole, item });
+      slot.exUsed.add(ex.id);
+      const cost = (parseSetCount(item.sets) * perSetMin(ex, effectiveRole)) || 2;
+      slot.timeUsed += cost; gap -= cost; added += cost;
     }
   }
 

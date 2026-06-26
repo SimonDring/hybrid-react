@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!--
+    Maskable variant: full-bleed background (launchers apply their own mask) with
+    the mark scaled into the central safe zone (~80%). Same mark as icon.svg.
+  -->
+  <defs>
+    <radialGradient id="glowm" cx="72%" cy="18%" r="62%">
+      <stop offset="0%" stop-color="#6fd3c4" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#6fd3c4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="#0d1016"/>
+  <rect width="512" height="512" fill="url(#glowm)"/>
+  <!-- mark scaled to ~0.82 around centre to survive masking -->
+  <g transform="translate(256 256) scale(0.82) translate(-256 -256)">
+    <rect x="178" y="72" width="156" height="368" rx="78" fill="#161b24"
+          stroke="#ffffff" stroke-opacity="0.08" stroke-width="2"/>
+    <circle cx="256" cy="148" r="58" fill="#46c98b" opacity="0.22"/>
+    <circle cx="256" cy="256" r="58" fill="#f2c14e" opacity="0.22"/>
+    <circle cx="256" cy="364" r="58" fill="#e8836f" opacity="0.22"/>
+    <circle cx="256" cy="148" r="40" fill="#46c98b"/>
+    <circle cx="256" cy="256" r="40" fill="#f2c14e"/>
+    <circle cx="256" cy="364" r="40" fill="#e8836f"/>
+  </g>
+</svg>

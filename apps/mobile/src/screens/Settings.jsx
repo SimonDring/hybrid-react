@@ -197,6 +197,18 @@ export default function Settings() {
         <li><span className="k">Storage</span><span className="v">Local (this device)</span></li>
       </ul>
 
+      {/* Cross-links to the rest of Performance OS (website + coach dashboard). */}
+      <div className="settings-group" style={{ marginBottom: 20 }}>
+        <a className="settings-row" href="https://performanceos.app" target="_blank" rel="noreferrer">
+          <span>Performance OS website</span>
+          <span className="sr-meta">↗</span>
+        </a>
+        <a className="settings-row" href="https://performanceos.app/login" target="_blank" rel="noreferrer">
+          <span>Coach dashboard</span>
+          <span className="sr-meta">↗</span>
+        </a>
+      </div>
+
       <h2 className="h3">Account</h2>
       {authStatus === 'signed_in' && user ? (
         <>
