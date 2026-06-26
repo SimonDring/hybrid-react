@@ -45,6 +45,12 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 // work. The allocator stops a slot here; volume ÷ day count sizes the rest.
 export const SESSION_CEILING_MIN = 75;
 
+// Supportive finisher: round a short session out toward FINISHER_TARGET_MIN with
+// sport/goal-appropriate factor-0 work (prehab/mobility/core-activation), but never
+// add more than FINISHER_CAP_MIN — a session is never mostly prehab.
+const FINISHER_TARGET_MIN = 30;
+const FINISHER_CAP_MIN = 15;
+
 // ---- rep / RPE / intensity scheme by style + phase (moved here from strength.js
 // so the allocator owns the prescription and there's no import cycle) ----
 function scheme(style, intent, deload, taper) {
@@ -348,6 +354,30 @@ const REGION = {
   core:  ['core']
 };
 
+// Sport/goal-appropriate supportive work for the finisher: factor-0 (health) or
+// mobility-pattern exercises the athlete can do, ranked by relevance (priority-list
+// membership / sport tag / build goal) then variety. Returns ordered candidates.
+function finisherPool(slot, ctx, levelName) {
+  const sport = ctx.sport || null;
+  const goal = ctx.style;                        // strength | bodybuilding | functional | sport
+  const prio = new Set(ctx.exercisePriority || []);
+  const cands = EXERCISES.filter(ex => {
+    if (!slot.equip.has(ex.equip)) return false;
+    if (ex.level > slot.level) return false;
+    if (slot.exUsed.has(ex.id)) return false;
+    return stimulusFactor(ex, levelName) === 0 || ex.pattern === 'mobility';  // health (0) or mobility
+  });
+  const relevance = (ex) => {
+    let r = 0;
+    if (prio.has(ex.id)) r += 3;
+    if (sport && (ex.sportTags || []).includes(sport)) r += 2;
+    if (!sport && (ex.goalTags || []).includes(goal)) r += 1;
+    if (ex.pattern === 'mobility') r += 0.5;     // general mobility is a safe fallback
+    return r;
+  };
+  return cands.sort((a, b) => relevance(b) - relevance(a) || (hash(a.id) % 5) - (hash(b.id) % 5));
+}
+
 // A SIMPLE focus label from a slot's realised volume — the plain name of what the
 // session actually trains: Upper / Lower / Push / Pull / Full body / Core. Kept
 // honest (read from delivered volume, not assumed) but deliberately jargon-free so
@@ -534,6 +564,26 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       if (!pick) break;
       place(slot, pick);
       added++;
+    }
+  }
+
+  // Supportive finisher: round out a short session with sport/goal-appropriate
+  // factor-0 work (counts nothing). The amount scales inversely to the realised
+  // working dose — a long session has no gap and gets nothing.
+  for (const slot of work) {
+    let gap = FINISHER_TARGET_MIN - slot.timeUsed;
+    if (gap <= 2) continue;
+    let added = 0;
+    for (const ex of finisherPool(slot, ctx, levelName)) {
+      if (gap <= 2 || added >= FINISHER_CAP_MIN) break;
+      const effectiveRole = ex.role;
+      const item = makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole, taper);
+      item.volumeFactor = 0;
+      item.tag = 'mobility';
+      slot.picks.push({ ex, effectiveRole, item });
+      slot.exUsed.add(ex.id);
+      const cost = (parseSetCount(item.sets) * perSetMin(ex, effectiveRole)) || 2;
+      slot.timeUsed += cost; gap -= cost; added += cost;
     }
   }
 
