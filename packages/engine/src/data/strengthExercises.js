@@ -141,7 +141,7 @@ export const EXERCISES = [
   // mobility-pattern + health-class items: the functional primer (prepended by
   // buildWeek) and supportive-finisher pool. They count zero toward volume.
   { id: 'hip_flexor_90_90',        name: '90/90 Hip Flexor Stretch',       pattern: 'mobility', equip: 'bodyweight', level: 0, role: 'core',   goalTags: ['functional'] },
-  { id: 'glute_bridge_activation',  name: 'Glute Bridge (2s hold)',         pattern: 'hinge',    equip: 'bodyweight', level: 0, role: 'core',   goalTags: ['functional'] },
+  { id: 'glute_bridge_activation', loadClass: 'health',  name: 'Glute Bridge (2s hold)',         pattern: 'hinge',    equip: 'bodyweight', level: 0, role: 'core',   goalTags: ['functional'] },
   { id: 'band_pull_apart', loadClass: 'health',          name: 'Band Pull-Apart',                pattern: 'hpull',    equip: 'band',       level: 0, role: 'iso',    goalTags: ['functional', 'hypertrophy'], sportTags: ['swim'] },
   { id: 'cat_camel_thoracic',       name: 'Cat-Camel + Thoracic Rotation', pattern: 'mobility', equip: 'bodyweight', level: 0, role: 'core',   goalTags: ['functional'] },
   { id: 'half_kneeling_pallof', loadClass: 'isoCore',     name: 'Half-Kneeling Pallof Press',    pattern: 'core',     equip: 'cable',      level: 1, role: 'core',  goalTags: ['functional'], sportTags: ['run', 'swim'] },

@@ -36,6 +36,7 @@ import { VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
 import { muscleContribution } from './contributions.js';
 import { parseSetCount } from './volume.js';
 import { applyWeights } from '../liftProgression.js';
+import { stimulusFactor } from '../strength/stimulus.js';
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
@@ -139,7 +140,7 @@ function makeItem(ex, idx, s, style, deload, repBump, effectiveRole, taper) {
   }
   if (ex.pattern === 'core') {
     const hold = /plank|hold|dead bug|copenhagen|hollow|bird dog/i.test(ex.name);
-    return { num, name: ex.name, sets: hold ? coreStr(deload || taper) : '3 × 12' + per, rpe: 'RPE 6', tag: 'mobility', note: '', restSec };
+    return { num, name: ex.name, sets: hold ? coreStr(deload || taper) : '3 × 12' + per, rpe: 'RPE 6', note: '', restSec };
   }
   if (ex.pattern === 'calf' || role === 'iso') {
     const str = ex.pattern === 'calf' ? '3 × 12' : isoStr(style);
@@ -240,7 +241,7 @@ const OVERSHOOT_PENALTY = 0.1;
 // Pick the single best exercise to add to a slot right now, or null when nothing
 // left pays down a deficit (within the slot's remaining time). `targets` is the
 // full per-muscle target (for urgency), `deficit` the running remainder.
-function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null) {
+function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null, levelName = 'intermediate') {
   let best = null, bestScore = 0.25; // threshold: ignore near-useless picks
   for (const ex of EXERCISES) {
     if (!slot.equip.has(ex.equip)) continue;
@@ -264,17 +265,22 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     if (!fillersOnly && slot.timeUsed > 0 && slot.timeUsed + cost > slot.budget + 2) continue;
 
     const contrib = muscleContribution(ex);
+    // Stimulus credit: a set's counted volume scales by load class × level (a bird
+    // dog ≈ 0 for an advanced athlete; health work = 0). The factor applies to ALL
+    // the volume math so selection, the MRV ceiling and the count stay coherent.
+    const vf = stimulusFactor(ex, levelName);
     // Never let a pick push any muscle past its weekly MRV ceiling (counting
     // synergist credit). This is the backstop that keeps high-frequency plans in
     // a recoverable range.
     let exceedsMRV = false;
     for (const m in contrib) {
-      if ((weeklyDelivered[m] || 0) + sets * contrib[m] > (weeklyCeiling[m] ?? Infinity) + 0.01) { exceedsMRV = true; break; }
+      if ((weeklyDelivered[m] || 0) + sets * contrib[m] * vf > (weeklyCeiling[m] ?? Infinity) + 0.01) { exceedsMRV = true; break; }
     }
     if (exceedsMRV) continue;
 
     let useful = 0, waste = 0;
     for (const m in contrib) {
+      const eff = sets * contrib[m] * vf;   // stimulus-weighted volume this pick delivers
       const cap = (perSlotCap[m] ?? Infinity) - (slot.delivered[m] || 0);
       const weeklyRoom = (weeklyCeiling[m] ?? Infinity) - (weeklyDelivered[m] || 0);
       const room = Math.min(Math.max(0, deficit[m] || 0), Math.max(0, cap), Math.max(0, weeklyRoom));
@@ -282,11 +288,11 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
       // up so single-muscle isolation can compete with multi-muscle compounds,
       // instead of always being crowded out and starved.
       const urgency = targets[m] > 0 ? Math.max(0, Math.min(1, (deficit[m] || 0) / targets[m])) : 0;
-      useful += Math.min(sets * contrib[m], room) * (0.6 + 0.9 * urgency);
+      useful += Math.min(eff, room) * (0.6 + 0.9 * urgency);
       // Volume this pick dumps PAST the remaining target — junk sets that overshoot
       // the evidence-based target (e.g. a squat piling quads onto a swimmer whose leg
       // target is already met). Penalised below so actual volume tracks the target.
-      waste += Math.max(0, sets * contrib[m] - Math.max(0, deficit[m] || 0));
+      waste += Math.max(0, eff - Math.max(0, deficit[m] || 0));
     }
     if (useful <= 0) continue;
 
@@ -360,6 +366,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const intent = ctx.intent || 'base';
   const weekNum = ctx.weekNum || 1;
   const repBump = femaleRepBump(ctx.sex);
+  const levelName = ctx.level || 'intermediate';
   const s = scheme(style, intent, deload, taper);
 
   // Hard WEEKLY ceiling: the actual allocated volume for a muscle (counting the
@@ -411,15 +418,16 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
 
   const place = (slot, pick) => {
     const { ex, sets, contrib, effectiveRole } = pick;
-    slot.picks.push({
-      ex, effectiveRole,
-      item: makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole, taper)
-    });
+    const vf = stimulusFactor(ex, levelName);
+    const item = makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole, taper);
+    item.volumeFactor = vf;
+    if (vf === 0) item.tag = 'mobility';   // health/activation — render + count as zero
+    slot.picks.push({ ex, effectiveRole, item });
     slot.timeUsed += sets * perSetMin(ex, effectiveRole);
     slot.patternsUsed.add(ex.pattern);
     slot.exUsed.add(ex.id);
     for (const m in contrib) {
-      const v = sets * contrib[m];
+      const v = sets * contrib[m] * vf;   // stimulus-weighted volume toward the ledger
       deficit[m] = (deficit[m] || 0) - v;
       slot.delivered[m] = (slot.delivered[m] || 0) + v;
       slot.muscleVol[m] = (slot.muscleVol[m] || 0) + v;
@@ -474,7 +482,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     progressed = false;
     for (const slot of work) {
       if (slot.timeUsed >= slot.budget) continue;
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet);
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName);
       if (!pick) continue;
       place(slot, pick);
       progressed = true;
@@ -488,7 +496,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const maint = { ...targets };
     let go = true;
     while (go && slot.timeUsed < slot.budget) {
-      const pick = bestExercise(slot, targets, maint, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet);
+      const pick = bestExercise(slot, targets, maint, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName);
       if (!pick) { go = false; break; }
       place(slot, pick);
       for (const m in pick.contrib) maint[m] -= pick.sets * pick.contrib[m];
@@ -502,7 +510,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const numMains = Math.max(1, slot.picks.filter(p => p.ex.role === 'primary').length);
     let added = 0;
     while (added < numMains + 1 && slot.timeUsed < slot.budget) {
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet);
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet, levelName);
       if (!pick) break;
       place(slot, pick);
       added++;
