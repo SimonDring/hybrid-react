@@ -50,11 +50,13 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/icon.svg'],
       manifest: {
-        name: 'Hybrid Training Plan',
-        short_name: 'Hybrid',
-        description: 'Hybrid athlete training programme. Strength, swim, run, ski.',
-        theme_color: '#f4f1ea',
-        background_color: '#f4f1ea',
+        // One brand across mobile app, coach dashboard and website.
+        name: 'Performance OS',
+        short_name: 'Performance OS',
+        description: 'Sport-specific training that adapts to your recovery, workload and goals.',
+        // Midnight dark, matching the web app (#0d1016) for a seamless install + splash.
+        theme_color: '#0d1016',
+        background_color: '#0d1016',
         display: 'standalone',
         orientation: 'portrait',
         scope: `/${REPO_NAME}/`,
