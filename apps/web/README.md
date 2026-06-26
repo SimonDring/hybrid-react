@@ -1,16 +1,72 @@
-# @performance-os/web — Coach Dashboard
+# @performance-os/web — Marketing site + Coach Dashboard
 
-The coach-facing web product (Stage 5, the **Team package**). It turns each
-player's data into a squad-level, decision-led view so a coach can answer, in
-under five minutes: **who is ready, who needs adjusting, who is falling behind,
-and what to do next.**
+The coach-facing web product (Stage 5, the **Team package**). It has two parts in
+one Next.js app:
+
+1. **Marketing site** (`/`, `/about`, `/pricing`, `/contact`, `/login`) — the
+   public front door that explains the product, generates leads, and signs a
+   coach in. See [Marketing site](#marketing-site) below.
+2. **Coach dashboard** (`/dashboard`) — turns each player's data into a
+   squad-level, decision-led view so a coach can answer, in under five minutes:
+   **who is ready, who needs adjusting, who is falling behind, and what to do next.**
 
 Built with **Next.js 14 (App Router) · TypeScript · Tailwind CSS v4 · Recharts**.
-It shares the player app's "Midnight" design system and reuses the decision
-engine's verdict language, so coach and player read the same story.
+The marketing site and dashboard share the player app's "Midnight" design system
+and the decision engine's verdict language, so the whole product reads as one.
 
 > First version runs on **realistic mock data**. No backend or auth yet — but the
 > code is structured so both slot in without touching the UI (see below).
+
+## Marketing site
+
+Lives in the `app/(marketing)/` **route group** (the folder name doesn't appear in
+the URL), which gives every marketing page a shared top nav + footer. `/login` and
+`/dashboard` keep their own layouts.
+
+**Pages (each nav tab is its own route):** `/` (a deliberately lean, hook-first
+landing — key message above the fold), `/how-it-works` (the data→decision pipeline,
+with a bespoke pipeline-flow hero), `/teams` (the commercial wedge: player vs coach,
+the cost "maths", who it's for, why us — with a squad-readiness hero), `/pricing`,
+`/about`, `/contact`, `/login`. Each page is an ordered list of section components.
+
+**Everything content lives in config — edit copy without touching layout:**
+
+| To change… | Edit |
+| --- | --- |
+| Brand name, nav, footer, primary CTA, contact email | `content/marketing/site.ts` |
+| Landing copy + FAQ | `content/marketing/landing.ts` |
+| The "Traditional vs Performance OS" cost story (real figures) | `content/marketing/comparison.ts` |
+| About: mission, beliefs, team | `content/marketing/about.ts` |
+| Pricing tiers | `content/marketing/pricing.ts` |
+| Contact page copy | `content/marketing/contact.ts` |
+| Per-page SEO | `content/marketing/seo.ts` |
+
+**Sections are Lego.** Each landing block is a component in
+`components/marketing/sections/`; the page (`app/(marketing)/page.tsx`) is just an
+ordered list of them. Reorder, add, or remove a section by editing that list.
+
+**Images are swappable by slot.** The site references visuals by a slot key, never
+a path. `<MediaPlaceholder slot="…">` shows a labelled placeholder (phone frame for
+the app, browser frame for the dashboard) until you register a real file in
+`content/marketing/images.ts` — then it swaps to an optimised `next/image`, no JSX
+change. Asset slots + sizes: `public/images/README.md`.
+
+**Lead generation + analytics (flip on with one env var — see `.env.example`):**
+- **Forms** — `lib/leads.ts → submitLead()` backs every form (contact, footer, lead
+  magnet). Set `NEXT_PUBLIC_LEADS_ENDPOINT` to a Formspree URL **or** `/api/leads`
+  and forms POST there; leave it empty and they fall back to a pre-filled email
+  (mailto). The success copy adapts to which path ran. `app/api/leads/route.ts` is a
+  ready same-origin endpoint (validates + logs today; drop in Resend/Supabase to
+  deliver — see its header).
+- **Analytics** — `lib/analytics.ts → track()` fires on every CTA + form submit and
+  captures UTM params. `components/marketing/layout/Analytics.tsx` loads Plausible
+  (`NEXT_PUBLIC_PLAUSIBLE_DOMAIN`) and/or GA4 (`NEXT_PUBLIC_GA_ID`); both `track`
+  targets are no-ops until configured, so it's always safe. Plausible needs no
+  cookie banner; GA4 does under UK/EU law.
+- **Coach login** — `lib/auth.ts → signInCoach()` is a **stub** today that routes to
+  `/dashboard`; wire Supabase (same project as the mobile app, so the same coach
+  credentials work) per [Adding auth](#adding-auth). The dashboard is not yet gated
+  — `/login` is a front door, not a security boundary.
 
 ## Views (left sidebar)
 

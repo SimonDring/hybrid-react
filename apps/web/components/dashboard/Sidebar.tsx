@@ -94,12 +94,17 @@ function SidebarBody({
           collapsed && "justify-center px-0",
         )}
       >
-        <span className="grid h-8 w-8 flex-shrink-0 place-items-center rounded-lg bg-accent-soft text-accent">
-          ●
+        {/* Shared RAG-dot brand mark — the same mark used on the website. */}
+        <span className="flex flex-shrink-0 items-center gap-1" aria-hidden="true">
+          <span className="h-2 w-2 rounded-full bg-ready" />
+          <span className="h-2 w-2 rounded-full bg-monitor" />
+          <span className="h-2 w-2 rounded-full bg-adjust" />
         </span>
         {!collapsed && (
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-strong">{team.name}</p>
+            <p className="truncate font-display text-sm font-semibold text-strong">
+              {team.name}
+            </p>
             <p className="text-[11px] text-muted">Performance OS</p>
           </div>
         )}
