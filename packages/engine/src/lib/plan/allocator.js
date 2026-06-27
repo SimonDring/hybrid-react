@@ -45,6 +45,14 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 // work. The allocator stops a slot here; volume ÷ day count sizes the rest.
 export const SESSION_CEILING_MIN = 75;
 
+// Spinal/axial-load budget. A session may accumulate up to AXIAL_SESSION_CAP units
+// of axial load (back squat 2 + deadlift 2 fills it); beyond that, intents resolve
+// to their lowest-axial available member so we don't keep reloading the spine.
+export const AXIAL_SESSION_CAP = 4;
+const axialOf = (ex) => (ex && ex.axialLoad != null ? ex.axialLoad : 0);
+
+const EX_BY_ID = new Map(EXERCISES.map(e => [e.id, e]));
+
 // Supportive finisher: round a short session out toward FINISHER_TARGET_MIN with
 // sport/goal-appropriate factor-0 work (prehab/mobility/core-activation), but never
 // add more than FINISHER_CAP_MIN — a session is never mostly prehab.
@@ -371,6 +379,18 @@ function structureItems(picks) {
   return items;
 }
 
+// The member of an intent's available chain to boost given the slot's spent axial
+// budget: the head (equipment-best) when it still fits, else the lowest-axial member.
+export function preferredMember(candidates = [], slotAxial = 0, cap = AXIAL_SESSION_CAP) {
+  if (!candidates.length) return null;
+  const ax = (id) => axialOf(EX_BY_ID.get(id));
+  const head = candidates[0];
+  if (slotAxial + ax(head) <= cap) return head;
+  let best = head, bestAx = ax(head);
+  for (const id of candidates) { const a = ax(id); if (a < bestAx) { best = id; bestAx = a; } }
+  return best;
+}
+
 // How hard to discourage volume that overshoots the remaining target. Higher = the
 // actual allocated volume tracks the evidence-based target more tightly (less junk).
 const OVERSHOOT_PENALTY = 0.1;
@@ -378,7 +398,7 @@ const OVERSHOOT_PENALTY = 0.1;
 // Pick the single best exercise to add to a slot right now, or null when nothing
 // left pays down a deficit (within the slot's remaining time). `targets` is the
 // full per-muscle target (for urgency), `deficit` the running remainder.
-function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null, levelName = 'intermediate', power = false, goalPrimary = null, demotePress = false, weeklyExCount = {}) {
+function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null, levelName = 'intermediate', power = false, goalPrimary = null, demotePress = false, weeklyExCount = {}, priorityFor = () => false) {
   let best = null, bestScore = 0.25; // threshold: ignore near-useless picks
   for (const ex of EXERCISES) {
     if (!slot.equip.has(ex.equip)) continue;
@@ -438,7 +458,7 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     if (slot.patternsUsed.has(ex.pattern)) score *= 0.6;          // variety within a session
     if (slot.timeUsed < 5) score *= effectiveRole === 'primary' ? 1.2 : 0.85; // open on a compound
     if (ex.pattern === 'hpull' || ex.pattern === 'vpull') score *= 1.05; // posture pull-lean
-    if (prioritySet && prioritySet.has(ex.id)) score *= 1.35;     // science-backed priority boost
+    if (priorityFor(ex.id, slot.axialLoad)) score *= 1.35;     // intent's axial-preferred member
     score *= qualityMult(ex, goalPrimary);                        // goal-quality steer
     score *= stretchMult(ex, goalPrimary);                        // lengthened-position bias (hypertrophy)
     // Cross-session variety: an accessory/iso already used in earlier sessions this
@@ -596,7 +616,8 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     delivered: {},   // muscle → sets delivered IN THIS SLOT (for perSlotCap)
     muscleVol: {},   // muscle → total fractional sets in this slot (for label/flags)
     focus: slot.focus || null,       // split day's muscle weights — biases selection (null = no bias)
-    anchors: slot.anchors || null    // split day's opening pattern(s)
+    anchors: slot.anchors || null,   // split day's opening pattern(s)
+    axialLoad: 0                     // running spinal-load budget for this session
   }));
 
   // SHARED weekly deficit — the single volume controller. Each slot pays it down;
@@ -605,6 +626,16 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
 
   const prioritySet = ctx.exercisePriority && ctx.exercisePriority.length
     ? new Set(ctx.exercisePriority) : null;
+
+  const priorityByIntent = ctx.priorityByIntent instanceof Map ? ctx.priorityByIntent : new Map();
+  const idToIntent = new Map();
+  for (const [intent, ids] of priorityByIntent) for (const id of ids) if (!idToIntent.has(id)) idToIntent.set(id, intent);
+  // Boost test used in scoring: is `id` the axial-preferred member of its intent now?
+  const priorityFor = (id, slotAxial) => {
+    const intent = idToIntent.get(id);
+    if (!intent) return prioritySet ? prioritySet.has(id) : false; // sport/no-intent fallback
+    return preferredMember(priorityByIntent.get(intent) || [], slotAxial, AXIAL_SESSION_CAP) === id;
+  };
 
   // Fallback anchor: a fundamental compound, rotated so the week always covers
   // legs + push + pull no matter how few/short the sessions are.
@@ -620,6 +651,9 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     slot.timeUsed += sets * perSetMin(ex, effectiveRole);
     slot.patternsUsed.add(ex.pattern);
     slot.exUsed.add(ex.id);
+    slot.axialLoad = (slot.axialLoad || 0) + axialOf(ex);
+    const exIntent = idToIntent.get(ex.id);
+    if (exIntent) item.intent = exIntent;   // tag for the de-spine pass
     weeklyExCount[ex.id] = (weeklyExCount[ex.id] || 0) + 1;   // cross-session variety tracking
     for (const m in contrib) {
       const v = sets * contrib[m] * vf;   // stimulus-weighted volume toward the ledger
@@ -676,7 +710,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     progressed = false;
     for (const slot of work) {
       if (slot.timeUsed >= slot.budget) continue;
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount);
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor);
       if (!pick) continue;
       place(slot, pick);
       progressed = true;
@@ -690,7 +724,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const maint = { ...targets };
     let go = true;
     while (go && slot.timeUsed < slot.budget) {
-      const pick = bestExercise(slot, targets, maint, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount);
+      const pick = bestExercise(slot, targets, maint, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor);
       if (!pick) { go = false; break; }
       place(slot, pick);
       for (const m in pick.contrib) maint[m] -= pick.sets * pick.contrib[m];
@@ -704,7 +738,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const numMains = Math.max(1, slot.picks.filter(p => p.ex.role === 'primary').length);
     let added = 0;
     while (added < numMains + 1 && slot.timeUsed < slot.budget) {
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount);
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor);
       if (!pick) break;
       place(slot, pick);
       added++;
@@ -749,7 +783,8 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       items,
       intensity: deload ? 'moderate' : 'hard',
       lowerBody: lower >= 0.4 * total,
-      muscleVol: slot.muscleVol   // realised per-muscle volume — lets the scheduler space same-muscle days
+      muscleVol: slot.muscleVol,   // realised per-muscle volume — lets the scheduler space same-muscle days
+      axialLoad: Object.values(slot.picks).reduce((a, p) => a + axialOf(p.ex), 0)
     };
   });
 }
