@@ -37,6 +37,7 @@ import { muscleContribution } from './contributions.js';
 import { parseSetCount } from './volume.js';
 import { applyWeights } from '../liftProgression.js';
 import { stimulusFactor } from '../strength/stimulus.js';
+import { AXIAL_SESSION_CAP, axialOf } from './axial.js';
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
@@ -50,11 +51,8 @@ export const SESSION_CEILING_MIN = 75;
 // non-fatiguing — and priority prehab is picked first, so it survives the cap.
 export const SPORT_WORK_ITEM_CAP = 6;
 
-// Spinal/axial-load budget. A session may accumulate up to AXIAL_SESSION_CAP units
-// of axial load (back squat 2 + deadlift 2 fills it); beyond that, intents resolve
-// to their lowest-axial available member so we don't keep reloading the spine.
-export const AXIAL_SESSION_CAP = 4;
-const axialOf = (ex) => (ex && ex.axialLoad != null ? ex.axialLoad : 0);
+// AXIAL_SESSION_CAP (the within-session spinal-load budget) + axialOf live in
+// ./axial.js, shared with the scheduler + de-spine pass so they can't diverge.
 
 // CNS / recovery demand of an exercise — drives what may be supersetted and how much
 // rest it gets. An explicit `cns` on the exercise wins; otherwise it's derived: heavy

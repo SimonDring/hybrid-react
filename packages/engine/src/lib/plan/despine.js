@@ -9,11 +9,10 @@
  */
 import { EXERCISES } from '../../data/strengthExercises.js';
 import { applyWeights } from '../liftProgression.js';
+import { HIGH_DAY_THRESHOLD, axialOf } from './axial.js';
 
-const HIGH_DAY_THRESHOLD = 3;
 const BY_ID = new Map(EXERCISES.map(e => [e.id, e]));
 const BY_NAME = new Map(EXERCISES.map(e => [e.name.toLowerCase(), e]));
-const axialOf = (ex) => (ex && ex.axialLoad != null ? ex.axialLoad : 0);
 const dist = (a, b) => { const g = ((a - b) % 7 + 7) % 7; return Math.min(g, 7 - g); };
 
 // Ordering class for a rendered item — mirrors the allocator's pickClass so a

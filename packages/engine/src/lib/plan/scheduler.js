@@ -20,6 +20,7 @@
  */
 
 import { lightenItems } from './constraints.js';
+import { HIGH_DAY_THRESHOLD } from './axial.js';
 
 const DAY_IDX = { Monday: 0, Tuesday: 1, Wednesday: 2, Thursday: 3, Friday: 4, Saturday: 5, Sunday: 6 };
 const IDX_DAY = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -28,7 +29,6 @@ const KEY_IDX = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
 const isHard = (s) => s.intensity === 'hard';
 const legStrength = (s) => s.discipline === 'gym' && s.lowerBody;
 const legTaxingRun = (s) => s.discipline === 'run' && (s.intensity === 'hard' || /^Long/.test(s.focus || ''));
-const HIGH_DAY_THRESHOLD = 3;
 const isHighAxial = (s) => (s.axialLoad || 0) >= HIGH_DAY_THRESHOLD;
 const isLongRun = (s) => s.discipline === 'run' && /^Long/.test(s.focus || '');
 const gap = (a, b) => ((b - a) % 7 + 7) % 7;

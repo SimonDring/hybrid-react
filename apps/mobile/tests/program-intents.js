@@ -11,4 +11,9 @@ const db = resolveProgram(P({ access: ['dumbbell','bodyweight'] }));
 assert(db.exercisePriority.length >= 8, `DB strength priority no longer ~1 (got ${db.exercisePriority.length})`);
 assert(db.exercisePriority.includes('db_bench') && !db.exercisePriority.includes('bench'), 'DB strength uses db_bench, not bench');
 
+// DB-only sport profiles also resolve a priorityByIntent Map, so the de-spine
+// fallback chain is available off-barbell too.
+const dbSport = resolveProgram({ goal_type: 'sport', sport: 'run', sport_intent: 'build_base', experience: { gym: 'intermediate' }, access: ['dumbbell','bodyweight'] });
+assert(dbSport.priorityByIntent instanceof Map, 'DB/sport priorityByIntent is a Map');
+
 console.log(process.exitCode ? 'program-intents FAILURES' : `PASS: program-intents — ${pass} assertions`);

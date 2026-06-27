@@ -21,4 +21,10 @@ assert(db.list.length >= 8, `DB strength resolves a full list (got ${db.list.len
 const hpull = db.byIntent.get('h_pull') || [];
 assert(hpull.includes('chest_supported_row'), `h_pull byIntent has chest_supported_row (got ${hpull.join(',')})`);
 
+// Full-gym byIntent leads with the curated head and still carries a lower-axial
+// fallback (back_squat → … → bw_split_squat) for the de-spine pass to reach.
+const fSquat = full.byIntent.get('squat') || [];
+assert(fSquat[0] === 'back_squat', `full squat byIntent leads back_squat (got ${fSquat.join(',')})`);
+assert(fSquat.includes('bw_split_squat'), `full squat byIntent carries a low-axial fallback (got ${fSquat.join(',')})`);
+
 console.log(process.exitCode ? 'intents FAILURES' : `PASS: intents — ${pass} assertions`);
