@@ -17,8 +17,11 @@ assert(!hasPower(plan({ goalType: 'build', strengthStyle: 'bodybuilding', experi
 assert(!hasPower(plan({ goalType: 'build', strengthStyle: 'strength', experienceLevel: 'advanced', daysPerWeek: 5 })), 'strength plan has NO power work');
 assert(hasPower(plan({ goalType: 'sport', sport: 'run', runDiscipline: 'sprint', sportIntent: 'recreational', experienceLevel: 'advanced', daysPerWeek: 4 })), 'sprint plan DOES contain power work');
 
-// Hip-thrust regression: general exercise with sportTags is never gated.
-const bb = plan({ goalType: 'build', strengthStyle: 'bodybuilding', experienceLevel: 'advanced', daysPerWeek: 6 });
-assert(allItemNames(bb).includes('Hip thrust'), 'hip thrust (general) still appears for a bodybuilder');
+// Hip-thrust regression: a general exercise with sportTags is never hard-gated
+// (only quality:'power' is gated). It surfaces wherever it's wanted — e.g. a
+// cyclist (glute priority). (It may be out-RANKED by stretch work in a hypertrophy
+// plan; that's selection, not gating — glutes are still covered by RDL/split squat.)
+const cyc = plan({ goalType: 'sport', sport: 'cycle', sportIntent: 'recreational', experienceLevel: 'advanced', daysPerWeek: 4 });
+assert(allItemNames(cyc).includes('Hip thrust'), 'hip thrust (general + sportTags) is not gated — appears for a cyclist');
 
 console.log('quality-gate done');

@@ -76,6 +76,12 @@ function qualityMult(ex, goalPrimary) {
   if (!goalPrimary || q === 'general' || q === 'power') return 1.0;
   return q === goalPrimary ? 1.15 : 0.7;
 }
+// Lengthened-position bias: nudge a hypertrophy plan toward stretch-loaded work
+// (more growth at long muscle lengths — Maeo/Pedrosa/Schoenfeld). Tunable; a
+// tie-breaker weaker than the priority boost, so it never overrides curation.
+function stretchMult(ex, goalPrimary) {
+  return (ex.stretchBias && goalPrimary === 'hypertrophy') ? 1.12 : 1.0;
+}
 
 // ---- rep / RPE / intensity scheme by style + phase (moved here from strength.js
 // so the allocator owns the prescription and there's no import cycle) ----
@@ -355,6 +361,7 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     if (ex.pattern === 'hpull' || ex.pattern === 'vpull') score *= 1.05; // posture pull-lean
     if (prioritySet && prioritySet.has(ex.id)) score *= 1.35;     // science-backed priority boost
     score *= qualityMult(ex, goalPrimary);                        // goal-quality steer
+    score *= stretchMult(ex, goalPrimary);                        // lengthened-position bias (hypertrophy)
     // Split FOCUS bias: steer this day toward the muscles its split assigns (an Upper
     // day prefers chest/back/shoulders, a Lower day quads/hams/glutes), so the week
     // reads as a curated split rather than identical days. The multiplier only ever
