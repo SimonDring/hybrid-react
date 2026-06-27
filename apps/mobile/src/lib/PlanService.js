@@ -23,6 +23,7 @@ import { resolveSplit } from '@performance-os/engine/lib/plan/split.js';
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 import { countWeeklyVolume } from '@performance-os/engine/lib/plan/volume.js';
 import { distributeAcrossSlots, WINDOW_DAYS } from '@performance-os/engine/lib/plan/rollingVolume.js';
+import { despineWeek } from '@performance-os/engine/lib/plan/despine.js';
 import { resolveLifts } from '@performance-os/engine/lib/liftProgression.js';
 import { MUSCLE_GROUPS, MUSCLE_LABELS } from '@performance-os/engine/data/muscleVolume.js';
 import { getOverrides } from './sessionOverrides.js';
@@ -329,6 +330,7 @@ function adaptedPhases() {
         if (!weeksTouched.includes(week.num)) return week;
         let changed = false;
         const newSessions = week.sessions.slice();
+        const reshapedIdx = new Set();           // sessions the reflow freshly rebuilt this pass
         const swap = (i, focus, duration, items, flag) => {
           const dayPrefix = (newSessions[i].title.split('·')[0] || '').trim();
           newSessions[i] = { ...newSessions[i], title: dayPrefix ? `${dayPrefix} · ${focus}` : focus, duration, items, ...flag };
@@ -342,8 +344,26 @@ function adaptedPhases() {
           // moment of starting (no badge — nothing was swapped out from under them).
           if (ov) { swap(i, ov.focus, ov.duration, ov.items, { _trainNow: !ov.pinnedAtStart }); return; }
           const spec = specByKey[k];
-          if (spec) swap(i, spec.focus, spec.duration, spec.items, { _trainNow: false });
+          // Carry the reshaped lifts' real axialLoad (not the original slot's) so the
+          // cross-day de-spine below reads the right "yesterday was spine-heavy" signal.
+          if (spec) { swap(i, spec.focus, spec.duration, spec.items, { _trainNow: false, axialLoad: spec.axialLoad || 0 }); reshapedIdx.add(i); }
         });
+
+        // De-spine the reflowed week, exactly as the baseline generator does after
+        // scheduling: where a high-axial day is followed (adjacently) by a training
+        // day carrying a high-axial intent lift, swap that lift for the lowest-axial
+        // member of its intent. Only the freshly RESHAPED sessions may change; started
+        // / Train Now / untouched-baseline sessions are passed as read-only context
+        // (deep-cloned) so a heavy "yesterday" still registers without recomputing a
+        // session the athlete has committed to — honouring freeze-on-start.
+        if (reshapedIdx.size) {
+          const forDespine = newSessions.map((s, i) =>
+            reshapedIdx.has(i) ? s : { ...s, items: (s.items || []).map(it => ({ ...it })) });
+          despineWeek(forDespine, {
+            priorityByIntent: gctx.priorityByIntent, lifts: gctx.lifts,
+            level: gctx.level, bodyweight: gctx.bodyweight
+          });
+        }
         // Surface an adaptive deload (or its deferral) on the current week.
         const forceDl = week.num === cw && rec.action === 'force';
         const deferDl = week.num === cw && rec.action === 'defer';
