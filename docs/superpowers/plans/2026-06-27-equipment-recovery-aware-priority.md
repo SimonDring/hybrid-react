@@ -122,7 +122,7 @@ assert(JSON.stringify(full.list) === JSON.stringify(CURRENT_STRENGTH), `full-gym
 const db = resolveIntents(BUILD_INTENTS.strength, DB, LEVELS.advanced);
 assert(db.list.length >= 8, `DB strength resolves a full list (got ${db.list.length})`);
 ['back_squat','deadlift','bench','barbell_row','ohp'].forEach(id => assert(!db.list.includes(id), `DB list excludes barbell ${id}`));
-['goblet_squat','db_rdl','db_bench','chest_supported_row','db_ohp'].forEach(id => assert(db.list.includes(id), `DB list includes ${id}`));
+['goblet_squat','db_rdl','db_bench','db_row','db_ohp'].forEach(id => assert(db.list.includes(id), `DB list includes ${id}`));
 
 // byIntent exposes the full equipment-available chain for axial fallback.
 const hpull = db.byIntent.get('h_pull') || [];
