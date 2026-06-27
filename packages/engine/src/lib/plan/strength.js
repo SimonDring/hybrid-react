@@ -128,7 +128,8 @@ export function buildWeek(ctx = {}) {
       style, intent: ctx.intent, deload, taper, weekNum: ctx.weekNum,
       level: ctx.level, sex: ctx.sex, lifts: ctx.lifts, access: ctx.access || [],
       bodyweight: ctx.bodyweight,
-      exercisePriority: ctx.exercisePriority || [], sport: ctx.sport || null, power: !!ctx.power
+      exercisePriority: ctx.exercisePriority || [], sport: ctx.sport || null, power: !!ctx.power,
+      priorityByIntent: ctx.priorityByIntent || new Map()
     }
   });
 

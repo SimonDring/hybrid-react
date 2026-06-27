@@ -97,7 +97,8 @@ function buildGymWeek(count, ctx, profile, program) {
     bodyweight: profile.bodyweight_kg,
     gymDays: count, lifts: resolveLifts(profile),
     style: program.style, emphasis: program.emphasis, volumeScalar: program.volumeScalar,
-    power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || []
+    power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || [],
+    priorityByIntent: program.priorityByIntent || new Map()
   });
 }
 

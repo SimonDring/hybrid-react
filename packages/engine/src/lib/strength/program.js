@@ -13,38 +13,14 @@ import { deriveSeason } from '../plan/periodization.js';
 import { getGymLevel } from '../Utils.js';
 import sports from '../sports/index.js';
 import { DEFAULT_SEASON_VOLUME } from '../sports/_schema.js';
+import { availableEquip, LEVELS } from '../../data/strengthExercises.js';
+import { BUILD_INTENTS, resolveIntents } from './priorityIntents.js';
 
 // Sport emphasis vectors, priority-exercise lists and season volume scalars now live
 // in the pluggable sport modules (src/lib/sports/) behind a registry — adding a sport
-// no longer touches this file. The build-style priority lists stay here (below).
-//
-// Build-style priority lists (science-backed):
-//   Hypertrophy (RP / Israetel): stretched-position isolation, compounds near MRV.
-//   Strength: competition lifts + close variants.
-//   Functional: Janda crossed syndromes, McGill spine, desk-job counterbalance.
-const GOAL_PRIORITY = {
-  bodybuilding: [
-    'incline_db_curl', 'spider_curl', 'overhead_cable_ext', 'low_high_cable_fly',
-    'seated_leg_curl', 'heel_elevated_goblet', 'reverse_pec_deck',
-    'prone_y_raise', 'prone_t_raise', 'prone_w_raise', 'db_pullover',
-    'leg_curl', 'leg_ext', 'chest_fly', 'lateral_raise', 'rear_fly',
-    'biceps_curl', 'triceps_pushdown', 'overhead_ext'
-  ],
-  strength: [
-    'back_squat', 'deadlift', 'bench', 'pause_squat', 'rack_pull',
-    'deficit_deadlift', 'jm_press', 'close_grip_bench', 'floor_press',
-    'barbell_row', 'ohp', 'trap_bar_dl', 'front_squat', 'hip_thrust',
-    'farmer_carry', 'ab_wheel', 'seated_box_jump'
-  ],
-  functional: [
-    'bird_dog', 'dead_bug', 'pallof', 'side_plank', 'ab_wheel',
-    'suitcase_carry', 'farmer_carry', 'split_squat', 'step_up',
-    'serratus_wall_slide', 'serratus_punch_cable', 'half_kneeling_pallof',
-    'tall_kneeling_landmine', 'seated_box_jump', 'bounding_a_skip',
-    'hip_flexor_90_90', 'glute_bridge_activation', 'band_pull_apart',
-    'thoracic_foam_roller', 'prone_hip_extension'
-  ]
-};
+// no longer touches this file. Build-style priority lists now live in priorityIntents.js
+// as intent chains with equipment-ordered fallbacks (BUILD_INTENTS), so a dumbbell
+// athlete gets a curated list rather than a ~1-item stub.
 
 export function resolveProgram(profile = {}) {
   // Programme resolution defaults an unset experience to 'intermediate'.
@@ -59,12 +35,17 @@ export function resolveProgram(profile = {}) {
     // Run sub-disciplines (sprint/middle/long) override the module's defaults.
     const disc = sport === 'run' ? profile.run_discipline : null;
     const byD = disc && mod && mod.byDiscipline ? mod.byDiscipline[disc] : null;
+    const sportPriority = (byD && byD.priorityExercises) || (mod && mod.priorityExercises) || [];
+    const equip = availableEquip(profile.access || []);
+    const lvlNum = LEVELS[level] ?? LEVELS.intermediate;
+    const intents = sportPriority.map(id => ({ intent: id, chain: [id] }));
+    const { list, byIntent } = resolveIntents(intents, equip, lvlNum);
     return {
       goalType: 'sport', style: 'sport',
       emphasis: (byD && byD.emphasis) || (mod && mod.emphasis) || {},
       volumeScalar: ((mod && mod.seasonModifiers) || DEFAULT_SEASON_VOLUME)[season] ?? 1.0,
       power: mod ? !!mod.power : true, sport, season, level,
-      exercisePriority: (byD && byD.priorityExercises) || (mod && mod.priorityExercises) || []
+      exercisePriority: list, priorityByIntent: byIntent
     };
   }
 
@@ -76,10 +57,13 @@ export function resolveProgram(profile = {}) {
   if (style === 'bodybuilding') { emphasis.shoulders = 1.1; emphasis.biceps = 1.1; emphasis.triceps = 1.1; }
   if (style === 'functional') { emphasis.core = 1.2; }
 
+  const equip = availableEquip(profile.access || []);
+  const lvlNum = LEVELS[level] ?? LEVELS.intermediate;
+  const { list, byIntent } = resolveIntents(BUILD_INTENTS[style] || [], equip, lvlNum);
   return {
     goalType: 'build', style, emphasis, volumeScalar: 1.0, power: style === 'functional',
     sport: null, season: null, level,
-    exercisePriority: GOAL_PRIORITY[style] || []
+    exercisePriority: list, priorityByIntent: byIntent
   };
 }
 
