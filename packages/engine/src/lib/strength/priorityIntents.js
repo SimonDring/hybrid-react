@@ -39,18 +39,22 @@ export const BUILD_INTENTS = {
   functional: ['bird_dog','dead_bug','pallof','side_plank','ab_wheel','suitcase_carry','farmer_carry','split_squat','step_up','serratus_wall_slide','serratus_punch_cable','half_kneeling_pallof','tall_kneeling_landmine','seated_box_jump','bounding_a_skip','hip_flexor_90_90','glute_bridge_activation','band_pull_apart','thoracic_foam_roller','prone_hip_extension'].map(id => ({ intent: id, chain: [id] }))
 };
 
-// Resolve each intent to its equipment+level-available candidates (chain order).
+// Resolve each intent to its EQUIPMENT-available candidates (chain order). We do NOT
+// filter by experience level here: the priority list stays level-agnostic (as the
+// old flat lists were) and the allocator gates selection by level at fill time, so a
+// curated priority (e.g. a runner's Nordic curl) stays listed even for athletes a tier
+// below it. `level` is accepted for caller compatibility but intentionally unused.
 // Returns { list, byIntent }: `list` is the flat ordered id set (the ×1.35 boost
 // pool, deduped — same shape resolveProgram returned before); `byIntent` maps each
 // intent to its available candidate ids (for the allocator's axial pick + despine).
-export function resolveIntents(intents = [], equip, level = LEVELS.intermediate) {
+export function resolveIntents(intents = [], equip, level = LEVELS.intermediate) {  // eslint-disable-line no-unused-vars
   const byIntent = new Map();
   const list = [];
   const seen = new Set();
   for (const { intent, chain } of intents) {
     const avail = chain.filter(id => {
       const ex = BY_ID.get(id);
-      return ex && equip.has(ex.equip) && ex.level <= level;
+      return ex && equip.has(ex.equip);
     });
     byIntent.set(intent, avail);
     if (avail.length && !seen.has(avail[0])) { list.push(avail[0]); seen.add(avail[0]); }
