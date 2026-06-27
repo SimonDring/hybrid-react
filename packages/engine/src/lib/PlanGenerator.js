@@ -23,6 +23,7 @@
 
 import * as strength from './plan/strength.js';
 import { scheduleWeek } from './plan/scheduler.js';
+import { despineWeek } from './plan/despine.js';
 import { resolveLifts } from './liftProgression.js';
 import { resolveProgram } from './strength/program.js';
 import { resolvePeriodization } from './plan/periodization.js';
@@ -142,7 +143,8 @@ export function generatePlan(profile = {}) {
 
       const sportSpecs = buildGymWeek(totalDays, ctx, profile, program);
       const dayNames = chooseDays(availability, sportSpecs.length, profile.sport_days || []);
-      const sessions = scheduleWeek({ sportSpecs, dayNames, busyDays, sportMuscles });
+      let sessions = scheduleWeek({ sportSpecs, dayNames, busyDays, sportMuscles });
+      sessions = despineWeek(sessions, { priorityByIntent: program.priorityByIntent || new Map(), lifts: resolveLifts(profile), level: getGymLevel(profile), bodyweight: profile.bodyweight_kg });
 
       weeks.push({ num: weekNum, deload, taper, theme: themeFor(seg.intent, deload, taper, isRace && weekNum === total), sessions, provisional: pi > 0 });
     }
