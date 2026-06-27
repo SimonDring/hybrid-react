@@ -21,11 +21,11 @@ const rl = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'l
 assert(rl.style === 'sport', 'T6 sport goal → style "sport"');
 assert(rl.emphasis.calves === 1.4 && rl.emphasis.chest === 0.45, 'T7 run-long emphasis: calves up (1.4), chest down (0.45)');
 assert(rl.exercisePriority.includes('nordic_curl'), 'T8 run-long prioritises nordic curl');
-const sw = resolveProgram({ goal_type: 'sport', sport: 'swim', sport_intent: 'recreational' });
+const sw = resolveProgram({ goal_type: 'sport', sport: 'swim', sport_intent: 'recreational', access: ['full_gym'] });
 assert(sw.emphasis.back === 1.3 && sw.exercisePriority.includes('face_pull'), 'T9 swim emphasises back + prioritises face pull');
 
 // ---- build goals → correct style, full volume, priority present ----
-const bb = resolveProgram({ goal_type: 'build', strength_style: 'bodybuilding' });
+const bb = resolveProgram({ goal_type: 'build', strength_style: 'bodybuilding', access: ['full_gym'] });
 assert(bb.style === 'bodybuilding' && bb.volumeScalar === 1.0, 'T10 bodybuilding style, full volume');
 assert(bb.exercisePriority.length > 0, 'T11 bodybuilding has an exercise-priority list');
 assert(resolveProgram({ goal_type: 'build', strength_style: 'strength' }).style === 'strength', 'T12 strength style');

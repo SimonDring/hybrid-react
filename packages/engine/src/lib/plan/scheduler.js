@@ -28,6 +28,8 @@ const KEY_IDX = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
 const isHard = (s) => s.intensity === 'hard';
 const legStrength = (s) => s.discipline === 'gym' && s.lowerBody;
 const legTaxingRun = (s) => s.discipline === 'run' && (s.intensity === 'hard' || /^Long/.test(s.focus || ''));
+const HIGH_DAY_THRESHOLD = 3;
+const isHighAxial = (s) => (s.axialLoad || 0) >= HIGH_DAY_THRESHOLD;
 const isLongRun = (s) => s.discipline === 'run' && /^Long/.test(s.focus || '');
 const gap = (a, b) => ((b - a) % 7 + 7) % 7;
 
@@ -99,6 +101,7 @@ function score(placed, ctx) {
       if (isHard(cur.spec) && isHard(nxt.spec)) pen += 10;
       if ((legStrength(cur.spec) && legTaxingRun(nxt.spec)) ||
           (legStrength(nxt.spec) && legTaxingRun(cur.spec))) pen += 8;
+      if (isHighAxial(cur.spec) && isHighAxial(nxt.spec)) pen += 9; // recover the spine between heavy axial days
     } else if (g === 2) {
       pen += 3 * shared;
       if (isHard(cur.spec) && isHard(nxt.spec)) pen += 2;
@@ -182,6 +185,8 @@ export function scheduleWeek({ sportSpecs = [], supSpecs = [], dayNames = [], al
       title: `${IDX_DAY[x.idx]} · ${x.spec.focus}`,
       duration: x.spec.duration,
       items,
+      axialLoad: x.spec.axialLoad || 0,
+      dayIdx: x.idx,
       ...(onSportDay ? { lightened: true } : {})
     };
   });

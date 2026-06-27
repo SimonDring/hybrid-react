@@ -85,8 +85,10 @@ function gymCtx(profile) {
   return {
     style: program.style, level, minutes,
     access: profile.access || [], sex: profile.sex, lifts: resolveLifts(profile),
+    bodyweight: profile.bodyweight_kg,
     emphasis: program.emphasis, volumeScalar: program.volumeScalar,
-    exercisePriority: program.exercisePriority || [], sport: profile.sport || null, power: !!program.power
+    exercisePriority: program.exercisePriority || [], priorityByIntent: program.priorityByIntent || new Map(),
+    sport: profile.sport || null, power: !!program.power
   };
 }
 
@@ -290,6 +292,7 @@ function adaptedPhases() {
       ctx: {
         style: gctx.style, intent: intentOfTitle(s.phase.title), deload: effDeload(s.week), taper: !!s.week.taper,
         weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,
+        bodyweight: gctx.bodyweight, priorityByIntent: gctx.priorityByIntent,
         exercisePriority: gctx.exercisePriority, sport: gctx.sport, power: gctx.power
       }
     })[0];
@@ -716,7 +719,7 @@ export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
   const specs = allocateGym({
     targets: fillTarget,
     slots: [{ minutes: functionalSlotMinutes(gctx.style, minutes), equip: equipArr }],
-    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, exercisePriority: gctx.exercisePriority }
+    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, bodyweight: gctx.bodyweight, exercisePriority: gctx.exercisePriority, priorityByIntent: gctx.priorityByIntent }
   });
   const session = applyFunctionalPrimer(specs, gctx.style, minutes, equipArr)[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
   return { session, why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };
