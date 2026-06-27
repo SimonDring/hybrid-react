@@ -94,6 +94,7 @@ function buildGymWeek(count, ctx, profile, program) {
     intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, winp: ctx.winp, weekNum: ctx.weekNum,
     phaseWeeks: ctx.phaseWeeks, blockFrac: ctx.blockFrac, minutes: ctx.minutes,
     level: getGymLevel(profile), access: profile.access || [], sex: profile.sex,
+    bodyweight: profile.bodyweight_kg,
     gymDays: count, lifts: resolveLifts(profile),
     style: program.style, emphasis: program.emphasis, volumeScalar: program.volumeScalar,
     power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || []

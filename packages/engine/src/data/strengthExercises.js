@@ -77,7 +77,7 @@ export const EXERCISES = [
 
   // ---------------- VERTICAL PULL ----------------
   { id: 'pullup',         name: 'Pull-up',           pattern: 'vpull', equip: 'bodyweight', level: 2, role: 'primary',                       minLevelForPrimary: 'intermediate' },
-  { id: 'lat_pulldown',   name: 'Lat pulldown',      pattern: 'vpull', equip: 'cable',     level: 0, role: 'primary',                        minLevelForPrimary: 'returning',    sportTags: ['swim'] },
+  { id: 'lat_pulldown', repFloor: 6,  name: 'Lat pulldown',      pattern: 'vpull', equip: 'cable',     level: 0, role: 'primary',                        minLevelForPrimary: 'returning',    sportTags: ['swim'] },
   { id: 'assisted_pullup', name: 'Band-assisted pull-up', pattern: 'vpull', equip: 'bodyweight', level: 0, role: 'accessory',               sportTags: ['swim'] },
   { id: 'straight_arm_pd', stretchBias: true, quality: 'hypertrophy', name: 'Straight-arm pulldown', pattern: 'vpull', equip: 'cable', level: 1, role: 'accessory',                    sportTags: ['swim'] },
 
@@ -111,7 +111,7 @@ export const EXERCISES = [
   { id: 'overhead_ext', stretchBias: true, quality: 'hypertrophy',   name: 'Overhead triceps ext.', pattern: 'iso', muscle: 'triceps', equip: 'dumbbell', level: 0, role: 'iso' },
   { id: 'diamond_pushup', loadClass: 'bodyweightStrength', name: 'Close-grip push-up', pattern: 'iso', muscle: 'triceps', equip: 'bodyweight', level: 0, role: 'iso' },
   { id: 'leg_curl', quality: 'hypertrophy',       name: 'Leg curl',          pattern: 'iso', muscle: 'ham',     equip: 'machine',   level: 0, role: 'iso', sportTags: ['run', 'cycle'] },
-  { id: 'nordic_curl', stretchBias: true,    name: 'Nordic curl',       pattern: 'iso', muscle: 'ham',     equip: 'bodyweight', level: 3, role: 'iso', sportTags: ['run', 'cycle'] },
+  { id: 'nordic_curl', stretchBias: true, repCap: 6,    name: 'Nordic curl',       pattern: 'iso', muscle: 'ham',     equip: 'bodyweight', level: 3, role: 'iso', sportTags: ['run', 'cycle'] },
   { id: 'leg_ext', quality: 'hypertrophy',        name: 'Leg extension',     pattern: 'iso', muscle: 'quad',    equip: 'machine',   level: 0, role: 'iso' },
   { id: 'chest_fly', stretchBias: true, quality: 'hypertrophy',      name: 'Chest fly',         pattern: 'iso', muscle: 'chest',   equip: 'dumbbell',  level: 0, role: 'iso' },
 
@@ -176,7 +176,7 @@ export const EXERCISES = [
   { id: 'cable_ext_rotation_90', name: 'Cable ER at 90° Abduction',      pattern: 'iso', muscle: 'shoulders', equip: 'cable',    level: 1, role: 'iso',       minLevelForPrimary: 'returning',    sportTags: ['swim'] },
   { id: 'cable_woodchop',        name: 'Cable Woodchop (high-to-low)',   pattern: 'core',                     equip: 'cable',    level: 2, role: 'core',                                          goalTags: ['functional'], sportTags: ['swim'] },
   { id: 'ankle_plantarflex_band', loadClass: 'health',name: 'Banded Ankle Plantarflexion',    pattern: 'calf',                     equip: 'band',     level: 0, role: 'iso',       minLevelForPrimary: 'beginner',     sportTags: ['swim'] },
-  { id: 'glute_ham_raise', stretchBias: true,       name: 'Glute-Ham Raise',                pattern: 'hinge',                    equip: 'machine',  level: 3, role: 'primary',   minLevelForPrimary: 'advanced',     sportTags: ['swim'] }
+  { id: 'glute_ham_raise', stretchBias: true, repCap: 8,       name: 'Glute-Ham Raise',                pattern: 'hinge',                    equip: 'machine',  level: 3, role: 'primary',   minLevelForPrimary: 'advanced',     sportTags: ['swim'] }
 ];
 
 // Equipment keys an exercise can require.
