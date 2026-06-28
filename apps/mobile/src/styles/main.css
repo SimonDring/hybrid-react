@@ -1377,7 +1377,8 @@ body { font-variant-numeric: tabular-nums; }
 /* Live (in-progress) session panel */
 /* ============================================================================
    Focused set-by-set runner — a full-screen takeover that walks one set at a
-   time. --rn-color is the active section colour (primer green / main rust).
+   time. --rn-color is the active section accent (primer = teal, main = neutral);
+   the progress bar stays teal throughout. No rust — aligned to the Midnight palette.
    ============================================================================ */
 .runner {
   position: fixed;
@@ -1404,7 +1405,7 @@ body { font-variant-numeric: tabular-nums; }
   text-transform: uppercase; color: var(--txt-muted);
 }
 .runner-bar { height: 3px; background: var(--hairline); margin: 0 16px 8px; border-radius: 2px; overflow: hidden; }
-.runner-bar-fill { height: 100%; background: var(--rn-color); transition: width 0.25s ease; }
+.runner-bar-fill { height: 100%; background: var(--accent); transition: width 0.25s ease; }
 
 .runner-body {
   flex: 1;
@@ -1429,6 +1430,16 @@ body { font-variant-numeric: tabular-nums; }
 .rn-setline { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rn-color); }
 .rn-target { font-size: 13px; color: var(--txt-muted); margin-top: 4px; }
 .rn-note { font-size: 13px; color: var(--txt-body); font-style: italic; line-height: 1.5; }
+
+/* Primer circuit — the round's moves listed together (no per-move stepping). */
+.rn-circuit { margin-top: 14px; }
+.rn-circuit-move {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 0; border-top: 1px solid var(--hairline);
+}
+.rn-circuit-move:first-child { border-top: none; }
+.rn-cm-name { font-size: 16px; color: var(--txt-strong); }
+.rn-cm-reps { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--txt-body); }
 
 .rn-steppers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
 .rn-stepper-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--txt-muted); margin-bottom: 6px; text-align: center; }
@@ -2159,39 +2170,95 @@ button:active,
    Designed to be read at arm's length mid-set.
    =================================================================== */
 
-/* Session SECTION — Primer (green) / Main (rust). Colour comes from --ss-color set
-   inline per section, so one rule themes both. The left border + header bar make the
-   two parts of the session unmistakable at a glance. */
-.session-section {
-  margin-bottom: 18px;
-  padding-left: 12px;
-  border-left: 2px solid var(--ss-color);
+/* Session SECTION cards — the colour SURROUNDS the block (full border), not a left
+   rail. Primer = teal (--accent, the app's primary accent); Main = neutral surface.
+   Inside, each exercise is one compact row: name + a single prescription badge.
+   Weight/RPE/cues are intentionally absent here — they live in the runner. */
+.section-card {
+  border-radius: 14px;
+  padding: 12px 14px 6px;
+  margin-bottom: 14px;
+  border: 1px solid var(--hairline-strong);
+  background: var(--bg-surface);
 }
-.session-section:last-child { margin-bottom: 4px; }
-.ss-head {
+.section-card:last-of-type { margin-bottom: 4px; }
+.section-card.primer {
+  border-color: rgba(111, 211, 196, 0.55);
+  background: rgba(111, 211, 196, 0.06);
+}
+.sc-head {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
-.ss-bar {
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-  background: var(--ss-color);
-  align-self: center;
-}
-.ss-label {
+.sc-label {
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ss-color);
-}
-.ss-sub {
-  font-size: 11px;
-  font-weight: 500;
   color: var(--txt-muted);
+}
+.section-card.primer .sc-label { color: var(--accent); }
+.sc-sub { font-size: 11px; font-weight: 500; color: var(--txt-muted); }
+.sc-tag {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(111, 211, 196, 0.12);
+  border-radius: 100px;
+  padding: 2px 8px;
+}
+/* Compact exercise row: [num] name ⓘ [tags] ............ [badge] */
+.sx-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 0;
+  border-top: 1px solid var(--hairline);
+}
+.sc-head + .sx-row { border-top: none; }
+.sx-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--txt-muted);
+  min-width: 20px;
+}
+.sx-main { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 6px; }
+.sx-name { font-size: 15px; color: var(--txt-strong); font-weight: 500; }
+.sx-info {
+  background: none;
+  border: none;
+  color: var(--txt-muted);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.sx-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 100px;
+  padding: 2px 7px;
+}
+.sx-tag.rehab { color: var(--accent); background: rgba(111, 211, 196, 0.12); }
+.sx-tag.prev { color: var(--txt-muted); background: rgba(127, 138, 156, 0.14); }
+.sx-badge {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--txt-body);
+  background: var(--bg-surface-2);
+  border-radius: 7px;
+  padding: 4px 9px;
 }
 
 .gym-table {

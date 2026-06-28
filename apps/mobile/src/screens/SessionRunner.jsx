@@ -8,26 +8,44 @@ import { matchLift, parseReps, parseRpe } from '@performance-os/engine/lib/liftP
 import RestTimer from '../components/RestTimer.jsx';
 
 const WEIGHT_STEP = 2.5;
-const SECTION_COLOR = { primer: 'var(--moss)', main: 'var(--rust)' };
+// Midnight palette: primer = teal (the app's primary accent), main = neutral. No rust.
+const SECTION_COLOR = { primer: 'var(--accent)', main: 'var(--txt-muted)' };
 
 // Numeric weight from a target string ("82.5 kg" → 82.5, "15 kg/hand" → 15, "—" → null).
 function parseWeight(s) { const m = /([\d.]+)/.exec(s || ''); return m ? Number(m[1]) : null; }
+// Leading set count from a prescription ("2 × 15" → 2) — drives the primer circuit rounds.
+function setsCount(s) { const m = /^(\d+)\s*[×x]/.exec(s || ''); return m ? Number(m[1]) : null; }
 const slug = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
 /**
  * Expand a session into an ordered list of STEPS for the runner.
- *  • primer / non-strength items → one `prep` step (do it, tap Done — not logged)
- *  • strength item "N × R"       → N `set` steps (weight/reps/RPE, logged)
+ *  • primer items                → a CIRCUIT: one `primerRound` step per round, each
+ *    listing every primer move (no per-move rest, not logged).
+ *  • non-strength main item       → one `prep` step (do it, tap Done — not logged)
+ *  • strength item "N × R"        → N `set` steps (weight/reps/RPE, logged)
  *  • supersets (same group)       → interleaved by round (A1·s1, A2·s1, rest, A1·s2 …);
  *    only the last set of each round carries the real rest.
  */
 export function buildSteps(session) {
-  const items = (session.items || []).filter(it => !it.substituted);
+  const allItems = (session.items || []).filter(it => !it.substituted);
+  const primerItems = allItems.filter(it => it.section === 'primer');
+  const mainItems = allItems.filter(it => it.section !== 'primer');
   const steps = [];
 
-  // Group consecutive supersetted items (same group letter) into one block.
+  // Primer → a short CIRCUIT: one step per round, each listing every primer move.
+  // Rounds come from the primer moves' set count (e.g. "2 × 15" → 2 rounds).
+  if (primerItems.length) {
+    const counts = primerItems.map(it => setsCount(it.sets)).filter(Boolean);
+    const rounds = counts.length ? Math.max(...counts) : 2;
+    const moves = primerItems.map(it => ({ name: it.name, reps: parseReps(it.sets), note: it.note || it.cue || '' }));
+    for (let r = 1; r <= rounds; r++) {
+      steps.push({ kind: 'primerRound', section: 'primer', round: r, totalRounds: rounds, moves });
+    }
+  }
+
+  // Main work → set-by-set. Group consecutive supersetted items (same group) into a block.
   const blocks = [];
-  items.forEach(it => {
+  mainItems.forEach(it => {
     const last = blocks[blocks.length - 1];
     if (it.superset && it.group && last && last.superset && last.group === it.group) last.items.push(it);
     else blocks.push({ superset: !!it.superset, group: it.group, items: [it] });
@@ -64,7 +82,7 @@ export function buildSteps(session) {
     if (block.items.length === 1) {
       const it = block.items[0];
       const sets = makeSetSteps(it);
-      if (it.section === 'primer' || sets.length === 0) steps.push(makePrep(it));
+      if (sets.length === 0) steps.push(makePrep(it));   // non-strength main (run/swim/mobility)
       else steps.push(...sets);
     } else {
       const perMember = block.items.map(it => makeSetSteps(it));
@@ -171,7 +189,7 @@ export default function SessionRunner() {
   if (!step) return null;  // finishing (effect navigates)
 
   const isLast = cursor + 1 >= steps.length;
-  const color = SECTION_COLOR[step.section] || 'var(--rust)';
+  const color = SECTION_COLOR[step.section] || 'var(--txt-muted)';
   const next = steps[cursor + 1] || null;
 
   const advanceAfterRest = (restSec) => {
@@ -252,9 +270,24 @@ export default function SessionRunner() {
       ) : (
         <div className="runner-body">
           <div className="rn-section" style={{ color }}>{step.section === 'primer' ? 'PRIMER' : 'MAIN'}</div>
-          <h1 className="rn-name">{step.exerciseName}</h1>
+          <h1 className="rn-name">{step.kind === 'primerRound' ? 'Primer circuit' : step.exerciseName}</h1>
 
-          {step.kind === 'prep' ? (
+          {step.kind === 'primerRound' ? (
+            <div className="step-card">
+              <div className="rn-setline" style={{ color }}>Round {step.round} of {step.totalRounds}</div>
+              <div className="rn-circuit">
+                {step.moves.map((m, i) => (
+                  <div className="rn-circuit-move" key={i}>
+                    <span className="rn-cm-name">{m.name}</span>
+                    {m.reps != null && <span className="rn-cm-reps">× {m.reps}</span>}
+                  </div>
+                ))}
+              </div>
+              <button className="btn-primary" style={{ width: '100%', marginTop: 22 }} onClick={() => advanceAfterRest(0)}>
+                {isLast ? 'Finish' : (step.round < step.totalRounds ? `Start round ${step.round + 1}` : 'Start main')}
+              </button>
+            </div>
+          ) : step.kind === 'prep' ? (
             <div className="step-card">
               <div className="rn-prescription">{step.prescription}{step.rpe ? ` · ${step.rpe}` : ''}</div>
               {step.note && <div className="rn-note">{step.note}</div>}

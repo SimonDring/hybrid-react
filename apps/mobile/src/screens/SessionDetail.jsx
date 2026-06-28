@@ -8,6 +8,16 @@ import ExerciseInfo from '../components/ExerciseInfo.jsx';
 import { clearChecked } from '../lib/SessionProgress.js';
 import { trackedLiftsInSession } from '@performance-os/engine/lib/liftProgression.js';
 
+// The single prescription string shown in the compact preview row — sets×reps for
+// strength ("4 × 5"), distance/target for run/swim/cycle. Weight & RPE are
+// deliberately omitted from the preview; they appear set-by-set in the runner.
+function prescriptionFor(item) {
+  const act = activityFor(item);
+  if (act.key === 'strength') return item.sets || '';
+  const emph = act.columns.find(c => c.emphasis);
+  return (emph ? emph.accessor(item) : (item.distance || item.sets)) || '';
+}
+
 function SessionPhysiology({ state, candidates, onUnlink, onLink }) {
   if (!state || !state.completed) return null;
   const hasHr = state.avgHr != null || state.maxHr != null;
@@ -130,12 +140,6 @@ export default function SessionDetail() {
   const handleStart = () => { startSession(key); navigate(runnerPath); };
   const handleResume = () => navigate(runnerPath);
 
-  const fmtRest = (s) => {
-    if (s < 60) return `Rest ${s}s`;
-    if (s % 60 === 0) return `Rest ${s / 60} min`;
-    return `Rest ${Math.floor(s / 60)} min ${s % 60}s`;
-  };
-
   const handleCancel = () => {
     if (!confirm('Started this by mistake? This clears the start time and resets it to not started. Your logged sets will be cleared.')) return;
     cancelSession(key);
@@ -244,119 +248,44 @@ export default function SessionDetail() {
         </button>
       )}
 
-      {/* Exercise table — two-level grouping: by SECTION (Primer / Main), then by
-          activity type within each section. The primer block (green) primes the
-          day's main lifts; the main block (rust) is the working set. `idx` stays the
-          absolute filtered-item index so the in-progress check-off keeps working. */}
+      {/* Session preview — two bordered SECTION cards (Primer = teal, Main = neutral),
+          each a compact one-line-per-exercise list: name + a single prescription
+          badge (sets×reps for strength, distance/target for run/swim). Weight, RPE and
+          cues are deliberately NOT here — they appear set-by-set in the runner. */}
       {(() => {
-        const visible = session.items
-          .filter(it => !it.substituted)
-          .map((item, idx) => ({ item, idx }));
-
+        const visible = session.items.filter(it => !it.substituted);
         const SECTIONS = [
-          { key: 'primer', label: 'Primer', sub: 'prime the main lifts', color: 'var(--moss)' },
-          { key: 'main',   label: 'Main',   sub: null,                   color: 'var(--rust)' }
+          { key: 'primer', label: 'Primer', sub: 'prime the main lifts' },
+          { key: 'main',   label: 'Main',   sub: null }
         ];
-        const sectionOf = (v) => (v.item.section === 'primer' ? 'primer' : 'main');
-
-        // Group a section's items by activity type so each group gets its columns.
-        const buildGroups = (rows) => {
-          const groups = [];
-          rows.forEach(({ item, idx }) => {
-            const activity = activityFor(item);
-            const last = groups[groups.length - 1];
-            if (last && last.activity.key === activity.key) last.items.push({ item, idx });
-            else groups.push({ activity, items: [{ item, idx }] });
-          });
-          return groups;
-        };
+        const sectionOf = (it) => (it.section === 'primer' ? 'primer' : 'main');
 
         return SECTIONS
-          .map(sec => ({ sec, rows: visible.filter(v => sectionOf(v) === sec.key) }))
+          .map(sec => ({ sec, rows: visible.filter(it => sectionOf(it) === sec.key) }))
           .filter(({ rows }) => rows.length)
           .map(({ sec, rows }) => (
-            <div className="session-section" key={sec.key} style={{ '--ss-color': sec.color }}>
-              <div className="ss-head">
-                <span className="ss-bar" aria-hidden="true" />
-                <span className="ss-label">{sec.label}</span>
-                {sec.sub && <span className="ss-sub">{sec.sub}</span>}
+            <div className={`section-card ${sec.key}`} key={sec.key}>
+              <div className="sc-head">
+                <span className="sc-label">{sec.label}</span>
+                {sec.sub && <span className="sc-sub">{sec.sub}</span>}
+                {sec.key === 'primer' && <span className="sc-tag">circuit</span>}
               </div>
-              {buildGroups(rows).map((group, gi, all) => {
-                const { activity, items } = group;
-                // Exercise name column is flexible (1fr); others size to content.
-                const cols = activity.columns;
-                const gridTemplate = `minmax(0,1fr) ${cols.map(c => c.wide ? 'minmax(70px,1.1fr)' : '54px').join(' ')}`;
-
-                return (
-                  <div className="gym-table" key={gi} style={{ marginBottom: gi < all.length - 1 ? 10 : 4 }}>
-                    {/* Activity-type header */}
-                    <div className="gt-head" style={{ gridTemplateColumns: gridTemplate }}>
-                      <div className="gt-h-ex">{activity.label}</div>
-                      {cols.map(c => (
-                        <div key={c.key} className={`gt-h-cell ${c.wide ? 'gt-h-wide' : ''}`}>{c.label}</div>
-                      ))}
-                    </div>
-
-                    {items.map(({ item }, i) => {
-                      const isTagged = !!item.tag;
-                      const cue = activity.cue(item);
-                      return (
-                        <div
-                          key={i}
-                          className="gt-row"
-                          style={{ borderLeft: `3px solid ${item.superset ? 'var(--accent)' : isTagged ? activity.accent : 'transparent'}` }}
-                        >
-                          <div className="gt-main" style={{ gridTemplateColumns: gridTemplate }}>
-                            <div className="gt-ex">
-                              <span className="gt-num" style={item.superset ? { color: 'var(--accent)' } : undefined}>{item.num}</span>
-                              <span className="gt-name">{item.name}</span>
-                              <button
-                                className="gt-info"
-                                aria-label={`How to do ${item.name}`}
-                                onClick={(e) => { e.stopPropagation(); setInfoItem(item); }}
-                              >ⓘ</button>
-                              {item.rehab && (
-                                <span style={{
-                                  fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
-                                  color: 'var(--moss)', background: 'rgba(74,93,58,0.12)', borderRadius: 100, padding: '2px 7px', marginLeft: 6
-                                }}>Rehab</span>
-                              )}
-                              {item.prevention && (
-                                <span style={{
-                                  fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
-                                  color: 'var(--txt-muted)', background: 'rgba(106,102,93,0.12)', borderRadius: 100, padding: '2px 7px', marginLeft: 6
-                                }}>Prev</span>
-                              )}
-                            </div>
-                            {cols.map(c => {
-                              const val = c.accessor(item);
-                              const cls = [
-                                'gt-cell',
-                                c.emphasis ? 'gt-emphasis' : '',
-                                c.accent ? 'gt-accent' : '',
-                                c.wide ? 'gt-wide' : ''
-                              ].filter(Boolean).join(' ');
-                              return <div key={c.key} className={cls}>{val}</div>;
-                            })}
-                          </div>
-                          {cue && <div className="gt-note">{cue}</div>}
-                          {item.rehab && item.rationale && (
-                            <div className="gt-note" style={{ color: 'var(--moss)', fontStyle: 'italic' }}>
-                              {item.rationale}
-                            </div>
-                          )}
-                          {item.prevention && item.preventionNote && (
-                            <div className="gt-note" style={{ color: 'var(--txt-muted)', fontStyle: 'italic' }}>
-                              {item.preventionNote}
-                            </div>
-                          )}
-                          {item.restSec > 0 && <div className="gt-rest">{fmtRest(item.restSec)}</div>}
-                        </div>
-                      );
-                    })}
+              {rows.map((item, i) => (
+                <div className="sx-row" key={i}>
+                  <span className="sx-num" style={item.superset ? { color: 'var(--accent)' } : undefined}>{item.num}</span>
+                  <div className="sx-main">
+                    <span className="sx-name">{item.name}</span>
+                    <button
+                      className="sx-info"
+                      aria-label={`How to do ${item.name}`}
+                      onClick={() => setInfoItem(item)}
+                    >ⓘ</button>
+                    {item.rehab && <span className="sx-tag rehab">Rehab</span>}
+                    {item.prevention && <span className="sx-tag prev">Prev</span>}
                   </div>
-                );
-              })}
+                  <span className="sx-badge">{prescriptionFor(item)}</span>
+                </div>
+              ))}
             </div>
           ));
       })()}
