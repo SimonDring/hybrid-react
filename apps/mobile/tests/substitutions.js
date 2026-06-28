@@ -44,6 +44,21 @@ const bench = { name: 'Bench press', sets: '4 × 5', rpe: 'RPE 7' };
 const benchOpts = substituteOptions(bench, { access: ['full_gym'], lifts: LIFTS, level: 'advanced' });
 assert(!benchOpts.some(o => o.name === 'Overhead press'), 'bench substitution does not offer the overhead press');
 
+// ── heavy compound only swaps for compounds, not prehab/iso ─────────────────
+const row = { name: 'Barbell row', sets: '4 × 5', rpe: 'RPE 7' };
+const rowOpts = substituteOptions(row, { access: ['full_gym'], lifts: LIFTS, level: 'advanced' });
+const rowNames = rowOpts.map(o => o.name);
+assert(rowNames.includes('Chest-supported row'), `row offers a real compound row (got: ${rowNames.join(', ')})`);
+assert(!rowOpts.some(o => /Prone [YTW] Raise/.test(o.name)),
+  'row does NOT offer a prehab Prone Y/T/W raise (compound→compound only)');
+
+// ── isolation swaps for isolation (matching tier) ───────────────────────────
+const curl = { name: 'Biceps curl', sets: '3 × 12', rpe: 'RPE 8' };
+const curlOpts = substituteOptions(curl, { access: ['full_gym'], lifts: LIFTS, level: 'advanced' });
+const HEAVY = ['Barbell row', 'Back squat', 'Bench press', 'Deadlift', 'Overhead press', 'Chest-supported row'];
+assert(!curlOpts.some(o => HEAVY.includes(o.name)),
+  `an isolation does not get heavy-compound substitutes (got: ${curlOpts.map(o => o.name).join(', ')})`);
+
 // ── unknown / non-loadable item → no options ────────────────────────────────
 assert(substituteOptions({ name: 'Cat-Camel', sets: '2 × 8' }, { access: ['full_gym'], lifts: LIFTS }).length === 0,
   'a non-loadable / unknown movement has no substitution options');

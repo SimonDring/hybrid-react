@@ -27,6 +27,16 @@ const groupsOf = (ex) => { const mc = muscleContribution(ex); return Object.keys
 const dominantGroup = (ex) => { const mc = muscleContribution(ex); let best = null, bv = -1; for (const k in mc) if (mc[k] > bv) { bv = mc[k]; best = k; } return best; };
 const isBodyweight = (ex) => ex.equip === 'bodyweight';
 
+// Movement tier — a heavy compound is only swapped for another compound, an isolation
+// for an isolation, etc. Stops a light prehab/iso move (a Prone Y raise tagged hpull)
+// from being offered as a substitute for a heavy compound (a barbell row).
+const tierOf = (ex) => {
+  if (ex.loadClass === 'health' || ex.pattern === 'mobility') return 'mobility';
+  if (ex.pattern === 'core' || ex.role === 'core') return 'core';
+  if (ex.role === 'iso') return 'iso';
+  return 'compound';   // primary + accessory multi-joint lifts
+};
+
 /**
  * @param {object} item   the session item being replaced (keeps its sets/reps/rpe)
  * @param {object} opts    { access, lifts, level, max }
@@ -40,6 +50,7 @@ export function substituteOptions(item, { access = [], lifts = {}, level = 'inte
   if (!origTop || !origGroups.length) return [];
   const origLift = matchLift(orig.name);
   const origLoaded = !isBodyweight(orig);
+  const origTier = tierOf(orig);
   const have = availableEquip(access);
   const lvl = LEVELS[level] ?? LEVELS.intermediate;
 
@@ -47,6 +58,7 @@ export function substituteOptions(item, { access = [], lifts = {}, level = 'inte
   for (const cand of EXERCISES) {
     if (cand.id === orig.id) continue;
     if (cand.quality === 'power') continue;               // Olympic/power lifts aren't equipment-swap subs
+    if (tierOf(cand) !== origTier) continue;              // compound→compound, iso→iso (not a prehab swap for a heavy lift)
     if (cand.level > lvl) continue;                       // within the athlete's level
     if (!have.has(cand.equip)) continue;                  // equipment the athlete can use
     const candSet = new Set(groupsOf(cand));
