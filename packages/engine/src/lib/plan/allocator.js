@@ -257,26 +257,31 @@ function structureItems(picks) {
   // Keep the anchor (the slot's first pick — a fundamental compound for build, the
   // sport-priority opener for sport) as the session's first block, so a swimmer's
   // session leads with a pull rather than a press the role-ordering promoted.
-  const anchorId = picks[0] && picks[0].ex.id;
-  if (anchorId) {
-    const ai = blocks.findIndex(blk => blk.some(p => p.ex.id === anchorId));
-    if (ai > 0) blocks.unshift(blocks.splice(ai, 1)[0]);
-  }
-
-  // Sequence supportive work last: working sets → isoCore → health/mobility. A
-  // block's rank is the max of its picks' classes (a superset with any core/health
-  // trails). Stable by original index, preserving the anchor-first ordering.
+  // Sequence supportive work last: working compounds → isolation → core →
+  // health/mobility. A block's rank is the max of its picks' classes (a superset with
+  // any core/iso trails). Stable by original index within a tier.
   const classRank = (p) => {
-    const lc = p.ex.loadClass;
-    if (lc === 'health' || (p.item && p.item.tag === 'mobility')) return 2;
-    if (lc === 'isoCore') return 1;
-    return 0;
+    const ex = p.ex;
+    if (ex.loadClass === 'health' || (p.item && p.item.tag === 'mobility')) return 3;  // mobility/health last
+    if (ex.pattern === 'core' || ex.role === 'core') return 2;                          // core after isolation
+    if (ex.role === 'iso') return 1;                                                    // isolation after compounds
+    return 0;                                                                            // primary + accessory compounds lead
   };
   const blockRank = (blk) => Math.max(...blk.map(classRank));
   blocks = blocks
     .map((blk, i) => ({ blk, i, r: blockRank(blk) }))
     .sort((a, b) => a.r - b.r || a.i - b.i)
     .map(x => x.blk);
+
+  // Pull the anchor (the slot's first pick) to the very front — AFTER the rank sort,
+  // so a sport-priority anchor that's an isolation/accessory (e.g. a swimmer's
+  // straight-arm pulldown) still leads the session instead of being demoted below a
+  // generic primary the rank sort promoted.
+  const anchorId = picks[0] && picks[0].ex.id;
+  if (anchorId) {
+    const ai = blocks.findIndex(blk => blk.some(p => p.ex.id === anchorId));
+    if (ai > 0) blocks.unshift(blocks.splice(ai, 1)[0]);
+  }
 
   const items = [];
   blocks.forEach((blk, bi) => {
@@ -369,6 +374,14 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     if (slot.focus) {
       let c = 0, inFocus = 0;
       for (const m in contrib) { c += contrib[m]; if ((slot.focus[m] || 0) > 0) inFocus += contrib[m]; }
+      // Region-pure focused days (build/strength only): a candidate whose work is
+      // ENTIRELY off-focus (e.g. a chest press on a Lower day) is EXCLUDED, not just
+      // suppressed — so a focused day stays in its region instead of absorbing
+      // cross-region weekly-deficit spillover. Full-body days weight every trained
+      // muscle > 0, so nothing is ever fully off-focus and nothing is excluded.
+      // SPORT is exempt: sport splits deliberately thread the sport's priority work
+      // through every session (a swimmer leads even a lower day with pull work).
+      if (style !== 'sport' && c > 0 && inFocus === 0) continue;
       score *= 0.4 + 0.6 * (c > 0 ? inFocus / c : 1);
     }
     score -= OVERSHOOT_PENALTY * waste;                            // prefer picks that fit the remaining target
