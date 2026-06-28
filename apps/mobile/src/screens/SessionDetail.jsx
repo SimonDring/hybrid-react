@@ -99,7 +99,6 @@ export default function SessionDetail() {
   const [notes, setNotes] = useState('');
   const [infoItem, setInfoItem] = useState(null); // exercise tapped for the form guide
   const [injuryBannerOpen, setInjuryBannerOpen] = useState(false);
-  const [lifts, setLifts] = useState({}); // top-set log: key → { weight, rpe }
 
   const phase = Plan.getPhase(Number(phaseId));
   const week = phase ? phase.weeks.find(w => w.num === Number(weekNum)) : null;
@@ -111,7 +110,6 @@ export default function SessionDetail() {
     setShowForm(false);
     setRatings({ quality: null, energy: null, recovery: null });
     setNotes('');
-    setLifts({});
   }, [key]);
 
   // The runner sends the athlete back here with ?finish=1 when the last set is done —
@@ -124,9 +122,10 @@ export default function SessionDetail() {
 
   if (!session) return <div style={{ padding: 24 }}>Session not found</div>;
 
-  // Main barbell lifts in this session whose top set we log to drive progression.
+  // Main barbell lifts in this session whose top set drives progression. The runner
+  // logs every set, so progression is derived from that real data (topLoggedSet) —
+  // there's no manual top-set entry to re-key.
   const trackedLifts = trackedLiftsInSession(session);
-  const targetKg = (t) => { const m = /([\d.]+)/.exec(t || ''); return m ? Number(m[1]) : null; };
 
   // completed/started come epoch-gated from the store view, so a stale row left over
   // from a previous plan reads as fresh (offers Start) instead of done/in-progress.
@@ -162,17 +161,12 @@ export default function SessionDetail() {
   };
 
   const handleSubmit = () => {
-    // Log top-set results for the main lifts → autoregulates next week's weights.
-    // Prefer the set the runner actually logged; fall back to the manual top-set
-    // form only when a tracked lift has no logged set. OPTIONAL — never blocks
-    // completion (writes locally first, syncs in the background, logs its own errors).
-    const sets = trackedLifts.map(l => {
-      const fromLog = topLoggedSet(l);
-      if (fromLog) return fromLog;
-      const entry = lifts[l.key] || {};
-      const weight = entry.weight != null && entry.weight !== '' ? Number(entry.weight) : targetKg(l.target);
-      return (weight && entry.rpe) ? { key: l.key, weight, reps: l.reps, rpe: entry.rpe, targetRpe: l.targetRpe, factor: l.factor } : null;
-    }).filter(Boolean);
+    // Autoregulate next week's weights from the sets the runner actually logged
+    // (heaviest working set per tracked lift). OPTIONAL — never blocks completion
+    // (writes locally first, syncs in the background, logs its own errors). A session
+    // completed without logging any sets simply doesn't adjust weights — no data to
+    // learn from — which is the right behaviour.
+    const sets = trackedLifts.map(topLoggedSet).filter(Boolean);
     if (sets.length) Promise.resolve(logLiftSets(sets)).catch(e => console.error('Top-set log failed (continuing):', e));
 
     // Completion is the primary action — fire and close the form immediately. The
@@ -189,7 +183,6 @@ export default function SessionDetail() {
     setShowForm(false);
     setRatings({ quality: null, energy: null, recovery: null });
     setNotes('');
-    setLifts({});
   };
 
   const handleUncomplete = () => {
@@ -349,38 +342,6 @@ export default function SessionDetail() {
       {/* Rating form */}
       {!isDone && showForm && (
         <div className="form-card" style={{ marginTop: 20 }}>
-          {/* Top-set logging for the main lifts — drives next week's targets */}
-          {trackedLifts.length > 0 && (
-            <div style={{ marginBottom: 20 }}>
-              <div className="h3" style={{ marginTop: 0, marginBottom: 4 }}>Log your top set</div>
-              <div style={{ fontSize: 12, color: 'var(--txt-muted)', marginBottom: 14 }}>
-                How the last set felt sets next week's weight — heavier if it was easy, steady if it was right.
-              </div>
-              {trackedLifts.map(l => (
-                <div key={l.key} style={{ marginBottom: 16 }}>
-                  <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>
-                    {l.name} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--txt-muted)' }}>· {l.reps} reps{l.target ? ` · target ${l.target}` : ''}</span>
-                  </label>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <input type="number" inputMode="decimal" placeholder={targetKg(l.target) != null ? String(targetKg(l.target)) : 'kg'}
-                      value={lifts[l.key]?.weight ?? ''}
-                      onChange={e => setLifts(p => ({ ...p, [l.key]: { ...p[l.key], weight: e.target.value } }))}
-                      style={{ width: 90, fontSize: 16, padding: '10px 12px', borderRadius: 10, border: '1px solid var(--hairline)', background: 'var(--bg-surface)', color: 'var(--txt-strong)', fontFamily: 'inherit', boxSizing: 'border-box' }} />
-                    <span style={{ fontSize: 13, color: 'var(--txt-muted)' }}>kg used</span>
-                  </div>
-                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: 'var(--txt-muted)', marginBottom: 5 }}>FINAL-SET RPE</div>
-                  <div className="rating-row">
-                    {[6, 7, 8, 9, 10].map(n => (
-                      <button key={n} className={`rating-btn ${lifts[l.key]?.rpe === n ? 'active' : ''}`}
-                        onClick={() => setLifts(p => ({ ...p, [l.key]: { ...p[l.key], rpe: n } }))}>{n}</button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-              <div style={{ borderBottom: '1px solid var(--hairline)', margin: '4px 0 16px' }} />
-            </div>
-          )}
-
           <div className="h3" style={{ marginTop: 0, marginBottom: 16 }}>Rate this session</div>
 
           {[

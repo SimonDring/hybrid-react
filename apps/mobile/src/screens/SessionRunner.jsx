@@ -6,6 +6,8 @@ import * as Utils from '@performance-os/engine/lib/Utils.js';
 import { parseExercise } from '@performance-os/engine/lib/Utils.js';
 import { matchLift, parseReps, parseRpe } from '@performance-os/engine/lib/liftProgression.js';
 import RestTimer from '../components/RestTimer.jsx';
+import { useWakeLock } from '../hooks/useWakeLock.js';
+import { ensureAudio } from '../lib/sound.js';
 
 const WEIGHT_STEP = 2.5;
 // Midnight palette: primer = teal (the app's primary accent), main = neutral. No rust.
@@ -120,6 +122,10 @@ export default function SessionRunner() {
   const setLogsBySession = useTrainingStore(s => s.setLogsBySession);
   const logSet = useTrainingStore(s => s.logSet);
 
+  // Keep the screen awake for the whole focused session so it never auto-locks
+  // between sets or during rest (the rest timer stays visible + its alarm fires).
+  useWakeLock(true);
+
   const phase = Plan.getPhase(Number(phaseId));
   const week = phase ? phase.weeks.find(w => w.num === Number(weekNum)) : null;
   const session = week ? week.sessions[Number(sessionIdx)] : null;
@@ -193,6 +199,7 @@ export default function SessionRunner() {
   const next = steps[cursor + 1] || null;
 
   const advanceAfterRest = (restSec) => {
+    ensureAudio();   // unlock audio within this tap so the rest-end beep can play later
     if (restSec > 0 && !isLast) {
       restingRef.current = true;
       setRestSeed({ secs: restSec, at: Date.now() });
@@ -211,9 +218,10 @@ export default function SessionRunner() {
   };
 
   // Skip + timer-complete both route here; the ref ensures we advance only once.
-  const endRest = () => { if (!restingRef.current) return; restingRef.current = false; goNext(); };
+  const endRest = () => { ensureAudio(); if (!restingRef.current) return; restingRef.current = false; goNext(); };
 
   const logCurrentSet = () => {
+    ensureAudio();   // unlock audio within this tap so the rest-end beep can play later
     carryRef.current[step.exerciseName] = { weight: draft.weight, reps: draft.reps, rpe: draft.rpe };
     logSet({
       id: `${sessionDbId}_${slug(step.exerciseName)}_${step.setIndex}`,
