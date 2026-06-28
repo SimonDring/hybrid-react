@@ -41,15 +41,23 @@ export default function SubstituteSheet({ originalName, options, onPick, onClose
             </div>
           ) : (
             <div style={{ display: 'grid', gap: 8 }}>
-              {options.map(o => (
+              {options.map((o, i) => (
                 <button key={o.id} onClick={() => onPick(o)} style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, width: '100%', textAlign: 'left',
-                  background: 'var(--bg-surface-2)', border: '1px solid var(--hairline)', borderRadius: 12, padding: '12px 14px', cursor: 'pointer', fontFamily: 'inherit'
+                  background: 'var(--bg-surface-2)', border: `1px solid ${i === 0 ? 'rgba(111,211,196,0.55)' : 'var(--hairline)'}`, borderRadius: 12, padding: '12px 14px', cursor: 'pointer', fontFamily: 'inherit'
                 }}>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--txt-strong)' }}>{o.name}</div>
-                    <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 2 }}>
-                      {EQUIP_LABEL[o.equip] || o.equip}{o.sameLift ? ' · tracks your main lift' : ''}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+                    <span aria-label={`rank ${i + 1}`} style={{
+                      flexShrink: 0, width: 24, height: 24, borderRadius: 12, display: 'grid', placeItems: 'center',
+                      fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 700,
+                      color: i === 0 ? 'var(--on-success, #08130F)' : 'var(--txt-muted)',
+                      background: i === 0 ? 'var(--accent)' : 'var(--bg-surface)'
+                    }}>{i + 1}</span>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--txt-strong)' }}>{o.name}</div>
+                      <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 2 }}>
+                        {EQUIP_LABEL[o.equip] || o.equip}{o.sameLift ? ' · tracks your main lift' : ''}{i === 0 ? ' · best match' : ''}
+                      </div>
                     </div>
                   </div>
                   <div style={{ flexShrink: 0, fontFamily: 'var(--mono)', fontSize: 14, fontWeight: 600, color: o.weight ? 'var(--txt-body)' : 'var(--txt-muted)' }}>

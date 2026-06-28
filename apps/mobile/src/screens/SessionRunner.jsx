@@ -344,9 +344,11 @@ export default function SessionRunner() {
               <button className="btn-primary" style={{ width: '100%', marginTop: 22 }} onClick={logCurrentSet}>
                 {isLast ? 'Log set & finish' : 'Log set'}
               </button>
-              <button className="btn-text" style={{ width: '100%', marginTop: 8 }} onClick={openSubstitute}>
-                Equipment taken? Substitute
-              </button>
+              {step.setIndex === 1 && (
+                <button className="btn-text" style={{ width: '100%', marginTop: 8 }} onClick={openSubstitute}>
+                  Equipment taken? Substitute
+                </button>
+              )}
             </div>
           )}
 
