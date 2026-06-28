@@ -8,6 +8,7 @@ import { matchLift, parseReps, parseRpe } from '@performance-os/engine/lib/liftP
 import RestTimer from '../components/RestTimer.jsx';
 import { useWakeLock } from '../hooks/useWakeLock.js';
 import { ensureAudio } from '../lib/sound.js';
+import SubstituteSheet from '../components/SubstituteSheet.jsx';
 
 const WEIGHT_STEP = 2.5;
 // Midnight palette: primer = teal (the app's primary accent), main = neutral. No rust.
@@ -121,6 +122,8 @@ export default function SessionRunner() {
   const sessions = useTrainingStore(s => s.sessions);
   const setLogsBySession = useTrainingStore(s => s.setLogsBySession);
   const logSet = useTrainingStore(s => s.logSet);
+  const substituteExercise = useTrainingStore(s => s.substituteExercise);
+  const substituteOptionsFor = useTrainingStore(s => s.substituteOptionsFor);
 
   // Keep the screen awake for the whole focused session so it never auto-locks
   // between sets or during rest (the rest timer stays visible + its alarm fires).
@@ -134,13 +137,15 @@ export default function SessionRunner() {
   const sessionDbId = state ? state.id : null;
   const detailPath = `/phases/${phaseId}/weeks/${weekNum}/sessions/${sessionIdx}`;
 
-  // Build steps ONCE. The session is frozen the moment it's started (pin-on-start),
-  // but PlanService hands back a fresh session object on every render, so memoising on
-  // its identity would rebuild steps each render and reset the steppers mid-set. A ref
-  // pins the step list to the first render where the session is available.
-  const stepsRef = useRef(null);
-  if (session && !stepsRef.current) stepsRef.current = buildSteps(session);
-  const steps = stepsRef.current || [];
+  // Build steps from the session's CONTENT signature, not its object identity —
+  // PlanService hands back a fresh object every render, so an identity memo would
+  // rebuild each render and reset the steppers mid-set. The signature is stable while
+  // training and changes only when an exercise is substituted (a session-only swap),
+  // which then correctly rebuilds the affected steps.
+  const stepsSig = session
+    ? session.items.filter(it => !it.substituted).map(it => `${it.name}|${it.sets}|${it.section || ''}`).join(';')
+    : '';
+  const steps = useMemo(() => (session ? buildSteps(session) : []), [stepsSig]);  // eslint-disable-line react-hooks/exhaustive-deps
   const logs = (sessionDbId && setLogsBySession[sessionDbId]) || [];
   const loggedKey = (name, idx) => `${name}__${idx}`;
   const loggedSet = useMemo(
@@ -159,6 +164,7 @@ export default function SessionRunner() {
   const [draft, setDraft] = useState({ weight: null, reps: null, rpe: null });
   const [resting, setResting] = useState(false);
   const [restSeed, setRestSeed] = useState(null);
+  const [subSheet, setSubSheet] = useState(null);   // { originalName, options } when open
   const restingRef = useRef(false);          // guards against double-advance (skip + auto)
   const carryRef = useRef({});               // exerciseName → last actual {weight,reps,rpe}
 
@@ -219,6 +225,17 @@ export default function SessionRunner() {
 
   // Skip + timer-complete both route here; the ref ensures we advance only once.
   const endRest = () => { ensureAudio(); if (!restingRef.current) return; restingRef.current = false; goNext(); };
+
+  // Equipment unavailable → open same-muscle alternatives for the current exercise.
+  const openSubstitute = () => {
+    setSubSheet({ originalName: step.exerciseName, options: substituteOptionsFor(step.item) });
+  };
+  // Swap this session only (local override). The content-signature step memo rebuilds
+  // the affected steps; the cursor stays on the current set, now the new exercise.
+  const applySubstitute = (option) => {
+    substituteExercise(key, step.exerciseName, option);
+    setSubSheet(null);
+  };
 
   const logCurrentSet = () => {
     ensureAudio();   // unlock audio within this tap so the rest-end beep can play later
@@ -327,11 +344,23 @@ export default function SessionRunner() {
               <button className="btn-primary" style={{ width: '100%', marginTop: 22 }} onClick={logCurrentSet}>
                 {isLast ? 'Log set & finish' : 'Log set'}
               </button>
+              <button className="btn-text" style={{ width: '100%', marginTop: 8 }} onClick={openSubstitute}>
+                Equipment taken? Substitute
+              </button>
             </div>
           )}
 
           {step.note && step.kind === 'set' && <div className="rn-note" style={{ marginTop: 14 }}>{step.note}</div>}
         </div>
+      )}
+
+      {subSheet && (
+        <SubstituteSheet
+          originalName={subSheet.originalName}
+          options={subSheet.options}
+          onPick={applySubstitute}
+          onClose={() => setSubSheet(null)}
+        />
       )}
     </div>
   );
