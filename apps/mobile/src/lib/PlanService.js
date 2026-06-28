@@ -18,7 +18,7 @@ import Database from './Database.js';
 import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets.js';
 import { allocateGym, SESSION_CEILING_MIN } from '@performance-os/engine/lib/plan/allocator.js';
-import { functionalSlotMinutes, applyFunctionalPrimer } from '@performance-os/engine/lib/plan/strength.js';
+import { functionalSlotMinutes } from '@performance-os/engine/lib/plan/strength.js';
 import { resolveSplit } from '@performance-os/engine/lib/plan/split.js';
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 import { countWeeklyVolume } from '@performance-os/engine/lib/plan/volume.js';
@@ -298,7 +298,7 @@ function adaptedPhases() {
       }
     })[0];
     if (spec) {
-      let built = applyFunctionalPrimer([spec], gctx.style, gctx.minutes, gctx.access)[0];
+      let built = spec;   // primer is added later by decorateSections (buildPrimer)
       // Lighten a reshaped session that lands on a sport day (JS Sun=0 → Mon=0 index).
       const wd = s.date ? (s.date.getDay() === 0 ? 6 : s.date.getDay() - 1) : null;
       if (wd != null && sportBusy.includes(wd)) built = { ...built, items: lightenItems(built.items), lightened: true };
@@ -753,7 +753,7 @@ export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
     slots: [{ minutes: functionalSlotMinutes(gctx.style, minutes), equip: equipArr }],
     ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, bodyweight: gctx.bodyweight, exercisePriority: gctx.exercisePriority, priorityByIntent: gctx.priorityByIntent }
   });
-  const session = applyFunctionalPrimer(specs, gctx.style, minutes, equipArr)[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
+  const session = specs[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
   return { session: decorateSections(session, equipArr), why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };
 }
 

@@ -132,26 +132,5 @@ const retItems = retSessions.flatMap(s => s.items);
 const retSqPrimary = retItems.find(it => it.name === 'Back squat' && it.restSec >= 120);
 assert(!!retSqPrimary, 'T8 returning athlete can get back_squat as primary');
 
-// ── T9: functional buildWeek prepends activation primer ───────────────────
-const funcSessions = buildWeek({
-  gymDays: 1, style: 'functional', intent: 'base', deload: false,
-  winp: 1, phaseWeeks: 4, minutes: 55, access: ['full_gym'],
-  level: 'intermediate', weekNum: 1
-});
-assert(funcSessions.length === 1, 'T9a functional buildWeek returns 1 session');
-const funcItems = funcSessions[0].items;
-// Primer items are prepended, tagged 'mobility', named exactly as in FUNCTIONAL_PRIMER
-const primerNames = ['90/90 Hip Flexor Stretch', 'Glute Bridge (2s hold)', 'Band Pull-Apart', 'Cat-Camel + Thoracic Rotation'];
-const foundPrimer = primerNames.every(n => funcItems.some(it => it.name === n));
-assert(foundPrimer, `T9b functional session has all primer items (found: ${funcItems.slice(0,4).map(i=>i.name)})`);
-assert(funcItems[0].name === '90/90 Hip Flexor Stretch', 'T9c primer is first in session');
-
-// Primer must NOT appear in strength sessions
-const strSessions = buildWeek({
-  gymDays: 1, style: 'strength', intent: 'base', deload: false,
-  winp: 1, phaseWeeks: 4, minutes: 55, access: ['full_gym'],
-  level: 'intermediate', weekNum: 1
-});
-const strItems = strSessions.flatMap(s => s.items);
-assert(!strItems.some(it => it.name === '90/90 Hip Flexor Stretch'),
-  'T9d strength sessions do NOT have primer');
+// (T9 removed: the activation primer is no longer prepended by buildWeek — every gym
+// session's movement-specific primer is added by PlanService decoration. See tests/primers.js.)

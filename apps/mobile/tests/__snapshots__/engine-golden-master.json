@@ -21885,46 +21885,6 @@
                 "duration": "~40 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Bodyweight squat",
                     "sets": "3 × 10",
@@ -22039,46 +21999,6 @@
                 "duration": "~50 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Single-leg hip hinge",
                     "sets": "3 × 10",
@@ -22191,46 +22111,6 @@
                 "duration": "~40 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Reverse lunge",
                     "sets": "3 × 10 ea.",
@@ -22342,46 +22222,6 @@
                 "title": "Monday · Full body",
                 "duration": "~45 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Tempo squat (3s down)",
@@ -22510,46 +22350,6 @@
                 "duration": "~50 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Glute Bridge (2s hold)",
                     "sets": "3 × 10",
@@ -22677,46 +22477,6 @@
                 "duration": "~50 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Step-up",
                     "sets": "3 × 10 ea.",
@@ -22838,46 +22598,6 @@
                 "title": "Monday · Full body",
                 "duration": "~50 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Heel-Elevated Goblet Squat",
@@ -23016,46 +22736,6 @@
                 "duration": "~45 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Cossack squat",
                     "sets": "3 × 10 ea.",
@@ -23180,46 +22860,6 @@
                 "title": "Friday · Full body",
                 "duration": "~50 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Prone Hip Extension",
@@ -23380,46 +23020,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Seated Box Jump",
                     "sets": "4 × 4",
@@ -23510,46 +23110,6 @@
                 "title": "Wednesday · Full body",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Single-Leg Glute Bridge",
@@ -23650,46 +23210,6 @@
                 "title": "Friday · Full body",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "A-Skip / Bounding",
@@ -23814,46 +23334,6 @@
                 "title": "Monday · Full body",
                 "duration": "~60 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Double-Leg Pogo Jump",
@@ -23991,46 +23471,6 @@
                 "duration": "~55 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Bulgarian split squat",
                     "sets": "3 × 8 ea.",
@@ -24156,46 +23596,6 @@
                 "title": "Friday · Full body",
                 "duration": "~60 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "DB Romanian deadlift",
@@ -24331,46 +23731,6 @@
                 "title": "Monday · Full body",
                 "duration": "~65 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Single-Leg Squat to Box",
@@ -24520,46 +23880,6 @@
                 "duration": "~60 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Split squat",
                     "sets": "3 × 8 ea.",
@@ -24696,46 +24016,6 @@
                 "title": "Friday · Full body",
                 "duration": "~60 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Glute bridge",
@@ -24885,46 +24165,6 @@
                 "duration": "~65 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Goblet squat",
                     "sets": "3 × 8",
@@ -25072,46 +24312,6 @@
                 "title": "Wednesday · Full body",
                 "duration": "~65 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Single-leg hip hinge",
@@ -25263,46 +24463,6 @@
                 "title": "Friday · Full body",
                 "duration": "~65 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Walking lunge",
@@ -25484,46 +24644,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Bodyweight squat",
                     "sets": "2 × 8",
@@ -25624,46 +24744,6 @@
                 "title": "Wednesday · Full body",
                 "duration": "~35 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Glute Bridge (2s hold)",
@@ -25767,46 +24847,6 @@
                 "title": "Friday · Full body",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Reverse lunge",
@@ -25962,46 +25002,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Glute Bridge (2s hold)",
                     "sets": "3 × 10",
@@ -26091,46 +25091,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Bodyweight squat",
                     "sets": "3 × 10",
@@ -26217,46 +25177,6 @@
                 "title": "Friday · Full body",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Split squat",
@@ -26354,46 +25274,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Bodyweight squat",
                     "sets": "3 × 10",
@@ -26480,46 +25360,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Reverse lunge",
                     "sets": "3 × 10 ea.",
@@ -26605,46 +25445,6 @@
                 "title": "Friday · Full body",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Prone Hip Extension",
@@ -26745,46 +25545,6 @@
                 "duration": "~35 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Bodyweight squat",
                     "sets": "3 × 10",
@@ -26881,46 +25641,6 @@
                 "title": "Wednesday · Full body",
                 "duration": "~35 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Glute bridge",
@@ -27019,46 +25739,6 @@
                 "title": "Friday · Full body",
                 "duration": "~35 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Step-up",
@@ -27189,46 +25869,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Bodyweight squat",
                     "sets": "2 × 8",
@@ -27351,46 +25991,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Split squat",
                     "sets": "2 × 8 ea.",
@@ -27500,46 +26100,6 @@
                 "title": "Friday · Full body",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Single-leg hip hinge",
@@ -27661,46 +26221,6 @@
                 "duration": "~40 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Bodyweight squat",
                     "sets": "3 × 8",
@@ -27821,46 +26341,6 @@
                 "duration": "~40 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Reverse lunge",
                     "sets": "3 × 8 ea.",
@@ -27969,46 +26449,6 @@
                 "title": "Friday · Full body",
                 "duration": "~40 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Glute Bridge (2s hold)",
@@ -28141,46 +26581,6 @@
                 "title": "Monday · Full body",
                 "duration": "~50 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Bodyweight squat",
@@ -28324,46 +26724,6 @@
                 "duration": "~45 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Step-up",
                     "sets": "3 × 8 ea.",
@@ -28495,46 +26855,6 @@
                 "title": "Friday · Full body",
                 "duration": "~50 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Prone Hip Extension",
@@ -28689,46 +27009,6 @@
                 "duration": "~50 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Bodyweight squat",
                     "sets": "3 × 8",
@@ -28872,46 +27152,6 @@
                 "duration": "~50 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Split squat",
                     "sets": "3 × 8 ea.",
@@ -29054,46 +27294,6 @@
                 "title": "Friday · Full body",
                 "duration": "~50 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Glute bridge",
@@ -29269,46 +27469,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Bodyweight squat",
                     "sets": "2 × 8",
@@ -29431,46 +27591,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Reverse lunge",
                     "sets": "2 × 8 ea.",
@@ -29580,46 +27700,6 @@
                 "title": "Friday · Full body",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Single-leg hip hinge",
@@ -29772,46 +27852,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Feet-elevated push-up",
                     "sets": "3 × 10",
@@ -29899,46 +27939,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Inverted row",
                     "sets": "3 × 10",
@@ -30013,46 +28013,6 @@
                 "title": "Wednesday · Lower",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Double-Leg Pogo Jump",
@@ -30141,46 +28101,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pull-up",
                     "sets": "3 × 8",
@@ -30256,46 +28176,6 @@
                 "title": "Friday · Lower",
                 "duration": "~35 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Single-leg hip hinge",
@@ -30396,46 +28276,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pike push-up",
                     "sets": "3 × 10",
@@ -30522,46 +28362,6 @@
                 "title": "Sunday · Full body",
                 "duration": "~50 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Step-up",
@@ -30703,46 +28503,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Dip",
                     "sets": "3 × 10",
@@ -30830,46 +28590,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Inverted row",
                     "sets": "3 × 10",
@@ -30944,46 +28664,6 @@
                 "title": "Wednesday · Lower",
                 "duration": "~35 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Single-Leg Squat to Box",
@@ -31095,46 +28775,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pull-up",
                     "sets": "3 × 8",
@@ -31209,46 +28849,6 @@
                 "title": "Friday · Lower",
                 "duration": "~40 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Glute Bridge (2s hold)",
@@ -31364,46 +28964,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pike push-up",
                     "sets": "3 × 10",
@@ -31490,46 +29050,6 @@
                 "title": "Sunday · Full body",
                 "duration": "~55 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Cossack squat",
@@ -31681,46 +29201,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Push-up",
                     "sets": "3 × 10",
@@ -31808,46 +29288,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Inverted row",
                     "sets": "3 × 10",
@@ -31921,46 +29361,6 @@
                 "title": "Wednesday · Lower",
                 "duration": "~40 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Bodyweight squat",
@@ -32083,46 +29483,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pull-up",
                     "sets": "3 × 8",
@@ -32197,46 +29557,6 @@
                 "title": "Friday · Lower",
                 "duration": "~35 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Prone Hip Extension",
@@ -32352,46 +29672,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pike push-up",
                     "sets": "3 × 10",
@@ -32478,46 +29758,6 @@
                 "title": "Sunday · Full body",
                 "duration": "~55 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "A-Skip / Bounding",
@@ -32692,46 +29932,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Feet-elevated push-up",
                     "sets": "2 × 8",
@@ -32842,46 +30042,6 @@
                 "title": "Tuesday · Pull",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Inverted row",
@@ -32995,46 +30155,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Tempo squat (3s down)",
                     "sets": "2 × 8",
@@ -33137,46 +30257,6 @@
                 "duration": "~25 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pull-up",
                     "sets": "2 × 5",
@@ -33278,46 +30358,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Single-Leg Glute Bridge",
                     "sets": "2 × 8",
@@ -33418,46 +30458,6 @@
                 "title": "Saturday · Push",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Pike push-up",
@@ -33569,46 +30569,6 @@
                 "title": "Sunday · Full body",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Split squat",
@@ -33727,46 +30687,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Dip",
                     "sets": "3 × 8",
@@ -33854,46 +30774,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Inverted row",
                     "sets": "3 × 8",
@@ -33956,46 +30836,6 @@
                 "title": "Wednesday · Lower",
                 "duration": "~45 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Seated Box Jump",
@@ -34119,46 +30959,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pull-up",
                     "sets": "4 × 6",
@@ -34222,46 +31022,6 @@
                 "title": "Friday · Lower",
                 "duration": "~45 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Glute bridge",
@@ -34386,46 +31146,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pike push-up",
                     "sets": "3 × 8",
@@ -34512,46 +31232,6 @@
                 "title": "Sunday · Full body",
                 "duration": "~65 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Reverse lunge",
@@ -34725,46 +31405,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Push-up",
                     "sets": "3 × 8",
@@ -34852,46 +31492,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Inverted row",
                     "sets": "3 × 8",
@@ -34954,46 +31554,6 @@
                 "title": "Wednesday · Lower",
                 "duration": "~45 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Double-Leg Pogo Jump",
@@ -35128,46 +31688,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pull-up",
                     "sets": "4 × 6",
@@ -35230,46 +31750,6 @@
                 "title": "Friday · Lower",
                 "duration": "~45 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Single-leg hip hinge",
@@ -35405,46 +31885,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pike push-up",
                     "sets": "3 × 8",
@@ -35531,46 +31971,6 @@
                 "title": "Sunday · Full body",
                 "duration": "~65 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Step-up",
@@ -35745,46 +32145,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Feet-elevated push-up",
                     "sets": "3 × 8",
@@ -35872,46 +32232,6 @@
                 "duration": "~35 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Inverted row",
                     "sets": "3 × 8",
@@ -35985,46 +32305,6 @@
                 "title": "Wednesday · Lower",
                 "duration": "~45 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Single-Leg Squat to Box",
@@ -36159,46 +32439,6 @@
                 "duration": "~35 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pull-up",
                     "sets": "4 × 6",
@@ -36272,46 +32512,6 @@
                 "title": "Friday · Lower",
                 "duration": "~50 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Glute Bridge (2s hold)",
@@ -36459,46 +32659,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pike push-up",
                     "sets": "3 × 8",
@@ -36585,46 +32745,6 @@
                 "title": "Sunday · Full body",
                 "duration": "~65 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Cossack squat",
@@ -36822,46 +32942,6 @@
                 "duration": "~30 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Dip",
                     "sets": "2 × 8",
@@ -36973,46 +33053,6 @@
                 "duration": "~25 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Inverted row",
                     "sets": "2 × 8",
@@ -37113,46 +33153,6 @@
                 "title": "Wednesday · Lower",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Bodyweight squat",
@@ -37256,46 +33256,6 @@
                 "duration": "~25 min",
                 "items": [
                   {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
-                  {
                     "num": "A1",
                     "name": "Pull-up",
                     "sets": "2 × 5",
@@ -37396,46 +33356,6 @@
                 "title": "Friday · Lower",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Prone Hip Extension",
@@ -37539,46 +33459,6 @@
                 "title": "Saturday · Push",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "Pike push-up",
@@ -37690,46 +33570,6 @@
                 "title": "Sunday · Full body",
                 "duration": "~30 min",
                 "items": [
-                  {
-                    "num": "P1",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "sets": "5 × 30s ea.",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Open hip flexors before loading",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P2",
-                    "name": "Glute Bridge (2s hold)",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Activate glutes — squeeze 2s at top",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P3",
-                    "name": "Scapular Wall Slide",
-                    "sets": "2 × 10",
-                    "rpe": "RPE 4",
-                    "tag": "mobility",
-                    "note": "Slide arms up the wall — blades down and back",
-                    "restSec": 20,
-                    "equip": "bodyweight"
-                  },
-                  {
-                    "num": "P4",
-                    "name": "Cat-Camel + Thoracic Rotation",
-                    "sets": "2 × 8",
-                    "rpe": "Easy",
-                    "tag": "mobility",
-                    "note": "Thoracic rotation each side",
-                    "restSec": 0,
-                    "equip": "bodyweight"
-                  },
                   {
                     "num": "A1",
                     "name": "A-Skip / Bounding",
