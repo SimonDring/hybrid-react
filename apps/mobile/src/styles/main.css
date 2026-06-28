@@ -1404,6 +1404,13 @@ body { font-variant-numeric: tabular-nums; }
   font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
   text-transform: uppercase; color: var(--txt-muted);
 }
+.runner-nav-group { display: flex; align-items: center; gap: 12px; }
+.runner-nav {
+  width: 32px; height: 32px; border: none; background: var(--bg-surface-2);
+  color: var(--txt-strong); border-radius: 8px; font-size: 18px; line-height: 1;
+  cursor: pointer; font-family: inherit;
+}
+.runner-nav:disabled { opacity: 0.35; cursor: default; }
 .runner-bar { height: 3px; background: var(--hairline); margin: 0 16px 8px; border-radius: 2px; overflow: hidden; }
 .runner-bar-fill { height: 100%; background: var(--accent); transition: width 0.25s ease; }
 

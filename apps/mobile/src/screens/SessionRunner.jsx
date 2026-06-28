@@ -226,6 +226,13 @@ export default function SessionRunner() {
   // Skip + timer-complete both route here; the ref ensures we advance only once.
   const endRest = () => { ensureAudio(); if (!restingRef.current) return; restingRef.current = false; goNext(); };
 
+  // Manual step navigation (header arrows). Cancels any active rest, then moves the
+  // cursor; a set step re-seeds its draft via the cursor effect.
+  const goTo = (delta) => {
+    setResting(false); setRestSeed(null); restingRef.current = false;
+    setCursor(c => Math.max(0, Math.min(steps.length - 1, c + delta)));
+  };
+
   // Equipment unavailable → open same-muscle alternatives for the current exercise.
   const openSubstitute = () => {
     setSubSheet({ originalName: step.exerciseName, options: substituteOptionsFor(step.item) });
@@ -273,7 +280,11 @@ export default function SessionRunner() {
       {/* Header: progress + exit */}
       <div className="runner-head">
         <button className="runner-exit" onClick={() => navigate(detailPath)} aria-label="Exit runner">✕</button>
-        <div className="runner-progress-text">Step {cursor + 1} of {steps.length}</div>
+        <div className="runner-nav-group">
+          <button className="runner-nav" onClick={() => goTo(-1)} disabled={cursor === 0} aria-label="Previous step">‹</button>
+          <span className="runner-progress-text">Step {cursor + 1} of {steps.length}</span>
+          <button className="runner-nav" onClick={() => goTo(1)} disabled={cursor >= steps.length - 1} aria-label="Next step">›</button>
+        </div>
         <div style={{ width: 32 }} />
       </div>
       <div className="runner-bar"><div className="runner-bar-fill" style={{ width: `${((cursor) / steps.length) * 100}%` }} /></div>
