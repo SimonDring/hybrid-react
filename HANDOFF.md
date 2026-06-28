@@ -3,6 +3,38 @@
 _Last updated: 2026-06-28. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
 
+## Latest work — Sport Knowledge Base v1 (GAA flagship) (2026-06-28)
+
+On worktree branch **`claude/elated-benz-f95b79`** (local). New **Sport Knowledge Base
+(SKB)** — a reusable, evidence-tagged per-sport knowledge module a deterministic engine can
+consume (the "sport is the priority" layer). **Additive only — no plan-generation rewiring;
+nothing in the app consumes it yet.** Full doc: `docs/engine/03-SPORT-KNOWLEDGE-BASE.md`.
+
+- **Schema + accessor:** `packages/engine/src/lib/sportKnowledge/{schema.js,index.js}`.
+  21-section `SportProfile` contract with per-recommendation provenance
+  (`confidence`/`evidenceLevel`/`source`), mirroring the existing `knowledge/` pattern.
+  `validate()` (structural) + `completeness()` (authoring depth, à la `kb.staleEntries`).
+- **Privacy enforced in the validator:** `RAW_VITALS` + a rule that **fails** if any
+  raw-vital KPI (HRV/sleep/RHR) is flagged coach/team-visible — the binding
+  `TEAM-ARCHITECTURE.md` rule, now a test, not a comment.
+- **Data (pure JSON):** `packages/engine/src/data/sport-knowledge/`. **Gaelic football**,
+  **hurling** and **swimming** authored fully across all 21 sections. The two GAA codes are
+  **separate sports** (hurling carries the striking / grip / rotational-power demands
+  football lacks); swimming is an individual endurance sport (positions = event/stroke
+  archetypes; readiness elevates shoulder soreness; taper is the headline load tool). Four
+  schema-conformant **stubs**: rugby, soccer, running, cycling.
+- Exposed on the engine barrel: `import { sportKnowledge } from '@performance-os/engine'`.
+- **Verified:** `node apps/mobile/tests/sport-knowledge.js` (51 assertions pass —
+  validity, flagship completeness + distinctness, stub scaffolds, energy %s, privacy rule,
+  KPI limits, score weights, decision rules); `sports.js` + `knowledge.js` no regressions;
+  barrel loads JSON in Node 26; esbuild (Vite 5.4's bundler) bundles the `with { type:
+  'json' }` imports cleanly. NB: this worktree has no `node_modules` — a local
+  `node_modules/@performance-os/{engine,shared}` symlink was added so `node` resolves the
+  worktree engine; `npm install` at the worktree root would supersede it.
+- **Next:** author the stubs to depth; wire `decisionRules`/`readinessModel`/
+  `loadManagement` into `PlanService` + the future coach dashboard; have the thin
+  `src/lib/sports/*.js` modules derive from the SKB.
+
 ## Latest work — Session UI v2 + timer reliability + engine cleanups (2026-06-28)
 
 Continues on branch **`feat/focused-session-runner`** (local only — NOT pushed, no PR).

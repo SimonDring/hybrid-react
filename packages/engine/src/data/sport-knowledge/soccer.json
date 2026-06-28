@@ -1,0 +1,54 @@
+{
+  "id": "soccer",
+  "schemaVersion": "1.0.0",
+  "label": "Soccer (Association Football)",
+  "stub": true,
+  "lastReviewed": "2026-06-28",
+  "_note": "SCAFFOLD — structurally valid but not yet authored to flagship depth. Fill the empty sections to promote to a full profile (see gaelic_football.json as the reference).",
+
+  "meta": {
+    "sport": "Soccer",
+    "category": "Invasion / field team sport",
+    "teamOrIndividual": "team",
+    "indoorOutdoor": "outdoor",
+    "contactLevel": "moderate",
+    "playersPerSide": 11,
+    "seasonLengthWeeks": 40,
+    "offseasonLengthWeeks": 5,
+    "competitionFrequencyPerWeek": "1-2 matches/week",
+    "trainingFrequencyPerWeek": "4-6 (professional)",
+    "sessionDurationMin": { "match": 90, "pitch": 75, "gym": 60 }
+  },
+
+  "physicalProfile": {
+    "qualities": {
+      "aerobicEndurance": { "importance": 9, "why": "90 min intermittent running.", "confidence": "high", "evidenceLevel": "L2", "source": "soccer physiology literature" },
+      "repeatSprintAbility": { "importance": 9, "why": "Repeated sprints decide key moments.", "confidence": "high", "evidenceLevel": "L2", "source": "soccer physiology literature" },
+      "acceleration": { "importance": 8, "why": "Beating an opponent over short distance.", "confidence": "high", "evidenceLevel": "L3", "source": "expert consensus" },
+      "changeOfDirection": { "importance": 8, "why": "Constant reactive COD.", "confidence": "high", "evidenceLevel": "L3", "source": "expert consensus" }
+    }
+  },
+
+  "energySystems": { "aerobicPct": 70, "glycolyticPct": 20, "atpPcPct": 10, "workToRestRatio": "intermittent ~1:5", "matchDemands": "~10-12 km, repeated sprints", "heartRateProfile": "mean ~85% HRmax", "fatigueProfile": "high-speed running declines late", "confidence": "moderate", "evidenceLevel": "L3", "source": "estimate — to be authored" },
+
+  "movementProfile": { "primaryPatterns": ["sprint", "change of direction", "kicking", "jump-land"], "planes": ["sagittal", "frontal", "transverse"], "dominantMuscleGroups": ["hamstrings", "glutes", "quads", "adductors", "calves"], "commonDeficiencies": ["eccentric hamstring strength", "adductor strength"], "asymmetricLoading": "kicking-leg dominance" },
+
+  "injuryProfile": { "common": [], "summary": "To be authored (hamstring, ankle, groin, knee high-priority — strong FIFA 11+ evidence base)." },
+
+  "positions": [],
+  "assessments": [],
+  "developmentPriorities": {},
+  "seasonalModel": {},
+  "microcycles": {},
+  "gymPhilosophy": {},
+  "exerciseLibrary": { "categories": [], "exercises": [] },
+  "injuryPreventionLibrary": [],
+  "decisionRules": [],
+  "loadManagement": {},
+  "readinessModel": { "factors": [] },
+  "coachDashboard": {},
+  "athleteDashboard": {},
+  "validation": {},
+  "references": [],
+  "kpiFramework": { "kpis": [], "athleteDashboardKpis": [], "coachDashboardKpis": [], "performanceScore": {}, "gamification": [] }
+}
