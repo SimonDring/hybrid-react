@@ -1,0 +1,53 @@
+{
+  "id": "cycling",
+  "schemaVersion": "1.0.0",
+  "label": "Cycling (endurance)",
+  "stub": true,
+  "lastReviewed": "2026-06-28",
+  "_note": "SCAFFOLD — structurally valid but not yet authored to flagship depth. Energy-system split shown is for endurance road cycling; track/sprint differ.",
+
+  "meta": {
+    "sport": "Cycling",
+    "category": "Endurance / individual",
+    "teamOrIndividual": "individual",
+    "indoorOutdoor": "outdoor",
+    "contactLevel": "none (peloton crash risk aside)",
+    "playersPerSide": 1,
+    "seasonLengthWeeks": 32,
+    "offseasonLengthWeeks": 6,
+    "competitionFrequencyPerWeek": "0-3 races/week (varies)",
+    "trainingFrequencyPerWeek": "5-12 rides + 1-2 gym",
+    "sessionDurationMin": { "match": 180, "pitch": 120, "gym": 45 }
+  },
+
+  "physicalProfile": {
+    "qualities": {
+      "aerobicEndurance": { "importance": 10, "why": "The dominant determinant of endurance cycling performance.", "confidence": "high", "evidenceLevel": "L1", "source": "endurance physiology literature" },
+      "legPower": { "importance": 7, "why": "Sprints, attacks and climbing surges.", "confidence": "moderate", "evidenceLevel": "L2", "source": "Rønnestad strength & cycling" },
+      "relativeStrength": { "importance": 6, "why": "Power-to-weight, especially for climbing.", "confidence": "moderate", "evidenceLevel": "L2", "source": "cycling performance literature" }
+    }
+  },
+
+  "energySystems": { "aerobicPct": 85, "glycolyticPct": 10, "atpPcPct": 5, "workToRestRatio": "continuous + surges (event-dependent)", "matchDemands": "sustained power + repeated surges", "heartRateProfile": "sustained high with spikes", "fatigueProfile": "peripheral leg fatigue + central", "confidence": "low", "evidenceLevel": "L4", "source": "estimate (endurance road) — to be authored" },
+
+  "movementProfile": { "primaryPatterns": ["repetitive pedalling (hip/knee/ankle)"], "planes": ["sagittal"], "dominantMuscleGroups": ["quads", "glutes", "hamstrings", "calves"], "commonDeficiencies": ["hip stability", "posterior-chain relative to quad dominance"], "asymmetricLoading": "left/right pedalling asymmetries" },
+
+  "injuryProfile": { "common": [], "summary": "To be authored (knee overuse, low-back, neck/shoulder from position; crash trauma)." },
+
+  "positions": [],
+  "assessments": [],
+  "developmentPriorities": {},
+  "seasonalModel": {},
+  "microcycles": {},
+  "gymPhilosophy": {},
+  "exerciseLibrary": { "categories": [], "exercises": [] },
+  "injuryPreventionLibrary": [],
+  "decisionRules": [],
+  "loadManagement": {},
+  "readinessModel": { "factors": [] },
+  "coachDashboard": {},
+  "athleteDashboard": {},
+  "validation": {},
+  "references": [],
+  "kpiFramework": { "kpis": [], "athleteDashboardKpis": [], "coachDashboardKpis": [], "performanceScore": {}, "gamification": [] }
+}

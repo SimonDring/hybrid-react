@@ -1,0 +1,55 @@
+{
+  "id": "rugby",
+  "schemaVersion": "1.0.0",
+  "label": "Rugby Union",
+  "stub": true,
+  "lastReviewed": "2026-06-28",
+  "_note": "SCAFFOLD — structurally valid but not yet authored to flagship depth. Fill the empty sections to promote to a full profile (see gaelic_football.json / hurling.json as the reference).",
+
+  "meta": {
+    "sport": "Rugby Union",
+    "category": "Invasion / collision team sport",
+    "teamOrIndividual": "team",
+    "indoorOutdoor": "outdoor",
+    "contactLevel": "high (tackles, rucks, mauls, scrums)",
+    "playersPerSide": 15,
+    "seasonLengthWeeks": 36,
+    "offseasonLengthWeeks": 6,
+    "competitionFrequencyPerWeek": "1 match/week typical",
+    "trainingFrequencyPerWeek": "4-6 (professional)",
+    "sessionDurationMin": { "match": 80, "pitch": 90, "gym": 75 }
+  },
+
+  "physicalProfile": {
+    "qualities": {
+      "maxStrength": { "importance": 9, "why": "Collision dominance, scrum/maul force, contact tolerance.", "confidence": "high", "evidenceLevel": "L3", "source": "expert consensus; rugby S&C literature" },
+      "explosivePower": { "importance": 8, "why": "Acceleration into contact, jumping (lineout), driving.", "confidence": "high", "evidenceLevel": "L3", "source": "expert consensus" },
+      "acceleration": { "importance": 8, "why": "Short bursts to attack/defend the line.", "confidence": "high", "evidenceLevel": "L3", "source": "expert consensus" },
+      "neckStrength": { "importance": 8, "why": "Scrum/contact loading and concussion-risk mitigation.", "confidence": "moderate", "evidenceLevel": "L4", "source": "World Rugby guidance; expert consensus" },
+      "repeatSprintAbility": { "importance": 7, "why": "Repeated efforts across 80 min.", "confidence": "moderate", "evidenceLevel": "L3", "source": "expert consensus" }
+    }
+  },
+
+  "energySystems": { "aerobicPct": 55, "glycolyticPct": 30, "atpPcPct": 15, "workToRestRatio": "varies by position", "matchDemands": "high collision load + repeated efforts", "heartRateProfile": "intermittent high", "fatigueProfile": "collision + running fatigue", "confidence": "low", "evidenceLevel": "L4", "source": "estimate — to be authored" },
+
+  "movementProfile": { "primaryPatterns": ["collision/tackle", "scrum/maul push", "repeated sprint", "lineout jump"], "planes": ["sagittal", "frontal", "transverse"], "dominantMuscleGroups": ["glutes", "hamstrings", "quads", "back", "shoulders", "neck"], "commonDeficiencies": [], "asymmetricLoading": "scrum/tackle side preferences" },
+
+  "injuryProfile": { "common": [], "summary": "To be authored (concussion, shoulder, knee, hamstring high-priority in rugby)." },
+
+  "positions": [],
+  "assessments": [],
+  "developmentPriorities": {},
+  "seasonalModel": {},
+  "microcycles": {},
+  "gymPhilosophy": {},
+  "exerciseLibrary": { "categories": [], "exercises": [] },
+  "injuryPreventionLibrary": [],
+  "decisionRules": [],
+  "loadManagement": {},
+  "readinessModel": { "factors": [] },
+  "coachDashboard": {},
+  "athleteDashboard": {},
+  "validation": {},
+  "references": [],
+  "kpiFramework": { "kpis": [], "athleteDashboardKpis": [], "coachDashboardKpis": [], "performanceScore": {}, "gamification": [] }
+}
