@@ -1,45 +1,22 @@
 /**
- * SessionProgress — lightweight, LOCAL-ONLY check-off state for a session in
- * progress. Which exercises you've ticked off mid-workout is ephemeral UI scratch
- * data, not core training history, so it lives in its own localStorage key and is
- * deliberately NOT synced to Supabase (and never touches the Database layer).
+ * SessionProgress — clears the legacy LOCAL-ONLY check-off state for a session.
  *
- * Keyed by the session's template_ref (e.g. "p1_wk5_s0"). Cleared when the
- * session is completed.
+ * The old per-exercise tap-to-tick checklist was replaced by the focused set-by-set
+ * runner (which records to `set_logs`), so nothing writes this key any more. We keep
+ * `clearChecked` as defensive cleanup: it removes any stale entry left in an existing
+ * user's localStorage when a session is reset/completed.
+ *
+ * Keyed by the session's template_ref (e.g. "p1_wk5_s0").
  */
 
 const KEY = 'htp_session_progress';
 
-function loadAll() {
-  try { return JSON.parse(localStorage.getItem(KEY)) || {}; }
-  catch { return {}; }
-}
-
-function saveAll(obj) {
-  try { localStorage.setItem(KEY, JSON.stringify(obj)); }
-  catch { /* storage full / unavailable — progress is non-critical */ }
-}
-
-// Indices of the exercises ticked off for this session (array of numbers).
-export function getChecked(sessionKey) {
-  return loadAll()[sessionKey] || [];
-}
-
-// Toggle one exercise index on/off; returns the new array.
-export function toggleChecked(sessionKey, idx) {
-  const all = loadAll();
-  const set = new Set(all[sessionKey] || []);
-  if (set.has(idx)) set.delete(idx); else set.add(idx);
-  all[sessionKey] = [...set];
-  saveAll(all);
-  return all[sessionKey];
-}
-
-// Forget all progress for a session (called on completion).
+// Forget any legacy progress for a session (called on complete/cancel/uncomplete).
 export function clearChecked(sessionKey) {
-  const all = loadAll();
-  delete all[sessionKey];
-  saveAll(all);
+  try {
+    const all = JSON.parse(localStorage.getItem(KEY)) || {};
+    if (all[sessionKey] != null) { delete all[sessionKey]; localStorage.setItem(KEY, JSON.stringify(all)); }
+  } catch { /* non-critical */ }
 }
 
-export default { getChecked, toggleChecked, clearChecked };
+export default { clearChecked };
