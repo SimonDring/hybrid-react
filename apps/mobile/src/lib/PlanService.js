@@ -29,6 +29,7 @@ import { getOverrides } from './sessionOverrides.js';
 import { applyInjuryRules, applyPrevention } from '@performance-os/engine/lib/injury/injuryFilter.js';
 import { combinedMultiplier, deloadRecommendation } from '@performance-os/engine/lib/plan/trainingLoad.js';
 import { deriveConstraints, lightenItems } from '@performance-os/engine/lib/plan/constraints.js';
+import { buildPrimer } from '@performance-os/engine/lib/plan/primers.js';
 
 let _cache = { sig: null, plan: null };
 
@@ -345,9 +346,37 @@ function adaptedPhases() {
 // ceiling) — exposed for dev tooling so forgiveness is visible, not silent.
 export function lastForgiven() { return _lastForgiven; }
 
+// Split a session into a PRIMER (short activation matched to its main lifts) and the
+// MAIN work, tagging every item with its `section` ('primer' | 'main'). The new
+// movement-specific primer (data/primers.js) REPLACES any legacy engine activation
+// block (the functional P1–P4 primer) so the UI reads a single, consistent primer
+// source. Gym sessions only; idempotent — a session that already carries a primer is
+// returned untouched, so this can never double-prime. Pure: returns a new session.
+function decorateSections(session, access) {
+  if (!session || sessionDiscipline(session) !== 'gym') return session;
+  const items = session.items || [];
+  if (items.some(it => it.section === 'primer')) return session;
+  const working = items.filter(it => !/^P\d/.test(it.num || ''));   // drop legacy P1–P4
+  const { primer, main } = buildPrimer({ items: working }, { access });
+  return { ...session, items: [...primer, ...main] };
+}
+
+function decoratePhases(phases, access) {
+  return phases.map(phase => ({
+    ...phase,
+    weeks: (phase.weeks || []).map(week => ({
+      ...week,
+      sessions: (week.sessions || []).map(s => decorateSections(s, access))
+    }))
+  }));
+}
+
 function injuryFilteredPhases() {
   const phases = adaptedPhases();
   if (!phases) return null;
+
+  const profile = Database.services.getProfile() || {};
+  const access = profile.access || [];
 
   const allInjuries = Database.services.listInjuries();
   const active = allInjuries.filter(i =>
@@ -355,16 +384,19 @@ function injuryFilteredPhases() {
   );
   const history = allInjuries.filter(i => i.body_part_key);
 
-  if (!active.length && !history.length) return phases;
-
-  return phases.map(phase => ({
+  const injured = active.length || history.length;
+  const filtered = injured ? phases.map(phase => ({
     ...phase,
     weeks: (phase.weeks || []).map(week => {
       let w = active.length ? applyInjuryRules(week, active) : week;
       w = history.length ? applyPrevention(w, history) : w;
       return w;
     })
-  }));
+  })) : phases;
+
+  // Decorate every gym session with its primer + section tags — done LAST (after
+  // injury filtering) so the primer reflects the actual, injury-adjusted main lifts.
+  return decoratePhases(filtered, access);
 }
 
 function profileSignature(profile) {
@@ -719,7 +751,7 @@ export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
     ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, exercisePriority: gctx.exercisePriority }
   });
   const session = applyFunctionalPrimer(specs, gctx.style, minutes, equipArr)[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
-  return { session, why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };
+  return { session: decorateSections(session, equipArr), why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };
 }
 
 // Plain-language rationale shown with an on-demand session.
