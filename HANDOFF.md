@@ -3,6 +3,41 @@
 _Last updated: 2026-06-28. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
 
+## Latest work — Session UI v2 + rest-timer reliability + straight-set primaries (2026-06-28)
+
+Continues on branch **`feat/focused-session-runner`** (local only — NOT pushed, no PR).
+Three brainstormed specs, all built + preview-verified. Specs under
+`docs/superpowers/specs/2026-06-28-{session-ui-v2,rest-timer-reliability,primaries-straight-sets}-design.md`.
+
+- **Spec A — Session UI v2.** The session preview is now mobile-first: one compact row
+  per exercise (name + a single sets×reps badge; weight/RPE/cues moved into the runner).
+  Primer and Main are **bordered section cards** (colour surrounds the block, no left
+  rail): **Primer = teal `--accent`**, **Main = neutral**; **rust removed** from the
+  session views + runner (it's legacy; the Midnight primary accent is teal). In the
+  runner the primer runs as a **circuit, round-by-round** ("Round 1 of 2 → Start main"),
+  no per-move rest. (Supersedes the "primer colour --moss" open item below.)
+- **Spec B — Rest-timer reliability (serverless).** `RestTimer` rewritten to
+  **timestamp-based** timing (tracks the end time, derives the display) so a screen
+  lock no longer freezes/drifts it; a `visibilitychange`/`pageshow` handler catches up
+  and fires completion once on return. New `hooks/useWakeLock.js` keeps the screen awake
+  for the whole runner (re-acquires on visibility; silent no-op on unsupported iOS).
+  New `lib/sound.js` beep on completion (+ existing vibrate; AudioContext unlocked on
+  taps). Also fixes the prior "setState while rendering" warning. The manual "Log your
+  top set" form is **removed** — progression derives solely from logged sets.
+  **Deferred (needs backend/native):** locked-screen Web Push banner + native iOS Live
+  Activity — a PWA can't schedule local notifications (verified: iOS Web Push is
+  server-only, installed-PWA only).
+- **Spec C — Primary lifts always run as straight sets.** `structureItems` no longer
+  crams a light filler into a primary's rest gap (it under-rested the heavy lift).
+  Primaries run straight with full rest; accessories still antagonist-superset among
+  themselves. Golden-master regenerated — **exercise selection + volume byte-identical**
+  across all 19 archetypes (570 session blocks); only superset structure changed.
+
+Verified live (375px): compact bordered cards, no rust on page/runner, primer circuit,
+timestamp timer counting + catch-up, wake-lock requested, completion form has no
+top-set inputs, full Save & complete runs clean. `npm run build` clean; `node tests/*.js`
+green except the pre-existing date-dependent `reflow-start-consistency.js`.
+
 ## Latest work — focused session runner + primer/main sections (2026-06-28)
 
 On branch **`feat/focused-session-runner`** (local only — NOT pushed, no PR). Built
