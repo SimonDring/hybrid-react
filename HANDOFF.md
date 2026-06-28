@@ -6,8 +6,10 @@ next session (or a fresh agent) can resume without re-deriving context._
 ## Latest work — Session UI v2 + timer reliability + engine cleanups (2026-06-28)
 
 Continues on branch **`feat/focused-session-runner`** (local only — NOT pushed, no PR).
-Four brainstormed specs, all built + preview-verified. Specs under
-`docs/superpowers/specs/2026-06-28-{session-ui-v2,rest-timer-reliability,primaries-straight-sets,region-pure-days-and-ordering}-design.md`.
+Six brainstormed specs, all built + preview-verified. Specs under
+`docs/superpowers/specs/2026-06-28-*-design.md` (session-ui-v2, rest-timer-reliability,
+primaries-straight-sets, region-pure-days-and-ordering, exercise-video-placeholder,
+on-the-fly-exercise-substitution).
 
 - **Spec A — Session UI v2.** The session preview is now mobile-first: one compact row
   per exercise (name + a single sets×reps badge; weight/RPE/cues moved into the runner).
@@ -44,6 +46,19 @@ Four brainstormed specs, all built + preview-verified. Specs under
   **Lower** (Box squat · Deficit Deadlift · Calf/Tibialis · Nordic curl · Ab Wheel), no
   stray press. New `tests/region-pure.js`; `session-density` volume canary + sport tests
   pass; golden-master regenerated.
+
+- **Spec E — Exercise video placeholder.** Deleted the stick-figure demos
+  (`StickFigureDemo.jsx` + `data/exerciseDemos.js`); the ⓘ guide keeps its written
+  content and the demo block is now a future-ready video area — plays `entry.video` when
+  one exists, else a "form video coming soon" shell with a disabled upload affordance.
+- **Spec F — On-the-fly exercise substitution (runner).** New `substituteOptions`
+  engine module + an "Equipment taken? Substitute" control on each working set: ranked
+  same-muscle alternatives (same pattern first; squat → leg press / split squat, never
+  OHP), filtered to available equipment, each with a recomputed weight target. Picking
+  one swaps the exercise for THIS session only (local `sessionOverrides`, keyed by name)
+  — future weeks untouched. Only true variants (same `matchLift` key) move the tracked
+  e1RM; others log history only. Runner steps rebuild from a content signature so a swap
+  is seamless. New `tests/substitutions.js`.
 
 Verified live (375px): compact bordered cards, no rust on page/runner, primer circuit,
 timestamp timer counting + catch-up, wake-lock requested, completion form has no
