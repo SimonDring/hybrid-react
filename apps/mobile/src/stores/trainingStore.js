@@ -118,9 +118,16 @@ function buildView() {
     .map(l => ({ date: (l.completed_at || '').split('T')[0], ...sessionLoad(l) }));
   const loadView = { acute: Math.round(ac.acute), chronic: Math.round(ac.chronic), acwr: acwrVal, band, sessions: loadSessions };
 
+  // Per-set training history grouped by session id — drives the runner's resume.
+  const setLogsBySession = {};
+  Database.tables.setLogs.all().forEach(r => {
+    (setLogsBySession[r.session_id] = setLogsBySession[r.session_id] || []).push(r);
+  });
+
   return {
     logs,
     sessions,
+    setLogsBySession,
     workouts:     workoutsAll,
     reassess:     Database.services.getReassessAnswers(),
     profile:      Database.services.getProfile(),
@@ -311,6 +318,14 @@ export const useTrainingStore = create((set) => ({
   cancelSession(templateRef) {
     Sync.cancelSession(templateRef).catch(e => console.error('cancelSession sync failed:', e));
     clearOverride(templateRef);   // started by mistake → drop any train-now adaptation too
+    set(buildView());
+  },
+  // Log one completed set from the focused runner. Offline-first: the local write
+  // happens synchronously (instant), the cloud upsert runs in the background and can
+  // never block or fail the runner. Pass a deterministic `id` to make re-logging the
+  // same set idempotent (overwrite, not duplicate).
+  logSet(fields) {
+    Promise.resolve(Sync.saveSetLog(fields)).catch(e => console.error('logSet sync failed:', e));
     set(buildView());
   },
   skipSession(templateRef) {

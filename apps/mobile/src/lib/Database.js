@@ -149,6 +149,7 @@ const tables = {
   weeks:             Storage.load(Storage.KEYS.weeks, {}),
   sessions:          Storage.load(Storage.KEYS.sessions, {}),
   sessionLogs:       Storage.load(Storage.KEYS.sessionLogs, {}),
+  setLogs:           Storage.load(Storage.KEYS.setLogs, {}),
   weeklyCheckins:    Storage.load(Storage.KEYS.weeklyCheckins, {}),
   reassessments:     Storage.load(Storage.KEYS.reassessments, {}),
   wearableReadings:  Storage.load(Storage.KEYS.wearableReadings, {}),
@@ -243,6 +244,7 @@ export const tablesApi = {
   weeks:             table('weeks'),
   sessions:          table('sessions'),
   sessionLogs:       table('sessionLogs'),
+  setLogs:           table('setLogs'),
   weeklyCheckins:    table('weeklyCheckins'),
   reassessments:     table('reassessments'),
   wearableReadings:  table('wearableReadings'),
@@ -504,6 +506,7 @@ export const services = {
     if (!s) return;
     const log = tablesApi.sessionLogs.find(l => l.session_id === s.id);
     if (log) tablesApi.sessionLogs.remove(log.id);
+    services.removeSetLogsForSession(s.id);
     tablesApi.sessions.update(s.id, { status: 'pending', started_at: null, completed_at: null });
   },
 
@@ -514,6 +517,7 @@ export const services = {
     if (!s) return;
     const log = tablesApi.sessionLogs.find(l => l.session_id === s.id);
     if (log) tablesApi.sessionLogs.remove(log.id);
+    services.removeSetLogsForSession(s.id);
     tablesApi.sessions.update(s.id, { status: 'pending', started_at: null, completed_at: null });
   },
 
@@ -690,6 +694,24 @@ export const services = {
     return tablesApi.injuries.update(injuryId, { recovery_log: log });
   },
 
+  // ---------- Set logs (per-set training history) ----------
+  // One row per logged set from the focused runner. This is REAL history (synced
+  // like every other table) — distinct from the ephemeral mid-session check-off
+  // state, which lives local-only in SessionProgress.js.
+  logSet(fields = {}) {
+    return tablesApi.setLogs.create({ ...fields });
+  },
+  setLogsForSession(sessionId) {
+    if (!sessionId) return [];
+    return tablesApi.setLogs.filter(r => r.session_id === sessionId);
+  },
+  // Soft-delete every set log for a session — called when a session is reset
+  // (uncomplete/cancel) so stale per-set rows don't linger as history.
+  removeSetLogsForSession(sessionId) {
+    if (!sessionId) return;
+    tablesApi.setLogs.filter(r => r.session_id === sessionId).forEach(r => tablesApi.setLogs.remove(r.id));
+  },
+
   exportAll() {
     return {
       schema_version: 4,
@@ -700,6 +722,7 @@ export const services = {
       weeks:              tablesApi.weeks.all(),
       sessions:           tablesApi.sessions.all(),
       session_logs:       tablesApi.sessionLogs.all(),
+      set_logs:           tablesApi.setLogs.all(),
       weekly_checkins:    tablesApi.weeklyCheckins.all(),
       reassessments:      tablesApi.reassessments.all(),
       wearable_readings:  tablesApi.wearableReadings.all(),
@@ -718,6 +741,7 @@ export const services = {
       ['weeks', 'weeks'],
       ['sessions', 'sessions'],
       ['session_logs', 'sessionLogs'],
+      ['set_logs', 'setLogs'],
       ['weekly_checkins', 'weeklyCheckins'],
       ['reassessments', 'reassessments'],
       ['wearable_readings', 'wearableReadings'],

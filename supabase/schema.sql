@@ -148,6 +148,32 @@ create index if not exists idx_session_logs_session on public.session_logs(sessi
 create index if not exists idx_session_logs_user on public.session_logs(user_id);
 
 -- ============================================================================
+-- TABLE: set_logs  (per-set training history — see migration 013)
+-- ============================================================================
+create table if not exists public.set_logs (
+  id            uuid primary key default gen_random_uuid(),
+  session_id    uuid references public.sessions(id) on delete cascade,
+  user_id       uuid not null references public.users(id) on delete cascade,
+  exercise_key  text,        -- tracked-lift key when applicable (squat/bench/deadlift/ohp/pull)
+  exercise_name text,
+  section       text,        -- 'primer' | 'main'
+  set_index     int,         -- 1-based within the exercise
+  target_weight numeric,
+  target_reps   int,
+  target_rpe    numeric,
+  actual_weight numeric,
+  actual_reps   int,
+  actual_rpe    numeric,
+  is_primer     boolean default false,
+  completed_at  timestamptz,
+  created_at    timestamptz not null default now(),
+  updated_at    timestamptz not null default now(),
+  deleted_at    timestamptz
+);
+create index if not exists idx_set_logs_session on public.set_logs(session_id);
+create index if not exists idx_set_logs_user on public.set_logs(user_id);
+
+-- ============================================================================
 -- TABLE: weekly_checkins
 -- ============================================================================
 create table if not exists public.weekly_checkins (
@@ -293,7 +319,7 @@ do $$
 declare t text;
 begin
   foreach t in array array[
-    'users','training_plans','phases','weeks','sessions','session_logs',
+    'users','training_plans','phases','weeks','sessions','session_logs','set_logs',
     'weekly_checkins','reassessments','daily_metrics','injuries','ai_recommendations'
   ]
   loop
@@ -317,6 +343,7 @@ alter table public.phases              enable row level security;
 alter table public.weeks               enable row level security;
 alter table public.sessions            enable row level security;
 alter table public.session_logs        enable row level security;
+alter table public.set_logs            enable row level security;
 alter table public.weekly_checkins     enable row level security;
 alter table public.reassessments       enable row level security;
 alter table public.daily_metrics       enable row level security;
@@ -334,7 +361,7 @@ do $$
 declare t text;
 begin
   foreach t in array array[
-    'training_plans','phases','weeks','sessions','session_logs',
+    'training_plans','phases','weeks','sessions','session_logs','set_logs',
     'weekly_checkins','reassessments','daily_metrics','injuries',
     'wearable_readings','ai_recommendations'
   ]
