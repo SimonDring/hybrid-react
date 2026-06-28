@@ -3,7 +3,7 @@
 // original (same movement pattern first, then same muscles via a different pattern),
 // filtered to available equipment + level, each with a recomputed weight target. Never
 // offers an unrelated movement. See lib/plan/substitutions.js.
-import { substituteOptions } from '@performance-os/engine/lib/plan/substitutions.js';
+import { substituteOptions, resolveMuscles, exerciseByName } from '@performance-os/engine/lib/plan/substitutions.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
@@ -58,6 +58,25 @@ const curlOpts = substituteOptions(curl, { access: ['full_gym'], lifts: LIFTS, l
 const HEAVY = ['Barbell row', 'Back squat', 'Bench press', 'Deadlift', 'Overhead press', 'Chest-supported row'];
 assert(!curlOpts.some(o => HEAVY.includes(o.name)),
   `an isolation does not get heavy-compound substitutes (got: ${curlOpts.map(o => o.name).join(', ')})`);
+
+// ── science-likeness: every option trains the original's PRIMARY mover ───────
+const squatPrimary = resolveMuscles(exerciseByName('Back squat')).primary;   // [quads]
+assert(opts.every(o => {
+  const m = resolveMuscles(exerciseByName(o.name));
+  return squatPrimary.some(p => m.primary.includes(p) || m.secondary.includes(p));
+}), 'every squat substitute trains quads (the original primary mover)');
+
+// glute-dominant hinge is NOT offered for a quad-dominant squat
+assert(!names.includes('Hip thrust'), 'squat does not offer a glute-dominant hip thrust');
+
+// bench: a chest-primary sub outranks the triceps-primary close-grip bench
+const benchNames = benchOpts.map(o => o.name);
+const iDB = benchNames.indexOf('DB bench press'), iCG = benchNames.indexOf('Close-Grip Bench Press');
+assert(iDB >= 0 && (iCG < 0 || iDB < iCG), 'DB bench (chest) ranks above close-grip bench (triceps) for a bench swap');
+
+// biceps curl: only biceps isolations — no rear-delt / pec-deck work (the original bug)
+assert(!curlOpts.some(o => /Reverse Pec Deck|Rear-delt|Face pull|Prone/.test(o.name)),
+  `biceps curl offers no rear-delt/scap work (got: ${curlOpts.map(o => o.name).join(', ')})`);
 
 // ── unknown / non-loadable item → no options ────────────────────────────────
 assert(substituteOptions({ name: 'Cat-Camel', sets: '2 × 8' }, { access: ['full_gym'], lifts: LIFTS }).length === 0,
