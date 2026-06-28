@@ -122,6 +122,122 @@ export const ENTRIES = [
     confidence: 'high',
     lastReviewed: '2026-06-23',
     appliesTo: ['injury', 'prevention']
+  },
+
+  // ── Universal physiological framework (raw metrics → derived indices) ──────────
+  // The physiological foundation for the readiness/recovery/load layer. Manufacturer-
+  // independent by design: derive everything from raw metrics, normalised to the
+  // individual's own baseline, never from a vendor's proprietary score.
+  // Full design: docs/engine/03-PHYSIOLOGICAL-FRAMEWORK.md.
+  {
+    id: 'physio.hrv.metric',
+    rule: 'rMSSD (log-transformed → lnRMSSD) is the canonical vagal-HRV index for daily readiness. Use a 7-day rolling average vs a personal baseline with a smallest-worthwhile-change filter, not single-day values. A collapsing day-to-day coefficient of variation (CV) flags non-functional overreaching.',
+    value: { index: 'lnRMSSD', rollingDays: 7, useSWC: true, cvCollapseIsRedFlag: true },
+    evidenceLevel: 'L2',
+    source: 'Plews, Laursen, Stanley, Kilding & Buchheit 2013, Sports Medicine ("Training adaptation and HRV in elite endurance athletes: opening the door to effective monitoring"); Buchheit 2014, Front. Physiol. (HRV beyond rMSSD)',
+    confidence: 'moderate',
+    lastReviewed: '2026-06-28',
+    appliesTo: ['recovery', 'readiness']
+  },
+  {
+    id: 'physio.hrv.guided_training',
+    rule: 'Guiding training by HRV trend (vs a fixed prescription) better maintains/improves vagal HRV and yields fewer negative responders, with a small positive effect on VO2max — supports HRV as an actionable readiness input, not merely a health descriptor.',
+    value: { betterThanPredefined: true, vo2maxEffect: 'small-positive', fewerNegativeResponders: true },
+    evidenceLevel: 'L1',
+    source: 'Manresa-Rocamora et al. 2020 (meta-analysis, VO2max); Granero-Gallegos et al. 2021 (methodological systematic review with meta-analysis)',
+    confidence: 'moderate',
+    lastReviewed: '2026-06-28',
+    appliesTo: ['recovery']
+  },
+  {
+    id: 'physio.rhr.role',
+    rule: 'Resting heart rate is a corroborating, not primary, recovery marker: alone it is weak and inconsistent for detecting overreaching (changes often sit within day-to-day noise); nocturnal/sleeping HR is more reliable than waking RHR. Weight RHR below HRV and subjective wellness.',
+    value: { role: 'corroborating', preferNocturnal: true },
+    evidenceLevel: 'L2',
+    source: 'Bosquet, Merkari, Arvisais & Aubert 2008, Br J Sports Med — "Is heart rate a convenient tool to monitor over-reaching? A systematic review of the literature"',
+    confidence: 'moderate',
+    lastReviewed: '2026-06-28',
+    appliesTo: ['recovery', 'readiness']
+  },
+  {
+    id: 'physio.sleep.targets',
+    rule: 'Sleep is the single most important recovery lever. Target 7–9 h total sleep time (athletes skew high, ≥8 h), sleep efficiency >85%, and regular sleep timing. Short/fragmented sleep degrades strength, power, endurance and reaction time.',
+    value: { totalHours: [7, 9], athleteFloorHours: 8, efficiencyPct: 85 },
+    evidenceLevel: 'L1',
+    source: 'Walsh et al. 2021, Br J Sports Med 55(7):356–368 (expert consensus recommendations); sleep-intervention systematic reviews 2022–2023',
+    confidence: 'high',
+    lastReviewed: '2026-06-28',
+    appliesTo: ['recovery', 'readiness']
+  },
+  {
+    id: 'physio.normalization.personal_baseline',
+    rule: "Normalise every objective metric (HRV, RHR, sleep, respiratory rate) to the INDIVIDUAL's own rolling baseline (z-score / % deviation over 7–60 days), never to population absolutes or a vendor's proprietary score. Devices disagree on absolute values but are reasonably self-consistent over time, so the trustworthy signal is the intra-device trend — this is what makes the framework manufacturer-independent.",
+    value: { method: 'personal-rolling-baseline', windowDays: [7, 60] },
+    evidenceLevel: 'L2',
+    source: 'Plews et al. 2013 (Sports Medicine); device-disagreement evidence: Dial et al. 2025 (Physiol Rep, 5 devices vs ECG, 536 nights), Miller et al. 2022 (six-device validation)',
+    confidence: 'moderate',
+    lastReviewed: '2026-06-28',
+    appliesTo: ['recovery', 'readiness', 'normalization']
+  },
+  {
+    id: 'physio.source.reliability',
+    rule: "Per-source confidence weights for objective metrics, from validation concordance vs ECG/PSG. Each input's confidence contribution scales by its source quality (these scale CONFIDENCE, never the value). Chest-strap/ECG ≈ 1.0; finger ring ≈ 0.95; wrist optical ≈ 0.8; manual/subjective ≈ 0.7.",
+    value: { ecg: 1.0, chest_strap: 1.0, finger_ring: 0.95, wrist_optical: 0.8, manual: 0.7 },
+    evidenceLevel: 'L2',
+    source: 'Dial et al. 2025 (Physiol Rep; nocturnal RHR/HRV vs ECG, 536 nights: Oura CCC≈0.99, WHOOP≈0.94, Garmin≈0.87, Polar≈0.82); Miller et al. 2022 (six wearables: sleep/HR/HRV)',
+    confidence: 'moderate',
+    lastReviewed: '2026-06-28',
+    appliesTo: ['normalization']
+  },
+  {
+    id: 'load.internal.method',
+    rule: 'Quantify internal training load as session-RPE × duration (min) and/or Edwards summated-HR-zone TRIMP; the two correlate strongly and both are validated across resistance and mixed training. Accumulate as acute (7-day) vs chronic (28-day) exponentially-weighted averages.',
+    value: { internal: ['sRPE_x_min', 'edwards_trimp'], acuteDays: 7, chronicDays: 28 },
+    evidenceLevel: 'L1',
+    source: 'Foster 1998/2001 (session-RPE origin); Haddad et al. 2017, Front. Neurosci. (session-RPE validity, ecological usefulness & influencing factors)',
+    confidence: 'high',
+    lastReviewed: '2026-06-28',
+    appliesTo: ['load']
+  },
+  {
+    id: 'load.external.volume_load',
+    rule: 'For strength training, track external load as volume-load (Σ sets × reps × kg, i.e. tonnage) alongside internal load — it captures mechanical dose that HR-based internal load misses. Judge progression by week-on-week change in absolute volume-load, not a single ratio.',
+    value: { external: 'volume_load_kg', formula: 'sum(sets*reps*kg)' },
+    evidenceLevel: 'L4',
+    source: 'Standard S&C monitoring practice; consistent with the athlete-monitoring consensus (Bourdon et al. 2017, Int J Sports Physiol Perform)',
+    confidence: 'moderate',
+    lastReviewed: '2026-06-28',
+    appliesTo: ['load']
+  },
+  {
+    id: 'index.readiness.weights',
+    rule: 'The derived Readiness Index integrates Recovery, Fatigue, Wellness and Sleep — never a vendor readiness score. Weight subjective wellness at least as high as objective HRV/RHR; treat HRV as the primary objective marker, sleep as a heavy contributor, and RHR as corroborating.',
+    value: { subjectiveAtLeastObjective: true, primaryObjective: 'hrv', sleep: 'heavy', rhr: 'corroborating' },
+    evidenceLevel: 'L4',
+    source: 'Weighting heuristic anchored on Saw, Main & Gastin 2016, Br J Sports Med (subjective ≥ objective); see readiness.subjective_priority',
+    confidence: 'moderate',
+    lastReviewed: '2026-06-28',
+    appliesTo: ['readiness']
+  },
+  {
+    id: 'index.fatigue.markers',
+    rule: 'No single objective marker reliably detects overreaching, so the Fatigue Index is a composite: HRV suppression + collapsing HRV coefficient of variation (non-functional-overreaching signal), upward RHR drift, rising subjective fatigue/soreness, and any performance decrement (e-1RM / bar velocity). Require corroboration across markers before acting.',
+    value: { markers: ['hrv_suppression', 'hrv_cv_collapse', 'rhr_drift', 'subjective_fatigue', 'performance_decrement'], requireCorroboration: true },
+    evidenceLevel: 'L2',
+    source: 'Bosquet et al. 2008 (Br J Sports Med, HR/over-reaching review); Plews et al. 2013 (Sports Medicine, HRV CV)',
+    confidence: 'moderate',
+    lastReviewed: '2026-06-28',
+    appliesTo: ['load', 'recovery']
+  },
+  {
+    id: 'index.confidence.model',
+    rule: 'Every index emits a value AND a confidence in [0,1]: confidence = Σ(weight·present·sourceReliability·baselineMaturity) / Σ(weight). Missing inputs lower confidence but never block a recommendation; low confidence biases verdicts toward conservative ("further assessment"), so weak data cannot drive aggressive load changes.',
+    value: { formula: 'sum(w*present*sourceReliability*baselineMaturity)/sum(w)', missingBlocks: false, lowConfidenceIsConservative: true },
+    evidenceLevel: 'L5',
+    source: 'Framework design principle (graceful degradation); grounded in physio.source.reliability and readiness.subjective_priority',
+    confidence: 'moderate',
+    lastReviewed: '2026-06-28',
+    appliesTo: ['readiness', 'normalization']
   }
 ];
 
