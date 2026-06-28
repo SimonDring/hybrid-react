@@ -1,7 +1,43 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-06-23. Keep this current at the end of each work session so the
+_Last updated: 2026-06-28. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
+
+## Latest work — focused session runner + primer/main sections (2026-06-28)
+
+On branch **`feat/focused-session-runner`** (local only — NOT pushed, no PR). Built
+overnight from a brainstorm; awaiting Simon's review. Spec + plan committed under
+`docs/superpowers/{specs,plans}/2026-06-28-*`.
+
+Two connected features:
+1. **Primer / Main sections.** Every gym session now shows a colour-coded **Primer**
+   block (green `--moss`) — 1–3 movement-specific activation moves matched to the
+   day's main lifts (band pull-aparts before bench, etc.) — then the **Main** block
+   (rust `--rust`). New engine module `buildPrimer` (`packages/engine/src/lib/plan/primers.js`
+   + `data/primers.js`, unit-tested in `apps/mobile/tests/primers.js`); applied as a
+   decoration in `PlanService.injuryFilteredPhases` (strips the legacy functional
+   P1–P4 primer, prepends the curated one, tags every item `section`). Engine left
+   untouched so all engine snapshot tests stay green.
+2. **Focused set-by-set runner.** `Start session` now freezes the session and opens
+   a full-screen runner (`screens/SessionRunner.jsx`, route `.../sessions/:idx/run`)
+   that walks one set at a time: primers are quick prep/Done; strength items expand
+   into per-set steps with reps/weight (±2.5 kg) / RPE steppers, carry-forward, and a
+   rest countdown that auto-advances (RestTimer `onComplete`). Supersets interleave by
+   round. Every set persists to a new **`set_logs`** table (migration 013 + schema;
+   offline-first via Storage/Database/SyncService/store `logSet`; degrades gracefully
+   if 013 isn't applied). On completion the top working set per lift is derived from
+   the logged sets and feeds the existing RPE progression. The old tap-each-exercise
+   checklist is removed; Resume re-enters the runner and skips logged sets.
+
+Verified in the preview: primer/main overview, full runner flow (steppers,
+carry-forward, superset interleave, rest auto-advance, resume), `set_logs`
+persistence, and progression (`lift_log.bench` updated from a logged 87.5 kg set).
+`node tests/*.js` green except the **pre-existing** date-dependent
+`reflow-start-consistency.js` (fails on clean HEAD too). `npm run build` clean.
+
+**Open for review:** primer colour `--moss` equals `--accent` (swap to `--ochre` for
+more contrast?); runner renders within the app shell (TopBar/TabBar visible) rather
+than a true viewport overlay; migration 013 not yet applied to the live DB.
 
 ## What this app is now
 
