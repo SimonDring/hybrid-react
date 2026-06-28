@@ -1,13 +1,22 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
 import * as Utils from '@performance-os/engine/lib/Utils.js';
 import { activityFor } from '../data/activityTypes.js';
-import RestTimer from '../components/RestTimer.jsx';
 import ExerciseInfo from '../components/ExerciseInfo.jsx';
-import { getChecked, toggleChecked, clearChecked } from '../lib/SessionProgress.js';
+import { clearChecked } from '../lib/SessionProgress.js';
 import { trackedLiftsInSession } from '@performance-os/engine/lib/liftProgression.js';
+
+// The single prescription string shown in the compact preview row — sets×reps for
+// strength ("4 × 5"), distance/target for run/swim/cycle. Weight & RPE are
+// deliberately omitted from the preview; they appear set-by-set in the runner.
+function prescriptionFor(item) {
+  const act = activityFor(item);
+  if (act.key === 'strength') return item.sets || '';
+  const emph = act.columns.find(c => c.emphasis);
+  return (emph ? emph.accessor(item) : (item.distance || item.sets)) || '';
+}
 
 function SessionPhysiology({ state, candidates, onUnlink, onLink }) {
   if (!state || !state.completed) return null;
@@ -77,18 +86,19 @@ export default function SessionDetail() {
   const uncompleteSession = useTrainingStore(state => state.uncompleteSession);
   const cancelSession = useTrainingStore(state => state.cancelSession);
   const logLiftSets = useTrainingStore(state => state.logLiftSets);
+  const setLogsBySession = useTrainingStore(state => state.setLogsBySession);
   const unlinkWorkoutFromSession = useTrainingStore(s => s.unlinkWorkoutFromSession);
   const linkWorkoutToSession     = useTrainingStore(s => s.linkWorkoutToSession);
   const allWorkouts              = useTrainingStore(s => s.workouts);
 
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const [showForm, setShowForm] = useState(false);
   const [ratings, setRatings] = useState({ quality: null, energy: null, recovery: null });
   const [notes, setNotes] = useState('');
-  const [checked, setChecked] = useState([]);
   const [infoItem, setInfoItem] = useState(null); // exercise tapped for the form guide
   const [injuryBannerOpen, setInjuryBannerOpen] = useState(false);
-  const [lifts, setLifts] = useState({}); // top-set log: key → { weight, rpe }
-  const [restStart, setRestStart] = useState(null); // { secs, at } — seeds RestTimer on set completion
 
   const phase = Plan.getPhase(Number(phaseId));
   const week = phase ? phase.weeks.find(w => w.num === Number(weekNum)) : null;
@@ -100,55 +110,63 @@ export default function SessionDetail() {
     setShowForm(false);
     setRatings({ quality: null, energy: null, recovery: null });
     setNotes('');
-    setChecked(getChecked(key));
-    setLifts({});
-    setRestStart(null);
   }, [key]);
+
+  // The runner sends the athlete back here with ?finish=1 when the last set is done —
+  // open the rating form straight away so completion is one tap, not a hunt.
+  useEffect(() => {
+    if (searchParams.get('finish') === '1' && state && state.started && !state.completed) {
+      setShowForm(true);
+    }
+  }, [searchParams, state]);
 
   if (!session) return <div style={{ padding: 24 }}>Session not found</div>;
 
-  // Main barbell lifts in this session whose top set we log to drive progression.
+  // Main barbell lifts in this session whose top set drives progression. The runner
+  // logs every set, so progression is derived from that real data (topLoggedSet) —
+  // there's no manual top-set entry to re-key.
   const trackedLifts = trackedLiftsInSession(session);
-  const targetKg = (t) => { const m = /([\d.]+)/.exec(t || ''); return m ? Number(m[1]) : null; };
 
   // completed/started come epoch-gated from the store view, so a stale row left over
   // from a previous plan reads as fresh (offers Start) instead of done/in-progress.
   const isDone = state && state.completed;
   const isStarted = state && state.started;
 
-  const handleStart = () => startSession(key);
+  const runnerPath = `/phases/${phaseId}/weeks/${weekNum}/sessions/${sessionIdx}/run`;
 
-  const fmtRest = (s) => {
-    if (s < 60) return `Rest ${s}s`;
-    if (s % 60 === 0) return `Rest ${s / 60} min`;
-    return `Rest ${Math.floor(s / 60)} min ${s % 60}s`;
-  };
-
-  const toggleItem = (idx) => {
-    const next = toggleChecked(key, idx);
-    setChecked(next);
-    if (next.includes(idx)) {
-      const item = session.items[idx];
-      if (item?.restSec) setRestStart({ secs: item.restSec, at: Date.now() });
-    }
-  };
+  // Start freezes the session (pin-on-start in the store) then opens the focused
+  // set-by-set runner. Resume re-enters the runner for an already-started session.
+  const handleStart = () => { startSession(key); navigate(runnerPath); };
+  const handleResume = () => navigate(runnerPath);
 
   const handleCancel = () => {
-    if (!confirm('Started this by mistake? This clears the start time and resets it to not started. Your check-offs will be cleared.')) return;
+    if (!confirm('Started this by mistake? This clears the start time and resets it to not started. Your logged sets will be cleared.')) return;
     cancelSession(key);
     clearChecked(key);
-    setChecked([]);
+  };
+
+  // The heaviest working set this session logged for a tracked lift (tiebreak: most
+  // reps). The runner records every set, so we derive progression from real data
+  // rather than asking the athlete to re-enter their top set.
+  const topLoggedSet = (l) => {
+    const rows = (state && setLogsBySession[state.id]) || [];
+    const matches = rows.filter(r =>
+      !r.is_primer && r.actual_weight != null && r.actual_rpe != null &&
+      (r.exercise_key === l.key || r.exercise_name === l.name)
+    );
+    if (!matches.length) return null;
+    matches.sort((a, b) => (b.actual_weight - a.actual_weight) || ((b.actual_reps || 0) - (a.actual_reps || 0)));
+    const t = matches[0];
+    return { key: l.key, weight: Number(t.actual_weight), reps: t.actual_reps || l.reps, rpe: Number(t.actual_rpe), targetRpe: l.targetRpe, factor: l.factor };
   };
 
   const handleSubmit = () => {
-    // Log top-set results for the main lifts → autoregulates next week's weights.
-    // This is OPTIONAL and must never block completion: fire it off (it writes
-    // locally first, then syncs in the background and logs any error itself).
-    const sets = trackedLifts.map(l => {
-      const entry = lifts[l.key] || {};
-      const weight = entry.weight != null && entry.weight !== '' ? Number(entry.weight) : targetKg(l.target);
-      return (weight && entry.rpe) ? { key: l.key, weight, reps: l.reps, rpe: entry.rpe, targetRpe: l.targetRpe, factor: l.factor } : null;
-    }).filter(Boolean);
+    // Autoregulate next week's weights from the sets the runner actually logged
+    // (heaviest working set per tracked lift). OPTIONAL — never blocks completion
+    // (writes locally first, syncs in the background, logs its own errors). A session
+    // completed without logging any sets simply doesn't adjust weights — no data to
+    // learn from — which is the right behaviour.
+    const sets = trackedLifts.map(topLoggedSet).filter(Boolean);
     if (sets.length) Promise.resolve(logLiftSets(sets)).catch(e => console.error('Top-set log failed (continuing):', e));
 
     // Completion is the primary action — fire and close the form immediately. The
@@ -162,18 +180,15 @@ export default function SessionDetail() {
     })).catch(e => console.error('Complete session failed:', e));
 
     clearChecked(key);
-    setChecked([]);
     setShowForm(false);
     setRatings({ quality: null, energy: null, recovery: null });
     setNotes('');
-    setLifts({});
   };
 
   const handleUncomplete = () => {
     if (confirm('Mark this session as incomplete? This resets it to "not started" and removes your ratings.')) {
       uncompleteSession(key);
       clearChecked(key);
-      setChecked([]);
     }
   };
 
@@ -226,103 +241,46 @@ export default function SessionDetail() {
         </button>
       )}
 
-      {/* Exercise table — columns driven by each item's activity type */}
+      {/* Session preview — two bordered SECTION cards (Primer = teal, Main = neutral),
+          each a compact one-line-per-exercise list: name + a single prescription
+          badge (sets×reps for strength, distance/target for run/swim). Weight, RPE and
+          cues are deliberately NOT here — they appear set-by-set in the runner. */}
       {(() => {
-        // Group consecutive items by activity type so each group gets its own
-        // header row with the right columns. Most sessions are a single type,
-        // but a session can mix (e.g. strength + mobility, or run + swim).
-        const groups = [];
-        session.items.filter(it => !it.substituted).forEach((item, gIdx) => {
-          const activity = activityFor(item);
-          const last = groups[groups.length - 1];
-          if (last && last.activity.key === activity.key) {
-            last.items.push({ item, idx: gIdx });
-          } else {
-            groups.push({ activity, items: [{ item, idx: gIdx }] });
-          }
-        });
+        const visible = session.items.filter(it => !it.substituted);
+        const SECTIONS = [
+          { key: 'primer', label: 'Primer', sub: 'prime the main lifts' },
+          { key: 'main',   label: 'Main',   sub: null }
+        ];
+        const sectionOf = (it) => (it.section === 'primer' ? 'primer' : 'main');
 
-        return groups.map((group, gi) => {
-          const { activity, items } = group;
-          // Build the grid template from the column definitions.
-          // Exercise name column is flexible (1fr); others size to content.
-          const cols = activity.columns;
-          const gridTemplate = `minmax(0,1fr) ${cols.map(c => c.wide ? 'minmax(70px,1.1fr)' : '54px').join(' ')}`;
-
-          return (
-            <div className="gym-table" key={gi} style={{ marginBottom: gi < groups.length - 1 ? 10 : 4 }}>
-              {/* Activity-type header */}
-              <div className="gt-head" style={{ gridTemplateColumns: gridTemplate }}>
-                <div className="gt-h-ex">{activity.label}</div>
-                {cols.map(c => (
-                  <div key={c.key} className={`gt-h-cell ${c.wide ? 'gt-h-wide' : ''}`}>{c.label}</div>
-                ))}
+        return SECTIONS
+          .map(sec => ({ sec, rows: visible.filter(it => sectionOf(it) === sec.key) }))
+          .filter(({ rows }) => rows.length)
+          .map(({ sec, rows }) => (
+            <div className={`section-card ${sec.key}`} key={sec.key}>
+              <div className="sc-head">
+                <span className="sc-label">{sec.label}</span>
+                {sec.sub && <span className="sc-sub">{sec.sub}</span>}
+                {sec.key === 'primer' && <span className="sc-tag">circuit</span>}
               </div>
-
-              {items.map(({ item, idx }, i) => {
-                const isTagged = !!item.tag;
-                const cue = activity.cue(item);
-                const done = checked.includes(idx);
-                return (
-                  <div
-                    key={i}
-                    className={`gt-row ${isStarted ? 'checkable' : ''} ${done ? 'is-checked' : ''}`}
-                    style={{ borderLeft: `3px solid ${item.superset ? 'var(--accent)' : isTagged ? activity.accent : 'transparent'}` }}
-                    onClick={isStarted ? () => toggleItem(idx) : undefined}
-                    role={isStarted ? 'button' : undefined}
-                  >
-                    <div className="gt-main" style={{ gridTemplateColumns: gridTemplate }}>
-                      <div className="gt-ex">
-                        {isStarted && <span className={`gt-check ${done ? 'on' : ''}`} aria-hidden="true">✓</span>}
-                        <span className="gt-num" style={item.superset ? { color: 'var(--accent)' } : undefined}>{item.num}</span>
-                        <span className="gt-name">{item.name}</span>
-                        <button
-                          className="gt-info"
-                          aria-label={`How to do ${item.name}`}
-                          onClick={(e) => { e.stopPropagation(); setInfoItem(item); }}
-                        >ⓘ</button>
-                        {item.rehab && (
-                          <span style={{
-                            fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
-                            color: 'var(--moss)', background: 'rgba(74,93,58,0.12)', borderRadius: 100, padding: '2px 7px', marginLeft: 6
-                          }}>Rehab</span>
-                        )}
-                        {item.prevention && (
-                          <span style={{
-                            fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
-                            color: 'var(--txt-muted)', background: 'rgba(106,102,93,0.12)', borderRadius: 100, padding: '2px 7px', marginLeft: 6
-                          }}>Prev</span>
-                        )}
-                      </div>
-                      {cols.map(c => {
-                        const val = c.accessor(item);
-                        const cls = [
-                          'gt-cell',
-                          c.emphasis ? 'gt-emphasis' : '',
-                          c.accent ? 'gt-accent' : '',
-                          c.wide ? 'gt-wide' : ''
-                        ].filter(Boolean).join(' ');
-                        return <div key={c.key} className={cls}>{val}</div>;
-                      })}
-                    </div>
-                    {cue && <div className="gt-note">{cue}</div>}
-                    {item.rehab && item.rationale && (
-                      <div className="gt-note" style={{ color: 'var(--moss)', fontStyle: 'italic' }}>
-                        {item.rationale}
-                      </div>
-                    )}
-                    {item.prevention && item.preventionNote && (
-                      <div className="gt-note" style={{ color: 'var(--txt-muted)', fontStyle: 'italic' }}>
-                        {item.preventionNote}
-                      </div>
-                    )}
-                    {item.restSec > 0 && <div className="gt-rest">{fmtRest(item.restSec)}</div>}
+              {rows.map((item, i) => (
+                <div className="sx-row" key={i}>
+                  <span className="sx-num" style={item.superset ? { color: 'var(--accent)' } : undefined}>{item.num}</span>
+                  <div className="sx-main">
+                    <span className="sx-name">{item.name}</span>
+                    <button
+                      className="sx-info"
+                      aria-label={`How to do ${item.name}`}
+                      onClick={() => setInfoItem(item)}
+                    >ⓘ</button>
+                    {item.rehab && <span className="sx-tag rehab">Rehab</span>}
+                    {item.prevention && <span className="sx-tag prev">Prev</span>}
                   </div>
-                );
-              })}
+                  <span className="sx-badge">{prescriptionFor(item)}</span>
+                </div>
+              ))}
             </div>
-          );
-        });
+          ));
       })()}
 
       {/* Completion state */}
@@ -384,38 +342,6 @@ export default function SessionDetail() {
       {/* Rating form */}
       {!isDone && showForm && (
         <div className="form-card" style={{ marginTop: 20 }}>
-          {/* Top-set logging for the main lifts — drives next week's targets */}
-          {trackedLifts.length > 0 && (
-            <div style={{ marginBottom: 20 }}>
-              <div className="h3" style={{ marginTop: 0, marginBottom: 4 }}>Log your top set</div>
-              <div style={{ fontSize: 12, color: 'var(--txt-muted)', marginBottom: 14 }}>
-                How the last set felt sets next week's weight — heavier if it was easy, steady if it was right.
-              </div>
-              {trackedLifts.map(l => (
-                <div key={l.key} style={{ marginBottom: 16 }}>
-                  <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>
-                    {l.name} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--txt-muted)' }}>· {l.reps} reps{l.target ? ` · target ${l.target}` : ''}</span>
-                  </label>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <input type="number" inputMode="decimal" placeholder={targetKg(l.target) != null ? String(targetKg(l.target)) : 'kg'}
-                      value={lifts[l.key]?.weight ?? ''}
-                      onChange={e => setLifts(p => ({ ...p, [l.key]: { ...p[l.key], weight: e.target.value } }))}
-                      style={{ width: 90, fontSize: 16, padding: '10px 12px', borderRadius: 10, border: '1px solid var(--hairline)', background: 'var(--bg-surface)', color: 'var(--txt-strong)', fontFamily: 'inherit', boxSizing: 'border-box' }} />
-                    <span style={{ fontSize: 13, color: 'var(--txt-muted)' }}>kg used</span>
-                  </div>
-                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: 'var(--txt-muted)', marginBottom: 5 }}>FINAL-SET RPE</div>
-                  <div className="rating-row">
-                    {[6, 7, 8, 9, 10].map(n => (
-                      <button key={n} className={`rating-btn ${lifts[l.key]?.rpe === n ? 'active' : ''}`}
-                        onClick={() => setLifts(p => ({ ...p, [l.key]: { ...p[l.key], rpe: n } }))}>{n}</button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-              <div style={{ borderBottom: '1px solid var(--hairline)', margin: '4px 0 16px' }} />
-            </div>
-          )}
-
           <div className="h3" style={{ marginTop: 0, marginBottom: 16 }}>Rate this session</div>
 
           {[
@@ -482,16 +408,22 @@ export default function SessionDetail() {
             <>
               <div className="session-live" style={{ marginTop: 20 }}>
                 <div className="sl-head">
-                  <span className="sl-progress">{checked.length}/{session.items.length} done</span>
+                  <span className="sl-progress">In progress</span>
                   {state.startedAt && (
                     <span className="sl-started">Started {new Date(state.startedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   )}
                 </div>
-                <RestTimer restStart={restStart} />
               </div>
               <button
                 className="btn-primary"
                 style={{ marginTop: 12, width: '100%' }}
+                onClick={handleResume}
+              >
+                Resume session
+              </button>
+              <button
+                className="btn-secondary"
+                style={{ marginTop: 8, width: '100%' }}
                 onClick={() => setShowForm(true)}
               >
                 Complete session

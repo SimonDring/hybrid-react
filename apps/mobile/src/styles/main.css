@@ -1375,6 +1375,95 @@ body { font-variant-numeric: tabular-nums; }
 .gt-check.on { background: var(--moss); border-color: var(--moss); color: #fff; }
 
 /* Live (in-progress) session panel */
+/* ============================================================================
+   Focused set-by-set runner — a full-screen takeover that walks one set at a
+   time. --rn-color is the active section accent (primer = teal, main = neutral);
+   the progress bar stays teal throughout. No rust — aligned to the Midnight palette.
+   ============================================================================ */
+.runner {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--bg-app, var(--bg-surface));
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.runner-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 8px;
+}
+.runner-exit {
+  width: 32px; height: 32px;
+  border: none; background: var(--bg-surface-2); color: var(--txt-muted);
+  border-radius: 8px; font-size: 16px; cursor: pointer; font-family: inherit;
+}
+.runner-progress-text {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--txt-muted);
+}
+.runner-nav-group { display: flex; align-items: center; gap: 12px; }
+.runner-nav {
+  width: 32px; height: 32px; border: none; background: var(--bg-surface-2);
+  color: var(--txt-strong); border-radius: 8px; font-size: 18px; line-height: 1;
+  cursor: pointer; font-family: inherit;
+}
+.runner-nav:disabled { opacity: 0.35; cursor: default; }
+.runner-bar { height: 3px; background: var(--hairline); margin: 0 16px 8px; border-radius: 2px; overflow: hidden; }
+.runner-bar-fill { height: 100%; background: var(--accent); transition: width 0.25s ease; }
+
+.runner-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 460px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 8px 22px 40px;
+}
+.rn-section { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 4px; }
+.rn-name { font-size: 30px; line-height: 1.1; margin: 0 0 18px; color: var(--txt-strong); }
+.step-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+}
+.rn-prescription { font-size: 22px; font-weight: 700; color: var(--txt-strong); }
+.rn-setline { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rn-color); }
+.rn-target { font-size: 13px; color: var(--txt-muted); margin-top: 4px; }
+.rn-note { font-size: 13px; color: var(--txt-body); font-style: italic; line-height: 1.5; }
+
+/* Primer circuit — the round's moves listed together (no per-move stepping). */
+.rn-circuit { margin-top: 14px; }
+.rn-circuit-move {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 0; border-top: 1px solid var(--hairline);
+}
+.rn-circuit-move:first-child { border-top: none; }
+.rn-cm-name { font-size: 16px; color: var(--txt-strong); }
+.rn-cm-reps { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--txt-body); }
+
+.rn-steppers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+.rn-stepper-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--txt-muted); margin-bottom: 6px; text-align: center; }
+.rn-stepper-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.rn-step-btn {
+  width: 44px; height: 44px; flex: none;
+  border: 1px solid var(--hairline); background: var(--bg-surface-2); color: var(--txt-strong);
+  border-radius: 12px; font-size: 24px; line-height: 1; cursor: pointer; font-family: inherit;
+}
+.rn-step-btn:disabled { opacity: 0.4; cursor: default; }
+.rn-step-val { flex: 1; text-align: center; font-size: 26px; font-weight: 700; color: var(--txt-strong); }
+.rn-step-unit { font-size: 13px; font-weight: 500; color: var(--txt-muted); margin-left: 3px; }
+.rn-rpe-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--txt-muted); margin: 20px 0 8px; }
+
+.rn-rest { text-align: center; }
+.rn-next { font-size: 14px; color: var(--txt-body); margin-top: 16px; }
+
 .session-live {
   background: var(--bg-surface);
   border: 1px solid var(--hairline);
@@ -2087,6 +2176,97 @@ button:active,
    Columns: Exercise | Sets | Reps | RPE | Weight
    Designed to be read at arm's length mid-set.
    =================================================================== */
+
+/* Session SECTION cards — the colour SURROUNDS the block (full border), not a left
+   rail. Primer = teal (--accent, the app's primary accent); Main = neutral surface.
+   Inside, each exercise is one compact row: name + a single prescription badge.
+   Weight/RPE/cues are intentionally absent here — they live in the runner. */
+.section-card {
+  border-radius: 14px;
+  padding: 12px 14px 6px;
+  margin-bottom: 14px;
+  border: 1px solid var(--hairline-strong);
+  background: var(--bg-surface);
+}
+.section-card:last-of-type { margin-bottom: 4px; }
+.section-card.primer {
+  border-color: rgba(111, 211, 196, 0.55);
+  background: rgba(111, 211, 196, 0.06);
+}
+.sc-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.sc-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--txt-muted);
+}
+.section-card.primer .sc-label { color: var(--accent); }
+.sc-sub { font-size: 11px; font-weight: 500; color: var(--txt-muted); }
+.sc-tag {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(111, 211, 196, 0.12);
+  border-radius: 100px;
+  padding: 2px 8px;
+}
+/* Compact exercise row: [num] name ⓘ [tags] ............ [badge] */
+.sx-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 0;
+  border-top: 1px solid var(--hairline);
+}
+.sc-head + .sx-row { border-top: none; }
+.sx-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--txt-muted);
+  min-width: 20px;
+}
+.sx-main { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 6px; }
+.sx-name { font-size: 15px; color: var(--txt-strong); font-weight: 500; }
+.sx-info {
+  background: none;
+  border: none;
+  color: var(--txt-muted);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.sx-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 100px;
+  padding: 2px 7px;
+}
+.sx-tag.rehab { color: var(--accent); background: rgba(111, 211, 196, 0.12); }
+.sx-tag.prev { color: var(--txt-muted); background: rgba(127, 138, 156, 0.14); }
+.sx-badge {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--txt-body);
+  background: var(--bg-surface-2);
+  border-radius: 7px;
+  padding: 4px 9px;
+}
 
 .gym-table {
   margin: 8px 0 4px;

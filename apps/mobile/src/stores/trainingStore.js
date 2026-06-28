@@ -13,7 +13,9 @@
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
-import { nextE1RM } from '@performance-os/engine/lib/liftProgression.js';
+import { nextE1RM, resolveLifts } from '@performance-os/engine/lib/liftProgression.js';
+import { substituteOptions } from '@performance-os/engine/lib/plan/substitutions.js';
+import { getGymLevel } from '@performance-os/engine/lib/Utils.js';
 import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch, adaptedSessionByKey } from '../lib/PlanService.js';
 import { dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad } from '@performance-os/engine/lib/plan/trainingLoad.js';
@@ -118,9 +120,16 @@ function buildView() {
     .map(l => ({ date: (l.completed_at || '').split('T')[0], ...sessionLoad(l) }));
   const loadView = { acute: Math.round(ac.acute), chronic: Math.round(ac.chronic), acwr: acwrVal, band, sessions: loadSessions };
 
+  // Per-set training history grouped by session id — drives the runner's resume.
+  const setLogsBySession = {};
+  Database.tables.setLogs.all().forEach(r => {
+    (setLogsBySession[r.session_id] = setLogsBySession[r.session_id] || []).push(r);
+  });
+
   return {
     logs,
     sessions,
+    setLogsBySession,
     workouts:     workoutsAll,
     reassess:     Database.services.getReassessAnswers(),
     profile:      Database.services.getProfile(),
@@ -311,6 +320,49 @@ export const useTrainingStore = create((set) => ({
   cancelSession(templateRef) {
     Sync.cancelSession(templateRef).catch(e => console.error('cancelSession sync failed:', e));
     clearOverride(templateRef);   // started by mistake → drop any train-now adaptation too
+    set(buildView());
+  },
+  // Log one completed set from the focused runner. Offline-first: the local write
+  // happens synchronously (instant), the cloud upsert runs in the background and can
+  // never block or fail the runner. Pass a deterministic `id` to make re-logging the
+  // same set idempotent (overwrite, not duplicate).
+  logSet(fields) {
+    Promise.resolve(Sync.saveSetLog(fields)).catch(e => console.error('logSet sync failed:', e));
+    set(buildView());
+  },
+  // Ranked same-muscle alternatives for an exercise (equipment unavailable in the gym).
+  // Pure read of the current profile — used by the runner's Substitute sheet.
+  substituteOptionsFor(item) {
+    const profile = Database.services.getProfile() || {};
+    return substituteOptions(item, {
+      access: profile.access || [], lifts: resolveLifts(profile), level: getGymLevel(profile)
+    });
+  },
+  // Swap one exercise in the CURRENT session for a same-muscle alternative — session
+  // only. Writes into the local session override (the same snapshot pin-on-start uses),
+  // so the generated plan and future weeks are never touched. Keyed by the exercise's
+  // current name (the override holds undecorated items; the runner shows decorated ones,
+  // so index wouldn't line up). The new exercise keeps the original's sets/reps/RPE and
+  // carries its own recomputed weight; `substitutedFrom` records what it replaced.
+  substituteExercise(templateRef, originalName, option) {
+    let override = getOverride(templateRef);
+    if (!override) {
+      const s = adaptedSessionByKey(templateRef);
+      if (!s) return;
+      const focus = (s.title || '').includes('·') ? s.title.split('·').slice(1).join('·').trim() : (s.focus || s.title || '');
+      override = { focus, duration: s.duration, items: s.items, pinnedAtStart: true };
+    }
+    const items = (override.items || []).slice();
+    const idx = items.findIndex(it => it.name === originalName);
+    if (idx < 0) return;
+    items[idx] = {
+      ...items[idx],
+      name: option.name,
+      weight: option.weight ?? null,
+      equip: option.equip,
+      substitutedFrom: items[idx].substitutedFrom || items[idx].name
+    };
+    setOverride(templateRef, { ...override, items });
     set(buildView());
   },
   skipSession(templateRef) {

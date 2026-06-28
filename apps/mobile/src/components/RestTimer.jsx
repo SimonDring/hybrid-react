@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { playBeep } from '../lib/sound.js';
 
 const PRESETS = [60, 90, 120, 180];
 
@@ -10,37 +11,105 @@ function fmt(s) {
 
 /**
  * RestTimer — a tap-to-run rest countdown for use between sets.
- * restStart: { secs, at } — changes trigger an auto-start with the given duration.
- * Pick a preset to override; tap the time to pause/resume. Vibrates on finish.
+ *
+ * Timing is TIMESTAMP-based, not a ticking counter: we store the wall-clock moment
+ * the rest ends (`endAtRef`) and derive the display from `now`. So when iOS suspends
+ * the page (screen lock / backgrounded), the countdown doesn't drift — the instant
+ * the page is visible again it reads the true remaining time, and if it elapsed while
+ * away it completes immediately (catch-up). Completion fires exactly once (`firedRef`).
+ *
+ * Props (unchanged):
+ *   restStart: { secs, at } — changes auto-start a rest, anchored to `at` (the real
+ *     set-completion time) so the countdown is correct even if the tab was busy.
+ *   onComplete: optional — fired once when the countdown reaches 0 (the runner uses it
+ *     to auto-advance). Called from a timer/visibility callback (never during render).
+ * Pick a preset to override; tap the time to pause/resume. Vibrates + beeps on finish.
  */
-export default function RestTimer({ restStart }) {
+export default function RestTimer({ restStart, onComplete }) {
   const [secs, setSecs] = useState(0);
   const [running, setRunning] = useState(false);
-  const intervalRef = useRef(null);
+  const endAtRef = useRef(null);       // wall-clock ms when the rest ends (while running)
+  const pausedRef = useRef(0);         // seconds remaining while paused
+  const firedRef = useRef(false);      // onComplete fires once per rest period
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
 
+  // The one place a rest ends — guarded so it runs once. Called from the tick or the
+  // visibility handler (post-commit callbacks), never from inside a render/updater.
+  const finish = () => {
+    if (firedRef.current) return;
+    firedRef.current = true;
+    endAtRef.current = null;
+    setRunning(false);
+    setSecs(0);
+    if (navigator.vibrate) navigator.vibrate(250);
+    playBeep();
+    onCompleteRef.current?.();
+  };
+
+  const remainingNow = () => Math.max(0, Math.round((endAtRef.current - Date.now()) / 1000));
+
+  // Display tick — derived from the end timestamp, so a suspended interval can't drift.
   useEffect(() => {
     if (!running) return;
-    intervalRef.current = setInterval(() => {
-      setSecs(s => {
-        if (s <= 1) {
-          clearInterval(intervalRef.current);
-          setRunning(false);
-          if (navigator.vibrate) navigator.vibrate(250);
-          return 0;
-        }
-        return s - 1;
-      });
-    }, 1000);
-    return () => clearInterval(intervalRef.current);
-  }, [running]);
+    const tick = () => {
+      const r = remainingNow();
+      setSecs(r);
+      if (r <= 0) finish();
+    };
+    tick();
+    const id = setInterval(tick, 250);
+    return () => clearInterval(id);
+  }, [running]);  // eslint-disable-line react-hooks/exhaustive-deps
 
-  const start = (n) => { setSecs(n); setRunning(true); };
-  const toggle = () => { if (secs > 0) setRunning(r => !r); };
-  const reset = () => { setRunning(false); setSecs(0); };
-
-  // Auto-start when a set is tapped complete — restStart.at changes each time.
+  // Catch-up: recompute the instant the page is visible again after a lock/background.
   useEffect(() => {
-    if (restStart?.secs > 0) start(restStart.secs);
+    if (!running) return;
+    const onVisible = () => {
+      if (document.visibilityState !== 'visible') return;
+      const r = remainingNow();
+      setSecs(r);
+      if (r <= 0) finish();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('pageshow', onVisible);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('pageshow', onVisible);
+    };
+  }, [running]);  // eslint-disable-line react-hooks/exhaustive-deps
+
+  const startSecs = (n) => {
+    if (n <= 0) return;
+    firedRef.current = false;
+    endAtRef.current = Date.now() + n * 1000;
+    setSecs(n);
+    setRunning(true);
+  };
+
+  // Tap the display: pause (capture remaining) / resume (fresh end time from remaining).
+  const toggle = () => {
+    if (running) {
+      pausedRef.current = remainingNow();
+      endAtRef.current = null;
+      setRunning(false);
+    } else if (secs > 0) {
+      endAtRef.current = Date.now() + (pausedRef.current || secs) * 1000;
+      setRunning(true);
+    }
+  };
+
+  const reset = () => { endAtRef.current = null; setRunning(false); setSecs(0); };
+
+  // Auto-start when a set is logged — restStart.at changes each time. Anchor to the
+  // real set-completion timestamp so the countdown is accurate from the off.
+  useEffect(() => {
+    if (restStart?.secs > 0) {
+      firedRef.current = false;
+      endAtRef.current = (restStart.at || Date.now()) + restStart.secs * 1000;
+      setSecs(remainingNow());
+      setRunning(true);
+    }
   }, [restStart]);
 
   return (
@@ -52,7 +121,7 @@ export default function RestTimer({ restStart }) {
       </button>
       <div className="rt-presets">
         {PRESETS.map(n => (
-          <button key={n} className="rt-preset" onClick={() => start(n)}>{n}s</button>
+          <button key={n} className="rt-preset" onClick={() => startSecs(n)}>{n}s</button>
         ))}
         {secs > 0 && <button className="rt-preset rt-reset" onClick={reset}>Reset</button>}
       </div>

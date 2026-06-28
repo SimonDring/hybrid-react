@@ -306,21 +306,19 @@ function structureItems(picks) {
   const LET = 'ABCDEFGH';
   const mains = [], rest = [];
   picks.forEach(p => (p.ex.role === 'primary' ? mains : rest).push(p));
-  const usedRest = new Set();
   let blocks = [];
 
   // Core + health/mobility work is never supersetted into another block — it forms
   // its own singleton blocks so it can be sequenced cleanly at the end of the session.
   const isSupportive = (p) => p.ex.loadClass === 'health' || p.ex.pattern === 'core' || (p.item && p.item.tag === 'mobility');
 
-  for (const m of mains) {
-    let fi = -1;
-    for (let i = 0; i < rest.length; i++) {
-      if (!usedRest.has(i) && isFiller(rest[i].ex) && !isSupportive(rest[i]) && canPair(m.ex, rest[i].ex)) { fi = i; break; }
-    }
-    if (fi >= 0) { usedRest.add(fi); blocks.push([m, rest[fi]]); } else blocks.push([m]);
-  }
-  const rem = rest.map((p, i) => ({ p, i })).filter(x => !usedRest.has(x.i));
+  // Primary compounds always run as STRAIGHT SETS — never supersetted with a filler —
+  // so the heavy work keeps its full prescribed rest. Cramming a light isolation into a
+  // heavy lift's rest gap under-rests it (biceps aren't an antagonist of a bench/row, so
+  // it's not "free" recovery). Accessories still antagonist/non-competing pair below.
+  for (const m of mains) blocks.push([m]);
+
+  const rem = rest.map((p, i) => ({ p, i }));
   const taken = new Set();
   for (let i = 0; i < rem.length; i++) {
     if (taken.has(i)) continue;
@@ -353,8 +351,7 @@ function structureItems(picks) {
   // split's fundamental compound for build. Pin it first (by design — sessions lead
   // with their most important/sport-specific work), then order the REMAINING blocks
   // power → primary → accessory → isoCore → health, so a heavy main is never buried
-  // behind the lone accessory/core filler it used to sort behind (the old rank took
-  // the MAX class, demoting any main paired with a calf/core filler).
+  // behind the lone accessory/core filler it used to sort behind.
   const anchorId = picks[0] && picks[0].ex.id;
   let anchorBlock = null;
   if (anchorId) {
@@ -478,6 +475,14 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     if (slot.focus) {
       let c = 0, inFocus = 0;
       for (const m in contrib) { c += contrib[m]; if ((slot.focus[m] || 0) > 0) inFocus += contrib[m]; }
+      // Region-pure focused days (build/strength only): a candidate whose work is
+      // ENTIRELY off-focus (e.g. a chest press on a Lower day) is EXCLUDED, not just
+      // suppressed — so a focused day stays in its region instead of absorbing
+      // cross-region weekly-deficit spillover. Full-body days weight every trained
+      // muscle > 0, so nothing is ever fully off-focus and nothing is excluded.
+      // SPORT is exempt: sport splits deliberately thread the sport's priority work
+      // through every session (a swimmer leads even a lower day with pull work).
+      if (style !== 'sport' && c > 0 && inFocus === 0) continue;
       score *= 0.4 + 0.6 * (c > 0 ? inFocus / c : 1);
     }
     score -= OVERSHOOT_PENALTY * waste;                            // prefer picks that fit the remaining target

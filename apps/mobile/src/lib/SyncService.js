@@ -200,13 +200,14 @@ export async function pullFromSupabase() {
     // client. It is still namespaced + cleared per user (see Storage), so its
     // exclusion from the pull is not an isolation gap.
     const [
-      usersRes, plansRes, sessionsRes, logsRes,
+      usersRes, plansRes, sessionsRes, logsRes, setLogsRes,
       checkinsRes, reassessRes, dailyRes, injuriesRes, workoutsRes
     ] = await Promise.all([
       supabase.from('users').select('*').eq('id', userId).is('deleted_at', null),
       supabase.from('training_plans').select('*').eq('user_id', userId).is('deleted_at', null),
       supabase.from('sessions').select('*').eq('user_id', userId).is('deleted_at', null),
       supabase.from('session_logs').select('*').eq('user_id', userId).is('deleted_at', null),
+      supabase.from('set_logs').select('*').eq('user_id', userId).is('deleted_at', null),
       supabase.from('weekly_checkins').select('*').eq('user_id', userId).is('deleted_at', null),
       supabase.from('reassessments').select('*').eq('user_id', userId).is('deleted_at', null),
       supabase.from('daily_metrics').select('*').eq('user_id', userId).is('deleted_at', null),
@@ -216,8 +217,8 @@ export async function pullFromSupabase() {
 
     const resultsByTable = {
       users: usersRes, plans: plansRes, sessions: sessionsRes, sessionLogs: logsRes,
-      weeklyCheckins: checkinsRes, reassessments: reassessRes, dailyMetrics: dailyRes,
-      injuries: injuriesRes, workouts: workoutsRes
+      setLogs: setLogsRes, weeklyCheckins: checkinsRes, reassessments: reassessRes,
+      dailyMetrics: dailyRes, injuries: injuriesRes, workouts: workoutsRes
     };
 
     // Log any per-table errors but do NOT abort — replace every table that came
@@ -236,6 +237,7 @@ export async function pullFromSupabase() {
     if (replaceable.includes('plans'))          Database.tables.plans.replaceAll(plansRes.data || []);
     if (replaceable.includes('sessions'))       Database.tables.sessions.replaceAll(sessionsRes.data || []);
     if (replaceable.includes('sessionLogs'))    Database.tables.sessionLogs.replaceAll(logsRes.data || []);
+    if (replaceable.includes('setLogs'))        Database.tables.setLogs.replaceAll(setLogsRes.data || []);
     if (replaceable.includes('weeklyCheckins')) Database.tables.weeklyCheckins.replaceAll(checkinsRes.data || []);
     if (replaceable.includes('reassessments')) Database.tables.reassessments.replaceAll(reassessRes.data || []);
     if (replaceable.includes('dailyMetrics'))   Database.tables.dailyMetrics.replaceAll(dailyRes.data || []);
@@ -283,7 +285,7 @@ export async function deleteTrainingData() {
   if (!canSync()) return { ok: true, local: true };
   const userId = uid();
   const stamp = new Date().toISOString();
-  const tables = ['session_logs', 'sessions', 'weekly_checkins', 'reassessments', 'daily_metrics', 'injuries'];
+  const tables = ['set_logs', 'session_logs', 'sessions', 'weekly_checkins', 'reassessments', 'daily_metrics', 'injuries'];
   for (const t of tables) {
     const { error } = await supabase.from(t).update({ deleted_at: stamp }).eq('user_id', userId).is('deleted_at', null);
     if (error) { logError('deleteTrainingData:' + t, error); return { ok: false, error: error.message }; }
@@ -365,6 +367,12 @@ export async function uncompleteSession(templateRef) {
       .update({ deleted_at: new Date().toISOString() })
       .eq('id', log.id)
   );
+  // Cascade: soft-delete this session's per-set history too.
+  if (before) ops.push(
+    supabase.from('set_logs')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('session_id', before.id).is('deleted_at', null)
+  );
   const results = await Promise.all(ops);
   results.forEach(r => { if (r.error) logError('uncompleteSession', r.error); });
 }
@@ -384,6 +392,12 @@ export async function cancelSession(templateRef) {
     supabase.from('session_logs')
       .update({ deleted_at: new Date().toISOString() })
       .eq('id', log.id)
+  );
+  // Cascade: soft-delete this session's per-set history too.
+  if (session) ops.push(
+    supabase.from('set_logs')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('session_id', session.id).is('deleted_at', null)
   );
   const results = await Promise.all(ops);
   results.forEach(r => { if (r.error) logError('cancelSession', r.error); });
@@ -407,6 +421,24 @@ export async function skipSession(templateRef) {
   reclaimDeleteOp(ops, before, updated);
   const results = await Promise.all(ops);
   results.forEach(r => { if (r.error) logError('skipSession', r.error); });
+}
+
+// ---------- Set logs (per-set training history) ----------
+
+// Persist one logged set offline-first: write it to the local cache synchronously,
+// then best-effort upsert to Supabase. If set_logs doesn't exist in the live DB yet
+// (migration 013 not applied), the upsert errors and is logged — the local write is
+// unaffected, so the runner keeps working. Mirrors addInjury.
+export async function saveSetLog(fields) {
+  if (!canSync()) return Database.services.logSet(fields);
+  const userId = uid();
+  const result = Database.services.logSet(fields);
+  if (!result) return result;
+  const { error } = await supabase
+    .from('set_logs')
+    .upsert(clean(result, userId), { onConflict: 'id' });
+  if (error) logError('saveSetLog', error);
+  return result;
 }
 
 // ---------- Weekly check-ins ----------
@@ -737,7 +769,7 @@ export async function resetAll() {
   if (!canSync()) return Database.services.resetAll();
   const userId = uid();
   const tables = [
-    'sessions', 'session_logs', 'weekly_checkins', 'reassessments',
+    'sessions', 'session_logs', 'set_logs', 'weekly_checkins', 'reassessments',
     'daily_metrics', 'injuries', 'wearable_readings', 'training_plans'
   ];
   await Promise.all(
@@ -755,6 +787,7 @@ export default {
   pullFromSupabase,
   updateProfile, setGoals,
   startSession, completeSession, uncompleteSession, cancelSession, skipSession,
+  saveSetLog,
   addCheckin, deleteCheckin,
   upsertDailyMetric,
   setReassessAnswer,

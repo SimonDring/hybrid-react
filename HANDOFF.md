@@ -1,7 +1,115 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-06-23. Keep this current at the end of each work session so the
+_Last updated: 2026-06-28. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
+
+## Latest work — Session UI v2 + timer reliability + engine cleanups (2026-06-28)
+
+Continues on branch **`feat/focused-session-runner`** (local only — NOT pushed, no PR).
+Six brainstormed specs, all built + preview-verified. Specs under
+`docs/superpowers/specs/2026-06-28-*-design.md` (session-ui-v2, rest-timer-reliability,
+primaries-straight-sets, region-pure-days-and-ordering, exercise-video-placeholder,
+on-the-fly-exercise-substitution).
+
+- **Spec A — Session UI v2.** The session preview is now mobile-first: one compact row
+  per exercise (name + a single sets×reps badge; weight/RPE/cues moved into the runner).
+  Primer and Main are **bordered section cards** (colour surrounds the block, no left
+  rail): **Primer = teal `--accent`**, **Main = neutral**; **rust removed** from the
+  session views + runner (it's legacy; the Midnight primary accent is teal). In the
+  runner the primer runs as a **circuit, round-by-round** ("Round 1 of 2 → Start main"),
+  no per-move rest. (Supersedes the "primer colour --moss" open item below.)
+- **Spec B — Rest-timer reliability (serverless).** `RestTimer` rewritten to
+  **timestamp-based** timing (tracks the end time, derives the display) so a screen
+  lock no longer freezes/drifts it; a `visibilitychange`/`pageshow` handler catches up
+  and fires completion once on return. New `hooks/useWakeLock.js` keeps the screen awake
+  for the whole runner (re-acquires on visibility; silent no-op on unsupported iOS).
+  New `lib/sound.js` beep on completion (+ existing vibrate; AudioContext unlocked on
+  taps). Also fixes the prior "setState while rendering" warning. The manual "Log your
+  top set" form is **removed** — progression derives solely from logged sets.
+  **Deferred (needs backend/native):** locked-screen Web Push banner + native iOS Live
+  Activity — a PWA can't schedule local notifications (verified: iOS Web Push is
+  server-only, installed-PWA only).
+- **Spec C — Primary lifts always run as straight sets.** `structureItems` no longer
+  crams a light filler into a primary's rest gap (it under-rested the heavy lift).
+  Primaries run straight with full rest; accessories still antagonist-superset among
+  themselves. Golden-master regenerated — **exercise selection + volume byte-identical**
+  across all 19 archetypes (570 session blocks); only superset structure changed.
+- **Spec D — Region-pure focused days + compounds-lead ordering.** A focused Upper/Lower
+  day no longer absorbs cross-region weekly-deficit spillover: in `bestExercise`, a
+  candidate whose muscles are ENTIRELY off-focus is now excluded (not just suppressed).
+  Hybrid lifts that hit an in-focus muscle stay (a Rack Pull on Upper trains the back);
+  factor-0 prehab finisher work (tag 'mobility') is region-agnostic; **sport is exempt**
+  (sport threads its priority work through every session). `structureItems` ordering
+  re-tiered to compounds → isolation → core → mobility, with the anchor pulled to front
+  AFTER the sort so a sport-priority iso/accessory anchor still leads. Fixes the reported
+  "why is Floor Press on the Tuesday lower day, last?" — Phase1/Wk1 Tuesday now reads
+  **Lower** (Box squat · Deficit Deadlift · Calf/Tibialis · Nordic curl · Ab Wheel), no
+  stray press. New `tests/region-pure.js`; `session-density` volume canary + sport tests
+  pass; golden-master regenerated.
+
+- **Spec E — Exercise video placeholder.** Deleted the stick-figure demos
+  (`StickFigureDemo.jsx` + `data/exerciseDemos.js`); the ⓘ guide keeps its written
+  content and the demo block is now a future-ready video area — plays `entry.video` when
+  one exists, else a "form video coming soon" shell with a disabled upload affordance.
+- **Spec F — On-the-fly exercise substitution (runner).** New `substituteOptions`
+  engine module + an "Equipment taken? Substitute" control on each working set: ranked
+  same-muscle alternatives (same pattern first; squat → leg press / split squat, never
+  OHP), filtered to available equipment, each with a recomputed weight target. Picking
+  one swaps the exercise for THIS session only (local `sessionOverrides`, keyed by name)
+  — future weeks untouched. Only true variants (same `matchLift` key) move the tracked
+  e1RM; others log history only. Runner steps rebuild from a content signature so a swap
+  is seamless. Substitute shows only on an exercise's FIRST set (committing the swap to
+  the whole exercise); the sheet numbers options 1..n with #1 badged "best match".
+- **Spec G — Science-based substitution ranking.** New allocator-safe enrichment
+  (`data/exerciseSimilarity.js`: accurate primary/secondary muscles via pattern defaults
+  + per-exercise overrides, and an equip→modality matrix). `substituteOptions` now gates
+  to the same movement TIER + training the original's PRIMARY mover, then ranks by a
+  multi-axis likeness score (primary alignment, coverage, synergist overlap, pattern,
+  modality/force-vector, loadability via the exerciseLoad coefficient, same tracked lift,
+  laterality, ROM). Fixes the rear-delt-for-biceps-curl and hip-thrust-for-squat
+  mis-rankings; chest subs rank above triceps-biased ones. muscleContribution/allocator
+  untouched. `tests/substitutions.js` extended (15 assertions).
+
+Verified live (375px): compact bordered cards, no rust on page/runner, primer circuit,
+timestamp timer counting + catch-up, wake-lock requested, completion form has no
+top-set inputs, full Save & complete runs clean. `npm run build` clean; `node tests/*.js`
+green except the pre-existing date-dependent `reflow-start-consistency.js`.
+
+## Latest work — focused session runner + primer/main sections (2026-06-28)
+
+On branch **`feat/focused-session-runner`** (local only — NOT pushed, no PR). Built
+overnight from a brainstorm; awaiting Simon's review. Spec + plan committed under
+`docs/superpowers/{specs,plans}/2026-06-28-*`.
+
+Two connected features:
+1. **Primer / Main sections.** Every gym session now shows a colour-coded **Primer**
+   block (green `--moss`) — 1–3 movement-specific activation moves matched to the
+   day's main lifts (band pull-aparts before bench, etc.) — then the **Main** block
+   (rust `--rust`). New engine module `buildPrimer` (`packages/engine/src/lib/plan/primers.js`
+   + `data/primers.js`, unit-tested in `apps/mobile/tests/primers.js`); applied as a
+   decoration in `PlanService.injuryFilteredPhases` (strips the legacy functional
+   P1–P4 primer, prepends the curated one, tags every item `section`). Engine left
+   untouched so all engine snapshot tests stay green.
+2. **Focused set-by-set runner.** `Start session` now freezes the session and opens
+   a full-screen runner (`screens/SessionRunner.jsx`, route `.../sessions/:idx/run`)
+   that walks one set at a time: primers are quick prep/Done; strength items expand
+   into per-set steps with reps/weight (±2.5 kg) / RPE steppers, carry-forward, and a
+   rest countdown that auto-advances (RestTimer `onComplete`). Supersets interleave by
+   round. Every set persists to a new **`set_logs`** table (migration 013 + schema;
+   offline-first via Storage/Database/SyncService/store `logSet`; degrades gracefully
+   if 013 isn't applied). On completion the top working set per lift is derived from
+   the logged sets and feeds the existing RPE progression. The old tap-each-exercise
+   checklist is removed; Resume re-enters the runner and skips logged sets.
+
+Verified in the preview: primer/main overview, full runner flow (steppers,
+carry-forward, superset interleave, rest auto-advance, resume), `set_logs`
+persistence, and progression (`lift_log.bench` updated from a logged 87.5 kg set).
+`node tests/*.js` green except the **pre-existing** date-dependent
+`reflow-start-consistency.js` (fails on clean HEAD too). `npm run build` clean.
+
+**Open for review:** primer colour `--moss` equals `--accent` (swap to `--ochre` for
+more contrast?); runner renders within the app shell (TopBar/TabBar visible) rather
+than a true viewport overlay; migration 013 not yet applied to the live DB.
 
 ## What this app is now
 

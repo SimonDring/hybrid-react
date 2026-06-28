@@ -17,6 +17,7 @@ export const KEYS = {
   weeks:             'htp_weeks_v4',
   sessions:          'htp_sessions_v4',
   sessionLogs:       'htp_session_logs_v4',
+  setLogs:           'htp_set_logs_v4',
   weeklyCheckins:    'htp_weekly_checkins_v4',
   reassessments:     'htp_reassessments_v4',
   wearableReadings:  'htp_wearable_readings_v4',
@@ -46,8 +47,8 @@ const ALL_BASE_KEYS = Object.values(KEYS);
 // Just the per-user table caches (used by adoptAnonDataOnce's "is target empty?").
 const TABLE_BASE_KEYS = [
   KEYS.users, KEYS.plans, KEYS.phases, KEYS.weeks, KEYS.sessions, KEYS.sessionLogs,
-  KEYS.weeklyCheckins, KEYS.reassessments, KEYS.wearableReadings, KEYS.dailyMetrics,
-  KEYS.injuries, KEYS.workouts, KEYS.aiRecommendations
+  KEYS.setLogs, KEYS.weeklyCheckins, KEYS.reassessments, KEYS.wearableReadings,
+  KEYS.dailyMetrics, KEYS.injuries, KEYS.workouts, KEYS.aiRecommendations
 ];
 
 const nsKey = (baseKey) => `${baseKey}_${currentNamespace}`;
