@@ -203,6 +203,10 @@ export default function SessionRunner() {
   const isLast = cursor + 1 >= steps.length;
   const color = SECTION_COLOR[step.section] || 'var(--txt-muted)';
   const next = steps[cursor + 1] || null;
+  // Forward nav is blocked on an unlogged working set — you must log it to advance
+  // (primer/prep steps and already-logged sets can be stepped past freely).
+  const setUnlogged = step.kind === 'set' && !loggedSet.has(loggedKey(step.exerciseName, step.setIndex));
+  const forwardDisabled = isLast || setUnlogged;
 
   const advanceAfterRest = (restSec) => {
     ensureAudio();   // unlock audio within this tap so the rest-end beep can play later
@@ -283,7 +287,7 @@ export default function SessionRunner() {
         <div className="runner-nav-group">
           <button className="runner-nav" onClick={() => goTo(-1)} disabled={cursor === 0} aria-label="Previous step">‹</button>
           <span className="runner-progress-text">Step {cursor + 1} of {steps.length}</span>
-          <button className="runner-nav" onClick={() => goTo(1)} disabled={cursor >= steps.length - 1} aria-label="Next step">›</button>
+          <button className="runner-nav" onClick={() => goTo(1)} disabled={forwardDisabled} aria-label="Next step" title={setUnlogged ? 'Log this set to continue' : 'Next step'}>›</button>
         </div>
         <div style={{ width: 32 }} />
       </div>
