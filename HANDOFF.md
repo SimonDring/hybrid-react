@@ -3,11 +3,11 @@
 _Last updated: 2026-06-28. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
 
-## Latest work — Session UI v2 + rest-timer reliability + straight-set primaries (2026-06-28)
+## Latest work — Session UI v2 + timer reliability + engine cleanups (2026-06-28)
 
 Continues on branch **`feat/focused-session-runner`** (local only — NOT pushed, no PR).
-Three brainstormed specs, all built + preview-verified. Specs under
-`docs/superpowers/specs/2026-06-28-{session-ui-v2,rest-timer-reliability,primaries-straight-sets}-design.md`.
+Four brainstormed specs, all built + preview-verified. Specs under
+`docs/superpowers/specs/2026-06-28-{session-ui-v2,rest-timer-reliability,primaries-straight-sets,region-pure-days-and-ordering}-design.md`.
 
 - **Spec A — Session UI v2.** The session preview is now mobile-first: one compact row
   per exercise (name + a single sets×reps badge; weight/RPE/cues moved into the runner).
@@ -32,6 +32,18 @@ Three brainstormed specs, all built + preview-verified. Specs under
   Primaries run straight with full rest; accessories still antagonist-superset among
   themselves. Golden-master regenerated — **exercise selection + volume byte-identical**
   across all 19 archetypes (570 session blocks); only superset structure changed.
+- **Spec D — Region-pure focused days + compounds-lead ordering.** A focused Upper/Lower
+  day no longer absorbs cross-region weekly-deficit spillover: in `bestExercise`, a
+  candidate whose muscles are ENTIRELY off-focus is now excluded (not just suppressed).
+  Hybrid lifts that hit an in-focus muscle stay (a Rack Pull on Upper trains the back);
+  factor-0 prehab finisher work (tag 'mobility') is region-agnostic; **sport is exempt**
+  (sport threads its priority work through every session). `structureItems` ordering
+  re-tiered to compounds → isolation → core → mobility, with the anchor pulled to front
+  AFTER the sort so a sport-priority iso/accessory anchor still leads. Fixes the reported
+  "why is Floor Press on the Tuesday lower day, last?" — Phase1/Wk1 Tuesday now reads
+  **Lower** (Box squat · Deficit Deadlift · Calf/Tibialis · Nordic curl · Ab Wheel), no
+  stray press. New `tests/region-pure.js`; `session-density` volume canary + sport tests
+  pass; golden-master regenerated.
 
 Verified live (375px): compact bordered cards, no rust on page/runner, primer circuit,
 timestamp timer counting + catch-up, wake-lock requested, completion form has no
