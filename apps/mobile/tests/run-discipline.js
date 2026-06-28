@@ -56,7 +56,7 @@ assert(
 
 // ── T9–T10: resolveProgram — priority list ────────────────────────────────
 // hang_clean is in run_sprint priority list; tibialis_raise is run_long/middle only
-const sprintProg = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'sprint', experience: { gym: 'intermediate' } });
+const sprintProg = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'sprint', experience: { gym: 'intermediate' }, access: ['full_gym'] });
 assert(
   sprintProg.exercisePriority.includes('hang_clean'),
   'T9 sprint program includes hang_clean in priority list'

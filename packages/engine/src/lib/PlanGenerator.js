@@ -23,6 +23,7 @@
 
 import * as strength from './plan/strength.js';
 import { scheduleWeek } from './plan/scheduler.js';
+import { despineWeek } from './plan/despine.js';
 import { resolveLifts } from './liftProgression.js';
 import { resolveProgram } from './strength/program.js';
 import { resolvePeriodization } from './plan/periodization.js';
@@ -94,9 +95,11 @@ function buildGymWeek(count, ctx, profile, program) {
     intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, winp: ctx.winp, weekNum: ctx.weekNum,
     phaseWeeks: ctx.phaseWeeks, blockFrac: ctx.blockFrac, minutes: ctx.minutes,
     level: getGymLevel(profile), access: profile.access || [], sex: profile.sex,
+    bodyweight: profile.bodyweight_kg,
     gymDays: count, lifts: resolveLifts(profile),
     style: program.style, emphasis: program.emphasis, volumeScalar: program.volumeScalar,
-    power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || []
+    power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || [],
+    priorityByIntent: program.priorityByIntent || new Map()
   });
 }
 
@@ -140,7 +143,8 @@ export function generatePlan(profile = {}) {
 
       const sportSpecs = buildGymWeek(totalDays, ctx, profile, program);
       const dayNames = chooseDays(availability, sportSpecs.length, profile.sport_days || []);
-      const sessions = scheduleWeek({ sportSpecs, dayNames, busyDays, sportMuscles });
+      let sessions = scheduleWeek({ sportSpecs, dayNames, busyDays, sportMuscles });
+      sessions = despineWeek(sessions, { priorityByIntent: program.priorityByIntent || new Map(), lifts: resolveLifts(profile), level: getGymLevel(profile), bodyweight: profile.bodyweight_kg });
 
       weeks.push({ num: weekNum, deload, taper, theme: themeFor(seg.intent, deload, taper, isRace && weekNum === total), sessions, provisional: pi > 0 });
     }

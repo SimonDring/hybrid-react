@@ -111,8 +111,22 @@ export function nextE1RM({ weight, reps, rpe, targetRpe = 8, factor = 1 }) {
 // with no loadable anchor (bodyweight, band, core, mobility, or no e1RM) are left as-is.
 // `level` scales isolation loads; superset items get a small short-rest fatigue nudge.
 // Mutates + returns `items`. Shared by the strength engine and the allocator.
-export function applyWeights(items = [], lifts = {}, level = 'intermediate') {
+export function applyWeights(items = [], lifts = {}, level = 'intermediate', bodyweightKg = null) {
   for (const it of items) {
+    // Weighted bodyweight vertical pull: a strict pull-up is sub-maximal once the
+    // athlete's pull e1RM exceeds bodyweight, so the prescribed RPE isn't real
+    // without added load. Anchor lookup returns null for bodyweight, so suggest
+    // the external load explicitly. (Assisted/band pull-ups are left bodyweight.)
+    if (bodyweightKg && /pull-up|chin-up/i.test(it.name) && !/assist|band/i.test(it.name)) {
+      const pull = Number(lifts.pull); const reps = parseReps(it.sets);
+      if (pull && reps) {
+        const rir = Math.max(0, 10 - parseRpe(it.rpe));
+        const pct = 1 / (1 + (reps + rir) / 30);          // %1RM at this rep target
+        const added = pull * pct - Number(bodyweightKg);  // external load over bodyweight
+        if (added >= 2.5) it.weight = `+${round2_5(added)} kg`;
+      }
+      continue;
+    }
     const a = anchorForName(it.name);
     if (!a) continue;
     const oneRM = Number(lifts[a.key]);

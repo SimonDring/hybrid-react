@@ -80,12 +80,12 @@ assert(runProg.exercisePriority.includes('nordic_curl') || runProg.exercisePrior
   'T6b run priority includes run-specific exercises');
 
 const swimProg = resolveProgram({ goal_type: 'sport', sport: 'swim', sport_season: 'off',
-  experience: { gym: 'intermediate' } });
+  experience: { gym: 'intermediate' }, access: ['full_gym'] });
 assert(Array.isArray(swimProg.exercisePriority) && swimProg.exercisePriority.includes('face_pull'),
   'T6c swim priority includes face_pull');
 
 const hypProg = resolveProgram({ goal_type: 'build', strength_style: 'bodybuilding',
-  experience: { gym: 'returning' } });
+  experience: { gym: 'returning' }, access: ['full_gym'] });
 assert(Array.isArray(hypProg.exercisePriority) && hypProg.exercisePriority.includes('incline_db_curl'),
   'T6d hypertrophy priority includes incline_db_curl');
 
