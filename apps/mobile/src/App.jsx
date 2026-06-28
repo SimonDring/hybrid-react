@@ -19,6 +19,7 @@ import PlanScreen from './screens/Plan.jsx';
 import PhaseDetail from './screens/PhaseDetail.jsx';
 import WeekDetail from './screens/WeekDetail.jsx';
 import SessionDetail from './screens/SessionDetail.jsx';
+import SessionRunner from './screens/SessionRunner.jsx';
 import Atlas from './screens/Atlas.jsx';
 import Health from './screens/Health.jsx';
 import SleepDetail from './screens/SleepDetail.jsx';
@@ -170,6 +171,7 @@ export default function App() {
           <Route path="/phases/:phaseId" element={<PhaseDetail />} />
           <Route path="/phases/:phaseId/weeks/:weekNum" element={<WeekDetail />} />
           <Route path="/phases/:phaseId/weeks/:weekNum/sessions/:sessionIdx" element={<SessionDetail />} />
+          <Route path="/phases/:phaseId/weeks/:weekNum/sessions/:sessionIdx/run" element={<SessionRunner />} />
           <Route path="/atlas" element={<Atlas />} />
           <Route path="/progress" element={<Navigate to="/atlas" replace />} />
           <Route path="/health" element={<Health />} />

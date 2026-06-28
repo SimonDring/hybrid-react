@@ -1375,6 +1375,77 @@ body { font-variant-numeric: tabular-nums; }
 .gt-check.on { background: var(--moss); border-color: var(--moss); color: #fff; }
 
 /* Live (in-progress) session panel */
+/* ============================================================================
+   Focused set-by-set runner — a full-screen takeover that walks one set at a
+   time. --rn-color is the active section colour (primer green / main rust).
+   ============================================================================ */
+.runner {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--bg-app, var(--bg-surface));
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.runner-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 8px;
+}
+.runner-exit {
+  width: 32px; height: 32px;
+  border: none; background: var(--bg-surface-2); color: var(--txt-muted);
+  border-radius: 8px; font-size: 16px; cursor: pointer; font-family: inherit;
+}
+.runner-progress-text {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--txt-muted);
+}
+.runner-bar { height: 3px; background: var(--hairline); margin: 0 16px 8px; border-radius: 2px; overflow: hidden; }
+.runner-bar-fill { height: 100%; background: var(--rn-color); transition: width 0.25s ease; }
+
+.runner-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 460px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 8px 22px 40px;
+}
+.rn-section { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 4px; }
+.rn-name { font-size: 30px; line-height: 1.1; margin: 0 0 18px; color: var(--txt-strong); }
+.step-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+}
+.rn-prescription { font-size: 22px; font-weight: 700; color: var(--txt-strong); }
+.rn-setline { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rn-color); }
+.rn-target { font-size: 13px; color: var(--txt-muted); margin-top: 4px; }
+.rn-note { font-size: 13px; color: var(--txt-body); font-style: italic; line-height: 1.5; }
+
+.rn-steppers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+.rn-stepper-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--txt-muted); margin-bottom: 6px; text-align: center; }
+.rn-stepper-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.rn-step-btn {
+  width: 44px; height: 44px; flex: none;
+  border: 1px solid var(--hairline); background: var(--bg-surface-2); color: var(--txt-strong);
+  border-radius: 12px; font-size: 24px; line-height: 1; cursor: pointer; font-family: inherit;
+}
+.rn-step-btn:disabled { opacity: 0.4; cursor: default; }
+.rn-step-val { flex: 1; text-align: center; font-size: 26px; font-weight: 700; color: var(--txt-strong); }
+.rn-step-unit { font-size: 13px; font-weight: 500; color: var(--txt-muted); margin-left: 3px; }
+.rn-rpe-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--txt-muted); margin: 20px 0 8px; }
+
+.rn-rest { text-align: center; }
+.rn-next { font-size: 14px; color: var(--txt-body); margin-top: 16px; }
+
 .session-live {
   background: var(--bg-surface);
   border: 1px solid var(--hairline);

@@ -1,12 +1,11 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
 import * as Utils from '@performance-os/engine/lib/Utils.js';
 import { activityFor } from '../data/activityTypes.js';
-import RestTimer from '../components/RestTimer.jsx';
 import ExerciseInfo from '../components/ExerciseInfo.jsx';
-import { getChecked, toggleChecked, clearChecked } from '../lib/SessionProgress.js';
+import { clearChecked } from '../lib/SessionProgress.js';
 import { trackedLiftsInSession } from '@performance-os/engine/lib/liftProgression.js';
 
 function SessionPhysiology({ state, candidates, onUnlink, onLink }) {
@@ -81,14 +80,15 @@ export default function SessionDetail() {
   const linkWorkoutToSession     = useTrainingStore(s => s.linkWorkoutToSession);
   const allWorkouts              = useTrainingStore(s => s.workouts);
 
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const [showForm, setShowForm] = useState(false);
   const [ratings, setRatings] = useState({ quality: null, energy: null, recovery: null });
   const [notes, setNotes] = useState('');
-  const [checked, setChecked] = useState([]);
   const [infoItem, setInfoItem] = useState(null); // exercise tapped for the form guide
   const [injuryBannerOpen, setInjuryBannerOpen] = useState(false);
   const [lifts, setLifts] = useState({}); // top-set log: key → { weight, rpe }
-  const [restStart, setRestStart] = useState(null); // { secs, at } — seeds RestTimer on set completion
 
   const phase = Plan.getPhase(Number(phaseId));
   const week = phase ? phase.weeks.find(w => w.num === Number(weekNum)) : null;
@@ -100,10 +100,16 @@ export default function SessionDetail() {
     setShowForm(false);
     setRatings({ quality: null, energy: null, recovery: null });
     setNotes('');
-    setChecked(getChecked(key));
     setLifts({});
-    setRestStart(null);
   }, [key]);
+
+  // The runner sends the athlete back here with ?finish=1 when the last set is done —
+  // open the rating form straight away so completion is one tap, not a hunt.
+  useEffect(() => {
+    if (searchParams.get('finish') === '1' && state && state.started && !state.completed) {
+      setShowForm(true);
+    }
+  }, [searchParams, state]);
 
   if (!session) return <div style={{ padding: 24 }}>Session not found</div>;
 
@@ -116,7 +122,12 @@ export default function SessionDetail() {
   const isDone = state && state.completed;
   const isStarted = state && state.started;
 
-  const handleStart = () => startSession(key);
+  const runnerPath = `/phases/${phaseId}/weeks/${weekNum}/sessions/${sessionIdx}/run`;
+
+  // Start freezes the session (pin-on-start in the store) then opens the focused
+  // set-by-set runner. Resume re-enters the runner for an already-started session.
+  const handleStart = () => { startSession(key); navigate(runnerPath); };
+  const handleResume = () => navigate(runnerPath);
 
   const fmtRest = (s) => {
     if (s < 60) return `Rest ${s}s`;
@@ -124,20 +135,10 @@ export default function SessionDetail() {
     return `Rest ${Math.floor(s / 60)} min ${s % 60}s`;
   };
 
-  const toggleItem = (idx) => {
-    const next = toggleChecked(key, idx);
-    setChecked(next);
-    if (next.includes(idx)) {
-      const item = session.items[idx];
-      if (item?.restSec) setRestStart({ secs: item.restSec, at: Date.now() });
-    }
-  };
-
   const handleCancel = () => {
-    if (!confirm('Started this by mistake? This clears the start time and resets it to not started. Your check-offs will be cleared.')) return;
+    if (!confirm('Started this by mistake? This clears the start time and resets it to not started. Your logged sets will be cleared.')) return;
     cancelSession(key);
     clearChecked(key);
-    setChecked([]);
   };
 
   const handleSubmit = () => {
@@ -162,7 +163,6 @@ export default function SessionDetail() {
     })).catch(e => console.error('Complete session failed:', e));
 
     clearChecked(key);
-    setChecked([]);
     setShowForm(false);
     setRatings({ quality: null, energy: null, recovery: null });
     setNotes('');
@@ -173,7 +173,6 @@ export default function SessionDetail() {
     if (confirm('Mark this session as incomplete? This resets it to "not started" and removes your ratings.')) {
       uncompleteSession(key);
       clearChecked(key);
-      setChecked([]);
     }
   };
 
@@ -279,21 +278,17 @@ export default function SessionDetail() {
                       ))}
                     </div>
 
-                    {items.map(({ item, idx }, i) => {
+                    {items.map(({ item }, i) => {
                       const isTagged = !!item.tag;
                       const cue = activity.cue(item);
-                      const done = checked.includes(idx);
                       return (
                         <div
                           key={i}
-                          className={`gt-row ${isStarted ? 'checkable' : ''} ${done ? 'is-checked' : ''}`}
+                          className="gt-row"
                           style={{ borderLeft: `3px solid ${item.superset ? 'var(--accent)' : isTagged ? activity.accent : 'transparent'}` }}
-                          onClick={isStarted ? () => toggleItem(idx) : undefined}
-                          role={isStarted ? 'button' : undefined}
                         >
                           <div className="gt-main" style={{ gridTemplateColumns: gridTemplate }}>
                             <div className="gt-ex">
-                              {isStarted && <span className={`gt-check ${done ? 'on' : ''}`} aria-hidden="true">✓</span>}
                               <span className="gt-num" style={item.superset ? { color: 'var(--accent)' } : undefined}>{item.num}</span>
                               <span className="gt-name">{item.name}</span>
                               <button
@@ -504,16 +499,22 @@ export default function SessionDetail() {
             <>
               <div className="session-live" style={{ marginTop: 20 }}>
                 <div className="sl-head">
-                  <span className="sl-progress">{checked.length}/{session.items.length} done</span>
+                  <span className="sl-progress">In progress</span>
                   {state.startedAt && (
                     <span className="sl-started">Started {new Date(state.startedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   )}
                 </div>
-                <RestTimer restStart={restStart} />
               </div>
               <button
                 className="btn-primary"
                 style={{ marginTop: 12, width: '100%' }}
+                onClick={handleResume}
+              >
+                Resume session
+              </button>
+              <button
+                className="btn-secondary"
+                style={{ marginTop: 8, width: '100%' }}
                 onClick={() => setShowForm(true)}
               >
                 Complete session
