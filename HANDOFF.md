@@ -58,7 +58,17 @@ on-the-fly-exercise-substitution).
   one swaps the exercise for THIS session only (local `sessionOverrides`, keyed by name)
   — future weeks untouched. Only true variants (same `matchLift` key) move the tracked
   e1RM; others log history only. Runner steps rebuild from a content signature so a swap
-  is seamless. New `tests/substitutions.js`.
+  is seamless. Substitute shows only on an exercise's FIRST set (committing the swap to
+  the whole exercise); the sheet numbers options 1..n with #1 badged "best match".
+- **Spec G — Science-based substitution ranking.** New allocator-safe enrichment
+  (`data/exerciseSimilarity.js`: accurate primary/secondary muscles via pattern defaults
+  + per-exercise overrides, and an equip→modality matrix). `substituteOptions` now gates
+  to the same movement TIER + training the original's PRIMARY mover, then ranks by a
+  multi-axis likeness score (primary alignment, coverage, synergist overlap, pattern,
+  modality/force-vector, loadability via the exerciseLoad coefficient, same tracked lift,
+  laterality, ROM). Fixes the rear-delt-for-biceps-curl and hip-thrust-for-squat
+  mis-rankings; chest subs rank above triceps-biased ones. muscleContribution/allocator
+  untouched. `tests/substitutions.js` extended (15 assertions).
 
 Verified live (375px): compact bordered cards, no rust on page/runner, primer circuit,
 timestamp timer counting + catch-up, wake-lock requested, completion form has no
