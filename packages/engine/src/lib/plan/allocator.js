@@ -229,21 +229,19 @@ function structureItems(picks) {
   const LET = 'ABCDEFGH';
   const mains = [], rest = [];
   picks.forEach(p => (p.ex.role === 'primary' ? mains : rest).push(p));
-  const usedRest = new Set();
   let blocks = [];
 
   // Core + health/mobility work is never supersetted into another block — it forms
   // its own singleton blocks so it can be sequenced cleanly at the end of the session.
   const isSupportive = (p) => p.ex.loadClass === 'health' || p.ex.pattern === 'core' || (p.item && p.item.tag === 'mobility');
 
-  for (const m of mains) {
-    let fi = -1;
-    for (let i = 0; i < rest.length; i++) {
-      if (!usedRest.has(i) && isFiller(rest[i].ex) && !isSupportive(rest[i]) && canPair(m.ex, rest[i].ex)) { fi = i; break; }
-    }
-    if (fi >= 0) { usedRest.add(fi); blocks.push([m, rest[fi]]); } else blocks.push([m]);
-  }
-  const rem = rest.map((p, i) => ({ p, i })).filter(x => !usedRest.has(x.i));
+  // Primary compounds always run as STRAIGHT SETS — never supersetted with a filler —
+  // so the heavy work keeps its full prescribed rest. Cramming a light isolation into a
+  // heavy lift's rest gap under-rests it (biceps aren't an antagonist of a bench/row, so
+  // it's not "free" recovery). Accessories still antagonist/non-competing pair below.
+  for (const m of mains) blocks.push([m]);
+
+  const rem = rest.map((p, i) => ({ p, i }));
   const taken = new Set();
   for (let i = 0; i < rem.length; i++) {
     if (taken.has(i)) continue;
