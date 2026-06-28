@@ -2088,6 +2088,41 @@ button:active,
    Designed to be read at arm's length mid-set.
    =================================================================== */
 
+/* Session SECTION — Primer (green) / Main (rust). Colour comes from --ss-color set
+   inline per section, so one rule themes both. The left border + header bar make the
+   two parts of the session unmistakable at a glance. */
+.session-section {
+  margin-bottom: 18px;
+  padding-left: 12px;
+  border-left: 2px solid var(--ss-color);
+}
+.session-section:last-child { margin-bottom: 4px; }
+.ss-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.ss-bar {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--ss-color);
+  align-self: center;
+}
+.ss-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ss-color);
+}
+.ss-sub {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--txt-muted);
+}
+
 .gym-table {
   margin: 8px 0 4px;
   border-radius: 14px;

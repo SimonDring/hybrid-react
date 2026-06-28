@@ -226,103 +226,125 @@ export default function SessionDetail() {
         </button>
       )}
 
-      {/* Exercise table — columns driven by each item's activity type */}
+      {/* Exercise table — two-level grouping: by SECTION (Primer / Main), then by
+          activity type within each section. The primer block (green) primes the
+          day's main lifts; the main block (rust) is the working set. `idx` stays the
+          absolute filtered-item index so the in-progress check-off keeps working. */}
       {(() => {
-        // Group consecutive items by activity type so each group gets its own
-        // header row with the right columns. Most sessions are a single type,
-        // but a session can mix (e.g. strength + mobility, or run + swim).
-        const groups = [];
-        session.items.filter(it => !it.substituted).forEach((item, gIdx) => {
-          const activity = activityFor(item);
-          const last = groups[groups.length - 1];
-          if (last && last.activity.key === activity.key) {
-            last.items.push({ item, idx: gIdx });
-          } else {
-            groups.push({ activity, items: [{ item, idx: gIdx }] });
-          }
-        });
+        const visible = session.items
+          .filter(it => !it.substituted)
+          .map((item, idx) => ({ item, idx }));
 
-        return groups.map((group, gi) => {
-          const { activity, items } = group;
-          // Build the grid template from the column definitions.
-          // Exercise name column is flexible (1fr); others size to content.
-          const cols = activity.columns;
-          const gridTemplate = `minmax(0,1fr) ${cols.map(c => c.wide ? 'minmax(70px,1.1fr)' : '54px').join(' ')}`;
+        const SECTIONS = [
+          { key: 'primer', label: 'Primer', sub: 'prime the main lifts', color: 'var(--moss)' },
+          { key: 'main',   label: 'Main',   sub: null,                   color: 'var(--rust)' }
+        ];
+        const sectionOf = (v) => (v.item.section === 'primer' ? 'primer' : 'main');
 
-          return (
-            <div className="gym-table" key={gi} style={{ marginBottom: gi < groups.length - 1 ? 10 : 4 }}>
-              {/* Activity-type header */}
-              <div className="gt-head" style={{ gridTemplateColumns: gridTemplate }}>
-                <div className="gt-h-ex">{activity.label}</div>
-                {cols.map(c => (
-                  <div key={c.key} className={`gt-h-cell ${c.wide ? 'gt-h-wide' : ''}`}>{c.label}</div>
-                ))}
+        // Group a section's items by activity type so each group gets its columns.
+        const buildGroups = (rows) => {
+          const groups = [];
+          rows.forEach(({ item, idx }) => {
+            const activity = activityFor(item);
+            const last = groups[groups.length - 1];
+            if (last && last.activity.key === activity.key) last.items.push({ item, idx });
+            else groups.push({ activity, items: [{ item, idx }] });
+          });
+          return groups;
+        };
+
+        return SECTIONS
+          .map(sec => ({ sec, rows: visible.filter(v => sectionOf(v) === sec.key) }))
+          .filter(({ rows }) => rows.length)
+          .map(({ sec, rows }) => (
+            <div className="session-section" key={sec.key} style={{ '--ss-color': sec.color }}>
+              <div className="ss-head">
+                <span className="ss-bar" aria-hidden="true" />
+                <span className="ss-label">{sec.label}</span>
+                {sec.sub && <span className="ss-sub">{sec.sub}</span>}
               </div>
+              {buildGroups(rows).map((group, gi, all) => {
+                const { activity, items } = group;
+                // Exercise name column is flexible (1fr); others size to content.
+                const cols = activity.columns;
+                const gridTemplate = `minmax(0,1fr) ${cols.map(c => c.wide ? 'minmax(70px,1.1fr)' : '54px').join(' ')}`;
 
-              {items.map(({ item, idx }, i) => {
-                const isTagged = !!item.tag;
-                const cue = activity.cue(item);
-                const done = checked.includes(idx);
                 return (
-                  <div
-                    key={i}
-                    className={`gt-row ${isStarted ? 'checkable' : ''} ${done ? 'is-checked' : ''}`}
-                    style={{ borderLeft: `3px solid ${item.superset ? 'var(--accent)' : isTagged ? activity.accent : 'transparent'}` }}
-                    onClick={isStarted ? () => toggleItem(idx) : undefined}
-                    role={isStarted ? 'button' : undefined}
-                  >
-                    <div className="gt-main" style={{ gridTemplateColumns: gridTemplate }}>
-                      <div className="gt-ex">
-                        {isStarted && <span className={`gt-check ${done ? 'on' : ''}`} aria-hidden="true">✓</span>}
-                        <span className="gt-num" style={item.superset ? { color: 'var(--accent)' } : undefined}>{item.num}</span>
-                        <span className="gt-name">{item.name}</span>
-                        <button
-                          className="gt-info"
-                          aria-label={`How to do ${item.name}`}
-                          onClick={(e) => { e.stopPropagation(); setInfoItem(item); }}
-                        >ⓘ</button>
-                        {item.rehab && (
-                          <span style={{
-                            fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
-                            color: 'var(--moss)', background: 'rgba(74,93,58,0.12)', borderRadius: 100, padding: '2px 7px', marginLeft: 6
-                          }}>Rehab</span>
-                        )}
-                        {item.prevention && (
-                          <span style={{
-                            fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
-                            color: 'var(--txt-muted)', background: 'rgba(106,102,93,0.12)', borderRadius: 100, padding: '2px 7px', marginLeft: 6
-                          }}>Prev</span>
-                        )}
-                      </div>
-                      {cols.map(c => {
-                        const val = c.accessor(item);
-                        const cls = [
-                          'gt-cell',
-                          c.emphasis ? 'gt-emphasis' : '',
-                          c.accent ? 'gt-accent' : '',
-                          c.wide ? 'gt-wide' : ''
-                        ].filter(Boolean).join(' ');
-                        return <div key={c.key} className={cls}>{val}</div>;
-                      })}
+                  <div className="gym-table" key={gi} style={{ marginBottom: gi < all.length - 1 ? 10 : 4 }}>
+                    {/* Activity-type header */}
+                    <div className="gt-head" style={{ gridTemplateColumns: gridTemplate }}>
+                      <div className="gt-h-ex">{activity.label}</div>
+                      {cols.map(c => (
+                        <div key={c.key} className={`gt-h-cell ${c.wide ? 'gt-h-wide' : ''}`}>{c.label}</div>
+                      ))}
                     </div>
-                    {cue && <div className="gt-note">{cue}</div>}
-                    {item.rehab && item.rationale && (
-                      <div className="gt-note" style={{ color: 'var(--moss)', fontStyle: 'italic' }}>
-                        {item.rationale}
-                      </div>
-                    )}
-                    {item.prevention && item.preventionNote && (
-                      <div className="gt-note" style={{ color: 'var(--txt-muted)', fontStyle: 'italic' }}>
-                        {item.preventionNote}
-                      </div>
-                    )}
-                    {item.restSec > 0 && <div className="gt-rest">{fmtRest(item.restSec)}</div>}
+
+                    {items.map(({ item, idx }, i) => {
+                      const isTagged = !!item.tag;
+                      const cue = activity.cue(item);
+                      const done = checked.includes(idx);
+                      return (
+                        <div
+                          key={i}
+                          className={`gt-row ${isStarted ? 'checkable' : ''} ${done ? 'is-checked' : ''}`}
+                          style={{ borderLeft: `3px solid ${item.superset ? 'var(--accent)' : isTagged ? activity.accent : 'transparent'}` }}
+                          onClick={isStarted ? () => toggleItem(idx) : undefined}
+                          role={isStarted ? 'button' : undefined}
+                        >
+                          <div className="gt-main" style={{ gridTemplateColumns: gridTemplate }}>
+                            <div className="gt-ex">
+                              {isStarted && <span className={`gt-check ${done ? 'on' : ''}`} aria-hidden="true">✓</span>}
+                              <span className="gt-num" style={item.superset ? { color: 'var(--accent)' } : undefined}>{item.num}</span>
+                              <span className="gt-name">{item.name}</span>
+                              <button
+                                className="gt-info"
+                                aria-label={`How to do ${item.name}`}
+                                onClick={(e) => { e.stopPropagation(); setInfoItem(item); }}
+                              >ⓘ</button>
+                              {item.rehab && (
+                                <span style={{
+                                  fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
+                                  color: 'var(--moss)', background: 'rgba(74,93,58,0.12)', borderRadius: 100, padding: '2px 7px', marginLeft: 6
+                                }}>Rehab</span>
+                              )}
+                              {item.prevention && (
+                                <span style={{
+                                  fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
+                                  color: 'var(--txt-muted)', background: 'rgba(106,102,93,0.12)', borderRadius: 100, padding: '2px 7px', marginLeft: 6
+                                }}>Prev</span>
+                              )}
+                            </div>
+                            {cols.map(c => {
+                              const val = c.accessor(item);
+                              const cls = [
+                                'gt-cell',
+                                c.emphasis ? 'gt-emphasis' : '',
+                                c.accent ? 'gt-accent' : '',
+                                c.wide ? 'gt-wide' : ''
+                              ].filter(Boolean).join(' ');
+                              return <div key={c.key} className={cls}>{val}</div>;
+                            })}
+                          </div>
+                          {cue && <div className="gt-note">{cue}</div>}
+                          {item.rehab && item.rationale && (
+                            <div className="gt-note" style={{ color: 'var(--moss)', fontStyle: 'italic' }}>
+                              {item.rationale}
+                            </div>
+                          )}
+                          {item.prevention && item.preventionNote && (
+                            <div className="gt-note" style={{ color: 'var(--txt-muted)', fontStyle: 'italic' }}>
+                              {item.preventionNote}
+                            </div>
+                          )}
+                          {item.restSec > 0 && <div className="gt-rest">{fmtRest(item.restSec)}</div>}
+                        </div>
+                      );
+                    })}
                   </div>
                 );
               })}
             </div>
-          );
-        });
+          ));
       })()}
 
       {/* Completion state */}
