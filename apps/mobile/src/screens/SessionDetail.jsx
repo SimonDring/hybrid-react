@@ -76,6 +76,7 @@ export default function SessionDetail() {
   const uncompleteSession = useTrainingStore(state => state.uncompleteSession);
   const cancelSession = useTrainingStore(state => state.cancelSession);
   const logLiftSets = useTrainingStore(state => state.logLiftSets);
+  const setLogsBySession = useTrainingStore(state => state.setLogsBySession);
   const unlinkWorkoutFromSession = useTrainingStore(s => s.unlinkWorkoutFromSession);
   const linkWorkoutToSession     = useTrainingStore(s => s.linkWorkoutToSession);
   const allWorkouts              = useTrainingStore(s => s.workouts);
@@ -141,11 +142,29 @@ export default function SessionDetail() {
     clearChecked(key);
   };
 
+  // The heaviest working set this session logged for a tracked lift (tiebreak: most
+  // reps). The runner records every set, so we derive progression from real data
+  // rather than asking the athlete to re-enter their top set.
+  const topLoggedSet = (l) => {
+    const rows = (state && setLogsBySession[state.id]) || [];
+    const matches = rows.filter(r =>
+      !r.is_primer && r.actual_weight != null && r.actual_rpe != null &&
+      (r.exercise_key === l.key || r.exercise_name === l.name)
+    );
+    if (!matches.length) return null;
+    matches.sort((a, b) => (b.actual_weight - a.actual_weight) || ((b.actual_reps || 0) - (a.actual_reps || 0)));
+    const t = matches[0];
+    return { key: l.key, weight: Number(t.actual_weight), reps: t.actual_reps || l.reps, rpe: Number(t.actual_rpe), targetRpe: l.targetRpe, factor: l.factor };
+  };
+
   const handleSubmit = () => {
     // Log top-set results for the main lifts → autoregulates next week's weights.
-    // This is OPTIONAL and must never block completion: fire it off (it writes
-    // locally first, then syncs in the background and logs any error itself).
+    // Prefer the set the runner actually logged; fall back to the manual top-set
+    // form only when a tracked lift has no logged set. OPTIONAL — never blocks
+    // completion (writes locally first, syncs in the background, logs its own errors).
     const sets = trackedLifts.map(l => {
+      const fromLog = topLoggedSet(l);
+      if (fromLog) return fromLog;
       const entry = lifts[l.key] || {};
       const weight = entry.weight != null && entry.weight !== '' ? Number(entry.weight) : targetKg(l.target);
       return (weight && entry.rpe) ? { key: l.key, weight, reps: l.reps, rpe: entry.rpe, targetRpe: l.targetRpe, factor: l.factor } : null;
