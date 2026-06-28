@@ -3,9 +3,9 @@
  * how to do it, and form cues (look for / avoid). Opened from a session when the
  * athlete taps the ⓘ next to a movement they're unsure about.
  *
- * The `demo` area is a placeholder for the long-term goal: a small animated
- * stick-figure / frame-by-frame demonstration that talks through the movement.
- * For now it shows a "demo coming soon" panel.
+ * The `video` area is future-ready: when a library entry has a `video` (a captured
+ * form clip) it plays inline; until that content exists it shows a "form video coming
+ * soon" placeholder with a disabled upload affordance.
  *
  * Props: { name, focus, fallbackCue, onClose } — name/focus drive the lookup;
  * fallbackCue is the session's own note, shown when there's no library entry yet.
@@ -13,8 +13,6 @@
 
 import { useEffect } from 'react';
 import { lookupExercise } from '../data/exerciseLibrary.js';
-import { DEMOS } from '../data/exerciseDemos.js';
-import StickFigureDemo from './StickFigureDemo.jsx';
 
 const ACCENT = { strength: 'var(--txt-strong)', swim: 'var(--moss)', run: 'var(--rust)', mobility: 'var(--ochre)' };
 
@@ -51,16 +49,44 @@ export default function ExerciseInfo({ name, focus, fallbackCue, onClose }) {
         <div style={{ padding: '14px 18px calc(24px + env(safe-area-inset-bottom))' }}>
           {entry && <p style={{ fontSize: 14, color: 'var(--txt-body)', lineHeight: 1.5, margin: '0 0 16px' }}>{entry.summary}</p>}
 
-        {/* Animated demo when we have one, else a placeholder. */}
-        {entry && entry.demo && DEMOS[entry.demo] ? (
-          <div style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--hairline)', borderRadius: 14, padding: '16px 16px 12px', marginBottom: 18 }}>
-            <StickFigureDemo demo={DEMOS[entry.demo]} />
-          </div>
+        {/* Form video — plays a captured clip when one exists, else a coming-soon
+            placeholder with a (disabled) upload affordance for the future. */}
+        {entry && entry.video ? (
+          <video
+            src={entry.video}
+            controls
+            playsInline
+            preload="metadata"
+            style={{ width: '100%', aspectRatio: '16 / 9', background: '#000', borderRadius: 14, marginBottom: 18, display: 'block' }}
+          />
         ) : (
-          <div style={{ background: 'var(--bg-surface-2)', border: '1px dashed var(--hairline)', borderRadius: 14, padding: '22px 16px', textAlign: 'center', marginBottom: 18 }}>
-            <div style={{ fontSize: 28, marginBottom: 4 }}>🧍‍♂️</div>
-            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--txt-muted)', letterSpacing: '0.05em' }}>ANIMATED DEMO COMING SOON</div>
-            <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 4 }}>A step-by-step demonstration of this movement will live here.</div>
+          <div style={{ marginBottom: 18 }}>
+            <div style={{
+              aspectRatio: '16 / 9', background: 'var(--bg-surface-2)', border: '1px solid var(--hairline)',
+              borderRadius: 14, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center', padding: 16
+            }}>
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--txt-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <path d="M10 9l5 3-5 3V9z" fill="var(--txt-muted)" stroke="none" />
+              </svg>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--txt-muted)', letterSpacing: '0.05em' }}>FORM VIDEO COMING SOON</div>
+              <div style={{ fontSize: 11, color: 'var(--txt-muted)', maxWidth: 280 }}>A short demonstration of this movement will play here.</div>
+            </div>
+            <button
+              type="button"
+              disabled
+              aria-label="Upload form video (coming soon)"
+              style={{
+                width: '100%', marginTop: 8, padding: '10px 12px', borderRadius: 10, cursor: 'not-allowed',
+                background: 'transparent', border: '1px dashed var(--hairline)', color: 'var(--txt-muted)',
+                fontFamily: 'inherit', fontSize: 12, fontWeight: 600, opacity: 0.8
+              }}
+            >
+              Upload form video
+            </button>
+            <div style={{ fontSize: 10, color: 'var(--txt-muted)', textAlign: 'center', marginTop: 5 }}>
+              Enabled once we’ve captured form videos.
+            </div>
           </div>
         )}
 
