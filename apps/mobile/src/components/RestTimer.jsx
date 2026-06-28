@@ -11,12 +11,17 @@ function fmt(s) {
 /**
  * RestTimer — a tap-to-run rest countdown for use between sets.
  * restStart: { secs, at } — changes trigger an auto-start with the given duration.
+ * onComplete: optional callback fired once when the countdown reaches 0 (used by the
+ *   focused runner to auto-advance to the next set). Absent → no-op (unchanged).
  * Pick a preset to override; tap the time to pause/resume. Vibrates on finish.
  */
-export default function RestTimer({ restStart }) {
+export default function RestTimer({ restStart, onComplete }) {
   const [secs, setSecs] = useState(0);
   const [running, setRunning] = useState(false);
   const intervalRef = useRef(null);
+  // Keep the latest onComplete without retriggering the interval effect.
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
 
   useEffect(() => {
     if (!running) return;
@@ -26,6 +31,7 @@ export default function RestTimer({ restStart }) {
           clearInterval(intervalRef.current);
           setRunning(false);
           if (navigator.vibrate) navigator.vibrate(250);
+          if (onCompleteRef.current) onCompleteRef.current();
           return 0;
         }
         return s - 1;
