@@ -24,7 +24,9 @@ export const ENUMS = {
   goal_type:      ['build', 'sport'],
   strength_style: ['strength', 'bodybuilding', 'functional'],
   sport:          ['run', 'cycle', 'swim'],
-  sport_intent:   ['compete', 'recreational', 'build_base'],
+  sport_intent:   ['compete', 'recreational', 'build_base'],   // 'build_base' kept for legacy profiles (migrated to recreational on read)
+  sport_season:   ['in', 'off'],                               // compete only (engine season keys)
+  sport_goal:     ['build_base', 'get_stronger', 'stay_durable'], // recreational training goal
   run_discipline: ['sprint', 'middle', 'long'],
   experience:     ['beginner', 'returning', 'intermediate', 'advanced'],
   equipment:      ['barbell', 'dumbbell', 'machine', 'cable', 'band', 'kettlebell', 'bodyweight'],

@@ -30,15 +30,18 @@ export const SPORTS = [
   { key: 'swim',  label: 'Swimming', emoji: '🏊' }
 ];
 const SPORT_INTENTS = [
-  { key: 'compete',      label: 'I compete',        hint: 'Races or events — training stays sport-specific.' },
-  { key: 'recreational', label: 'For fitness',      hint: 'No events planned — balanced programme with sport support.' },
-  { key: 'build_base',   label: 'Building my base', hint: 'No events right now — maximise strength and conditioning.' }
+  { key: 'compete',      label: 'I compete',        hint: 'Races, meets or matches — training stays sport-specific.' },
+  { key: 'recreational', label: "I don't compete",  hint: 'No events — strength that supports your sport.' }
 ];
-const SPORT_INTENT_QUESTION = {
-  run:   'Why do you run?',
-  cycle: 'Why do you cycle?',
-  swim:  'Why do you swim?'
-};
+const SPORT_SEASONS = [
+  { key: 'off_season', label: 'Off-season', hint: 'Build phase — more gym, away from competition.' },
+  { key: 'in_season',  label: 'In-season',  hint: 'Maintenance — keep strength, stay fresh to compete.' }
+];
+const SPORT_GOALS = [
+  { key: 'build_base',   label: 'Build my base', hint: 'General strength + conditioning for your sport.' },
+  { key: 'get_stronger', label: 'Get stronger',  hint: 'Heavier, lower-volume strength support.' },
+  { key: 'stay_durable', label: 'Stay durable',  hint: 'Lower-volume, injury-proofing focus.' }
+];
 const RUN_DISCIPLINES = [
   { key: 'sprint', label: 'Sprints',          hint: '100 – 400m' },
   { key: 'middle', label: 'Middle distance',   hint: '800m – 5K' },
@@ -248,7 +251,11 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     isBuild && { title: 'What are you building?', subtitle: 'This sets your rep ranges, exercise mix and volume.', valid: () => !!a.strengthStyle,
       render: () => <OptionGrid cols={1}>{STYLES.map(s => <Chip key={s.key} selected={a.strengthStyle === s.key} onClick={() => set({ strengthStyle: s.key })} label={s.label} hint={s.hint} />)}</OptionGrid> },
 
-    isSport && { title: 'Which sport — and where are you?', subtitle: 'We program supportive strength: heavier, lower-volume, tuned to your sport.', valid: () => !!a.sport && !!a.sportIntent && (a.sport !== 'run' || !!a.runDiscipline),
+    isSport && { title: 'Which sport — and where are you?', subtitle: 'We program supportive strength: heavier, lower-volume, tuned to your sport.',
+      valid: () => !!a.sport && !!a.sportIntent
+        && (a.sport !== 'run' || !!a.runDiscipline)
+        && (a.sportIntent !== 'compete' || !!a.sportSeason)
+        && (a.sportIntent !== 'recreational' || !!a.sportGoal),
       render: () => (
         <div style={{ display: 'grid', gap: 18 }}>
           <div>
@@ -268,7 +275,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             </div>
           )}
           <div>
-            <label style={FIELD_LABEL}>{SPORT_INTENT_QUESTION[a.sport] || 'How do you train?'}</label>
+            <label style={FIELD_LABEL}>{a.sport ? `Do you compete in ${SPORTS.find(s => s.key === a.sport)?.label?.toLowerCase() || 'your sport'}?` : 'Do you compete?'}</label>
             <OptionGrid cols={1} gap={6}>
               {SPORT_INTENTS.map(opt => (
                 <Chip key={opt.key} selected={a.sportIntent === opt.key} onClick={() => set({ sportIntent: opt.key })} label={opt.label} hint={opt.hint} />
@@ -277,7 +284,17 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
           </div>
           {a.sportIntent === 'compete' && (
             <div>
-              <label style={FIELD_LABEL}>Next event date <span style={{ opacity: 0.5, fontWeight: 400, textTransform: 'none', fontSize: 10, letterSpacing: 0 }}>(optional)</span></label>
+              <label style={FIELD_LABEL}>Where are you in your season?</label>
+              <OptionGrid cols={2}>
+                {SPORT_SEASONS.map(opt => (
+                  <Chip key={opt.key} selected={a.sportSeason === opt.key} onClick={() => set({ sportSeason: opt.key })} label={opt.label} hint={opt.hint} />
+                ))}
+              </OptionGrid>
+            </div>
+          )}
+          {a.sportIntent === 'compete' && (
+            <div>
+              <label style={FIELD_LABEL}>Key event date <span style={{ opacity: 0.5, fontWeight: 400, textTransform: 'none', fontSize: 10, letterSpacing: 0 }}>(optional)</span></label>
               <input
                 type="date"
                 style={INPUT}
@@ -285,7 +302,17 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
                 min={new Date().toISOString().slice(0, 10)}
                 onChange={e => set({ eventDate: e.target.value })}
               />
-              <div style={HINT}>Used to auto-size the block length and track your season. Leave blank if unsure.</div>
+              <div style={HINT}>We taper you into it. Leave blank for a season-based block.</div>
+            </div>
+          )}
+          {a.sportIntent === 'recreational' && (
+            <div>
+              <label style={FIELD_LABEL}>What's your training goal?</label>
+              <OptionGrid cols={1} gap={6}>
+                {SPORT_GOALS.map(opt => (
+                  <Chip key={opt.key} selected={a.sportGoal === opt.key} onClick={() => set({ sportGoal: opt.key })} label={opt.label} hint={opt.hint} />
+                ))}
+              </OptionGrid>
             </div>
           )}
         </div>
@@ -451,7 +478,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     { title: 'Ready to go', subtitle: "Here's what we captured. Create your plan and you're in.", valid: () => true,
       render: () => {
         const goalLabel = isSport
-          ? `Support ${SPORTS.find(s => s.key === a.sport)?.label || 'sport'} · ${a.sportIntent === 'compete' ? 'competing' : a.sportIntent === 'build_base' ? 'building base' : 'recreational'}`
+          ? `Support ${SPORTS.find(s => s.key === a.sport)?.label || 'sport'} · ${a.sportIntent === 'compete' ? (a.sportSeason === 'in_season' ? 'in-season' : 'off-season') : (SPORT_GOALS.find(g => g.key === a.sportGoal)?.label || 'recreational')}`
           : (STYLES.find(s => s.key === a.strengthStyle)?.label || '—');
         const liftBits = [];
         for (const [k, lab] of [['squat', 'Sq'], ['bench', 'Bn'], ['deadlift', 'Dl'], ['ohp', 'OHP']]) {

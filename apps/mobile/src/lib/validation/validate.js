@@ -65,6 +65,8 @@ export function validateProfile(patch = {}) {
   if ('strength_style' in patch) setEnum('strength_style', patch.strength_style, ENUMS.strength_style, 'Training style');
   if ('sport' in patch)          setEnum('sport', patch.sport, ENUMS.sport, 'Sport');
   if ('sport_intent' in patch)   setEnum('sport_intent', patch.sport_intent, ENUMS.sport_intent, 'Sport intent');
+  if ('sport_season' in patch)   setEnum('sport_season', patch.sport_season, ENUMS.sport_season, 'Sport season');
+  if ('sport_goal' in patch)     setEnum('sport_goal', patch.sport_goal, ENUMS.sport_goal, 'Sport goal');
   if ('run_discipline' in patch) setEnum('run_discipline', patch.run_discipline, ENUMS.run_discipline, 'Run discipline');
 
   if (patch.lifts && typeof patch.lifts === 'object') {
