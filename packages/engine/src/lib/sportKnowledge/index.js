@@ -50,7 +50,8 @@ const RICH = {
   'injuryPreventionLibrary':   (v) => (v || []).length >= 2,
   'decisionRules':             (v) => (v || []).length >= 6,
   'references':                (v) => (v || []).length >= 6,
-  'kpiFramework.kpis':         (v) => (v || []).length >= 8
+  'kpiFramework.kpis':         (v) => (v || []).length >= 8,
+  'gymProgramming':            (v) => !!v && !!v.emphasis && Array.isArray(v.priorityExercises) && v.priorityExercises.length > 0
 };
 
 function dig(p, path) {

@@ -20,7 +20,21 @@
  * passes. This keeps the bar high for real content without blocking scaffolds.
  */
 
+import { validateGymProgramming } from './blocks.js';
+
 export const SCHEMA_VERSION = '1.0.0';
+
+export const RULE_SIGNALS = new Set([
+  'competition_within_h', 'matches_this_week', 'acwr', 'readiness',
+  'cmj_drop_pct', 'illness', 'season', 'soreness_region'
+]);
+export const RULE_EFFECTS = new Set([
+  // shipped (applied by the reflow)
+  'reduce_volume_pct', 'priming_only', 'force_deload', 'minimal_effective_volume',
+  'reduce_one_step', 'withhold', 'taper',
+  // reserved (validated, evaluator no-ops this build)
+  'exclude_soreness_above', 'reduce_region_eccentric', 'reduce_region_overhead', 'cap_high_speed'
+]);
 
 export const EVIDENCE_LEVELS = ['L1', 'L2', 'L3', 'L4', 'L5'];
 export const CONFIDENCE = ['high', 'moderate', 'low'];
@@ -115,6 +129,11 @@ export function validateSportProfile(p) {
       if (!isStr(r.if)) errs.push(`${lbl}: "if" required`);
       if (!isStr(r.then)) errs.push(`${lbl}: "then" required`);
       errs.push(...provErrors(lbl, r));
+      if (r.trigger) {
+        if (!RULE_SIGNALS.has(r.trigger.signal)) errs.push(`${lbl}: trigger.signal "${r.trigger.signal}" not in vocabulary`);
+        if (typeof r.trigger.op !== 'string') errs.push(`${lbl}: trigger.op required`);
+      }
+      if (r.effect && !RULE_EFFECTS.has(r.effect.type)) errs.push(`${lbl}: effect.type "${r.effect.type}" not in vocabulary`);
     });
   } else errs.push(`${id}.decisionRules: must be an array`);
 
@@ -127,6 +146,9 @@ export function validateSportProfile(p) {
     if (!isStr(inj.name)) errs.push(`${lbl}: name required`);
     errs.push(...provErrors(lbl, inj));
   });
+
+  // ── gymProgramming (when present — required for completeness, not structural validity)
+  if (p.gymProgramming) errs.push(...validateGymProgramming(p.gymProgramming).map(e => `${id}.${e}`));
 
   // ── §21 KPI framework — limits, weights, privacy ─────────────────────────────
   errs.push(...validateKpiFramework(id, p.kpiFramework));
@@ -199,5 +221,6 @@ export function validateRegistry(profiles) {
 
 export default {
   SCHEMA_VERSION, EVIDENCE_LEVELS, CONFIDENCE, SECTIONS, RAW_VITALS,
+  RULE_SIGNALS, RULE_EFFECTS,
   validateSportProfile, validateRegistry
 };
