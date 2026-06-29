@@ -238,6 +238,26 @@ export const ENTRIES = [
     confidence: 'moderate',
     lastReviewed: '2026-06-28',
     appliesTo: ['readiness', 'normalization']
+  },
+  {
+    id: 'index.recovery_capacity',
+    rule: 'Recovery Capacity is a slow-moving trait (how much load an athlete can absorb): weight chronic HRV-baseline stability and fitness/training-age most, then chronic sleep adequacy and age. Modulates the acceptable-load ceiling and deload sensitivity — it does not drive the daily call.',
+    value: { weights: { hrvStability: 3, chronicSleep: 2, fitness: 2, age: 1 }, cadence: 'weekly' },
+    evidenceLevel: 'L4',
+    source: 'Composite heuristic: HRV stability (Plews et al. 2013, Sports Medicine), sleep (Walsh et al. 2021), fitness buffers load (training-status reviews)',
+    confidence: 'moderate',
+    lastReviewed: '2026-06-29',
+    appliesTo: ['readiness', 'recovery']
+  },
+  {
+    id: 'index.consistency',
+    rule: 'Consistency = adherence (completed vs planned sessions) weighted above data completeness (days logged), with routine regularity reserved for when sleep/training timing is captured. High consistency supports progressive overload and raises confidence; low biases conservative.',
+    value: { weights: { adherence: 3, dataCompleteness: 2, routineRegularity: 1 }, windowDays: 14, cadence: 'weekly' },
+    evidenceLevel: 'L4',
+    source: 'Athlete-monitoring practice (adherence + monitoring compliance); Saw, Main & Gastin 2016 (self-report implementation)',
+    confidence: 'moderate',
+    lastReviewed: '2026-06-29',
+    appliesTo: ['readiness']
   }
 ];
 

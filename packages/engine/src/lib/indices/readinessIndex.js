@@ -18,6 +18,8 @@ import { wellnessIndex } from './wellnessIndex.js';
 import { recoveryIndex } from './recoveryIndex.js';
 import { fatigueIndex } from './fatigueIndex.js';
 import { trainingLoadIndex } from './trainingLoadIndex.js';
+import { recoveryCapacityIndex } from './recoveryCapacityIndex.js';
+import { consistencyIndex } from './consistencyIndex.js';
 import { bandFromValue } from './contract.js';
 
 /**
@@ -29,9 +31,11 @@ import { bandFromValue } from './contract.js';
  * @param {{date,load}[]} [inputs.dl]       daily loads (optional — adds Training Load)
  * @param {string} [inputs.asOf]            ISO date for the load window
  * @param {object[]} [inputs.setLogs]       set_logs rows (for volume-load)
+ * @param {object} [inputs.capacity]        { history, profile, fitnessScore } → Recovery Capacity (optional)
+ * @param {object} [inputs.consistency]     { completed, planned, loggedDays, windowDays } → Consistency (optional)
  * @returns {{ value, confidence, band, contributors, missingInputs, indices }}
  */
-export function readinessIndex({ metric = {}, prior = [], objectiveScore = null, recentRecovery = null, dl = null, asOf = null, setLogs = [] } = {}) {
+export function readinessIndex({ metric = {}, prior = [], objectiveScore = null, recentRecovery = null, dl = null, asOf = null, setLogs = [], capacity = null, consistency = null } = {}) {
   const subjective = {
     sleepQuality: metric.sleep_quality, soreness: metric.soreness,
     mood: metric.mood, stress: metric.stress, energy: metric.energy
@@ -45,6 +49,8 @@ export function readinessIndex({ metric = {}, prior = [], objectiveScore = null,
 
   const sub = { sleep, cardio, wellness, recovery, fatigue };
   if (dl && asOf) sub.trainingLoad = trainingLoadIndex({ dl, asOf, setLogs });
+  if (capacity) sub.recoveryCapacity = recoveryCapacityIndex(capacity);   // trait ceiling (optional)
+  if (consistency) sub.consistency = consistencyIndex(consistency);       // behavioural reliability (optional)
 
   // Parity: the integrated value is the Recovery score that drives adaptation today.
   const value = recovery.value;

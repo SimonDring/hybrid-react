@@ -21,6 +21,7 @@ import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch,
 import { dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad } from '@performance-os/engine/lib/plan/trainingLoad.js';
 import { assessRecovery } from '@performance-os/engine/lib/recovery/recovery.js';
 import { assessLoad } from '@performance-os/engine/lib/load/load.js';
+import { readinessIndex } from '@performance-os/engine/lib/indices/index.js';
 import { setOverride, clearOverride, getOverride } from '../lib/sessionOverrides.js';
 import { matchWorkoutToSession, sessionPhysiologyFromWorkout } from '../lib/sessionWorkoutMatch.js';
 import { validateProfile, validateDailyMetric, validateSessionLog, validateInjury } from '../lib/validation/validate.js';
@@ -120,6 +121,23 @@ function buildView() {
     .map(l => ({ date: (l.completed_at || '').split('T')[0], ...sessionLoad(l) }));
   const loadView = { acute: Math.round(ac.acute), chronic: Math.round(ac.chronic), acwr: acwrVal, band, sessions: loadSessions };
 
+  // Derived Readiness Index (display only) — the physiological index breakdown the
+  // Home/Recovery screens render. Reuses the inputs already assembled above; it does
+  // NOT feed plan adaptation (that still runs through recovery/load via setRuntime).
+  const priorMetrics = [...dailyMetrics].sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(1);
+  const cutoff14 = new Date(Date.parse(today) - 14 * 86400000).toISOString().split('T')[0];
+  const recVals = [...logs].filter(l => l && l.recovery != null)
+    .sort((a, b) => String(b.date || '').localeCompare(String(a.date || ''))).slice(0, 4).map(l => Number(l.recovery));
+  const recentRecovery = recVals.length ? recVals.reduce((a, b) => a + b, 0) / recVals.length : null;
+  const loggedDays = new Set(dailyMetrics.filter(m => (m.date || '') >= cutoff14).map(m => m.date)).size;
+  const completed14 = sessionLogsAll.filter(l => (l.completed_at || '').split('T')[0] >= cutoff14).length;
+  const readinessIx = readinessIndex({
+    metric: latestMetric, prior: priorMetrics, objectiveScore, recentRecovery,
+    dl, asOf: today, setLogs: Database.tables.setLogs.all(),
+    capacity: { history: dailyMetrics, profile: Database.services.getProfile() || {} },
+    consistency: { loggedDays, windowDays: 14, completed: completed14, planned: 0 }
+  });
+
   // Per-set training history grouped by session id — drives the runner's resume.
   const setLogsBySession = {};
   Database.tables.setLogs.all().forEach(r => {
@@ -136,6 +154,7 @@ function buildView() {
     injuries:     Database.services.listInjuries(),
     dailyMetrics,
     load:         loadView,
+    readiness:    readinessIx,
     adaptation:   currentAdaptation(),
     syncing:      false,
     _tick:        Date.now()

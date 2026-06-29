@@ -49,4 +49,19 @@ export function baselineMaturity(count = 0, required = 7) {
   return Math.max(0, Math.min(1, count / required));
 }
 
-export default { mean, clamp100, deviationScore, baselineMaturity };
+/**
+ * Coefficient of variation (%) of the present numbers — SD / mean × 100. Needs ≥2
+ * points and a non-zero mean, else null. A low, steady HRV CV reflects a stable
+ * autonomic baseline (recovery capacity); a collapsing CV is a separate acute
+ * overreaching flag handled by the Fatigue Index. (physio.hrv.metric.)
+ */
+export function coefficientOfVariation(nums = []) {
+  const a = nums.filter(v => v != null && !Number.isNaN(Number(v))).map(Number);
+  if (a.length < 2) return null;
+  const m = a.reduce((x, y) => x + y, 0) / a.length;
+  if (!m) return null;
+  const variance = a.reduce((s, v) => s + (v - m) ** 2, 0) / a.length;
+  return (Math.sqrt(variance) / m) * 100;
+}
+
+export default { mean, clamp100, deviationScore, baselineMaturity, coefficientOfVariation };

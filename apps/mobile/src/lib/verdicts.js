@@ -24,6 +24,20 @@ export function readinessVerdict(readiness) {
   return { ...base, color: TONE[base.tone] };
 }
 
+// Theme colour for a derived-index band (green/amber/red) → real tokens.
+export const INDEX_BAND_COLOR = { green: 'var(--moss)', amber: 'var(--ochre)', red: 'var(--rust)' };
+export function indexBandColor(band) { return INDEX_BAND_COLOR[band] || 'var(--txt-muted)'; }
+
+// A short confidence caveat for a 0–1 index confidence; null when confidence is high
+// (no caveat needed) or absent. Drives "how much to trust this" copy under readiness.
+export function confidenceNote(confidence) {
+  if (confidence == null) return null;
+  const p = Math.round(confidence * 100);
+  if (p >= 70) return null;
+  if (p >= 40) return `Moderate confidence · ${p}%`;
+  return `Low confidence · ${p}% — log more to sharpen this`;
+}
+
 const LOAD = {
   sweet: { tone: 'positive', label: 'Balanced',     note: 'Right where you want to be — the plan stays as written.' },
   under: { tone: 'caution',  label: 'Light',        note: "Below your usual — there's room to build back up." },

@@ -1,4 +1,4 @@
-import { readinessVerdict, loadVerdict } from '../src/lib/verdicts.js';
+import { readinessVerdict, loadVerdict, confidenceNote, indexBandColor } from '../src/lib/verdicts.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
@@ -25,3 +25,14 @@ assert(loadVerdict({ acwr: 1.6, band: 'over' }, { reverted: true, reason: 'x' })
 assert(loadVerdict({ acwr: 1.0, band: 'taper' }).tone === 'neutral', 'T16 unknown band → neutral');
 assert(readinessVerdict({ status: 'strong' }).label === 'Primed', 'T17 strong → label Primed');
 assert(readinessVerdict({ status: 'low' }).label === 'Ease in', 'T18 low → label Ease in');
+
+// ── confidenceNote: caveat only when confidence is not high ─────────────────────
+assert(confidenceNote(null) === null, 'T19 null confidence → no caveat');
+assert(confidenceNote(0.8) === null, 'T20 high confidence (≥70%) → no caveat');
+assert(/Moderate/.test(confidenceNote(0.5)), 'T21 mid confidence → moderate caveat');
+assert(/Low/.test(confidenceNote(0.2)), 'T22 low confidence → low caveat');
+// ── indexBandColor: real theme tokens, muted fallback ──────────────────────────
+assert(indexBandColor('green') === 'var(--moss)' && indexBandColor('red') === 'var(--rust)', 'T23 band colours use real tokens');
+assert(indexBandColor(null) === 'var(--txt-muted)', 'T24 null band → muted fallback');
+
+console.log('verdicts tests done');

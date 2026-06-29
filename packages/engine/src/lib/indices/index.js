@@ -11,4 +11,6 @@ export { cardiovascularRecoveryIndex } from './cardiovascularRecoveryIndex.js';
 export { recoveryIndex } from './recoveryIndex.js';
 export { trainingLoadIndex } from './trainingLoadIndex.js';
 export { fatigueIndex } from './fatigueIndex.js';
+export { recoveryCapacityIndex } from './recoveryCapacityIndex.js';
+export { consistencyIndex } from './consistencyIndex.js';
 export { readinessIndex } from './readinessIndex.js';
