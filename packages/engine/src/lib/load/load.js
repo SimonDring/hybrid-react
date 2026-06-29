@@ -30,10 +30,11 @@ const ACWR_ONLY_FLOOR = 0.85;
  * @param {Object} inputs
  * @param {number|null} inputs.acwrVal     today's acute:chronic ratio (or null)
  * @param {number[]} inputs.recentAcwr     recent daily ACWR values
+ * @param {Object|undefined} inputs.thresholds  sport-specific ACWR thresholds (from acwrThresholdsForSport); omit/undefined → global defaults
  * @returns {LoadOutput}
  */
-export function assessLoad({ acwrVal = null, recentAcwr = [] } = {}) {
-  const d = loadDecision(acwrVal, recentAcwr);   // { action, multiplier, reason }
+export function assessLoad({ acwrVal = null, recentAcwr = [], thresholds = undefined } = {}) {
+  const d = loadDecision(acwrVal, recentAcwr, thresholds || undefined);   // { action, multiplier, reason }
   return {
     riskLevel: d.action === 'deload' ? 'high' : d.action === 'ease' ? 'moderate' : 'low',
     loadModifier: Math.max(ACWR_ONLY_FLOOR, d.multiplier),

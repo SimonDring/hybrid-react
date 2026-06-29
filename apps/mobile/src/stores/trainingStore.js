@@ -17,8 +17,9 @@ import { nextE1RM, resolveLifts } from '@performance-os/engine/lib/liftProgressi
 import { substituteOptions } from '@performance-os/engine/lib/plan/substitutions.js';
 import { getGymLevel } from '@performance-os/engine/lib/Utils.js';
 import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
+import skb, { normalizeSportId } from '@performance-os/engine/lib/sportKnowledge/index.js';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch, adaptedSessionByKey } from '../lib/PlanService.js';
-import { dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad } from '@performance-os/engine/lib/plan/trainingLoad.js';
+import { dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad, acwrThresholdsForSport } from '@performance-os/engine/lib/plan/trainingLoad.js';
 import { assessRecovery } from '@performance-os/engine/lib/recovery/recovery.js';
 import { assessLoad } from '@performance-os/engine/lib/load/load.js';
 import { setOverride, clearOverride, getOverride } from '../lib/sessionOverrides.js';
@@ -91,6 +92,8 @@ function buildView() {
   // Keep the plan's adaptive reflow current: it reflows this week around what's
   // been completed + today's readiness. Set before screens read the plan.
   const today = new Date().toISOString().split('T')[0];
+  const profile = Database.services.getProfile() || {};
+  const sportProfile = skb.get(normalizeSportId(profile.sport)) || null;
   const sessionLogsAll = Database.tables.sessionLogs.all();
   const workoutsAll = Database.tables.workouts.all();
   const dl = dailyLoads(sessionLogsAll, workoutsAll);
@@ -99,8 +102,8 @@ function buildView() {
   // Load contract (ACWR demoted to a soft input). Recovery contract blends objective
   // wearable readiness with subjective wellness (latest daily_metrics: energy/soreness/
   // mood — dormant until captured) + illness/travel flags. See src/lib/{load,recovery}/.
-  const loadOut = assessLoad({ acwrVal, recentAcwr: acwrSeries(dl, today, 4) });
-  const objectiveScore = computeReadiness(dailyMetrics, logs).score;
+  const loadOut = assessLoad({ acwrVal, recentAcwr: acwrSeries(dl, today, 4), thresholds: acwrThresholdsForSport(profile.sport) });
+  const objectiveScore = computeReadiness(dailyMetrics, logs, sportProfile ? sportProfile.readinessModel : null).score;
   const latestMetric = [...dailyMetrics].sort((a, b) => (b.date || '').localeCompare(a.date || ''))[0] || {};
   const recoveryOut = assessRecovery({
     objectiveScore,
