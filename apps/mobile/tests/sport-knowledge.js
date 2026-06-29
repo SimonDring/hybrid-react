@@ -14,13 +14,13 @@ function assert(cond, msg) {
 // ── registry validity + coverage ──────────────────────────────────────────────
 const v = skb.validate();
 assert(v.ok, `every sport profile is valid (${v.errors.slice(0, 4).join(' | ') || 'no errors'})`);
-for (const id of ['gaelic_football', 'hurling', 'rugby', 'soccer', 'running', 'cycling', 'swimming']) {
+for (const id of ['gaelic_football', 'hurling', 'rugby', 'soccer', 'running', 'cycling', 'swimming', 'triathlon']) {
   assert(skb.has(id), `registry contains "${id}"`);
 }
 assert(skb.get('kabaddi') === undefined, 'unknown sport returns undefined (generic fallback)');
 
 // ── flagships fully authored ───────────────────────────────────────────────────
-const FLAGSHIPS = ['gaelic_football', 'hurling', 'swimming'];
+const FLAGSHIPS = ['gaelic_football', 'hurling', 'swimming', 'triathlon'];
 for (const id of FLAGSHIPS) {
   const c = skb.completeness(id);
   assert(c.complete, `${id} is fully authored (score ${c.score.toFixed(2)}; thin: ${c.thin.join(', ') || 'none'})`);
