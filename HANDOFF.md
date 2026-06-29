@@ -3,6 +3,29 @@
 _Last updated: 2026-06-28. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
 
+## Latest work — SKB: cycling authored to flagship depth (2026-06-29)
+
+Promoted `packages/engine/src/data/sport-knowledge/cycling.json` from a stub to a
+**fully-authored** profile (all 21 sections), modelled on `swimming.json` (the closest
+individual-endurance reference) with real evidence provenance.
+
+- **Sport-specific shape:** discipline archetypes in `positions` (GC/climber, sprinter,
+  TT, criterium/puncheur, **track sprinter**, endurance/domestique); readiness elevates
+  **leg/quad soreness** (knee is the overuse target); a **power-to-weight (FTP W/kg)** KPI
+  is the climbing/GC currency; the gym serves the evidence-based **strength→economy** gain
+  (Rønnestad & Mujika 2014; Sunde 2010; Aagaard 2011) + **in-season maintenance**
+  (Rønnestad 2010). Injuries are the two cycling faces: overuse (anterior knee, low back,
+  neck, ITB, saddle/bar neuropathies) + acute **crash trauma** (clavicle).
+- **Engine wiring:** already imported in `sportKnowledge/index.js` and in `PROFILES`, so
+  no registry change was needed — authoring the JSON is the whole change (the SKB's "add a
+  sport = JSON + one registry line" promise; the line already existed).
+- **Test:** `apps/mobile/tests/sport-knowledge.js` — cycling moved from the stub list into
+  `FLAGSHIPS`, plus cycling-specific distinctness assertions (aerobic endurance leads,
+  rotational power low, carries the `ftp_wkg` KPI).
+- **Docs:** `docs/engine/03-SPORT-KNOWLEDGE-BASE.md` updated (cycling now a reference
+  profile; three stubs remain: rugby, soccer, running).
+- Still **additive** — nothing in the app consumes the SKB yet.
+
 ## Latest work — Sport Knowledge Base v1 (GAA flagship) (2026-06-28)
 
 On worktree branch **`claude/elated-benz-f95b79`** (local). New **Sport Knowledge Base
@@ -21,8 +44,9 @@ nothing in the app consumes it yet.** Full doc: `docs/engine/03-SPORT-KNOWLEDGE-
   **hurling** and **swimming** authored fully across all 21 sections. The two GAA codes are
   **separate sports** (hurling carries the striking / grip / rotational-power demands
   football lacks); swimming is an individual endurance sport (positions = event/stroke
-  archetypes; readiness elevates shoulder soreness; taper is the headline load tool). Four
-  schema-conformant **stubs**: rugby, soccer, running, cycling.
+  archetypes; readiness elevates shoulder soreness; taper is the headline load tool).
+  Schema-conformant **stubs**: rugby, soccer, running (cycling was promoted to a full
+  profile on 2026-06-29 — see the entry above).
 - Exposed on the engine barrel: `import { sportKnowledge } from '@performance-os/engine'`.
 - **Verified:** `node apps/mobile/tests/sport-knowledge.js` (51 assertions pass —
   validity, flagship completeness + distinctness, stub scaffolds, energy %s, privacy rule,

@@ -35,10 +35,12 @@ Every profile declares all 21 top-level sections (see `SECTIONS` in `schema.js`)
 `kpiFramework` (KPI classification + ≤8 athlete / ≤15 coach dashboards + weighted
 performance score + gamification).
 
-See `gaelic_football.json`, `hurling.json` and `swimming.json` as the **fully-authored
-reference profiles** (two team sports + one individual endurance sport — proof the same
-schema flexes across very different sports, e.g. swimming's "positions" are event/stroke
-archetypes and its readiness model elevates shoulder soreness).
+See `gaelic_football.json`, `hurling.json`, `swimming.json` and `cycling.json` as the
+**fully-authored reference profiles** (two team sports + two individual endurance sports —
+proof the same schema flexes across very different sports, e.g. swimming's "positions" are
+event/stroke archetypes and cycling's are discipline archetypes — climber / sprinter / TT /
+track — each elevating its own sport-specific readiness input: shoulder soreness for
+swimming, leg/knee soreness for cycling).
 
 ## Evidence policy (non-negotiable)
 
@@ -74,7 +76,7 @@ athlete-only — and a test fixture proves the validator rejects a coach-visible
 
 A **stub** is structurally valid (all sections present, energy %s sum ~100, empty arrays
 allowed) but reports a low `completeness()` score. Fill the empty sections to promote it to
-a full profile. `rugby/soccer/running/cycling.json` are current scaffolds.
+a full profile. `rugby/soccer/running.json` are the current scaffolds.
 
 `completeness(id)` (modelled on `kb.staleEntries`) returns `{ score, complete, thin[] }` —
 a report, not a pass/fail — so scaffolds are honestly flagged without failing CI.
@@ -84,9 +86,13 @@ a report, not a pass/fail — so scaffolds are honestly flagged without failing 
 - **Built (2026-06-28):** the schema/validator/accessor; **Gaelic football**, **hurling**
   and **swimming** fully authored (the two GAA codes are modelled as *separate* sports —
   hurling carries the striking / grip / rotational-power demands football lacks; swimming
-  proves the schema flexes to an individual endurance sport); four conformant stubs
-  (rugby, soccer, running, cycling). Additive only — **no plan-generation rewiring**;
-  nothing in the app consumes it yet.
+  proves the schema flexes to an individual endurance sport).
+- **Added (2026-06-29):** **cycling** fully authored — a second individual endurance sport,
+  modelled by *discipline* (climber / sprinter / TT / track / criterium), elevating leg/knee
+  soreness as its sport-specific readiness input and carrying a power-to-weight (FTP W/kg)
+  KPI; the gym serves the evidence-based strength→economy gain (Rønnestad/Sunde/Aagaard).
+  Three conformant stubs remain (rugby, soccer, running). Additive only — **no
+  plan-generation rewiring**; nothing in the app consumes it yet.
 - **Next:** author the remaining stubs to depth; wire `decisionRules` / `readinessModel` /
   `loadManagement` into `PlanService` reflow + the future coach dashboard; reconcile the
   thin `src/lib/sports/*.js` modules to derive from the SKB.
