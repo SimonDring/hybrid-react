@@ -45,6 +45,11 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 // work. The allocator stops a slot here; volume ÷ day count sizes the rest.
 export const SESSION_CEILING_MIN = 75;
 
+// Sport sessions stay lean to leave recovery for the sport: cap fatiguing (working)
+// items per session. The factor-0 prehab/mobility finisher is exempt — it's
+// non-fatiguing — and priority prehab is picked first, so it survives the cap.
+export const SPORT_WORK_ITEM_CAP = 6;
+
 // Spinal/axial-load budget. A session may accumulate up to AXIAL_SESSION_CAP units
 // of axial load (back squat 2 + deadlift 2 fills it); beyond that, intents resolve
 // to their lowest-axial available member so we don't keep reloading the spine.
@@ -586,6 +591,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   // No barbell (dumbbell / bodyweight only) → a max-strength scheme can't be loaded.
   const noBarbell = !availableEquip(ctx.access || []).has('barbell');
   const s = scheme(style, intent, deload, taper, noBarbell);
+  // Sport-only: count fatiguing (working, factor>0) picks in a slot, and whether it's
+  // at the lean cap. The factor-0 supportive finisher is added later and stays exempt.
+  const workCount = (slot) => slot.picks.filter(p => (p.item?.volumeFactor ?? 1) > 0).length;
+  const overSportCap = (slot) => style === 'sport' && workCount(slot) >= SPORT_WORK_ITEM_CAP;
 
   // Hard WEEKLY ceiling: the actual allocated volume for a muscle (counting the
   // synergist contributions that compounds credit) may never exceed its MRV across
@@ -714,7 +723,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   while (progressed) {
     progressed = false;
     for (const slot of work) {
-      if (slot.timeUsed >= slot.budget) continue;
+      if (slot.timeUsed >= slot.budget || overSportCap(slot)) continue;
       const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor);
       if (!pick) continue;
       place(slot, pick);
@@ -742,7 +751,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   for (const slot of work) {
     const numMains = Math.max(1, slot.picks.filter(p => p.ex.role === 'primary').length);
     let added = 0;
-    while (added < numMains + 1 && slot.timeUsed < slot.budget) {
+    while (added < numMains + 1 && slot.timeUsed < slot.budget && !overSportCap(slot)) {
       const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor);
       if (!pick) break;
       place(slot, pick);

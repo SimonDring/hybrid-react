@@ -43,19 +43,48 @@ const DEFAULT_DAYS = {
 // Choose the weekday slots for `n` sessions, honouring the user's preferred days and
 // keeping gym off the athlete's sport days when there's room (suggestGymDays). If the
 // user explicitly picked gym days we respect them; otherwise we suggest around sport.
+// Choose `k` weekday keys from `pool` (any order) spread as evenly as possible around
+// the 7-day week — maximising the SMALLEST gap between chosen days (counting the
+// week-boundary wrap) so gym work isn't bunched. Ties break toward earlier days for
+// determinism. e.g. pool = free days [mon,wed,fri,sun], k=3 → [mon,wed,fri].
+function evenSpread(pool, k) {
+  const idx = [...new Set(pool.map(d => DAY_ORDER.indexOf(d)).filter(i => i >= 0))].sort((a, b) => a - b);
+  if (k >= idx.length) return idx.map(i => DAY_ORDER[i]);
+  const combos = (arr, kk) => kk === 0 ? [[]] : arr.flatMap((v, i) => combos(arr.slice(i + 1), kk - 1).map(c => [v, ...c]));
+  let best = idx.slice(0, k), bestGap = -1;
+  for (const combo of combos(idx, k)) {
+    const sorted = [...combo].sort((a, b) => a - b);
+    let minGap = Infinity;
+    for (let i = 0; i < sorted.length; i++) {
+      const gap = i === 0 ? sorted[0] + 7 - sorted[sorted.length - 1] : sorted[i] - sorted[i - 1];
+      minGap = Math.min(minGap, gap);
+    }
+    if (minGap > bestGap) { bestGap = minGap; best = sorted; }
+  }
+  return best.map(i => DAY_ORDER[i]);
+}
+
+// Pick the weekday slots for `n` gym sessions. Honour the user's available days but
+// route AROUND sport days (swim/track/pool) when the available set allows — only land
+// on a sport day when there genuinely aren't enough free days, and even-spread the
+// rest so the week doesn't bunch. Blank availability falls back to suggestGymDays.
 function chooseDays(availability, n, sportDays = []) {
   let days = (availability?.days || []).filter(d => DAY_ORDER.includes(d));
   days = [...new Set(days)].sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
-  if (days.length >= n) days = days.slice(0, n);
-  else if (days.length === 0 && sportDays.length) {
-    days = suggestGymDays({ sportDays, gymDays: n });   // no explicit picks → suggest around sport
+  const sport = new Set(sportDays);
+
+  if (days.length === 0) {
+    // No explicit picks → suggest spread around sport (existing behaviour).
+    days = sportDays.length ? suggestGymDays({ sportDays, gymDays: n }) : (DEFAULT_DAYS[n] || DAY_ORDER.slice(0, n));
   } else {
-    // Fill from rest-spaced defaults, preferring non-sport days first.
-    const sport = new Set(sportDays);
-    const def = (DEFAULT_DAYS[n] || DAY_ORDER.slice(0, n)).filter(d => !sport.has(d));
-    const defSport = (DEFAULT_DAYS[n] || DAY_ORDER.slice(0, n)).filter(d => sport.has(d));
-    days = [...new Set([...days, ...def, ...defSport])]
-      .sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b)).slice(0, n);
+    // Explicit availability → prefer free (non-sport) days, evenly spread; only borrow
+    // sport days when there aren't enough free ones (those clash sessions are lightened
+    // downstream by the scheduler via lightenItems).
+    const free = days.filter(d => !sport.has(d));
+    const clash = days.filter(d => sport.has(d));
+    days = free.length >= n
+      ? evenSpread(free, n)
+      : [...free, ...clash.slice(0, n - free.length)].sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
   }
   return days.map(d => DAY_NAMES[d]);
 }

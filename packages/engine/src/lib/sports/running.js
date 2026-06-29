@@ -21,6 +21,7 @@ export const running = {
   id: 'run',
   label: 'Running',
   power: true,
+  systemicFactor: 0.90,   // high impact + leg overlap → larger gym pullback
   seasonModifiers: DEFAULT_SEASON_VOLUME,
   periodization: SPORT_BLOCKS,            // long + no-discipline use the generic templates
 

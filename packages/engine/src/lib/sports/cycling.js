@@ -11,6 +11,7 @@ export const cycling = {
   id: 'cycle',
   label: 'Cycling',
   power: true,
+  systemicFactor: 0.95,   // moderate leg load → mild extra gym pullback
   seasonModifiers: DEFAULT_SEASON_VOLUME,
   periodization: SPORT_BLOCKS,
 

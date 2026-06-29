@@ -65,7 +65,9 @@ export const BLANK_ANSWERS = {
   goalType: '',                 // 'build' | 'sport'
   strengthStyle: 'strength',    // build: 'strength' | 'bodybuilding' | 'functional'
   sport: '',                    // sport: 'run' | 'cycle' | 'swim'
-  sportIntent: '',              // 'compete' | 'recreational' | 'build_base'
+  sportIntent: '',              // 'compete' | 'recreational'
+  sportSeason: '',              // compete only: 'in_season' | 'off_season'
+  sportGoal: '',                // recreational only: 'build_base' | 'get_stronger' | 'stay_durable'
   runDiscipline: '',            // run only: 'sprint' | 'middle' | 'long'
   sportDays: [],                // sport goals: weekday keys the athlete trains their sport
   eventDate: '',                // optional ISO date YYYY-MM-DD
@@ -126,6 +128,16 @@ export function answersToProfilePatch(a) {
         [k, liftsRaw[k] != null ? ((a.liftsSource && a.liftsSource[k]) || 'entered') : 'estimated']))
     : null;
 
+  // Sport intent / season / goal (new model). Legacy 'build_base' intent migrates to
+  // recreational + build_base goal so old answers + saved profiles still resolve.
+  let sportIntent = a.sportIntent || null;
+  let sportGoal = a.sportGoal || null;
+  if (sportIntent === 'build_base') { sportIntent = 'recreational'; sportGoal = sportGoal || 'build_base'; }
+  if (sportIntent === 'recreational' && !sportGoal) sportGoal = 'build_base';
+  const sportSeasonKey = a.sportSeason === 'in_season' ? 'in' : a.sportSeason === 'off_season' ? 'off' : null;
+  const seasonOut = (isSport && sportIntent === 'compete') ? sportSeasonKey : null;
+  const goalOut = (isSport && sportIntent === 'recreational') ? sportGoal : null;
+
   return {
     plan_start_date: resolveStartDate(a.startWhen, a.startDate),
     plan_weeks: (() => {
@@ -133,7 +145,9 @@ export function answersToProfilePatch(a) {
         goal_type: a.goalType || null,
         strength_style: isBuild ? (a.strengthStyle || 'strength') : null,
         sport: isSport ? (a.sport || null) : null,
-        sport_intent: isSport ? (a.sportIntent || 'recreational') : null,
+        sport_intent: isSport ? (sportIntent || 'recreational') : null,
+        sport_season: seasonOut,
+        sport_goal: goalOut,
         event_date: isSport && a.eventDate ? a.eventDate : null,
         run_discipline: isSport && a.sport === 'run' ? (a.runDiscipline || null) : null
       };
@@ -148,9 +162,10 @@ export function answersToProfilePatch(a) {
     primary: 'gym',
     strength_style: isBuild ? (a.strengthStyle || 'strength') : 'strength',
     sport: isSport ? (a.sport || null) : null,
-    sport_intent: isSport ? (a.sportIntent || 'recreational') : null,
+    sport_intent: isSport ? (sportIntent || 'recreational') : null,
+    sport_goal: goalOut,                           // recreational training goal | null
     event_date: isSport && a.eventDate ? a.eventDate : null,
-    sport_season: null,  // no longer set during onboarding; deriveSeason() computes it on demand
+    sport_season: seasonOut,  // 'in' | 'off' | null (compete only); deriveSeason() falls back for recreational
     run_discipline: isSport && a.sport === 'run' ? (a.runDiscipline || null) : null,
     sport_days: isSport ? (a.sportDays || []) : null,
 

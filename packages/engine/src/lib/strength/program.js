@@ -12,7 +12,7 @@
 import { deriveSeason } from '../plan/periodization.js';
 import { getGymLevel } from '../Utils.js';
 import sports from '../sports/index.js';
-import { DEFAULT_SEASON_VOLUME } from '../sports/_schema.js';
+import { sportLoadScalar } from './sportLoad.js';
 import { availableEquip, LEVELS } from '../../data/strengthExercises.js';
 import { BUILD_INTENTS, resolveIntents } from './priorityIntents.js';
 
@@ -43,7 +43,7 @@ export function resolveProgram(profile = {}) {
     return {
       goalType: 'sport', style: 'sport',
       emphasis: (byD && byD.emphasis) || (mod && mod.emphasis) || {},
-      volumeScalar: ((mod && mod.seasonModifiers) || DEFAULT_SEASON_VOLUME)[season] ?? 1.0,
+      volumeScalar: sportLoadScalar(profile, { season, mod }),
       power: mod ? !!mod.power : true, sport, season, level,
       exercisePriority: list, priorityByIntent: byIntent
     };
