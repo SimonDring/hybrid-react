@@ -11,7 +11,7 @@
 
 import { deriveSeason } from '../plan/periodization.js';
 import { getGymLevel } from '../Utils.js';
-import skb, { normalizeSportId } from '../sportKnowledge/index.js';
+import skb, { normalizeSportId, toSportTag } from '../sportKnowledge/index.js';
 import { DEFAULT_SEASON_VOLUME } from '../sportKnowledge/blocks.js';
 import { availableEquip, LEVELS } from '../../data/strengthExercises.js';
 import { BUILD_INTENTS, resolveIntents } from './priorityIntents.js';
@@ -28,8 +28,11 @@ export function resolveProgram(profile = {}) {
   const goalType = profile.goal_type || (profile.sport ? 'sport' : 'build');
 
   if (goalType === 'sport' && profile.sport) {
-    const sport = profile.sport;                                   // raw ID (e.g. 'run') — preserved for allocator/sportTags
-    const gp = (skb.get(normalizeSportId(sport)) || {}).gymProgramming || null;   // null → generic fallback
+    // Normalize to canonical SKB id for the knowledge base lookup, then to the legacy
+    // tag form used in strengthExercises.js sportTags so 'swimming' and 'swim' both
+    // match the same exercise-tag set (byte-identical plans regardless of alias used).
+    const sport = toSportTag(profile.sport);                       // 'swim'|'run'|'cycle' or raw
+    const gp = (skb.get(normalizeSportId(profile.sport)) || {}).gymProgramming || null;   // null → generic fallback
     const season = profile.sport_season || deriveSeason(profile) || 'off';
     const disc = profile.run_discipline || null;
     const byD = disc && gp && gp.byDiscipline ? gp.byDiscipline[disc] : null;

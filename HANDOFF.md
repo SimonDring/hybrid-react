@@ -1,7 +1,19 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-06-28. Keep this current at the end of each work session so the
+_Last updated: 2026-06-29. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
+
+## Latest work — SKB drives onboarding + decision engine (2026-06-29)
+
+On branch **`claude/elated-benz-f95b79`** (local).
+
+- **SKB is now the single source of truth for sports.** `sportKnowledge.selectable()` returns only fully-authored sports (`gaelic_football`, `hurling`, `swimming`); onboarding shows exactly those and auto-updates whenever a new sport is authored + committed — no code change needed.
+- **Three fully-authored sports:** `gaelic_football`, `hurling`, `swimming` — all 21 SKB sections complete. `run`, `cycle`, `rugby`, `soccer` remain scaffolds and are hidden from onboarding.
+- **`gymProgramming` drives `resolveProgram`:** `emphasis`, `priorityExercises`, `seasonModifiers`, and `power` are read from the SKB JSON; `resolveProgram` no longer carries per-sport hardcoded vectors. `run`/`cycle` fall back gracefully to the generic sport path (their scaffolds carry no `gymProgramming`).
+- **Legacy alias normalization fixed end-to-end:** `toSportTag()` added to `sportKnowledge/index.js` maps canonical IDs (`'swimming'`, `'running'`, `'cycling'`) back to the legacy tag form (`'swim'`, `'run'`, `'cycle'`) used in `strengthExercises.js` `sportTags`. `resolveProgram` uses `toSportTag` so `sport:'swim'` and `sport:'swimming'` produce byte-identical plans — confirmed by the migration-parity assertion in the new golden-master test.
+- **New deterministic golden-master test** `apps/mobile/tests/sport-generate-skb.js`: for each of `gaelic_football`, `hurling`, `swimming` asserts non-empty phases + sessions, determinism (two calls → identical JSON), and swim/swimming migration parity. 15 assertions, all green.
+- **Full suite green:** 0 FAILs across all `apps/mobile/tests/*.js`. Golden-master snapshot (19 archetypes) still byte-identical.
+- Legacy `run`/`cycle` profiles still generate valid tailored plans (generic sport path) but are hidden from onboarding until fully authored in the SKB.
 
 ## Latest work — Sport Knowledge Base v1 (GAA flagship) (2026-06-28)
 

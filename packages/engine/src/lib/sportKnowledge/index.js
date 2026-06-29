@@ -77,4 +77,11 @@ export function normalizeSportId(id) { if (!id) return null; return ID_ALIASES[i
 export function selectable() { return PROFILES.filter(p => completeness(p.id).complete); }
 export function gymProgrammingFor(id) { const p = BY_ID.get(normalizeSportId(id)); return p ? p.gymProgramming || null : null; }
 
+// Reverse alias map: canonical SKB id → legacy short tag used in strengthExercises.js sportTags.
+// Legacy profiles (sport:'swim') and canonical ones (sport:'swimming') both map to 'swim' so
+// the allocator's sportTags lookup is always consistent.
+const CANONICAL_TO_TAG = { swimming: 'swim', running: 'run', cycling: 'cycle' };
+/** Returns the legacy sportTag key for use in the allocator (e.g. 'swimming' → 'swim'). */
+export function toSportTag(id) { if (!id) return null; return CANONICAL_TO_TAG[id] || CANONICAL_TO_TAG[normalizeSportId(id)] || id; }
+
 export default { get, has, all, ids, section, validate, completeness, normalizeSportId, selectable, gymProgrammingFor };
