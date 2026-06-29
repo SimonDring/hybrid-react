@@ -33,7 +33,9 @@
 export const SEASONS = ['off', 'pre', 'in', 'transition'];
 
 // Shared default season volume scalar (in-season = maintenance dose; Rønnestad 2011).
-export const DEFAULT_SEASON_VOLUME = { off: 1.0, pre: 0.85, in: 0.6, transition: 0.7 };
+// Off-season pulled back from 1.0 → 0.90 so gym strength SUPPORTS the sport instead of
+// piling full volume on a body that already trains its sport (sportLoadScalar trims further).
+export const DEFAULT_SEASON_VOLUME = { off: 0.90, pre: 0.85, in: 0.6, transition: 0.7 };
 
 // Generic sport block templates, reused by most sports (running sprint/middle add
 // their own). Off-season builds a max-strength base (Rønnestad 2015); pre-season
@@ -41,7 +43,7 @@ export const DEFAULT_SEASON_VOLUME = { off: 1.0, pre: 0.85, in: 0.6, transition:
 // (Mujika 2010). These moved here from periodization.js so sports own their season
 // shape and new sports need no core edits.
 export const SPORT_BLOCKS = {
-  off:        { totalWeeks: 12, split: [{ intent: 'base', weeks: 5 }, { intent: 'build', weeks: 5 }, { intent: 'peak', weeks: 2 }], deloads: [5, 10] },
+  off:        { totalWeeks: 12, split: [{ intent: 'base', weeks: 5 }, { intent: 'build', weeks: 7 }], deloads: [5, 10] },
   pre:        { totalWeeks: 6,  split: [{ intent: 'base', weeks: 3 }, { intent: 'build', weeks: 3 }], deloads: [6] },
   in:         { totalWeeks: 4,  split: [{ intent: 'build', weeks: 4 }], deloads: [] },
   transition: { totalWeeks: 4,  split: [{ intent: 'base', weeks: 4 }], deloads: [] }

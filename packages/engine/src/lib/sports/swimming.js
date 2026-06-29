@@ -12,6 +12,7 @@ export const swimming = {
   id: 'swim',
   label: 'Swimming',
   power: true,
+  systemicFactor: 0.95,   // low-impact aerobic load → mild extra gym pullback
   seasonModifiers: DEFAULT_SEASON_VOLUME,
   periodization: SPORT_BLOCKS,
 
