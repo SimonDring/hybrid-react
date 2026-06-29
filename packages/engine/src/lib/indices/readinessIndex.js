@@ -35,7 +35,24 @@ import { bandFromValue } from './contract.js';
  * @param {object} [inputs.consistency]     { completed, planned, loggedDays, windowDays } → Consistency (optional)
  * @returns {{ value, confidence, band, contributors, missingInputs, indices }}
  */
-export function readinessIndex({ metric = {}, prior = [], objectiveScore = null, recentRecovery = null, dl = null, asOf = null, setLogs = [], capacity = null, consistency = null } = {}) {
+// v2 weighting (knowledge base: index.readiness.weights) — subjective is the largest
+// single component (Saw 2016), HRV the primary objective marker, sleep heavy; Recovery
+// Capacity nudges the ceiling. Returns null if none of the weighted parts are present.
+const V2_WEIGHTS = { wellness: 0.40, sleep: 0.25, cardio: 0.25, fatigue: 0.10 };
+function readinessV2(sub) {
+  let num = 0, den = 0;
+  for (const k of Object.keys(V2_WEIGHTS)) {
+    const ix = sub[k];
+    if (ix && ix.value != null) { num += V2_WEIGHTS[k] * ix.value; den += V2_WEIGHTS[k]; }
+  }
+  if (den === 0) return null;
+  let v = num / den;
+  const cap = sub.recoveryCapacity && sub.recoveryCapacity.value;
+  if (cap != null) v += (cap - 50) * 0.1; // capacity modulates the ceiling (±5 at the extremes)
+  return Math.round(Math.max(0, Math.min(100, v)));
+}
+
+export function readinessIndex({ metric = {}, prior = [], objectiveScore = null, recentRecovery = null, dl = null, asOf = null, setLogs = [], capacity = null, consistency = null, v2 = false } = {}) {
   const subjective = {
     sleepQuality: metric.sleep_quality, soreness: metric.soreness,
     mood: metric.mood, stress: metric.stress, energy: metric.energy
@@ -52,13 +69,16 @@ export function readinessIndex({ metric = {}, prior = [], objectiveScore = null,
   if (capacity) sub.recoveryCapacity = recoveryCapacityIndex(capacity);   // trait ceiling (optional)
   if (consistency) sub.consistency = consistencyIndex(consistency);       // behavioural reliability (optional)
 
-  // Parity: the integrated value is the Recovery score that drives adaptation today.
-  const value = recovery.value;
+  // v1 (default): the integrated value IS the Recovery score that drives adaptation
+  // today (exact parity). v2 (flagged): the evidence-based composition above, with a
+  // ≥67 green cut. Off by default so behaviour is unchanged until the flag is set.
+  const greenCut = v2 ? 67 : 70;
+  const value = v2 ? readinessV2(sub) : recovery.value;
 
   return {
     value: value == null ? null : Math.round(value),
     confidence: recovery.confidence,
-    band: bandFromValue(value),
+    band: bandFromValue(value, greenCut),
     contributors: Object.entries(sub).map(([name, ix]) => ({ name, value: ix.value, confidence: ix.confidence, band: ix.band })),
     missingInputs: [...new Set(Object.values(sub).flatMap(ix => ix.missingInputs || []))],
     indices: sub

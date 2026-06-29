@@ -26,18 +26,19 @@ import { subjectiveScore } from '../indices/wellnessIndex.js';
 import { recoveryIndex } from '../indices/recoveryIndex.js';
 export { subjectiveScore };
 
-function bandFromScore(score) {
+function bandFromScore(score, greenCut = 70) {
   if (score == null) return 'unknown';
-  if (score >= 70) return 'high';
+  if (score >= greenCut) return 'high';
   if (score >= 50) return 'moderate';
   return 'low';
 }
 
 // Volume modifier preserves the engine's prior readiness mapping (1 / 0.9 / 0.78), so
-// behaviour is unchanged when only an objective score is present.
-function volumeFromScore(score) {
+// behaviour is unchanged when only an objective score is present. greenCut defaults to
+// 70 (legacy); the v2 readiness weighting passes 67.
+function volumeFromScore(score, greenCut = 70) {
   if (score == null) return 1;
-  if (score >= 70) return 1;
+  if (score >= greenCut) return 1;
   if (score >= 50) return 0.9;
   return 0.78;
 }
@@ -74,4 +75,28 @@ export function assessRecovery({ objectiveScore = null, subjective = null, illne
   };
 }
 
-export default { assessRecovery, subjectiveScore };
+/**
+ * Build a RecoveryOutput from a precomputed 0–100 readiness score — the v2 hand-off,
+ * where the Readiness Index value drives adaptation instead of the legacy blend.
+ * Same contract + illness/travel override semantics as assessRecovery. greenCut
+ * defaults to 70 (legacy); the v2 weighting passes 67.
+ *
+ * @param {number|null} score
+ * @param {{illness?:boolean, travel?:boolean, confidence?:number, greenCut?:number}} opts
+ * @returns {RecoveryOutput}
+ */
+export function recoveryFromScore(score = null, { illness = false, travel = false, confidence, greenCut = 70 } = {}) {
+  let sessionOverride = null;
+  if (illness) sessionOverride = 'rest';
+  else if (travel) sessionOverride = 'easy';
+  return {
+    readinessLevel: bandFromScore(score, greenCut),
+    volumeModifier: volumeFromScore(score, greenCut),
+    intensityModifier: 1,
+    sessionOverride,
+    score,
+    confidence
+  };
+}
+
+export default { assessRecovery, recoveryFromScore, subjectiveScore };

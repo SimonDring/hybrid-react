@@ -8,7 +8,7 @@ import {
   cardiovascularRecoveryIndex, trainingLoadIndex, subjectiveScore,
   recoveryCapacityIndex, consistencyIndex, bandFromValue
 } from '@performance-os/engine/lib/indices/index.js';
-import { assessRecovery } from '@performance-os/engine/lib/recovery/recovery.js';
+import { assessRecovery, recoveryFromScore } from '@performance-os/engine/lib/recovery/recovery.js';
 import { sleepScoreFor } from '@performance-os/engine/lib/Readiness.js';
 
 function assert(cond, msg) {
@@ -104,5 +104,22 @@ const rdx2 = readinessIndex({
 });
 assert(rdx2.value === expected, 'readinessIndex.value unchanged with capacity + consistency present (parity preserved)');
 assert(rdx2.indices.recoveryCapacity && rdx2.indices.consistency, 'integrator includes capacity + consistency when supplied');
+
+// ── Spec B: v2 re-weighting (flag-gated; v1 stays exact parity) ────────────────
+// Strong subjective + sleep but a sharp HRV drop vs baseline: v2 (HRV-primary)
+// scores LOWER than v1 (which is the flat objective+subjective blend).
+const mB = { source: 'fitbit', energy: 5, mood: 5, soreness: 5, stress: 5, sleep_quality: 5, sleep_duration_min: 480, hrv_ms: 40, resting_hr: 60 };
+const priorB = [{ hrv_ms: 70 }, { hrv_ms: 72 }];
+const v1 = readinessIndex({ metric: mB, prior: priorB, objectiveScore: 60 });
+const v2 = readinessIndex({ metric: mB, prior: priorB, objectiveScore: 60, v2: true });
+assert(v1.value === 84, `v1 value = round(0.6·100 + 0.4·60) = 84 (got ${v1.value})`);
+assert(v2.value < v1.value, `v2 (HRV-weighted) scores lower on a poor-HRV day (${v2.value} < ${v1.value})`);
+// flag OFF leaves the value identical to the legacy blend (parity preserved)
+assert(readinessIndex({ metric: mB, prior: priorB, objectiveScore: 60, v2: false }).value === v1.value, 'v2:false → identical to v1 (no behaviour change when flag off)');
+// the ≥67 green cut only applies under v2
+assert(bandFromValue(68, 67) === 'green' && bandFromValue(68) === 'amber', 'greenCut 67 → green; default 70 → amber');
+// recoveryFromScore (the v2 runtime hand-off) honours the green cut
+assert(recoveryFromScore(68, { greenCut: 67 }).volumeModifier === 1 && recoveryFromScore(68, { greenCut: 67 }).readinessLevel === 'high', 'recoveryFromScore 68 @67 → full volume, high');
+assert(recoveryFromScore(68).volumeModifier === 0.9, 'recoveryFromScore 68 @ default 70 → 0.9 (legacy)');
 
 console.log('indices tests done');

@@ -211,12 +211,12 @@ export const ENTRIES = [
   },
   {
     id: 'index.readiness.weights',
-    rule: 'The derived Readiness Index integrates Recovery, Fatigue, Wellness and Sleep — never a vendor readiness score. Weight subjective wellness at least as high as objective HRV/RHR; treat HRV as the primary objective marker, sleep as a heavy contributor, and RHR as corroborating.',
-    value: { subjectiveAtLeastObjective: true, primaryObjective: 'hrv', sleep: 'heavy', rhr: 'corroborating' },
+    rule: 'The v2 Readiness Index composes its value from sub-indices: wellness (subjective) is the largest single weight (Saw 2016), HRV-driven cardiovascular recovery the primary objective marker, sleep heavy, fatigue a corroborator; Recovery Capacity nudges the ceiling. A ≥67 green cut. Behind a default-off flag until validated against logged performance.',
+    value: { weights: { wellness: 0.40, sleep: 0.25, cardio: 0.25, fatigue: 0.10 }, greenCut: 67, capacityModulation: 0.1, subjectiveAtLeastObjective: true, primaryObjective: 'hrv' },
     evidenceLevel: 'L4',
-    source: 'Weighting heuristic anchored on Saw, Main & Gastin 2016, Br J Sports Med (subjective ≥ objective); see readiness.subjective_priority',
+    source: 'Weighting heuristic anchored on Saw, Main & Gastin 2016, Br J Sports Med (subjective ≥ objective); HRV primary per Plews 2013; sleep per Walsh 2021. See readiness.subjective_priority',
     confidence: 'moderate',
-    lastReviewed: '2026-06-28',
+    lastReviewed: '2026-06-29',
     appliesTo: ['readiness']
   },
   {
