@@ -56,6 +56,21 @@ export const SPORT_WORK_ITEM_CAP = 6;
 export const AXIAL_SESSION_CAP = 4;
 const axialOf = (ex) => (ex && ex.axialLoad != null ? ex.axialLoad : 0);
 
+// CNS / recovery demand of an exercise — drives what may be supersetted and how much
+// rest it gets. An explicit `cns` on the exercise wins; otherwise it's derived: heavy
+// compounds + power work are 'high' (straight sets, full rest); axially-loaded
+// accessories are 'moderate' (may pair only with light work); isolation / core / calf /
+// health work is 'low' (the stuff that belongs in a superset). This is why a heavy
+// Good morning / RDL no longer gets crammed into a light lift's rest gap.
+function cnsTier(ex) {
+  if (!ex) return 'low';
+  if (ex.cns) return ex.cns;
+  if (ex.role === 'primary' || axialOf(ex) >= 2 || ex.quality === 'power') return 'high';
+  if (axialOf(ex) >= 1) return 'moderate';
+  if (ex.role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf' || ex.loadClass === 'health') return 'low';
+  return 'moderate';
+}
+
 const EX_BY_ID = new Map(EXERCISES.map(e => [e.id, e]));
 
 // Supportive finisher: round a short session out toward FINISHER_TARGET_MIN with
@@ -236,7 +251,17 @@ function restForRole(ex, style, effectiveRole) {
   if (ex.quality === 'power') return POWER_REST;
   if (role === 'primary') return (style === 'strength' || style === 'sport') ? 180 : 120;
   if (role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf') return 60;
-  return 75; // accessory compound — supersetted, so actual rest ≈ partner's work time
+  // Accessory compound. A GENUINE high-CNS accessory (heavy RDL / Good morning / Rack
+  // pull) now runs as a STRAIGHT SET, so it needs real rest — not the 75s that assumed
+  // it would be tucked into another lift's rest gap; moderate accessories sit between.
+  // A *demoted* primary (a barbell main programmed light for a less-experienced athlete)
+  // keeps the lighter accessory rest — it's deliberately not loaded like a heavy main.
+  if (ex.role === 'accessory') {
+    const tier = cnsTier(ex);
+    if (tier === 'high') return 150;
+    if (tier === 'moderate') return 90;
+  }
+  return 75;
 }
 
 // Build the rendered item for a chosen exercise at a given position in the slot.
@@ -300,6 +325,10 @@ function isFiller(ex) { return ex.role === 'iso' || ex.pattern === 'core' || ex.
 function canPair(a, b) {
   if (a.id === b.id) return false;
   if (a.role === 'primary' && b.role === 'primary') return false;
+  // Don't pair two CNS-demanding moves. A 'moderate' accessory may only superset with
+  // 'low' isolation/core work (high-CNS work is straight-set and never reaches here),
+  // so a heavy lift's rest is never spent on another heavy lift.
+  if (cnsTier(a) !== 'low' && cnsTier(b) !== 'low') return false;
   return !shareMuscle(a, b);
 }
 
@@ -309,28 +338,38 @@ function canPair(a, b) {
 // with `superset` + `group` flags for rendering. Volume is unchanged.
 function structureItems(picks) {
   const LET = 'ABCDEFGH';
+  // The session OPENS on its anchor (picks[0]) — its headline lift. The anchor, every
+  // primary, and every high-CNS accessory run as STRAIGHT SETS (their own block, full
+  // rest); only lower-CNS work is eligible to be supersetted below. This keeps heavy /
+  // neurally-demanding work — including a sport's lead lift — out of supersets, instead
+  // of cramming a light isolation into its rest gap (which isn't "free" recovery).
+  const anchorId = picks[0] && picks[0].ex.id;
+  const isStraightSet = (p) => p.ex.role === 'primary' || cnsTier(p.ex) === 'high' || p.ex.id === anchorId;
   const mains = [], rest = [];
-  picks.forEach(p => (p.ex.role === 'primary' ? mains : rest).push(p));
+  picks.forEach(p => (isStraightSet(p) ? mains : rest).push(p));
   let blocks = [];
 
   // Core + health/mobility work is never supersetted into another block — it forms
   // its own singleton blocks so it can be sequenced cleanly at the end of the session.
   const isSupportive = (p) => p.ex.loadClass === 'health' || p.ex.pattern === 'core' || (p.item && p.item.tag === 'mobility');
 
-  // Primary compounds always run as STRAIGHT SETS — never supersetted with a filler —
-  // so the heavy work keeps its full prescribed rest. Cramming a light isolation into a
-  // heavy lift's rest gap under-rests it (biceps aren't an antagonist of a bench/row, so
-  // it's not "free" recovery). Accessories still antagonist/non-competing pair below.
   for (const m of mains) blocks.push([m]);
 
+  // Pair the remaining (lower-CNS) work into antagonist / non-competing supersets,
+  // preferring the LIGHTEST compatible partner — so it's the isolation/core work that
+  // gets compressed into a rest gap, never two demanding moves crammed together.
+  const cnsWeight = { low: 0, moderate: 1, high: 2 };
   const rem = rest.map((p, i) => ({ p, i }));
   const taken = new Set();
   for (let i = 0; i < rem.length; i++) {
     if (taken.has(i)) continue;
     if (isSupportive(rem[i].p)) { taken.add(i); blocks.push([rem[i].p]); continue; }
-    let j = -1;
+    let j = -1, bestW = Infinity;
     for (let k = i + 1; k < rem.length; k++) {
-      if (!taken.has(k) && !isSupportive(rem[k].p) && canPair(rem[i].p.ex, rem[k].p.ex)) { j = k; break; }
+      if (taken.has(k) || isSupportive(rem[k].p)) continue;
+      if (!canPair(rem[i].p.ex, rem[k].p.ex)) continue;
+      const w = cnsWeight[cnsTier(rem[k].p.ex)] ?? 1;
+      if (w < bestW) { bestW = w; j = k; }
     }
     if (j >= 0) { taken.add(i); taken.add(j); blocks.push([rem[i].p, rem[j].p]); }
     else { taken.add(i); blocks.push([rem[i].p]); }
@@ -357,7 +396,6 @@ function structureItems(picks) {
   // with their most important/sport-specific work), then order the REMAINING blocks
   // power → primary → accessory → isoCore → health, so a heavy main is never buried
   // behind the lone accessory/core filler it used to sort behind.
-  const anchorId = picks[0] && picks[0].ex.id;
   let anchorBlock = null;
   if (anchorId) {
     const ai = blocks.findIndex(blk => blk.some(p => p.ex.id === anchorId));
@@ -564,6 +602,23 @@ export function focusLabel(mv) {
   return Math.max(push, pull) >= meaningful ? top : 'Full body';
 }
 
+// An optional QUALITY tag appended to the region label (sport + functional plans only)
+// so a session name communicates intent, not just the body part: a day that opens on
+// explosive work and is mostly explosive reads 'Explosive'; a day that merely includes
+// some power work gets a 'Power' tag (e.g. 'Lower Power'). Build/strength plans keep the
+// plain region label. Reads the slot's WORKING picks — finisher/mobility (factor 0)
+// don't count. Returns '' when there's no distinct quality to surface.
+export function qualityTag(picks = [], style) {
+  if (style !== 'sport' && style !== 'functional') return '';
+  const working = picks.filter(p => p && p.ex && p.item && p.item.volumeFactor !== 0);
+  if (!working.length) return '';
+  const powerWork = working.filter(p => p.ex.quality === 'power');
+  if (!powerWork.length) return '';
+  const anchorIsPower = picks[0] && picks[0].ex && picks[0].ex.quality === 'power';
+  if (anchorIsPower && powerWork.length >= Math.ceil(working.length / 2)) return 'Explosive';
+  return 'Power';
+}
+
 /**
  * Allocate a week of gym sessions to hit per-muscle volume targets.
  * @param {object} args
@@ -745,18 +800,19 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     }
   }
 
-  // Filler pass: add light, non-competing work (calves, core, rear delts, cuff)
-  // into the rest gaps of the heavy lifts — extra volume "for free" toward the
-  // weekly target. One filler per main (+1), placed against the biggest deficits.
+  // Filler pass: top up with ONE light, non-competing move (calves/core/rear delt/cuff)
+  // into a rest gap — but only when a muscle is still meaningfully short of its weekly
+  // target. This used to add up to (mains+1) fillers chasing every small remainder,
+  // which tacked a string of seemingly-random exercises onto the end of a session.
+  // One targeted filler, real gap only.
+  const FILLER_MIN_GAP = 0.33;   // a muscle must still be ≥ a third of its target short
   for (const slot of work) {
-    const numMains = Math.max(1, slot.picks.filter(p => p.ex.role === 'primary').length);
-    let added = 0;
-    while (added < numMains + 1 && slot.timeUsed < slot.budget && !overSportCap(slot)) {
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor);
-      if (!pick) break;
-      place(slot, pick);
-      added++;
-    }
+    if (slot.timeUsed >= slot.budget || overSportCap(slot)) continue;
+    const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor);
+    if (!pick) continue;
+    const realGap = Object.keys(pick.contrib).some(m => (targets[m] || 0) > 0 && (deficit[m] || 0) >= FILLER_MIN_GAP * targets[m]);
+    if (!realGap) continue;
+    place(slot, pick);
   }
 
   // Supportive finisher: round out a short session with sport/goal-appropriate
@@ -792,7 +848,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const duration = `~${Math.max(15, Math.round(slot.timeUsed / 5) * 5)} min`;
     return {
       discipline: 'gym',
-      focus: focusLabel(slot.muscleVol),
+      focus: [focusLabel(slot.muscleVol), qualityTag(slot.picks, style)].filter(Boolean).join(' '),
       duration,
       items,
       intensity: deload ? 'moderate' : 'hard',
