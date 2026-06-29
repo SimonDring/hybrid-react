@@ -15,3 +15,6 @@ supabase/.temp/
 # generated review gallery + scratch scripts (regenerated locally, not app code)
 exercise-demos.html
 _scratch_*.mjs
+
+# SDD subagent scratch (briefs/reports/ledger)
+sdd/
