@@ -72,4 +72,9 @@ export function completeness(id) {
   return { id, score, complete: thin.length === 0, thin };
 }
 
-export default { get, has, all, ids, section, validate, completeness };
+const ID_ALIASES = { swim: 'swimming', run: 'running', cycle: 'cycling' };
+export function normalizeSportId(id) { if (!id) return null; return ID_ALIASES[id] || id; }
+export function selectable() { return PROFILES.filter(p => completeness(p.id).complete); }
+export function gymProgrammingFor(id) { const p = BY_ID.get(normalizeSportId(id)); return p ? p.gymProgramming || null : null; }
+
+export default { get, has, all, ids, section, validate, completeness, normalizeSportId, selectable, gymProgrammingFor };
