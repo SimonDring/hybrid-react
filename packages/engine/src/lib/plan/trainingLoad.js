@@ -9,11 +9,14 @@
  * a soft input is a later, deliberate step (roadmap Phase 3).
  */
 import kb from '../knowledge/kb.js';
+import skb, { normalizeSportId } from '../sportKnowledge/index.js';
 
 const DAY_MS = 86400000;
 const _T = kb.value('load.acwr.thresholds');
 const _P = kb.value('load.acwr.policy');
 export const SWEET_LOW = _T.sweetLow, EASE_FROM = _T.easeFrom, HIGH = _T.high;
+
+const DEFAULT_T = { sweetLow: SWEET_LOW, easeFrom: EASE_FROM, high: HIGH, policy: _P };
 
 // Edwards TRIMP from HR-zone minutes; fallback to a moderate duration proxy.
 export function sessionLoad(log) {
@@ -86,17 +89,30 @@ export function acwrSeries(dl, asOf, n = 4) {
 }
 
 // Decide the week-level adaptation from today's ACWR + a short recent series.
-export function loadDecision(acwrVal, recentAcwr = []) {
+// An optional `thresholds` object overrides the global kb values — useful for per-sport
+// ACWR bands (call acwrThresholdsForSport to build one). Defaults to DEFAULT_T so all
+// existing call sites are unaffected.
+export function loadDecision(acwrVal, recentAcwr = [], thresholds = DEFAULT_T) {
+  const { sweetLow, easeFrom, high, policy } = thresholds;
   if (acwrVal == null) return { action: 'none', multiplier: 1, reason: null };
-  const sustainedHigh = recentAcwr.filter(v => v != null && v > HIGH).length >= _P.sustainedDays;
-  const sustainedLow  = recentAcwr.filter(v => v != null && v < SWEET_LOW).length >= _P.sustainedDays;
-  if (acwrVal > HIGH && sustainedHigh) return { action: 'deload', multiplier: _P.deloadMultiplier, reason: 'Sustained high load — deload this week' };
-  if (acwrVal > EASE_FROM) {
-    const t = Math.min(1, (acwrVal - EASE_FROM) / (HIGH - EASE_FROM));
-    return { action: 'ease', multiplier: Math.round((1.0 - _P.easeSlope * t) * 100) / 100, reason: 'Load high — eased this week' };
+  const sustainedHigh = recentAcwr.filter(v => v != null && v > high).length >= policy.sustainedDays;
+  const sustainedLow  = recentAcwr.filter(v => v != null && v < sweetLow).length >= policy.sustainedDays;
+  if (acwrVal > high && sustainedHigh) return { action: 'deload', multiplier: policy.deloadMultiplier, reason: 'Sustained high load — deload this week' };
+  if (acwrVal > easeFrom) {
+    const t = Math.min(1, (acwrVal - easeFrom) / (high - easeFrom));
+    return { action: 'ease', multiplier: Math.round((1.0 - policy.easeSlope * t) * 100) / 100, reason: 'Load high — eased this week' };
   }
-  if (acwrVal < SWEET_LOW && sustainedLow) return { action: 'nudge_up', multiplier: _P.nudgeUp, reason: 'Load low — building back toward plan' };
+  if (acwrVal < sweetLow && sustainedLow) return { action: 'nudge_up', multiplier: policy.nudgeUp, reason: 'Load low — building back toward plan' };
   return { action: 'none', multiplier: 1, reason: null };
+}
+
+// Returns a thresholds object for `loadDecision` built from a sport's loadManagement.acwr
+// section in the sport knowledge base. Returns null for unknown sports or sports without
+// ACWR data — callers should fall back to DEFAULT_T (or pass no thresholds arg).
+export function acwrThresholdsForSport(sportId) {
+  const lm = ((skb.get(normalizeSportId(sportId)) || {}).loadManagement || {}).acwr;
+  if (!lm) return null;
+  return { sweetLow: lm.sweetSpotLow ?? SWEET_LOW, easeFrom: lm.sweetSpotHigh ?? EASE_FROM, high: lm.highRiskAbove ?? HIGH, policy: _P };
 }
 
 // Combine the readiness multiplier (≤1) with the load decision. ease/deload/none
@@ -149,5 +165,6 @@ export function deloadRecommendation({ loadAction = null, readiness = null, rece
 
 export default {
   sessionLoad, workoutLoad, dailyLoads, acuteChronic, acwr, acwrSeries,
-  loadDecision, combinedMultiplier, deloadRecommendation, EASE_FROM, HIGH, SWEET_LOW
+  loadDecision, combinedMultiplier, deloadRecommendation, acwrThresholdsForSport,
+  EASE_FROM, HIGH, SWEET_LOW
 };

@@ -1,6 +1,6 @@
 import {
   sessionLoad, workoutLoad, dailyLoads, acuteChronic, acwr, acwrSeries,
-  loadDecision, combinedMultiplier
+  loadDecision, combinedMultiplier, acwrThresholdsForSport
 } from '@performance-os/engine/lib/plan/trainingLoad.js';
 
 function assert(cond, msg) {
@@ -49,3 +49,15 @@ assert(combinedMultiplier(0.2, { action: 'deload', multiplier: 0.5 }) === 0.5, '
 assert(combinedMultiplier(1.0, { action: 'nudge_up', multiplier: 1.0 }) === 1.0, 'T18 nudge + recovered → full plan');
 assert(combinedMultiplier(0.7, { action: 'nudge_up', multiplier: 1.0 }) === 0.7, 'T19 nudge but low readiness → respect readiness');
 assert(combinedMultiplier(0.9, { action: 'none', multiplier: 1 }) === 0.9, 'T20 none → readiness only');
+
+// acwrThresholdsForSport — per-sport threshold override
+const t = acwrThresholdsForSport('gaelic_football');
+assert(t && typeof t.high === 'number', 'T21 sport thresholds resolve from loadManagement');
+// gaelic_football has sweetSpotHigh:1.3, highRiskAbove:1.5 — tighter than global
+assert(t.easeFrom === 1.3 && t.high === 1.5, 'T22 gaelic_football easeFrom=1.3, high=1.5');
+assert(acwrThresholdsForSport('unknown_sport') === null, 'T23 unknown sport returns null');
+
+// loadDecision with custom thresholds — acwrVal=1.45 > high=1.4, 3 recent > 1.4 >= sustainedDays=2 → deload
+const d = loadDecision(1.45, [1.45, 1.45, 1.45], { sweetLow: 0.8, easeFrom: 1.2, high: 1.4, policy: { sustainedDays: 2, deloadMultiplier: 0.6, easeSlope: 0.5, nudgeUp: 1.05 } });
+assert(d.action === 'deload', 'T24 custom thresholds drive the decision');
+assert(d.multiplier === 0.6, 'T25 custom deloadMultiplier applied');
