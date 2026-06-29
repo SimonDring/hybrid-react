@@ -45,7 +45,9 @@ export function deriveSeason(profile = {}) {
 
   // No event date — use the explicit season (compete) or the training goal (recreational).
   const intent = profile.sport_intent;
-  if (intent === 'compete') return profile.sport_season || 'off';   // 'in' | 'off'
+  // A competitor without a stated season defaults to in-season maintenance: it's the
+  // lower-volume, safer dose, and matches the pre-onboarding-rewrite contract.
+  if (intent === 'compete') return profile.sport_season || 'in';     // 'in' | 'off'
   if (profile.sport_goal === 'stay_durable') return 'in';            // maintenance-style low volume
   return 'off';  // build_base | get_stronger | legacy | unset → off-season build
 }

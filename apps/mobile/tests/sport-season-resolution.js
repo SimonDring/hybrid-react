@@ -6,7 +6,7 @@ const eq = (got, want, msg) => { const ok = got === want; console.log((ok ? 'PAS
 
 eq(deriveSeason(P({ sport_intent: 'compete', sport_season: 'in' })), 'in', 'compete in-season → in');
 eq(deriveSeason(P({ sport_intent: 'compete', sport_season: 'off' })), 'off', 'compete off-season → off');
-eq(deriveSeason(P({ sport_intent: 'compete' })), 'off', 'compete w/o season defaults off');
+eq(deriveSeason(P({ sport_intent: 'compete' })), 'in', 'compete w/o season defaults in (maintenance)');
 eq(deriveSeason(P({ sport_intent: 'recreational', sport_goal: 'build_base' })), 'off', 'build_base → off');
 eq(deriveSeason(P({ sport_intent: 'recreational', sport_goal: 'get_stronger' })), 'off', 'get_stronger → off');
 eq(deriveSeason(P({ sport_intent: 'recreational', sport_goal: 'stay_durable' })), 'in', 'stay_durable → in (maintenance)');

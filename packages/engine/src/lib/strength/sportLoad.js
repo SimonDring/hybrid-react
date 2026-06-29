@@ -26,7 +26,9 @@ export function sportLoadScalar(profile = {}, { season = 'off', mod = null } = {
     ? (GOAL_FACTOR[profile.sport_goal] ?? 1.0) : 1.0;
   const dayFactor = sportDayFactor(Array.isArray(profile.sport_days) ? profile.sport_days.length : 0);
   const systemic = (mod && typeof mod.systemicFactor === 'number') ? mod.systemicFactor : 1.0;
-  const raw = seasonBase * goalFactor * dayFactor * systemic;
+  // Round to 3 dp so the multiplier is tidy + FP-stable (it propagates into volume
+  // targets and the golden-master snapshot), then clamp to the maintenance floor.
+  const raw = Math.round(seasonBase * goalFactor * dayFactor * systemic * 1000) / 1000;
   return Math.max(VOLUME_FLOOR, Math.min(VOLUME_CEIL, raw));
 }
 
