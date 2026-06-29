@@ -104,7 +104,7 @@ function buildView() {
   const objectiveScore = computeReadiness(dailyMetrics, logs).score;
   const latestMetric = [...dailyMetrics].sort((a, b) => (b.date || '').localeCompare(a.date || ''))[0] || {};
   const profileRow = Database.services.getProfile() || {};
-  const readinessV2 = !!profileRow.readiness_v2;   // opt-in, behaviour-changing; default OFF
+  const readinessV2 = profileRow.readiness_v2 !== false;   // evidence-based weighting is the DEFAULT; set readiness_v2:false to opt out
 
   // Derived Readiness Index — the physiological index breakdown. Computed once, reused
   // for the UI AND (when readiness_v2 is on) to drive plan adaptation via recoveryOut.
