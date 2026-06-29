@@ -122,4 +122,13 @@ assert(bandFromValue(68, 67) === 'green' && bandFromValue(68) === 'amber', 'gree
 assert(recoveryFromScore(68, { greenCut: 67 }).volumeModifier === 1 && recoveryFromScore(68, { greenCut: 67 }).readinessLevel === 'high', 'recoveryFromScore 68 @67 → full volume, high');
 assert(recoveryFromScore(68).volumeModifier === 0.9, 'recoveryFromScore 68 @ default 70 → 0.9 (legacy)');
 
+// ── v2 behaviour sanity (it is now the product default) ────────────────────────
+const goodDay = readinessIndex({ metric: { source: 'fitbit', energy: 5, mood: 5, soreness: 5, stress: 5, sleep_quality: 5, sleep_duration_min: 480, hrv_ms: 70, resting_hr: 45 }, prior: [{ hrv_ms: 68 }, { hrv_ms: 69 }], objectiveScore: 85, v2: true });
+assert(goodDay.value >= 67 && goodDay.band === 'green', `v2 good day → green (${goodDay.value})`);
+const poorDay = readinessIndex({ metric: { source: 'fitbit', energy: 2, mood: 2, soreness: 2, stress: 2, sleep_quality: 2, sleep_duration_min: 300, hrv_ms: 35, resting_hr: 62 }, prior: [{ hrv_ms: 65 }, { hrv_ms: 66 }], objectiveScore: 35, v2: true });
+assert(poorDay.value < goodDay.value && poorDay.value < 67, `v2 poor day scores lower, not green (${poorDay.value} < ${goodDay.value})`);
+// objective-only (no check-in) still yields a value — subjective drops out gracefully
+const noSubj = readinessIndex({ metric: { source: 'fitbit', sleep_duration_min: 450, hrv_ms: 60, resting_hr: 50 }, prior: [{ hrv_ms: 58 }], objectiveScore: 70, v2: true });
+assert(noSubj.value != null, 'v2 with no subjective check-in still produces a value (objective-only)');
+
 console.log('indices tests done');
