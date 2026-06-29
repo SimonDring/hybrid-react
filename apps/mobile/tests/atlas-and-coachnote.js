@@ -4,7 +4,7 @@
 // pillar set with valid scores and a focus — without throwing.
 import { buildCoachNote } from '../src/lib/coachNote.js';
 import { computePillars } from '../src/lib/atlas/pillars.js';
-import { SPORTS } from '../src/data/sports/index.js';
+import { sportConfigFor } from '../src/lib/atlas/sportConfig.js';
 import { strength } from '../src/lib/atlas/signals.js';
 
 function assert(cond, msg) {
@@ -33,25 +33,25 @@ const cnDeload = buildCoachNote(sportProfile('swim'), { weekNum: 4, totalWeeks: 
 assert(cnDeload.headline === 'Deload week' && /deload/.test(cnDeload.footer), 'T5 deload week reframes the note');
 
 // ---- pillars: every shipped sport ---------------------------------------
-const cases = [
-  ['run_sprint', sportProfile('run', 'sprint')],
-  ['run_middle', sportProfile('run', 'middle')],
-  ['run_long', sportProfile('run', 'long')],
-  ['cycle', sportProfile('cycle')],
-  ['swim', sportProfile('swim')],
-  ['build', buildProfile]
+const sportsToTest = [
+  sportProfile('run', 'sprint'), sportProfile('run', 'middle'), sportProfile('run', 'long'),
+  sportProfile('cycle'), sportProfile('swim'),
+  { ...base, goal_type: 'sport', sport: 'gaelic_football' },
+  { ...base, goal_type: 'sport', sport: 'hurling' },
+  buildProfile
 ];
 
-for (const [key, profile] of cases) {
+for (const profile of sportsToTest) {
+  const cfg = sportConfigFor(profile);
   const res = computePillars(profile, data);
-  assert(res.sport === key, `T6 ${key}: resolves to its own sport config`);
+  assert(res.sport === cfg.key, `T6 ${cfg.key}: resolves to its own sport config`);
   const ids = res.pillars.map(p => p.id);
-  assert(ids.length === SPORTS[key].pillars.length && SPORTS[key].pillars.every(id => ids.includes(id)),
-    `T7 ${key}: pillar set matches the registry (${ids.join(',')})`);
+  assert(ids.length === cfg.pillars.length && cfg.pillars.every(id => ids.includes(id)),
+    `T7 ${cfg.key}: pillar set matches config (${ids.join(',')})`);
   assert(res.pillars.every(p => Number.isFinite(p.score) && p.score >= 0 && p.score <= 100),
-    `T8 ${key}: every pillar scores 0–100`);
-  assert(res.focus && typeof res.focus.why === 'string', `T9 ${key}: has a focus with a why`);
-  assert(res.estimated === true, `T10 ${key}: benchmarks flagged estimated`);
+    `T8 ${cfg.key}: every pillar scores 0–100`);
+  assert(res.focus && typeof res.focus.why === 'string', `T9 ${cfg.key}: has a focus with a why`);
+  assert(res.estimated === true, `T10 ${cfg.key}: benchmarks flagged estimated`);
 }
 
 // ---- pillars are sport-specific, not generic ----------------------------

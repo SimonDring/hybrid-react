@@ -15,7 +15,7 @@
  */
 
 import { PILLARS } from '../../data/athletePillars.js';
-import { sportConfigFor } from '../../data/sports/index.js';
+import { sportConfigFor } from './sportConfig.js';
 import { muscleCapabilities } from './signals.js';
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 import { MUSCLE_LABELS } from '@performance-os/engine/data/muscleVolume.js';
