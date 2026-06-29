@@ -31,6 +31,7 @@ export function validateGymProgramming(gp){
     errs.push('gymProgramming.keyMuscles must be engine-muscle ids');
   if (gp.byDiscipline) for (const [d, o] of Object.entries(gp.byDiscipline)) {
     if (o.emphasis && typeof o.emphasis !== 'object') errs.push(`gymProgramming.byDiscipline.${d}.emphasis must be an object`);
+    else if (o.emphasis) for (const k of Object.keys(o.emphasis)) if (!ENGINE_MUSCLES.has(k)) errs.push(`gymProgramming.byDiscipline.${d}.emphasis: unknown muscle "${k}"`);
     if (o.priorityExercises && !Array.isArray(o.priorityExercises)) errs.push(`gymProgramming.byDiscipline.${d}.priorityExercises must be an array`);
     if (o.periodization) for (const s of SEASONS) if (o.periodization[s] && !isBlock(o.periodization[s])) errs.push(`gymProgramming.byDiscipline.${d}.periodization.${s} not a block`);
   }

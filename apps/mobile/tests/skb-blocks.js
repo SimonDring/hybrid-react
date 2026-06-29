@@ -12,4 +12,6 @@ assert(validateGymProgramming(good).length === 0, 'valid gymProgramming passes')
 assert(validateGymProgramming({}).length > 0, 'empty gymProgramming fails');
 assert(validateGymProgramming({ ...good, emphasis:{ foot: 1.2 } }).length > 0,
   'non-engine muscle key rejected');
+assert(validateGymProgramming({ ...good, byDiscipline:{ sprint:{ emphasis:{ foot: 1.5 } } } }).length > 0,
+  'byDiscipline emphasis rejects non-engine muscle');
 console.log('skb-blocks tests done');
