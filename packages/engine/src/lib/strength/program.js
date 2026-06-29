@@ -11,8 +11,8 @@
 
 import { deriveSeason } from '../plan/periodization.js';
 import { getGymLevel } from '../Utils.js';
-import sports from '../sports/index.js';
-import { DEFAULT_SEASON_VOLUME } from '../sports/_schema.js';
+import skb, { normalizeSportId } from '../sportKnowledge/index.js';
+import { DEFAULT_SEASON_VOLUME } from '../sportKnowledge/blocks.js';
 import { availableEquip, LEVELS } from '../../data/strengthExercises.js';
 import { BUILD_INTENTS, resolveIntents } from './priorityIntents.js';
 
@@ -28,23 +28,21 @@ export function resolveProgram(profile = {}) {
   const goalType = profile.goal_type || (profile.sport ? 'sport' : 'build');
 
   if (goalType === 'sport' && profile.sport) {
-    const sport = profile.sport;
-    const mod = sports.get(sport);   // undefined for an unknown sport → generic defaults
-    // Season: an explicit override wins, else derive from event date / intent.
+    const sport = profile.sport;                                   // raw ID (e.g. 'run') — preserved for allocator/sportTags
+    const gp = (skb.get(normalizeSportId(sport)) || {}).gymProgramming || null;   // null → generic fallback
     const season = profile.sport_season || deriveSeason(profile) || 'off';
-    // Run sub-disciplines (sprint/middle/long) override the module's defaults.
-    const disc = sport === 'run' ? profile.run_discipline : null;
-    const byD = disc && mod && mod.byDiscipline ? mod.byDiscipline[disc] : null;
-    const sportPriority = (byD && byD.priorityExercises) || (mod && mod.priorityExercises) || [];
+    const disc = profile.run_discipline || null;
+    const byD = disc && gp && gp.byDiscipline ? gp.byDiscipline[disc] : null;
+    const sportPriority = (byD && byD.priorityExercises) || (gp && gp.priorityExercises) || [];
     const equip = availableEquip(profile.access || []);
     const lvlNum = LEVELS[level] ?? LEVELS.intermediate;
     const intents = sportPriority.map(id => ({ intent: id, chain: [id] }));
     const { list, byIntent } = resolveIntents(intents, equip, lvlNum);
     return {
       goalType: 'sport', style: 'sport',
-      emphasis: (byD && byD.emphasis) || (mod && mod.emphasis) || {},
-      volumeScalar: ((mod && mod.seasonModifiers) || DEFAULT_SEASON_VOLUME)[season] ?? 1.0,
-      power: mod ? !!mod.power : true, sport, season, level,
+      emphasis: (byD && byD.emphasis) || (gp && gp.emphasis) || {},
+      volumeScalar: ((gp && gp.seasonModifiers) || DEFAULT_SEASON_VOLUME)[season] ?? 1.0,
+      power: gp ? !!gp.power : true, sport, season, level,
       exercisePriority: list, priorityByIntent: byIntent
     };
   }

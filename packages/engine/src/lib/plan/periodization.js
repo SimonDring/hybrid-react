@@ -17,8 +17,8 @@
  *  sport modules (src/lib/sports/); this file owns the BUILD profiles + season
  *  derivation and looks sports up via the registry. Adding a sport needs no edit here.
  */
-import sports from '../sports/index.js';
-import { SPORT_BLOCKS } from '../sports/_schema.js';
+import skb, { normalizeSportId } from '../sportKnowledge/index.js';
+import { SPORT_BLOCKS } from '../sportKnowledge/blocks.js';
 
 /**
  * Derive the current training season from the athlete's profile.
@@ -87,15 +87,12 @@ export function resolvePeriodization(profile = {}) {
   const goalType = profile.goal_type || (profile.sport ? 'sport' : 'build');
 
   if (goalType === 'sport' && profile.sport) {
-    const mod = sports.get(profile.sport);   // undefined for an unknown sport → generic blocks
+    const gp = (skb.get(normalizeSportId(profile.sport)) || {}).gymProgramming || null;
     const season = deriveSeason(profile) || 'off';
-    // Run sub-disciplines (sprint/middle) override the season block; a season the
-    // discipline doesn't override (and 'long' / no discipline) falls back to the
-    // module's generic SPORT_BLOCKS — matching the prior branching exactly.
-    const disc = profile.sport === 'run' ? profile.run_discipline : null;
-    const byD = disc && mod && mod.byDiscipline ? mod.byDiscipline[disc] : null;
+    const disc = profile.run_discipline || null;
+    const byD = disc && gp && gp.byDiscipline ? gp.byDiscipline[disc] : null;
     return (byD && byD.periodization && byD.periodization[season])
-      || (mod && mod.periodization && mod.periodization[season])
+      || (gp && gp.periodization && gp.periodization[season])
       || SPORT_BLOCKS[season] || SPORT_BLOCKS.off;
   }
 
