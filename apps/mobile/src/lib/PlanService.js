@@ -242,7 +242,7 @@ function adaptedPhases() {
   const recBand = recentRecovery == null ? 'n' : recentRecovery <= 2 ? 'l' : recentRecovery >= 4 ? 'h' : 'm';
 
   const ruleCtx = {
-    season: resolveProgram(profile).season,
+    season: profile.sport ? resolveProgram(profile).season : null,
     readiness: recovery ? recovery.score : null,
     illness: override === 'rest',
     travel: override === 'easy',
