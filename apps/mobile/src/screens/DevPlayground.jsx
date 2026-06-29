@@ -27,6 +27,8 @@ import { volumeReport } from '@performance-os/engine/lib/plan/volume.js';
 import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets.js';
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 import { MUSCLE_LABELS } from '@performance-os/engine/data/muscleVolume.js';
+import { readinessIndex } from '@performance-os/engine/lib/indices/index.js';
+import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
 
 const NOTES_KEY = 'htp_dev_review_notes';
 
@@ -200,6 +202,76 @@ const NOTE_FIELDS = [
   { key: 'bugs', label: '🐞 Bugs', placeholder: 'Anything broken…' }
 ];
 
+// ---- Readiness Index preview (the physiological index layer; read-only) ----
+// Representative daily_metrics scenarios spanning rich → no data, to eyeball the
+// derived Readiness Index and watch confidence degrade (not blank) as inputs drop.
+const BAND_COLOR = { green: 'var(--moss)', amber: 'var(--ochre)', red: 'var(--rust)' };
+const bandColor = (b) => BAND_COLOR[b] || 'var(--txt-muted)';
+const pct = (f) => `${Math.round((f || 0) * 100)}%`;
+
+const READINESS_SCENARIOS = [
+  { name: 'Full wearable + check-in',
+    metric: { source: 'fitbit', sleep_duration_min: 465, sleep_deep_min: 80, sleep_rem_min: 95, hrv_ms: 64, resting_hr: 48, breathing_rate: 14, energy: 4, mood: 4, soreness: 3, stress: 4, sleep_quality: 4 },
+    prior: [{ hrv_ms: 58, resting_hr: 50 }, { hrv_ms: 60, resting_hr: 49 }], recentRecovery: 4 },
+  { name: 'No HRV (sleep + check-in)',
+    metric: { source: 'fitbit', sleep_duration_min: 420, resting_hr: 52, energy: 3, mood: 3, soreness: 3, stress: 3 },
+    prior: [{ resting_hr: 50 }], recentRecovery: 3 },
+  { name: 'Manual check-in only',
+    metric: { source: 'manual', energy: 2, mood: 2, soreness: 2, stress: 2 },
+    prior: [], recentRecovery: 2 },
+  { name: 'Nothing logged',
+    metric: {}, prior: [], recentRecovery: null }
+];
+
+function ConfBar({ frac, color }) {
+  return (
+    <div style={{ height: 6, borderRadius: 3, background: 'var(--bg-surface-2)', overflow: 'hidden' }}>
+      <div style={{ width: pct(frac), height: '100%', background: color }} />
+    </div>
+  );
+}
+
+function IndexRow({ c }) {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '120px 40px 1fr 54px', gap: 8, alignItems: 'center', fontSize: 12, padding: '4px 0', borderBottom: '1px solid var(--hairline)' }}>
+      <span style={{ color: 'var(--txt-muted)' }}>{c.name}</span>
+      <span style={{ fontWeight: 700, color: bandColor(c.band) }}>{c.value == null ? '—' : c.value}</span>
+      <ConfBar frac={c.confidence} color={bandColor(c.band)} />
+      <span style={{ color: 'var(--txt-muted)', fontSize: 10, textAlign: 'right' }}>{pct(c.confidence)}</span>
+    </div>
+  );
+}
+
+function ScenarioCard({ s }) {
+  const objectiveScore = computeReadiness([s.metric, ...s.prior]).score;
+  const r = readinessIndex({ metric: s.metric, prior: s.prior, objectiveScore, recentRecovery: s.recentRecovery });
+  return (
+    <div style={{ border: '1px solid var(--hairline)', borderRadius: 10, padding: 10, marginBottom: 10 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt-strong)' }}>{s.name}</span>
+        <span style={{ fontSize: 12, color: 'var(--txt-body)' }}>
+          Readiness <strong style={{ color: bandColor(r.band), fontSize: 15 }}>{r.value == null ? '—' : r.value}</strong>
+          <span style={{ color: 'var(--txt-muted)' }}> · conf {pct(r.confidence)}</span>
+        </span>
+      </div>
+      {r.contributors.map(c => <IndexRow key={c.name} c={c} />)}
+      {r.missingInputs.length > 0 && (
+        <div style={{ fontSize: 10, color: 'var(--txt-muted)', marginTop: 6 }}>missing: {r.missingInputs.join(', ')}</div>
+      )}
+    </div>
+  );
+}
+
+function ReadinessPanel() {
+  return (
+    <div style={card}>
+      <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.14em', opacity: 0.5, marginBottom: 4 }}>READINESS INDEX · derived, manufacturer-independent</div>
+      <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginBottom: 10 }}>Confidence degrades (it never blanks) as inputs drop. Read-only preview of the index layer.</div>
+      {READINESS_SCENARIOS.map(s => <ScenarioCard key={s.name} s={s} />)}
+    </div>
+  );
+}
+
 export default function DevPlayground() {
   const [seed, setSeed] = useState(BLANK_ANSWERS);
   const [seedKey, setSeedKey] = useState(0);
@@ -243,6 +315,9 @@ export default function DevPlayground() {
         <div style={{ background: 'var(--ochre)', color: '#1a1205', borderRadius: 10, padding: '8px 12px', fontSize: 12, fontWeight: 700, marginBottom: 16 }}>
           DEV TESTING MODE · local only — nothing here is saved to your account or Supabase
         </div>
+
+      {/* Readiness Index preview (physiological index layer) */}
+      <ReadinessPanel />
 
       {/* Presets */}
       <div style={card}>
