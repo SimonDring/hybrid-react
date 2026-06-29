@@ -26,7 +26,7 @@ export const SCHEMA_VERSION = '1.0.0';
 
 export const RULE_SIGNALS = new Set([
   'competition_within_h', 'matches_this_week', 'acwr', 'readiness',
-  'cmj_drop_pct', 'illness', 'season', 'soreness_region'
+  'cmj_drop_pct', 'illness', 'season', 'soreness_region', 'travel'
 ]);
 export const RULE_EFFECTS = new Set([
   // shipped (applied by the reflow)
