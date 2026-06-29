@@ -31,7 +31,10 @@ export default function Home() {
 
   const now = new Date();
   const readiness = computeReadiness(dailyMetrics, logs);
+  const readinessIx = useTrainingStore(s => s.readiness);
   const rv = readinessVerdict(readiness);
+  const readinessChip = readinessIx && readinessIx.confidence != null
+    ? `${rv.label} · ${Math.round(readinessIx.confidence * 100)}%` : rv.label;
   const lv = loadVerdict(load, adaptation);
 
   const openSession = (s) => navigate(`/phases/${s.phaseId}/weeks/${s.weekNum}/sessions/${s.idx}`);
@@ -145,7 +148,7 @@ export default function Home() {
           fill={readiness.score != null ? readiness.score : 0}
           max={100}
           color={rv.color}
-          verdict={rv.label}
+          verdict={readinessChip}
           onClick={() => navigate('/tracking/wearables')}
         />
         <RingTile

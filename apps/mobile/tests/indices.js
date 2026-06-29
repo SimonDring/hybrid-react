@@ -6,7 +6,7 @@
 import {
   readinessIndex, recoveryIndex, wellnessIndex, sleepIndex,
   cardiovascularRecoveryIndex, trainingLoadIndex, subjectiveScore,
-  bandFromValue
+  recoveryCapacityIndex, consistencyIndex, bandFromValue
 } from '@performance-os/engine/lib/indices/index.js';
 import { assessRecovery } from '@performance-os/engine/lib/recovery/recovery.js';
 import { sleepScoreFor } from '@performance-os/engine/lib/Readiness.js';
@@ -82,5 +82,27 @@ assert(rdx.contributors.length >= 5 && rdx.contributors.every(c => 'confidence' 
 // ── assessRecovery: score/volume unchanged, confidence now surfaced (additive) ─
 const arc = assessRecovery({ objectiveScore: 60 });
 assert(arc.score === 60 && arc.volumeModifier === 0.9 && typeof arc.confidence === 'number', 'assessRecovery score/volume preserved + confidence added');
+
+// ── Recovery Capacity Index (trait) ────────────────────────────────────────────
+const cap = recoveryCapacityIndex({ history: [{ hrv_ms: 60, sleep_duration_min: 470 }, { hrv_ms: 62, sleep_duration_min: 455 }, { hrv_ms: 59, sleep_duration_min: 480 }], profile: { age: 30 }, fitnessScore: 70 });
+assert(cap.value != null && cap.value >= 0 && cap.value <= 100, `recoveryCapacity → 0–100 (got ${cap.value})`);
+assert(cap.contributors.some(c => c.name === 'hrv_stability'), 'capacity reports hrv_stability contributor');
+const capThin = recoveryCapacityIndex({ history: [], profile: {} });
+assert(capThin.value === null && capThin.confidence === 0, 'capacity with no inputs → null value, 0 conf (no throw)');
+
+// ── Consistency Index ──────────────────────────────────────────────────────────
+const con = consistencyIndex({ completed: 8, planned: 10, loggedDays: 12, windowDays: 14 });
+assert(con.value === 82, `consistency blend = round((80·3 + 85.7·2)/5) = 82 (got ${con.value})`);
+assert(con.missingInputs.includes('routine_regularity'), 'routine_regularity flagged missing (future input)');
+assert(consistencyIndex({ windowDays: 0 }).value === null, 'consistency with no window/inputs → null');
+
+// ── integrator parity holds with capacity + consistency present ────────────────
+const rdx2 = readinessIndex({
+  metric, prior: [{ hrv_ms: 58 }, { hrv_ms: 59 }], objectiveScore: 72, recentRecovery: 4,
+  capacity: { history: [{ hrv_ms: 60, sleep_duration_min: 470 }], profile: { age: 30 }, fitnessScore: 70 },
+  consistency: { completed: 8, planned: 10, loggedDays: 12, windowDays: 14 }
+});
+assert(rdx2.value === expected, 'readinessIndex.value unchanged with capacity + consistency present (parity preserved)');
+assert(rdx2.indices.recoveryCapacity && rdx2.indices.consistency, 'integrator includes capacity + consistency when supplied');
 
 console.log('indices tests done');

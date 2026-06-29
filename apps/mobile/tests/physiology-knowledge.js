@@ -27,9 +27,15 @@ const NEW_IDS = [
   'load.external.volume_load',
   'index.readiness.weights',
   'index.fatigue.markers',
-  'index.confidence.model'
+  'index.confidence.model',
+  'index.recovery_capacity',
+  'index.consistency'
 ];
 for (const id of NEW_IDS) assert(kb.has(id), `KB has entry: ${id}`);
+
+// ── the two slow-moving indices are honest L4 heuristics ───────────────────────
+assert(kb.get('index.recovery_capacity').evidenceLevel === 'L4', 'recovery_capacity is an L4 heuristic');
+assert(kb.get('index.consistency').evidenceLevel === 'L4', 'consistency is an L4 heuristic');
 
 // ── the new 'normalization' domain is covered ──────────────────────────────────
 assert(kb.byTag('normalization').length >= 2, 'KB has normalization entries (≥2)');

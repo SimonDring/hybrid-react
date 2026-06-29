@@ -5,14 +5,21 @@
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
-import { readinessVerdict } from '../lib/verdicts.js';
+import { readinessVerdict, indexBandColor, confidenceNote } from '../lib/verdicts.js';
 import MetricRing from '../components/ui/MetricRing.jsx';
 import Sparkline from '../components/ui/Sparkline.jsx';
+
+// Pretty labels for the Readiness Index contributors.
+const IX_LABELS = {
+  sleep: 'Sleep', cardio: 'Cardio recovery', wellness: 'Wellness', recovery: 'Recovery',
+  fatigue: 'Freshness', trainingLoad: 'Training load', recoveryCapacity: 'Recovery capacity', consistency: 'Consistency'
+};
 
 export default function RecoveryDetail() {
   const navigate = useNavigate();
   const dailyMetrics = useTrainingStore(s => s.dailyMetrics);
   const logs = useTrainingStore(s => s.logs);
+  const rdx = useTrainingStore(s => s.readiness);
   const readiness = computeReadiness(dailyMetrics, logs);
   const rv = readinessVerdict(readiness);
   const sorted = [...dailyMetrics].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
@@ -63,6 +70,32 @@ export default function RecoveryDetail() {
           {rhr.length >= 2 && <Sparkline values={rhr} color="#E8836F" />}
         </div>
       </div>
+
+      {rdx && rdx.contributors && rdx.contributors.length > 0 && (
+        <div className="health-card">
+          <div className="hc-eyebrow">
+            Readiness Index{rdx.value != null ? ` · ${rdx.value}` : ''}{rdx.confidence != null ? ` · conf ${Math.round(rdx.confidence * 100)}%` : ''}
+          </div>
+          <div style={{ display: 'grid', gap: 8, marginTop: 10 }}>
+            {rdx.contributors.map(c => (
+              <div key={c.name} style={{ display: 'grid', gridTemplateColumns: '110px 34px 1fr 40px', gap: 8, alignItems: 'center' }}>
+                <span style={{ fontSize: 12, color: 'var(--txt-muted)' }}>{IX_LABELS[c.name] || c.name}</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: indexBandColor(c.band) }}>{c.value == null ? '—' : c.value}</span>
+                <div style={{ height: 6, borderRadius: 3, background: 'var(--bg-surface-2)', overflow: 'hidden' }}>
+                  <div style={{ width: `${Math.round((c.confidence || 0) * 100)}%`, height: '100%', background: indexBandColor(c.band) }} />
+                </div>
+                <span style={{ fontSize: 10, color: 'var(--txt-muted)', textAlign: 'right' }}>{Math.round((c.confidence || 0) * 100)}%</span>
+              </div>
+            ))}
+          </div>
+          {rdx.missingInputs && rdx.missingInputs.length > 0 && (
+            <div style={{ fontSize: 10, color: 'var(--txt-muted)', marginTop: 8 }}>missing: {rdx.missingInputs.join(', ')}</div>
+          )}
+          {confidenceNote(rdx.confidence) && (
+            <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 6 }}>{confidenceNote(rdx.confidence)}</div>
+          )}
+        </div>
+      )}
     </>
   );
 }
