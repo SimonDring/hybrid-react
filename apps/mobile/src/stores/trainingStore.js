@@ -19,7 +19,7 @@ import { getGymLevel } from '@performance-os/engine/lib/Utils.js';
 import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch, adaptedSessionByKey } from '../lib/PlanService.js';
 import { dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad } from '@performance-os/engine/lib/plan/trainingLoad.js';
-import { assessRecovery } from '@performance-os/engine/lib/recovery/recovery.js';
+import { assessRecovery, recoveryFromScore } from '@performance-os/engine/lib/recovery/recovery.js';
 import { assessLoad } from '@performance-os/engine/lib/load/load.js';
 import { readinessIndex } from '@performance-os/engine/lib/indices/index.js';
 import { setOverride, clearOverride, getOverride } from '../lib/sessionOverrides.js';
@@ -103,12 +103,36 @@ function buildView() {
   const loadOut = assessLoad({ acwrVal, recentAcwr: acwrSeries(dl, today, 4) });
   const objectiveScore = computeReadiness(dailyMetrics, logs).score;
   const latestMetric = [...dailyMetrics].sort((a, b) => (b.date || '').localeCompare(a.date || ''))[0] || {};
-  const recoveryOut = assessRecovery({
-    objectiveScore,
-    subjective: { sleepQuality: latestMetric.sleep_quality, soreness: latestMetric.soreness, mood: latestMetric.mood, stress: latestMetric.stress, energy: latestMetric.energy },
-    illness: !!latestMetric.illness,
-    travel: !!latestMetric.travel
+  const profileRow = Database.services.getProfile() || {};
+  const readinessV2 = !!profileRow.readiness_v2;   // opt-in, behaviour-changing; default OFF
+
+  // Derived Readiness Index — the physiological index breakdown. Computed once, reused
+  // for the UI AND (when readiness_v2 is on) to drive plan adaptation via recoveryOut.
+  const priorMetrics = [...dailyMetrics].sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(1);
+  const cutoff14 = new Date(Date.parse(today) - 14 * 86400000).toISOString().split('T')[0];
+  const recVals = [...logs].filter(l => l && l.recovery != null)
+    .sort((a, b) => String(b.date || '').localeCompare(String(a.date || ''))).slice(0, 4).map(l => Number(l.recovery));
+  const recentRecovery = recVals.length ? recVals.reduce((a, b) => a + b, 0) / recVals.length : null;
+  const loggedDays = new Set(dailyMetrics.filter(m => (m.date || '') >= cutoff14).map(m => m.date)).size;
+  const completed14 = sessionLogsAll.filter(l => (l.completed_at || '').split('T')[0] >= cutoff14).length;
+  const readinessIx = readinessIndex({
+    metric: latestMetric, prior: priorMetrics, objectiveScore, recentRecovery,
+    dl, asOf: today, setLogs: Database.tables.setLogs.all(),
+    capacity: { history: dailyMetrics, profile: profileRow },
+    consistency: { loggedDays, windowDays: 14, completed: completed14, planned: 0 },
+    v2: readinessV2
   });
+
+  // Recovery contract. v1 (default): the legacy objective+subjective blend. v2 (flagged):
+  // the Readiness Index value drives volumeModifier + the deload decision instead.
+  const recoveryOut = readinessV2
+    ? recoveryFromScore(readinessIx.value, { illness: !!latestMetric.illness, travel: !!latestMetric.travel, confidence: readinessIx.confidence, greenCut: 67 })
+    : assessRecovery({
+      objectiveScore,
+      subjective: { sleepQuality: latestMetric.sleep_quality, soreness: latestMetric.soreness, mood: latestMetric.mood, stress: latestMetric.stress, energy: latestMetric.energy },
+      illness: !!latestMetric.illness,
+      travel: !!latestMetric.travel
+    });
 
   setRuntime({ sessions, recovery: recoveryOut, load: loadOut });
 
@@ -120,23 +144,6 @@ function buildView() {
     .slice(0, 14)
     .map(l => ({ date: (l.completed_at || '').split('T')[0], ...sessionLoad(l) }));
   const loadView = { acute: Math.round(ac.acute), chronic: Math.round(ac.chronic), acwr: acwrVal, band, sessions: loadSessions };
-
-  // Derived Readiness Index (display only) — the physiological index breakdown the
-  // Home/Recovery screens render. Reuses the inputs already assembled above; it does
-  // NOT feed plan adaptation (that still runs through recovery/load via setRuntime).
-  const priorMetrics = [...dailyMetrics].sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(1);
-  const cutoff14 = new Date(Date.parse(today) - 14 * 86400000).toISOString().split('T')[0];
-  const recVals = [...logs].filter(l => l && l.recovery != null)
-    .sort((a, b) => String(b.date || '').localeCompare(String(a.date || ''))).slice(0, 4).map(l => Number(l.recovery));
-  const recentRecovery = recVals.length ? recVals.reduce((a, b) => a + b, 0) / recVals.length : null;
-  const loggedDays = new Set(dailyMetrics.filter(m => (m.date || '') >= cutoff14).map(m => m.date)).size;
-  const completed14 = sessionLogsAll.filter(l => (l.completed_at || '').split('T')[0] >= cutoff14).length;
-  const readinessIx = readinessIndex({
-    metric: latestMetric, prior: priorMetrics, objectiveScore, recentRecovery,
-    dl, asOf: today, setLogs: Database.tables.setLogs.all(),
-    capacity: { history: dailyMetrics, profile: Database.services.getProfile() || {} },
-    consistency: { loggedDays, windowDays: 14, completed: completed14, planned: 0 }
-  });
 
   // Per-set training history grouped by session id — drives the runner's resume.
   const setLogsBySession = {};

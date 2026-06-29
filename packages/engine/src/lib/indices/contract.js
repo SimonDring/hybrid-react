@@ -31,10 +31,11 @@ export function sourceReliability(source) {
   return REL.wrist_optical; // fitbit / garmin / whoop / apple wrist
 }
 
-/** 70 / 50 cut → green / amber / red; null value → null band. */
-export function bandFromValue(v) {
+/** greenCut / 50 cut → green / amber / red; null value → null band. greenCut
+ *  defaults to 70 (the legacy mapping); the v2 readiness weighting passes 67. */
+export function bandFromValue(v, greenCut = 70) {
   if (v == null) return null;
-  if (v >= 70) return 'green';
+  if (v >= greenCut) return 'green';
   if (v >= 50) return 'amber';
   return 'red';
 }
