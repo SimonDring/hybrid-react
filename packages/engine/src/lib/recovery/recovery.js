@@ -19,19 +19,12 @@
  * @property {number|null} score          0..100 blended readiness (bands + diagnostics)
  */
 
-/**
- * Subjective wellness → 0..100. Each item is 1–5 where 5 = best, INCLUDING soreness
- * (5 = no soreness) and stress (5 = calm). Averages the present items; null if none.
- */
-export function subjectiveScore(s = {}) {
-  const vals = ['sleepQuality', 'soreness', 'mood', 'stress', 'energy']
-    .map(k => s[k])
-    .filter(v => v != null && !Number.isNaN(Number(v)))
-    .map(Number);
-  if (!vals.length) return null;
-  const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
-  return Math.round(((mean - 1) / 4) * 100);   // 1 → 0, 5 → 100
-}
+// Subjective wellness (the Wellness Index) is the leaf maths now — imported and
+// re-exported here so existing importers of `subjectiveScore` from this module keep
+// working while the index layer owns the single implementation.
+import { subjectiveScore } from '../indices/wellnessIndex.js';
+import { recoveryIndex } from '../indices/recoveryIndex.js';
+export { subjectiveScore };
 
 function bandFromScore(score) {
   if (score == null) return 'unknown';
@@ -57,13 +50,12 @@ function volumeFromScore(score) {
  * @param {boolean} inputs.travel
  * @returns {RecoveryOutput}
  */
-export function assessRecovery({ objectiveScore = null, subjective = null, illness = false, travel = false } = {}) {
-  const subj = subjective ? subjectiveScore(subjective) : null;
-  // Blend: subjective weighted ≥ objective (Saw 2016). Use whichever is present.
-  let score = null;
-  if (subj != null && objectiveScore != null) score = Math.round(0.6 * subj + 0.4 * objectiveScore);
-  else if (subj != null) score = subj;
-  else if (objectiveScore != null) score = objectiveScore;
+export function assessRecovery({ objectiveScore = null, subjective = null, illness = false, travel = false, source } = {}) {
+  // The blended score is produced by the Recovery Index (single source of truth); the
+  // blend is identical (0.6 subjective / 0.4 objective, Saw 2016), so behaviour is
+  // unchanged through the cut-over. The index also yields a confidence we surface.
+  const ri = recoveryIndex({ objectiveScore, subjective, source });
+  const score = ri.value;
 
   // Session override: illness > travel. Pure fatigue (low readiness + poor session
   // recovery) and rock-bottom readiness are composed downstream with session-recovery
@@ -77,7 +69,8 @@ export function assessRecovery({ objectiveScore = null, subjective = null, illne
     volumeModifier: volumeFromScore(score),
     intensityModifier: 1,   // reserved — readiness does not yet scale intensity
     sessionOverride,
-    score
+    score,
+    confidence: ri.confidence   // additive: how much to trust the score (0–1)
   };
 }
 
