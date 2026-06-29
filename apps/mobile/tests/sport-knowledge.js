@@ -88,4 +88,14 @@ for (const id of FLAGSHIPS) {
   assert(rules.every(r => r.if && r.then && r.confidence), `${id}: every decision rule has if/then/confidence`);
 }
 
+// ── gymProgramming authored + rules structured (flagships) ──────────────────────
+for (const id of FLAGSHIPS) {
+  const gp = skb.get(id).gymProgramming;
+  assert(gp && Object.keys(gp.emphasis).length > 0, `${id} has gymProgramming.emphasis`);
+  assert(skb.get(id).decisionRules.every(r => r.trigger && r.effect), `${id} rules are all structured`);
+}
+assert(JSON.stringify(skb.ids().filter(id => skb.completeness(id).complete).sort())
+  === JSON.stringify(['gaelic_football','hurling','swimming'].sort()),
+  'exactly the three flagships are complete');
+
 console.log('sport-knowledge tests done');
