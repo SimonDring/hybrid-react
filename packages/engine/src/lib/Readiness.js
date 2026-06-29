@@ -62,31 +62,49 @@ function avg(nums) {
  *
  * @param {object} latest  the most recent daily_metrics row
  * @param {object[]} prior up to ~7 days of metrics BEFORE `latest`, newest first
+ * @param {object|null} weights optional { sleep, hrv, rhr } importance values; null = equal weights
  */
-function deriveScore(latest, prior) {
+function deriveScore(latest, prior, weights = null) {
   const parts = [];
 
   // Sleep: target ~8h (480 min). Linear up to the target.
   if (latest.sleep_duration_min != null) {
-    parts.push(clamp100((latest.sleep_duration_min / 480) * 100));
+    parts.push({ key: 'sleep', v: clamp100((latest.sleep_duration_min / 480) * 100) });
   }
 
   // HRV: higher than your recent baseline is better. 50 = at baseline.
   if (latest.hrv_ms != null) {
     const base = avg(prior.map(d => d.hrv_ms).filter(v => v != null));
-    if (base) parts.push(clamp100(50 + ((latest.hrv_ms - base) / base) * 200));
-    else parts.push(60); // no baseline yet — treat a present HRV as neutral-ish
+    parts.push({ key: 'hrv', v: base ? clamp100(50 + ((latest.hrv_ms - base) / base) * 200) : 60 });
   }
 
   // Resting HR: lower than your recent baseline is better. 50 = at baseline.
   if (latest.resting_hr != null) {
     const base = avg(prior.map(d => d.resting_hr).filter(v => v != null));
-    if (base) parts.push(clamp100(50 + ((base - latest.resting_hr) / base) * 200));
-    else parts.push(55);
+    parts.push({ key: 'rhr', v: base ? clamp100(50 + ((base - latest.resting_hr) / base) * 200) : 55 });
   }
 
   if (!parts.length) return null;
-  return Math.round(avg(parts));
+  let wsum = 0, vsum = 0;
+  for (const p of parts) { const w = (weights && weights[p.key] != null) ? weights[p.key] : 1; wsum += w; vsum += p.v * w; }
+  return Math.round(vsum / wsum);
+}
+
+// Maps sport readinessModel factor metrics to the keys used in deriveScore.
+const COLLECTED_METRIC = { sleep: 'sleep', hrv: 'hrv', resting_hr: 'rhr' };
+
+/**
+ * Build a weights object from a sport's readinessModel.
+ * Returns null if the model is absent or has no matching collected metrics.
+ *
+ * @param {object|null} model  the readinessModel from a sport knowledge profile
+ * @returns {{ sleep?: number, hrv?: number, rhr?: number }|null}
+ */
+function weightsFromModel(model) {
+  if (!model || !Array.isArray(model.factors)) return null;
+  const w = {};
+  for (const f of model.factors) if (COLLECTED_METRIC[f.metric]) w[COLLECTED_METRIC[f.metric]] = f.importance;
+  return Object.keys(w).length ? w : null;
 }
 
 /**
@@ -97,10 +115,10 @@ function deriveScore(latest, prior) {
  * @param {object[]} prior earlier days (for HRV/RHR baseline); order ignored
  * @returns {{ score: number, estimated: boolean }|null}
  */
-export function readinessFor(metric, prior = []) {
+export function readinessFor(metric, prior = [], weights = null) {
   if (!metric) return null;
   if (metric.readiness_score != null) return { score: metric.readiness_score, estimated: false };
-  const derived = deriveScore(metric, prior);
+  const derived = deriveScore(metric, prior, weights);
   if (derived != null) return { score: derived, estimated: true };
   return null;
 }
@@ -153,7 +171,7 @@ export function fmtSleep(min) {
   return `${h}h ${String(m).padStart(2, '0')}m`;
 }
 
-export function computeReadiness(dailyMetrics = [], logs = []) {
+export function computeReadiness(dailyMetrics = [], logs = [], readinessModel = null) {
   const sorted = [...dailyMetrics].sort((a, b) =>
     (b.date || '').localeCompare(a.date || '')
   );
@@ -178,7 +196,7 @@ export function computeReadiness(dailyMetrics = [], logs = []) {
     rhr: latest.resting_hr ?? null
   };
 
-  const r = readinessFor(latest, sorted.slice(1, 8));
+  const r = readinessFor(latest, sorted.slice(1, 8), weightsFromModel(readinessModel));
   if (r) {
     const status = bandFromScore(r.score);
     return {
