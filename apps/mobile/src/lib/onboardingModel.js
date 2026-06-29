@@ -135,7 +135,7 @@ export function answersToProfilePatch(a) {
         sport: isSport ? (a.sport || null) : null,
         sport_intent: isSport ? (a.sportIntent || 'recreational') : null,
         event_date: isSport && a.eventDate ? a.eventDate : null,
-        run_discipline: isSport && a.sport === 'run' ? (a.runDiscipline || null) : null
+        run_discipline: isSport ? (a.runDiscipline || null) : null
       };
       return resolvePeriodization(pseudo).totalWeeks;
     })(),
@@ -151,7 +151,7 @@ export function answersToProfilePatch(a) {
     sport_intent: isSport ? (a.sportIntent || 'recreational') : null,
     event_date: isSport && a.eventDate ? a.eventDate : null,
     sport_season: null,  // no longer set during onboarding; deriveSeason() computes it on demand
-    run_discipline: isSport && a.sport === 'run' ? (a.runDiscipline || null) : null,
+    run_discipline: isSport ? (a.runDiscipline || null) : null,
     sport_days: isSport ? (a.sportDays || []) : null,
 
     experience: { gym: a.experienceLevel || 'intermediate' },
