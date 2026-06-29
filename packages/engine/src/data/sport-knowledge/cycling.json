@@ -49,5 +49,14 @@
   "athleteDashboard": {},
   "validation": {},
   "references": [],
-  "kpiFramework": { "kpis": [], "athleteDashboardKpis": [], "coachDashboardKpis": [], "performanceScore": {}, "gamification": [] }
+  "kpiFramework": { "kpis": [], "athleteDashboardKpis": [], "coachDashboardKpis": [], "performanceScore": {}, "gamification": [] },
+
+  "gymProgramming": {
+    "emphasis": { "quads": 1.3, "glutes": 1.25, "hamstrings": 1.15, "calves": 1.0, "core": 1.15, "back": 0.9, "shoulders": 0.7, "chest": 0.55, "biceps": 0.55, "triceps": 0.7 },
+    "priorityExercises": ["sl_leg_press","split_squat","hip_thrust","glute_bridge_single_leg","lateral_band_walk","rdl","sl_hinge","goblet_squat","copenhagen","thoracic_foam_roller","hip_flexor_90_90","prone_hip_extension","pallof"],
+    "keyMuscles": ["quads","glutes","hamstrings"],
+    "power": true,
+    "seasonModifiers": { "off": 1.0, "pre": 0.85, "in": 0.6, "transition": 0.7 },
+    "periodization": { "off": { "totalWeeks": 12, "split": [{ "intent": "base", "weeks": 5 }, { "intent": "build", "weeks": 5 }, { "intent": "peak", "weeks": 2 }], "deloads": [5, 10] }, "pre": { "totalWeeks": 6, "split": [{ "intent": "base", "weeks": 3 }, { "intent": "build", "weeks": 3 }], "deloads": [6] }, "in": { "totalWeeks": 4, "split": [{ "intent": "build", "weeks": 4 }], "deloads": [] }, "transition": { "totalWeeks": 4, "split": [{ "intent": "base", "weeks": 4 }], "deloads": [] } }
+  }
 }

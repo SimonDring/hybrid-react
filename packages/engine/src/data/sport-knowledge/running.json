@@ -49,5 +49,30 @@
   "athleteDashboard": {},
   "validation": {},
   "references": [],
-  "kpiFramework": { "kpis": [], "athleteDashboardKpis": [], "coachDashboardKpis": [], "performanceScore": {}, "gamification": [] }
+  "kpiFramework": { "kpis": [], "athleteDashboardKpis": [], "coachDashboardKpis": [], "performanceScore": {}, "gamification": [] },
+
+  "gymProgramming": {
+    "emphasis": { "quads": 1.15, "hamstrings": 1.25, "glutes": 1.20, "calves": 1.30, "core": 1.20, "back": 0.90, "shoulders": 0.80, "chest": 0.55, "biceps": 0.55, "triceps": 0.70 },
+    "priorityExercises": ["nordic_curl","double_leg_pogo","sl_pogo_jump","bounding_a_skip","split_squat","rdl","trap_bar_dl","glute_bridge_single_leg","tibialis_raise","lateral_band_walk","sl_hip_abduction","copenhagen","pallof","sl_calf","sl_hinge","step_up"],
+    "keyMuscles": ["hamstrings","glutes","calves","quads"],
+    "power": true,
+    "seasonModifiers": { "off": 1.0, "pre": 0.85, "in": 0.6, "transition": 0.7 },
+    "periodization": { "off": { "totalWeeks": 12, "split": [{ "intent": "base", "weeks": 5 }, { "intent": "build", "weeks": 5 }, { "intent": "peak", "weeks": 2 }], "deloads": [5, 10] }, "pre": { "totalWeeks": 6, "split": [{ "intent": "base", "weeks": 3 }, { "intent": "build", "weeks": 3 }], "deloads": [6] }, "in": { "totalWeeks": 4, "split": [{ "intent": "build", "weeks": 4 }], "deloads": [] }, "transition": { "totalWeeks": 4, "split": [{ "intent": "base", "weeks": 4 }], "deloads": [] } },
+    "byDiscipline": {
+      "sprint": {
+        "emphasis": { "quads": 1.20, "hamstrings": 1.30, "glutes": 1.35, "calves": 1.20, "core": 1.15, "back": 1.00, "shoulders": 1.10, "chest": 0.70, "biceps": 0.70, "triceps": 0.70 },
+        "priorityExercises": ["hang_clean","power_clean","depth_jump","broad_jump","sled_push","back_squat","hip_thrust","nordic_curl","bounding_a_skip","double_leg_pogo","sl_pogo_jump","split_squat","glute_bridge_single_leg","pallof","sl_calf"],
+        "periodization": { "off": { "totalWeeks": 6, "split": [{ "intent": "base", "weeks": 2 }, { "intent": "build", "weeks": 3 }, { "intent": "peak", "weeks": 1 }], "deloads": [6] }, "pre": { "totalWeeks": 4, "split": [{ "intent": "base", "weeks": 2 }, { "intent": "build", "weeks": 2 }], "deloads": [] } }
+      },
+      "middle": {
+        "emphasis": { "quads": 1.15, "hamstrings": 1.30, "glutes": 1.25, "calves": 1.20, "core": 1.20, "back": 0.90, "shoulders": 0.80, "chest": 0.55, "biceps": 0.55, "triceps": 0.70 },
+        "priorityExercises": ["nordic_curl","split_squat","rdl","double_leg_pogo","sl_pogo_jump","trap_bar_dl","step_up","lateral_band_walk","copenhagen","pallof","sl_calf","sl_hinge","tibialis_raise"],
+        "periodization": { "off": { "totalWeeks": 10, "split": [{ "intent": "base", "weeks": 4 }, { "intent": "build", "weeks": 4 }, { "intent": "peak", "weeks": 2 }], "deloads": [4, 8] } }
+      },
+      "long": {
+        "emphasis": { "quads": 1.10, "hamstrings": 1.30, "glutes": 1.20, "calves": 1.40, "core": 1.25, "back": 0.90, "shoulders": 0.70, "chest": 0.45, "biceps": 0.50, "triceps": 0.65 },
+        "priorityExercises": ["nordic_curl","rdl","trap_bar_dl","split_squat","sl_calf","tibialis_raise","lateral_band_walk","copenhagen","pallof","dead_bug","sl_hinge","glute_bridge_single_leg","step_up"]
+      }
+    }
+  }
 }

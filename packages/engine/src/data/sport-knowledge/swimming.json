@@ -172,17 +172,12 @@
   "atlas": { "family": "mixed", "pillars": ["upper_pull","shoulder_health","core","aerobic","explosive","recovery","consistency"] },
 
   "gymProgramming": {
-    "emphasis": { "back": 1.30, "shoulders": 1.15, "core": 1.20, "triceps": 1.05, "chest": 0.9, "biceps": 1.0, "quads": 0.9, "hamstrings": 0.9, "glutes": 1.0, "calves": 0.9 },
-    "priorityExercises": ["pullup","lat_pulldown","cable_row","face_pull","cable_ext_rotation_90","prone_y_raise","dead_bug","trap_bar_dl"],
+    "emphasis": { "back": 1.3, "shoulders": 1.25, "triceps": 1.15, "biceps": 1.1, "core": 1.2, "chest": 1.0, "quads": 0.7, "hamstrings": 0.7, "glutes": 0.7, "calves": 0.5 },
+    "priorityExercises": ["face_pull","band_face_pull","sl_ext_rotation","cable_ext_rotation_90","reverse_pec_deck","prone_y_raise","prone_t_raise","prone_w_raise","serratus_punch_cable","serratus_wall_slide","band_pull_apart","straight_arm_pd","lat_pulldown","cable_woodchop","hip_thrust","cable_woodchop","glute_ham_raise","plank","side_plank"],
     "keyMuscles": ["back","shoulders","core"],
     "power": true,
     "seasonModifiers": { "off": 1.0, "pre": 0.85, "in": 0.6, "transition": 0.7 },
-    "periodization": {
-      "off":        { "totalWeeks": 12, "split": [{ "intent": "base", "weeks": 5 }, { "intent": "build", "weeks": 5 }, { "intent": "peak", "weeks": 2 }], "deloads": [5, 10] },
-      "pre":        { "totalWeeks": 6,  "split": [{ "intent": "base", "weeks": 3 }, { "intent": "build", "weeks": 3 }], "deloads": [6] },
-      "in":         { "totalWeeks": 4,  "split": [{ "intent": "build", "weeks": 4 }], "deloads": [] },
-      "transition": { "totalWeeks": 4,  "split": [{ "intent": "base", "weeks": 4 }], "deloads": [] }
-    }
+    "periodization": { "off": { "totalWeeks": 12, "split": [{ "intent": "base", "weeks": 5 }, { "intent": "build", "weeks": 5 }, { "intent": "peak", "weeks": 2 }], "deloads": [5, 10] }, "pre": { "totalWeeks": 6, "split": [{ "intent": "base", "weeks": 3 }, { "intent": "build", "weeks": 3 }], "deloads": [6] }, "in": { "totalWeeks": 4, "split": [{ "intent": "build", "weeks": 4 }], "deloads": [] }, "transition": { "totalWeeks": 4, "split": [{ "intent": "base", "weeks": 4 }], "deloads": [] } }
   },
 
   "decisionRules": [
