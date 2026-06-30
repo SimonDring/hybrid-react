@@ -24,7 +24,7 @@
       "maxStrength": { "importance": 8, "why": "High maximal force output underpins horizontal force application at ground contact; stronger athletes produce greater peak forces in shorter contact times.", "confidence": "high", "evidenceLevel": "L2", "source": "Morin & Samozino sprint-mechanics literature; Haugen 2019" },
       "relativeStrength": { "importance": 8, "why": "Strength per kilogram directly scales acceleration — carrying non-propulsive mass without proportional force output limits sprint velocity.", "confidence": "high", "evidenceLevel": "L2", "source": "Morin & Samozino; force-velocity profiling literature" },
       "explosivePower": { "importance": 10, "why": "The defining physical quality of sprinting — rate of force development and peak power at ground contact determine both acceleration and top speed. The gym must prioritise this above all.", "confidence": "high", "evidenceLevel": "L2", "source": "Morin & Samozino; Haugen 2019 sprint-mechanics review" },
-      "reactiveStrength": { "importance": 9, "why": "Maximal-velocity sprinting involves contact times of ~80–100 ms — the stretch-shortening cycle and leg stiffness are decisive at top speed; reactive strength index is a strong performance correlate.", "confidence": "high", "evidenceLevel": "L2", "source": "Blagrove 2018; reactive-strength / tendon-stiffness literature" },
+      "reactiveStrength": { "importance": 9, "why": "Maximal-velocity sprinting involves contact times of ~80–100 ms — the stretch-shortening cycle and leg stiffness are decisive at top speed; reactive strength index is a strong performance correlate.", "confidence": "high", "evidenceLevel": "L2", "source": "Markovic 2007 (plyometric-training meta-analysis); Seitz 2014 (lower-body strength → sprint transfer)" },
       "sprintSpeed": { "importance": 10, "why": "Sprint speed IS the performance outcome — improving maximal velocity is the primary goal of the entire training system.", "confidence": "high", "evidenceLevel": "L1", "source": "self-evident from sport; Haugen 2019" },
       "acceleration": { "importance": 10, "why": "0–30 m acceleration phase is decisive in all sprint events; force orientation (horizontal force production) during this phase largely determines race outcome.", "confidence": "high", "evidenceLevel": "L2", "source": "Morin & Samozino horizontal force-velocity profiling" },
       "deceleration": { "importance": 5, "why": "Velocity maintenance in the late 100–400 m requires resisting deceleration; some strength in this quality, but not a primary driver.", "confidence": "moderate", "evidenceLevel": "L3", "source": "sprint-fatigue and velocity-maintenance literature; expert consensus" },
@@ -230,7 +230,7 @@
       "wearableEstimable": false,
       "confidence": "high",
       "evidenceLevel": "L2",
-      "source": "Haugen 2019; Blagrove 2018 reactive-strength literature"
+      "source": "Haugen 2019; Markovic 2007 (plyometrics → jump); Claudino 2017 (CMJ monitoring)"
     },
     {
       "name": "10 m split + 30 m acceleration test",
@@ -1071,15 +1071,27 @@
     },
     {
       "key": "Haugen2019",
-      "citation": "Haugen T, et al. (2019). Sprint mechanical properties in football players: a systematic review. J Sports Sci.",
+      "citation": "Haugen T, Seiler S, Sandbakk Ø, Tønnessen E (2019). The training and development of elite sprint performance: a review. Sports Medicine - Open.",
       "governingBody": null,
-      "type": "systematic review"
+      "type": "review"
     },
     {
-      "key": "Blagrove2018",
-      "citation": "Blagrove RC, Howatson G, Hayes PR (2018). Effects of strength training on the physiological determinants of middle- and long-distance running performance: a systematic review. Sports Med.",
+      "key": "Seitz2014",
+      "citation": "Seitz LB, Reyes A, Tran TT, Saez de Villarreal E, Haff GG (2014). Increases in lower-body strength transfer positively to sprint performance: a systematic review with meta-analysis. Sports Med.",
       "governingBody": null,
-      "type": "systematic review"
+      "type": "meta-analysis"
+    },
+    {
+      "key": "Markovic2007",
+      "citation": "Markovic G (2007). Does plyometric training improve vertical jump height? A meta-analytical review. Br J Sports Med.",
+      "governingBody": null,
+      "type": "meta-analysis"
+    },
+    {
+      "key": "Claudino2017",
+      "citation": "Claudino JG, et al. (2017). The countermovement jump to monitor neuromuscular status: a meta-analysis. J Sci Med Sport.",
+      "governingBody": null,
+      "type": "meta-analysis"
     },
     {
       "key": "Saw2016",
@@ -1279,7 +1291,7 @@
         "autoCalculable": true,
         "confidence": "high",
         "evidenceLevel": "L2",
-        "source": "Haugen 2019; Blagrove 2018"
+        "source": "Claudino 2017 (CMJ neuromuscular monitoring); Seitz 2014 (strength → sprint power)"
       },
       {
         "name": "Eccentric hamstring strength (NordBord)",
