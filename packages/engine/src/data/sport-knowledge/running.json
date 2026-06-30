@@ -17,7 +17,12 @@
     "offseasonLengthWeeks": 6,
     "competitionFrequencyPerWeek": "0-1 races/week (varies)",
     "trainingFrequencyPerWeek": "5-10 runs + 1-2 gym",
-    "sessionDurationMin": { "match": 60, "pitch": 60, "gym": 45 }
+    "sessionDurationMin": { "match": 60, "pitch": 60, "gym": 45 },
+    "disciplines": [
+      { "key": "sprint", "label": "Sprints", "hint": "100 – 400m" },
+      { "key": "middle", "label": "Middle distance", "hint": "800m – 5K" },
+      { "key": "long", "label": "Long distance", "hint": "10K+" }
+    ]
   },
 
   "physicalProfile": {

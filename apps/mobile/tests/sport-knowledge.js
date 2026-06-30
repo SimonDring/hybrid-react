@@ -98,4 +98,13 @@ assert(JSON.stringify(skb.ids().filter(id => skb.completeness(id).complete).sort
   === JSON.stringify(['gaelic_football','hurling','swimming'].sort()),
   'exactly the three flagships are complete');
 
+// ── onboarding discipline mechanism ─────────────────────────────────────────
+// a profile that declares meta.disciplines must use {key,label,hint}
+// keys that match its gymProgramming.byDiscipline keys (the wizard reads meta.disciplines).
+const runMeta = skb.get('running').meta.disciplines;
+assert(Array.isArray(runMeta) && runMeta.length === 3 && runMeta.every(d => d.key && d.label),
+  'running.meta.disciplines is a well-formed {key,label,hint}[]');
+assert(JSON.stringify(runMeta.map(d => d.key).sort()) === JSON.stringify(Object.keys(skb.get('running').gymProgramming.byDiscipline).sort()),
+  'running.meta.disciplines keys match gymProgramming.byDiscipline keys');
+
 console.log('sport-knowledge tests done');
