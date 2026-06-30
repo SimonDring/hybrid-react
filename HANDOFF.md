@@ -1,11 +1,11 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-06-28. Keep this current at the end of each work session so the
+_Last updated: 2026-06-30. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
 
-## Latest work — Session UI v2 + timer reliability + engine cleanups (2026-06-28)
+## Latest work — Session UI v2 + timer reliability + engine cleanups (2026-06-28, MERGED)
 
-Continues on branch **`feat/focused-session-runner`** (local only — NOT pushed, no PR).
+Merged to **`main`** via PR #32 (`feat/focused-session-runner`) + `chore/post-merge-cleanup`.
 Six brainstormed specs, all built + preview-verified. Specs under
 `docs/superpowers/specs/2026-06-28-*-design.md` (session-ui-v2, rest-timer-reliability,
 primaries-straight-sets, region-pure-days-and-ordering, exercise-video-placeholder,
@@ -75,10 +75,9 @@ timestamp timer counting + catch-up, wake-lock requested, completion form has no
 top-set inputs, full Save & complete runs clean. `npm run build` clean; `node tests/*.js`
 green except the pre-existing date-dependent `reflow-start-consistency.js`.
 
-## Latest work — focused session runner + primer/main sections (2026-06-28)
+## Latest work — focused session runner + primer/main sections (2026-06-28, MERGED)
 
-On branch **`feat/focused-session-runner`** (local only — NOT pushed, no PR). Built
-overnight from a brainstorm; awaiting Simon's review. Spec + plan committed under
+Merged to **`main`** via PR #32. Built from a brainstorm; spec + plan committed under
 `docs/superpowers/{specs,plans}/2026-06-28-*`.
 
 Two connected features:
@@ -107,9 +106,7 @@ persistence, and progression (`lift_log.bench` updated from a logged 87.5 kg set
 `node tests/*.js` green except the **pre-existing** date-dependent
 `reflow-start-consistency.js` (fails on clean HEAD too). `npm run build` clean.
 
-**Open for review:** primer colour `--moss` equals `--accent` (swap to `--ochre` for
-more contrast?); runner renders within the app shell (TopBar/TabBar visible) rather
-than a true viewport overlay; migration 013 not yet applied to the live DB.
+**Migration 013** (`set_logs` table) needs applying to the live Supabase DB — the runner degrades gracefully without it but set persistence won't work in production until applied.
 
 ## What this app is now
 
