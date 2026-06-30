@@ -25,6 +25,21 @@ export const SCHEMA_VERSION = '1.0.0';
 export const EVIDENCE_LEVELS = ['L1', 'L2', 'L3', 'L4', 'L5'];
 export const CONFIDENCE = ['high', 'moderate', 'low'];
 
+// Machine-readable decision-rule vocabulary. A rule MAY carry a structured
+// `trigger {signal, op, value}` + `effect {type, params}` (alongside its human if/then) so
+// the runtime reflow can act on it (see lib/sportKnowledge/rules.js + reflowAdjust.js).
+export const RULE_SIGNALS = new Set([
+  'competition_within_h', 'matches_this_week', 'acwr', 'readiness',
+  'cmj_drop_pct', 'illness', 'season', 'soreness_region', 'travel'
+]);
+export const RULE_EFFECTS = new Set([
+  // shipped — applied by the reflow
+  'reduce_volume_pct', 'priming_only', 'force_deload', 'minimal_effective_volume',
+  'reduce_one_step', 'withhold', 'taper',
+  // reserved — validated, evaluator no-ops (need exercise-level tagging)
+  'exclude_soreness_above', 'reduce_region_eccentric', 'reduce_region_overhead', 'cap_high_speed'
+]);
+
 /** The 21 spec sections, in order. Every profile must declare all of them. */
 export const SECTIONS = [
   'meta',                    // 1  metadata
@@ -115,6 +130,12 @@ export function validateSportProfile(p) {
       if (!isStr(r.if)) errs.push(`${lbl}: "if" required`);
       if (!isStr(r.then)) errs.push(`${lbl}: "then" required`);
       errs.push(...provErrors(lbl, r));
+      // structured trigger/effect are OPTIONAL, but when present must use the vocabulary
+      if (r.trigger) {
+        if (!RULE_SIGNALS.has(r.trigger.signal)) errs.push(`${lbl}: trigger.signal "${r.trigger.signal}" not in vocabulary`);
+        if (typeof r.trigger.op !== 'string') errs.push(`${lbl}: trigger.op required`);
+      }
+      if (r.effect && !RULE_EFFECTS.has(r.effect.type)) errs.push(`${lbl}: effect.type "${r.effect.type}" not in vocabulary`);
     });
   } else errs.push(`${id}.decisionRules: must be an array`);
 
