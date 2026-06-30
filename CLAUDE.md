@@ -57,8 +57,13 @@ Monorepo — npm workspaces. Run `npm run dev` / `npm run build` from the REPO R
     is still reserved/empty.)
   supabase/ — schema.sql, migrations, edge functions, runbook (shared backend, at the root)
   docs/ — SCHEMA.md, decision-engine-evaluation.md, SECURITY-AUDIT.md, strategy/, product/, prompts/,
-    engine/ — the FOUNDATIONAL engine spec set (the governing design): docs/engine/00-ENGINE-DESIGN-
-    SPECIFICATION.md (the EDS — the constitution) + 01-PANEL-REVIEW, 02-REFACTOR-ROADMAP,
+    foundation/ — the PLATFORM-LEVEL governing framework, ABOVE the engine spec: CONSTITUTION.md
+    (immutable Articles — the ultimate tie-breaker), DECISION-ONTOLOGY.md (canonical vocabulary),
+    KNOWLEDGE-ARCHITECTURE.md (how knowledge is structured, not hard-coded), PANEL-REVIEW.md,
+    README.md (index + the governance stack). Validate any new feature/algorithm/schema against
+    these BEFORE building.
+    engine/ — the FOUNDATIONAL engine spec set (how the engine reasons, BENEATH the Constitution):
+    docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md (the EDS) + 01-PANEL-REVIEW, 02-REFACTOR-ROADMAP,
     03-SPORT-KNOWLEDGE-BASE, 04-PHYSIOLOGICAL-FRAMEWORK, 05-INDEX-LAYER-FOLLOWUPS. The EDS is the
     reference for any engine feature/refactor/fix. Index + the foundational-vs-running distinction:
     docs/engine/README.md. (This CLAUDE.md and HANDOFF.md are the RUNNING docs — they track current

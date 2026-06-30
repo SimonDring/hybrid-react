@@ -1,7 +1,10 @@
 # Engine Design Specification (EDS)
 
-> **The governing document for the athlete performance platform.**
-> This is the constitution. Every future engineering decision references it.
+> **The governing design specification for the platform's decision engine.**
+> It sits *beneath* the platform [Constitution](../foundation/CONSTITUTION.md) — the immutable
+> principles — and alongside the [Decision Ontology](../foundation/DECISION-ONTOLOGY.md) and
+> [Knowledge Architecture](../foundation/KNOWLEDGE-ARCHITECTURE.md). This document is how the
+> engine *reasons* within them; every future engine decision references both.
 > The other four foundational docs — `01-PANEL-REVIEW` (evidence), `02-REFACTOR-ROADMAP`
 > (build plan), `03-SPORT-KNOWLEDGE-BASE` (sport schema), `04-PHYSIOLOGICAL-FRAMEWORK`
 > (physiological metrics), and its implementation spec `05-INDEX-LAYER-FOLLOWUPS` — are
@@ -17,7 +20,7 @@
 | **Scope** | The decision engine: how the platform *reasons*, not how it is *coded* |
 | **Audience** | Any engineer, scientist, or coach who must understand or extend the platform |
 | **Implementation-independence** | This document names no React component, API, or table unless unavoidable. It describes the engine's mind, not its body. |
-| **Authority** | Governs the foundational doc set (see [index](README.md)); the tie-breaker on any conflict. Canonical for philosophy, laws, and the decision architecture. Defers to the named owner for evidence (01), build plan & contracts (02), the sport schema (03), and physiological metrics (04–05). |
+| **Authority** | Sits *beneath* the platform foundation (see [`../foundation/`](../foundation/README.md)): the [Constitution](../foundation/CONSTITUTION.md) is the tie-breaker on any conflict. Governs the *engine* doc set (see [index](README.md)); canonical for the decision architecture. Its Core Philosophy (§2), First Principles (P1–P15) and Engine Laws (L1–L15) are **derivations of the Constitution's Articles** — see [Constitution Appendix A](../foundation/CONSTITUTION.md#appendix-a--mapping-the-eds-onto-the-articles). Defers to the named owner for evidence (01), build plan & contracts (02), the sport schema (03), and physiological metrics (04–05). |
 | **Companion docs** | Foundational set: [`01-PANEL-REVIEW`](01-PANEL-REVIEW.md) (evidence), [`02-REFACTOR-ROADMAP`](02-REFACTOR-ROADMAP.md) (build plan & contracts), [`03-SPORT-KNOWLEDGE-BASE`](03-SPORT-KNOWLEDGE-BASE.md) (sport schema), [`04-PHYSIOLOGICAL-FRAMEWORK`](04-PHYSIOLOGICAL-FRAMEWORK.md) (metrics), [`05-INDEX-LAYER-FOLLOWUPS`](05-INDEX-LAYER-FOLLOWUPS.md) (index-layer specs). Related: [`decision-engine-evaluation.md`](../decision-engine-evaluation.md) (the F1–F10 sweep), [`../strategy/VISION.md`](../strategy/VISION.md), [`../product/TEAM-ARCHITECTURE.md`](../product/TEAM-ARCHITECTURE.md). |
 | **Status tracking** | This document states the **target**. Where the codebase actually stands against it — what is shipped, in flight, or pending — lives in the **running docs** (`HANDOFF.md`, `CLAUDE.md`), never here. Parts III–IV (the as-built snapshot and critique) are a point-in-time read; see the note at the head of Part III. |
 
@@ -110,6 +113,13 @@ A note on plain language: the platform's user (and one of its authors) is a begi
 ---
 
 # Part I — Vision, Philosophy, Laws
+
+> **Reconciliation note.** The platform's immutable principles now live in the
+> [Constitution](../foundation/CONSTITUTION.md) (20 Articles). The Core Philosophy (§2),
+> First Principles (P1–P15), and Engine Laws (L1–L15) below are retained as the engineering
+> *expression* of those Articles — the detailed "how" beneath the Constitution's "what and
+> why." Where wording differs, the Constitution governs; the full mapping is in
+> [Constitution Appendix A](../foundation/CONSTITUTION.md#appendix-a--mapping-the-eds-onto-the-articles).
 
 ## 1. Executive Vision
 
@@ -1798,7 +1808,7 @@ Plain-language definitions of every load-bearing term, alphabetised. (Conceptual
 
 ## Closing note
 
-This document describes how the platform should *think*. It is deliberately ahead of what is built — that is the point of a constitution. The current engine is a strong, evidence-based gym generator; this specification is the map from there to an evidence-based coaching decision engine that happens to express itself, today, mostly through gym work, and tomorrow through the full breadth of an athlete's preparation.
+This document describes how the platform should *think*. It is deliberately ahead of what is built — that is the point of a foundational specification (the platform's immutable principles sit above it, in the [Constitution](../foundation/CONSTITUTION.md)). The current engine is a strong, evidence-based gym generator; this specification is the map from there to an evidence-based coaching decision engine that happens to express itself, today, mostly through gym work, and tomorrow through the full breadth of an athlete's preparation.
 
 Three sentences carry the whole document:
 
