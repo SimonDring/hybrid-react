@@ -14,13 +14,13 @@ function assert(cond, msg) {
 // ── registry validity + coverage ──────────────────────────────────────────────
 const v = skb.validate();
 assert(v.ok, `every sport profile is valid (${v.errors.slice(0, 4).join(' | ') || 'no errors'})`);
-for (const id of ['gaelic_football', 'hurling', 'rugby', 'soccer', 'running', 'cycling', 'swimming']) {
+for (const id of ['gaelic_football', 'hurling', 'rugby', 'soccer', 'running_sprint', 'running_middle', 'running_long', 'cycling', 'swimming']) {
   assert(skb.has(id), `registry contains "${id}"`);
 }
 assert(skb.get('kabaddi') === undefined, 'unknown sport returns undefined (generic fallback)');
 
 // ── flagships fully authored ───────────────────────────────────────────────────
-const FLAGSHIPS = ['gaelic_football', 'hurling', 'swimming'];
+const FLAGSHIPS = ['gaelic_football', 'hurling', 'swimming', 'running_sprint', 'running_middle', 'running_long'];
 for (const id of FLAGSHIPS) {
   const c = skb.completeness(id);
   assert(c.complete, `${id} is fully authored (score ${c.score.toFixed(2)}; thin: ${c.thin.join(', ') || 'none'})`);
@@ -46,8 +46,29 @@ assert(sw.physicalProfile.qualities.mobility.importance >= 9,
 assert(sw.kpiFramework.kpis.some(k => k.metric === 'shoulder_er_strength'),
   'swimming carries a shoulder external-rotation KPI (swimmer\'s-shoulder focus)');
 
+// ── running disciplines are genuinely DISTINCT events, not one 'running' profile ──
+const rsp = skb.get('running_sprint');
+const rmd = skb.get('running_middle');
+const rlg = skb.get('running_long');
+assert(rsp.physicalProfile.qualities.explosivePower.importance > rlg.physicalProfile.qualities.explosivePower.importance,
+  `sprint weights explosive power higher than long (${rsp.physicalProfile.qualities.explosivePower.importance} > ${rlg.physicalProfile.qualities.explosivePower.importance})`);
+assert(rlg.physicalProfile.qualities.aerobicEndurance.importance > rsp.physicalProfile.qualities.aerobicEndurance.importance,
+  `long weights aerobic endurance higher than sprint (${rlg.physicalProfile.qualities.aerobicEndurance.importance} > ${rsp.physicalProfile.qualities.aerobicEndurance.importance})`);
+assert(rlg.physicalProfile.qualities.durability.importance > rsp.physicalProfile.qualities.durability.importance,
+  `long weights durability higher than sprint (${rlg.physicalProfile.qualities.durability.importance} > ${rsp.physicalProfile.qualities.durability.importance})`);
+assert(rsp.energySystems.atpPcPct > rlg.energySystems.atpPcPct && rlg.energySystems.aerobicPct > rsp.energySystems.aerobicPct,
+  `sprint is ATP-PC/glycolytic-led, long aerobic-dominant (sprint atpPc ${rsp.energySystems.atpPcPct} vs long ${rlg.energySystems.atpPcPct}; long aerobic ${rlg.energySystems.aerobicPct} vs sprint ${rsp.energySystems.aerobicPct})`);
+assert(rmd.energySystems.aerobicPct > rsp.energySystems.aerobicPct && rmd.energySystems.aerobicPct < rlg.energySystems.aerobicPct,
+  `middle sits between sprint and long on the aerobic axis (${rsp.energySystems.aerobicPct} < ${rmd.energySystems.aerobicPct} < ${rlg.energySystems.aerobicPct})`);
+const sprintMetrics = rsp.kpiFramework.kpis.map(k => k.metric);
+const longMetrics = rlg.kpiFramework.kpis.map(k => k.metric);
+assert(sprintMetrics.includes('nordic_hamstring') && !longMetrics.includes('nordic_hamstring'),
+  'sprint carries a Nordic-hamstring eccentric-strength KPI that long does not');
+assert(longMetrics.includes('energy_availability') && !sprintMetrics.includes('energy_availability'),
+  'long carries an energy-availability (RED-S/bone) KPI that sprint does not');
+
 // ── stubs are valid scaffolds (structurally fine, low completeness) ─────────────
-for (const id of ['rugby', 'soccer', 'running', 'cycling']) {
+for (const id of ['rugby', 'soccer', 'cycling']) {
   assert(validateSportProfile(skb.get(id)).length === 0, `${id} stub is structurally valid`);
   assert(!skb.completeness(id).complete, `${id} stub reports as a scaffold (not yet complete)`);
 }
