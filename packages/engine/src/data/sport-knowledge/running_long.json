@@ -5,14 +5,14 @@
   "lastReviewed": "2026-06-29",
   "meta": {
     "sport": "Running — long distance",
-    "category": "Track & field — individual (cyclic, mixed aerobic/anaerobic)",
+    "category": "Endurance / individual (road, track, trail; cyclic, aerobic-dominant)",
     "teamOrIndividual": "individual",
     "indoorOutdoor": "outdoor (road, trail; track 10 000 m)",
     "contactLevel": "none",
     "playersPerSide": 1,
     "seasonLengthWeeks": 36,
     "offseasonLengthWeeks": 8,
-    "competitionFrequencyPerWeek": "1–2 races per week at peak season; single-race duration ~1.5–14 min",
+    "competitionFrequencyPerWeek": "0–1 races most weeks (distance runners race infrequently, building to peak races); single-race duration ~27 min (10 km) to 2–5+ h (marathon), longer for ultras",
     "trainingFrequencyPerWeek": "6–9 track/road sessions (aerobic, threshold, interval, speed) + 2–3 gym",
     "sessionDurationMin": {
       "match": 10,
@@ -2276,7 +2276,7 @@
       },
       {
         "name": "Weekly consistency",
-        "why": "Middle-distance adaptation is built on relentless aerobic accumulation — consistency over weeks beats occasional perfect sessions."
+        "why": "Long-distance adaptation is built on relentless aerobic accumulation — consistency over weeks beats occasional perfect sessions."
       },
       {
         "name": "Achilles resilience (calf raise capacity)",
