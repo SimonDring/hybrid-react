@@ -3,6 +3,33 @@
 _Last updated: 2026-06-30. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
 
+## Latest work — foundation governing framework (`docs/foundation/`) (2026-06-30)
+
+Merged to **`main`** (PR #49, merge commit `7166bd3`). Added a new **platform-level
+governing framework** that sits *above* the engine-scoped EDS — the layer every future
+engineering, coaching, product, and AI decision is validated against **before** building.
+Full index + governance stack: `docs/foundation/README.md`.
+
+- **`CONSTITUTION.md`** — 20 immutable Articles (5 Titles), the conflict-resolution order,
+  an amendment process, and a mapping table that **subsumes the EDS's Core Philosophy (§2),
+  First Principles (P1–P15), and Engine Laws (L1–L15)** (nothing orphaned — Appendix A).
+- **`DECISION-ONTOLOGY.md`** — the canonical vocabulary: ~40 entities in 7 families; the
+  **three orthogonal structures** (Reasoning Spine · Containment Hierarchy · Diagnostic
+  Triangle); reinstates **Performance Outcome**, makes **Fatigue** + **Override** first-class,
+  and adds the **Organisation/Team/Coach/Position** entities the EDS left implicit.
+- **`KNOWLEDGE-ARCHITECTURE.md`** — the **8-kind data taxonomy** (Knowledge / Decision Logic /
+  Inference / Calculation / Stored / Derived / Assumption / Prediction) + 12 governed knowledge
+  domains, grounded in the real SKB / evidence-KB / index schemas.
+- **`PANEL-REVIEW.md`** — six-lens expert critique with revisions folded back; **`README.md`** —
+  index, reading order, governance stack.
+- **Reconciliation:** the EDS no longer calls *itself* "the constitution"; its §2/P/L are now
+  derivations of the Constitution's Articles (pointers + Appendix A mapping). `docs/engine/README.md`
+  and `CLAUDE.md` updated so the new layer is discoverable.
+- **Additive / docs-only** — no engine code changed; nothing consumes these yet. They are
+  **foundational** (the target), not running status. **Next:** check in-flight engine work (SKB
+  wiring; the orchestrator/evidence-architecture refactor) against the Constitution + Ontology
+  before extending it.
+
 ## Latest work — SKB: triathlon authored to flagship depth (2026-06-30)
 
 New profile `packages/engine/src/data/sport-knowledge/triathlon.json`, authored from
@@ -494,6 +521,12 @@ apply when `feat/decision-engine-evidence-architecture` merges. No new functions
   get actual cardio sessions, not just gym support.
 
 ## How work is run here
+
+**Validate against the foundation first.** Before building any engine, coaching, product, or
+AI feature, check it against `docs/foundation/` — the **Constitution** (immutable Articles, the
+tie-breaker), the **Decision Ontology** (canonical vocabulary), and the **Knowledge Architecture**
+(reason from data, don't hard-code). These sit *above* the EDS as the governing framework (added
+2026-06-30; see the entry above). When the rules disagree, the higher document wins.
 
 Engine changes this session: branch → small themed commits → node tests per change →
 `/dev` sweep + preview verification → PR. The deterministic engine lives in
