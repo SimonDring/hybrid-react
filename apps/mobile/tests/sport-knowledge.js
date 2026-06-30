@@ -20,7 +20,7 @@ for (const id of ['gaelic_football', 'hurling', 'rugby', 'soccer', 'running', 'c
 assert(skb.get('kabaddi') === undefined, 'unknown sport returns undefined (generic fallback)');
 
 // ── flagships fully authored ───────────────────────────────────────────────────
-const FLAGSHIPS = ['gaelic_football', 'hurling', 'swimming', 'triathlon'];
+const FLAGSHIPS = ['gaelic_football', 'hurling', 'swimming', 'cycling', 'triathlon'];
 for (const id of FLAGSHIPS) {
   const c = skb.completeness(id);
   assert(c.complete, `${id} is fully authored (score ${c.score.toFixed(2)}; thin: ${c.thin.join(', ') || 'none'})`);
@@ -46,8 +46,17 @@ assert(sw.physicalProfile.qualities.mobility.importance >= 9,
 assert(sw.kpiFramework.kpis.some(k => k.metric === 'shoulder_er_strength'),
   'swimming carries a shoulder external-rotation KPI (swimmer\'s-shoulder focus)');
 
+// cycling is a genuinely different sport: aerobic endurance leads, power-to-weight is the currency
+const cy = skb.get('cycling');
+assert(cy.physicalProfile.qualities.aerobicEndurance.importance >= 9,
+  `cycling weights aerobic endurance very high (${cy.physicalProfile.qualities.aerobicEndurance.importance}) — the dominant determinant`);
+assert(cy.physicalProfile.qualities.rotationalPower.importance <= 3,
+  `cycling weights rotational power low (${cy.physicalProfile.qualities.rotationalPower.importance}) — a symmetric, sagittal sport`);
+assert(cy.kpiFramework.kpis.some(k => k.metric === 'ftp_wkg'),
+  'cycling carries a power-to-weight (FTP W/kg) KPI — the climbing/GC currency');
+
 // ── stubs are valid scaffolds (structurally fine, low completeness) ─────────────
-for (const id of ['rugby', 'soccer', 'running', 'cycling']) {
+for (const id of ['rugby', 'soccer', 'running']) {
   assert(validateSportProfile(skb.get(id)).length === 0, `${id} stub is structurally valid`);
   assert(!skb.completeness(id).complete, `${id} stub reports as a scaffold (not yet complete)`);
 }
