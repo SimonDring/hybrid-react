@@ -19,10 +19,11 @@ import soccer from '../../data/sport-knowledge/soccer.json' with { type: 'json' 
 import running from '../../data/sport-knowledge/running.json' with { type: 'json' };
 import cycling from '../../data/sport-knowledge/cycling.json' with { type: 'json' };
 import swimming from '../../data/sport-knowledge/swimming.json' with { type: 'json' };
+import triathlon from '../../data/sport-knowledge/triathlon.json' with { type: 'json' };
 
 import { validateRegistry, SECTIONS } from './schema.js';
 
-const PROFILES = [gaelicFootball, hurling, rugby, soccer, running, cycling, swimming];
+const PROFILES = [gaelicFootball, hurling, rugby, soccer, running, cycling, swimming, triathlon];
 const BY_ID = new Map(PROFILES.map(p => [p.id, p]));
 
 export function get(id) { return BY_ID.get(id); }

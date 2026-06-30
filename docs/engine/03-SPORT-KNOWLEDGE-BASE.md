@@ -35,12 +35,14 @@ Every profile declares all 21 top-level sections (see `SECTIONS` in `schema.js`)
 `kpiFramework` (KPI classification + ≤8 athlete / ≤15 coach dashboards + weighted
 performance score + gamification).
 
-See `gaelic_football.json`, `hurling.json`, `swimming.json` and `cycling.json` as the
-**fully-authored reference profiles** (two team sports + two individual endurance sports —
-proof the same schema flexes across very different sports, e.g. swimming's "positions" are
-event/stroke archetypes and cycling's are discipline archetypes — climber / sprinter / TT /
-track — each elevating its own sport-specific readiness input: shoulder soreness for
-swimming, leg/knee soreness for cycling).
+See `gaelic_football.json`, `hurling.json`, `swimming.json`, `cycling.json` and
+`triathlon.json` as the **fully-authored reference profiles** (two team sports + three
+individual endurance sports — proof the same schema flexes across very different sports,
+e.g. swimming's "positions" are event/stroke archetypes, cycling's are discipline
+archetypes — climber / sprinter / TT / track — and triathlon's are distance archetypes
+(Sprint / Olympic / 70.3 / Ironman) for one unified multi-discipline profile — each
+elevating its own sport-specific readiness input: shoulder soreness for swimming, leg/knee
+soreness for cycling, lower-limb (run) soreness for triathlon).
 
 ## Evidence policy (non-negotiable)
 
@@ -91,8 +93,13 @@ a report, not a pass/fail — so scaffolds are honestly flagged without failing 
   modelled by *discipline* (climber / sprinter / TT / track / criterium), elevating leg/knee
   soreness as its sport-specific readiness input and carrying a power-to-weight (FTP W/kg)
   KPI; the gym serves the evidence-based strength→economy gain (Rønnestad/Sunde/Aagaard).
-  Three conformant stubs remain (rugby, soccer, running). Additive only — **no
-  plan-generation rewiring**; nothing in the app consumes it yet.
+- **Added (2026-06-30):** **triathlon** fully authored — a unified multi-discipline endurance
+  profile modelled by *distance* (Sprint / Olympic / 70.3 / Ironman / draft-legal), elevating
+  lower-limb (run) soreness as its readiness input (the run is the highest-injury discipline),
+  carrying a run-off-the-bike `brick_decoupling` KPI and building RED-S / energy availability
+  in as the highest-severity risk; strength is sequenced for economy + durability without
+  added mass (concurrent-training interference). Three conformant stubs remain (rugby, soccer,
+  running). Additive only — **no plan-generation rewiring**; nothing in the app consumes it yet.
 - **Next:** author the remaining stubs to depth; wire `decisionRules` / `readinessModel` /
   `loadManagement` into `PlanService` reflow + the future coach dashboard; reconcile the
   thin `src/lib/sports/*.js` modules to derive from the SKB.
