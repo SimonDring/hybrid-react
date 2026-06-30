@@ -1,7 +1,8 @@
 // tests/session-titles.js
 // Session titles must be SIMPLE and reflect what the session actually trains:
 // Upper / Lower / Push / Pull / Full body / Core — no jargon, no per-muscle suffix.
-import { focusLabel } from '@performance-os/engine/lib/plan/allocator.js';
+// Sport + functional plans may append a QUALITY tag (Power / Explosive) — see below.
+import { focusLabel, qualityTag } from '@performance-os/engine/lib/plan/allocator.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
@@ -37,5 +38,30 @@ assert(focusLabel({ core: 8, quads: 1 }) === 'Core', 'T7 dominant core → "Core
 
 // Empty / zero volume → Full body fallback.
 assert(focusLabel({}) === 'Full body', 'T8 empty volume → Full body');
+
+// ── Quality tag (appended to the region label for sport + functional plans) ──
+const W = (quality) => ({ ex: { quality }, item: { volumeFactor: 1 } });
+
+// Build/strength plans never get a quality tag, even with power work present.
+assert(qualityTag([W('power'), W('general')], 'strength') === '', 'Q1 strength → no tag');
+assert(qualityTag([W('power'), W('general')], 'bodybuilding') === '', 'Q2 bodybuilding → no tag');
+
+// Sport/functional with no power work → no tag.
+assert(qualityTag([W('general'), W('general')], 'sport') === '', 'Q3 sport, no power → no tag');
+
+// Sport with SOME power work but not power-led → "Power".
+assert(qualityTag([W('general'), W('general'), W('power')], 'sport') === 'Power',
+  'Q4 sport, minority power → "Power"');
+
+// Sport that OPENS on power and is mostly power → "Explosive".
+assert(qualityTag([W('power'), W('power'), W('general')], 'sport') === 'Explosive',
+  'Q5 sport, power-led → "Explosive"');
+
+// Functional carries power too.
+assert(qualityTag([W('general'), W('power')], 'functional') === 'Power', 'Q6 functional power → "Power"');
+
+// Finisher/mobility power (volumeFactor 0) does not count as working power.
+assert(qualityTag([{ ex: { quality: 'power' }, item: { volumeFactor: 0 } }], 'sport') === '',
+  'Q7 factor-0 power (finisher) → no tag');
 
 console.log('session-titles tests done');

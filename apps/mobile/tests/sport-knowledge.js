@@ -14,13 +14,13 @@ function assert(cond, msg) {
 // ── registry validity + coverage ──────────────────────────────────────────────
 const v = skb.validate();
 assert(v.ok, `every sport profile is valid (${v.errors.slice(0, 4).join(' | ') || 'no errors'})`);
-for (const id of ['gaelic_football', 'hurling', 'rugby', 'soccer', 'running_sprint', 'running_middle', 'running_long', 'cycling', 'swimming']) {
+for (const id of ['gaelic_football', 'hurling', 'rugby', 'soccer', 'running_sprint', 'running_middle', 'running_long', 'cycling', 'swimming', 'triathlon']) {
   assert(skb.has(id), `registry contains "${id}"`);
 }
 assert(skb.get('kabaddi') === undefined, 'unknown sport returns undefined (generic fallback)');
 
 // ── flagships fully authored ───────────────────────────────────────────────────
-const FLAGSHIPS = ['gaelic_football', 'hurling', 'swimming', 'running_sprint', 'running_middle', 'running_long'];
+const FLAGSHIPS = ['gaelic_football', 'hurling', 'swimming', 'cycling', 'triathlon', 'running_sprint', 'running_middle', 'running_long'];
 for (const id of FLAGSHIPS) {
   const c = skb.completeness(id);
   assert(c.complete, `${id} is fully authored (score ${c.score.toFixed(2)}; thin: ${c.thin.join(', ') || 'none'})`);
@@ -46,6 +46,15 @@ assert(sw.physicalProfile.qualities.mobility.importance >= 9,
 assert(sw.kpiFramework.kpis.some(k => k.metric === 'shoulder_er_strength'),
   'swimming carries a shoulder external-rotation KPI (swimmer\'s-shoulder focus)');
 
+// cycling is a genuinely different sport: aerobic endurance leads, power-to-weight is the currency
+const cy = skb.get('cycling');
+assert(cy.physicalProfile.qualities.aerobicEndurance.importance >= 9,
+  `cycling weights aerobic endurance very high (${cy.physicalProfile.qualities.aerobicEndurance.importance}) — the dominant determinant`);
+assert(cy.physicalProfile.qualities.rotationalPower.importance <= 3,
+  `cycling weights rotational power low (${cy.physicalProfile.qualities.rotationalPower.importance}) — a symmetric, sagittal sport`);
+assert(cy.kpiFramework.kpis.some(k => k.metric === 'ftp_wkg'),
+  'cycling carries a power-to-weight (FTP W/kg) KPI — the climbing/GC currency');
+
 // ── running disciplines are genuinely DISTINCT events, not one 'running' profile ──
 const rsp = skb.get('running_sprint');
 const rmd = skb.get('running_middle');
@@ -68,7 +77,7 @@ assert(longMetrics.includes('energy_availability') && !sprintMetrics.includes('e
   'long carries an energy-availability (RED-S/bone) KPI that sprint does not');
 
 // ── stubs are valid scaffolds (structurally fine, low completeness) ─────────────
-for (const id of ['rugby', 'soccer', 'cycling']) {
+for (const id of ['rugby', 'soccer']) {
   assert(validateSportProfile(skb.get(id)).length === 0, `${id} stub is structurally valid`);
   assert(!skb.completeness(id).complete, `${id} stub reports as a scaffold (not yet complete)`);
 }
