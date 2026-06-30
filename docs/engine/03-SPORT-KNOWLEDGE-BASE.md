@@ -6,6 +6,17 @@
 > **The sport is the priority; the gym exists only to serve it.** Adding a sport requires
 > **zero engine code** — just a new JSON profile + one line in the registry.
 
+> **Role in the doc set.** This is the **sport knowledge schema** — the 21-section per-sport demand
+> model plus the evidence and privacy policy for authoring it. A *foundational* spec governed by the
+> **[Engine Design Specification](00-ENGINE-DESIGN-SPECIFICATION.md)** (the EDS); **the EDS wins** on
+> any conflict. **Canonical home for:** the `SportProfile` schema, sport-authoring rules, the
+> raw-vitals privacy validator, and sport status. The EDS treats this as *the* Sport Model (Part VIII
+> §30) and adopts its privacy validator as the canonical mechanism for its privacy law (L13). **Find
+> elsewhere:** laws & decision architecture → [00](00-ENGINE-DESIGN-SPECIFICATION.md); evidence →
+> [01](01-PANEL-REVIEW.md); build plan & contracts → [02](02-REFACTOR-ROADMAP.md); physiological
+> metrics → [04](04-PHYSIOLOGICAL-FRAMEWORK.md). What is wired vs. authored-but-dormant is tracked in
+> the running docs (`HANDOFF.md`, `CLAUDE.md`). See the [index](README.md).
+
 ## Where it lives
 
 ```

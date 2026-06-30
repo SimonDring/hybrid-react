@@ -3,6 +3,14 @@
 _Robustness + scientific review of the gym plan generator._
 Date: 2026-06-21 · Method: exhaustive automated sweep + real-UI verification + cited literature review.
 
+> **Relation to the foundational specs.** This evaluation (and its F1–F10 findings) **seeded** the
+> engine documentation set in [engine/](engine/README.md): it was extended by the
+> [Panel Review](engine/01-PANEL-REVIEW.md) and is now governed by the
+> [Engine Design Specification](engine/00-ENGINE-DESIGN-SPECIFICATION.md) (the EDS). This remains the
+> **evaluation of record** for that point-in-time sweep. Note several findings have since shipped (e.g.
+> F1 weekly-MRV ceiling, F4 intensity-holding taper); current status is tracked in the running docs
+> (`HANDOFF.md`, `CLAUDE.md`), not here.
+
 > **Scope.** The engine is a **gym-only** plan generator on purpose. When a user picks a sport
 > (run / cycle / swim) it biases the *gym* programming to **support** a sport the athlete trains
 > on their own; it does **not** program endurance sessions (a deliberate future stage). Sport

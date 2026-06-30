@@ -1,9 +1,12 @@
 # Product Vision — the North Star
 
-_The single source of truth for where this product is going. When a build decision is
-ambiguous, it should serve this vision. Companion docs: the team build blueprint lives in
-[../product/TEAM-ARCHITECTURE.md](../product/TEAM-ARCHITECTURE.md); current state of play is
-in the repo-root `HANDOFF.md`._
+_The single source of truth for where this **product** is going. When a build decision is
+ambiguous, it should serve this vision. The governing spec for **how the decision engine reasons**
+in service of this vision is the **[Engine Design Specification](../engine/00-ENGINE-DESIGN-SPECIFICATION.md)** (the EDS)
+— this vision sets the destination; the EDS defines the engine that gets us there (its Executive
+Vision, §1, restates this mission). Companion docs: the team build blueprint lives in
+[../product/TEAM-ARCHITECTURE.md](../product/TEAM-ARCHITECTURE.md); the full engine spec set is in
+[../engine/](../engine/README.md); current state of play is in the repo-root `HANDOFF.md`._
 
 ## Mission
 

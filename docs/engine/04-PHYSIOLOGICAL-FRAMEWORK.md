@@ -20,6 +20,18 @@ explicit confidence so the system keeps working — at reduced confidence — wh
 > Companions: [01-PANEL-REVIEW.md](01-PANEL-REVIEW.md) (engine architecture review),
 > [02-REFACTOR-ROADMAP.md](02-REFACTOR-ROADMAP.md) (build plan & contracts).
 
+> **Role in the doc set.** This is the **physiological metrics model** — the manufacturer-independent
+> readiness / recovery / load data model. A *foundational* spec governed by the
+> **[Engine Design Specification](00-ENGINE-DESIGN-SPECIFICATION.md)** (the EDS); **the EDS wins** on
+> any conflict. **Canonical home for:** the raw-metric schema, personal-baseline normalisation, the
+> derived indices, decision bands, and graceful degradation. The EDS's Recovery Model (§33) and
+> Confidence Model (§28) state the *principles* (e.g. subjective ≥ objective; confidence governs
+> authority); this doc owns the *metrics* that realise them. Its deferred build specs live in
+> [05-INDEX-LAYER-FOLLOWUPS.md](05-INDEX-LAYER-FOLLOWUPS.md). **Find elsewhere:** laws & decision
+> architecture → [00](00-ENGINE-DESIGN-SPECIFICATION.md); evidence → [01](01-PANEL-REVIEW.md); build
+> plan & contracts → [02](02-REFACTOR-ROADMAP.md); sport schema → [03](03-SPORT-KNOWLEDGE-BASE.md).
+> Current implementation status lives in the running docs (`HANDOFF.md`, `CLAUDE.md`). See the [index](README.md).
+
 ---
 
 ## §0 Headline verdict

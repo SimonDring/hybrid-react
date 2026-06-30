@@ -20,6 +20,17 @@ evidence; distinguish evidence from coaching tradition.
 > This review supersedes nothing in [../decision-engine-evaluation.md](../decision-engine-evaluation.md)
 > — it extends it with an architecture/future-proofing lens and refreshed citations.
 
+> **Role in the doc set.** This is the **evidence & critique basis** of the engine documentation —
+> the scientific grounding (graded L1–L5) and the weakness/risk audit behind the platform's design.
+> It is a *foundational* spec governed by the **[Engine Design Specification](00-ENGINE-DESIGN-SPECIFICATION.md)** (the EDS);
+> where this review and the EDS conflict, **the EDS wins**. **Canonical home for:** the evidence and
+> the ranked weaknesses/risks. The decision-hierarchy (§6) and orchestrator (§7) *ideas* first proposed
+> here are now canonicalised in the EDS (Part V decision architecture, Part VII knowledge architecture) —
+> this doc keeps the **evidence** for them, not the law. **Find elsewhere:** laws & decision architecture →
+> [00](00-ENGINE-DESIGN-SPECIFICATION.md); build plan & contracts → [02](02-REFACTOR-ROADMAP.md); sport
+> schema → [03](03-SPORT-KNOWLEDGE-BASE.md); physiological metrics → [04](04-PHYSIOLOGICAL-FRAMEWORK.md).
+> Current status vs. these targets lives in the running docs (`HANDOFF.md`, `CLAUDE.md`). See the [index](README.md).
+
 ---
 
 ## §0 Headline verdict
@@ -302,6 +313,11 @@ settled. The knowledge base (§13) mitigates this by forcing every number to car
 
 ## §6 Recommended Decision Hierarchy
 
+> _Canonical home: this hierarchy is now formalised as the engine's decision architecture in the
+> **[EDS](00-ENGINE-DESIGN-SPECIFICATION.md) Part V** (the D1–D16 decision graph) and refined in its
+> Part II §8. The version below is the **evidence-grounded proposal** that seeded it; defer to the EDS
+> for the authoritative sequence._
+
 The brief proposes a 14-step order; it is close to right. The **critical correction** is that
 sport, injury, recovery and load must be **overlays/modules the orchestrator consumes**, not
 logic baked into base generation — and **injury contraindications should feed exercise
@@ -337,6 +353,12 @@ spent.
 ---
 
 ## §7 Modular Architecture (the orchestrator)
+
+> _Canonical home: the orchestrator **principle** (core coordinates registries; holds no domain
+> knowledge) is canonicalised in the **[EDS](00-ENGINE-DESIGN-SPECIFICATION.md) Part VII** (knowledge
+> architecture) and Part X (software architecture); the **build structure & contracts** that realise it
+> live in **[02-REFACTOR-ROADMAP](02-REFACTOR-ROADMAP.md)** §8–§9. The diagram below is the originating
+> proposal._
 
 ```
                          ┌───────────────────────────┐

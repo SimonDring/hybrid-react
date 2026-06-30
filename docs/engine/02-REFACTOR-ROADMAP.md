@@ -5,6 +5,17 @@ architecture), §8 (folder structure), §9 (data contracts), §10 (refactor plan
 §12 (long-term roadmap)._
 Date: 2026-06-23.
 
+> **Role in the doc set.** This is the **software design & build plan** — the orchestrator target,
+> folder structure, typed data contracts, and the phased migration that operationalise the engine
+> design. A *foundational* spec governed by the **[Engine Design Specification](00-ENGINE-DESIGN-SPECIFICATION.md)** (the EDS);
+> **the EDS wins** on any conflict. **Canonical home for:** the target architecture's *structure*
+> (folders, typed contracts), phase sequencing, quick wins, and test strategy. The EDS's migration
+> (Part XI) reframes and extends this plan around the decision architecture — read them together.
+> **Find elsewhere:** laws & decision architecture → [00](00-ENGINE-DESIGN-SPECIFICATION.md);
+> evidence → [01](01-PANEL-REVIEW.md); sport schema → [03](03-SPORT-KNOWLEDGE-BASE.md); physiological
+> metrics → [04](04-PHYSIOLOGICAL-FRAMEWORK.md). Current build status lives in the running docs
+> (`HANDOFF.md`, `CLAUDE.md`). See the [index](README.md).
+
 ## Guiding constraints (non-negotiable)
 
 1. **Refactor, don't rewrite.** Every step preserves behaviour unless explicitly flagged as a

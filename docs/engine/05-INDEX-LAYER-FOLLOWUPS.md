@@ -8,8 +8,18 @@ evidence base.
 
 > **How to read this.** Each spec is graded by **risk** (behaviour-inert vs behaviour-changing) and
 > names the real files + knowledge-base ids it touches. Recommendations carry **Evidence level**
-> (L1 → L5) where relevant. Companions: [03-PHYSIOLOGICAL-FRAMEWORK.md](03-PHYSIOLOGICAL-FRAMEWORK.md)
+> (L1 → L5) where relevant. Companions: [04-PHYSIOLOGICAL-FRAMEWORK.md](04-PHYSIOLOGICAL-FRAMEWORK.md)
 > (the framework + §7 roadmap), [01-PANEL-REVIEW.md](01-PANEL-REVIEW.md), [02-REFACTOR-ROADMAP.md](02-REFACTOR-ROADMAP.md).
+
+> **Role in the doc set.** This is an **implementation spec** — the deferred build specs (A/B/C) that
+> complete the index layer defined in [04-PHYSIOLOGICAL-FRAMEWORK.md](04-PHYSIOLOGICAL-FRAMEWORK.md) §7.
+> A *foundational* spec governed by the **[Engine Design Specification](00-ENGINE-DESIGN-SPECIFICATION.md)** (the EDS);
+> **the EDS wins** on any conflict. **Canonical home for:** the concrete, code-level specs for the
+> remaining physiological indices (Recovery Capacity, Consistency) and the evidence-based readiness
+> re-weighting (Spec B — which realises the EDS's "subjective steers the plan" target, §28/§33).
+> **Find elsewhere:** the metrics model it completes → [04](04-PHYSIOLOGICAL-FRAMEWORK.md); laws &
+> decision architecture → [00](00-ENGINE-DESIGN-SPECIFICATION.md); build plan → [02](02-REFACTOR-ROADMAP.md).
+> Which of A/B/C have shipped is tracked in the running docs (`HANDOFF.md`, `CLAUDE.md`). See the [index](README.md).
 
 ## §0 What shipped, what's left
 

@@ -5,6 +5,13 @@
 > package *toward*. It is the recommended target, not a description of existing code.
 > Vision context: [../strategy/VISION.md](../strategy/VISION.md). Binding guardrails are
 > also summarised in the repo-root `CLAUDE.md` ("TEAM DATA ISOLATION").
+>
+> **Relation to the engine spec.** The principles this blueprint embodies are canonical in the
+> **[Engine Design Specification](../engine/00-ENGINE-DESIGN-SPECIFICATION.md)** (the EDS): one engine
+> serves both Individual and Team (a player *is* an athlete; a team adds constraints + a derived read
+> surface, EDS §7.4 & §27.1), and raw vitals never cross a person boundary (EDS law **L13**, enforced
+> by the Sport-Knowledge-Base privacy validator, [../engine/03-SPORT-KNOWLEDGE-BASE.md](../engine/03-SPORT-KNOWLEDGE-BASE.md)).
+> This doc owns the *team build specifics*; the EDS owns the *principles*.
 
 The team package wraps the **same decision engine** for a squad across two surfaces, with
 **player privacy as a hard architectural constraint** — not a feature bolted on later.

@@ -51,16 +51,28 @@ Monorepo — npm workspaces. Run `npm run dev` / `npm run build` from the REPO R
 (they delegate to apps/mobile). Top level:
   apps/mobile/ — the app today (React + Vite PWA; the Individual package + the player surface)
   apps/web/ — RESERVED: coach dashboard + marketing site (Next.js; not built yet)
-  packages/{shared,engine}/ — RESERVED: shared utils + a future engine extraction (empty)
+  packages/engine/ — the EXTRACTED decision engine (`@performance-os/engine`): the pure
+    generatePlan pipeline + the sport-knowledge / injury / recovery / load knowledge and
+    science data tables. apps/mobile consumes it as a workspace dependency. (packages/shared/
+    is still reserved/empty.)
   supabase/ — schema.sql, migrations, edge functions, runbook (shared backend, at the root)
-  docs/ — SCHEMA.md, decision-engine-evaluation.md, SECURITY-AUDIT.md, strategy/, product/, prompts/
+  docs/ — SCHEMA.md, decision-engine-evaluation.md, SECURITY-AUDIT.md, strategy/, product/, prompts/,
+    engine/ — the FOUNDATIONAL engine spec set (the governing design): docs/engine/00-ENGINE-DESIGN-
+    SPECIFICATION.md (the EDS — the constitution) + 01-PANEL-REVIEW, 02-REFACTOR-ROADMAP,
+    03-SPORT-KNOWLEDGE-BASE, 04-PHYSIOLOGICAL-FRAMEWORK, 05-INDEX-LAYER-FOLLOWUPS. The EDS is the
+    reference for any engine feature/refactor/fix. Index + the foundational-vs-running distinction:
+    docs/engine/README.md. (This CLAUDE.md and HANDOFF.md are the RUNNING docs — they track current
+    status against those foundational targets.)
   HANDOFF.md — current state of play (keep updated at the end of each session)
 
 Inside apps/mobile/ — NOTE: every `src/...` path elsewhere in this doc is relative to here:
   src/screens/ — one file per screen (~23, plus the auth/ subdir)
   src/components/ — shared shell (TopBar, TabBar, ScreenContainer) + ui/ primitives
-  src/lib/ — data layer: Database.js, Storage.js, SyncService.js, supabaseClient.js, Utils.js
-  src/lib/ — the DECISION ENGINE (the app's core — see next section)
+  src/lib/ — app-side data + runtime layer: Database.js, Storage.js, SyncService.js,
+    supabaseClient.js, PlanService.js (wraps the engine + runs the adaptive reflow),
+    sessionOverrides.js, verdicts.js
+  NOTE: the PURE decision engine has MOVED OUT to packages/engine (`@performance-os/engine`) —
+    see the next section.
   src/stores/ — trainingStore.js (app data), authStore.js (auth session)
   src/data/ — exercise + science tables: strengthExercises.js, muscleVolume.js
   (MEV/MAV/MRV landmarks), strengthStandards.js, activityTypes.js (column registry),
@@ -69,7 +81,13 @@ Inside apps/mobile/ — NOTE: every `src/...` path elsewhere in this doc is rela
 
 The decision engine (core — generates the gym plan)
 
-generatePlan(profile) in src/lib/PlanGenerator.js is a PURE function — the same
+LOCATION: the pure engine now lives in packages/engine/src/lib/ (the `@performance-os/engine`
+package). The `src/lib/...` and `src/data/...` paths in THIS section are relative to
+packages/engine/ — NOT apps/mobile/. Only PlanService.js (the runtime wrapper) stays in
+apps/mobile/src/lib/. The GOVERNING design for everything below is the foundational spec set in
+docs/engine/ — start with the EDS (00-ENGINE-DESIGN-SPECIFICATION.md).
+
+generatePlan(profile) in packages/engine/src/lib/PlanGenerator.js is a PURE function — the same
 profile always produces the same plan. Pipeline:
 - resolveProgram (src/lib/strength/program.js) — goal → style, per-muscle emphasis,
   volume scalar, exercise-priority list.
