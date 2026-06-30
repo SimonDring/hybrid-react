@@ -28,6 +28,7 @@ import { MUSCLE_GROUPS, MUSCLE_LABELS } from '@performance-os/engine/data/muscle
 import { getOverrides } from './sessionOverrides.js';
 import { applyInjuryRules, applyPrevention } from '@performance-os/engine/lib/injury/injuryFilter.js';
 import { combinedMultiplier, deloadRecommendation } from '@performance-os/engine/lib/plan/trainingLoad.js';
+import { ruleVolumeAdjustment } from '@performance-os/engine/lib/sportKnowledge/reflowAdjust.js';
 import { deriveConstraints, lightenItems } from '@performance-os/engine/lib/plan/constraints.js';
 import { buildPrimer } from '@performance-os/engine/lib/plan/primers.js';
 
@@ -240,13 +241,25 @@ function adaptedPhases() {
   });
   const recBand = recentRecovery == null ? 'n' : recentRecovery <= 2 ? 'l' : recentRecovery >= 4 ? 'h' : 'm';
 
-  const key = `${_cache.sig}|${cw}|${localISO(today)}|${stateSig}|${band}|${ovSig}|${loadAction}|${recBand}|${rec.action}|${override || ''}|${reverted ? 'r' : ''}`;
+  // SKB decision rules (sport-specific) → conservative reflow modifiers for the CURRENT week.
+  // Dormant for non-sport profiles and sports whose rules carry no structured trigger/effect.
+  const ruleCtx = {
+    season: profile.sport ? resolveProgram(profile).season : null,
+    readiness: recovery ? recovery.score : null,
+    illness: override === 'rest',
+    travel: override === 'easy',
+    acwr: (load && load.inputs && load.inputs.acwr != null) ? load.inputs.acwr : null,
+    competitionWithinH: profile.event_date ? Math.max(0, (new Date(profile.event_date).getTime() - today.getTime()) / 3600000) : null
+  };
+  const ruleAdj = ruleVolumeAdjustment(profile, ruleCtx);
+
+  const key = `${_cache.sig}|${cw}|${localISO(today)}|${stateSig}|${band}|${ovSig}|${loadAction}|${recBand}|${rec.action}|${override || ''}|${reverted ? 'r' : ''}|${ruleAdj.ruleIds.join('.')}`;
   if (_adaptCache.key === key) return _adaptCache.phases;
 
   // Effective deload for a week — the force/defer decision applies to the current week only.
   const effDeload = (week) => {
     if (week.num !== cw) return !!week.deload;
-    if (rec.action === 'force') return true;
+    if (rec.action === 'force' || ruleAdj.forceDeload) return true;
     if (rec.action === 'defer') return false;
     return !!week.deload;
   };
@@ -284,6 +297,7 @@ function adaptedPhases() {
     { action: loadAction, multiplier: load ? load.loadModifier : 1 }
   );
   if (!reverted && override === 'easy') mult = Math.min(mult, 0.7);
+  mult *= ruleAdj.volumeMult;   // sport decision-rule reduction (≤1; conservative — only trims)
   const specByKey = {};
   slots.forEach((s, idx) => {
     const spec = allocateGym({

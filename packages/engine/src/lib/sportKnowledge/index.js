@@ -31,6 +31,11 @@ export function has(id) { return BY_ID.has(id); }
 export function all() { return PROFILES.slice(); }
 export function ids() { return PROFILES.map(p => p.id); }
 
+// Map a legacy short sport id (used by onboarding / saved profiles) to its canonical SKB
+// profile id, so engine code can look a sport up consistently (e.g. 'swim' → 'swimming').
+const ID_ALIASES = { swim: 'swimming', run: 'running', cycle: 'cycling' };
+export function normalizeSportId(id) { if (!id) return null; return ID_ALIASES[id] || id; }
+
 /** One section of a profile (e.g. section('hurling', 'positions')). Undefined if missing. */
 export function section(id, name) {
   const p = BY_ID.get(id);
@@ -72,4 +77,4 @@ export function completeness(id) {
   return { id, score, complete: thin.length === 0, thin };
 }
 
-export default { get, has, all, ids, section, validate, completeness };
+export default { get, has, all, ids, section, validate, completeness, normalizeSportId };
