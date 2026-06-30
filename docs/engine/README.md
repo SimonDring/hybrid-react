@@ -5,10 +5,16 @@ the documents that define *what we are building and why*, and that every feature
 bug-fix, and engine improvement should be checked against.
 
 The **[Engine Design Specification (EDS)](00-ENGINE-DESIGN-SPECIFICATION.md)** is the governing
-document — the constitution. The other documents sit *under* it: each owns one layer of the
-problem (evidence, build plan, sport knowledge, physiological metrics, implementation specs) and
-defers to the EDS for principles, laws, and the decision architecture. **Where any document
-conflicts with the EDS, the EDS wins.**
+document *for the engine*. The other documents in this folder sit *under* it: each owns one layer
+of the problem (evidence, build plan, sport knowledge, physiological metrics, implementation specs)
+and defers to the EDS for the decision architecture. **Where any document in this folder conflicts
+with the EDS, the EDS wins.**
+
+**Above this folder** sits the platform-level foundation in [`../foundation/`](../foundation/README.md):
+the [Constitution](../foundation/CONSTITUTION.md) (immutable principles — the ultimate tie-breaker),
+the [Decision Ontology](../foundation/DECISION-ONTOLOGY.md) (canonical vocabulary), and the
+[Knowledge Architecture](../foundation/KNOWLEDGE-ARCHITECTURE.md). The EDS defers *up* to those;
+where the EDS conflicts with the Constitution, the Constitution wins.
 
 ## Foundational vs. running documents
 
