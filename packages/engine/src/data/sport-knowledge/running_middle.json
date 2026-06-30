@@ -3,7 +3,6 @@
   "schemaVersion": "1.0.0",
   "label": "Running — middle distance (800 m–5 km)",
   "lastReviewed": "2026-06-29",
-
   "meta": {
     "sport": "Running — middle distance",
     "category": "Track & field — individual (cyclic, mixed aerobic/anaerobic)",
@@ -15,34 +14,150 @@
     "offseasonLengthWeeks": 8,
     "competitionFrequencyPerWeek": "1–2 races per week at peak season; single-race duration ~1.5–14 min",
     "trainingFrequencyPerWeek": "6–9 track/road sessions (aerobic, threshold, interval, speed) + 2–3 gym",
-    "sessionDurationMin": { "match": 10, "pitch": 75, "gym": 55 },
+    "sessionDurationMin": {
+      "match": 10,
+      "pitch": 75,
+      "gym": 55
+    },
     "notes": "Middle distance (800 m–5 km) bridges the anaerobic intensity of sprinting and the aerobic demands of distance running. The 800 m is close to anaerobic in its lactate demands; the 5 km is predominantly aerobic with a critical-speed component. The gym plays a supporting but essential role: heavy, low-rep strength training improves running economy and aerobic endurance performance without adding non-propulsive mass. Reactive plyometrics (pogos, bounding) build tendon stiffness for a stiffer, more economical ground contact. Hamstring eccentric strength, calf/Achilles prehab, and tibial bone-stress management are the primary injury-prevention levers. Olympic lifting is optional; single-leg strength emphasis is high."
   },
-
   "physicalProfile": {
     "qualities": {
-      "maxStrength": { "importance": 6, "why": "Heavy strength training (trap-bar DL, squat) improves running economy by enhancing neuromuscular efficiency and force per stride; a moderate priority — enough to drive economy gains without adding non-propulsive mass.", "confidence": "high", "evidenceLevel": "L2", "source": "Blagrove 2018 (strength training for middle/long distance, Sports Med); Rønnestad & Mujika 2014" },
-      "relativeStrength": { "importance": 8, "why": "Strength per kilogram is the relevant metric — economy improvements only materialise if mass is controlled. High relative strength drives force per stride without the metabolic cost of extra body weight.", "confidence": "high", "evidenceLevel": "L2", "source": "Blagrove 2018; Saunders 2004 (running economy factors)" },
-      "explosivePower": { "importance": 6, "why": "Rate of force development contributes to running economy via a stiffer, shorter ground contact. More important at 800 m (decisive sprint finish) than at 5 km; a moderate priority across the discipline.", "confidence": "moderate", "evidenceLevel": "L2", "source": "Beattie 2014; Blagrove 2018" },
-      "reactiveStrength": { "importance": 8, "why": "Tendon stiffness and SSC efficiency directly reduce the metabolic cost of running — a stiffer Achilles/calf complex returns elastic energy per stride. Reactive strength training (pogos, bounding) is one of the highest-transfer gym inputs for middle-distance performance.", "confidence": "high", "evidenceLevel": "L2", "source": "Blagrove 2018; Beattie 2017 (reactive strength → economy)" },
-      "sprintSpeed": { "importance": 6, "why": "A decisive sprint finish is a feature of 800 m and 1500 m racing; the capacity to accelerate in the final lap or straight separates elite competitors. Less relevant at 5 km but never negligible.", "confidence": "moderate", "evidenceLevel": "L3", "source": "Jones (critical speed); expert consensus" },
-      "acceleration": { "importance": 5, "why": "Useful for tactical acceleration mid-race and final-lap kicks; less globally important than in pure sprint events but relevant for 800 m tactical surges.", "confidence": "moderate", "evidenceLevel": "L3", "source": "expert consensus" },
-      "deceleration": { "importance": 3, "why": "Pace management in middle distance rarely involves large decelerations; minor relevance to recovery between laps but not a primary driver.", "confidence": "low", "evidenceLevel": "L4", "source": "expert consensus" },
-      "changeOfDirection": { "importance": 2, "why": "Track racing is near-straight-line; COD is irrelevant to competitive performance and a very low training priority.", "confidence": "moderate", "evidenceLevel": "L4", "source": "expert consensus (task specificity)" },
-      "aerobicEndurance": { "importance": 9, "why": "The dominant energy system for 1500 m–5 km and still critical for 800 m — VO2max, lactate threshold, and aerobic capacity underpin competitive performance at all middle-distance events. The primary physiological target.", "confidence": "high", "evidenceLevel": "L1", "source": "Gastin 2001; Jones (critical speed / D'); Saunders 2004" },
-      "anaerobicEndurance": { "importance": 9, "why": "Lactate tolerance is decisive at 800 m and significant at 1500 m — the ability to sustain speed above VO2max pace defines tactical and finishing ability across all middle-distance events.", "confidence": "high", "evidenceLevel": "L2", "source": "Gastin 2001; Billat (interval training and lactate kinetics)" },
-      "repeatSprintAbility": { "importance": 5, "why": "Heats + finals scheduling over 2–3 days requires some capacity to repeat quality efforts; more relevant at 800/1500 m championship meets than at 5 km.", "confidence": "moderate", "evidenceLevel": "L3", "source": "expert consensus; competition-schedule demands" },
-      "mobility": { "importance": 6, "why": "Hip extension range, hip-flexor flexibility, and ankle dorsiflexion affect running mechanics and stride length. Reduced ankle dorsiflexion and hip extension increase Achilles and tibial bone-stress injury risk.", "confidence": "moderate", "evidenceLevel": "L3", "source": "running-biomechanics and injury-risk literature; expert consensus" },
-      "stability": { "importance": 7, "why": "Pelvis-lumbar stability and single-leg stance stability underpin efficient energy transfer per stride and reduce injury risk (hip drop, knee valgus, tibial loading) over the thousands of strides in a race or training session.", "confidence": "high", "evidenceLevel": "L3", "source": "running-mechanics literature; expert consensus" },
-      "rotationalPower": { "importance": 3, "why": "Arm drive and minimal trunk counter-rotation contribute to running mechanics; a secondary quality — trained mainly through sprint drills and anti-rotation core work rather than dedicated rotational loading.", "confidence": "moderate", "evidenceLevel": "L4", "source": "running biomechanics; expert consensus" },
-      "gripStrength": { "importance": 2, "why": "No implement; arm swing and hand position matter for mechanics but grip strength is not a performance limiter.", "confidence": "low", "evidenceLevel": "L5", "source": "expert consensus" },
-      "neckStrength": { "importance": 2, "why": "No collision; head position influences running mechanics at high speed but neck strength is not a middle-distance performance limiter.", "confidence": "low", "evidenceLevel": "L5", "source": "expert consensus" },
-      "balance": { "importance": 4, "why": "Single-leg stance phases and uneven terrain (cross-country, road) require balance; relevant for injury prevention and single-leg gym exercises that build hip/ankle robustness.", "confidence": "moderate", "evidenceLevel": "L4", "source": "expert consensus" },
-      "coordination": { "importance": 7, "why": "Running economy is partly a coordination quality — arm drive, hip cycle, ground-contact mechanics, and A-skip/B-skip drill competency all contribute to efficiency at race pace.", "confidence": "high", "evidenceLevel": "L3", "source": "running mechanics literature; Blagrove 2018" },
-      "durability": { "importance": 6, "why": "Middle-distance training volumes (60–100+ miles/week at high level) impose cumulative load on bones, tendons, and muscles — connective-tissue durability (Achilles, tibiae, hamstrings) is a meaningful performance limiter and career-longevity factor.", "confidence": "high", "evidenceLevel": "L2", "source": "Blagrove 2018; Saunders 2004; running-injury epidemiology" }
+      "maxStrength": {
+        "importance": 6,
+        "why": "Heavy strength training (trap-bar DL, squat) improves running economy by enhancing neuromuscular efficiency and force per stride; a moderate priority — enough to drive economy gains without adding non-propulsive mass.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Blagrove 2018 (strength training for middle/long distance, Sports Med); Rønnestad & Mujika 2014"
+      },
+      "relativeStrength": {
+        "importance": 8,
+        "why": "Strength per kilogram is the relevant metric — economy improvements only materialise if mass is controlled. High relative strength drives force per stride without the metabolic cost of extra body weight.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Blagrove 2018; Saunders 2004 (running economy factors)"
+      },
+      "explosivePower": {
+        "importance": 6,
+        "why": "Rate of force development contributes to running economy via a stiffer, shorter ground contact. More important at 800 m (decisive sprint finish) than at 5 km; a moderate priority across the discipline.",
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "Beattie 2014; Blagrove 2018"
+      },
+      "reactiveStrength": {
+        "importance": 8,
+        "why": "Tendon stiffness and SSC efficiency directly reduce the metabolic cost of running — a stiffer Achilles/calf complex returns elastic energy per stride. Reactive strength training (pogos, bounding) is one of the highest-transfer gym inputs for middle-distance performance.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Blagrove 2018; Beattie 2017 (reactive strength → economy)"
+      },
+      "sprintSpeed": {
+        "importance": 6,
+        "why": "A decisive sprint finish is a feature of 800 m and 1500 m racing; the capacity to accelerate in the final lap or straight separates elite competitors. Less relevant at 5 km but never negligible.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Jones (critical speed); expert consensus"
+      },
+      "acceleration": {
+        "importance": 5,
+        "why": "Useful for tactical acceleration mid-race and final-lap kicks; less globally important than in pure sprint events but relevant for 800 m tactical surges.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "expert consensus"
+      },
+      "deceleration": {
+        "importance": 3,
+        "why": "Pace management in middle distance rarely involves large decelerations; minor relevance to recovery between laps but not a primary driver.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "expert consensus"
+      },
+      "changeOfDirection": {
+        "importance": 2,
+        "why": "Track racing is near-straight-line; COD is irrelevant to competitive performance and a very low training priority.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "expert consensus (task specificity)"
+      },
+      "aerobicEndurance": {
+        "importance": 9,
+        "why": "The dominant energy system for 1500 m–5 km and still critical for 800 m — VO2max, lactate threshold, and aerobic capacity underpin competitive performance at all middle-distance events. The primary physiological target.",
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Gastin 2001; Jones (critical speed / D'); Saunders 2004"
+      },
+      "anaerobicEndurance": {
+        "importance": 9,
+        "why": "Lactate tolerance is decisive at 800 m and significant at 1500 m — the ability to sustain speed above VO2max pace defines tactical and finishing ability across all middle-distance events.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Gastin 2001; Billat (interval training and lactate kinetics)"
+      },
+      "repeatSprintAbility": {
+        "importance": 5,
+        "why": "Heats + finals scheduling over 2–3 days requires some capacity to repeat quality efforts; more relevant at 800/1500 m championship meets than at 5 km.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "expert consensus; competition-schedule demands"
+      },
+      "mobility": {
+        "importance": 6,
+        "why": "Hip extension range, hip-flexor flexibility, and ankle dorsiflexion affect running mechanics and stride length. Reduced ankle dorsiflexion and hip extension increase Achilles and tibial bone-stress injury risk.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "running-biomechanics and injury-risk literature; expert consensus"
+      },
+      "stability": {
+        "importance": 7,
+        "why": "Pelvis-lumbar stability and single-leg stance stability underpin efficient energy transfer per stride and reduce injury risk (hip drop, knee valgus, tibial loading) over the thousands of strides in a race or training session.",
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "running-mechanics literature; expert consensus"
+      },
+      "rotationalPower": {
+        "importance": 3,
+        "why": "Arm drive and minimal trunk counter-rotation contribute to running mechanics; a secondary quality — trained mainly through sprint drills and anti-rotation core work rather than dedicated rotational loading.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "running biomechanics; expert consensus"
+      },
+      "gripStrength": {
+        "importance": 2,
+        "why": "No implement; arm swing and hand position matter for mechanics but grip strength is not a performance limiter.",
+        "confidence": "low",
+        "evidenceLevel": "L5",
+        "source": "expert consensus"
+      },
+      "neckStrength": {
+        "importance": 2,
+        "why": "No collision; head position influences running mechanics at high speed but neck strength is not a middle-distance performance limiter.",
+        "confidence": "low",
+        "evidenceLevel": "L5",
+        "source": "expert consensus"
+      },
+      "balance": {
+        "importance": 4,
+        "why": "Single-leg stance phases and uneven terrain (cross-country, road) require balance; relevant for injury prevention and single-leg gym exercises that build hip/ankle robustness.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "expert consensus"
+      },
+      "coordination": {
+        "importance": 7,
+        "why": "Running economy is partly a coordination quality — arm drive, hip cycle, ground-contact mechanics, and A-skip/B-skip drill competency all contribute to efficiency at race pace.",
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "running mechanics literature; Blagrove 2018"
+      },
+      "durability": {
+        "importance": 6,
+        "why": "Middle-distance training volumes (60–100+ miles/week at high level) impose cumulative load on bones, tendons, and muscles — connective-tissue durability (Achilles, tibiae, hamstrings) is a meaningful performance limiter and career-longevity factor.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Blagrove 2018; Saunders 2004; running-injury epidemiology"
+      }
     }
   },
-
   "energySystems": {
     "aerobicPct": 75,
     "glycolyticPct": 20,
@@ -56,10 +171,20 @@
     "source": "Gastin 2001 energy-system contribution during maximal exercise",
     "notes": "Event-dependence is large — the engine should read the event archetype (positions) for a more precise energy split rather than treating the 75/20/5 midpoint as universal."
   },
-
   "movementProfile": {
-    "primaryPatterns": ["triple extension (hip/knee/ankle) at ground contact", "hip flexion (swing phase / stride recovery)", "arm drive (elbow flexion/extension, shoulder flexion/extension)", "sustained aerobic pace — economy and fatigue resistance", "lactate-tolerance surges (800/1500 m)", "finishing kick (maximal sprint in final 200–400 m)"],
-    "planes": ["sagittal (dominant — stride, arm drive)", "transverse (minor — trunk counter-rotation)", "frontal (minor — lateral hip stability)"],
+    "primaryPatterns": [
+      "triple extension (hip/knee/ankle) at ground contact",
+      "hip flexion (swing phase / stride recovery)",
+      "arm drive (elbow flexion/extension, shoulder flexion/extension)",
+      "sustained aerobic pace — economy and fatigue resistance",
+      "lactate-tolerance surges (800/1500 m)",
+      "finishing kick (maximal sprint in final 200–400 m)"
+    ],
+    "planes": [
+      "sagittal (dominant — stride, arm drive)",
+      "transverse (minor — trunk counter-rotation)",
+      "frontal (minor — lateral hip stability)"
+    ],
     "jointLoading": "Achilles/calf complex and tibiae undergo high repetitive compressive and tensile loading across thousands of strides per session. Hamstring eccentric loading during late swing phase increases at faster paces. Patellofemoral joint loaded with each stride under fatigue. Hip abductors / glute medius stabilise the pelvis across every ground contact.",
     "groundContacts": "~800–1200 ground contacts per km of running; middle-distance athletes accumulate many thousands per week across training volume.",
     "landingDemands": "Moderate-stiffness landing at near-forefoot or midfoot at race pace; plyometric training (pogos, bounding) introduces brief very-stiff landings to develop Achilles tendon stiffness.",
@@ -71,10 +196,24 @@
     "collisions": "None.",
     "repeatedImpacts": "High-volume, moderate-to-high-force repetitive ground impacts in every training session. Tibial bone and Achilles tendon are the primary cumulative-load targets. Hamstring under eccentric load at faster paces.",
     "asymmetricLoading": "Asymmetric stride patterns are common and can drive unilateral injury risk; bilateral strength and contact-time symmetry should be monitored.",
-    "dominantMuscleGroups": ["calves / Achilles (primary tendon stiffness and propulsion unit)", "hamstrings (eccentric late-swing loading, especially at fast paces)", "glutes (hip extension each stride)", "quadriceps (impact absorption, knee extension)", "hip flexors (stride recovery / swing)", "hip abductors / glute medius (pelvic stability per stride)", "tibialis anterior (shock absorption, tibial loading)", "core (anti-extension, anti-rotation, pelvic control over thousands of strides)"],
-    "commonDeficiencies": ["insufficient calf/Achilles load capacity relative to training volume", "hamstring eccentric strength deficit at fast paces", "weak hip abductors driving hip drop (Trendelenburg) and knee valgus", "poor tibialis anterior and intrinsic foot strength predisposing tibial bone stress", "inadequate running economy (high metabolic cost of a given pace)"]
+    "dominantMuscleGroups": [
+      "calves / Achilles (primary tendon stiffness and propulsion unit)",
+      "hamstrings (eccentric late-swing loading, especially at fast paces)",
+      "glutes (hip extension each stride)",
+      "quadriceps (impact absorption, knee extension)",
+      "hip flexors (stride recovery / swing)",
+      "hip abductors / glute medius (pelvic stability per stride)",
+      "tibialis anterior (shock absorption, tibial loading)",
+      "core (anti-extension, anti-rotation, pelvic control over thousands of strides)"
+    ],
+    "commonDeficiencies": [
+      "insufficient calf/Achilles load capacity relative to training volume",
+      "hamstring eccentric strength deficit at fast paces",
+      "weak hip abductors driving hip drop (Trendelenburg) and knee valgus",
+      "poor tibialis anterior and intrinsic foot strength predisposing tibial bone stress",
+      "inadequate running economy (high metabolic cost of a given pace)"
+    ]
   },
-
   "injuryProfile": {
     "common": [
       {
@@ -82,10 +221,24 @@
         "incidence": "moderate — more prevalent at 800 m/1500 m pace than long distance; driven by faster stride velocities and interval/speed work",
         "severity": "moderate (grade I–II typical; grade II = 1–4 weeks out)",
         "mechanism": "Eccentric loading of the biceps femoris long head during late swing phase at fast running velocities and during sprint finishes; risk increases with fatigue, training load spikes, and speed-work volume.",
-        "highRiskTissues": ["biceps femoris long head (proximal musculotendinous junction)", "semimembranosus", "proximal hamstring origin (ischial tuberosity)"],
+        "highRiskTissues": [
+          "biceps femoris long head (proximal musculotendinous junction)",
+          "semimembranosus",
+          "proximal hamstring origin (ischial tuberosity)"
+        ],
         "riskFactors": {
-          "modifiable": ["hamstring eccentric strength deficit", "prior hamstring injury", "inadequate warm-up before speed/interval sessions", "training load spike (speed-work volume)", "fatigue late in interval sets"],
-          "nonModifiable": ["prior hamstring injury", "age (increasing risk with age)", "limb length / anthropometry"]
+          "modifiable": [
+            "hamstring eccentric strength deficit",
+            "prior hamstring injury",
+            "inadequate warm-up before speed/interval sessions",
+            "training load spike (speed-work volume)",
+            "fatigue late in interval sets"
+          ],
+          "nonModifiable": [
+            "prior hamstring injury",
+            "age (increasing risk with age)",
+            "limb length / anthropometry"
+          ]
         },
         "rtpConsiderations": "Restore full eccentric hamstring strength, particularly at long muscle length; progressive reintroduction of interval then race-pace running before maximal sprint work; Nordic curl protocol through RTP.",
         "confidence": "high",
@@ -97,10 +250,23 @@
         "incidence": "high in middle-distance runners — the most common chronic soft-tissue injury across all running disciplines; driven by high repetitive Achilles loading",
         "severity": "moderate-high if unmanaged (often chronic; can sideline athletes for months)",
         "mechanism": "Cumulative compressive and tensile load on the Achilles tendon from high training volume, combined with insufficient tendon-load management, inadequate recovery, and training surface changes. Rapid increases in interval-training volume or pace are a common precipitant.",
-        "highRiskTissues": ["Achilles tendon mid-substance", "insertional Achilles (at the calcaneus)"],
+        "highRiskTissues": [
+          "Achilles tendon mid-substance",
+          "insertional Achilles (at the calcaneus)"
+        ],
         "riskFactors": {
-          "modifiable": ["rapid volume or intensity increase", "insufficient calf strength (eccentric deficit)", "training surface changes (harder surfaces)", "poor footwear / worn-out shoes", "reduced ankle dorsiflexion"],
-          "nonModifiable": ["prior Achilles injury", "anatomy (tendon vascularity, insertional anatomy)", "age"]
+          "modifiable": [
+            "rapid volume or intensity increase",
+            "insufficient calf strength (eccentric deficit)",
+            "training surface changes (harder surfaces)",
+            "poor footwear / worn-out shoes",
+            "reduced ankle dorsiflexion"
+          ],
+          "nonModifiable": [
+            "prior Achilles injury",
+            "anatomy (tendon vascularity, insertional anatomy)",
+            "age"
+          ]
         },
         "rtpConsiderations": "Heavy slow resistance and isometric calf loading (Alfredson / Silbernagel protocol); graduated return to impact with symptom monitoring; address biomechanical and load-management drivers before full return.",
         "confidence": "high",
@@ -112,10 +278,24 @@
         "incidence": "moderate — common in female runners and during training volume build-phases; exacerbated by hill and downhill running",
         "severity": "low-moderate (often self-limiting if managed; can become chronic)",
         "mechanism": "Repetitive patellofemoral joint compression during knee flexion at ground contact under running load; exacerbated by weak hip abductors (hip drop), excessive knee valgus, rearfoot strike pattern, and rapid volume increases.",
-        "highRiskTissues": ["patellofemoral joint", "patellar articular cartilage", "lateral retinaculum"],
+        "highRiskTissues": [
+          "patellofemoral joint",
+          "patellar articular cartilage",
+          "lateral retinaculum"
+        ],
         "riskFactors": {
-          "modifiable": ["weak hip abductors / glute medius", "knee valgus gait pattern", "rapid training volume increase", "hill running volume", "worn footwear"],
-          "nonModifiable": ["female sex (higher incidence)", "patellar morphology", "prior injury"]
+          "modifiable": [
+            "weak hip abductors / glute medius",
+            "knee valgus gait pattern",
+            "rapid training volume increase",
+            "hill running volume",
+            "worn footwear"
+          ],
+          "nonModifiable": [
+            "female sex (higher incidence)",
+            "patellar morphology",
+            "prior injury"
+          ]
         },
         "rtpConsiderations": "Address hip abductor strength deficits; load management; graduated return to volume; biomechanical retraining if indicated.",
         "confidence": "high",
@@ -127,10 +307,26 @@
         "incidence": "moderate — a significant risk in high-mileage middle-distance runners, especially those with low energy availability or high training volume",
         "severity": "moderate-high (stress fracture = 4–12 weeks+ off impact training; cortical fracture can end season)",
         "mechanism": "Repetitive bending stress on the tibial cortex from high-volume ground-contact loading exceeding the bone's remodelling capacity; compounded by low energy availability (relative energy deficiency / RED-S), calcium/vitamin D insufficiency, and training surface hardness.",
-        "highRiskTissues": ["tibial shaft (posteromedial — posterior tibial stress syndrome spectrum)", "fibula", "metatarsals"],
+        "highRiskTissues": [
+          "tibial shaft (posteromedial — posterior tibial stress syndrome spectrum)",
+          "fibula",
+          "metatarsals"
+        ],
         "riskFactors": {
-          "modifiable": ["rapid training volume increase", "low energy availability (RED-S)", "inadequate calcium/vitamin D", "training surface hardness", "worn footwear", "biomechanical risk factors (hip drop, increased stride rate)"],
-          "nonModifiable": ["female sex (higher incidence)", "low bone density", "prior bone stress injury", "age"]
+          "modifiable": [
+            "rapid training volume increase",
+            "low energy availability (RED-S)",
+            "inadequate calcium/vitamin D",
+            "training surface hardness",
+            "worn footwear",
+            "biomechanical risk factors (hip drop, increased stride rate)"
+          ],
+          "nonModifiable": [
+            "female sex (higher incidence)",
+            "low bone density",
+            "prior bone stress injury",
+            "age"
+          ]
         },
         "rtpConsiderations": "Minimum 4–6 weeks off impact training for stress reaction; 8–12+ weeks for cortical stress fracture; bone health screening (DEXA, nutrition review) before RTP; screen for RED-S.",
         "confidence": "high",
@@ -140,7 +336,6 @@
     ],
     "summary": "Mixed ACUTE + OVERUSE injury profile. Hamstring strains are acute and velocity-driven (more prevalent at 800/1500 m training paces). Achilles tendinopathy, patellofemoral pain, and tibial bone stress are overuse injuries driven by high training volume and load mismanagement. Tibial bone stress and RED-S (low energy availability) require specific screening in female and weight-conscious athletes. Nordic curls, calf/Achilles loading, and hip abductor strengthening are the primary gym-based prevention levers."
   },
-
   "positions": [
     {
       "name": "800 m (anaerobic-biased middle distance)",
@@ -152,10 +347,28 @@
       "powerReq": "high (strong finishing kick and tactical surges required)",
       "strengthReq": "high (relative strength for economy; power for finishing sprint)",
       "bodyComposition": "Lean and powerful relative to build; fast-twitch capacity higher than at longer distances; minimal non-propulsive mass.",
-      "primaryQualities": ["anaerobicEndurance", "aerobicEndurance", "sprintSpeed", "reactiveStrength"],
-      "secondaryQualities": ["explosivePower", "stability", "coordination"],
-      "commonInjuries": ["hamstring strain", "Achilles tendinopathy", "tibial bone stress"],
-      "gymPriorities": ["strength for economy (trap-bar DL, squat — heavy, low-rep)", "reactive plyometrics for leg stiffness (pogo, bounding)", "hamstring eccentric strength (Nordic curl)", "single-leg calf and Achilles loading"],
+      "primaryQualities": [
+        "anaerobicEndurance",
+        "aerobicEndurance",
+        "sprintSpeed",
+        "reactiveStrength"
+      ],
+      "secondaryQualities": [
+        "explosivePower",
+        "stability",
+        "coordination"
+      ],
+      "commonInjuries": [
+        "hamstring strain",
+        "Achilles tendinopathy",
+        "tibial bone stress"
+      ],
+      "gymPriorities": [
+        "strength for economy (trap-bar DL, squat — heavy, low-rep)",
+        "reactive plyometrics for leg stiffness (pogo, bounding)",
+        "hamstring eccentric strength (Nordic curl)",
+        "single-leg calf and Achilles loading"
+      ],
       "recoveryConsiderations": "High glycolytic and neuromuscular demand per race — 48–72 h recovery after a maximal 800 m effort before quality training. Gym should not be scheduled within 24 h of key interval sessions."
     },
     {
@@ -168,10 +381,29 @@
       "powerReq": "moderate-high (finishing kick and surge capacity essential)",
       "strengthReq": "high (relative strength for economy over 3–4 laps)",
       "bodyComposition": "Lean; slightly more aerobic profile than 800 m; VO2max-to-weight ratio a key performance determinant.",
-      "primaryQualities": ["aerobicEndurance", "anaerobicEndurance", "reactiveStrength", "coordination"],
-      "secondaryQualities": ["sprintSpeed", "stability", "relativeStrength"],
-      "commonInjuries": ["Achilles tendinopathy", "patellofemoral pain", "tibial bone stress", "hamstring strain"],
-      "gymPriorities": ["heavy strength for economy", "single-leg and bilateral calf/Achilles loading", "hip abductor strength (patellofemoral/tibial risk reduction)", "reactive plyometrics at moderate volume"],
+      "primaryQualities": [
+        "aerobicEndurance",
+        "anaerobicEndurance",
+        "reactiveStrength",
+        "coordination"
+      ],
+      "secondaryQualities": [
+        "sprintSpeed",
+        "stability",
+        "relativeStrength"
+      ],
+      "commonInjuries": [
+        "Achilles tendinopathy",
+        "patellofemoral pain",
+        "tibial bone stress",
+        "hamstring strain"
+      ],
+      "gymPriorities": [
+        "heavy strength for economy",
+        "single-leg and bilateral calf/Achilles loading",
+        "hip abductor strength (patellofemoral/tibial risk reduction)",
+        "reactive plyometrics at moderate volume"
+      ],
       "recoveryConsiderations": "High aerobic demand — recovery is aerobic replenishment as much as glycolytic. Gym workload must be managed to avoid compromising interval session quality."
     },
     {
@@ -184,14 +416,32 @@
       "powerReq": "moderate (economy > raw power at this distance)",
       "strengthReq": "high (strength for economy at low added mass; calf/Achilles durability for volume)",
       "bodyComposition": "Very lean; aerobic efficiency and VO2max-to-weight ratio are key; minimal non-propulsive mass critical.",
-      "primaryQualities": ["aerobicEndurance", "reactiveStrength", "relativeStrength", "durability"],
-      "secondaryQualities": ["anaerobicEndurance", "stability", "coordination"],
-      "commonInjuries": ["tibial bone stress", "Achilles tendinopathy", "patellofemoral pain"],
-      "gymPriorities": ["strength for economy (heavy, low-rep — not hypertrophy)", "single-leg calf and Achilles robustness", "tibialis raise (tibial bone stress risk reduction)", "hip abductor strength", "low-dose reactive plyometrics (pogo, bounding — dosed against running volume)"],
+      "primaryQualities": [
+        "aerobicEndurance",
+        "reactiveStrength",
+        "relativeStrength",
+        "durability"
+      ],
+      "secondaryQualities": [
+        "anaerobicEndurance",
+        "stability",
+        "coordination"
+      ],
+      "commonInjuries": [
+        "tibial bone stress",
+        "Achilles tendinopathy",
+        "patellofemoral pain"
+      ],
+      "gymPriorities": [
+        "strength for economy (heavy, low-rep — not hypertrophy)",
+        "single-leg calf and Achilles robustness",
+        "tibialis raise (tibial bone stress risk reduction)",
+        "hip abductor strength",
+        "low-dose reactive plyometrics (pogo, bounding — dosed against running volume)"
+      ],
       "recoveryConsiderations": "Lower per-session glycolytic cost than 800 m but higher cumulative training volume — gym scheduling must protect the aerobic training week. No heavy lower-body gym within 24 h of key long or threshold runs."
     }
   ],
-
   "assessments": [
     {
       "name": "Critical speed / critical velocity (lactate threshold time-trial)",
@@ -199,8 +449,15 @@
       "essential": true,
       "purpose": "Determine the athlete's critical speed — the maximal pace sustainable by aerobic pathways. Predictive of middle-distance race performance and guides training-pace zones. Typically estimated from two or three time-trial efforts at different distances.",
       "frequency": "per training block (every 4–6 weeks)",
-      "targets": { "elite": "event-relative PB tracking; CS as % of VO2max velocity", "beginner": "establish baseline", "youth": "track trend" },
-      "equipment": ["GPS watch / timing gates", "400 m track"],
+      "targets": {
+        "elite": "event-relative PB tracking; CS as % of VO2max velocity",
+        "beginner": "establish baseline",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "GPS watch / timing gates",
+        "400 m track"
+      ],
       "wearableEstimable": true,
       "confidence": "high",
       "evidenceLevel": "L2",
@@ -212,8 +469,15 @@
       "essential": true,
       "purpose": "Measure the oxygen cost (ml/kg/min) of running at a fixed submaximal pace — a primary determinant of middle-distance performance independent of VO2max. Typically measured in a lab at 3–4 speeds; approximated by pace-HR relationship in the field.",
       "frequency": "per macro-block (3–4 per season)",
-      "targets": { "elite": "track economy improvement vs baseline; elite men ~200 ml/kg/km", "beginner": "establish baseline trend", "youth": "baseline" },
-      "equipment": ["metabolic cart (lab) or pace-HR proxy (field)", "GPS watch"],
+      "targets": {
+        "elite": "track economy improvement vs baseline; elite men ~200 ml/kg/km",
+        "beginner": "establish baseline trend",
+        "youth": "baseline"
+      },
+      "equipment": [
+        "metabolic cart (lab) or pace-HR proxy (field)",
+        "GPS watch"
+      ],
       "wearableEstimable": true,
       "confidence": "high",
       "evidenceLevel": "L2",
@@ -225,8 +489,14 @@
       "essential": true,
       "purpose": "Monitor neuromuscular freshness (acute readiness) and track reactive strength / leg-stiffness gains from plyometric training. A drop in CMJ flags accumulated neuromuscular fatigue before a key session or race.",
       "frequency": "weekly neuromuscular monitoring + block testing",
-      "targets": { "elite": "within 10% of 4-week baseline for monitoring; track upward trend for stiffness gains", "beginner": "establish baseline", "youth": "track trend" },
-      "equipment": ["jump mat / force plate"],
+      "targets": {
+        "elite": "within 10% of 4-week baseline for monitoring; track upward trend for stiffness gains",
+        "beginner": "establish baseline",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "jump mat / force plate"
+      ],
       "wearableEstimable": false,
       "confidence": "high",
       "evidenceLevel": "L2",
@@ -238,8 +508,14 @@
       "essential": true,
       "purpose": "Assess bilateral eccentric hamstring force — a primary modifiable risk factor for hamstring strain, especially relevant at the faster paces of 800 m/1500 m training and race finishes.",
       "frequency": "monthly + post-injury + RTP gate",
-      "targets": { "elite": "≥3 N/kg per limb; L/R symmetry >90%", "beginner": "establish baseline", "youth": "baseline" },
-      "equipment": ["NordBord or equivalent; alternative: Nordic curl load progression"],
+      "targets": {
+        "elite": "≥3 N/kg per limb; L/R symmetry >90%",
+        "beginner": "establish baseline",
+        "youth": "baseline"
+      },
+      "equipment": [
+        "NordBord or equivalent; alternative: Nordic curl load progression"
+      ],
       "wearableEstimable": false,
       "confidence": "high",
       "evidenceLevel": "L2",
@@ -251,8 +527,14 @@
       "essential": true,
       "purpose": "Assess calf and Achilles tendon loading capacity — the primary prehab and return-to-play gate for Achilles tendinopathy. Single-leg calf raise to fatigue or loaded (Silbernagel protocol) is the standard.",
       "frequency": "monthly + on Achilles symptoms + RTP gate",
-      "targets": { "elite": "≥25 single-leg calf raises to fatigue; bilateral symmetry", "beginner": "establish baseline", "youth": "baseline" },
-      "equipment": ["step / none"],
+      "targets": {
+        "elite": "≥25 single-leg calf raises to fatigue; bilateral symmetry",
+        "beginner": "establish baseline",
+        "youth": "baseline"
+      },
+      "equipment": [
+        "step / none"
+      ],
       "wearableEstimable": false,
       "confidence": "high",
       "evidenceLevel": "L2",
@@ -264,8 +546,14 @@
       "essential": true,
       "purpose": "The primary outcome measure — race time relative to PB and age-group standards is the defining performance indicator for middle-distance runners.",
       "frequency": "per block + competition meets",
-      "targets": { "elite": "World Athletics standards", "beginner": "age-group standards", "youth": "age-group standards; trend over time" },
-      "equipment": ["timing system / official results"],
+      "targets": {
+        "elite": "World Athletics standards",
+        "beginner": "age-group standards",
+        "youth": "age-group standards; trend over time"
+      },
+      "equipment": [
+        "timing system / official results"
+      ],
       "wearableEstimable": false,
       "confidence": "high",
       "evidenceLevel": "L1",
@@ -277,8 +565,14 @@
       "essential": false,
       "purpose": "Identify hip abductor weakness linked to hip drop, knee valgus, and elevated patellofemoral and tibial stress injury risk; simple Trendelenburg screen or dynamometer.",
       "frequency": "monthly + on patellofemoral / tibial soreness",
-      "targets": { "elite": "no Trendelenburg; symmetrical", "beginner": "baseline", "youth": "baseline" },
-      "equipment": ["handheld dynamometer (optional); no equipment for screen"],
+      "targets": {
+        "elite": "no Trendelenburg; symmetrical",
+        "beginner": "baseline",
+        "youth": "baseline"
+      },
+      "equipment": [
+        "handheld dynamometer (optional); no equipment for screen"
+      ],
       "wearableEstimable": false,
       "confidence": "moderate",
       "evidenceLevel": "L3",
@@ -290,48 +584,123 @@
       "essential": false,
       "purpose": "Periodic symptom screen for tibial tenderness, particularly in high-volume training phases and in athletes with low energy availability risk factors; early detection reduces severity of bone-stress injuries.",
       "frequency": "monthly during high-volume phases + on tibial pain",
-      "targets": { "elite": "nil tenderness on palpation + nil pain with impact", "beginner": "symptom awareness", "youth": "baseline + education" },
-      "equipment": ["palpation / clinical assessment; MRI if indicated"],
+      "targets": {
+        "elite": "nil tenderness on palpation + nil pain with impact",
+        "beginner": "symptom awareness",
+        "youth": "baseline + education"
+      },
+      "equipment": [
+        "palpation / clinical assessment; MRI if indicated"
+      ],
       "wearableEstimable": false,
       "confidence": "moderate",
       "evidenceLevel": "L3",
       "source": "Bennell KL; Mountjoy IOC RED-S consensus 2018/2023; expert consensus"
     }
   ],
-
   "developmentPriorities": {
     "youth": {
-      "highest": ["aerobic base development (easy running habit)", "running mechanics (A-skip, arm drive, cadence drills)", "basic strength foundation (bodyweight)", "enjoyment / long-term athletic development", "bone health (adequate fuelling + calcium/vitamin D)"],
-      "lowest": ["high-volume interval training before aerobic base", "heavy loading before growth plates close", "early specialisation — multi-sport participation protective"],
+      "highest": [
+        "aerobic base development (easy running habit)",
+        "running mechanics (A-skip, arm drive, cadence drills)",
+        "basic strength foundation (bodyweight)",
+        "enjoyment / long-term athletic development",
+        "bone health (adequate fuelling + calcium/vitamin D)"
+      ],
+      "lowest": [
+        "high-volume interval training before aerobic base",
+        "heavy loading before growth plates close",
+        "early specialisation — multi-sport participation protective"
+      ],
       "trainingEmphasis": "Aerobic base first. Running mechanics and coordination habits. Basic bodyweight strength (single-leg squats, hip hinges, core). Protect bone health: adequate nutrition and no sudden volume spikes. No RED-S risk.",
-      "commonMistakes": ["training mileage before aerobic mechanics are established", "early high-intensity interval overload", "under-fuelling in female youth athletes (RED-S onset)", "neglecting strength work entirely"]
+      "commonMistakes": [
+        "training mileage before aerobic mechanics are established",
+        "early high-intensity interval overload",
+        "under-fuelling in female youth athletes (RED-S onset)",
+        "neglecting strength work entirely"
+      ]
     },
     "development": {
-      "highest": ["VO2max development (aerobic base + moderate interval work)", "strength-for-economy introduction (trap-bar DL, split squat)", "Nordic curl habit (hamstring resilience)", "reactive strength base (pogos, bounding)", "calf/Achilles loading capacity (SL calf raises)"],
-      "lowest": ["high-load Olympic lifting before power-to-economy transfer need established", "non-specific hypertrophy adding mass without economy benefit"],
+      "highest": [
+        "VO2max development (aerobic base + moderate interval work)",
+        "strength-for-economy introduction (trap-bar DL, split squat)",
+        "Nordic curl habit (hamstring resilience)",
+        "reactive strength base (pogos, bounding)",
+        "calf/Achilles loading capacity (SL calf raises)"
+      ],
+      "lowest": [
+        "high-load Olympic lifting before power-to-economy transfer need established",
+        "non-specific hypertrophy adding mass without economy benefit"
+      ],
       "trainingEmphasis": "Build aerobic capacity and running economy simultaneously. Introduce heavy, low-rep strength training. Establish Nordic curl habit. Begin reactive plyometrics conservatively on a strength base. Educate on energy availability.",
-      "commonMistakes": ["skipping strength work in favour of more running volume", "plyometric volume before calf/Achilles strength capacity", "under-recovery from combined training + strength load", "ignoring early Achilles or tibial symptoms"]
+      "commonMistakes": [
+        "skipping strength work in favour of more running volume",
+        "plyometric volume before calf/Achilles strength capacity",
+        "under-recovery from combined training + strength load",
+        "ignoring early Achilles or tibial symptoms"
+      ]
     },
     "senior": {
-      "highest": ["peak VO2max + critical speed", "running economy (strength + plyometric synergy)", "Achilles/calf resilience", "taper execution + race management", "hamstring health (Nordic curl maintenance at fast-pace training periods)"],
-      "lowest": ["non-specific gym volume in-season adding fatigue without performance benefit", "heavy gym work adjacent to key interval sessions"],
+      "highest": [
+        "peak VO2max + critical speed",
+        "running economy (strength + plyometric synergy)",
+        "Achilles/calf resilience",
+        "taper execution + race management",
+        "hamstring health (Nordic curl maintenance at fast-pace training periods)"
+      ],
+      "lowest": [
+        "non-specific gym volume in-season adding fatigue without performance benefit",
+        "heavy gym work adjacent to key interval sessions"
+      ],
       "trainingEmphasis": "Individualise strength type (economy-biased heavy strength + reactive plyometrics); protect Achilles and tibiae at high mileage; execute the taper; monitor energy availability.",
-      "commonMistakes": ["adding gym volume in-season without adjusting running load", "dropping Nordic curls when programme gets busy", "taper mistakes (too much volume retained)", "ignoring early Achilles symptoms at volume peaks"]
+      "commonMistakes": [
+        "adding gym volume in-season without adjusting running load",
+        "dropping Nordic curls when programme gets busy",
+        "taper mistakes (too much volume retained)",
+        "ignoring early Achilles symptoms at volume peaks"
+      ]
     },
     "elite": {
-      "highest": ["economy optimisation (strength + plyometric specificity)", "critical speed / V̇O2max marginal gains", "Achilles and hamstring resilience", "taper precision", "individual economy analysis (lab + field)"],
-      "lowest": ["generic block programming", "gym exercises that add mass without economy transfer"],
+      "highest": [
+        "economy optimisation (strength + plyometric specificity)",
+        "critical speed / V̇O2max marginal gains",
+        "Achilles and hamstring resilience",
+        "taper precision",
+        "individual economy analysis (lab + field)"
+      ],
+      "lowest": [
+        "generic block programming",
+        "gym exercises that add mass without economy transfer"
+      ],
       "trainingEmphasis": "Data-led economy and critical-speed analysis; individualised strength prescription (evidence of economy response); minimal-effective in-season gym; protect Achilles/tibiae at peak volume; nail the taper.",
-      "commonMistakes": ["too much gym volume at peak running load", "ignoring early Achilles load signals", "one-size gym programme with insufficient economy data", "poor taper management"]
+      "commonMistakes": [
+        "too much gym volume at peak running load",
+        "ignoring early Achilles load signals",
+        "one-size gym programme with insufficient economy data",
+        "poor taper management"
+      ]
     },
     "masters": {
-      "highest": ["aerobic capacity retention", "strength and tendon health (Achilles/calf robustness)", "bone health monitoring", "mobility and recovery management"],
-      "lowest": ["chasing youth training volumes", "aggressive plyometric volume on ageing tendons", "ignoring recovery windows"],
+      "highest": [
+        "aerobic capacity retention",
+        "strength and tendon health (Achilles/calf robustness)",
+        "bone health monitoring",
+        "mobility and recovery management"
+      ],
+      "lowest": [
+        "chasing youth training volumes",
+        "aggressive plyometric volume on ageing tendons",
+        "ignoring recovery windows"
+      ],
       "trainingEmphasis": "Maintain aerobic capacity and running economy conservatively; prioritise Achilles/calf and bone health; increase recovery time between hard sessions; monitor RED-S risk especially in female masters athletes.",
-      "commonMistakes": ["ignoring Achilles / bone-stress early warning signs", "under-fuelling (RED-S risk rises in masters)", "insufficient recovery between high-load sessions", "dropping strength work that protects tendons and bone"]
+      "commonMistakes": [
+        "ignoring Achilles / bone-stress early warning signs",
+        "under-fuelling (RED-S risk rises in masters)",
+        "insufficient recovery between high-load sessions",
+        "dropping strength work that protects tendons and bone"
+      ]
     }
   },
-
   "seasonalModel": {
     "offSeason": {
       "primaryObjective": "Build maximal aerobic base, strength-for-economy foundation, and connective-tissue capacity; address injury risk factors (calf/Achilles, hamstring, tibial bone health).",
@@ -341,7 +710,13 @@
       "intensity": "low-moderate (running) + moderate-high (gym)",
       "fatigueTolerance": "high",
       "recoveryEmphasis": "moderate",
-      "testingRecommendations": ["CMJ baseline", "NordBord baseline", "single-leg calf raise baseline", "hip abductor screen", "bone-health / energy-availability screen if indicated"]
+      "testingRecommendations": [
+        "CMJ baseline",
+        "NordBord baseline",
+        "single-leg calf raise baseline",
+        "hip abductor screen",
+        "bone-health / energy-availability screen if indicated"
+      ]
     },
     "preSeason": {
       "primaryObjective": "Convert strength and aerobic base to race-pace-specific fitness; begin interval training; introduce reactive plyometrics; reduce gym volume as running intensity rises.",
@@ -351,7 +726,13 @@
       "intensity": "moderate-high",
       "fatigueTolerance": "moderate-high",
       "recoveryEmphasis": "moderate-high",
-      "testingRecommendations": ["CMJ retest", "NordBord retest", "critical-speed estimate from time trials", "running economy check (pace-HR proxy)", "calf raise retest"]
+      "testingRecommendations": [
+        "CMJ retest",
+        "NordBord retest",
+        "critical-speed estimate from time trials",
+        "running economy check (pace-HR proxy)",
+        "calf raise retest"
+      ]
     },
     "competition": {
       "primaryObjective": "Maintain aerobic fitness and economy; protect Achilles/hamstring; execute race-specific sharpening and taper into key competitions.",
@@ -361,7 +742,12 @@
       "intensity": "high (low volume, preserved quality)",
       "fatigueTolerance": "low-moderate",
       "recoveryEmphasis": "high",
-      "testingRecommendations": ["readiness monitoring", "weekly CMJ neuromuscular check", "race-time tracking", "Achilles soreness monitoring"]
+      "testingRecommendations": [
+        "readiness monitoring",
+        "weekly CMJ neuromuscular check",
+        "race-time tracking",
+        "Achilles soreness monitoring"
+      ]
     },
     "playoffs": {
       "primaryObjective": "Peak for target championship — manage heats / semis / finals over multiple days; freshness above all.",
@@ -371,7 +757,9 @@
       "intensity": "high (minimal volume priming only)",
       "fatigueTolerance": "very low",
       "recoveryEmphasis": "very high",
-      "testingRecommendations": ["readiness monitoring only — no fatiguing tests"]
+      "testingRecommendations": [
+        "readiness monitoring only — no fatiguing tests"
+      ]
     },
     "recovery": {
       "primaryObjective": "Full physical and psychological recovery; address any carried injuries (Achilles, tibial, hamstring); bone health review if needed.",
@@ -381,10 +769,11 @@
       "intensity": "low",
       "fatigueTolerance": "n/a",
       "recoveryEmphasis": "very high",
-      "testingRecommendations": ["bone health / RED-S screen if indicated; injury review; no performance tests"]
+      "testingRecommendations": [
+        "bone health / RED-S screen if indicated; injury review; no performance tests"
+      ]
     }
   },
-
   "microcycles": {
     "oneMatchPerWeek": {
       "pattern": "Built around 1–2 quality run sessions (interval/threshold); gym placed to NOT fatigue Achilles/hamstring before key running quality sessions.",
@@ -394,8 +783,15 @@
       "mobilityDay": "daily (hip flexors, calf/Achilles, hip rotation)",
       "injuryPreventionDay": "Nordic curls + single-leg calf + tibialis raise embedded 2×/week; Copenhagen adduction 1–2×/week",
       "typicalLoadingPattern": "Heavy gym early-week → quality interval session mid-week → easy/recovery → race → recovery.",
-      "avoidHeavyLiftingDays": ["day before key interval session", "day before race", "race day"],
-      "preferExplosiveWorkDays": ["after easy/moderate running days", "dedicated gym day away from key running"]
+      "avoidHeavyLiftingDays": [
+        "day before key interval session",
+        "day before race",
+        "race day"
+      ],
+      "preferExplosiveWorkDays": [
+        "after easy/moderate running days",
+        "dedicated gym day away from key running"
+      ]
     },
     "twoMatchesPerWeek": {
       "pattern": "Championship round scheduling (heats + finals): recovery-first between races; no heavy gym during race days.",
@@ -405,8 +801,12 @@
       "mobilityDay": "daily",
       "injuryPreventionDay": "minimal calf and Nordic maintenance only",
       "typicalLoadingPattern": "Warm-up → heat → recovery → final. Gym is priming or none.",
-      "avoidHeavyLiftingDays": ["all race days"],
-      "preferExplosiveWorkDays": ["brief race-morning activation only"]
+      "avoidHeavyLiftingDays": [
+        "all race days"
+      ],
+      "preferExplosiveWorkDays": [
+        "brief race-morning activation only"
+      ]
     },
     "tournamentOrCongested": {
       "pattern": "Multi-day championships with multiple rounds; pure freshness and Achilles/injury management.",
@@ -416,11 +816,14 @@
       "mobilityDay": "daily",
       "injuryPreventionDay": "minimal-dose only (calf, drills — no fatigue-inducing work)",
       "typicalLoadingPattern": "Protect recovery and running-mechanics quality between rounds; no development loading.",
-      "avoidHeavyLiftingDays": ["entire championship period"],
-      "preferExplosiveWorkDays": ["race-morning primers only (skips, drills, brief pogo — no fatigue)"]
+      "avoidHeavyLiftingDays": [
+        "entire championship period"
+      ],
+      "preferExplosiveWorkDays": [
+        "race-morning primers only (skips, drills, brief pogo — no fatigue)"
+      ]
     }
   },
-
   "gymPhilosophy": {
     "transfersWell": [
       "heavy trap-bar deadlift / back squat (maximal strength → running economy; 3–6 rep ranges to avoid hypertrophy)",
@@ -440,8 +843,22 @@
       "high-impact plyometric volume on top of a full running week (cumulative Achilles/tendon overload)",
       "long steady-state low-intensity cardio as gym substitute (no economy or strength transfer)"
     ],
-    "essentialMovementPatterns": ["hip hinge (RDL, trap-bar DL — hamstring + posterior chain)", "bilateral squat/triple extension (back squat, split squat)", "single-leg calf / ankle plantar-flexion (SL calf, pogo)", "anti-extension core (dead bug, hollow hold)", "anti-rotation core (Pallof press)", "single-leg hip hinge (SL hinge — unilateral posterior chain)", "reactive plyometric — low-impact (pogo, bounding)", "hip abduction (Copenhagen, lateral band walk)"],
-    "accessoryPriorities": ["single-leg calf / Achilles loading (priority #1 for overuse prevention)", "Nordic curl / eccentric hamstring (priority #2 — especially at 800/1500 m paces)", "tibialis raise (tibial bone-stress prevention)", "hip abductor stability (Copenhagen, lateral band walk)"],
+    "essentialMovementPatterns": [
+      "hip hinge (RDL, trap-bar DL — hamstring + posterior chain)",
+      "bilateral squat/triple extension (back squat, split squat)",
+      "single-leg calf / ankle plantar-flexion (SL calf, pogo)",
+      "anti-extension core (dead bug, hollow hold)",
+      "anti-rotation core (Pallof press)",
+      "single-leg hip hinge (SL hinge — unilateral posterior chain)",
+      "reactive plyometric — low-impact (pogo, bounding)",
+      "hip abduction (Copenhagen, lateral band walk)"
+    ],
+    "accessoryPriorities": [
+      "single-leg calf / Achilles loading (priority #1 for overuse prevention)",
+      "Nordic curl / eccentric hamstring (priority #2 — especially at 800/1500 m paces)",
+      "tibialis raise (tibial bone-stress prevention)",
+      "hip abductor stability (Copenhagen, lateral band walk)"
+    ],
     "singleLegEmphasis": "High — running is a unilateral cyclic task; single-leg calf, split squat, SL hinge, and step-up build the hip and lower-leg robustness needed to sustain running volume without overuse injury.",
     "olympicLiftingSuitability": "Optional — power/hang clean may provide some RFD benefit particularly for 800 m athletes where the finishing sprint is decisive, but is not essential for middle-distance; economy-focused heavy strength + reactive plyometrics deliver more return per training unit.",
     "plyometricEmphasis": "Moderate — reactive stiffness training (pogo, bounding, A-skip) builds Achilles tendon stiffness and running economy but must be dosed carefully against already high running volume; avoid large plyometric sessions on the same day as key interval runs.",
@@ -453,9 +870,17 @@
     "tempoRecommendations": "Controlled heavy tempo on strength work (no grinding fatigue near key sessions); explosive intent on reactive/pogo work; high-rep controlled calf raises for Achilles loading (Silbernagel protocol).",
     "velocityRecommendations": "Heavy and slow in off-season (strength-for-economy base); moderate load + explosive intent in pre-season (RFD conversion); minimal-volume, maintained quality in-season. Economy-focused — never chase hypertrophy."
   },
-
   "exerciseLibrary": {
-    "categories": ["posterior chain / hamstring", "strength for economy", "plyometric / reactive", "single-leg", "calf / Achilles / prehab", "hip stability / prehab", "core anti-extension", "core anti-rotation"],
+    "categories": [
+      "posterior chain / hamstring",
+      "strength for economy",
+      "plyometric / reactive",
+      "single-leg",
+      "calf / Achilles / prehab",
+      "hip stability / prehab",
+      "core anti-extension",
+      "core anti-rotation"
+    ],
     "exercises": [
       {
         "id": "nordic_curl",
@@ -468,10 +893,19 @@
         "sorenessCost": "high (early exposure)",
         "recoveryTimeH": 72,
         "jointLoading": "low (knee only; posterior chain)",
-        "equipment": ["bench / partner / Nordic station"],
+        "equipment": [
+          "bench / partner / Nordic station"
+        ],
         "difficulty": "intermediate",
-        "regressions": ["lying leg curl", "isometric hamstring hold", "Nordic from partner (easier angle)"],
-        "progressions": ["weighted Nordic curl", "single-leg Nordic variation"],
+        "regressions": [
+          "lying leg curl",
+          "isometric hamstring hold",
+          "Nordic from partner (easier angle)"
+        ],
+        "progressions": [
+          "weighted Nordic curl",
+          "single-leg Nordic variation"
+        ],
         "suitableInSeason": true,
         "suitableOffSeason": true,
         "suitableReturnToPlay": true,
@@ -491,10 +925,20 @@
         "sorenessCost": "moderate-high",
         "recoveryTimeH": 48,
         "jointLoading": "moderate (hip, lumbar)",
-        "equipment": ["barbell", "dumbbell"],
+        "equipment": [
+          "barbell",
+          "dumbbell"
+        ],
         "difficulty": "beginner-friendly",
-        "regressions": ["single-leg RDL bodyweight", "kettlebell RDL"],
-        "progressions": ["sl_hinge", "trap-bar RDL", "deficit RDL"],
+        "regressions": [
+          "single-leg RDL bodyweight",
+          "kettlebell RDL"
+        ],
+        "progressions": [
+          "sl_hinge",
+          "trap-bar RDL",
+          "deficit RDL"
+        ],
         "suitableInSeason": true,
         "suitableOffSeason": true,
         "suitableReturnToPlay": true,
@@ -514,10 +958,19 @@
         "sorenessCost": "moderate",
         "recoveryTimeH": 48,
         "jointLoading": "moderate (hip, lumbar, knee)",
-        "equipment": ["trap bar", "barbell plates"],
+        "equipment": [
+          "trap bar",
+          "barbell plates"
+        ],
         "difficulty": "intermediate",
-        "regressions": ["goblet squat", "rdl"],
-        "progressions": ["deficit trap-bar DL", "loaded trap-bar DL to maximal"],
+        "regressions": [
+          "goblet squat",
+          "rdl"
+        ],
+        "progressions": [
+          "deficit trap-bar DL",
+          "loaded trap-bar DL to maximal"
+        ],
         "suitableInSeason": true,
         "suitableOffSeason": true,
         "suitableReturnToPlay": false,
@@ -537,10 +990,19 @@
         "sorenessCost": "moderate-high",
         "recoveryTimeH": 48,
         "jointLoading": "moderate (knee, hip)",
-        "equipment": ["dumbbell / barbell", "bench (Bulgarian)"],
+        "equipment": [
+          "dumbbell / barbell",
+          "bench (Bulgarian)"
+        ],
         "difficulty": "intermediate",
-        "regressions": ["reverse lunge", "bodyweight split squat"],
-        "progressions": ["Bulgarian split squat loaded", "single-leg squat (pistol)"],
+        "regressions": [
+          "reverse lunge",
+          "bodyweight split squat"
+        ],
+        "progressions": [
+          "Bulgarian split squat loaded",
+          "single-leg squat (pistol)"
+        ],
         "suitableInSeason": true,
         "suitableOffSeason": true,
         "suitableReturnToPlay": true,
@@ -560,10 +1022,18 @@
         "sorenessCost": "low",
         "recoveryTimeH": 12,
         "jointLoading": "low-moderate (ankle repetitive)",
-        "equipment": ["none"],
+        "equipment": [
+          "none"
+        ],
         "difficulty": "beginner-friendly",
-        "regressions": ["slow pogo (taller hops)", "seated calf raise"],
-        "progressions": ["sl_pogo_jump", "high-frequency pogo 10 s sets"],
+        "regressions": [
+          "slow pogo (taller hops)",
+          "seated calf raise"
+        ],
+        "progressions": [
+          "sl_pogo_jump",
+          "high-frequency pogo 10 s sets"
+        ],
         "suitableInSeason": true,
         "suitableOffSeason": true,
         "suitableReturnToPlay": true,
@@ -583,10 +1053,17 @@
         "sorenessCost": "low-moderate",
         "recoveryTimeH": 24,
         "jointLoading": "moderate (ankle — unilateral repetitive)",
-        "equipment": ["none"],
+        "equipment": [
+          "none"
+        ],
         "difficulty": "intermediate",
-        "regressions": ["double_leg_pogo"],
-        "progressions": ["single-leg pogo bounds", "hurdle hops single-leg"],
+        "regressions": [
+          "double_leg_pogo"
+        ],
+        "progressions": [
+          "single-leg pogo bounds",
+          "hurdle hops single-leg"
+        ],
         "suitableInSeason": true,
         "suitableOffSeason": true,
         "suitableReturnToPlay": false,
@@ -606,10 +1083,19 @@
         "sorenessCost": "low",
         "recoveryTimeH": 24,
         "jointLoading": "moderate",
-        "equipment": ["track / flat surface"],
+        "equipment": [
+          "track / flat surface"
+        ],
         "difficulty": "intermediate",
-        "regressions": ["marching A-skip", "arm-drive drill"],
-        "progressions": ["B-skip", "running bounding", "wicket runs"],
+        "regressions": [
+          "marching A-skip",
+          "arm-drive drill"
+        ],
+        "progressions": [
+          "B-skip",
+          "running bounding",
+          "wicket runs"
+        ],
         "suitableInSeason": true,
         "suitableOffSeason": true,
         "suitableReturnToPlay": true,
@@ -629,10 +1115,19 @@
         "sorenessCost": "low-moderate",
         "recoveryTimeH": 24,
         "jointLoading": "low (ankle/Achilles — controlled)",
-        "equipment": ["step (optional)", "dumbbell for load"],
+        "equipment": [
+          "step (optional)",
+          "dumbbell for load"
+        ],
         "difficulty": "beginner-friendly",
-        "regressions": ["bilateral calf raise", "seated calf raise"],
-        "progressions": ["loaded single-leg calf raise (dumbbell)", "single-leg calf raise deficit"],
+        "regressions": [
+          "bilateral calf raise",
+          "seated calf raise"
+        ],
+        "progressions": [
+          "loaded single-leg calf raise (dumbbell)",
+          "single-leg calf raise deficit"
+        ],
         "suitableInSeason": true,
         "suitableOffSeason": true,
         "suitableReturnToPlay": true,
@@ -652,10 +1147,17 @@
         "sorenessCost": "low",
         "recoveryTimeH": 12,
         "jointLoading": "low",
-        "equipment": ["wall or tibia raise block"],
+        "equipment": [
+          "wall or tibia raise block"
+        ],
         "difficulty": "beginner-friendly",
-        "regressions": ["seated foot dorsiflexion (bodyweight)"],
-        "progressions": ["loaded tibialis raise (weight plate on foot)", "single-leg"],
+        "regressions": [
+          "seated foot dorsiflexion (bodyweight)"
+        ],
+        "progressions": [
+          "loaded tibialis raise (weight plate on foot)",
+          "single-leg"
+        ],
         "suitableInSeason": true,
         "suitableOffSeason": true,
         "suitableReturnToPlay": true,
@@ -675,10 +1177,18 @@
         "sorenessCost": "moderate",
         "recoveryTimeH": 36,
         "jointLoading": "low-moderate (hip/groin)",
-        "equipment": ["bench"],
+        "equipment": [
+          "bench"
+        ],
         "difficulty": "intermediate",
-        "regressions": ["short-lever Copenhagen (knee on bench)", "side-lying hip adduction"],
-        "progressions": ["long-lever Copenhagen", "weighted Copenhagen"],
+        "regressions": [
+          "short-lever Copenhagen (knee on bench)",
+          "side-lying hip adduction"
+        ],
+        "progressions": [
+          "long-lever Copenhagen",
+          "weighted Copenhagen"
+        ],
         "suitableInSeason": true,
         "suitableOffSeason": true,
         "suitableReturnToPlay": true,
@@ -698,10 +1208,18 @@
         "sorenessCost": "low",
         "recoveryTimeH": 12,
         "jointLoading": "low",
-        "equipment": ["cable", "band"],
+        "equipment": [
+          "cable",
+          "band"
+        ],
         "difficulty": "beginner-friendly",
-        "regressions": ["tall-kneeling Pallof"],
-        "progressions": ["split-stance Pallof", "anti-rotation press with step"],
+        "regressions": [
+          "tall-kneeling Pallof"
+        ],
+        "progressions": [
+          "split-stance Pallof",
+          "anti-rotation press with step"
+        ],
         "suitableInSeason": true,
         "suitableOffSeason": true,
         "suitableReturnToPlay": true,
@@ -721,10 +1239,18 @@
         "sorenessCost": "low",
         "recoveryTimeH": 12,
         "jointLoading": "low",
-        "equipment": ["none / band"],
+        "equipment": [
+          "none / band"
+        ],
         "difficulty": "beginner-friendly",
-        "regressions": ["bent-knee dead bug"],
-        "progressions": ["loaded dead bug", "hollow hold", "long-lever dead bug"],
+        "regressions": [
+          "bent-knee dead bug"
+        ],
+        "progressions": [
+          "loaded dead bug",
+          "hollow hold",
+          "long-lever dead bug"
+        ],
         "suitableInSeason": true,
         "suitableOffSeason": true,
         "suitableReturnToPlay": true,
@@ -735,49 +1261,113 @@
       }
     ]
   },
-
   "injuryPreventionLibrary": [
     {
       "injury": "Achilles tendinopathy prevention",
-      "riskFactors": ["rapid training volume or pace increase", "insufficient calf/Achilles load capacity", "training surface change (harder surface)", "worn footwear", "reduced ankle dorsiflexion ROM"],
-      "warningSigns": ["Achilles morning stiffness >10 min post warm-up", "tenderness on palpation at mid-substance or insertional Achilles", "pain or stiffness after running that worsens over days", "single-leg calf raise load capacity drop vs baseline"],
-      "preventativeExercises": ["sl_calf", "double_leg_pogo", "sl_pogo_jump"],
+      "riskFactors": [
+        "rapid training volume or pace increase",
+        "insufficient calf/Achilles load capacity",
+        "training surface change (harder surface)",
+        "worn footwear",
+        "reduced ankle dorsiflexion ROM"
+      ],
+      "warningSigns": [
+        "Achilles morning stiffness >10 min post warm-up",
+        "tenderness on palpation at mid-substance or insertional Achilles",
+        "pain or stiffness after running that worsens over days",
+        "single-leg calf raise load capacity drop vs baseline"
+      ],
+      "preventativeExercises": [
+        "sl_calf",
+        "double_leg_pogo",
+        "sl_pogo_jump"
+      ],
       "recommendedFrequency": "Single-leg calf raise loaded 2–3×/week year-round; pogo 2×/week in pre-season and in-season; address dorsiflexion mobility daily",
       "suitableSeason": "all",
       "evidenceLevel": "L2",
-      "exercisesToAvoid": ["sudden high-volume plyometrics without calf strength base", "depth jumps early in the season on unconditioned Achilles"],
-      "monitoringRecommendations": ["VISA-A score monthly if symptomatic", "Achilles soreness NRS before and after sessions", "track volume spikes in training load log"],
+      "exercisesToAvoid": [
+        "sudden high-volume plyometrics without calf strength base",
+        "depth jumps early in the season on unconditioned Achilles"
+      ],
+      "monitoringRecommendations": [
+        "VISA-A score monthly if symptomatic",
+        "Achilles soreness NRS before and after sessions",
+        "track volume spikes in training load log"
+      ],
       "source": "Alfredson H, Silbernagel K — Achilles tendinopathy eccentric and heavy slow resistance literature",
       "confidence": "high"
     },
     {
       "injury": "Tibial bone stress prevention",
-      "riskFactors": ["rapid training volume increase", "low energy availability (RED-S risk)", "low calcium/vitamin D", "hard training surfaces", "worn footwear", "hip drop / knee valgus gait pattern", "female sex + low bone density"],
-      "warningSigns": ["localised tibial tenderness on palpation (posteromedial / anterior tibia)", "tibial pain during or after running that worsens progressively", "pain at rest or at night (concerning for cortical stress fracture)"],
-      "preventativeExercises": ["tibialis_raise", "sl_calf", "split_squat"],
+      "riskFactors": [
+        "rapid training volume increase",
+        "low energy availability (RED-S risk)",
+        "low calcium/vitamin D",
+        "hard training surfaces",
+        "worn footwear",
+        "hip drop / knee valgus gait pattern",
+        "female sex + low bone density"
+      ],
+      "warningSigns": [
+        "localised tibial tenderness on palpation (posteromedial / anterior tibia)",
+        "tibial pain during or after running that worsens progressively",
+        "pain at rest or at night (concerning for cortical stress fracture)"
+      ],
+      "preventativeExercises": [
+        "tibialis_raise",
+        "sl_calf",
+        "split_squat"
+      ],
       "recommendedFrequency": "Tibialis raise 2×/week; progress calf loading progressively; screen energy availability in high-risk athletes",
       "suitableSeason": "all",
       "evidenceLevel": "L2",
-      "exercisesToAvoid": ["sudden large training volume spikes", "high-volume plyometrics in athletes with active tibial symptoms"],
-      "monitoringRecommendations": ["tibial tenderness palpation screen monthly at high mileage", "energy availability / RED-S screen in female and weight-conscious athletes", "DEXA bone density if repeated bone-stress history"],
+      "exercisesToAvoid": [
+        "sudden large training volume spikes",
+        "high-volume plyometrics in athletes with active tibial symptoms"
+      ],
+      "monitoringRecommendations": [
+        "tibial tenderness palpation screen monthly at high mileage",
+        "energy availability / RED-S screen in female and weight-conscious athletes",
+        "DEXA bone density if repeated bone-stress history"
+      ],
       "source": "Bennell KL — bone stress fracture epidemiology; Mountjoy et al. IOC RED-S consensus 2018/2023",
       "confidence": "high"
     },
     {
       "injury": "Hamstring strain prevention",
-      "riskFactors": ["hamstring eccentric strength deficit", "prior hamstring injury", "training load spike (speed/interval sessions)", "fatigue late in interval sets or finish sprints", "inadequate warm-up before speed work"],
-      "warningSigns": ["proximal posterior thigh tightness or soreness after fast running", "reduced NordBord / Nordic curl force output vs baseline", "subjective hamstring tightness on high-knee drills or A-skips"],
-      "preventativeExercises": ["nordic_curl", "rdl", "sl_hinge"],
+      "riskFactors": [
+        "hamstring eccentric strength deficit",
+        "prior hamstring injury",
+        "training load spike (speed/interval sessions)",
+        "fatigue late in interval sets or finish sprints",
+        "inadequate warm-up before speed work"
+      ],
+      "warningSigns": [
+        "proximal posterior thigh tightness or soreness after fast running",
+        "reduced NordBord / Nordic curl force output vs baseline",
+        "subjective hamstring tightness on high-knee drills or A-skips"
+      ],
+      "preventativeExercises": [
+        "nordic_curl",
+        "rdl",
+        "sl_hinge"
+      ],
       "recommendedFrequency": "Nordic curl 2×/week year-round; RDL 2×/week; single-leg hinge 1–2×/week",
       "suitableSeason": "all",
       "evidenceLevel": "L2",
-      "exercisesToAvoid": ["heavy RDL or Nordic within 48 h of key interval session", "novel high-load eccentric without progressive introduction"],
-      "monitoringRecommendations": ["monthly NordBord bilateral force + L/R ratio", "weekly hamstring soreness check before speed or interval sessions", "track speed-session volume spikes in training log"],
+      "exercisesToAvoid": [
+        "heavy RDL or Nordic within 48 h of key interval session",
+        "novel high-load eccentric without progressive introduction"
+      ],
+      "monitoringRecommendations": [
+        "monthly NordBord bilateral force + L/R ratio",
+        "weekly hamstring soreness check before speed or interval sessions",
+        "track speed-session volume spikes in training log"
+      ],
       "source": "Petersen 2011 Nordic hamstring RCT; Askling; van Dyk",
       "confidence": "high"
     }
   ],
-
   "decisionRules": [
     {
       "id": "low_readiness_autoregulate",
@@ -787,7 +1377,9 @@
       "confidence": "high",
       "evidenceLevel": "L1",
       "source": "Saw 2016",
-      "appliesTo": ["readiness"]
+      "appliesTo": [
+        "readiness"
+      ]
     },
     {
       "id": "illness_no_training",
@@ -797,7 +1389,9 @@
       "confidence": "high",
       "evidenceLevel": "L4",
       "source": "exercise-immunology consensus",
-      "appliesTo": ["readiness"]
+      "appliesTo": [
+        "readiness"
+      ]
     },
     {
       "id": "acwr_spike_pullback",
@@ -807,7 +1401,9 @@
       "confidence": "low",
       "evidenceLevel": "L3",
       "source": "Gabbett 2016 (methodology contested — Impellizzeri 2020, Lolli 2019); applied as a soft monitoring input",
-      "appliesTo": ["load"]
+      "appliesTo": [
+        "load"
+      ]
     },
     {
       "id": "taper_protocol",
@@ -817,7 +1413,9 @@
       "confidence": "high",
       "evidenceLevel": "L1",
       "source": "Mujika & Padilla; Bosquet 2007 taper meta-analysis",
-      "appliesTo": ["volume"]
+      "appliesTo": [
+        "volume"
+      ]
     },
     {
       "id": "race_day_priming_only",
@@ -827,7 +1425,9 @@
       "confidence": "moderate",
       "evidenceLevel": "L3",
       "source": "priming-session literature; expert consensus",
-      "appliesTo": ["volume"]
+      "appliesTo": [
+        "volume"
+      ]
     },
     {
       "id": "achilles_soreness_reduce_plyo_calf",
@@ -837,7 +1437,10 @@
       "confidence": "high",
       "evidenceLevel": "L2",
       "source": "Alfredson; Silbernagel — Achilles tendinopathy load-management consensus",
-      "appliesTo": ["achilles", "plyometrics"]
+      "appliesTo": [
+        "achilles",
+        "plyometrics"
+      ]
     },
     {
       "id": "inseason_minimal_effective_strength",
@@ -847,7 +1450,9 @@
       "confidence": "high",
       "evidenceLevel": "L2",
       "source": "Rønnestad & Mujika 2014; Blagrove 2018",
-      "appliesTo": ["volume"]
+      "appliesTo": [
+        "volume"
+      ]
     },
     {
       "id": "no_heavy_strength_before_key_run",
@@ -857,10 +1462,12 @@
       "confidence": "moderate",
       "evidenceLevel": "L4",
       "source": "expert consensus (running-session priority sequencing); residual-fatigue and running-economy literature",
-      "appliesTo": ["gym_sequencing", "running_quality"]
+      "appliesTo": [
+        "gym_sequencing",
+        "running_quality"
+      ]
     }
   ],
-
   "loadManagement": {
     "acwr": {
       "model": "Acute (7-day) : chronic (28-day) of running volume load (km or session RPE); rolling EWMA preferred to reduce day-to-day variability",
@@ -889,14 +1496,18 @@
     "evidenceLevel": "L3",
     "source": "Mujika/Bosquet (taper); Gabbett (load — contested); Rønnestad/Blagrove (maintenance + economy); Alfredson/Silbernagel (Achilles); Bennell (bone stress); Saw 2016"
   },
-
   "readinessModel": {
     "factors": [
       {
         "name": "Achilles / calf soreness (sport-specific)",
         "metric": "localised_soreness",
         "importance": 9,
-        "thresholds": [{ "when": "Achilles morning stiffness >10 min post warm-up or VISA-A declining", "modifier": "remove high-impact plyometrics and high-pace running; calf isometrics only; flag for physio" }],
+        "thresholds": [
+          {
+            "when": "Achilles morning stiffness >10 min post warm-up or VISA-A declining",
+            "modifier": "remove high-impact plyometrics and high-pace running; calf isometrics only; flag for physio"
+          }
+        ],
         "confidence": "high",
         "evidenceLevel": "L2",
         "source": "Alfredson; Silbernagel; Achilles tendinopathy load-management consensus"
@@ -905,7 +1516,16 @@
         "name": "Subjective wellness (soreness / energy / mood)",
         "metric": "subjective_wellness",
         "importance": 9,
-        "thresholds": [{ "when": "≥1 SD below personal baseline", "modifier": "reduce session load one step" }, { "when": "multiple sub-scores red", "modifier": "convert to recovery / easy aerobic session" }],
+        "thresholds": [
+          {
+            "when": "≥1 SD below personal baseline",
+            "modifier": "reduce session load one step"
+          },
+          {
+            "when": "multiple sub-scores red",
+            "modifier": "convert to recovery / easy aerobic session"
+          }
+        ],
         "confidence": "high",
         "evidenceLevel": "L1",
         "source": "Saw 2016"
@@ -914,7 +1534,12 @@
         "name": "Sleep",
         "metric": "sleep",
         "importance": 8,
-        "thresholds": [{ "when": "<6 h or markedly below baseline", "modifier": "reduce intensity; prioritise recovery" }],
+        "thresholds": [
+          {
+            "when": "<6 h or markedly below baseline",
+            "modifier": "reduce intensity; prioritise recovery"
+          }
+        ],
         "confidence": "high",
         "evidenceLevel": "L2",
         "source": "Milewski 2014"
@@ -923,7 +1548,12 @@
         "name": "Previous session RPE (running + gym load)",
         "metric": "session_rpe",
         "importance": 8,
-        "thresholds": [{ "when": "high prior session load + short recovery (<36 h) before key interval", "modifier": "lower today's running or gym intensity" }],
+        "thresholds": [
+          {
+            "when": "high prior session load + short recovery (<36 h) before key interval",
+            "modifier": "lower today's running or gym intensity"
+          }
+        ],
         "confidence": "high",
         "evidenceLevel": "L2",
         "source": "Foster sRPE; Haddad 2017"
@@ -932,7 +1562,12 @@
         "name": "CMJ / neuromuscular freshness",
         "metric": "cmj",
         "importance": 7,
-        "thresholds": [{ "when": ">10% below rolling 4-week baseline", "modifier": "reduce high-intensity intervals and gym volume; treat as accumulated fatigue" }],
+        "thresholds": [
+          {
+            "when": ">10% below rolling 4-week baseline",
+            "modifier": "reduce high-intensity intervals and gym volume; treat as accumulated fatigue"
+          }
+        ],
         "confidence": "moderate",
         "evidenceLevel": "L3",
         "source": "Claudino 2017; CMJ neuromuscular-monitoring literature"
@@ -941,7 +1576,12 @@
         "name": "HRV",
         "metric": "hrv",
         "importance": 7,
-        "thresholds": [{ "when": "sustained suppression vs baseline trend over 3+ days", "modifier": "treat as accumulating fatigue; ease interval load and gym intensity" }],
+        "thresholds": [
+          {
+            "when": "sustained suppression vs baseline trend over 3+ days",
+            "modifier": "treat as accumulating fatigue; ease interval load and gym intensity"
+          }
+        ],
         "confidence": "moderate",
         "evidenceLevel": "L3",
         "source": "Plews 2013 (trends, not single days)"
@@ -950,7 +1590,12 @@
         "name": "Resting HR",
         "metric": "resting_hr",
         "importance": 5,
-        "thresholds": [{ "when": "elevated vs personal baseline", "modifier": "possible fatigue or illness — caution before high-intensity sessions" }],
+        "thresholds": [
+          {
+            "when": "elevated vs personal baseline",
+            "modifier": "possible fatigue or illness — caution before high-intensity sessions"
+          }
+        ],
         "confidence": "low",
         "evidenceLevel": "L4",
         "source": "expert consensus"
@@ -959,7 +1604,12 @@
         "name": "Stress (life / work / study)",
         "metric": "life_stress",
         "importance": 6,
-        "thresholds": [{ "when": "high non-training stress reported", "modifier": "reduce load; maintain prehab and calf loading" }],
+        "thresholds": [
+          {
+            "when": "high non-training stress reported",
+            "modifier": "reduce load; maintain prehab and calf loading"
+          }
+        ],
         "confidence": "moderate",
         "evidenceLevel": "L3",
         "source": "Mann 2016; expert consensus"
@@ -968,7 +1618,12 @@
         "name": "Illness",
         "metric": "illness",
         "importance": 9,
-        "thresholds": [{ "when": "systemic / below-neck symptoms", "modifier": "withhold training; see illness rule" }],
+        "thresholds": [
+          {
+            "when": "systemic / below-neck symptoms",
+            "modifier": "withhold training; see illness rule"
+          }
+        ],
         "confidence": "high",
         "evidenceLevel": "L4",
         "source": "exercise-immunology consensus"
@@ -977,7 +1632,12 @@
         "name": "Competition / fixture congestion",
         "metric": "fixture_congestion",
         "importance": 7,
-        "thresholds": [{ "when": "heats + finals within 24–48 h", "modifier": "recovery-first; gym is priming or none" }],
+        "thresholds": [
+          {
+            "when": "heats + finals within 24–48 h",
+            "modifier": "recovery-first; gym is priming or none"
+          }
+        ],
         "confidence": "moderate",
         "evidenceLevel": "L4",
         "source": "competition-schedule demands; expert consensus"
@@ -986,7 +1646,12 @@
         "name": "Travel",
         "metric": "travel",
         "importance": 4,
-        "thresholds": [{ "when": "long travel <48 h ago", "modifier": "reduce intensity; prioritise sleep and recovery" }],
+        "thresholds": [
+          {
+            "when": "long travel <48 h ago",
+            "modifier": "reduce intensity; prioritise sleep and recovery"
+          }
+        ],
         "confidence": "low",
         "evidenceLevel": "L4",
         "source": "travel-fatigue literature"
@@ -994,35 +1659,121 @@
     ],
     "notes": "Achilles/calf soreness is elevated to a top-priority, sport-specific readiness input — it should GATE all reactive plyometric and high-pace running. Subjective wellness, sleep, and prior session load carry the most general weight. HRV is a moderate additional signal when trended over multiple days. Raw vitals (HRV/RHR/sleep) stay private to the athlete; the coach sees only the derived readiness score."
   },
-
   "coachDashboard": {
     "principle": "Coach sees DERIVED signals and availability only — never an individual athlete's raw HRV, sleep, or resting HR. Aggregated, plain-English, action-oriented.",
-    "mostUsefulKpis": ["squad readiness (derived, traffic-light)", "training availability (fit/modified/out — especially Achilles and tibial)", "running-volume ACWR distribution", "weekly km vs plan (per athlete/event group)", "compliance (interval sessions + prehab completion)", "race-time trend (event-group)", "meet readiness (taper state)", "Achilles and bone-stress risk flags"],
-    "mostUsefulAlerts": ["Achilles soreness flag on any athlete", "running volume ACWR >1.5", "readiness red ≥2 days", "tibial tenderness reported", "CMJ drop flag"],
-    "weeklyReports": ["squad availability trend", "running volume vs plan (per athlete/event group)", "injury/illness summary (status only)", "compliance %"],
+    "mostUsefulKpis": [
+      "squad readiness (derived, traffic-light)",
+      "training availability (fit/modified/out — especially Achilles and tibial)",
+      "running-volume ACWR distribution",
+      "weekly km vs plan (per athlete/event group)",
+      "compliance (interval sessions + prehab completion)",
+      "race-time trend (event-group)",
+      "meet readiness (taper state)",
+      "Achilles and bone-stress risk flags"
+    ],
+    "mostUsefulAlerts": [
+      "Achilles soreness flag on any athlete",
+      "running volume ACWR >1.5",
+      "readiness red ≥2 days",
+      "tibial tenderness reported",
+      "CMJ drop flag"
+    ],
+    "weeklyReports": [
+      "squad availability trend",
+      "running volume vs plan (per athlete/event group)",
+      "injury/illness summary (status only)",
+      "compliance %"
+    ],
     "trafficLightIndicators": "Per-athlete green/amber/red from the derived readiness + load state (no raw numbers shown).",
-    "teamReadinessMetrics": ["% squad green", "mean derived readiness", "fatigue distribution"],
-    "complianceMetrics": ["% prescribed interval sessions completed", "% calf/Nordic prehab completed", "wellness check-in completion"],
+    "teamReadinessMetrics": [
+      "% squad green",
+      "mean derived readiness",
+      "fatigue distribution"
+    ],
+    "complianceMetrics": [
+      "% prescribed interval sessions completed",
+      "% calf/Nordic prehab completed",
+      "wellness check-in completion"
+    ],
     "privacyNote": "All per-athlete entries here are DERIVED (readiness score, load_state, ACWR, adherence %, injury availability). Raw vitals are excluded by design and enforced by the schema validator."
   },
-
   "athleteDashboard": {
-    "mostUsefulMetrics": ["readiness (today)", "weekly consistency", "race-time trend", "running economy trend", "critical speed", "Achilles resilience (calf raise capacity)", "weekly volume ACWR", "availability streak"],
-    "progressIndicators": ["race-time PBs vs baseline", "critical speed improvement", "running economy trend (pace-HR)", "CMJ / reactive strength trend"],
-    "recoveryIndicators": ["sleep trend (private)", "Achilles soreness trend", "readiness trend"],
-    "performanceIndicators": ["race-time score", "critical speed score", "economy score (pace-HR)", "strength-for-economy score (trap-bar DL trend)"],
-    "motivationalMetrics": ["Achilles-healthy weeks (streak)", "consistency streak", "calf raise load milestone", "testing-battery completion"],
-    "educationTips": ["why heavy, low-rep strength training improves running economy (not just more running)", "why calf raises protect your Achilles better than rest alone (Silbernagel evidence)", "why the taper works — less volume, maintained intensity", "what your readiness colour means and how Achilles soreness gates your sessions"]
+    "mostUsefulMetrics": [
+      "readiness (today)",
+      "weekly consistency",
+      "race-time trend",
+      "running economy trend",
+      "critical speed",
+      "Achilles resilience (calf raise capacity)",
+      "weekly volume ACWR",
+      "availability streak"
+    ],
+    "progressIndicators": [
+      "race-time PBs vs baseline",
+      "critical speed improvement",
+      "running economy trend (pace-HR)",
+      "CMJ / reactive strength trend"
+    ],
+    "recoveryIndicators": [
+      "sleep trend (private)",
+      "Achilles soreness trend",
+      "readiness trend"
+    ],
+    "performanceIndicators": [
+      "race-time score",
+      "critical speed score",
+      "economy score (pace-HR)",
+      "strength-for-economy score (trap-bar DL trend)"
+    ],
+    "motivationalMetrics": [
+      "Achilles-healthy weeks (streak)",
+      "consistency streak",
+      "calf raise load milestone",
+      "testing-battery completion"
+    ],
+    "educationTips": [
+      "why heavy, low-rep strength training improves running economy (not just more running)",
+      "why calf raises protect your Achilles better than rest alone (Silbernagel evidence)",
+      "why the taper works — less volume, maintained intensity",
+      "what your readiness colour means and how Achilles soreness gates your sessions"
+    ]
   },
-
   "validation": {
-    "strongEvidence": ["heavy strength training improves running economy in middle- and long-distance runners (Blagrove 2018 systematic review; L2)", "single-leg calf raise loading is the primary evidence-based Achilles tendinopathy intervention (Alfredson; Silbernagel)", "subjective wellness is a sensitive readiness indicator (Saw 2016)", "taper improves middle-distance performance — reduce volume, maintain intensity (Mujika/Padilla; Bosquet 2007)", "Nordic hamstring protocol reduces hamstring strain incidence (Petersen 2011 RCT; L1)", "critical speed is a robust predictor of middle-distance performance (Jones; Billat)"],
-    "weakEvidence": ["exact ACWR thresholds for running injury risk (contested methodology)", "optimal ratio of strength:plyometric:running volume for economy in middle-distance", "whether Olympic lifting provides incremental benefit over heavy strength + plyometrics for middle distance", "specific gym volume thresholds for peak middle-distance performance"],
-    "areasRequiringExpertJudgement": ["balance between running volume (aerobic capacity) and gym load (economy/stiffness) — both compete for recovery", "individual response to strength training on running economy (some non-responders exist)", "Achilles load management during high-mileage pre-season without losing running volume", "RED-S / energy availability assessment and nutrition referral in female athletes"],
-    "areasRequiringFutureResearch": ["optimal Nordic curl + calf loading programme integrated within a full middle-distance training week", "AI/wearable real-time economy and stiffness feedback", "personalised running-economy response to strength training", "bone health and RED-S prevention protocols in masters middle-distance runners"],
-    "potentialRisksIfMisimplemented": ["heavy gym work adjacent to key interval sessions (impairs running quality and Achilles recovery)", "dropping calf/Nordic prehab when programme busy (removes the primary tendinopathy/hamstring prevention lever)", "treating ACWR as a hard rule rather than a soft signal", "exposing raw vitals to coaches (privacy + trust breach)", "botched taper — too much volume retained, performance suppressed", "non-screening for RED-S / low energy availability in at-risk athletes"]
+    "strongEvidence": [
+      "heavy strength training improves running economy in middle- and long-distance runners (Blagrove 2018 systematic review; L2)",
+      "single-leg calf raise loading is the primary evidence-based Achilles tendinopathy intervention (Alfredson; Silbernagel)",
+      "subjective wellness is a sensitive readiness indicator (Saw 2016)",
+      "taper improves middle-distance performance — reduce volume, maintain intensity (Mujika/Padilla; Bosquet 2007)",
+      "Nordic hamstring protocol reduces hamstring strain incidence (Petersen 2011 RCT; L1)",
+      "critical speed is a robust predictor of middle-distance performance (Jones; Billat)"
+    ],
+    "weakEvidence": [
+      "exact ACWR thresholds for running injury risk (contested methodology)",
+      "optimal ratio of strength:plyometric:running volume for economy in middle-distance",
+      "whether Olympic lifting provides incremental benefit over heavy strength + plyometrics for middle distance",
+      "specific gym volume thresholds for peak middle-distance performance"
+    ],
+    "areasRequiringExpertJudgement": [
+      "balance between running volume (aerobic capacity) and gym load (economy/stiffness) — both compete for recovery",
+      "individual response to strength training on running economy (some non-responders exist)",
+      "Achilles load management during high-mileage pre-season without losing running volume",
+      "RED-S / energy availability assessment and nutrition referral in female athletes"
+    ],
+    "areasRequiringFutureResearch": [
+      "optimal Nordic curl + calf loading programme integrated within a full middle-distance training week",
+      "AI/wearable real-time economy and stiffness feedback",
+      "personalised running-economy response to strength training",
+      "bone health and RED-S prevention protocols in masters middle-distance runners"
+    ],
+    "potentialRisksIfMisimplemented": [
+      "heavy gym work adjacent to key interval sessions (impairs running quality and Achilles recovery)",
+      "dropping calf/Nordic prehab when programme busy (removes the primary tendinopathy/hamstring prevention lever)",
+      "treating ACWR as a hard rule rather than a soft signal",
+      "exposing raw vitals to coaches (privacy + trust breach)",
+      "botched taper — too much volume retained, performance suppressed",
+      "non-screening for RED-S / low energy availability in at-risk athletes"
+    ]
   },
-
   "references": [
     {
       "key": "Gastin2001",
@@ -1145,7 +1896,6 @@
       "type": "governing body"
     }
   ],
-
   "kpiFramework": {
     "kpis": [
       {
@@ -1163,7 +1913,9 @@
         "eliteBenchmark": "consistently green pre-race",
         "beginnerBenchmark": "establish baseline",
         "youthBenchmark": "track trend",
-        "equipmentRequired": ["app (+ optional wearable)"],
+        "equipmentRequired": [
+          "app (+ optional wearable)"
+        ],
         "wearableEstimable": true,
         "autoCalculable": true,
         "confidence": "high",
@@ -1185,7 +1937,10 @@
         "eliteBenchmark": "event-relative; tracked vs seasonal history",
         "beginnerBenchmark": "establish baseline",
         "youthBenchmark": "track trend",
-        "equipmentRequired": ["GPS watch / timing gates", "400 m track"],
+        "equipmentRequired": [
+          "GPS watch / timing gates",
+          "400 m track"
+        ],
         "wearableEstimable": true,
         "autoCalculable": false,
         "confidence": "high",
@@ -1207,7 +1962,9 @@
         "eliteBenchmark": "elite men ~200 ml/kg/km at race pace",
         "beginnerBenchmark": "establish baseline trend",
         "youthBenchmark": "baseline",
-        "equipmentRequired": ["metabolic cart (lab) or GPS watch + HR monitor (field proxy)"],
+        "equipmentRequired": [
+          "metabolic cart (lab) or GPS watch + HR monitor (field proxy)"
+        ],
         "wearableEstimable": true,
         "autoCalculable": false,
         "confidence": "high",
@@ -1229,7 +1986,9 @@
         "eliteBenchmark": "≥90%",
         "beginnerBenchmark": "≥70%",
         "youthBenchmark": "habit-building",
-        "equipmentRequired": ["app"],
+        "equipmentRequired": [
+          "app"
+        ],
         "wearableEstimable": false,
         "autoCalculable": true,
         "confidence": "high",
@@ -1251,7 +2010,9 @@
         "eliteBenchmark": "high availability",
         "beginnerBenchmark": "n/a",
         "youthBenchmark": "n/a",
-        "equipmentRequired": ["app"],
+        "equipmentRequired": [
+          "app"
+        ],
         "wearableEstimable": false,
         "autoCalculable": true,
         "confidence": "high",
@@ -1273,7 +2034,9 @@
         "eliteBenchmark": "matches plan",
         "beginnerBenchmark": "learn RPE scale",
         "youthBenchmark": "learn RPE scale",
-        "equipmentRequired": ["app"],
+        "equipmentRequired": [
+          "app"
+        ],
         "wearableEstimable": false,
         "autoCalculable": true,
         "confidence": "high",
@@ -1295,7 +2058,9 @@
         "eliteBenchmark": "stable in range",
         "beginnerBenchmark": "n/a",
         "youthBenchmark": "n/a",
-        "equipmentRequired": ["training log / GPS watch"],
+        "equipmentRequired": [
+          "training log / GPS watch"
+        ],
         "wearableEstimable": false,
         "autoCalculable": true,
         "confidence": "low",
@@ -1317,7 +2082,9 @@
         "eliteBenchmark": "World Athletics standards",
         "beginnerBenchmark": "age-group standards",
         "youthBenchmark": "age-group standards",
-        "equipmentRequired": ["timing gates / official results"],
+        "equipmentRequired": [
+          "timing gates / official results"
+        ],
         "wearableEstimable": false,
         "autoCalculable": false,
         "confidence": "high",
@@ -1339,7 +2106,9 @@
         "eliteBenchmark": "consistent ≥8 h",
         "beginnerBenchmark": "improve consistency",
         "youthBenchmark": "≥8–10 h",
-        "equipmentRequired": ["wearable / self-report"],
+        "equipmentRequired": [
+          "wearable / self-report"
+        ],
         "wearableEstimable": true,
         "autoCalculable": true,
         "confidence": "high",
@@ -1361,7 +2130,9 @@
         "eliteBenchmark": "stable / upward trend (aerobic training typically elevates HRV)",
         "beginnerBenchmark": "establish baseline",
         "youthBenchmark": "n/a",
-        "equipmentRequired": ["wearable"],
+        "equipmentRequired": [
+          "wearable"
+        ],
         "wearableEstimable": true,
         "autoCalculable": true,
         "confidence": "moderate",
@@ -1383,7 +2154,9 @@
         "eliteBenchmark": "stable/low (aerobic training typically lowers RHR)",
         "beginnerBenchmark": "baseline",
         "youthBenchmark": "n/a",
-        "equipmentRequired": ["wearable"],
+        "equipmentRequired": [
+          "wearable"
+        ],
         "wearableEstimable": true,
         "autoCalculable": true,
         "confidence": "low",
@@ -1392,52 +2165,172 @@
       }
     ],
     "athleteDashboardKpis": [
-      { "name": "Readiness", "why": "One daily signal telling the middle-distance runner whether to push or hold back — the most actionable single number, anchoring Achilles and overall training quality decisions." },
-      { "name": "Race time trend", "why": "The outcome every middle-distance runner cares about most — their time, improving vs their own baseline across their event." },
-      { "name": "Critical speed", "why": "The most powerful leading indicator of middle-distance race performance — tracks aerobic and lactate fitness gains between races." },
-      { "name": "Running economy", "why": "Makes the invisible gains from strength training visible — a more economical stride means faster racing for the same effort, directly linked to gym work." },
-      { "name": "Weekly consistency", "why": "Middle-distance adaptation is built on relentless aerobic accumulation — consistency over weeks beats occasional perfect sessions." },
-      { "name": "Achilles resilience (calf raise capacity)", "why": "Makes the primary tendon injury risk visible and trainable — a calf raise milestone is both a performance and injury-prevention win." },
-      { "name": "Availability streak", "why": "Celebrates injury-free training weeks — the Achilles-healthy and tibial-healthy streak is the most important career-longevity metric." },
-      { "name": "Volume ACWR", "why": "Shows whether training load is in the productive zone or spiking toward overuse injury — the primary load-management guardrail." }
+      {
+        "name": "Readiness",
+        "why": "One daily signal telling the middle-distance runner whether to push or hold back — the most actionable single number, anchoring Achilles and overall training quality decisions."
+      },
+      {
+        "name": "Race time trend",
+        "why": "The outcome every middle-distance runner cares about most — their time, improving vs their own baseline across their event."
+      },
+      {
+        "name": "Critical speed",
+        "why": "The most powerful leading indicator of middle-distance race performance — tracks aerobic and lactate fitness gains between races."
+      },
+      {
+        "name": "Running economy",
+        "why": "Makes the invisible gains from strength training visible — a more economical stride means faster racing for the same effort, directly linked to gym work."
+      },
+      {
+        "name": "Weekly consistency",
+        "why": "Middle-distance adaptation is built on relentless aerobic accumulation — consistency over weeks beats occasional perfect sessions."
+      },
+      {
+        "name": "Achilles resilience (calf raise capacity)",
+        "why": "Makes the primary tendon injury risk visible and trainable — a calf raise milestone is both a performance and injury-prevention win."
+      },
+      {
+        "name": "Availability streak",
+        "why": "Celebrates injury-free training weeks — the Achilles-healthy and tibial-healthy streak is the most important career-longevity metric."
+      },
+      {
+        "name": "Volume ACWR",
+        "why": "Shows whether training load is in the productive zone or spiking toward overuse injury — the primary load-management guardrail."
+      }
     ],
     "coachDashboardKpis": [
-      { "name": "Squad readiness", "why": "At-a-glance freshness (traffic-light, derived) to shape the session before it starts — especially relevant on high-volume training days." },
-      { "name": "Training availability", "why": "Who is fit / modified / out (especially Achilles and tibial) — the critical daily planning input for a running squad." },
-      { "name": "Achilles / injury risk flags", "why": "Surfaces athletes with Achilles soreness or tibial symptoms needing immediate load adjustment or physio referral." },
-      { "name": "Running volume ACWR distribution", "why": "Flags load-spike risk athletes proactively for volume management before injury onset." },
-      { "name": "Weekly km vs plan (per athlete/event group)", "why": "Shows who is over- or under-loaded relative to planned training volume." },
-      { "name": "Training completion / compliance", "why": "Whether prescribed interval sessions and prehab (calf loading, Nordic curls) are actually completed." },
-      { "name": "Meet readiness (taper state)", "why": "Taper / freshness picture into a key competition — shaping race-week decisions for each athlete." },
-      { "name": "Critical speed trend (event group)", "why": "Derived performance signal showing whether the group's fitness is on track without exposing raw vitals." },
-      { "name": "Recovery trend (squad)", "why": "Derived readiness trend warns of accumulating fatigue across a training block before it shows up as injury." },
-      { "name": "Injury / illness status summary", "why": "Availability picture (status only) for planning + medical liaison." },
-      { "name": "CMJ drop flags", "why": "Identifies athletes carrying accumulated neuromuscular fatigue before a key interval session or race." },
-      { "name": "Fatigue distribution", "why": "Spread of green / amber / red shows whether the whole squad or just individuals need load adjustment." }
+      {
+        "name": "Squad readiness",
+        "why": "At-a-glance freshness (traffic-light, derived) to shape the session before it starts — especially relevant on high-volume training days."
+      },
+      {
+        "name": "Training availability",
+        "why": "Who is fit / modified / out (especially Achilles and tibial) — the critical daily planning input for a running squad."
+      },
+      {
+        "name": "Achilles / injury risk flags",
+        "why": "Surfaces athletes with Achilles soreness or tibial symptoms needing immediate load adjustment or physio referral."
+      },
+      {
+        "name": "Running volume ACWR distribution",
+        "why": "Flags load-spike risk athletes proactively for volume management before injury onset."
+      },
+      {
+        "name": "Weekly km vs plan (per athlete/event group)",
+        "why": "Shows who is over- or under-loaded relative to planned training volume."
+      },
+      {
+        "name": "Training completion / compliance",
+        "why": "Whether prescribed interval sessions and prehab (calf loading, Nordic curls) are actually completed."
+      },
+      {
+        "name": "Meet readiness (taper state)",
+        "why": "Taper / freshness picture into a key competition — shaping race-week decisions for each athlete."
+      },
+      {
+        "name": "Critical speed trend (event group)",
+        "why": "Derived performance signal showing whether the group's fitness is on track without exposing raw vitals."
+      },
+      {
+        "name": "Recovery trend (squad)",
+        "why": "Derived readiness trend warns of accumulating fatigue across a training block before it shows up as injury."
+      },
+      {
+        "name": "Injury / illness status summary",
+        "why": "Availability picture (status only) for planning + medical liaison."
+      },
+      {
+        "name": "CMJ drop flags",
+        "why": "Identifies athletes carrying accumulated neuromuscular fatigue before a key interval session or race."
+      },
+      {
+        "name": "Fatigue distribution",
+        "why": "Spread of green / amber / red shows whether the whole squad or just individuals need load adjustment."
+      }
     ],
     "performanceScore": {
       "range": "0-100",
       "philosophy": "Reflects progress toward the aerobic, economic, and lactate-tolerance demands of competitive middle-distance running, weighted to reward the qualities that determine race outcomes (economy, critical speed, availability) while penalising injury risk, Achilles fragility, and excessive fatigue — never rewarding training through pain.",
       "components": [
-        { "kpi": "consistency", "weight": 0.18, "rationale": "Aerobic adaptation is built on consistent training accumulation — the single most controllable performance lever." },
-        { "kpi": "availability", "weight": 0.20, "rationale": "Achilles-healthy, tibial-healthy availability is the strongest performance lever — injured athletes don't adapt." },
-        { "kpi": "race_time", "weight": 0.22, "rationale": "Race-time improvement is the primary performance outcome for every middle-distance athlete." },
-        { "kpi": "critical_speed", "weight": 0.18, "rationale": "Critical speed tracks the primary aerobic performance determinant between races." },
-        { "kpi": "running_economy", "weight": 0.12, "rationale": "Economy improvement is the mechanism by which strength training converts to race performance — a leading indicator." },
-        { "kpi": "recovery", "weight": 0.06, "rationale": "Penalises chronic fatigue and poor recovery; keeps the score sustainable across a long season." },
-        { "kpi": "acwr", "weight": 0.04, "rationale": "Mild penalty for load-spiking patterns that increase overuse injury risk." }
+        {
+          "kpi": "consistency",
+          "weight": 0.18,
+          "rationale": "Aerobic adaptation is built on consistent training accumulation — the single most controllable performance lever."
+        },
+        {
+          "kpi": "availability",
+          "weight": 0.2,
+          "rationale": "Achilles-healthy, tibial-healthy availability is the strongest performance lever — injured athletes don't adapt."
+        },
+        {
+          "kpi": "race_time",
+          "weight": 0.22,
+          "rationale": "Race-time improvement is the primary performance outcome for every middle-distance athlete."
+        },
+        {
+          "kpi": "critical_speed",
+          "weight": 0.18,
+          "rationale": "Critical speed tracks the primary aerobic performance determinant between races."
+        },
+        {
+          "kpi": "running_economy",
+          "weight": 0.12,
+          "rationale": "Economy improvement is the mechanism by which strength training converts to race performance — a leading indicator."
+        },
+        {
+          "kpi": "recovery",
+          "weight": 0.06,
+          "rationale": "Penalises chronic fatigue and poor recovery; keeps the score sustainable across a long season."
+        },
+        {
+          "kpi": "acwr",
+          "weight": 0.04,
+          "rationale": "Mild penalty for load-spiking patterns that increase overuse injury risk."
+        }
       ],
-      "guardrails": ["never increases for training through Achilles pain, tibial tenderness, red readiness, or injury", "consistency + availability dominate so the score cannot be gamed by occasional maximal race-day efforts", "CMJ drop or poor readiness caps the score when neuromuscular fatigue is high"],
+      "guardrails": [
+        "never increases for training through Achilles pain, tibial tenderness, red readiness, or injury",
+        "consistency + availability dominate so the score cannot be gamed by occasional maximal race-day efforts",
+        "CMJ drop or poor readiness caps the score when neuromuscular fatigue is high"
+      ],
       "explainability": "Each component is shown with its contribution so the athlete sees exactly why the score moved and what to work on next — economy gains from the gym are made visible."
     },
     "gamification": [
-      { "name": "Achilles-healthy weeks", "type": "streak", "rewards": "Consecutive weeks training and racing without Achilles soreness — tied to the sport's primary overuse injury risk." },
-      { "name": "Calf raise load milestone", "type": "milestone", "rewards": "Personal bests in loaded single-leg calf raise — links injury prevention directly to a concrete, achievable gym target." },
-      { "name": "Consistency streak", "type": "streak", "rewards": "Unbroken weeks hitting prescribed running + gym sessions; rewards process over outcome." },
-      { "name": "Critical speed PB", "type": "milestone", "rewards": "Improvement in estimated critical speed — the most meaningful between-race fitness marker for middle-distance athletes." },
-      { "name": "Economy milestone", "type": "milestone", "rewards": "Improvement in running economy (pace-HR proxy trend) — makes gym-to-race transfer tangible and rewarding." },
-      { "name": "Personal-best milestones", "type": "milestone", "rewards": "Race-time PBs vs the athlete's own baseline — self-referenced, never leaderboard." },
-      { "name": "Testing-battery completion", "type": "milestone", "rewards": "Completing each testing block (critical speed time-trials, calf raise, CMJ) — encourages objective tracking." }
+      {
+        "name": "Achilles-healthy weeks",
+        "type": "streak",
+        "rewards": "Consecutive weeks training and racing without Achilles soreness — tied to the sport's primary overuse injury risk."
+      },
+      {
+        "name": "Calf raise load milestone",
+        "type": "milestone",
+        "rewards": "Personal bests in loaded single-leg calf raise — links injury prevention directly to a concrete, achievable gym target."
+      },
+      {
+        "name": "Consistency streak",
+        "type": "streak",
+        "rewards": "Unbroken weeks hitting prescribed running + gym sessions; rewards process over outcome."
+      },
+      {
+        "name": "Critical speed PB",
+        "type": "milestone",
+        "rewards": "Improvement in estimated critical speed — the most meaningful between-race fitness marker for middle-distance athletes."
+      },
+      {
+        "name": "Economy milestone",
+        "type": "milestone",
+        "rewards": "Improvement in running economy (pace-HR proxy trend) — makes gym-to-race transfer tangible and rewarding."
+      },
+      {
+        "name": "Personal-best milestones",
+        "type": "milestone",
+        "rewards": "Race-time PBs vs the athlete's own baseline — self-referenced, never leaderboard."
+      },
+      {
+        "name": "Testing-battery completion",
+        "type": "milestone",
+        "rewards": "Completing each testing block (critical speed time-trials, calf raise, CMJ) — encourages objective tracking."
+      }
     ]
   }
 }
