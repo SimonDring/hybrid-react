@@ -1,7 +1,25 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-06-30. Keep this current at the end of each work session so the
+_Last updated: 2026-07-01. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
+
+## Governance FROZEN — the five documents are locked at v1.0 (2026-07-01)
+
+The platform's five governing/architecture documents are now **FROZEN** — the authoritative,
+locked baseline. All future engineering, coaching, product, and AI work is **validated against**
+them; it does **not** modify them. Changing one is a deliberate, versioned **amendment** (per the
+Constitution's *Amendment & Stewardship* section), reviewed and reconciled across the whole set —
+never an inline edit during feature work.
+
+The frozen set:
+1. **Constitution** — `docs/foundation/CONSTITUTION.md` (20 immutable Articles — the tie-breaker)
+2. **Decision Ontology** — `docs/foundation/DECISION-ONTOLOGY.md`
+3. **Knowledge Architecture** — `docs/foundation/KNOWLEDGE-ARCHITECTURE.md`
+4. **Engine Design Specification (EDS)** — `docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md`
+5. **Technical Architecture Specification (TAS)** — `docs/architecture/TAS.md`
+
+`CLAUDE.md` carries this as a hard rule. The supporting docs (engine 01–05, foundation
+`PANEL-REVIEW.md`, the READMEs) remain **living references** — only the five above are frozen.
 
 ## Latest work — foundation governing framework (`docs/foundation/`) (2026-06-30)
 
@@ -522,11 +540,12 @@ apply when `feat/decision-engine-evidence-architecture` merges. No new functions
 
 ## How work is run here
 
-**Validate against the foundation first.** Before building any engine, coaching, product, or
-AI feature, check it against `docs/foundation/` — the **Constitution** (immutable Articles, the
-tie-breaker), the **Decision Ontology** (canonical vocabulary), and the **Knowledge Architecture**
-(reason from data, don't hard-code). These sit *above* the EDS as the governing framework (added
-2026-06-30; see the entry above). When the rules disagree, the higher document wins.
+**Validate against the frozen governance set first.** Before building any engine, coaching,
+product, or AI feature, check it against the **five FROZEN documents** (v1.0) — the
+**Constitution**, **Decision Ontology**, **Knowledge Architecture** (`docs/foundation/`), the
+**EDS** (`docs/engine/00`), and the **TAS** (`docs/architecture/TAS.md`). New work is validated
+*against* them and never edits them — changes are deliberate amendments (see the freeze entry
+above). When the rules disagree, the higher document wins (the Constitution is the tie-breaker).
 
 Engine changes this session: branch → small themed commits → node tests per change →
 `/dev` sweep + preview verification → PR. The deterministic engine lives in
