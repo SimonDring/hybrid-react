@@ -62,6 +62,9 @@ Monorepo — npm workspaces. Run `npm run dev` / `npm run build` from the REPO R
     KNOWLEDGE-ARCHITECTURE.md (how knowledge is structured, not hard-coded), PANEL-REVIEW.md,
     README.md (index + the governance stack). Validate any new feature/algorithm/schema against
     these BEFORE building.
+    architecture/ — the TECHNICAL blueprint (TAS.md): how the software is BUILT to implement the
+    governing docs — the six-layer architecture, the pure-engine boundary + public API, knowledge/
+    data flow, the two learning systems, the AI seam. Every engineering decision validates against it.
     engine/ — the FOUNDATIONAL engine spec set (how the engine reasons, BENEATH the Constitution):
     docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md (the EDS) + 01-PANEL-REVIEW, 02-REFACTOR-ROADMAP,
     03-SPORT-KNOWLEDGE-BASE, 04-PHYSIOLOGICAL-FRAMEWORK, 05-INDEX-LAYER-FOLLOWUPS. The EDS is the

@@ -16,6 +16,11 @@ the [Decision Ontology](../foundation/DECISION-ONTOLOGY.md) (canonical vocabular
 [Knowledge Architecture](../foundation/KNOWLEDGE-ARCHITECTURE.md). The EDS defers *up* to those;
 where the EDS conflicts with the Constitution, the Constitution wins.
 
+**Below this folder** sits the technical blueprint: the
+[Technical Architecture Specification](../architecture/TAS.md) (`../architecture/`) is the
+*software* realization of this engine design — the pure-library boundary, the engine's public
+API, knowledge/data flow, and the future-AI seam.
+
 ## Foundational vs. running documents
 
 There are two kinds of document in this repo, and they must not be confused:

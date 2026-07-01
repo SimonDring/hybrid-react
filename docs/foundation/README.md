@@ -25,6 +25,8 @@ immutable principles, the canonical vocabulary, and how knowledge must be struct
         │
    engine/01–05  ...........  evidence · build plan · sport schema · physiology · index specs
         │
+   architecture/TAS  ......  the TECHNICAL blueprint — HOW the software is built to implement all the above
+        │
    CLAUDE.md · HANDOFF.md  .  RUNNING docs — current status against the targets above
 ```
 
