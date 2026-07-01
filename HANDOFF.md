@@ -21,6 +21,50 @@ The frozen set:
 `CLAUDE.md` carries this as a hard rule. The supporting docs (engine 01–05, foundation
 `PANEL-REVIEW.md`, the READMEs) remain **living references** — only the five above are frozen.
 
+## Latest work — Sprints 1 & 2: Baseline Assessment + Migration Blueprint (2026-07-01)
+
+Two new **planning documents** in `docs/architecture/` (NOT frozen — the *living rebuild plan*,
+derived from and validated against the frozen governing set). They turn "the engine is mid-migration"
+into a precise, executable programme.
+
+- **Sprint 1 → `docs/architecture/BASELINE-ARCHITECTURE-ASSESSMENT.md`** — a 25-section
+  **observational** baseline (no code changed): what exists today, how coaching decisions are
+  actually made (a full decision catalogue), where knowledge lives, the data flow, alignment vs
+  each frozen doc, technical debt, and what to preserve / replace / remove. Headline: the engine is
+  an **excellent VOLUME-FIRST gym planner** whose central shape is exactly what the Constitution's
+  Articles 4/5/6 name as their "Violated" examples — the gap is **orientation, not quality**.
+- **Sprint 2 → `docs/architecture/MIGRATION-BLUEPRINT.md`** — the master **rebuild plan** (10 parts):
+  the future decision chain (diagnosis as the pivot; adaptation chosen before exercise); the
+  **D1–D16 decision catalogue** with contracts; decision-ownership (the anti-hard-coding rules); a
+  current→future mapping (Retain/Refactor/Replace/Remove per component); the knowledge-migration plan
+  (code → the 12 domains); the target module map (**one engine, not many**); the migration
+  **waves W0–W11**; an executable **Sprint 0–12 backlog**; a traceability matrix; and a six-lens
+  critical review.
+
+**The rebuild is a RE-SEATING, not a rewrite** (EDS §18): keep the pure/deterministic engine +
+golden-master (G1), the injury subsystem (G3), the SKB schema (G5), freeze-on-commit (G6), and
+privacy-by-validation (G8); change the *primitive* (physical qualities/adaptations, not per-muscle
+volume) and the *order* (diagnose → prioritise → dose → validate); wire the dormant SKB. **W0–W4
+ship value and are independent of the risky re-seating (W5–W9)** — the platform improves continuously.
+
+### ▶ START SPRINT 3 HERE — "Sprint 0: Safety net & CI gate" (Blueprint Part 8)
+
+The very first execution step, because there is currently **no automated test protection**:
+1. **Fix `npm test`** — it points at a non-existent `apps/mobile/tests/data-layer.js` and fails
+   immediately. The real 84-file engine suite only runs via the manual `node tests/*.js` glob.
+2. **Add a CI test gate** — neither `.github/workflows/deploy.yml` (build-only) nor `web-ci.yml`
+   runs the engine suite or the golden-master. Add a job that runs both on PR + push to `main`.
+3. **Lock the golden-master** (`apps/mobile/tests/golden-master.js`, 19-archetype byte-identical
+   snapshot) as the safety net every later wave depends on; document the `UPDATE=1` workflow.
+
+Then proceed to Blueprint **Sprint 1 (confidence operative)** → **Sprint 2 (recovery honest)** →
+**Sprint 3 (validator suite)** → **Sprint 4 (constraints-first)** — all independent of the re-seating.
+Read `MIGRATION-BLUEPRINT.md` **Part 8** for each sprint's full objective / scope / validation /
+success, and **Part 7** for how the waves sequence. Validate every step against the frozen set.
+
+- **Docs-only; no code changed; no frozen document was modified** (verified: zero diff to the frozen
+  set). The two new docs are living planning artefacts, not part of the frozen v1.0 set.
+
 ## Latest work — foundation governing framework (`docs/foundation/`) (2026-06-30)
 
 Merged to **`main`** (PR #49, merge commit `7166bd3`). Added a new **platform-level

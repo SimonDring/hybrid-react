@@ -67,9 +67,19 @@ Monorepo — npm workspaces. Run `npm run dev` / `npm run build` from the REPO R
     KNOWLEDGE-ARCHITECTURE.md (how knowledge is structured, not hard-coded), PANEL-REVIEW.md,
     README.md (index + the governance stack). Validate any new feature/algorithm/schema against
     these BEFORE building.
-    architecture/ — the TECHNICAL blueprint (TAS.md): how the software is BUILT to implement the
-    governing docs — the six-layer architecture, the pure-engine boundary + public API, knowledge/
+    architecture/ — the TECHNICAL blueprint (TAS.md, FROZEN): how the software is BUILT to implement
+    the governing docs — the six-layer architecture, the pure-engine boundary + public API, knowledge/
     data flow, the two learning systems, the AI seam. Every engineering decision validates against it.
+    architecture/ ALSO holds the two Sprint-1/2 planning docs (NOT frozen — the LIVING REBUILD PLAN,
+    derived from and validated against the frozen set):
+      • BASELINE-ARCHITECTURE-ASSESSMENT.md — the observational baseline: what exists today, how
+        coaching decisions are actually made, knowledge + data-flow catalogues, alignment vs the
+        frozen set, technical debt, what to preserve / replace / remove.
+      • MIGRATION-BLUEPRINT.md — the master rebuild plan: the future decision chain, the D1–D16
+        decision catalogue, current→future mapping, knowledge migration, the target module map, the
+        migration WAVES (W0–W11) + an executable SPRINT BACKLOG (Sprint 0–12), traceability + a
+        six-lens review. START engine-rebuild work from its Part 8 backlog (next up: "Sprint 0 —
+        Safety net & CI gate" = fix the broken `npm test` + add a CI test gate).
     engine/ — the FOUNDATIONAL engine spec set (how the engine reasons, BENEATH the Constitution):
     docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md (the EDS) + 01-PANEL-REVIEW, 02-REFACTOR-ROADMAP,
     03-SPORT-KNOWLEDGE-BASE, 04-PHYSIOLOGICAL-FRAMEWORK, 05-INDEX-LAYER-FOLLOWUPS. The EDS is the
@@ -87,9 +97,13 @@ Inside apps/mobile/ — NOTE: every `src/...` path elsewhere in this doc is rela
   NOTE: the PURE decision engine has MOVED OUT to packages/engine (`@performance-os/engine`) —
     see the next section.
   src/stores/ — trainingStore.js (app data), authStore.js (auth session)
-  src/data/ — exercise + science tables: strengthExercises.js, muscleVolume.js
-  (MEV/MAV/MRV landmarks), strengthStandards.js, activityTypes.js (column registry),
-  rehabExercises.js, injuryTaxonomy.js, exerciseDemos.js
+  src/data/ — APP-side data tables: activityTypes.js (session-table column registry),
+  strengthStandards.js (1RM/BW display bands), exerciseLibrary.js (form-guide content for the ⓘ
+  guide — text how-to/cues, matched by name; NOT a competing exercise catalogue), athletePillars.js
+  (Atlas), providers.js (wearable providers), sports/.
+  NOTE: the ENGINE's science tables — strengthExercises.js, muscleVolume.js (MEV/MAV/MRV landmarks),
+  rehabExercises.js, injuryTaxonomy.js — live in packages/engine/src/data, NOT here. (There is no
+  exerciseDemos.js — the ⓘ guide shows a "form video coming soon" placeholder.)
   src/styles/main.css — all styles (dark-only "Midnight" design system)
 
 The decision engine (core — generates the gym plan)
@@ -178,6 +192,15 @@ Decision engine is mature + evidence-based — exhaustively evaluated 2026-06-21
 (keeps intensity, cuts volume), adaptive deloads (fatigue/ACWR-driven), sport-specific
 session anchors, honest durations. It is GYM-ONLY — sport selection biases the gym
 plan; it does not yet program run/cycle/swim sessions (a future stage).
+
+ENGINE RE-SEATING (planned, not started — the current major direction). The engine today is a
+VOLUME-FIRST gym planner (it computes per-muscle set targets, then fills them). The frozen governing
+set defines a DIAGNOSIS-FIRST coaching engine that reasons in physical qualities/adaptations, with
+muscle-volume as a downstream ledger. The precise gap + the phased, executable path from one to the
+other live in docs/architecture/BASELINE-ARCHITECTURE-ASSESSMENT.md (where we are) and
+MIGRATION-BLUEPRINT.md (how we get there — begin at its Part 8 "Sprint 0: safety net & CI gate").
+It's a RE-SEATING, not a rewrite: the pure engine + golden-master, the injury system, the SKB, and
+freeze-on-commit are preserved. See HANDOFF.md for the current sprint pointer.
 Sync layer (SyncService) handles sessions, weekly check-ins, injuries, and daily
 metrics; the store is offline-first (instant local write, background cloud sync).
 Wearable + training-load (Strava ingest → HR zones → ACWR → plan adaptation) is live.
