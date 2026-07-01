@@ -34,3 +34,15 @@ for (const q of ['hypertrophy', 'reactiveStrength', 'aerobicCapacity', 'mobility
   const c = estimateCapability(q, createAthleteModel(), ASOF);
   assert(c.confidence && c.level != null, `T9 ${q} always yields level + confidence`);
 }
+
+// never-throw on partial / null models (no createAthleteModel backfill).
+let t1 = false;
+try { const c = estimateCapability('maxStrength', { performanceMetrics: [{ metric: '1rm_squat', value: 150 }] }, ASOF); assert(c.source && c.level != null, 'T10 partial model (no identity) still yields a capability'); }
+catch { t1 = true; }
+assert(!t1, 'T10b never throws on a model missing identity');
+
+let t2 = false;
+try { const c = estimateCapability('maxStrength', null, ASOF); assert(c.confidence, 'T11 null model → inferred capability'); }
+catch { t2 = true; }
+assert(!t2, 'T11b never throws on null model');
+assert(bandForModel(null) === 'intermediate', 'T12 bandForModel(null) → intermediate default');
