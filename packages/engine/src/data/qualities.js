@@ -1,0 +1,36 @@
+// Seed physical-quality registry — the organising primitive of training content (EDS §31).
+// Representative, evidence-tagged; NOT exhaustive. fatigueCost values are 'low'|'moderate'|'high'.
+export const QUALITIES = [
+  { id: 'maxStrength', family: 'strength', adaptations: ['motor_unit_recruitment', 'myofibrillar_hypertrophy'],
+    assessment: '1rm', fatigueCost: { neural: 'high', metabolic: 'low', mechanical: 'moderate' },
+    recoveryTimeH: 48, prerequisites: [], evidence: 'seed' },
+  { id: 'hypertrophy', family: 'structural', adaptations: ['myofibrillar_hypertrophy', 'sarcoplasmic_hypertrophy'],
+    assessment: 'girth_or_bodyweight', fatigueCost: { neural: 'low', metabolic: 'high', mechanical: 'high' },
+    recoveryTimeH: 48, prerequisites: [], evidence: 'seed' },
+  { id: 'explosiveStrength', family: 'power', adaptations: ['rate_coding', 'motor_unit_recruitment'],
+    assessment: 'jump_or_imtp_rfd', fatigueCost: { neural: 'high', metabolic: 'low', mechanical: 'moderate' },
+    recoveryTimeH: 48, prerequisites: ['maxStrength'], evidence: 'seed' },
+  { id: 'reactiveStrength', family: 'power', adaptations: ['tendon_stiffness', 'ssc_efficiency'],
+    assessment: 'rsi_drop_jump', fatigueCost: { neural: 'high', metabolic: 'low', mechanical: 'high' },
+    recoveryTimeH: 72, prerequisites: ['maxStrength'], evidence: 'seed' },
+  { id: 'strengthEndurance', family: 'endurance', adaptations: ['capillary_density', 'fiber_type_shift'],
+    assessment: 'amrap', fatigueCost: { neural: 'low', metabolic: 'high', mechanical: 'moderate' },
+    recoveryTimeH: 24, prerequisites: [], evidence: 'seed' },
+  { id: 'aerobicCapacity', family: 'aerobic', adaptations: ['mitochondrial_density', 'stroke_volume', 'capillary_density'],
+    assessment: 'vo2max_or_pace', fatigueCost: { neural: 'low', metabolic: 'high', mechanical: 'low' },
+    recoveryTimeH: 24, prerequisites: [], evidence: 'seed' },
+  { id: 'anaerobicCapacity', family: 'anaerobic', adaptations: ['glycolytic_enzymes', 'buffering_capacity'],
+    assessment: 'repeat_sprint', fatigueCost: { neural: 'moderate', metabolic: 'high', mechanical: 'moderate' },
+    recoveryTimeH: 48, prerequisites: [], evidence: 'seed' },
+  { id: 'mobility', family: 'tissue', adaptations: ['sarcomerogenesis', 'tissue_tolerance'],
+    assessment: 'rom_screen', fatigueCost: { neural: 'low', metabolic: 'low', mechanical: 'low' },
+    recoveryTimeH: 24, prerequisites: [], evidence: 'seed' },
+  { id: 'stability', family: 'control', adaptations: ['proprioception', 'co_contraction'],
+    assessment: 'single_leg_balance', fatigueCost: { neural: 'moderate', metabolic: 'low', mechanical: 'low' },
+    recoveryTimeH: 24, prerequisites: [], evidence: 'seed' },
+  { id: 'robustness', family: 'durability', adaptations: ['tendon_remodelling', 'tissue_tolerance', 'bone_density'],
+    assessment: 'load_tolerance', fatigueCost: { neural: 'low', metabolic: 'moderate', mechanical: 'high' },
+    recoveryTimeH: 72, prerequisites: [], evidence: 'seed' },
+];
+export const qualityIds = () => QUALITIES.map((q) => q.id);
+export const getQuality = (id) => QUALITIES.find((q) => q.id === id) || null;
