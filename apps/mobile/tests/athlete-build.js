@@ -17,3 +17,7 @@ assert(JSON.stringify(m1) === JSON.stringify(m2), 'T4 deterministic (same inputs
 
 assert(typeof A.buildAthleteModel === 'function' && typeof A.validateAthleteModel === 'function'
   && A.ATHLETE_SCHEMA_VERSION === 1, 'T5 index re-exports public API');
+
+// precedence: an explicit inputs.meta.onboardedAt must win over asOf.
+const pinned = buildAthleteModel({ meta: { onboardedAt: '2025-01-01' } }, ASOF);
+assert(pinned.meta.onboardedAt === '2025-01-01', 'T6 inputs.meta.onboardedAt wins over asOf');

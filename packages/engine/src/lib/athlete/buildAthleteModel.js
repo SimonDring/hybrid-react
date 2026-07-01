@@ -5,7 +5,8 @@ import { validateAthleteModel } from './validation.js';
 
 export function buildAthleteModel(inputs = {}, asOf) {
   const model = createAthleteModel(inputs);
-  model.meta = { ...model.meta, onboardedAt: (inputs.meta && inputs.meta.onboardedAt) || asOf || null,
-                 source: (inputs.meta && inputs.meta.source) || 'onboarding' };
+  model.meta = { ...model.meta,
+                 onboardedAt: inputs.meta?.onboardedAt ?? asOf ?? null,
+                 source: inputs.meta?.source ?? 'onboarding' };
   return validateAthleteModel(model).value;
 }
