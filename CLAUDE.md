@@ -57,6 +57,11 @@ Monorepo — npm workspaces. Run `npm run dev` / `npm run build` from the REPO R
     is still reserved/empty.)
   supabase/ — schema.sql, migrations, edge functions, runbook (shared backend, at the root)
   docs/ — SCHEMA.md, decision-engine-evaluation.md, SECURITY-AUDIT.md, strategy/, product/, prompts/,
+    *** FROZEN GOVERNANCE SET (v1.0, 2026-07-01) — do NOT edit as routine work: the Constitution,
+    Decision Ontology, Knowledge Architecture (foundation/), the EDS (engine/00), and the TAS
+    (architecture/TAS.md). They are the authoritative baseline; new work is VALIDATED AGAINST them,
+    never modifies them. Changing one = a deliberate, versioned amendment (Constitution → Amendment
+    & Stewardship), reviewed + reconciled across the set. ***
     foundation/ — the PLATFORM-LEVEL governing framework, ABOVE the engine spec: CONSTITUTION.md
     (immutable Articles — the ultimate tie-breaker), DECISION-ONTOLOGY.md (canonical vocabulary),
     KNOWLEDGE-ARCHITECTURE.md (how knowledge is structured, not hard-coded), PANEL-REVIEW.md,
@@ -149,6 +154,12 @@ broken colours in dark/auto mode — this bug has recurred 3 times)
 Don't rewrite Database.js. It's stable and tested; other code depends on
 its synchronous API. SyncService wraps it.
 Don't change the Supabase schema without a versioned migration.
+The five governing documents are FROZEN (v1.0). Do NOT edit the Constitution, Decision Ontology,
+Knowledge Architecture (docs/foundation/), the EDS (docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md),
+or the TAS (docs/architecture/TAS.md) as part of routine work. They are the authoritative baseline
+every feature/algorithm/schema is validated against; changing one is a deliberate, versioned
+amendment (per the Constitution's Amendment & Stewardship section), reviewed and reconciled across
+the whole set — never an inline edit during feature work.
 The app must still run (npm run dev) at the end of every change.
 
 Workflow rules
