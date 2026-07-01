@@ -998,9 +998,10 @@ import { qualityIds } from '../../data/qualities.js';
 import { estimateCapability } from './estimation.js';
 
 export function derivePerformanceModel(model, asOf) {
-  const capabilities = qualityIds().map((q) => estimateCapability(q, model, asOf));
+  const m = model || {}; // never throw on a null/partial model
+  const capabilities = qualityIds().map((q) => estimateCapability(q, m, asOf));
   return {
-    athleteId: model.athleteId || null,
+    athleteId: m.athleteId || null,
     derivedAt: asOf || null,
     capabilities,
     demandProfile: null,
@@ -1129,6 +1130,7 @@ import { OUTCOME_TO_LEGACY } from './goalMapping.js';
 const LEVELS = new Set(['beginner', 'returning', 'intermediate', 'advanced']);
 
 export function athleteModelToEngineInput(model) {
+  model = model || {}; // never throw on a null/partial model
   const goals = [...(model.goals || [])].sort((a, b) => (a.priority || 1) - (b.priority || 1));
   const primary = goals[0] || { outcome: 'get_stronger' };
   const legacy = OUTCOME_TO_LEGACY[primary.outcome] || OUTCOME_TO_LEGACY.get_stronger;
