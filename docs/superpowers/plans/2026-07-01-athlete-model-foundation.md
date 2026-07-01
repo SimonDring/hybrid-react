@@ -907,7 +907,8 @@ function measuredMaxStrength(model, asOf) {
   const squat = metrics.find((m) => m.metric === '1rm_squat') || metrics[0];
   const bw = model.identity.bodyMassKg || 80;
   const sex = model.identity.biologicalSex || 'other';
-  const level = Math.min(1, Math.max(0, (squat.value / bw) / STRONG_BW_MULTIPLE[sex] ?? STRONG_BW_MULTIPLE.other));
+  const mult = STRONG_BW_MULTIPLE[sex] || STRONG_BW_MULTIPLE.other;
+  const level = Math.min(1, Math.max(0, (squat.value / bw) / mult));
   let confidence = 'moderate';
   if (squat.measuredAt) confidence = daysBetween(squat.measuredAt, asOf) <= 30 ? 'high' : (daysBetween(squat.measuredAt, asOf) <= 180 ? 'moderate' : 'low');
   return { level, confidence, evidence: `measured ${squat.metric} ${squat.value}${squat.unit || ''}` };
@@ -1037,7 +1038,7 @@ git commit -m "feat(engine): derive performance model (capability vector)"
 
 **Interfaces:**
 - Produces (`goalMapping.js`): `OUTCOME_TO_LEGACY` (`{ [outcome]: { goal_type, strength_style } }`), `legacyToOutcome(goal_type, strength_style, sport) → outcome`.
-- Produces (`athleteModelToEngineInput.js`): `athleteModelToEngineInput(model) → engineProfile` — reproduces the engine read-set (Global Constraints): `goal_type, strength_style, sport, sport_intent, sport_goal, event_date, sport_season, run_discipline, sport_days, experience:{gym}, lifts, availability:{days,days_per_week,allocation}, access, bodyweight_kg, sex, age, name, plan_start_date, focus:['gym'], primary:'gym'`, plus any `meta.enginePassthrough` fields (e.g. `plan_weeks`). Primary goal = `goals` sorted by ascending `priority`, first entry.
+- Produces (`athleteModelToEngineInput.js`): `athleteModelToEngineInput(model) → engineProfile` — reproduces the engine read-set (Global Constraints): `goal_type, strength_style, sport, sport_intent, sport_goal, event_date, sport_season, run_discipline, sport_days, experience:{gym}, lifts, availability:{days,days_per_week,allocation}, access, bodyweight_kg, sex, age, plan_start_date, focus:['gym'], primary:'gym'`. Sport values `sport/season/event/sport_days` come from first-class `sportingContext` fields; `sport_intent/sport_goal/run_discipline` and scheduling passthroughs (`plan_weeks`) come from `meta.enginePassthrough`. Primary goal = `goals` sorted by ascending `priority`, first entry. (`name` is display metadata, not a coaching input — the model does not carry it.)
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1070,19 +1071,20 @@ assert(eb.bodyweight_kg === 82 && eb.sex === 'male', 'T5 biometrics mapped');
 assert(eb.plan_start_date === '2026-07-06', 'T6 plan_start_date from meta');
 assert(eb.focus[0] === 'gym' && eb.primary === 'gym', 'T7 always a gym plan');
 
-// Sport goal.
+// Sport goal — sport-shape specifics travel on meta.enginePassthrough + weeklySportSchedule.
 const sport = createAthleteModel({
   goals: [{ id: 'g', outcome: 'improve_sport_performance', priority: 1, sportRef: 'run' }],
-  sportingContext: { primarySport: 'run', seasonPhase: 'in', competitionCalendar: [{ label: 'race', date: '2026-09-01' }] },
+  sportingContext: {
+    primarySport: 'run', seasonPhase: 'in',
+    competitionCalendar: [{ label: 'race', date: '2026-09-01' }],
+    weeklySportSchedule: [{ day: 'tue', type: 'sport' }, { day: 'thu', type: 'sport' }],
+  },
+  meta: { enginePassthrough: { run_discipline: 'long', sport_intent: 'compete' } },
 });
-// carry the sport specifics the engine reads:
-sport.sportingContext.runDiscipline = 'long';
-sport.sportingContext.sportIntent = 'compete';
-sport.sportingContext.sportDays = ['tue', 'thu'];
 const es = athleteModelToEngineInput(sport);
 assert(es.goal_type === 'sport' && es.sport === 'run', 'T8 sport goal → goal_type sport');
-assert(es.run_discipline === 'long' && es.sport_intent === 'compete', 'T9 discipline + intent mapped');
-assert(es.event_date === '2026-09-01' && Array.isArray(es.sport_days), 'T10 event date + sport days mapped');
+assert(es.run_discipline === 'long' && es.sport_intent === 'compete', 'T9 discipline + intent from passthrough');
+assert(es.event_date === '2026-09-01' && es.sport_days.length === 2, 'T10 event date + sport days mapped');
 assert(legacyToOutcome('build', 'strength') === 'get_stronger', 'T11 legacy→outcome inverse');
 ```
 
@@ -1136,6 +1138,7 @@ export function athleteModelToEngineInput(model) {
   const th = model.trainingHistory || {};
   const cn = model.constraints || {};
   const id = model.identity || {};
+  const pass = (model.meta && model.meta.enginePassthrough) || {};
 
   const gym = LEVELS.has(th.selfRatedLevel) ? th.selfRatedLevel : 'intermediate';
 
@@ -1151,9 +1154,12 @@ export function athleteModelToEngineInput(model) {
   const anyLift = Object.values(lifts).some((v) => v != null);
 
   const event = (sc.competitionCalendar && sc.competitionCalendar[0]) ? sc.competitionCalendar[0].date : null;
+  const sportDays = (sc.weeklySportSchedule || []).map((s) => s.day);
+  // pure scheduling passthroughs (e.g. plan_weeks); sport-shape passthroughs are read explicitly below
+  const passExtras = { ...pass };
+  delete passExtras.sport_intent; delete passExtras.sport_goal; delete passExtras.run_discipline;
 
   return {
-    name: model.name || '',
     age: id.age ?? null,
     sex: id.biologicalSex ?? null,
     bodyweight_kg: id.bodyMassKg ?? null,
@@ -1163,12 +1169,12 @@ export function athleteModelToEngineInput(model) {
     focus: ['gym'], primary: 'gym',
 
     sport: isSport ? (sc.primarySport || primary.sportRef || null) : null,
-    sport_intent: isSport ? (sc.sportIntent || 'recreational') : null,
-    sport_goal: isSport ? (sc.sportGoal || null) : null,
+    sport_intent: isSport ? (pass.sport_intent || 'recreational') : null,
+    sport_goal: isSport ? (pass.sport_goal || null) : null,
     sport_season: isSport ? (sc.seasonPhase || null) : null,
-    run_discipline: isSport && (sc.primarySport === 'run') ? (sc.runDiscipline || null) : null,
+    run_discipline: isSport && (sc.primarySport === 'run') ? (pass.run_discipline || null) : null,
     event_date: isSport ? event : null,
-    sport_days: isSport ? (sc.sportDays || []) : null,
+    sport_days: isSport ? sportDays : null,
 
     experience: { gym },
     lifts: anyLift ? lifts : null,
@@ -1178,7 +1184,7 @@ export function athleteModelToEngineInput(model) {
     access: cn.equipment || [],
 
     plan_start_date: (model.meta && model.meta.planStartDate) || null,
-    ...((model.meta && model.meta.enginePassthrough) || {}),
+    ...passExtras,
   };
 }
 ```
@@ -1205,7 +1211,7 @@ git commit -m "feat(engine): adapter athlete-model → engine input"
 
 **Interfaces:**
 - Consumes: `buildAthleteModel` (`athlete/buildAthleteModel.js`), `legacyToOutcome` (`adapters/goalMapping.js`).
-- Produces: `profileToAthleteModel(profile, asOf) → AthleteModel`. Maps engine read-set fields into model sections and stashes engine-only scheduling passthroughs (`plan_weeks`) in `meta.enginePassthrough`, `plan_start_date` in `meta.planStartDate`. Carries sport specifics on `sportingContext` (`sportIntent, sportGoal, runDiscipline, sportDays`) so the inverse adapter can reproduce them. Lifts → `performanceMetrics` as `1rm_*`.
+- Produces: `profileToAthleteModel(profile, asOf) → AthleteModel`. Maps engine read-set fields into first-class model sections (`sport`→`sportingContext.primarySport`, `sport_season`→`seasonPhase`, `event_date`→`competitionCalendar`, `sport_days`→`weeklySportSchedule`) and stashes the legacy-shape sport values the engine still reads (`sport_intent, sport_goal, run_discipline`) plus scheduling passthroughs (`plan_weeks`) in `meta.enginePassthrough`; `plan_start_date` → `meta.planStartDate`. Lifts → `performanceMetrics` as `1rm_*`.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1245,8 +1251,8 @@ const sportP = {
 };
 const sm = profileToAthleteModel(sportP, ASOF);
 assert(sm.goals[0].outcome === 'improve_sport_performance' && sm.sportingContext.primarySport === 'run', 'T7 sport mapped');
-assert(sm.sportingContext.runDiscipline === 'long' && sm.sportingContext.sportDays.length === 2,
-  'T8 sport specifics carried for inverse mapping');
+assert(sm.meta.enginePassthrough.run_discipline === 'long' && sm.sportingContext.weeklySportSchedule.length === 2,
+  'T8 sport specifics carried (passthrough + weekly schedule)');
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -1274,19 +1280,25 @@ export function profileToAthleteModel(profile = {}, asOf) {
     if (L[k] != null) performanceMetrics.push({ id: metric, metric, value: L[k], unit: 'kg', source: 'self', confidence: 'moderate', measuredAt: null });
   }
 
+  const sportDays = Array.isArray(p.sport_days) ? p.sport_days : [];
+  const weeklySportSchedule = sportDays.map((day) => ({ day, type: 'sport' }));
+
+  // Sport-shape values the live engine reads but that Plan 1 does not yet model first-class
+  // (Plan 2 promotes them to outcome goals / competitive level) travel as an explicit bridge.
+  const enginePassthrough = {};
+  if (p.plan_weeks != null) enginePassthrough.plan_weeks = p.plan_weeks;
+  if (p.sport_intent != null) enginePassthrough.sport_intent = p.sport_intent;
+  if (p.sport_goal != null) enginePassthrough.sport_goal = p.sport_goal;
+  if (p.run_discipline != null) enginePassthrough.run_discipline = p.run_discipline;
+
   const inputs = {
-    name: p.name || '',
     identity: { age: p.age ?? null, biologicalSex: p.sex ?? null, bodyMassKg: p.bodyweight_kg ?? null, heightCm: p.height_cm ?? null },
     goals: [{ id: 'primary', outcome, priority: 1, sportRef: p.sport || null }],
     sportingContext: {
       primarySport: p.sport || null,
       seasonPhase: p.sport_season || null,
       competitionCalendar: p.event_date ? [{ label: 'event', date: p.event_date }] : [],
-      // engine-relevant sport specifics carried for the inverse adapter:
-      sportIntent: p.sport_intent || null,
-      sportGoal: p.sport_goal || null,
-      runDiscipline: p.run_discipline || null,
-      sportDays: p.sport_days || [],
+      weeklySportSchedule,
     },
     trainingHistory: { selfRatedLevel: (p.experience && p.experience.gym) || null },
     constraints: {
@@ -1295,11 +1307,7 @@ export function profileToAthleteModel(profile = {}, asOf) {
       daysPerWeek: (p.availability && p.availability.days_per_week) ?? null,
     },
     performanceMetrics,
-    meta: {
-      source: 'migration',
-      planStartDate: p.plan_start_date || null,
-      enginePassthrough: (p.plan_weeks != null ? { plan_weeks: p.plan_weeks } : {}),
-    },
+    meta: { source: 'migration', planStartDate: p.plan_start_date || null, enginePassthrough },
   };
   return buildAthleteModel(inputs, asOf);
 }
