@@ -10,7 +10,11 @@ export function validateAthleteModel(model) {
   const src = (model && typeof model === 'object') ? model : {};
   const value = createAthleteModel(src);
 
-  // identity
+  // identity — guard against a null / non-object / array identity so we never throw
+  // and never emit a corrupt identity (createAthleteModel can pass an explicit null through).
+  if (!value.identity || typeof value.identity !== 'object' || Array.isArray(value.identity)) {
+    value.identity = createAthleteModel().identity;
+  }
   const id = value.identity;
   if (id.age != null) {
     if (typeof id.age !== 'number' || Number.isNaN(id.age)) { errors['identity.age'] = 'age must be a number'; id.age = null; }

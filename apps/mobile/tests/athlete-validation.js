@@ -25,3 +25,14 @@ assert(g.value.goals[0].priority === 3, 'T5 goal priority coerced to positive in
 let threw = false;
 try { validateAthleteModel(null); } catch { threw = true; }
 assert(!threw, 'T6 never throws, even on null input');
+
+// never-throw must hold for nested-null / malformed nested fields, not just top-level null.
+let threw2 = false;
+try { const r = validateAthleteModel(createAthleteModel({ identity: null })); assert(r.value.identity && typeof r.value.identity === 'object', 'T7 null identity coerced to a valid object'); }
+catch { threw2 = true; }
+assert(!threw2, 'T7b never throws on { identity: null }');
+
+let threw3 = false;
+try { const r = validateAthleteModel({ identity: 'bad', goals: 'not-an-array' }); assert(Array.isArray(r.value.goals), 'T8 non-array goals coerced to array'); assert(typeof r.value.identity === 'object', 'T8b non-object identity coerced'); }
+catch { threw3 = true; }
+assert(!threw3, 'T8c never throws on malformed nested fields');
