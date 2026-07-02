@@ -65,11 +65,15 @@ onboarding answers → Athlete Model (WHO: identity/goals/sport+position/trainin
   `onboardingModel.js` (`answersToProfilePatch` + `answersToAthleteModelInputs`), `OnboardingWizard.jsx`.
 - Full tech doc: **`docs/architecture/ATHLETE-MODEL.md`**. Specs/plans: `docs/superpowers/{specs,plans}/`.
 
-**⇒ THE NEXT STEP — steer the plan from the diagnosis (the risky "re-seating", Blueprint W5–W9).**
-This is the **first** time live plans will change: let `priorityAdaptations` (adaptation-first,
-position-aware) actually drive periodization / session design / exercise selection, instead of the
-current volume-first per-muscle emphasis. **It needs its own brainstorm** (start with
-`superpowers:brainstorming`). Open design questions to resolve there:
+**⇒ THE NEXT STEP — Sprint 5 (exercise-quality tagging) is DONE; next is Blueprint Sprint 7 (D9/D10 —
+session objective + movement requirements), still heading toward the D11 allocator re-seat (Sprint 8).**
+The exercise catalogue is now tagged by physical quality/adaptation/force-velocity/fatigue cost
+(`packages/engine/src/data/exerciseQualities.js`) — parallel knowledge, both golden masters green, the
+live plan unchanged. That tagging is the bridge Sprint 7 needs: define the session-objective (D9) and
+per-exercise movement-requirement (D10) layer that reads these tags, before Sprint 8 lets the allocator
+actually select exercises by quality instead of by muscle alone — **the first time live plans change**.
+**Each sprint still needs its own brainstorm** (start with `superpowers:brainstorming`). Open design
+questions to resolve there:
 1. **How aggressive** — a full re-seat of the allocator to adaptation-first, or a diagnosis-weighted
    overlay on top of today's allocator (lower risk, incremental)?
 2. **Golden-master strategy** — plans will intentionally change, so the golden master must be
@@ -102,6 +106,24 @@ robustness`); **raw vitals never enter the model** (Constitution Art 11 — `dai
 owner-only). Deferred cosmetic minors (non-blocking): a `diagnose.js` comment overstatement; the
 `prioritise.js` unknown-confidence→k=1 fallback is undocumented; `selectable.js` sport labels use
 `humanize(id)` (e.g. "Running Sprint") since flagship `meta` has no display label.
+
+## Latest work — Sprint 5: exercise-quality tagging (the re-seat enabler) (2026-07-02)
+
+On branch **`feat/exercise-quality-tags`**. The on-path enabler for the diagnosis→plan re-seating
+(Blueprint **Sprint 5 / Wave W5**): the exercise catalogue is now tagged by the physical
+quality/adaptation it develops, its force-velocity profile, and its fatigue cost — the bridge the
+diagnosis (which speaks in qualities) needs before it can steer exercise selection (the allocator
+picks by muscle). Design/plan: `docs/superpowers/{specs,plans}/2026-07-02-exercise-quality-tagging-*`.
+
+- **New `packages/engine/src/data/exerciseQualities.js`** — `exerciseQualities(id)` (also on the
+  barrel) tags all 118 exercises via CLASS rules → PATTERN defaults → per-exercise OVERRIDES
+  (mirrors `exerciseSimilarity.js`). Honest seed evidence (`confidence` + `needsReview:true`).
+- **`qualities.js`** — every quality gained a `doseResponse` (no label without a dose + assessment).
+- **Read-only `/dev` readout** shows each exercise's quality tags; the plan itself is unchanged.
+- **PARALLEL — nothing in `generatePlan` reads it.** Both golden masters stay byte-identical green
+  (verified: full `npm test` green, no `UPDATE=1`). Frozen governance set untouched.
+- **Next:** Blueprint **Sprint 7 (D9/D10)** — session objective + movement requirements — then
+  **Sprint 8 (D11)** re-seats the allocator's `bestExercise` to select by these qualities.
 
 ## Latest work — Diagnosis layer: D4 limiting factors + D5 priority qualities (2026-07-02)
 

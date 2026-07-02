@@ -25,3 +25,11 @@ for (const q of QUALITIES) {
 assert(getQuality('maxStrength').prerequisites.length === 0, 'T7 maxStrength has no prereqs');
 assert(getQuality('reactiveStrength').prerequisites.includes('maxStrength'),
   'T8 reactive strength requires a max-strength base');
+
+// T9/T10 — Sprint 5: every quality is DOSABLE + measurable (no label without a dose + assessment).
+const DOSE_KEYS = ['intensity', 'reps', 'rir', 'restType'];
+for (const q of QUALITIES) {
+  assert(q.doseResponse && DOSE_KEYS.every((k) => q.doseResponse[k]),
+    `T9 ${q.id} has a dose-response (${DOSE_KEYS.join(', ')})`);
+  assert(!!q.assessment, `T10 ${q.id} has an assessment`);
+}

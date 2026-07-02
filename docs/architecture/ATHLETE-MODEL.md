@@ -310,6 +310,25 @@ list of adaptations itself.
 **This diagnosis is model output only.** Nothing in the live plan generator reads
 `limitingFactors`/`priorityAdaptations` yet — see §12.
 
+### 5.5 Exercise-quality knowledge layer (Sprint 5, PARALLEL)
+
+`packages/engine/src/data/exerciseQualities.js` tags every one of the 118 exercises with the physical
+**qualities** it develops (primary/secondary, from the fixed 10), the **adaptations** it drives
+(derived through the quality registry), its **force-velocity** profile (a controlled vocabulary,
+`FORCE_VELOCITY`), and a per-exercise **fatigue cost** (`{neural, metabolic, mechanical}`). Tags
+resolve via CLASS rules (reading the flags an exercise already carries) → PATTERN defaults →
+per-exercise OVERRIDES, mirroring `exerciseSimilarity.js`. Every tag carries honest seed evidence
+(`{ level:'seed', confidence, source, needsReview:true }`).
+
+Each of the 10 qualities also now carries a `doseResponse` (`{ intensity, reps, rir, restType }`), so
+the blueprint's rule holds — no quality label without both a dose and an assessment.
+
+**This is PARALLEL knowledge — nothing in `generatePlan` reads it.** It is the bridge the diagnosis
+needs before it can steer exercise selection (the allocator picks by muscle; the diagnosis speaks in
+qualities). Both golden masters stay byte-identical. Accessor: `exerciseQualities(id)` (also on the
+engine barrel). Consumers arrive next: **D10** (movement/quality requirements) and **D11** (intervention
+selection) in Sprints 7–8. Design + plan: `docs/superpowers/{specs,plans}/2026-07-02-exercise-quality-tagging-*`.
+
 ---
 
 ## 6. Validation rules
