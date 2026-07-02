@@ -21,6 +21,30 @@ The frozen set:
 `CLAUDE.md` carries this as a hard rule. The supporting docs (engine 01–05, foundation
 `PANEL-REVIEW.md`, the READMEs) remain **living references** — only the five above are frozen.
 
+## Latest work — Diagnosis layer: D4 limiting factors + D5 priority qualities (2026-07-02)
+
+On branch **`feat/diagnosis-d4-d5`**. The Performance Model now *diagnoses* — it doesn't just hold
+capability and demand, it compares them. Design spec:
+`docs/superpowers/specs/2026-07-02-diagnosis-d4-d5-design.md`. Tech doc updated:
+`docs/architecture/ATHLETE-MODEL.md` §5.4/§12.
+
+- **D4 — `diagnoseLimitingFactors`** (`packages/engine/src/lib/performance/diagnose.js`): ranks the
+  gap between sport/position demand and athlete capability per quality
+  (`magnitude = max(0, demandImportance − capabilityLevel) × demandImportance`, `trainability`/
+  `injuryRisk` neutral seams at `1.0`), confidence = the weakest input (the capability estimate),
+  with a plain-English rationale. A sport athlete always gets a full diagnosis (every demanded
+  quality ranked, including met demands at zero magnitude); a non-sport model gets `[]`.
+- **D5 — `prioritiseQualities`** (`packages/engine/src/lib/performance/prioritise.js` +
+  `packages/engine/src/data/qualityCompatibility.js`): selects a confidence-scaled set (`k`: low→1,
+  moderate→2, high→3) of positive-magnitude priority qualities, each traced back to its limiter and
+  mapped to the quality registry's developing `adaptations[]`, respecting a compatibility guard
+  (defers a candidate that conflicts with an already-selected higher priority — seeded with
+  `maxStrength` × `aerobicCapacity`).
+- **`derivePerformanceModel` now populates both fields** purely from capability × demand — no clock,
+  no plan change. **The live plan is unchanged**: nothing downstream reads the diagnosis yet, and
+  the golden master stays green.
+- **Next:** steer the plan from the diagnosis (the diagnosis→plan re-seating).
+
 ## Latest work — Sprint 3 Plan 2: SKB-driven onboarding + demand-profile wiring (2026-07-02)
 
 On branch **`feat/plan2-onboarding-skb`**. Wires the (previously dormant) Sport Knowledge Base into
