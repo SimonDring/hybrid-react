@@ -13,6 +13,7 @@ import { BLANK_ANSWERS, localISODate, resolveStartDate, answersToProfile } from 
 import { epley1RM, pullupE1RM } from '@performance-os/engine/lib/liftProgression.js';
 import { suggestGymDays } from '@performance-os/engine/lib/plan/constraints.js';
 import { suggestOptimalFrequency } from '@performance-os/engine/lib/plan/frequency.js';
+import { selectableSports, positionsFor } from '@performance-os/engine/lib/sportKnowledge/selectable.js';
 
 // ---- Option catalogues ----
 export const GOAL_TYPES = [
@@ -23,11 +24,6 @@ export const STYLES = [
   { key: 'strength',     label: 'Get stronger',       hint: 'Heavy, low reps, the big lifts' },
   { key: 'bodybuilding', label: 'Build muscle',       hint: 'Moderate–high reps, more volume' },
   { key: 'functional',   label: 'Functional fitness', hint: 'Compounds, carries, core — athletic & desk-counter' }
-];
-export const SPORTS = [
-  { key: 'run',   label: 'Running', emoji: '🏃' },
-  { key: 'cycle', label: 'Cycling', emoji: '🚴' },
-  { key: 'swim',  label: 'Swimming', emoji: '🏊' }
 ];
 const SPORT_INTENTS = [
   { key: 'compete',      label: 'I compete',        hint: 'Races, meets or matches — training stays sport-specific.' },
@@ -41,11 +37,6 @@ const SPORT_GOALS = [
   { key: 'build_base',   label: 'Build my base', hint: 'General strength + conditioning for your sport.' },
   { key: 'get_stronger', label: 'Get stronger',  hint: 'Heavier, lower-volume strength support.' },
   { key: 'stay_durable', label: 'Stay durable',  hint: 'Lower-volume, injury-proofing focus.' }
-];
-const RUN_DISCIPLINES = [
-  { key: 'sprint', label: 'Sprints',          hint: '100 – 400m' },
-  { key: 'middle', label: 'Middle distance',   hint: '800m – 5K' },
-  { key: 'long',   label: 'Long distance',     hint: '10K+' }
 ];
 const LEVELS = [
   { key: 'beginner', label: 'Beginner', hint: 'New to lifting' },
@@ -197,12 +188,14 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
 
   const isBuild = a.goalType === 'build';
   const isSport = a.goalType === 'sport';
+  const SKB_SPORTS = selectableSports();
+  const SKB_POSITIONS = a.skbSport ? positionsFor(a.skbSport) : [];
 
   // Engine's recommended day count from goal + experience; the slider defaults here.
   const optimalDays = useMemo(() => {
     try { return suggestOptimalFrequency(answersToProfile(a)).optimalDays; }
     catch { return 3; }
-  }, [a.goalType, a.strengthStyle, a.sport, a.runDiscipline, a.sportIntent, a.experienceLevel]);
+  }, [a.goalType, a.strengthStyle, a.skbSport, a.sportIntent, a.experienceLevel]);
 
   // Default the slider to the optimum once, when the user first lands without a pick.
   useEffect(() => {
@@ -251,31 +244,32 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     isBuild && { title: 'What are you building?', subtitle: 'This sets your rep ranges, exercise mix and volume.', valid: () => !!a.strengthStyle,
       render: () => <OptionGrid cols={1}>{STYLES.map(s => <Chip key={s.key} selected={a.strengthStyle === s.key} onClick={() => set({ strengthStyle: s.key })} label={s.label} hint={s.hint} />)}</OptionGrid> },
 
-    isSport && { title: 'Which sport — and where are you?', subtitle: 'We program supportive strength: heavier, lower-volume, tuned to your sport.',
-      valid: () => !!a.sport && !!a.sportIntent
-        && (a.sport !== 'run' || !!a.runDiscipline)
+    isSport && { title: 'Which sport?', subtitle: 'Your sport + position set the demands your training serves.', valid: () => !!a.skbSport,
+      render: () => (
+        <OptionGrid cols={2}>
+          {SKB_SPORTS.map(s => (
+            <Chip key={s.id} selected={a.skbSport === s.id} onClick={() => set({ skbSport: s.id, position: '' })} label={s.label} />
+          ))}
+        </OptionGrid>
+      ) },
+
+    (isSport && a.skbSport && SKB_POSITIONS.length > 0) && { title: 'Your position / event?', subtitle: 'This sharpens the demand profile.', valid: () => !!a.position,
+      render: () => (
+        <OptionGrid cols={1} gap={6}>
+          {SKB_POSITIONS.map(p => (
+            <Chip key={p.id} selected={a.position === p.id} onClick={() => set({ position: p.id })} label={p.name} />
+          ))}
+        </OptionGrid>
+      ) },
+
+    isSport && { title: 'Tell us about your training', subtitle: 'We program supportive strength: heavier, lower-volume, tuned to your sport.',
+      valid: () => !!a.sportIntent
         && (a.sportIntent !== 'compete' || !!a.sportSeason)
         && (a.sportIntent !== 'recreational' || !!a.sportGoal),
       render: () => (
         <div style={{ display: 'grid', gap: 18 }}>
           <div>
-            <label style={FIELD_LABEL}>Sport</label>
-            <OptionGrid cols={3}>{SPORTS.map(s => <Chip key={s.key} emoji={s.emoji} center selected={a.sport === s.key} onClick={() => set({ sport: s.key, runDiscipline: s.key === 'run' ? a.runDiscipline : '' })} label={s.label} />)}</OptionGrid>
-          </div>
-          {a.sport === 'run' && (
-            <div>
-              <label style={FIELD_LABEL}>What distance do you run?</label>
-              <OptionGrid cols={3}>
-                {RUN_DISCIPLINES.map(d => (
-                  <Chip key={d.key} center selected={a.runDiscipline === d.key}
-                    onClick={() => set({ runDiscipline: d.key })}
-                    label={d.label} hint={d.hint} />
-                ))}
-              </OptionGrid>
-            </div>
-          )}
-          <div>
-            <label style={FIELD_LABEL}>{a.sport ? `Do you compete in ${SPORTS.find(s => s.key === a.sport)?.label?.toLowerCase() || 'your sport'}?` : 'Do you compete?'}</label>
+            <label style={FIELD_LABEL}>{a.skbSport ? `Do you compete in ${(SKB_SPORTS.find(s => s.id === a.skbSport)?.label || 'your sport').toLowerCase()}?` : 'Do you compete?'}</label>
             <OptionGrid cols={1} gap={6}>
               {SPORT_INTENTS.map(opt => (
                 <Chip key={opt.key} selected={a.sportIntent === opt.key} onClick={() => set({ sportIntent: opt.key })} label={opt.label} hint={opt.hint} />
@@ -478,7 +472,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     { title: 'Ready to go', subtitle: "Here's what we captured. Create your plan and you're in.", valid: () => true,
       render: () => {
         const goalLabel = isSport
-          ? `Support ${SPORTS.find(s => s.key === a.sport)?.label || 'sport'} · ${a.sportIntent === 'compete' ? (a.sportSeason === 'in_season' ? 'in-season' : 'off-season') : (SPORT_GOALS.find(g => g.key === a.sportGoal)?.label || 'recreational')}`
+          ? `Support ${(SKB_SPORTS.find(s => s.id === a.skbSport) || {}).label || 'sport'} · ${a.sportIntent === 'compete' ? (a.sportSeason === 'in_season' ? 'in-season' : 'off-season') : (SPORT_GOALS.find(g => g.key === a.sportGoal)?.label || 'recreational')}`
           : (STYLES.find(s => s.key === a.strengthStyle)?.label || '—');
         const liftBits = [];
         for (const [k, lab] of [['squat', 'Sq'], ['bench', 'Bn'], ['deadlift', 'Dl'], ['ohp', 'OHP']]) {
@@ -491,10 +485,8 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
         return (
           <div style={{ display: 'grid', gap: 6 }}>
             <SummaryRow label="Goal" value={goalLabel} />
-            {isSport && <SummaryRow label="Sport" value={SPORTS.find(s => s.key === a.sport)?.label || '—'} />}
-            {a.sport === 'run' && a.runDiscipline && (
-              <SummaryRow label="Distance" value={RUN_DISCIPLINES.find(d => d.key === a.runDiscipline)?.label || '—'} />
-            )}
+            {isSport && <SummaryRow label="Sport" value={(SKB_SPORTS.find(s => s.id === a.skbSport) || {}).label || '—'} />}
+            {isSport && a.position && <SummaryRow label="Position" value={a.position} />}
             <SummaryRow label="Experience" value={LEVELS.find(l => l.key === a.experienceLevel)?.label || '—'} />
             {liftBits.length > 0 && <SummaryRow label="Maxes" value={liftBits.join(' · ')} />}
             <SummaryRow label="Week" value={a.daysPerWeek ? `${a.daysPerWeek} days / week` : '—'} />
