@@ -15,3 +15,17 @@ const old = answersToProfilePatch(A({ goalType: 'sport', sport: 'run', runDiscip
 assert(old.sport === 'run' && old.run_discipline === 'long', 'T3 legacy sport/runDiscipline fields unchanged');
 
 assert('skbSport' in BLANK_ANSWERS && 'position' in BLANK_ANSWERS && 'sessionDurationMin' in BLANK_ANSWERS && 'resistanceTrainingYears' in BLANK_ANSWERS, 'T4 BLANK_ANSWERS has the new fields');
+
+import { answersToAthleteModelInputs } from '../src/lib/onboardingModel.js';
+const ASOF = '2026-07-02';
+const m = answersToAthleteModelInputs(A({
+  goalType: 'sport', skbSport: 'cycling', position: 'Sprinter (road)',
+  daysPerWeek: 4, equipment: ['barbell'], sessionDurationMin: 50,
+  resistanceTrainingYears: '3', sportYears: '5',
+  movementCompetency: { squat: 'advanced', hinge: 'intermediate' },
+}), ASOF);
+assert(m.sportingContext.primarySport === 'cycling', 'T5 model primarySport = SKB id');
+assert(m.sportingContext.position === 'Sprinter (road)', 'T6 model position from answers');
+assert(m.constraints.sessionDurationMin === 50, 'T7 session duration into model');
+assert(m.trainingHistory.resistanceTrainingYears === 3 && m.trainingHistory.sportYears === 5, 'T8 measurable training age into model (numeric)');
+assert(m.trainingHistory.movementCompetency.squat === 'advanced', 'T9 movement competency into model');

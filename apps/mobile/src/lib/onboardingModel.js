@@ -223,5 +223,19 @@ export function answersToAthleteModelInputs(a, asOf) {
   const profile = answersToProfilePatch(a);
   const model = profileToAthleteModel(profile, asOf);
   model.meta = { ...model.meta, source: 'onboarding' };
+
+  // Overlay the richer question set (fields the legacy profile doesn't carry).
+  if (a.skbSport) model.sportingContext.primarySport = a.skbSport;
+  if (a.position) model.sportingContext.position = a.position;
+  if (a.sessionDurationMin != null && a.sessionDurationMin !== '') {
+    model.constraints.sessionDurationMin = Number(a.sessionDurationMin);
+  }
+  const ry = numOrNull(a.resistanceTrainingYears);
+  const sy = numOrNull(a.sportYears);
+  if (ry != null) model.trainingHistory.resistanceTrainingYears = ry;
+  if (sy != null) model.trainingHistory.sportYears = sy;
+  if (a.movementCompetency && typeof a.movementCompetency === 'object') {
+    model.trainingHistory.movementCompetency = { ...model.trainingHistory.movementCompetency, ...a.movementCompetency };
+  }
   return model;
 }
