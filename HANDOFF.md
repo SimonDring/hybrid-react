@@ -21,6 +21,88 @@ The frozen set:
 `CLAUDE.md` carries this as a hard rule. The supporting docs (engine 01–05, foundation
 `PANEL-REVIEW.md`, the READMEs) remain **living references** — only the five above are frozen.
 
+## ▶ RESUME HERE — engine-rebuild status & the next step (2026-07-02)
+
+_This section is the authoritative "where we are / what's next". Older "▶ START/NEXT" pointers in
+the entries below are historical and superseded by this._
+
+**Where we are.** The **diagnosis-first engine rebuild** has completed its ADDITIVE foundation across
+four merged PRs. The platform now models the full **diagnostic triangle**, but the **live plan
+generator is still the original volume-first gym planner** — nothing built so far changes plan output.
+That is deliberate and proven: a green golden master (`apps/mobile/tests/golden-master.js`) has gated
+every step. All four pieces are on **`main`**:
+
+| PR | Branch (merged) | Delivered |
+|---|---|---|
+| #54 | `feat/athlete-model-sprint3` | **Athlete Model + Performance Model** foundation (Plan 1) — capability per quality, with confidence |
+| #55 | `chore/sprint0-safety-net` | **Safety net** (Sprint 0) — fixed the stale golden master + broken `npm test`; added the CI test gate |
+| #56 | `feat/plan2-onboarding-skb` | **SKB-driven onboarding + demand profile** (Plan 2) |
+| #57 | `feat/diagnosis-d4-d5` | **Diagnosis (D4/D5)** — limiting factors + priority qualities |
+
+**The reasoning chain now built** (all PURE in `packages/engine`, consumed app-side via
+`apps/mobile/src/lib/AthleteModelService.js`; NONE of it is wired into `generatePlan` yet):
+
+```
+onboarding answers → Athlete Model (WHO: identity/goals/sport+position/training-age/constraints)
+   → Performance Model (derivePerformanceModel):
+        capabilities      (CAN DO: level per physical quality, measured|inferred + confidence)   ── Plan 1
+        × demandProfile   (SPORT NEEDS: importance per quality, from the SKB sport+position)      ── Plan 2
+        → limitingFactors      (D4: ranked demand−capability gap, magnitude+confidence+rationale) ── Diagnosis
+        → priorityAdaptations  (D5: confidence-scaled k qualities → developing adaptations)        ── Diagnosis
+```
+
+**Code map (the new engine layer):**
+- `packages/engine/src/lib/athlete/` — schema, field-registry justification gate, validation, builder.
+- `packages/engine/src/lib/performance/` — `estimation.js` (capabilities), `demandProfile.js`,
+  `diagnose.js` (D4), `prioritise.js` (D5), `derivePerformanceModel.js` (assembles all of it).
+- `packages/engine/src/lib/adapters/` — `profileToAthleteModel.js` + `athleteModelToEngineInput.js`
+  (round-trip the model ↔ the legacy engine input; **`meta.enginePassthrough` carries the exact legacy
+  `sport`/`run_discipline` so `generatePlan` output is byte-identical**).
+- `packages/engine/src/lib/sportKnowledge/selectable.js` + `packages/engine/src/data/`
+  (`sportEngineBinding.js`, `sportQualityMap.js`, `qualityCompatibility.js`, `trainingAgeBands.js`,
+  `qualities.js`, `adaptations.js`, `capabilityPriors.js`).
+- App side: `AthleteModelService.js` (build/persist at `users.profile.athlete_model`/load/upgrade),
+  `onboardingModel.js` (`answersToProfilePatch` + `answersToAthleteModelInputs`), `OnboardingWizard.jsx`.
+- Full tech doc: **`docs/architecture/ATHLETE-MODEL.md`**. Specs/plans: `docs/superpowers/{specs,plans}/`.
+
+**⇒ THE NEXT STEP — steer the plan from the diagnosis (the risky "re-seating", Blueprint W5–W9).**
+This is the **first** time live plans will change: let `priorityAdaptations` (adaptation-first,
+position-aware) actually drive periodization / session design / exercise selection, instead of the
+current volume-first per-muscle emphasis. **It needs its own brainstorm** (start with
+`superpowers:brainstorming`). Open design questions to resolve there:
+1. **How aggressive** — a full re-seat of the allocator to adaptation-first, or a diagnosis-weighted
+   overlay on top of today's allocator (lower risk, incremental)?
+2. **Golden-master strategy** — plans will intentionally change, so the golden master must be
+   regenerated deliberately per-archetype **with review** (it's order-insensitive + CI-gated now);
+   decide what "unchanged where it should be" means.
+3. **Validation** — prove plan quality actually improves (use the `/dev` DevPlayground sweep +
+   `docs/decision-engine-evaluation.md` approach), not just that it changed.
+4. **Wiring point** — how the diagnosis→plan hook sits behind `PlanService`/`generatePlan` without
+   breaking freeze-on-start + the reflow.
+
+**How work is run here (follow this):** `superpowers:brainstorming` → design spec in
+`docs/superpowers/specs/YYYY-MM-DD-*.md` (commit) → `superpowers:writing-plans` (plan in
+`docs/superpowers/plans/`) → `superpowers:subagent-driven-development` (fresh implementer + task
+reviewer per task; SDD ledger at `.git/sdd/progress.md`, NOT committed) → opus whole-branch review →
+PR → **confirm before merging** (merges deploy + are consequential). Tests: **`npm test` now works**
+(runs every `apps/mobile/tests/*.js` via `apps/mobile/tests/run-all.mjs`; CI-gated by
+`.github/workflows/test.yml`); the golden master is order-insensitive (`UPDATE=1` only for intended
+changes). Browser-verify UI via the preview MCP (onboarding is behind auth — drive the wired service
+via `preview_eval` importing `/hybrid-react/src/lib/AthleteModelService.js`, as prior sessions did).
+
+**Invariants / decisions to carry forward:** compute-then-steer (everything so far is model output,
+proven by the green golden master); backward-compat via `meta.enginePassthrough`; the **SKB is the
+source of truth** for selectable sports (GAA/hurling/triathlon are now selectable; authoring a flagship
+profile + a `sportEngineBinding` entry auto-adds a sport); `trainability`/`injuryRisk` in D4 are
+**neutral seams (=1.0)** ready to enrich (injury-risk from the injury system; trainability from the
+quality registry); build-goal diagnosis is empty (goal-as-sport demand profiles are future); the
+Performance-Model quality vocabulary is a fixed 10 (`maxStrength, hypertrophy, explosiveStrength,
+reactiveStrength, strengthEndurance, aerobicCapacity, anaerobicCapacity, mobility, stability,
+robustness`); **raw vitals never enter the model** (Constitution Art 11 — `daily_metrics` stays
+owner-only). Deferred cosmetic minors (non-blocking): a `diagnose.js` comment overstatement; the
+`prioritise.js` unknown-confidence→k=1 fallback is undocumented; `selectable.js` sport labels use
+`humanize(id)` (e.g. "Running Sprint") since flagship `meta` has no display label.
+
 ## Latest work — Diagnosis layer: D4 limiting factors + D5 priority qualities (2026-07-02)
 
 On branch **`feat/diagnosis-d4-d5`**. The Performance Model now *diagnoses* — it doesn't just hold
@@ -79,6 +161,23 @@ Tech doc updated: `docs/architecture/ATHLETE-MODEL.md` §5.2/§5.3/§12.
   does not yet change what the plan generator produces (nothing compares demand against capability
   yet). **Next:** the diagnosis engine — couple demand × capability into limiting factors / priority
   adaptations, per the Migration Blueprint's re-seating path.
+
+## Latest work — Sprint 0: engine test safety net + CI gate (2026-07-02)
+
+Merged (**PR #55**, branch `chore/sprint0-safety-net`). The blueprint's "Sprint 0 — safety net & CI
+gate", done between Plan 1 and Plan 2 because the test protection was broken.
+
+- **`npm test` was pointing at a non-existent `apps/mobile/tests/data-layer.js`** → it failed instantly
+  and the ~90-file node suite never ran in CI. Fixed: `apps/mobile/tests/run-all.mjs` runs every
+  `tests/*.js` and fails (exit 1) on any non-zero exit; `apps/mobile/package.json`'s `test` script points
+  at it (root `npm test` delegates).
+- **The golden master had drifted far** (its snapshot was last regenerated at `49f9263`, before a large
+  body of intentional merged engine work). Root cause: the broken `npm test` meant nobody re-ran it. Made
+  the comparison **order-insensitive** (`stableStringify` — recursive key-sort) so refactors that only
+  reorder keys no longer produce false drift, then re-baselined the snapshot to current shipped behaviour
+  (validated by the other ~97 green tests). Future diffs are now minimal/reviewable.
+- **CI gate:** `.github/workflows/test.yml` runs `npm ci` + `npm test` on push to `main` and every PR.
+- Verified non-vacuous (perturbing a snapshot value fails the gate). No engine behaviour changed.
 
 ## Latest work — Sprint 3 Plan 1: Athlete & Performance Model foundation (2026-07-02)
 
