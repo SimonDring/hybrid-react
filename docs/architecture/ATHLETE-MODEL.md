@@ -173,9 +173,9 @@ quality:
 PerformanceModel = {
   athleteId, derivedAt,        // derivedAt = asOf
   capabilities: [ { qualityId, level, source, confidence, evidence, updatedAt } ],
-  demandProfile: null,         // scaffolding — computed in a later sprint
-  limitingFactors: [],         // scaffolding
-  priorityAdaptations: [],     // scaffolding
+  demandProfile: [ { qualityId, importance, source, evidence } ] | null,   // see §5.2 — live (Plan 2)
+  limitingFactors: [],         // scaffolding — computed in a later sprint (diagnosis)
+  priorityAdaptations: [],     // scaffolding — computed in a later sprint (diagnosis)
 }
 ```
 
@@ -207,6 +207,57 @@ PerformanceModel = {
 
 Dose-response/fatigue values are **seed** (tagged `evidence: 'seed'`) — the sprint proves the
 *structure*, not final coefficients.
+
+### 5.2 `demandProfile` — populated from the SKB (Plan 2)
+
+`demandProfile` is no longer scaffolding: `derivePerformanceModel` (`packages/engine/src/lib/performance/derivePerformanceModel.js`)
+calls `buildDemandProfile(sportId, positionId)` (`packages/engine/src/lib/performance/demandProfile.js`)
+whenever `model.sportingContext.primarySport` is set, using `model.sportingContext.position` (or
+`null`). It stays `null` when there's no primary sport, or when the sport has no SKB physical
+profile, or when nothing maps (never throws).
+
+`buildDemandProfile(sportId, positionId)`:
+1. Reads the SKB sport's `physicalProfile.qualities` (`packages/engine/src/lib/sportKnowledge`) and
+   maps each SKB quality name through `mapSkbQuality` (`packages/engine/src/data/sportQualityMap.js`,
+   the `SKB_TO_PM_QUALITY` table) to a Performance-Model quality id. The base `importance` per PM
+   quality is the SKB's `importance` (0–10) normalised to 0..1, taking the max across every SKB
+   quality that maps to the same PM quality.
+2. **Position boost:** for the chosen position's `primaryQualities` (`SKB.section(sportId,
+   'positions')`), any mapped PM quality is raised to at least `PRIMARY_FLOOR` (0.9) — a position's
+   primary qualities are always treated as highly demanding, even if the sport-level base importance
+   was lower.
+3. Returns `[ { qualityId, importance, source: 'skb', evidence } ]` — `evidence` is a traceable
+   string (`skb:<sportId>:<skbQualityName>` or `skb:<sportId>:pos:<positionId>`).
+
+`SKB_TO_PM_QUALITY` (`sportQualityMap.js`) maps: `maxStrength`, `relativeStrength` → `maxStrength`;
+`explosivePower` → `explosiveStrength`; `reactiveStrength` → `reactiveStrength`; `aerobicEndurance` →
+`aerobicCapacity`; `anaerobicEndurance`, `repeatSprintAbility` → `anaerobicCapacity`; `mobility` →
+`mobility`; `stability`, `balance` → `stability`; `durability` → `robustness`. **Unmapped and
+dropped** (no Performance-Model home yet — a future sport-skill/speed quality layer, not this
+sprint): `sprintSpeed`, `acceleration`, `deceleration`, `changeOfDirection`, `coordination`,
+`rotationalPower`, `gripStrength`, `neckStrength`.
+
+### 5.3 SKB-driven sport selection (Plan 2)
+
+The onboarding sport list is **derived from the SKB**, not hand-maintained:
+
+- `selectableSports()` (`packages/engine/src/lib/sportKnowledge/selectable.js`) returns every SKB
+  sport id that is both **completeness-gated** (`SKB.completeness(id).complete` — sufficiently
+  authored) **and** has an engine binding (`bindingFor(id)` is non-null). `positionsFor(skbId)`
+  reads the sport's `positions` section for the onboarding position picker. Authoring a new
+  flagship SKB profile and adding one binding entry is enough to make a sport selectable — no
+  wizard change needed.
+- `bindingFor(skbId)` (`packages/engine/src/data/sportEngineBinding.js`, table `SKB_ENGINE_BINDING`)
+  maps an SKB sport id to the **legacy engine sport module + discipline** that actually plans it
+  today (e.g. `running_sprint → { engineSport: 'run', discipline: 'sprint' }`,
+  `gaelic_football`/`hurling → { engineSport: 'gaa', discipline: null }`), so onboarding can reason
+  in SKB ids while the live gym engine keeps biasing correctly on its existing sport vocabulary.
+- The adapter preserves the exact legacy round-trip: `athleteModelToEngineInput` prefers the exact
+  legacy `sport`/`run_discipline` stashed in `meta.enginePassthrough` when present (byte-identical
+  golden master for existing users), and only falls back to `bindingFor(sportingContext.primarySport)`
+  for the new SKB-driven onboarding path. **Net effect: plans are unchanged** — SKB-driven sport
+  selection changes what onboarding asks and what feeds `demandProfile`, not what the live plan
+  generator produces.
 
 ---
 
@@ -346,9 +397,18 @@ isolated from decision code.
   goal; multi-goal is stored but not yet consumed (matches today's engine).
 - **Non-queryable across athletes** — the model lives inside `users.profile`; a normalized
   `athlete_profiles` table is deferred to the Team package (cross-athlete reads).
-- **Revised onboarding question wording is Plan 2** — this sprint keeps the existing wizard; it maps
-  today's answers into the model. Plan 2 adds outcome-based multi-goal, measurable training age,
-  session duration, and movement-competency questions.
+- **`demandProfile` is modelled but not yet consumed by plan generation.** Plan 2 populates it from
+  the SKB (§5.2), but no diagnosis step exists yet to compare demand against capability and adjust
+  the plan — the live plan generator still runs entirely off the legacy profile via
+  `athleteModelToEngineInput`. Coupling demand × capability into a diagnosis (limiting factors,
+  priority adaptations) is the **next sprint**.
+- **SKB qualities without a Performance-Model home are unmapped, not lost.** `sportQualityMap.js`
+  documents the drop list (`sprintSpeed`, `acceleration`, `deceleration`, `changeOfDirection`,
+  `coordination`, `rotationalPower`, `gripStrength`, `neckStrength`) — a future sport-skill/speed
+  quality layer, not this sprint. They are absent from `demandProfile` rather than approximated.
+- **Revised onboarding question wording landed in Plan 2** — SKB-driven sport + position selection,
+  session-duration, training-age, and movement-competency steps are now in `OnboardingWizard.jsx`;
+  see §5.2/§5.3 for the mechanism. Live plans are unchanged (golden master green).
 - **Pre-existing engine golden-master drift (unrelated to this sprint).** `apps/mobile/tests/golden-master.js`
   reports a 19-archetype `restSec` drift that predates Sprint 3 (the snapshot was last regenerated at
   `49f9263`; allocator rest logic changed afterward; the broken `npm test` never ran it). It is

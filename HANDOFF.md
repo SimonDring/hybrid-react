@@ -21,6 +21,41 @@ The frozen set:
 `CLAUDE.md` carries this as a hard rule. The supporting docs (engine 01–05, foundation
 `PANEL-REVIEW.md`, the READMEs) remain **living references** — only the five above are frozen.
 
+## Latest work — Sprint 3 Plan 2: SKB-driven onboarding + demand-profile wiring (2026-07-02)
+
+On branch **`feat/plan2-onboarding-skb`**. Wires the (previously dormant) Sport Knowledge Base into
+onboarding and into the Performance Model's `demandProfile`, and revises the onboarding question set
+per the Plan 1 "NOT yet built" note. Design spec: `docs/superpowers/specs/2026-07-02-plan2-onboarding-skb-design.md`.
+Tech doc updated: `docs/architecture/ATHLETE-MODEL.md` §5.2/§5.3/§12.
+
+- **SKB-driven sport selection.** `selectableSports()` (`packages/engine/src/lib/sportKnowledge/selectable.js`)
+  derives the onboarding sport list from the SKB itself — completeness-gated (`SKB.completeness(id).complete`)
+  **and** has an engine binding (`bindingFor(id)`, `packages/engine/src/data/sportEngineBinding.js`,
+  new `SKB_ENGINE_BINDING` table mapping SKB sport ids to the legacy engine sport module + discipline).
+  `positionsFor(skbId)` feeds a new onboarding position step. Authoring a new flagship SKB profile +
+  one binding entry is now enough to make a sport selectable — no wizard change needed.
+- **`demandProfile` is live.** `derivePerformanceModel` now calls `buildDemandProfile(sportId,
+  positionId)` (`packages/engine/src/lib/performance/demandProfile.js`): base importance per
+  Performance-Model quality from the SKB's `physicalProfile.qualities` (mapped through
+  `sportQualityMap.js`'s `SKB_TO_PM_QUALITY` table), boosted to a 0.9 floor for the chosen position's
+  `primaryQualities`. SKB qualities with no PM home yet (`sprintSpeed`, `acceleration`,
+  `changeOfDirection`, `gripStrength`, etc.) are documented and dropped, not approximated.
+- **Legacy round-trip preserved.** `profileToAthleteModel`/`athleteModelToEngineInput` now carry the
+  SKB sport id on `sportingContext.primarySport`, while the exact legacy `sport`/`run_discipline`
+  travel in `meta.enginePassthrough` and win on read-back — **the live plan generator output is
+  unchanged** (golden master + the athlete-adapter golden master both green).
+- **Onboarding UI:** `OnboardingWizard.jsx` gained SKB-driven sport + position steps, plus new
+  session-duration, training-age, and movement-competency steps feeding `onboardingModel.js`'s
+  backward-compatible `answersToProfilePatch` bridge and `answersToAthleteModelInputs` overlay.
+- **Tests (all new, all green):** `sport-engine-binding.js`, `skb-selectable.js`, `sport-quality-map.js`,
+  `demand-profile.js`, `performance-demand.js`, `adapter-sport-position.js`, `answers-athlete-rich.js` —
+  plus the unchanged `golden-master.js` and `athlete-adapter-golden-master.js`, both still green.
+- **Frozen docs untouched** (verified: zero diff to `docs/foundation/`, the EDS, and the TAS).
+- **Not done here (deliberately out of scope):** no diagnosis step — `demandProfile` is modelled but
+  does not yet change what the plan generator produces (nothing compares demand against capability
+  yet). **Next:** the diagnosis engine — couple demand × capability into limiting factors / priority
+  adaptations, per the Migration Blueprint's re-seating path.
+
 ## Latest work — Sprint 3 Plan 1: Athlete & Performance Model foundation (2026-07-02)
 
 On branch **`feat/athlete-model-sprint3`**. The first **code** of the engine re-seating: a pure

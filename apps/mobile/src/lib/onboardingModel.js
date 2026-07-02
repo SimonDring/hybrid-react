@@ -1,6 +1,7 @@
 import { resolvePeriodization } from '@performance-os/engine/lib/plan/periodization.js';
 import { pullupE1RM } from '@performance-os/engine/lib/liftProgression.js';
 import { profileToAthleteModel } from '@performance-os/engine/lib/adapters/profileToAthleteModel.js';
+import { bindingFor } from '@performance-os/engine/data/sportEngineBinding.js';
 
 /**
  * onboardingModel — the pure (non-UI) part of onboarding: the answer shape and
@@ -84,7 +85,13 @@ export const BLANK_ANSWERS = {
   startDate: '',                // ISO YYYY-MM-DD, used only when startWhen === 'date'
   strengthAccess: '',           // legacy access tier — still accepted, superseded by `equipment`
   equipment: [],                // equipment keys: barbell/dumbbell/machine/cable/band/kettlebell/bodyweight
-  injuries: [], notes: ''
+  injuries: [], notes: '',
+  skbSport: '',                 // SKB profile id (e.g. 'running_sprint' | 'cycling'); preferred over `sport`
+  position: '',                 // SKB position name
+  sessionDurationMin: null,     // minutes per session
+  resistanceTrainingYears: '',  // measurable training age (years)
+  sportYears: '',               // years in the sport
+  movementCompetency: {}        // { squat|hinge|press|pull: 'novice'|'intermediate'|'advanced' }
 };
 
 // Legacy access tiers → equipment sets (kept so older answer seeds + saved
@@ -96,6 +103,13 @@ const TIER_EQUIP = {
 };
 
 export function answersToProfilePatch(a) {
+  // Bridge: a new SKB sport selection derives the legacy engine sport + run discipline. Old
+  // answer seeds (goalType+sport+runDiscipline) are untouched, so existing callers + the
+  // golden-master are byte-identical.
+  const bind = a.skbSport ? bindingFor(a.skbSport) : null;
+  const legacySport = bind ? bind.engineSport : a.sport;
+  const legacyRunDisc = bind ? (bind.discipline || null) : (a.runDiscipline || null);
+
   const isBuild = a.goalType === 'build';
   const isSport = a.goalType === 'sport';
   // Prefer the granular equipment array; fall back to the legacy tier for older seeds.
@@ -145,12 +159,12 @@ export function answersToProfilePatch(a) {
       const pseudo = {
         goal_type: a.goalType || null,
         strength_style: isBuild ? (a.strengthStyle || 'strength') : null,
-        sport: isSport ? (a.sport || null) : null,
+        sport: isSport ? (legacySport || null) : null,
         sport_intent: isSport ? (sportIntent || 'recreational') : null,
         sport_season: seasonOut,
         sport_goal: goalOut,
         event_date: isSport && a.eventDate ? a.eventDate : null,
-        run_discipline: isSport && a.sport === 'run' ? (a.runDiscipline || null) : null
+        run_discipline: isSport && legacySport === 'run' ? (legacyRunDisc || null) : null
       };
       return resolvePeriodization(pseudo).totalWeeks;
     })(),
@@ -162,12 +176,12 @@ export function answersToProfilePatch(a) {
     focus: ['gym'],                          // the plan is always a gym plan now
     primary: 'gym',
     strength_style: isBuild ? (a.strengthStyle || 'strength') : 'strength',
-    sport: isSport ? (a.sport || null) : null,
+    sport: isSport ? (legacySport || null) : null,
     sport_intent: isSport ? (sportIntent || 'recreational') : null,
     sport_goal: goalOut,                           // recreational training goal | null
     event_date: isSport && a.eventDate ? a.eventDate : null,
     sport_season: seasonOut,  // 'in' | 'off' | null (compete only); deriveSeason() falls back for recreational
-    run_discipline: isSport && a.sport === 'run' ? (a.runDiscipline || null) : null,
+    run_discipline: isSport && legacySport === 'run' ? (legacyRunDisc || null) : null,
     sport_days: isSport ? (a.sportDays || []) : null,
 
     experience: { gym: a.experienceLevel || 'intermediate' },
@@ -209,5 +223,19 @@ export function answersToAthleteModelInputs(a, asOf) {
   const profile = answersToProfilePatch(a);
   const model = profileToAthleteModel(profile, asOf);
   model.meta = { ...model.meta, source: 'onboarding' };
+
+  // Overlay the richer question set (fields the legacy profile doesn't carry).
+  if (a.skbSport) model.sportingContext.primarySport = a.skbSport;
+  if (a.position) model.sportingContext.position = a.position;
+  if (a.sessionDurationMin != null && a.sessionDurationMin !== '') {
+    model.constraints.sessionDurationMin = Number(a.sessionDurationMin);
+  }
+  const ry = numOrNull(a.resistanceTrainingYears);
+  const sy = numOrNull(a.sportYears);
+  if (ry != null) model.trainingHistory.resistanceTrainingYears = ry;
+  if (sy != null) model.trainingHistory.sportYears = sy;
+  if (a.movementCompetency && typeof a.movementCompetency === 'object') {
+    model.trainingHistory.movementCompetency = { ...model.trainingHistory.movementCompetency, ...a.movementCompetency };
+  }
   return model;
 }

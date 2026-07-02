@@ -32,6 +32,6 @@ const sportP = {
   experience: { gym: 'intermediate' }, availability: { days_per_week: 3, days: [] }, access: ['full_gym'],
 };
 const sm = profileToAthleteModel(sportP, ASOF);
-assert(sm.goals[0].outcome === 'improve_sport_performance' && sm.sportingContext.primarySport === 'run', 'T7 sport mapped');
+assert(sm.goals[0].outcome === 'improve_sport_performance' && sm.sportingContext.primarySport === 'running_long', 'T7 sport mapped (SKB id: run/long → running_long)');
 assert(sm.meta.enginePassthrough.run_discipline === 'long' && sm.sportingContext.weeklySportSchedule.length === 2,
   'T8 sport specifics carried (passthrough + weekly schedule)');

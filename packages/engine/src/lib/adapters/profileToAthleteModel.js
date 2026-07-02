@@ -2,6 +2,15 @@
 // the source side of the round-trip golden master). Preserves everything the engine reads.
 import { buildAthleteModel } from '../athlete/buildAthleteModel.js';
 import { legacyToOutcome } from './goalMapping.js';
+import { normalizeSportId } from '../sportKnowledge/index.js';
+
+// Legacy engine sport (+ run discipline) → SKB profile id. Running splits by discipline; others
+// use the alias map. Falls back to normalizeSportId when there's no finer id.
+function toSkbSportId(sport, runDiscipline) {
+  if (!sport) return null;
+  if (sport === 'run') return runDiscipline ? `running_${runDiscipline}` : normalizeSportId('run');
+  return normalizeSportId(sport) || sport;
+}
 
 export function profileToAthleteModel(profile = {}, asOf) {
   const p = profile || {};
@@ -24,12 +33,13 @@ export function profileToAthleteModel(profile = {}, asOf) {
   if (p.sport_intent != null) enginePassthrough.sport_intent = p.sport_intent;
   if (p.sport_goal != null) enginePassthrough.sport_goal = p.sport_goal;
   if (p.run_discipline != null) enginePassthrough.run_discipline = p.run_discipline;
+  if (p.sport != null) enginePassthrough.sport = p.sport;
 
   const inputs = {
     identity: { age: p.age ?? null, biologicalSex: p.sex ?? null, bodyMassKg: p.bodyweight_kg ?? null, heightCm: p.height_cm ?? null },
     goals: [{ id: 'primary', outcome, priority: 1, sportRef: p.sport || null }],
     sportingContext: {
-      primarySport: p.sport || null,
+      primarySport: toSkbSportId(p.sport, p.run_discipline),
       seasonPhase: p.sport_season || null,
       competitionCalendar: p.event_date ? [{ label: 'event', date: p.event_date }] : [],
       weeklySportSchedule,
