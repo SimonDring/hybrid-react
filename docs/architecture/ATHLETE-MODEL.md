@@ -28,8 +28,9 @@ An app-side `AthleteModelService` builds, persists (versioned), loads, and upgra
 - No programme-generation logic was rewritten. The live plan generator still consumes today's
   legacy `users.profile`; an adapter maps the model back to that profile and a **golden-master
   test proves the plans are byte-identical**.
-- No diagnosis: the Performance Model's `demandProfile` / `limitingFactors` / `priorityAdaptations`
-  are **scaffolded** (present in the shape, not computed) — diagnosis is a later sprint.
+- Diagnosis is computed but does **not steer the plan**. `demandProfile` (from the SKB),
+  `limitingFactors`, and `priorityAdaptations` are now populated (see §5.2/§5.4) — but the diagnosis
+  is model output only; it does not yet change plan generation (that re-seating is a later sprint).
 - No real learning: `learnedPriors` hold population defaults; the learning loop is later.
 - No new onboarding UI. The revised onboarding *question wording* (outcome-based multi-goal,
   measurable training age, session duration, movement competency) is **Plan 2** — see §12.

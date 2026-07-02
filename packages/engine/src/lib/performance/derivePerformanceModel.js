@@ -1,7 +1,7 @@
 // The Performance Model: capability-per-physical-quality with confidence, derived from the
-// Athlete Model + knowledge. Independent of programme generation. The demandProfile is
-// populated from the SKB (buildDemandProfile); limitingFactors/priorityAdaptations remain
-// scaffolded here (diagnosis, computed in a later sprint).
+// Athlete Model + knowledge. Independent of programme generation. demandProfile (from the SKB) and
+// the diagnosis — limitingFactors (D4) + priorityAdaptations (D5) — are computed here as model
+// output; they do not yet steer plan generation (that re-seating is a later sprint).
 import { qualityIds } from '../../data/qualities.js';
 import { estimateCapability } from './estimation.js';
 import { buildDemandProfile } from './demandProfile.js';
