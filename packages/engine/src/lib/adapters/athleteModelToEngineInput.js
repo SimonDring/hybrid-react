@@ -39,6 +39,9 @@ export function athleteModelToEngineInput(model) {
   delete passExtras.sport_intent; delete passExtras.sport_goal; delete passExtras.run_discipline;
 
   return {
+    // pure scheduling passthroughs FIRST, so every explicit field below always wins on a
+    // key collision (guards against a future enginePassthrough key shadowing a mapped field).
+    ...passExtras,
     age: id.age ?? null,
     sex: id.biologicalSex ?? null,
     bodyweight_kg: id.bodyMassKg ?? null,
@@ -63,6 +66,5 @@ export function athleteModelToEngineInput(model) {
     access: cn.equipment || [],
 
     plan_start_date: (model.meta && model.meta.planStartDate) || null,
-    ...passExtras,
   };
 }
