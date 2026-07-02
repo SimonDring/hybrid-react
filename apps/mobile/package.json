@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node tests/data-layer.js"
+    "test": "node tests/run-all.mjs"
   },
   "dependencies": {
     "@performance-os/engine": "*",
