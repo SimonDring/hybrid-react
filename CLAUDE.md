@@ -142,7 +142,10 @@ round-trip to today's engine input (proven byte-identical by apps/mobile/tests/a
 App-side apps/mobile/src/lib/AthleteModelService.js persists it (versioned) at users.profile.athlete_model
 and Onboarding.jsx dual-writes it alongside the legacy profile — the live plan generator is UNCHANGED
 (parallel, proven by tests). Design: docs/superpowers/specs/2026-07-01-athlete-model-design.md; tech
-doc: docs/architecture/ATHLETE-MODEL.md. NOT yet built: the revised onboarding question wording (Plan 2).
+doc: docs/architecture/ATHLETE-MODEL.md. Plan 2 (done): the onboarding sport list is SKB-derived
+(packages/engine/src/lib/sportKnowledge/selectable.js) and the Performance Model's demandProfile is
+populated from the SKB (packages/engine/src/lib/performance/demandProfile.js) — the live plan is
+still unchanged; next is the diagnosis engine (couple demand × capability).
 
 How data flows (IMPORTANT)
 Screens → trainingStore (Zustand) → SyncService → Supabase (primary)
