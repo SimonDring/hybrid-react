@@ -344,6 +344,32 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     { title: 'Your lifting experience', subtitle: 'How much strength training have you done?', valid: () => !!a.experienceLevel,
       render: () => <OptionGrid cols={2} fill>{LEVELS.map(l => <Chip key={l.key} center selected={a.experienceLevel === l.key} onClick={() => set({ experienceLevel: l.key })} label={l.label} hint={l.hint} />)}</OptionGrid> },
 
+    { title: 'How long have you trained?', subtitle: 'Years is more useful to us than a label.', valid: () => true,
+      render: () => (
+        <OptionGrid cols={2}>
+          <Field label="Years lifting" type="number" value={a.resistanceTrainingYears} onChange={v => set({ resistanceTrainingYears: v })} suffix="yrs" />
+          {isSport && <Field label="Years in sport" type="number" value={a.sportYears} onChange={v => set({ sportYears: v })} suffix="yrs" />}
+        </OptionGrid>
+      ) },
+
+    { title: 'Movement confidence', subtitle: 'Roughly how solid are these patterns for you?', valid: () => true,
+      render: () => (
+        <div style={{ display: 'grid', gap: 12 }}>
+          {[['squat','Squat'],['hinge','Hinge / deadlift'],['press','Press'],['pull','Pull']].map(([k, label]) => (
+            <div key={k}>
+              <label style={FIELD_LABEL}>{label}</label>
+              <OptionGrid cols={3} gap={6}>
+                {['novice','intermediate','advanced'].map(lvl => (
+                  <Chip key={lvl} center selected={(a.movementCompetency || {})[k] === lvl}
+                    onClick={() => set({ movementCompetency: { ...(a.movementCompetency || {}), [k]: lvl } })}
+                    label={lvl[0].toUpperCase() + lvl.slice(1)} />
+                ))}
+              </OptionGrid>
+            </div>
+          ))}
+        </div>
+      ) },
+
     { title: 'How much can you train?', subtitle: "Be realistic — a plan you stick to beats an ideal one you can't.", valid: () => a.daysPerWeek != null && (a.equipment || []).length > 0,
       render: () => (
         <div style={{ display: 'grid', gap: 20 }}>
@@ -364,6 +390,16 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
                 : (a.daysPerWeek ?? optimalDays) > optimalDays
                   ? `More than the ${optimalDays} days we'd recommend — extra days add fatigue without more progress for this goal.`
                   : `Fewer than the ${optimalDays} days we'd recommend — you'll likely fall short of the ideal dose for your goal.`}
+            </div>
+          </div>
+          <div>
+            <label style={FIELD_LABEL}>Minutes per session</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <input type="range" min={20} max={120} step={5} value={a.sessionDurationMin ?? 60}
+                onChange={e => set({ sessionDurationMin: Number(e.target.value) })} style={{ flex: 1, accentColor: 'var(--accent)' }} />
+              <div style={{ minWidth: 74, textAlign: 'right', fontSize: 22, fontWeight: 700, color: 'var(--txt-strong)' }}>
+                {a.sessionDurationMin ?? 60}<span style={{ fontSize: 12, fontWeight: 600, color: 'var(--txt-muted)' }}> min</span>
+              </div>
             </div>
           </div>
           <div>
