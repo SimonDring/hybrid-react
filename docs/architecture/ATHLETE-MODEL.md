@@ -28,8 +28,9 @@ An app-side `AthleteModelService` builds, persists (versioned), loads, and upgra
 - No programme-generation logic was rewritten. The live plan generator still consumes today's
   legacy `users.profile`; an adapter maps the model back to that profile and a **golden-master
   test proves the plans are byte-identical**.
-- No diagnosis: the Performance Model's `demandProfile` / `limitingFactors` / `priorityAdaptations`
-  are **scaffolded** (present in the shape, not computed) — diagnosis is a later sprint.
+- Diagnosis is computed but does **not steer the plan**. `demandProfile` (from the SKB),
+  `limitingFactors`, and `priorityAdaptations` are now populated (see §5.2/§5.4) — but the diagnosis
+  is model output only; it does not yet change plan generation (that re-seating is a later sprint).
 - No real learning: `learnedPriors` hold population defaults; the learning loop is later.
 - No new onboarding UI. The revised onboarding *question wording* (outcome-based multi-goal,
   measurable training age, session duration, movement competency) is **Plan 2** — see §12.
@@ -174,8 +175,8 @@ PerformanceModel = {
   athleteId, derivedAt,        // derivedAt = asOf
   capabilities: [ { qualityId, level, source, confidence, evidence, updatedAt } ],
   demandProfile: [ { qualityId, importance, source, evidence } ] | null,   // see §5.2 — live (Plan 2)
-  limitingFactors: [],         // scaffolding — computed in a later sprint (diagnosis)
-  priorityAdaptations: [],     // scaffolding — computed in a later sprint (diagnosis)
+  limitingFactors: [ { qualityId, magnitude, demandImportance, capabilityLevel, confidence, trainability, injuryRisk, rationale } ],  // see §5.4 — COMPUTED (D4)
+  priorityAdaptations: [ { qualityId, order, magnitude, confidence, adaptations, tracesToLimiter, rationale } ],  // see §5.4 — COMPUTED (D5)
 }
 ```
 
@@ -258,6 +259,56 @@ The onboarding sport list is **derived from the SKB**, not hand-maintained:
   for the new SKB-driven onboarding path. **Net effect: plans are unchanged** — SKB-driven sport
   selection changes what onboarding asks and what feeds `demandProfile`, not what the live plan
   generator produces.
+
+### 5.4 `limitingFactors` / `priorityAdaptations` — the diagnosis (D4/D5, COMPUTED)
+
+`limitingFactors` and `priorityAdaptations` are no longer scaffolding — `derivePerformanceModel`
+(`packages/engine/src/lib/performance/derivePerformanceModel.js`) now calls
+`diagnoseLimitingFactors(capabilities, demandProfile)` (D4,
+`packages/engine/src/lib/performance/diagnose.js`) and feeds its output into
+`prioritiseQualities(limitingFactors)` (D5, `packages/engine/src/lib/performance/prioritise.js`).
+Both are pure and null-safe.
+
+**D4 — `diagnoseLimitingFactors`.** For every quality in the `demandProfile`, ranks the gap between
+what the sport/position *demands* and what the athlete can currently *do*:
+
+- `magnitude = max(0, demandImportance − capabilityLevel) × demandImportance × trainability × injuryRisk`
+  — the gap, weighted by how important the quality is to the sport (a large gap on a low-importance
+  quality matters less than a smaller gap on a high-importance one). `trainability` and `injuryRisk`
+  are **neutral seams** (`= 1.0` today — typed and wired so a later sprint can enrich them from the
+  quality registry / injury system without changing the shape).
+- `confidence` is the **weakest input** — the capability estimate's confidence (the demand side is
+  SKB-evidence-backed, so the capability estimate is the weak link).
+- `rationale` is a plain-English sentence naming the demand, the athlete's current level, and the
+  gap (or "you meet the demand; maintain it" when there is no gap).
+- Factors are sorted by `magnitude` descending (ties broken alphabetically by `qualityId`).
+- **A sport athlete always has a diagnosis** — every demanded quality is ranked, including
+  zero-magnitude ones (met demands). When there is no `demandProfile` (no primary sport, or the
+  sport has no SKB physical profile), `diagnoseLimitingFactors` returns `[]` — there is nothing to
+  diagnose against.
+
+**D5 — `prioritiseQualities`.** From the ranked limiting factors, selects a **confidence-scaled**
+set of priority qualities to develop:
+
+- Only positive-magnitude factors are candidates (a met demand is never a priority).
+- `k` (how many priorities to select) scales with the top factor's confidence: `low → 1`,
+  `moderate → 2`, `high → 3` — lower confidence means a narrower, more conservative diagnosis.
+- Each selected quality is mapped through the quality registry (`data/qualities.js`) to the
+  `adaptations[]` that develop it, and carries `tracesToLimiter` (which limiting factor it
+  addresses) plus a `rationale` naming the magnitude and the adaptations to develop it via.
+- **Compatibility guard** (`data/qualityCompatibility.js`, `areIncompatible`): a candidate is
+  deferred (skipped, not selected) if it conflicts with an already-selected higher-priority quality.
+  Seeded with the classic concurrent-training interference pair (`maxStrength` ×
+  `aerobicCapacity`) — priorities are never a mix of max-strength and max-endurance work at once.
+- When `limitingFactors` is empty (no demand, or every demand is already met), `priorityAdaptations`
+  is `[]`.
+
+**Field naming note:** despite the historical name, `priorityAdaptations` holds **priority-QUALITY**
+entries — each one *carries* the `adaptations[]` that develop that quality, rather than being a flat
+list of adaptations itself.
+
+**This diagnosis is model output only.** Nothing in the live plan generator reads
+`limitingFactors`/`priorityAdaptations` yet — see §12.
 
 ---
 
@@ -397,11 +448,20 @@ isolated from decision code.
   goal; multi-goal is stored but not yet consumed (matches today's engine).
 - **Non-queryable across athletes** — the model lives inside `users.profile`; a normalized
   `athlete_profiles` table is deferred to the Team package (cross-athlete reads).
-- **`demandProfile` is modelled but not yet consumed by plan generation.** Plan 2 populates it from
-  the SKB (§5.2), but no diagnosis step exists yet to compare demand against capability and adjust
-  the plan — the live plan generator still runs entirely off the legacy profile via
-  `athleteModelToEngineInput`. Coupling demand × capability into a diagnosis (limiting factors,
-  priority adaptations) is the **next sprint**.
+- **The diagnosis (`limitingFactors` / `priorityAdaptations`) is model output only — it does not
+  yet steer plan generation.** D4/D5 (§5.4) now compute the demand × capability diagnosis, but
+  nothing downstream reads it: the live plan generator still runs entirely off the legacy profile
+  via `athleteModelToEngineInput`, unchanged. Coupling the diagnosis into what the plan actually
+  builds (the diagnosis→plan re-seating) is the **next sprint**.
+- **`trainability` and `injuryRisk` are neutral seams** (`= 1.0` on every limiting factor) — typed
+  and wired into the `magnitude` formula so a later sprint can enrich them (from the quality
+  registry's `fatigueCost`/prerequisites and the injury system) without changing the shape or
+  breaking consumers.
+- **Build-goal diagnosis is empty.** `diagnoseLimitingFactors` only ever produces factors when a
+  `demandProfile` exists, and `demandProfile` is only built from a primary **sport** (§5.2). Athletes
+  whose goal is a build-goal (get stronger, build muscle, general fitness) with no sporting context
+  get `limitingFactors: []` and `priorityAdaptations: []` — not because the diagnosis is broken, but
+  because no goal-as-sport demand profile exists yet to diagnose against.
 - **SKB qualities without a Performance-Model home are unmapped, not lost.** `sportQualityMap.js`
   documents the drop list (`sprintSpeed`, `acceleration`, `deceleration`, `changeOfDirection`,
   `coordination`, `rotationalPower`, `gripStrength`, `neckStrength`) — a future sport-skill/speed

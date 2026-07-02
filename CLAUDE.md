@@ -145,7 +145,9 @@ and Onboarding.jsx dual-writes it alongside the legacy profile — the live plan
 doc: docs/architecture/ATHLETE-MODEL.md. Plan 2 (done): the onboarding sport list is SKB-derived
 (packages/engine/src/lib/sportKnowledge/selectable.js) and the Performance Model's demandProfile is
 populated from the SKB (packages/engine/src/lib/performance/demandProfile.js) — the live plan is
-still unchanged; next is the diagnosis engine (couple demand × capability).
+still unchanged; next is the diagnosis engine (couple demand × capability). Diagnosis (done): the
+Performance Model now computes the diagnosis itself (performance/diagnose.js D4 limiting factors,
+performance/prioritise.js D5 priority qualities) — model output only, it does not yet steer the plan.
 
 How data flows (IMPORTANT)
 Screens → trainingStore (Zustand) → SyncService → Supabase (primary)
