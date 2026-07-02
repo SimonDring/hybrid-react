@@ -100,6 +100,22 @@ function firstDiff(aStr, bStr) {
   return '  (length differs only)';
 }
 
+// Order-insensitive canonical serialization: recursively sort object keys so the snapshot is
+// stable across engine refactors that only change key INSERTION order (which never affects plan
+// behaviour). Genuine value changes still show as drift; harmless key reordering does not.
+function stableStringify(value) {
+  const sort = (v) => {
+    if (Array.isArray(v)) return v.map(sort);
+    if (v && typeof v === 'object') {
+      const out = {};
+      for (const k of Object.keys(v).sort()) out[k] = sort(v[k]);
+      return out;
+    }
+    return v;
+  };
+  return JSON.stringify(sort(value), null, 2);
+}
+
 const current = buildCurrent();
 
 // In-process determinism: regenerating each archetype must be byte-identical. This
@@ -116,7 +132,7 @@ const update = !!process.env.UPDATE;
 
 if (!existsSync(SNAP) || update) {
   if (!existsSync(SNAP_DIR)) mkdirSync(SNAP_DIR, { recursive: true });
-  writeFileSync(SNAP, JSON.stringify(current, null, 2) + '\n');
+  writeFileSync(SNAP, stableStringify(current) + '\n');
   console.log(`${update ? 'UPDATED' : 'CAPTURED'} golden-master snapshot: ${Object.keys(current).length} archetypes → ${SNAP}`);
   console.log('golden-master done');
 } else {
@@ -130,8 +146,8 @@ if (!existsSync(SNAP) || update) {
   let drift = 0;
   for (const key of snapKeys) {
     if (!(key in current)) continue;
-    const exp = JSON.stringify(snapshot[key], null, 2);
-    const got = JSON.stringify(current[key], null, 2);
+    const exp = stableStringify(snapshot[key]);
+    const got = stableStringify(current[key]);
     if (exp === got) {
       console.log('PASS:', key);
     } else {
