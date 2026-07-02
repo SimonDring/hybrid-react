@@ -62,21 +62,39 @@ QUALITY_MOVEMENT[qualityId] = {
 
 Representative content (seed): `maxStrength → { [squat,hinge,hpush,vpush,hpull,vpull], 'maximal-force',
 'grinding' }`; `robustness → { [hinge,lunge,calf,iso], 'controlled', 'eccentric-emphasis' }`;
-`reactiveStrength → { [squat,lunge], 'ballistic', 'fast-ssc' }`; `hypertrophy → { [squat,hinge,lunge,
-hpush,vpush,hpull,vpull,iso], 'controlled-hypertrophy', 'controlled' }`; `stability → { [core,carry,iso],
-'isometric', 'isometric' }`; the aerobic/anaerobic qualities carry a documented "gym-support only"
-note (the gym engine doesn't program cardio). Accessor: `movementRequirementsFor(qualityId)` → the
-entry or `null`.
+`reactiveStrength → { [squat,lunge], 'ballistic', 'fast-ssc' }`; `explosiveStrength → { [squat,hinge],
+'strength-speed', 'explosive-concentric' }`; `hypertrophy → { [squat,hinge,lunge,hpush,vpush,hpull,
+vpull,iso], 'controlled-hypertrophy', 'controlled' }`; `strengthEndurance → { [lunge,carry,calf,iso],
+'endurance', 'sustained' }`; `stability → { [core,carry,iso], 'isometric', 'isometric' }`;
+`mobility → { [mobility], 'mobility', 'end-range' }`. The two cardio qualities (`aerobicCapacity`,
+`anaerobicCapacity`) are **not gym-trained directly** — the map entries carry a documented
+"gym-support only" note and are handled via the gym-support translation below (3.2), not by naming
+gym movements for cardio. Accessor: `movementRequirementsFor(qualityId)` → the entry or `null`.
+
+**Cardio → gym-support translation (`CARDIO_GYM_SUPPORT`).** The diagnosis legitimately ranks a cardio
+quality as an athlete's top limiter (verified: a distance runner's #1 priority is `aerobicCapacity`),
+but the **gym engine cannot train it directly** — it *supports* it. A small map translates a cardio
+priority to the gym-trainable qualities that support it: `aerobicCapacity → [robustness,
+reactiveStrength]` (durability + running-economy via tendon stiffness) and `anaerobicCapacity →
+[strengthEndurance, maxStrength]`. This is what makes the distance-runner archetype produce the EDS's
+exact gym prescription (eccentric hinge + reactive calf, **not** chest/arms) instead of an empty
+requirement. Gym-trainable qualities pass through unchanged.
 
 ### 3.2 D9 — `packages/engine/src/lib/session/sessionObjective.js`
 
 Two pure functions:
 
+- `gymTrainableTargets(priorityQualities, goalPrimary)` → `string[]` — the ordered gym-trainable
+  target qualities. For each priority quality (from `priorityAdaptations`): pass it through if it is
+  gym-trainable; if it is a cardio quality, expand it via `CARDIO_GYM_SUPPORT` (3.1). De-duplicate,
+  preserving order. Build athlete (empty diagnosis) → `[goalPrimary]` (strength→`maxStrength`,
+  bodybuilding→`hypertrophy`, functional→`stability` as a balanced default). Empty + no goal →
+  `['maxStrength']` fallback.
 - `assignTargetQualities(priorityQualities, sessionCount, goalPrimary)` → `string[]` (one target
-  quality per session). Sport athlete: deterministic **round-robin** over the block's priority
-  qualities (`priorityAdaptations[i % k].qualityId`). Build athlete (empty diagnosis): every session
-  gets `goalPrimary` (strength→`maxStrength`, bodybuilding→`hypertrophy`, functional→`stability` as a
-  balanced default). Null-safe (empty priorities + no goal → `maxStrength` fallback).
+  quality per session): deterministic **round-robin** over `gymTrainableTargets(...)`
+  (`targets[i % targets.length]`). This is why a distance runner (priority `aerobicCapacity` →
+  `[robustness, reactiveStrength]`) gets durability + economy sessions, while a sprinter (priority
+  `explosiveStrength`) gets power sessions.
 
 - `deriveSessionObjective({ targetQuality, region, phaseIntent, deload, taper, season })` →
   ```js
@@ -95,15 +113,18 @@ Two pure functions:
 - `deriveMovementRequirements({ targetQuality, region, level, contraindicatedPatterns })` →
   ```js
   { movementPatterns: string[], forceVelocity: string, contraction: string,
-    contraindicated: [{ pattern, reason }], rationale: string }
+    contraindicated: [{ pattern, reason }], competencyNote: string|null, rationale: string }
   ```
   - Base from `movementRequirementsFor(targetQuality)`, **intersected with the session region** so
     requirements are session-appropriate (lower → {squat,hinge,lunge,calf}; upper → {hpush,vpush,
     hpull,vpull}; full → all; core → {core,carry,iso}).
-  - **Subtract up front (L8):** remove any pattern in `contraindicatedPatterns` (from injuries),
-    recording `{pattern, reason:'injury'}`; and for a **novice** (`level` = beginner) when the required
-    `forceVelocity` is high-skill (`ballistic`/`strength-speed`), record `{pattern, reason:'competency'}`
-    and drop it — reproducing the sprinter archetype's deferred plyometrics.
+  - **Subtract up front (L8):** remove any required pattern in `contraindicatedPatterns` (from
+    injuries), recording `{pattern, reason:'injury'}`.
+  - **Competency (L4):** for a **novice** (`level` = beginner) when the required `forceVelocity` is
+    high-skill (`ballistic`/`strength-speed`), **downgrade** the force-velocity to `maximal-force`
+    (keep the patterns) and record a `competencyNote` ("plyometric/Olympic velocity deferred — build
+    the strength base first"). This reproduces the EDS novice-sprinter (max-strength base before
+    plyometric RFD) without needing to remove movements.
   - `rationale` names the requirement in plain English ("heavy-slow hip-hinge + eccentric loading;
     knee-loaded squat patterns removed — injury").
 
@@ -133,11 +154,15 @@ Two pure functions:
 ## 4. Validation
 
 - **The archetype test (headline)** `apps/mobile/tests/session-archetypes.js` — build the EDS §22
-  in-season distance runner and off-season novice sprinter (via `answersToProfile` + the Athlete/
-  Performance Model), derive their session specs, and assert they are **categorically different**:
-  the runner's targets/requirements centre on `robustness`/eccentric hinge + calf and **exclude
-  chest/arm (hpush/iso-arm) patterns**; the sprinter's centre on a `maxStrength` base and **defer
-  ballistic work by competency**. (Non-vacuous: the two share a sport but diverge by diagnosis.)
+  archetypes via `answersToAthleteModelInputs` (verified real diagnoses): an **in-season distance
+  runner** (`skbSport:'running_long'`, in-season → priority `aerobicCapacity` → gym-support
+  `[robustness, reactiveStrength]`) and a **novice sprinter** (`skbSport:'running_sprint'`, beginner →
+  priority `explosiveStrength`). Derive their session specs and assert they are **categorically
+  different**: the runner's target qualities are `{robustness, reactiveStrength}` with movement
+  requirements centred on eccentric hinge + reactive calf and **excluding chest/arm (hpush) patterns**;
+  the sprinter's target is `explosiveStrength` with a squat/hinge requirement whose force-velocity is
+  **competency-downgraded to `maximal-force`** (base first) carrying a `competencyNote`. (Non-vacuous:
+  the two share the sport of running but diverge entirely by diagnosis.)
 - **D9 invariant** — every session objective has all four fields (`purpose, targetQuality,
   intensityZone, fatigueBudget`) and a non-empty rationale.
 - **D10 invariant** — requirements never include a contraindicated pattern; the `contraindicated[]`
