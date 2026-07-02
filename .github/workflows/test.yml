@@ -1,0 +1,23 @@
+name: Tests
+
+# The engine regression gate: run the full node test suite (incl. the golden-master
+# snapshot) on every push to main and every PR into main. Previously `npm test` pointed
+# at a non-existent file and never ran, so drift went uncaught (see the golden-master
+# re-baseline in this change). This job is the safety net every later engine change relies on.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  engine-suite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm test
