@@ -29,6 +29,12 @@ import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 import { MUSCLE_LABELS } from '@performance-os/engine/data/muscleVolume.js';
 import { readinessIndex } from '@performance-os/engine/lib/indices/index.js';
 import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
+import { exerciseQualities } from '@performance-os/engine/data/exerciseQualities.js';
+import { EXERCISES } from '@performance-os/engine/data/strengthExercises.js';
+
+// Session items carry a display `name`, not the exercise id — map name → id so we can
+// look up the (read-only) physical-quality tags. Built once at module load.
+const NAME_TO_ID = new Map(EXERCISES.map((e) => [e.name, e.id]));
 
 const NOTES_KEY = 'htp_dev_review_notes';
 
@@ -61,6 +67,16 @@ function ItemsTable({ session }) {
           <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'baseline', flexWrap: 'wrap', fontSize: 12, paddingBottom: 5, borderBottom: '1px solid var(--hairline)' }}>
             <span style={{ fontWeight: 700, color: it.superset ? 'var(--rust)' : 'var(--txt-muted)', minWidth: 26 }}>{it.num}</span>
             <span style={{ fontWeight: 600, color: 'var(--txt-strong)', flex: '1 1 120px' }}>{it.name || it.stroke}</span>
+            {(() => {
+              const tag = exerciseQualities(NAME_TO_ID.get(it.name));
+              if (!tag) return null;
+              const qs = tag.qualities.map((q) => q.id).join(', ');
+              return (
+                <span style={{ flexBasis: '100%', fontSize: 11, color: 'var(--txt-muted)', marginTop: 2 }}>
+                  {qs} · {tag.forceVelocity}
+                </span>
+              );
+            })()}
             {def.columns.map(col => {
               const v = col.accessor(it);
               if (v === '' || v == null || v === '—') return null;
