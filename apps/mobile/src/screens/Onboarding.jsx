@@ -15,6 +15,7 @@ import OnboardingWizard from '../components/OnboardingWizard.jsx';
 import {
   BLANK_ANSWERS, answersToProfilePatch, answersToInjuries
 } from '../lib/onboardingModel.js';
+import * as AthleteModelService from '../lib/AthleteModelService.js';
 
 export default function Onboarding() {
   const profile = useTrainingStore(s => s.profile);
@@ -40,6 +41,11 @@ export default function Onboarding() {
       setSubmitError(first || 'Please check your details and try again.');
       return; // block: profile not saved, onboarding stays open
     }
+    // Sprint 3: also build + persist the Athlete Model (parallel to the legacy profile;
+    // the live engine still consumes the legacy profile). Non-blocking — model persistence
+    // must never break onboarding completion.
+    try { await AthleteModelService.buildAndSaveFromAnswers(a); }
+    catch (e) { console.error('athlete model save failed (non-fatal):', e); }
     await setGoals([]);   // strength-focused: no separate ranked goals; clear any legacy ones
     for (const inj of answersToInjuries(a)) await addInjury(inj);
     // onboarded:true is now in the store → App.jsx gate unmounts this screen.

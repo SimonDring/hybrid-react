@@ -1,5 +1,6 @@
 import { resolvePeriodization } from '@performance-os/engine/lib/plan/periodization.js';
 import { pullupE1RM } from '@performance-os/engine/lib/liftProgression.js';
+import { profileToAthleteModel } from '@performance-os/engine/lib/adapters/profileToAthleteModel.js';
 
 /**
  * onboardingModel — the pure (non-UI) part of onboarding: the answer shape and
@@ -199,4 +200,14 @@ export function answersToInjuries(a) {
 // Full profile object — what generatePlan() consumes (no separate ranked goals now).
 export function answersToProfile(a) {
   return { ...answersToProfilePatch(a), goals: [] };
+}
+
+// Onboarding answers → Athlete Model. Routes through the SAME legacy profile mapping so the
+// model never diverges from the fields the live engine reads, then (Plan 2) enriches with the
+// richer question set. asOf keeps it deterministic/testable.
+export function answersToAthleteModelInputs(a, asOf) {
+  const profile = answersToProfilePatch(a);
+  const model = profileToAthleteModel(profile, asOf);
+  model.meta = { ...model.meta, source: 'onboarding' };
+  return model;
 }

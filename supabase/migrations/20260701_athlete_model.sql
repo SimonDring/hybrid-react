@@ -1,0 +1,38 @@
+-- Sprint 3 — Athlete Model persistence (audit trail; NO DDL required).
+--
+-- The Athlete Model is stored as a versioned sub-object at
+--     public.users.profile -> 'athlete_model'
+-- which is an EXISTING JSONB column already protected by the "own profile" RLS policy
+-- (auth.uid() = id). No schema change is needed; this file documents the shape + version
+-- for auditability, matching the repo convention that every persistence decision has a
+-- versioned migration record.
+--
+-- profile.athlete_model = {
+--   schemaVersion: 1, athleteId, updatedAt,
+--   identity:        { age, biologicalSex, heightCm, bodyMassKg },
+--   goals:           [ { id, outcome, priority, sportRef, targetMetric, deadline } ],
+--   sportingContext: { primarySport, secondarySports[], position, competitiveLevel,
+--                      seasonPhase, competitionCalendar[], weeklySportSchedule[],
+--                      competitionFrequency, trainingFrequency },
+--   trainingHistory: { resistanceTrainingYears, sportYears, selfRatedLevel,
+--                      olympicLiftingExperience, barbellExperience, plyometricExperience,
+--                      vbtExperience, coachingHistory, movementCompetency{} },
+--   constraints:     { equipment[], availableDays[], daysPerWeek, sessionDurationMin,
+--                      injuryHistory[], currentPain[], medicalRestrictions[],
+--                      mobilityLimitations[], travel, shiftWork, rehabStatus, other[] },
+--   lifestyle:       { sleepQuality, stress, occupation, recoveryOpportunities },
+--   assessments:     [ { id, type, value, unit, source, confidence, measuredAt } ],
+--   performanceMetrics: [ { id, metric, value, unit, source, confidence, measuredAt } ],
+--   learnedPriors:   { recoveryRate{}, volumeTolerance{} },
+--   meta:            { onboardedAt, source, planStartDate, enginePassthrough{} }
+-- }
+--
+-- PRIVACY (Constitution Article 11): raw vitals (HRV / sleep / resting HR) are NOT stored
+-- here. They remain owner-only in public.daily_metrics; the model only references them. The
+-- whole athlete_model is owner-only via the existing users RLS (auth.uid() = id).
+--
+-- FUTURE: a normalized public.athlete_profiles table (with additive, team-scoped RLS) is
+-- deferred to the Team package, where cross-athlete queries are needed. Until then, no
+-- schema change is required.
+
+select 1;  -- no-op

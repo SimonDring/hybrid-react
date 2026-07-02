@@ -134,6 +134,16 @@ src/data/muscleVolume.js; injuries filter sessions via src/lib/injury/.
 Try it: the /dev route (DevPlayground) generates a plan from any onboarding answers
 with a live actual-vs-target volume readout. Engine tests: node tests/*.js.
 
+The Athlete Model (Sprint 3): the athlete representation every FUTURE coaching decision reads —
+packages/engine/src/lib/athlete (schema + field-registry justification gate + validation + builder)
+and packages/engine/src/lib/performance (capability-per-physical-quality with confidence), fed by
+packages/engine/src/data (qualities/adaptations/priors/training-age bands), with adapters that
+round-trip to today's engine input (proven byte-identical by apps/mobile/tests/athlete-adapter-golden-master.js).
+App-side apps/mobile/src/lib/AthleteModelService.js persists it (versioned) at users.profile.athlete_model
+and Onboarding.jsx dual-writes it alongside the legacy profile — the live plan generator is UNCHANGED
+(parallel, proven by tests). Design: docs/superpowers/specs/2026-07-01-athlete-model-design.md; tech
+doc: docs/architecture/ATHLETE-MODEL.md. NOT yet built: the revised onboarding question wording (Plan 2).
+
 How data flows (IMPORTANT)
 Screens → trainingStore (Zustand) → SyncService → Supabase (primary)
 ↘ Database.js / localStorage (cache)
