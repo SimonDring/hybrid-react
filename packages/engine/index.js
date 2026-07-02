@@ -23,3 +23,6 @@ export { applyInjuryRules, applyPrevention } from './src/lib/injury/injuryFilter
 export { default as kb } from './src/lib/knowledge/kb.js';
 export { default as sportKnowledge } from './src/lib/sportKnowledge/index.js';
 export { exerciseQualities, FORCE_VELOCITY } from './src/data/exerciseQualities.js';
+export { deriveSessionSpecs, regionOf } from './src/lib/session/sessionSpecs.js';
+export { deriveSessionObjective, assignTargetQualities, gymTrainableTargets } from './src/lib/session/sessionObjective.js';
+export { deriveMovementRequirements, contraindicatedPatternsFrom } from './src/lib/session/movementRequirements.js';
