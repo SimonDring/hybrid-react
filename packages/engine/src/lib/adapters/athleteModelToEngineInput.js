@@ -3,6 +3,7 @@
 // This adapter is NOT in the live path this sprint — it exists to prove the model can drive
 // the engine.
 import { OUTCOME_TO_LEGACY } from './goalMapping.js';
+import { bindingFor } from '../../data/sportEngineBinding.js';
 
 const LEVELS = new Set(['beginner', 'returning', 'intermediate', 'advanced']);
 
@@ -18,6 +19,7 @@ export function athleteModelToEngineInput(model) {
   const cn = model.constraints || {};
   const id = model.identity || {};
   const pass = (model.meta && model.meta.enginePassthrough) || {};
+  const binding = bindingFor(sc.primarySport) || {};
 
   const gym = LEVELS.has(th.selfRatedLevel) ? th.selfRatedLevel : 'intermediate';
 
@@ -37,6 +39,11 @@ export function athleteModelToEngineInput(model) {
   // pure scheduling passthroughs (e.g. plan_weeks); sport-shape passthroughs are read explicitly below
   const passExtras = { ...pass };
   delete passExtras.sport_intent; delete passExtras.sport_goal; delete passExtras.run_discipline;
+  delete passExtras.sport;
+
+  // Exact legacy passthrough wins (byte-identical round-trip); else derive from the SKB→engine
+  // binding (new onboarding path); else fall back to the raw primarySport/sportRef (unbound SKB id).
+  const engineSport = isSport ? (pass.sport ?? binding.engineSport ?? sc.primarySport ?? primary.sportRef ?? null) : null;
 
   return {
     // pure scheduling passthroughs FIRST, so every explicit field below always wins on a
@@ -50,11 +57,11 @@ export function athleteModelToEngineInput(model) {
     strength_style: legacy.strength_style,
     focus: ['gym'], primary: 'gym',
 
-    sport: isSport ? (sc.primarySport || primary.sportRef || null) : null,
+    sport: engineSport,
     sport_intent: isSport ? (pass.sport_intent || 'recreational') : null,
     sport_goal: isSport ? (pass.sport_goal || null) : null,
     sport_season: isSport ? (sc.seasonPhase || null) : null,
-    run_discipline: isSport && (sc.primarySport === 'run') ? (pass.run_discipline || null) : null,
+    run_discipline: isSport && engineSport === 'run' ? (pass.run_discipline ?? binding.discipline ?? null) : null,
     event_date: isSport ? event : null,
     sport_days: isSport ? sportDays : null,
 
