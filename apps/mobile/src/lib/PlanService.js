@@ -321,7 +321,12 @@ function adaptedPhases() {
         weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,
         bodyweight: gctx.bodyweight, priorityByIntent: gctx.priorityByIntent,
         exercisePriority: gctx.exercisePriority, sport: gctx.sport, power: gctx.power,
-        priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds
+        priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds,
+        // The slot's baseline identity within its week, so the D11 target-quality
+        // rotation matches the weekly builder's (same mechanism as resolveSplit[s.i]
+        // above) — without it every single-slot rebuild pinned the same top-priority
+        // quality and a runner's explosive days collapsed into the durability day.
+        weekGymCount: gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, weekSlotIdx: s.i
       }
     })[0];
     if (spec) {

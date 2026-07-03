@@ -66,6 +66,8 @@ function horizonGymSessions() {
   return out;
 }
 
+const EXPLOSIVE = /pogo|jump|hop|bound|throw|slam/;
+
 function assertD11(label, sessions) {
   assert(sessions.length > 0, `${label}: found ${sessions.length} in-horizon reflowed gym session(s)`);
   const names = sessions.flatMap(({ session }) => (session.items || []).map((it) => (it.name || '').toLowerCase()));
@@ -74,6 +76,15 @@ function assertD11(label, sessions) {
     `${label}: reflowed runner sessions exclude chest/arm isolation (got: ${names.join(', ')})`);
   assert(names.some((n) => DURABILITY.test(n)),
     `${label}: reflowed runner sessions include durability / lower-body strength work`);
+  // Day differentiation: the reflow must preserve the baseline's D9 quality rotation
+  // (ctx.weekGymCount/weekSlotIdx), not collapse every pending day into the same
+  // top-priority session. A 4-day runner week alternates durability and
+  // explosive/reactive days — both must survive the reflow.
+  const contents = new Set(sessions.map(({ session }) => (session.items || []).map((it) => it.name).join('|')));
+  assert(contents.size >= 2,
+    `${label}: reflowed days are differentiated (${contents.size} distinct session contents)`);
+  assert(names.some((n) => EXPLOSIVE.test(n)),
+    `${label}: the explosive/reactive day survives the reflow`);
 }
 
 // ── Scenario 1: idle runtime (fresh plan, nothing settled) ──────────────────
@@ -96,11 +107,21 @@ Plan.setRuntime({
 const pending = horizonGymSessions().filter(({ phase, week, i }) => `p${phase.id}_wk${week.num}_s${i}` !== key);
 assertD11('mid-week', pending);
 
-// KNOWN GAP (not asserted yet): the baseline generator differentiates a runner's
-// week (Lower vs Lower Explosive days), but the reflow rebuilds each horizon slot
-// independently and collapses them to identical content — the D9 quality rotation
-// is lost. That is the WP-24 reflow re-seat's problem to fix; when it lands, add
-// an assertion here that a 4-day runner week has ≥2 distinct session contents.
+// ── Scenario 3: baseline parity — the reflow's per-day targets equal the plan's ──
+// With an idle runtime the reflowed week must carry the SAME day pattern the pure
+// generator scheduled (Lower vs Lower Explosive), because each reflow slot re-derives
+// its target quality from its baseline week position, not from a fresh single-slot
+// rotation. Compare title suffixes (the D9 objective surface) per session.
+Plan.setRuntime({ sessions: {}, recovery: null, load: null });
+const { generatePlan } = await import('@performance-os/engine/lib/PlanGenerator.js');
+const baseline = generatePlan(Database.services.getProfile());
+const baseTitles = baseline.phases[0].weeks[0].sessions.map((s) => (s.title.split('·')[1] || s.title).trim());
+const reflowWeek1 = horizonGymSessions().filter(({ week }) => week.num === 1);
+for (const { i, session } of reflowWeek1) {
+  const focus = (session.title.split('·')[1] || session.title).trim();
+  assert(focus === baseTitles[i],
+    `parity: reflowed session ${i} keeps the baseline objective ('${focus}' === '${baseTitles[i]}')`);
+}
 
 // Determinism: the same runtime state renders the same reflowed content.
 const a = JSON.stringify(horizonGymSessions().map(({ session }) => (session.items || []).map((it) => it.name)));
