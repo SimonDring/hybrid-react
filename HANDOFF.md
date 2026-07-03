@@ -65,15 +65,9 @@ onboarding answers → Athlete Model (WHO: identity/goals/sport+position/trainin
   `onboardingModel.js` (`answersToProfilePatch` + `answersToAthleteModelInputs`), `OnboardingWizard.jsx`.
 - Full tech doc: **`docs/architecture/ATHLETE-MODEL.md`**. Specs/plans: `docs/superpowers/{specs,plans}/`.
 
-**⇒ THE NEXT STEP — Sprint 7 (D9/D10 — session objective + movement requirements) is DONE; next is
-Blueprint Sprint 8 (D11 — intervention selection re-seated), the allocator re-seat where live plans
-change for the first time.**
-The exercise catalogue is tagged by physical quality/adaptation/force-velocity/fatigue cost
-(`packages/engine/src/data/exerciseQualities.js`, Sprint 5), and each session now has a computed
-objective (D9) and movement/quality requirements (D10) via `packages/engine/src/lib/session/` — both
-still parallel model output, both golden masters green, the live plan unchanged. Sprint 8 is where the
-allocator's `bestExercise` actually starts selecting exercises by these requirements instead of by
-muscle alone — **the first time live plans change**.
+**⇒ THE NEXT STEP — Sprint 8 (D11 re-seat for run + cycle) is DONE — the first sprint where live plans
+changed.** Next options: Blueprint **Sprint 9 (W7: SKB-primary demand + retire the emphasis vectors)**
+and **D12 (dose schemes keyed by quality)**; plus the near-term follow-ups below.
 **Each sprint still needs its own brainstorm** (start with `superpowers:brainstorming`). Open design
 questions to resolve there:
 1. **How aggressive** — a full re-seat of the allocator to adaptation-first, or a diagnosis-weighted
@@ -108,6 +102,26 @@ robustness`); **raw vitals never enter the model** (Constitution Art 11 — `dai
 owner-only). Deferred cosmetic minors (non-blocking): a `diagnose.js` comment overstatement; the
 `prioritise.js` unknown-confidence→k=1 fallback is undocumented; `selectable.js` sport labels use
 `humanize(id)` (e.g. "Running Sprint") since flagship `meta` has no display label.
+
+## Latest work — Sprint 8: D11 intervention-selection re-seat (run + cycle) (2026-07-03)
+
+On branch **`feat/d11-intervention-selection`**. The FIRST sprint where live plans change: for **run and
+cycle**, exercise selection is now diagnosis-driven (D11 value-hierarchy, transfer-per-fatigue, stop at
+the fatigue budget) instead of muscle-deficit fill. **Build and swim are byte-identical** (build-parity
+gate; swim deferred to the legacy path). Design/plan: `docs/superpowers/{specs,plans}/2026-07-03-d11-intervention-selection*`.
+
+- **New** `plan/selectInterventions.js` (D11, EDS §34, cap 2/pattern), `performance/forProfile.js`
+  (`performanceModelForProfile` — diagnosis from a legacy profile), wired through `generatePlan` +
+  the PlanService reflow. Muscle-volume is now the in-loop MRV ledger, not the driver.
+- **Fixes surfaced by the re-seat:** mobility/stability → robustness (session-support, not drivers);
+  beginners targeting power build the max-strength base first (`competencyAdjustedTarget`).
+- **Safety:** `build-parity.js` proves build byte-identical; sport golden master re-baselined (only
+  run/cycle changed); `d11-runner-quality.js` proves the change is an improvement. Full suite 117/117.
+- **Deferred / near-term follow-ups:** (1) re-seat **swim** once the model surfaces its upper-pull/
+  shoulder need (its diagnosis currently points to mobility→robustness, wrong for a swimmer); (2) wire
+  D11 into on-demand **"Train Now"** (`generateTrainNow` still uses the legacy fill for run/cycle);
+  (3) add a reflow-specific D11 regression test; (4) **D12** dose schemes keyed by quality; (5) the
+  MRV→validator extraction; (6) SKB-primary selection (Sprint 9).
 
 ## Latest work — Sprint 7: session objective (D9) + movement requirements (D10) (2026-07-02)
 

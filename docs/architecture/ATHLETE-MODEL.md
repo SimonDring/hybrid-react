@@ -349,6 +349,36 @@ qualities and requirements (the runner gets durability/economy and no chest work
 competency-gated strength base). Both golden masters stay byte-identical. Consumed next by **D11**
 (Sprint 8, the allocator re-seat). Design/plan: `docs/superpowers/{specs,plans}/2026-07-02-session-objective-movement-requirements*`.
 
+### 5.7 D11 intervention selection — the run/cycle re-seat (Sprint 8, LIVE for run + cycle)
+
+`packages/engine/src/lib/plan/selectInterventions.js` re-seats exercise selection for **run and cycle**
+athletes: instead of the muscle-deficit greedy fill, it selects the minimum-effective set of exercises
+that satisfy the D9/D10 requirement, ordered by **transfer-per-fatigue** in the EDS §34 value hierarchy
+(primary compound → secondary → prevention → sport accessory → lagging-muscle hypertrophy → core →
+mobility), **capped at 2 exercises per movement pattern**, and **stopping at the fatigue budget** (banks
+the rest). Muscle-volume is now the downstream **ledger** (the MRV ceiling still guards, in-loop).
+`allocator.js` branches: run/cycle with a non-empty diagnosis → D11; **build and swim are unchanged**
+(byte-identical, gated by `apps/mobile/tests/build-parity.js`).
+
+The diagnosis reaches the plan via `performanceModelForProfile(profile, asOf)`
+(`packages/engine/src/lib/performance/forProfile.js`), threaded through `generatePlan(profile, opts?)` →
+`buildWeek` → `allocateGym`, and reused by the PlanService reflow (`gymCtx`) so reflowed run/cycle weeks
+stay diagnosis-driven.
+
+**Two D9-level fixes surfaced by the re-seat** (both in `session/sessionObjective.js`):
+- `mobility`/`stability` are session **support** qualities, not drivers → translated to `robustness`
+  (a "mobility session" is not a training stimulus).
+- `competencyAdjustedTarget`: a **beginner** targeting a power quality (explosive/reactive) builds the
+  **max-strength base** first (EDS §22 — the power exercises are competency-gated, so the session would
+  otherwise collapse to prehab-only).
+
+The run/cycle golden master was deliberately **re-baselined** (only `sport·run-*`/`sport·cycle-*`
+archetypes changed); `d11-runner-quality.js` gates the *nature* of the change (durability in, chest flyes
+out, leaner sessions). **Deferred:** swim (a swimmer's gym need is upper-pull/shoulder, not the
+mobility→robustness the diagnosis produces — kept on the legacy path); D12 dose schemes; the
+MRV→validator extraction; SKB-primary selection (Sprint 9); D11 for on-demand "Train Now". Design/plan:
+`docs/superpowers/{specs,plans}/2026-07-03-d11-intervention-selection*`.
+
 ---
 
 ## 6. Validation rules

@@ -9,6 +9,13 @@
 import { getQuality } from '../../data/qualities.js';
 import { GYM_TRAINABLE, CARDIO_GYM_SUPPORT } from '../../data/qualityMovementMap.js';
 
+// Qualities that SUPPORT a gym session but don't DRIVE one: mobility/stability are value-hierarchy
+// support tiers (6/7), never a session's primary target (a "mobility session" is not a training
+// stimulus). Translate them to the loadable strength cousin (robustness) so the session has a real
+// driver; the mobility/stability work still appears as supporting tiers within the session.
+const NON_DRIVER_SUPPORT = { mobility: ['robustness'], stability: ['robustness'] };
+const SESSION_DRIVER = new Set([...GYM_TRAINABLE].filter((q) => q !== 'mobility' && q !== 'stability'));
+
 const QUALITY_LABEL = {
   maxStrength: 'max strength', hypertrophy: 'hypertrophy', explosiveStrength: 'explosive strength',
   reactiveStrength: 'reactive strength', strengthEndurance: 'strength endurance',
@@ -24,8 +31,9 @@ export function gymTrainableTargets(priorityQualities = [], goalPrimary = null) 
   for (const p of Array.isArray(priorityQualities) ? priorityQualities : []) {
     const q = idOf(p);
     if (!q) continue;
-    if (GYM_TRAINABLE.has(q)) out.push(q);
+    if (SESSION_DRIVER.has(q)) out.push(q);
     else if (CARDIO_GYM_SUPPORT[q]) out.push(...CARDIO_GYM_SUPPORT[q]);
+    else if (NON_DRIVER_SUPPORT[q]) out.push(...NON_DRIVER_SUPPORT[q]);
   }
   const distinct = [...new Set(out)];
   if (distinct.length) return distinct;
@@ -38,6 +46,19 @@ export function assignTargetQualities(priorityQualities, sessionCount, goalPrima
   const targets = gymTrainableTargets(priorityQualities, goalPrimary);
   const n = Math.max(1, sessionCount || 1);
   return Array.from({ length: n }, (_, i) => targets[i % targets.length]);
+}
+
+// Competency gate (EDS L4 / §22 novice sprinter): a low-competency athlete can't express a quality
+// whose prerequisite strength base isn't built — a novice can't train explosiveStrength/reactiveStrength
+// (their exercises are level-gated), so the session would collapse to prehab-only. For a BEGINNER,
+// substitute the target quality's prerequisite (e.g. explosiveStrength → maxStrength) so they build the
+// base first; every non-beginner keeps their diagnosed target.
+export function competencyAdjustedTarget(qualityId, level) {
+  const beginner = level === 'beginner' || level === 0;
+  if (!beginner) return qualityId;
+  const q = getQuality(qualityId);
+  const prereq = q && Array.isArray(q.prerequisites) ? q.prerequisites[0] : null;
+  return prereq || qualityId;
 }
 
 // Coarse fatigue level (0..2) from a quality's dominant fatigue cost.

@@ -32,6 +32,9 @@ import { combinedMultiplier, deloadRecommendation } from '@performance-os/engine
 import { ruleVolumeAdjustment } from '@performance-os/engine/lib/sportKnowledge/reflowAdjust.js';
 import { deriveConstraints, lightenItems } from '@performance-os/engine/lib/plan/constraints.js';
 import { buildPrimer } from '@performance-os/engine/lib/plan/primers.js';
+import { performanceModelForProfile } from '@performance-os/engine';
+import * as SKB from '@performance-os/engine/lib/sportKnowledge/index.js';
+import { profileToAthleteModel } from '@performance-os/engine/lib/adapters/profileToAthleteModel.js';
 
 let _cache = { sig: null, plan: null };
 
@@ -85,13 +88,21 @@ function gymCtx(profile) {
   const e = profile.experience || {};
   const level = e.gym || e.strength_functional || e.strength_physique || 'beginner';
   const minutes = SESSION_CEILING_MIN;   // volume-driven; user no longer picks a session length
+  // The diagnosis (D4/D5) that steers SPORT selection (D11) — the SAME source the baseline
+  // generator uses, so a reflowed run/cycle week stays D11-driven instead of reverting to
+  // the legacy fill. asOf comes from the profile's start date (never the clock) for determinism.
+  const asOf = profile.plan_start_date || null;
+  const perf = performanceModelForProfile(profile, asOf);
+  const skbSportId = profile.sport ? (profileToAthleteModel(profile, asOf)?.sportingContext?.primarySport || null) : null;
+  const skbIds = skbSportId ? new Set((SKB.section(skbSportId, 'exerciseLibrary')?.exercises || []).map((e) => e.id)) : new Set();
   return {
     style: program.style, level, minutes,
     access: profile.access || [], sex: profile.sex, lifts: resolveLifts(profile),
     bodyweight: profile.bodyweight_kg,
     emphasis: program.emphasis, volumeScalar: program.volumeScalar,
     exercisePriority: program.exercisePriority || [], priorityByIntent: program.priorityByIntent || new Map(),
-    sport: profile.sport || null, power: !!program.power
+    sport: profile.sport || null, power: !!program.power,
+    priorityQualities: (perf && perf.priorityAdaptations) || [], season: program.season, skbIds
   };
 }
 
@@ -309,7 +320,8 @@ function adaptedPhases() {
         style: gctx.style, intent: intentOfTitle(s.phase.title), deload: effDeload(s.week), taper: !!s.week.taper,
         weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,
         bodyweight: gctx.bodyweight, priorityByIntent: gctx.priorityByIntent,
-        exercisePriority: gctx.exercisePriority, sport: gctx.sport, power: gctx.power
+        exercisePriority: gctx.exercisePriority, sport: gctx.sport, power: gctx.power,
+        priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds
       }
     })[0];
     if (spec) {
