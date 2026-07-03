@@ -1,5 +1,11 @@
 # Stage 3 Runbook — Supabase backend + auth
 
+> **HISTORICAL — Stage 3 is done.** This runbook is kept as the record of how
+> the backend was first set up. For anything database-related TODAY — the
+> migration ledger, the naming convention, how to apply schema changes
+> (`supabase db push`), and the **staging-project setup TODO** — see
+> `supabase/migrations/README.md`.
+
 Four sessions. Each ends with the app still working. Do them in order.
 
 ---
