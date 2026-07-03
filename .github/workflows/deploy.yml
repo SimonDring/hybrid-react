@@ -15,7 +15,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # The engine regression gate: a red suite must never deploy. Same suite as
+  # .github/workflows/test.yml (which still gates PRs); duplicated here because a
+  # push to main triggers this workflow independently and GitHub Actions can't
+  # `needs:` across workflows.
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm test
+
   build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
