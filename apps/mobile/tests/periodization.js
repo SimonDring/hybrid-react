@@ -8,24 +8,26 @@ function assert(cond, msg) {
 }
 
 // ── deriveSeason ───────────────────────────────────────────────────────────
-// today = 2026-06-12 (from memory context — tests are written relative to this)
-// Dates chosen to be unambiguous regardless of when tests run:
+// The event window is measured from the profile's plan_start_date (never the
+// clock — Constitution Art 18), so fixed dates make these fully deterministic.
 
-const FAR_OUT  = new Date(); FAR_OUT.setMonth(FAR_OUT.getMonth() + 8);  // ~8 months out → 'off'
-const PRE_RACE = new Date(); PRE_RACE.setDate(PRE_RACE.getDate() + 60); // 60 days out → 'pre'
-const CLOSE    = new Date(); CLOSE.setDate(CLOSE.getDate() + 28);       // 28 days out → 'in'
-const PAST     = new Date(); PAST.setDate(PAST.getDate() - 5);          // 5 days ago → 'transition'
+const ANCHOR   = '2026-07-06';                    // plan_start_date for all dated profiles
+const FAR_OUT  = '2027-03-06';                    // ~8 months after the anchor → 'off'
+const PRE_RACE = '2026-09-04';                    // 60 days after the anchor → 'pre'
+const CLOSE    = '2026-08-03';                    // 28 days after the anchor → 'in'
+const PAST     = '2026-07-01';                    // 5 days before the anchor → 'transition'
 
-function dateStr(d) { return d.toISOString().slice(0, 10); }
-
-assert(deriveSeason({ sport: 'run', event_date: dateStr(FAR_OUT) }) === 'off',
+assert(deriveSeason({ sport: 'run', plan_start_date: ANCHOR, event_date: FAR_OUT }) === 'off',
   'T1 event 8 months out → off');
-assert(deriveSeason({ sport: 'run', event_date: dateStr(PRE_RACE) }) === 'pre',
+assert(deriveSeason({ sport: 'run', plan_start_date: ANCHOR, event_date: PRE_RACE }) === 'pre',
   'T2 event 60 days out → pre');
-assert(deriveSeason({ sport: 'run', event_date: dateStr(CLOSE) }) === 'in',
+assert(deriveSeason({ sport: 'run', plan_start_date: ANCHOR, event_date: CLOSE }) === 'in',
   'T3 event 28 days out → in');
-assert(deriveSeason({ sport: 'run', event_date: dateStr(PAST) }) === 'transition',
+assert(deriveSeason({ sport: 'run', plan_start_date: ANCHOR, event_date: PAST }) === 'transition',
   'T4 past event → transition');
+// An event without a date anchor never reads the clock — falls through to intent.
+assert(deriveSeason({ sport: 'run', event_date: PRE_RACE, sport_intent: 'recreational' }) === 'off',
+  'T4b undated profile with event → intent branch, not the clock');
 
 // sport_intent fallback (no event_date)
 assert(deriveSeason({ sport: 'run', sport_intent: 'compete' }) === 'in',
@@ -51,9 +53,9 @@ assert(totalWeeks({ goal_type: 'sport', sport: 'run', sport_intent: 'build_base'
   'T12 sport off-season → 12-week block');
 assert(totalWeeks({ goal_type: 'sport', sport: 'run', sport_intent: 'compete' }) === 4,
   'T13 sport in-season → 4-week rolling block');
-assert(totalWeeks({ goal_type: 'sport', sport: 'run', event_date: dateStr(PRE_RACE) }) === 6,
+assert(totalWeeks({ goal_type: 'sport', sport: 'run', plan_start_date: ANCHOR, event_date: PRE_RACE }) === 6,
   'T14 sport pre-season (60 days out) → 6-week pre-season block');
-assert(totalWeeks({ goal_type: 'sport', sport: 'run', event_date: dateStr(PAST) }) === 4,
+assert(totalWeeks({ goal_type: 'sport', sport: 'run', plan_start_date: ANCHOR, event_date: PAST }) === 4,
   'T15 sport transition → 4-week recovery block');
 
 // All blocks have at least one phase
@@ -78,7 +80,8 @@ const baseProfile = {
 };
 
 // Normal progress → next block, history appended
-const normal = continueBlock(baseProfile, { feel: 'just_right', changed: false, sameGoal: true, hitSessions: true });
+const TODAY = '2026-05-24';  // "today" is caller-supplied — the engine never reads the clock
+const normal = continueBlock(baseProfile, { feel: 'just_right', changed: false, sameGoal: true, hitSessions: true }, TODAY);
 assert(normal.progress === true, 'T17 normal → progress:true');
 assert(Array.isArray(normal.profilePatch.block_history) && normal.profilePatch.block_history.length === 1,
   'T18 normal → block_history has 1 entry');
@@ -88,16 +91,16 @@ assert(typeof normal.profilePatch.plan_weeks === 'number',
   'T20 normal → plan_weeks set');
 
 // Struggling → repeat same block
-const hard = continueBlock(baseProfile, { feel: 'too_hard', changed: false, sameGoal: true, hitSessions: false });
+const hard = continueBlock(baseProfile, { feel: 'too_hard', changed: false, sameGoal: true, hitSessions: false }, TODAY);
 assert(hard.repeat === true, 'T21 too_hard + missed sessions → repeat:true');
 assert(hard.profilePatch.plan_weeks === baseProfile.plan_weeks, 'T22 repeat → same plan_weeks');
 
 // Goal changed → recalibrate (re-onboard)
-const changed = continueBlock(baseProfile, { feel: 'just_right', changed: false, sameGoal: false, hitSessions: true });
+const changed = continueBlock(baseProfile, { feel: 'just_right', changed: false, sameGoal: false, hitSessions: true }, TODAY);
 assert(changed.recalibrate === true, 'T23 goal changed → recalibrate:true');
 
 // Injury/life change → bridge block
-const injured = continueBlock(baseProfile, { feel: 'hard', changed: true, sameGoal: true, hitSessions: false });
+const injured = continueBlock(baseProfile, { feel: 'hard', changed: true, sameGoal: true, hitSessions: false }, TODAY);
 assert(injured.bridge === true, 'T24 life changed → bridge:true');
 
 // ── generatePlan uses resolvePeriodization ─────────────────────────────────

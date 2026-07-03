@@ -160,11 +160,13 @@ export function generatePlan(profile = {}, opts = {}) {
   // Race taper: a dated event that lands within this block cuts volume in the final
   // 1–2 weeks (keeping some sharpness) so the athlete arrives fresh. An event months
   // out shapes the season/length via deriveSeason — not a taper now.
-  const start = profile.plan_start_date ? new Date(profile.plan_start_date + 'T00:00:00') : new Date();
-  start.setHours(0, 0, 0, 0);
+  // The taper window is anchored to plan_start_date, never the clock (Constitution
+  // Art 18): a profile without a start date has no anchor, so it gets no race taper
+  // rather than a plan that changes across midnight. Onboarding always sets one.
+  const start = profile.plan_start_date ? new Date(profile.plan_start_date + 'T00:00:00') : null;
   const eventDate = profile.event_date ? new Date(profile.event_date + 'T00:00:00') : null;
-  const planEnd = new Date(start.getTime() + total * 7 * 86400000);
-  const isRace = !!(eventDate && !isNaN(eventDate.getTime()) && eventDate > start && eventDate <= new Date(planEnd.getTime() + 7 * 86400000));
+  const planEnd = start ? new Date(start.getTime() + total * 7 * 86400000) : null;
+  const isRace = !!(start && eventDate && !isNaN(eventDate.getTime()) && eventDate > start && eventDate <= new Date(planEnd.getTime() + 7 * 86400000));
   const taperWeeks = isRace ? (total >= 12 ? 2 : 1) : 0;
   const lastBuildWeek = total - taperWeeks;
 
