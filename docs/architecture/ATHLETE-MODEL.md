@@ -329,6 +329,26 @@ qualities). Both golden masters stay byte-identical. Accessor: `exerciseQualitie
 engine barrel). Consumers arrive next: **D10** (movement/quality requirements) and **D11** (intervention
 selection) in Sprints 7–8. Design + plan: `docs/superpowers/{specs,plans}/2026-07-02-exercise-quality-tagging-*`.
 
+### 5.6 Session decisions — D9 objective + D10 movement requirements (Sprint 7, PARALLEL)
+
+`packages/engine/src/lib/session/` computes, per session, the **objective** (D9) and **movement/quality
+requirements** (D10), driven by the diagnosis — as parallel model output nothing in `generatePlan`
+reads. `sessionObjective.js` picks each session's gym target quality (passing gym-trainable priorities
+through, and translating a cardio priority via `CARDIO_GYM_SUPPORT` in `data/qualityMovementMap.js` —
+e.g. `aerobicCapacity → [robustness, reactiveStrength]`), then derives `{ purpose, targetQuality,
+intensityZone (from the S5 `doseResponse`), fatigueBudget (from `fatigueCost`) }`. `movementRequirements.js`
+turns the target quality into `{ movementPatterns, forceVelocity, contraction }` (from
+`data/qualityMovementMap.js`), intersected with the session region, with **injury-contraindicated
+patterns subtracted up front** (`contraindicatedPatternsFrom` maps the injury system's name-regexes onto
+movement patterns) and a **novice's high-skill force-velocity downgraded to a strength base** (L4).
+`sessionSpecs.js` assembles both per session; the barrel exposes `deriveSessionSpecs`.
+
+**Validated by the EDS §22 archetypes** (`apps/mobile/tests/session-archetypes.js`): an in-season distance
+runner and a novice sprinter — the *same sport* — produce **categorically different** (disjoint) target
+qualities and requirements (the runner gets durability/economy and no chest work; the sprinter a
+competency-gated strength base). Both golden masters stay byte-identical. Consumed next by **D11**
+(Sprint 8, the allocator re-seat). Design/plan: `docs/superpowers/{specs,plans}/2026-07-02-session-objective-movement-requirements*`.
+
 ---
 
 ## 6. Validation rules

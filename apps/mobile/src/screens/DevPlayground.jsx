@@ -31,6 +31,10 @@ import { readinessIndex } from '@performance-os/engine/lib/indices/index.js';
 import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
 import { exerciseQualities } from '@performance-os/engine/data/exerciseQualities.js';
 import { EXERCISES } from '@performance-os/engine/data/strengthExercises.js';
+import { answersToAthleteModelInputs, localISODate } from '../lib/onboardingModel.js';
+import { derivePerformanceModel } from '@performance-os/engine/lib/performance/index.js';
+import { getGymLevel } from '@performance-os/engine/lib/Utils.js';
+import { deriveSessionObjective, deriveMovementRequirements, gymTrainableTargets } from '@performance-os/engine';
 
 // Session items carry a display `name`, not the exercise id — map name → id so we can
 // look up the (read-only) physical-quality tags. Built once at module load.
@@ -186,9 +190,57 @@ function WeekBlock({ phase, week, profile }) {
   );
 }
 
-function PlanReview({ plan, profile }) {
+// Sprint 7: read-only D9/D10 preview for the current athlete. Computes the diagnosis from the /dev
+// answers, translates it to gym target qualities, and shows each one's objective + requirements.
+// Read-only — it does not affect the generated plan.
+function SessionDecisionsPanel({ answers, profile }) {
+  if (!answers || !profile) return null;
+  let pm = null;
+  try { pm = derivePerformanceModel(answersToAthleteModelInputs(answers, localISODate()), localISODate()); } catch { pm = null; }
+  const program = (() => { try { return resolveProgram(profile); } catch { return null; } })();
+  const goalPrimary = ({ strength: 'maxStrength', bodybuilding: 'hypertrophy', functional: 'stability' })[program?.style] || 'maxStrength';
+  const level = getGymLevel(profile);
+  const season = program?.season || null;
+  const targets = gymTrainableTargets(pm?.priorityAdaptations || [], goalPrimary);
+  const priorityLabel = (pm?.priorityAdaptations || []).map((p) => p.qualityId).join(', ') || '(none — goal-driven)';
+
+  return (
+    <div style={card}>
+      <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.14em', opacity: 0.5, marginBottom: 10 }}>
+        SESSION DECISIONS · D9 / D10 (parallel — does not change the plan)
+      </div>
+      <div style={{ fontSize: 12, color: 'var(--txt-muted)', marginBottom: 10 }}>
+        Diagnosis priority: <span style={{ color: 'var(--txt-strong)' }}>{priorityLabel}</span> → gym targets:{' '}
+        <span style={{ color: 'var(--moss)' }}>{targets.join(', ')}</span>
+      </div>
+      <div style={{ display: 'grid', gap: 10 }}>
+        {targets.map((tq) => {
+          const obj = deriveSessionObjective({ targetQuality: tq, region: 'full', phaseIntent: 'base', season });
+          const req = deriveMovementRequirements({ targetQuality: tq, region: 'full', level, contraindicatedPatterns: new Set() });
+          return (
+            <div key={tq} style={{ border: '1px solid var(--hairline)', borderRadius: 10, padding: '8px 10px' }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--txt-strong)' }}>{obj.purpose}</div>
+              <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 3 }}>
+                intensity: {obj.intensityZone} · fatigue budget: {obj.fatigueBudget.level}
+              </div>
+              {req && (
+                <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 3 }}>
+                  needs: {req.movementPatterns.join('/')} · {req.forceVelocity} · {req.contraction}
+                  {req.competencyNote ? ` — ${req.competencyNote}` : ''}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function PlanReview({ plan, profile, answers }) {
   return (
     <div>
+      <SessionDecisionsPanel answers={answers} profile={profile} />
       <div style={{ fontSize: 13, color: 'var(--txt-body)', marginBottom: 12 }}>
         <strong>{plan.totalWeeks} weeks</strong> · {plan.phases.length} phases ·{' '}
         {plan.phases[0]?.weeks[0]?.sessions.length || 0} sessions/week
@@ -375,7 +427,7 @@ export default function DevPlayground() {
       )}
 
       {/* Plan review */}
-      {plan && <div style={card}><PlanReview plan={plan} profile={profilePreview || {}} /></div>}
+      {plan && <div style={card}><PlanReview plan={plan} profile={profilePreview || {}} answers={answers} /></div>}
 
       {/* Raw JSON (profile + plan) */}
       {showJson && (
