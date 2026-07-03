@@ -81,7 +81,7 @@ export function buildWeek(ctx = {}) {
   const split = resolveSplit({ gymDays, style, emphasis: ctx.emphasis });
   const slotMin = functionalSlotMinutes(style, minutes);
   const slots = split.map(day => ({
-    minutes: slotMin, equip: ctx.access || [], anchors: day.anchors, focus: day.weights
+    minutes: slotMin, equip: ctx.access || [], anchors: day.anchors, focus: day.weights, focusLabel: day.focus
   }));
 
   const sessions = allocateGym({
@@ -91,7 +91,8 @@ export function buildWeek(ctx = {}) {
       level: ctx.level, sex: ctx.sex, lifts: ctx.lifts, access: ctx.access || [],
       bodyweight: ctx.bodyweight,
       exercisePriority: ctx.exercisePriority || [], sport: ctx.sport || null, power: !!ctx.power,
-      priorityByIntent: ctx.priorityByIntent || new Map()
+      priorityByIntent: ctx.priorityByIntent || new Map(),
+      priorityQualities: ctx.priorityQualities || [], season: ctx.season || null, skbIds: ctx.skbIds || new Set(),
     }
   });
 

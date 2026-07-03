@@ -30,6 +30,9 @@ import { resolvePeriodization } from './plan/periodization.js';
 import { getGymLevel } from './Utils.js';
 import { deriveConstraints, suggestGymDays } from './plan/constraints.js';
 import { SESSION_CEILING_MIN } from './plan/allocator.js';
+import { performanceModelForProfile } from './performance/forProfile.js';
+import { profileToAthleteModel } from './adapters/profileToAthleteModel.js';
+import * as SKB from './sportKnowledge/index.js';
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
@@ -119,7 +122,7 @@ function gatesFor(intent, totalSessions) {
 // Build the week's gym sessions from the resolved program. Deload and taper are
 // passed SEPARATELY: both cut volume, but a taper keeps intensity high (peaking)
 // whereas a deload drops it (recovery). Goal tuning comes from program.
-function buildGymWeek(count, ctx, profile, program) {
+function buildGymWeek(count, ctx, profile, program, diag) {
   return strength.buildWeek({
     intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, winp: ctx.winp, weekNum: ctx.weekNum,
     phaseWeeks: ctx.phaseWeeks, blockFrac: ctx.blockFrac, minutes: ctx.minutes,
@@ -128,12 +131,23 @@ function buildGymWeek(count, ctx, profile, program) {
     gymDays: count, lifts: resolveLifts(profile),
     style: program.style, emphasis: program.emphasis, volumeScalar: program.volumeScalar,
     power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || [],
-    priorityByIntent: program.priorityByIntent || new Map()
+    priorityByIntent: program.priorityByIntent || new Map(),
+    priorityQualities: diag.priorityQualities, season: program.season, skbIds: diag.skbIds
   });
 }
 
-export function generatePlan(profile = {}) {
+export function generatePlan(profile = {}, opts = {}) {
   const program = resolveProgram(profile);
+  // The diagnosis (D4/D5) that steers SPORT selection (D11). Derived from the profile unless the
+  // caller supplies one (PlanService passes the stored athlete model). Empty for build → legacy path.
+  // asOf comes from the profile's start date (never the clock) so generatePlan stays deterministic.
+  const asOf = profile.plan_start_date || null;
+  const perf = opts.performanceModel || performanceModelForProfile(profile, asOf);
+  const skbSportId = program.sport ? (profileToAthleteModel(profile, asOf)?.sportingContext?.primarySport || null) : null;
+  const diag = {
+    priorityQualities: (perf && perf.priorityAdaptations) || [],
+    skbIds: skbSportId ? new Set((SKB.section(skbSportId, 'exerciseLibrary')?.exercises || []).map((e) => e.id)) : new Set(),
+  };
   const { busyDays, sportMuscles } = deriveConstraints(profile);
   const availability = profile.availability || {};
   const totalDays = Math.max(1, Math.min(7, availability.days_per_week || 3));
@@ -170,7 +184,7 @@ export function generatePlan(profile = {}) {
       const blockFrac = total > 1 ? (weekNum - 1) / (total - 1) : 0.5;
       const ctx = { intent: seg.intent, deload, taper, winp, weekNum, minutes, phaseWeeks: seg.weeks, blockFrac };
 
-      const sportSpecs = buildGymWeek(totalDays, ctx, profile, program);
+      const sportSpecs = buildGymWeek(totalDays, ctx, profile, program, diag);
       const dayNames = chooseDays(availability, sportSpecs.length, profile.sport_days || []);
       let sessions = scheduleWeek({ sportSpecs, dayNames, busyDays, sportMuscles });
       sessions = despineWeek(sessions, { priorityByIntent: program.priorityByIntent || new Map(), lifts: resolveLifts(profile), level: getGymLevel(profile), bodyweight: profile.bodyweight_kg });

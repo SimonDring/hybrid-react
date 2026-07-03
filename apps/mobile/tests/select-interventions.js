@@ -52,5 +52,11 @@ const idxBoosted = boosted.findIndex((p) => p.ex.id === 'nordic_curl');
 const idxPlain = picks.findIndex((p) => p.ex.id === 'nordic_curl');
 assert(idxBoosted === -1 || idxPlain === -1 || idxBoosted <= idxPlain, 'SKB-boosted exercise ranks no later');
 
+// Variety cap: no movement pattern appears more than twice (EDS §34 primary + secondary compound —
+// avoids a session collapsing to 3+ variants of the target quality's one pattern).
+const patCount = {};
+for (const p of picks) patCount[p.ex.pattern] = (patCount[p.ex.pattern] || 0) + 1;
+assert(Object.values(patCount).every((n) => n <= 2), 'at most 2 exercises per movement pattern');
+
 // Deterministic.
 assert(JSON.stringify(selectInterventions({ req: runReq, equip: FULL, level: 3, levelName: 'advanced', sport: 'run', skbIds: new Set(), ledger: { weeklyDelivered: {}, weeklyCeiling: bigCeiling }, makePick })) === JSON.stringify(picks), 'deterministic');

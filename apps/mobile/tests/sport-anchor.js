@@ -1,7 +1,9 @@
 // tests/sport-anchor.js
-// F8: sport sessions must LEAD with the sport's priority work (swimmer → a pull,
-// sprinter → power/plyo), not the generic squat/hinge anchor. Plus: sprint no
-// longer accrues a pile of non-specific chest volume.
+// Sport sessions must LEAD with substantive sport work, not a generic anchor or a filler.
+// Two regimes (Sprint 8 D11 re-seat): run + cycle are diagnosis-driven (D11) — each session leads
+// with a compound or power quality-driver (the value-ordered pick). Swim is still on the legacy path
+// — it leads with a sport-priority-list exercise (the original F8 behaviour). Plus: sprint no longer
+// accrues a pile of non-specific chest volume.
 import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
@@ -18,13 +20,24 @@ const byName = {}; for (const e of EXERCISES) byName[e.name] = e;
 const mk = (o) => answersToProfile({ ...BLANK_ANSWERS, goalType: 'sport', sessionMinutes: 60, daysPerWeek: 4,
   equipment: FULL, sex: 'male', lifts: { squat: 140, bench: 100, deadlift: 180 }, experienceLevel: 'intermediate', sportIntent: 'build_base', ...o });
 
+const D11_SPORTS = new Set(['run', 'cycle']);        // diagnosis-driven selection (Sprint 8); swim = legacy
+const COMPOUND = new Set(['squat', 'hinge', 'hpush', 'vpush', 'hpull', 'vpull', 'lunge']);
 for (const cfg of [{ sport: 'swim' }, { sport: 'run', runDiscipline: 'sprint', experienceLevel: 'advanced' }, { sport: 'run', runDiscipline: 'long' }, { sport: 'cycle' }]) {
   const prof = mk(cfg);
-  const prio = new Set(resolveProgram(prof).exercisePriority);
   const wk = generatePlan(prof).phases[0].weeks[0];
   const tag = cfg.sport + (cfg.runDiscipline ? '-' + cfg.runDiscipline : '');
-  const allLed = wk.sessions.every(s => { const d = byName[s.items[0] && s.items[0].name]; return d && prio.has(d.id); });
-  assert(allLed, `${tag}: every session leads with a sport-priority exercise (leads: ${wk.sessions.map(s => s.items[0] && s.items[0].name).join(', ')})`);
+  const leads = wk.sessions.map(s => s.items[0] && s.items[0].name).join(', ');
+  if (D11_SPORTS.has(cfg.sport)) {
+    // D11: each session leads with a substantive quality-driver — a compound OR a power/plyo movement
+    // (the value-ordered pick), never an isolation/core/mobility filler.
+    const allLed = wk.sessions.every(s => { const d = byName[s.items[0] && s.items[0].name]; return d && (COMPOUND.has(d.pattern) || d.quality === 'power'); });
+    assert(allLed, `${tag}: every session leads with a compound/power quality-driver (leads: ${leads})`);
+  } else {
+    // Legacy sports (swim): lead with a sport-priority-list exercise (original F8 behaviour).
+    const prio = new Set(resolveProgram(prof).exercisePriority);
+    const allLed = wk.sessions.every(s => { const d = byName[s.items[0] && s.items[0].name]; return d && prio.has(d.id); });
+    assert(allLed, `${tag}: every session leads with a sport-priority exercise (leads: ${leads})`);
+  }
 }
 
 // Build plans still open with a fundamental compound (anchor override is sport-only).

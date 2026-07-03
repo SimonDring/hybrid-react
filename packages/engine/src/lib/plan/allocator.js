@@ -38,6 +38,10 @@ import { parseSetCount } from './volume.js';
 import { applyWeights } from '../liftProgression.js';
 import { stimulusFactor } from '../strength/stimulus.js';
 import { AXIAL_SESSION_CAP, axialOf } from './axial.js';
+import { selectInterventions } from './selectInterventions.js';
+import { deriveSessionObjective, assignTargetQualities } from '../session/sessionObjective.js';
+import { deriveMovementRequirements } from '../session/movementRequirements.js';
+import { regionOf } from '../session/sessionSpecs.js';
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
@@ -746,6 +750,43 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     return null;
   };
 
+  // ── D11 (SPORT): value-ordered selection satisfying each session's D9/D10 requirement, stopping at
+  //    the fatigue budget. Build keeps the legacy fill below. Muscle-volume stays the MRV ledger.
+  //    Scoped to run + cycle for now: their gym need (posterior-chain/power durability) matches the
+  //    diagnosis-driven target well. Swim is deferred — a swimmer isn't strength-limited, so its
+  //    diagnosis points to mobility (→ robustness), which crowds out the upper-pull/shoulder work a
+  //    swimmer actually needs; swim keeps the legacy fill until the model surfaces that need.
+  const D11_SPORTS = new Set(['run', 'cycle']);
+  const priorityQualities = ctx.priorityQualities || [];
+  const useD11 = style === 'sport' && priorityQualities.length > 0 && D11_SPORTS.has(ctx.sport);
+  if (useD11) {
+    const goalPrimaryD11 = null;
+    const targetsD11 = assignTargetQualities(priorityQualities, work.length, goalPrimaryD11);
+    work.forEach((slot, i) => {
+      const region = regionOf(slot.focusLabel);
+      const objective = deriveSessionObjective({ targetQuality: targetsD11[i], region, phaseIntent: intent, deload, taper, season: ctx.season });
+      const requirements = deriveMovementRequirements({ targetQuality: targetsD11[i], region, level: levelName, contraindicatedPatterns: new Set() });
+      const req = { objective, requirements };
+      const makePick = (ex) => {
+        const effectiveRole = effectiveRoleOf(ex, slot.level, demotePress);
+        return { ex, sets: roleSetCount(ex, s, style, effectiveRole), contrib: muscleContribution(ex), effectiveRole };
+      };
+      const picks = selectInterventions({
+        req, equip: slot.equip, level: slot.level, levelName, sport: ctx.sport,
+        skbIds: ctx.skbIds || new Set(), ledger: { weeklyDelivered, weeklyCeiling }, makePick
+      });
+      if (picks.length === 0) {
+        // Guarantee coverage: fall back to a fundamental anchor (never an empty session).
+        const anchor = patternAnchor(slot, slot.anchors || [FUNDAMENTAL[slot.idx % FUNDAMENTAL.length]]) || patternAnchor(slot, FUNDAMENTAL);
+        if (anchor) place(slot, { ex: anchor, sets: roleSetCount(anchor, s, style, effectiveRoleOf(anchor, slot.level, demotePress)), contrib: muscleContribution(anchor), effectiveRole: effectiveRoleOf(anchor, slot.level, demotePress) });
+      } else {
+        for (const p of picks) place(slot, p);
+      }
+    });
+    // Finalise sport slots through the SAME structuring/weights/duration machinery, then return.
+    return work.map(slot => finaliseSlot(slot, style, ctx));
+  }
+
   // 1) Anchor each slot. SPORT plans lead with the sport's priority work (a swimmer
   //    opens on a pull, a sprinter on a power lift); when the day has a focus we
   //    prefer a priority lift that hits it. BUILD plans open on the split day's
@@ -834,27 +875,33 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   }
 
   // Finalise each slot: structure into supersets/fillers, then a session spec.
-  return work.map(slot => {
-    const items = structureItems(slot.picks);
-    applyWeights(items, ctx.lifts || {}, ctx.level, ctx.bodyweight);
-    const total = Object.values(slot.muscleVol).reduce((a, b) => a + b, 0) || 1;
-    const lower = (slot.muscleVol.quads || 0) + (slot.muscleVol.hamstrings || 0) +
-                  (slot.muscleVol.glutes || 0) + (slot.muscleVol.calves || 0);
-    // A single rounded ESTIMATE from the REALISED work (sets × per-set minutes,
-    // supersets already compressed in perSetMin), not the requested slot length —
-    // so a packed 1-day session no longer mislabels 90 min of work as "~60 min" (F5).
-    const duration = `~${Math.max(15, Math.round(slot.timeUsed / 5) * 5)} min`;
-    return {
-      discipline: 'gym',
-      focus: [focusLabel(slot.muscleVol), qualityTag(slot.picks, style)].filter(Boolean).join(' '),
-      duration,
-      items,
-      intensity: deload ? 'moderate' : 'hard',
-      lowerBody: lower >= 0.4 * total,
-      muscleVol: slot.muscleVol,   // realised per-muscle volume — lets the scheduler space same-muscle days
-      axialLoad: Object.values(slot.picks).reduce((a, p) => a + axialOf(p.ex), 0)
-    };
-  });
+  return work.map(slot => finaliseSlot(slot, style, ctx));
+}
+
+// Finalise a single slot: structure into supersets/fillers, then a session spec.
+// Shared verbatim by the legacy fill path and the D11 sport path so BUILD output
+// stays byte-identical no matter which path populated slot.picks.
+function finaliseSlot(slot, style, ctx) {
+  const deload = !!ctx.deload;
+  const items = structureItems(slot.picks);
+  applyWeights(items, ctx.lifts || {}, ctx.level, ctx.bodyweight);
+  const total = Object.values(slot.muscleVol).reduce((a, b) => a + b, 0) || 1;
+  const lower = (slot.muscleVol.quads || 0) + (slot.muscleVol.hamstrings || 0) +
+                (slot.muscleVol.glutes || 0) + (slot.muscleVol.calves || 0);
+  // A single rounded ESTIMATE from the REALISED work (sets × per-set minutes,
+  // supersets already compressed in perSetMin), not the requested slot length —
+  // so a packed 1-day session no longer mislabels 90 min of work as "~60 min" (F5).
+  const duration = `~${Math.max(15, Math.round(slot.timeUsed / 5) * 5)} min`;
+  return {
+    discipline: 'gym',
+    focus: [focusLabel(slot.muscleVol), qualityTag(slot.picks, style)].filter(Boolean).join(' '),
+    duration,
+    items,
+    intensity: deload ? 'moderate' : 'hard',
+    lowerBody: lower >= 0.4 * total,
+    muscleVol: slot.muscleVol,   // realised per-muscle volume — lets the scheduler space same-muscle days
+    axialLoad: Object.values(slot.picks).reduce((a, p) => a + axialOf(p.ex), 0)
+  };
 }
 
 export default { allocateGym, scheme };

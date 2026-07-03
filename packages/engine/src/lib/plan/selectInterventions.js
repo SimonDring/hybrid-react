@@ -75,11 +75,13 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
   cand.sort((a, b) => a.tier - b.tier || b.value - a.value || (a.ex.id < b.ex.id ? -1 : a.ex.id > b.ex.id ? 1 : 0));
 
   const picks = [];
-  const usedPatterns = new Set();
+  const patternCount = {};
   let fatigue = 0;
   for (const c of cand) {
     if (fatigue >= budget && picks.length >= 1) break;           // stopping rule — bank the rest (L5)
-    if (usedPatterns.has(c.ex.pattern) && c.tier > 2) continue;  // one exercise per pattern (variety), anchors exempt
+    // Variety: at most 2 exercises per movement pattern (EDS §34 primary + secondary compound). This
+    // stops a session collapsing to 3+ variants of the target quality's one pattern (e.g. 3 deadlifts).
+    if ((patternCount[c.ex.pattern] || 0) >= 2) continue;
     const pick = makePick(c.ex);
     if (!pick || !(pick.sets > 0)) continue;
     const vf = stimulusFactor(c.ex, levelName);
@@ -93,7 +95,7 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
       if (!lagging) continue;
     }
     picks.push({ ...pick, tier: c.tier });
-    usedPatterns.add(c.ex.pattern);
+    patternCount[c.ex.pattern] = (patternCount[c.ex.pattern] || 0) + 1;
     fatigue += fatigueScalar(c.ex);
     for (const m in pick.contrib) weeklyDelivered[m] = (weeklyDelivered[m] || 0) + pick.sets * pick.contrib[m] * vf;
   }
