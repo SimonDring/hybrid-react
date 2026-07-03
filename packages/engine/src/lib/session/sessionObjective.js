@@ -9,6 +9,13 @@
 import { getQuality } from '../../data/qualities.js';
 import { GYM_TRAINABLE, CARDIO_GYM_SUPPORT } from '../../data/qualityMovementMap.js';
 
+// Qualities that SUPPORT a gym session but don't DRIVE one: mobility/stability are value-hierarchy
+// support tiers (6/7), never a session's primary target (a "mobility session" is not a training
+// stimulus). Translate them to the loadable strength cousin (robustness) so the session has a real
+// driver; the mobility/stability work still appears as supporting tiers within the session.
+const NON_DRIVER_SUPPORT = { mobility: ['robustness'], stability: ['robustness'] };
+const SESSION_DRIVER = new Set([...GYM_TRAINABLE].filter((q) => q !== 'mobility' && q !== 'stability'));
+
 const QUALITY_LABEL = {
   maxStrength: 'max strength', hypertrophy: 'hypertrophy', explosiveStrength: 'explosive strength',
   reactiveStrength: 'reactive strength', strengthEndurance: 'strength endurance',
@@ -24,8 +31,9 @@ export function gymTrainableTargets(priorityQualities = [], goalPrimary = null) 
   for (const p of Array.isArray(priorityQualities) ? priorityQualities : []) {
     const q = idOf(p);
     if (!q) continue;
-    if (GYM_TRAINABLE.has(q)) out.push(q);
+    if (SESSION_DRIVER.has(q)) out.push(q);
     else if (CARDIO_GYM_SUPPORT[q]) out.push(...CARDIO_GYM_SUPPORT[q]);
+    else if (NON_DRIVER_SUPPORT[q]) out.push(...NON_DRIVER_SUPPORT[q]);
   }
   const distinct = [...new Set(out)];
   if (distinct.length) return distinct;

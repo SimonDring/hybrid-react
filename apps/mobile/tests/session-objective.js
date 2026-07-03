@@ -12,6 +12,11 @@ assert(JSON.stringify(gymTrainableTargets([{ qualityId: 'explosiveStrength' }], 
 assert(JSON.stringify(gymTrainableTargets([], 'hypertrophy')) === JSON.stringify(['hypertrophy']), 'empty priorities → [goalPrimary]');
 assert(JSON.stringify(gymTrainableTargets([], null)) === JSON.stringify(['maxStrength']), 'empty + no goal → [maxStrength] fallback');
 
+// Sprint 8 fix: mobility/stability are NOT session drivers — translated to a loadable strength cousin.
+assert(JSON.stringify(gymTrainableTargets([{ qualityId: 'mobility' }], null)) === JSON.stringify(['robustness']), 'mobility priority → robustness (never an all-mobility session)');
+assert(JSON.stringify(gymTrainableTargets([{ qualityId: 'stability' }], null)) === JSON.stringify(['robustness']), 'stability priority → robustness');
+assert(JSON.stringify(gymTrainableTargets([{ qualityId: 'maxStrength' }], null)) === JSON.stringify(['maxStrength']), 'a strength quality still passes through');
+
 // Round-robin assignment across sessions.
 const a = assignTargetQualities([{ qualityId: 'aerobicCapacity' }], 4, null); // → [robustness,reactiveStrength]
 assert(a.length === 4 && a[0] === 'robustness' && a[1] === 'reactiveStrength' && a[2] === 'robustness', 'round-robin across 4 sessions');
