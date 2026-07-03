@@ -21,64 +21,151 @@ The frozen set:
 `CLAUDE.md` carries this as a hard rule. The supporting docs (engine 01–05, foundation
 `PANEL-REVIEW.md`, the READMEs) remain **living references** — only the five above are frozen.
 
-## ▶ RESUME HERE — engine-rebuild status & the next step (2026-07-02)
+## ▶ RESUME HERE — engine-rebuild status & the next step (2026-07-03)
 
 _This section is the authoritative "where we are / what's next". Older "▶ START/NEXT" pointers in
 the entries below are historical and superseded by this._
 
-**Where we are.** The **diagnosis-first engine rebuild** has completed its ADDITIVE foundation across
-four merged PRs. The platform now models the full **diagnostic triangle**, but the **live plan
-generator is still the original volume-first gym planner** — nothing built so far changes plan output.
-That is deliberate and proven: a green golden master (`apps/mobile/tests/golden-master.js`) has gated
-every step. All four pieces are on **`main`**:
+**Where we are (2026-07-03).** The **diagnosis-first engine rebuild has reached the plan.** The
+diagnosis now **actually steers live gym plans for run + cycle athletes** — this is no longer a
+parallel/additive model. Build and swim stay on the original volume-first planner (byte-identical).
+Seven merged PRs on **`main`**:
 
-| PR | Branch (merged) | Delivered |
+| PR | Delivered | Live plan change? |
 |---|---|---|
-| #54 | `feat/athlete-model-sprint3` | **Athlete Model + Performance Model** foundation (Plan 1) — capability per quality, with confidence |
-| #55 | `chore/sprint0-safety-net` | **Safety net** (Sprint 0) — fixed the stale golden master + broken `npm test`; added the CI test gate |
-| #56 | `feat/plan2-onboarding-skb` | **SKB-driven onboarding + demand profile** (Plan 2) |
-| #57 | `feat/diagnosis-d4-d5` | **Diagnosis (D4/D5)** — limiting factors + priority qualities |
+| #54 | **Athlete + Performance Model** (Plan 1) — capability per quality + confidence | no (parallel) |
+| #55 | **Safety net** (Sprint 0) — fixed golden master + `npm test`; CI test gate | no |
+| #56 | **SKB-driven onboarding + demand profile** (Plan 2) | no |
+| #57 | **Diagnosis (D4/D5)** — limiting factors + priority qualities | no |
+| #58 | **Exercise-quality tagging** (Sprint 5) — every exercise tagged by quality/force-velocity/fatigue-cost | no (the enabler) |
+| #59 | **D9/D10** (Sprint 7) — session objective + movement requirements | no (parallel spec) |
+| **#60** | **D11 re-seat** (Sprint 8) — **run/cycle selection is now diagnosis-driven** | **YES (run + cycle)** |
 
-**The reasoning chain now built** (all PURE in `packages/engine`, consumed app-side via
-`apps/mobile/src/lib/AthleteModelService.js`; NONE of it is wired into `generatePlan` yet):
+**The reasoning chain, now WIRED into the live plan for run/cycle:**
 
 ```
-onboarding answers → Athlete Model (WHO: identity/goals/sport+position/training-age/constraints)
-   → Performance Model (derivePerformanceModel):
-        capabilities      (CAN DO: level per physical quality, measured|inferred + confidence)   ── Plan 1
-        × demandProfile   (SPORT NEEDS: importance per quality, from the SKB sport+position)      ── Plan 2
-        → limitingFactors      (D4: ranked demand−capability gap, magnitude+confidence+rationale) ── Diagnosis
-        → priorityAdaptations  (D5: confidence-scaled k qualities → developing adaptations)        ── Diagnosis
+onboarding → Athlete Model (WHO) → Performance Model:
+   capabilities × demandProfile → limitingFactors (D4) → priorityAdaptations (D5)   [diagnosis]
+     ├─ RUN / CYCLE (LIVE):  D9 session objective → D10 movement requirements
+     │     → D11 selectInterventions (value hierarchy §34, transfer-per-fatigue, stop at fatigue budget)
+     │     → the generated plan.   Muscle-volume is now the downstream MRV LEDGER, not the driver.
+     └─ BUILD / SWIM (legacy):  the original volume-first allocateGym fill — unchanged, byte-identical.
 ```
+
+The wiring: `generatePlan(profile, opts?)` derives the diagnosis via `performanceModelForProfile(profile,
+asOf)` and threads `priorityQualities`/`season`/`skbIds` through `buildWeek` → `allocateGym`; the
+PlanService reflow (`gymCtx`) does the same so reflowed run/cycle weeks stay D11-driven. The D11 gate is
+`style==='sport' && priorityQualities.length>0 && D11_SPORTS.has(ctx.sport)`, `D11_SPORTS = {run,cycle}`.
 
 **Code map (the new engine layer):**
-- `packages/engine/src/lib/athlete/` — schema, field-registry justification gate, validation, builder.
-- `packages/engine/src/lib/performance/` — `estimation.js` (capabilities), `demandProfile.js`,
-  `diagnose.js` (D4), `prioritise.js` (D5), `derivePerformanceModel.js` (assembles all of it).
-- `packages/engine/src/lib/adapters/` — `profileToAthleteModel.js` + `athleteModelToEngineInput.js`
-  (round-trip the model ↔ the legacy engine input; **`meta.enginePassthrough` carries the exact legacy
-  `sport`/`run_discipline` so `generatePlan` output is byte-identical**).
-- `packages/engine/src/lib/sportKnowledge/selectable.js` + `packages/engine/src/data/`
-  (`sportEngineBinding.js`, `sportQualityMap.js`, `qualityCompatibility.js`, `trainingAgeBands.js`,
-  `qualities.js`, `adaptations.js`, `capabilityPriors.js`).
-- App side: `AthleteModelService.js` (build/persist at `users.profile.athlete_model`/load/upgrade),
-  `onboardingModel.js` (`answersToProfilePatch` + `answersToAthleteModelInputs`), `OnboardingWizard.jsx`.
-- Full tech doc: **`docs/architecture/ATHLETE-MODEL.md`**. Specs/plans: `docs/superpowers/{specs,plans}/`.
+- **Diagnosis (D1–D5):** `packages/engine/src/lib/athlete/` (schema + justification gate + builder);
+  `packages/engine/src/lib/performance/` — `estimation.js` (capabilities), `demandProfile.js`,
+  `diagnose.js` (D4), `prioritise.js` (D5), `derivePerformanceModel.js`, **`forProfile.js`
+  (`performanceModelForProfile` — derive the diagnosis from a legacy profile; the plan's entry point)**.
+- **Session decisions (D9/D10) — Sprint 7:** `packages/engine/src/lib/session/` — `sessionObjective.js`
+  (D9: `gymTrainableTargets`, `assignTargetQualities`, `competencyAdjustedTarget`, `deriveSessionObjective`),
+  `movementRequirements.js` (D10 + `contraindicatedPatternsFrom`), `sessionSpecs.js` (`deriveSessionSpecs`, `regionOf`).
+- **Selection (D11) — Sprint 8:** `packages/engine/src/lib/plan/selectInterventions.js` (value hierarchy,
+  transfer-per-fatigue, stopping rule, cap 2/pattern); the `allocateGym` sport branch in
+  `plan/allocator.js` (`finaliseSlot` extracted so build stays byte-identical).
+- **Knowledge — Sprint 5/7:** `packages/engine/src/data/` — `exerciseQualities.js` (exercise→quality/
+  force-velocity/fatigue-cost tags + `FORCE_VELOCITY`), `qualityMovementMap.js` (quality→movement reqs +
+  `CARDIO_GYM_SUPPORT`), plus `qualities.js` (with `doseResponse`), `adaptations.js`, `sportEngineBinding.js`,
+  `sportQualityMap.js`, `qualityCompatibility.js`, `trainingAgeBands.js`, `capabilityPriors.js`.
+- **Adapters:** `packages/engine/src/lib/adapters/profileToAthleteModel.js` (infers the SKB sport id from
+  the legacy `sport`+`run_discipline`) + `athleteModelToEngineInput.js`.
+- **App side:** `AthleteModelService.js` (persist at `users.profile.athlete_model`), `PlanService.js`
+  (`gymCtx` now derives the diagnosis for the reflow), `onboardingModel.js`, `OnboardingWizard.jsx`.
+- **Safety net:** `apps/mobile/tests/build-parity.js` (9 build archetypes byte-identical — the gate that
+  proves the sport re-seat never touches build); `golden-master.js` (19 archetypes; re-baselined per sprint
+  with review via `UPDATE=1`); `d11-runner-quality.js` (proves run/cycle plans improved, not just changed).
+- **Tech docs:** `docs/architecture/ATHLETE-MODEL.md` (§5.4 diagnosis, §5.5 exercise tags, §5.6 D9/D10,
+  §5.7 D11 re-seat). Specs/plans: `docs/superpowers/{specs,plans}/`.
 
-**⇒ THE NEXT STEP — Sprint 8 (D11 re-seat for run + cycle) is DONE — the first sprint where live plans
-changed.** Next options: Blueprint **Sprint 9 (W7: SKB-primary demand + retire the emphasis vectors)**
-and **D12 (dose schemes keyed by quality)**; plus the near-term follow-ups below.
-**Each sprint still needs its own brainstorm** (start with `superpowers:brainstorming`). Open design
-questions to resolve there:
-1. **How aggressive** — a full re-seat of the allocator to adaptation-first, or a diagnosis-weighted
-   overlay on top of today's allocator (lower risk, incremental)?
-2. **Golden-master strategy** — plans will intentionally change, so the golden master must be
-   regenerated deliberately per-archetype **with review** (it's order-insensitive + CI-gated now);
-   decide what "unchanged where it should be" means.
-3. **Validation** — prove plan quality actually improves (use the `/dev` DevPlayground sweep +
-   `docs/decision-engine-evaluation.md` approach), not just that it changed.
-4. **Wiring point** — how the diagnosis→plan hook sits behind `PlanService`/`generatePlan` without
-   breaking freeze-on-start + the reflow.
+**⇒ THE NEXT STEP — pick one; each needs its own brainstorm** (start with `superpowers:brainstorming` →
+spec → plan → subagent-driven-development, per "How work is run" below). In rough priority:
+
+1. **Swim re-seat** — bring swim into D11 (currently deferred to legacy). This is the highest-value
+   correctness gap — see the dedicated **"Swim re-seat — what's required"** section below. Best done
+   *after* or *with* Sprint 9 (SKB-primary), because a swimmer's gym plan should be driven by the SKB's
+   swim `exerciseLibrary`, not the raw diagnosis.
+2. **Blueprint Sprint 9 (W7) — SKB-primary demand + retire the emphasis vectors.** `D2`/`D11` read the
+   SKB demand profile + `exerciseLibrary` transfer ratings directly; derive muscle-emphasis from demand;
+   retire `lib/sports/*`. One sport model, not two. This also unlocks the swim re-seat.
+3. **D12 — dose schemes keyed by quality** (not style). Move the `allocator.js scheme()` rep/RPE/rest
+   tables into `knowledge/programming` keyed by the target quality; readiness scales volume AND intensity.
+4. **Small follow-ups (quick, low-risk):**
+   - **Wire D11 into "Train Now"** — `generateTrainNow` in `PlanService.js` is a separate `allocateGym`
+     call site that still uses the legacy fill, so a run/cycle athlete's on-demand session gets chest
+     flyes etc. Thread the same `priorityQualities`/`season`/`skbIds` into its ctx (3-line change, same
+     pattern as `gymCtx`); the allocator D11 gate does the rest.
+   - **Reflow-specific D11 regression test** — the reflow D11 wiring is proven by inspection only; add a
+     test that drives a run profile through `PlanService.getPhases()`/`adaptedPhases()` (with `setRuntime`)
+     and asserts D11 content, cloned from `d11-runner-quality.js`.
+   - **Enrich the D4 neutral seams** — `trainability`/`injuryRisk` are still `1.0` in `diagnose.js`.
+
+**The general lesson from Sprint 8 (carry into every sport re-seat):** the diagnosis→gym-target mapping
+breaks when a sport's top limiting factor is **not a gym-trainable strength driver**. Three cases seen,
+each with its handling: **cardio** (aerobic/anaerobic → gym-support qualities via `CARDIO_GYM_SUPPORT`);
+**mobility/stability** (→ `robustness`, since a "mobility session" is no stimulus); **power for a
+beginner** (→ the `maxStrength` prerequisite, since power exercises are competency-gated). Run/cycle work
+cleanly because durability/power **is** their gym need. Swim does not (see below).
+
+### Swim re-seat — what's required to bring it to standard
+
+**Why it's deferred.** When swim was wired into D11 (Sprint 8), every swim session collapsed to
+posterior-chain hinges (RDL/deadlift/glute), undifferentiated (all "Lower"), under-dosed (~63% of the old
+volume), with **no pressing or pulling** — clearly worse than the swimmer's current legacy plan. So swim
+is excluded from `D11_SPORTS` and keeps the legacy volume-first fill (which gives it a proper upper/lower
+split with rows, pulls, and pressing).
+
+**Root cause.** A swimmer is **not strength-limited** — they're relatively strong for their needs. So
+the diagnosis (D4/D5) correctly names their biggest demand−capability gap as **`mobility`** (shoulder/
+thoracic ROM), with tiny strength gaps (`explosiveStrength 0.14`, `maxStrength 0.06`). D9's stopgap
+translates `mobility → robustness`, and D11 then fills the session with the highest-value **robustness**
+compounds — which are hinges. Those hinges eat the fatigue budget before the **swim-specific upper-pull
+work** (tier-4 sport accessories: rows, lat pulldown, face pulls, shoulder ER) gets a look-in. The
+model assumes *gym target = the top trainable limiting factor*; for an athlete whose limiter isn't a gym
+strength quality, that assumption fails.
+
+**What "the required standard" is** — a good swimmer gym session (per the SKB `swimming.json`
+`gymPhilosophy`/`exerciseLibrary`): **strength for economy without added mass** + **upper-body PULL
+strength** (lats/mid-back — the propulsive musculature) + **shoulder stability & rotator-cuff / scapular
+health** (swimmers' #1 injury site) + **core anti-rotation** + **posterior-chain durability**. Differentiated
+across days, not all-hinge; a real dose, not 63%.
+
+**The fixes required (do these, roughly in order):**
+1. **Drive the swim gym target from the sport's PRESCRIBED gym focus, not the raw diagnosis gap.** The
+   SKB `swimming.json` already encodes this: its `exerciseLibrary.categories` are the tiers a swimmer's
+   session should cover (posterior chain, strength-for-economy, plyometric/reactive, single-leg, calf/
+   Achilles/prehab, **shoulder/scapular prehab**, **upper-pull**, core anti-rotation/anti-extension), and
+   `gymPhilosophy` says *what transfers*. **This is exactly what Blueprint Sprint 9 (SKB-primary) delivers:**
+   D11 selects candidates from the sport's `exerciseLibrary` (via `SKB.section(id,'exerciseLibrary')`),
+   tier-mapped from its `categories`, instead of from the raw quality target. Once D11 reads the swim
+   library, a swimmer gets rows + pulldowns + shoulder ER + Pallof + a durability compound — the right
+   session. **So the cleanest path is: do Sprint 9 first, then add `'swim'` to `D11_SPORTS`.**
+2. **If done before Sprint 9 (interim):** add a swim-appropriate gym-target in `sessionObjective.js` — a
+   sport→gym-driver map so swim's target resolves to **upper-pull strength + shoulder stability**, applied
+   to UPPER patterns (`hpull`/`vpull`/`vpush` + `iso` shoulder), and **boost the tier-4 sport-accessory
+   value** in `selectInterventions.js` so the swim-tagged rows/pulls/ER work isn't crowded out by lower-
+   body compounds. Also ensure the week is **differentiated** (not every day the same target) and not
+   under-dosed (raise the fatigue budget for a maintenance-style sport, or don't stop so early).
+3. **Confirm the swimmer's diagnosis is sane first.** Re-run the probe (below) and check whether the swim
+   `demandProfile`/`limitingFactors` reasonably reflect a swimmer (upper-pull + shoulder should rank as
+   real needs). If the SKB→PM quality mapping (`sportQualityMap.js`) is dropping the swimmer's upper-pull
+   signal, fix that mapping too — the PM's fixed-10 vocabulary has no "upper-pull" quality, so swim's
+   pull need currently shows up only as generic `maxStrength`/`hypertrophy`, which the diagnosis scores as
+   already-met. This vocabulary gap is the deep reason swim needs the SKB `exerciseLibrary` (movement-
+   specific), not just the quality diagnosis.
+
+**How to validate the swim re-seat:**
+- Probe: `node --input-type=module -e "import { BLANK_ANSWERS, answersToProfile } from './apps/mobile/src/lib/onboardingModel.js'; import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js'; const p=generatePlan(answersToProfile({...BLANK_ANSWERS,goalType:'sport',sport:'swim',experienceLevel:'intermediate',daysPerWeek:4,days:['mon','tue','thu','fri'],strengthAccess:'full_gym'})); console.log(p.phases[0].weeks[0].sessions.map(s=>(s.items||[]).map(i=>i.name).join(', ')));"`
+  — a good result shows **upper-pull + shoulder work across differentiated days**, not all-hinge.
+- Add a `d11-swim-quality.js` test (mirror `d11-runner-quality.js`): assert the plan includes upper-pull
+  (row/pulldown), shoulder health (external rotation / face pull / scapular), and core anti-rotation;
+  assert it is NOT posterior-chain-only and NOT under-dosed; assert days are differentiated.
+- The swim golden-master archetypes (`sport·swim·intermediate·off·3d`, `sport·swim·advanced·in·3d`) will
+  change → re-baseline deliberately with review (only swim keys should move; `build-parity` must stay green).
 
 **How work is run here (follow this):** `superpowers:brainstorming` → design spec in
 `docs/superpowers/specs/YYYY-MM-DD-*.md` (commit) → `superpowers:writing-plans` (plan in
@@ -90,8 +177,13 @@ PR → **confirm before merging** (merges deploy + are consequential). Tests: **
 changes). Browser-verify UI via the preview MCP (onboarding is behind auth — drive the wired service
 via `preview_eval` importing `/hybrid-react/src/lib/AthleteModelService.js`, as prior sessions did).
 
-**Invariants / decisions to carry forward:** compute-then-steer (everything so far is model output,
-proven by the green golden master); backward-compat via `meta.enginePassthrough`; the **SKB is the
+**Invariants / decisions to carry forward:** the re-seat is now LIVE for run/cycle, so the invariant is
+**"build + swim byte-identical, sport re-seated deliberately"** — `build-parity.js` gates build byte-for-
+byte, and the golden master is **re-baselined per sprint with review** (`UPDATE=1`; confirm only the
+intended sport archetypes moved, no build). `generatePlan` stays **pure/deterministic** — the diagnosis
+`asOf` comes from `profile.plan_start_date`, never the clock. Muscle-volume is the downstream **MRV
+ledger** (`VOLUME_LANDMARKS`), no longer the selection driver, for run/cycle. Backward-compat via
+`meta.enginePassthrough`; the **SKB is the
 source of truth** for selectable sports (GAA/hurling/triathlon are now selectable; authoring a flagship
 profile + a `sportEngineBinding` entry auto-adds a sport); `trainability`/`injuryRisk` in D4 are
 **neutral seams (=1.0)** ready to enrich (injury-risk from the injury system; trainability from the
