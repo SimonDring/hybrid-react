@@ -767,6 +767,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       // Competency gate: a beginner targeting a power quality builds the max-strength base first (EDS §22).
       const targetQuality = competencyAdjustedTarget(targetsD11[i], levelName);
       const objective = deriveSessionObjective({ targetQuality, region, phaseIntent: intent, deload, taper, season: ctx.season });
+      // contraindicatedPatterns is deliberately empty here: injuries are filtered downstream as a
+      // post-generation pass (PlanService applyInjuryRules/applyPrevention), same as the legacy path —
+      // allocateGym has never taken injury input. When D11 owns contraindication-aware SELECTION (so it
+      // backfills a legal alternative rather than leaving a filtered hole), thread the real patterns in.
       const requirements = deriveMovementRequirements({ targetQuality, region, level: levelName, contraindicatedPatterns: new Set() });
       const req = { objective, requirements };
       const makePick = (ex) => {
