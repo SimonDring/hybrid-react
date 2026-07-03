@@ -761,11 +761,21 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const useD11 = style === 'sport' && priorityQualities.length > 0 && D11_SPORTS.has(ctx.sport);
   if (useD11) {
     const goalPrimaryD11 = null;
-    const targetsD11 = assignTargetQualities(priorityQualities, work.length, goalPrimaryD11);
+    // The D9 target-quality rotation is a property of the WEEK, not of this call. The
+    // weekly builder passes all of a week's slots at once, so rotating over work.length
+    // is correct there — but the runtime reflow rebuilds ONE pending slot per call, and
+    // rotating over a single-slot call pinned every session to the same top-priority
+    // quality (a runner's explosive days collapsed into repeats of the durability day).
+    // A caller that allocates a week piecemeal declares the slot's baseline identity via
+    // ctx.weekGymCount (the week's gym-session count) + ctx.weekSlotIdx (this slot's
+    // index within that week); absent, behaviour is exactly the old whole-week rotation.
+    const weekCount = ctx.weekGymCount || work.length;
+    const targetsD11 = assignTargetQualities(priorityQualities, weekCount, goalPrimaryD11);
     work.forEach((slot, i) => {
+      const wi = ctx.weekSlotIdx != null ? (ctx.weekSlotIdx + i) % weekCount : i;
       const region = regionOf(slot.focusLabel);
       // Competency gate: a beginner targeting a power quality builds the max-strength base first (EDS §22).
-      const targetQuality = competencyAdjustedTarget(targetsD11[i], levelName);
+      const targetQuality = competencyAdjustedTarget(targetsD11[wi], levelName);
       const objective = deriveSessionObjective({ targetQuality, region, phaseIntent: intent, deload, taper, season: ctx.season });
       // contraindicatedPatterns is deliberately empty here: injuries are filtered downstream as a
       // post-generation pass (PlanService applyInjuryRules/applyPrevention), same as the legacy path —
