@@ -37,7 +37,8 @@ export default function BlockCheckin() {
 
   async function finish(finalAnswers) {
     setCompleting(true);
-    const result = continueBlock(profile, finalAnswers);
+    // The engine is pure and never reads the clock — the app layer supplies "today".
+    const result = continueBlock(profile, finalAnswers, new Date().toISOString().slice(0, 10));
     await updateProfile(result.profilePatch);
     // If recalibrate, updateProfile sets onboarded:false → App.jsx shows Onboarding
     // Otherwise the new plan_start_date triggers plan regeneration on next render

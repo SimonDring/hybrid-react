@@ -24,17 +24,24 @@ import { SPORT_BLOCKS } from '../sports/_schema.js';
  * Derive the current training season from the athlete's profile.
  * Uses event_date if present; falls back to sport_intent.
  *
+ * The event window is measured from `asOf` (default: the profile's plan_start_date),
+ * never the clock (Constitution Art 18) — the same plan must come out of the same
+ * profile whatever day it's generated on. A profile with an event but no date anchor
+ * falls through to the intent branch instead of guessing from the real calendar;
+ * onboarding always sets plan_start_date, so that path is synthetic/dev only.
+ *
  * @param {object} profile — needs: sport, event_date (opt), sport_intent (opt)
+ * @param {string|null} asOf — ISO date the "days until event" is measured from
  * @returns {'off'|'pre'|'in'|'transition'|null}
  */
-export function deriveSeason(profile = {}) {
+export function deriveSeason(profile = {}, asOf = profile.plan_start_date || null) {
   if (!profile.sport) return null;
 
-  if (profile.event_date) {
-    const today = new Date();
+  if (profile.event_date && asOf) {
+    const today = new Date(asOf + 'T00:00:00');
     today.setHours(0, 0, 0, 0);
     const event = new Date(profile.event_date + 'T00:00:00');
-    if (isNaN(event.getTime())) return null;
+    if (isNaN(event.getTime()) || isNaN(today.getTime())) return null;
 
     const daysOut = Math.round((event - today) / 86400000);
     if (daysOut < 0)   return 'transition';   // event has passed
@@ -115,14 +122,18 @@ export function resolvePeriodization(profile = {}) {
  * @param {object} profile — current profile (needs plan_start_date, plan_weeks, block_history)
  * @param {object} answers — { feel: 'easy'|'just_right'|'hard'|'too_hard',
  *                             changed: boolean, sameGoal: boolean, hitSessions: boolean }
+ * @param {string} todayISO — the date the block check-in happened (YYYY-MM-DD).
+ *   "Today" is genuine runtime input, so the (impure) caller supplies it — the
+ *   engine never reads the clock (Constitution Art 18).
  * @returns {{ progress?, repeat?, recalibrate?, bridge?,
  *             profilePatch: object }}
  *
  * Exactly one of { progress, repeat, recalibrate, bridge } is true.
  * `profilePatch` is always present and ready to pass to updateProfile().
  */
-export function continueBlock(profile = {}, answers = {}) {
-  const today = new Date().toISOString().slice(0, 10);
+export function continueBlock(profile = {}, answers = {}, todayISO) {
+  if (!todayISO) throw new Error('continueBlock requires todayISO — the engine does not read the clock');
+  const today = todayISO;
 
   // 1. Goal changed → send back to onboarding
   if (answers.sameGoal === false) {
@@ -136,7 +147,7 @@ export function continueBlock(profile = {}, answers = {}) {
       profilePatch: {
         plan_start_date: today,
         plan_weeks: 2,
-        block_history: appendBlockHistory(profile, { outcome: 'bridge', answers })
+        block_history: appendBlockHistory(profile, { outcome: 'bridge', answers }, today)
       }
     };
   }
@@ -149,7 +160,7 @@ export function continueBlock(profile = {}, answers = {}) {
       profilePatch: {
         plan_start_date: today,
         plan_weeks: profile.plan_weeks || 12,
-        block_history: appendBlockHistory(profile, { outcome: 'repeat', answers })
+        block_history: appendBlockHistory(profile, { outcome: 'repeat', answers }, today)
       }
     };
   }
@@ -161,17 +172,17 @@ export function continueBlock(profile = {}, answers = {}) {
     profilePatch: {
       plan_start_date: today,
       plan_weeks: totalWeeks,
-      block_history: appendBlockHistory(profile, { outcome: 'progress', answers })
+      block_history: appendBlockHistory(profile, { outcome: 'progress', answers }, today)
     }
   };
 }
 
-function appendBlockHistory(profile, entry) {
+function appendBlockHistory(profile, entry, todayISO) {
   const history = Array.isArray(profile.block_history) ? profile.block_history : [];
   return [
     ...history,
     {
-      completed_date: new Date().toISOString().slice(0, 10),
+      completed_date: todayISO,
       plan_weeks: profile.plan_weeks || null,
       plan_start_date: profile.plan_start_date || null,
       ...entry

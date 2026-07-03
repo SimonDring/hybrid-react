@@ -7,14 +7,14 @@ function assert(cond, msg) {
   else console.log('PASS:', msg);
 }
 
-// Relative date helpers (unambiguous regardless of when tests run)
-const FAR_OUT  = new Date(); FAR_OUT.setMonth(FAR_OUT.getMonth() + 8);  // ~8 months out → 'off'
-const PRE_RACE = new Date(); PRE_RACE.setDate(PRE_RACE.getDate() + 60); // 60 days out → 'pre'
-function dateStr(d) { return d.toISOString().slice(0, 10); }
+// Event windows are measured from plan_start_date, never the clock (Art 18).
+const ANCHOR   = '2026-07-06';
+const FAR_OUT  = '2027-03-06';   // ~8 months after the anchor → 'off'
+const PRE_RACE = '2026-09-04';   // 60 days after the anchor → 'pre'
 
 // ── T1: deriveSeason unaffected by run_discipline ──────────────────────────
 assert(
-  deriveSeason({ sport: 'run', run_discipline: 'sprint', event_date: dateStr(FAR_OUT) }) === 'off',
+  deriveSeason({ sport: 'run', run_discipline: 'sprint', plan_start_date: ANCHOR, event_date: FAR_OUT }) === 'off',
   'T1 deriveSeason ignores run_discipline — still returns off'
 );
 
@@ -24,7 +24,7 @@ assert(
   'T2 sprint off-season → 6 weeks'
 );
 assert(
-  resolvePeriodization({ goal_type: 'sport', sport: 'run', run_discipline: 'sprint', event_date: dateStr(PRE_RACE) }).totalWeeks === 4,
+  resolvePeriodization({ goal_type: 'sport', sport: 'run', run_discipline: 'sprint', plan_start_date: ANCHOR, event_date: PRE_RACE }).totalWeeks === 4,
   'T3 sprint pre-season (60d out) → 4 weeks'
 );
 assert(
@@ -38,7 +38,7 @@ assert(
   'T5 middle off-season → 10 weeks'
 );
 assert(
-  resolvePeriodization({ goal_type: 'sport', sport: 'run', run_discipline: 'middle', event_date: dateStr(PRE_RACE) }).totalWeeks === 6,
+  resolvePeriodization({ goal_type: 'sport', sport: 'run', run_discipline: 'middle', plan_start_date: ANCHOR, event_date: PRE_RACE }).totalWeeks === 6,
   'T6 middle pre-season → 6 weeks (reuses sportPre)'
 );
 
