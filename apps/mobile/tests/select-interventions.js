@@ -1,0 +1,50 @@
+// tests/select-interventions.js — Sprint 8 D11: value-ordered selection satisfying the requirement,
+// EDS §34 tier order, transfer-per-fatigue, stopping at the fatigue budget. Tested in isolation.
+import { selectInterventions } from '@performance-os/engine/lib/plan/selectInterventions.js';
+import { EXERCISES } from '@performance-os/engine/data/strengthExercises.js';
+import { muscleContribution } from '@performance-os/engine/lib/plan/contributions.js';
+
+function assert(c, m) { if (!c) { console.error('FAIL:', m); process.exitCode = 1; } else console.log('PASS:', m); }
+
+// A stub makePick mirroring the allocator's shape: 3 working sets, real muscle contribution.
+const EX_BY_ID = new Map(EXERCISES.map((e) => [e.id, e]));
+const makePick = (ex) => ({ ex, sets: ex.role === 'primary' ? 4 : 3, contrib: muscleContribution(ex), effectiveRole: ex.role });
+const FULL = new Set(['barbell', 'dumbbell', 'machine', 'cable', 'bodyweight', 'band', 'kettlebell']);
+const bigCeiling = {}; for (const e of EXERCISES) for (const m in muscleContribution(e)) bigCeiling[m] = 999;
+
+const runReq = {
+  objective: { targetQuality: 'robustness', fatigueBudget: { level: 'moderate' } },
+  requirements: { movementPatterns: ['hinge', 'lunge', 'calf', 'iso'], contraindicated: [] },
+};
+const picks = selectInterventions({ req: runReq, equip: FULL, level: 3, levelName: 'advanced', sport: 'run', skbIds: new Set(), ledger: { weeklyDelivered: {}, weeklyCeiling: bigCeiling }, makePick });
+
+// Non-empty, and every pick carries a tier + real sets.
+assert(picks.length >= 1, 'produces at least one intervention (never empty)');
+assert(picks.every((p) => p.tier >= 1 && p.tier <= 7 && p.sets > 0), 'every pick has a §34 tier + sets');
+
+// Tier order is non-decreasing (primary compound before mobility).
+const tiers = picks.map((p) => p.tier);
+assert(tiers.every((t, i) => i === 0 || t >= tiers[i - 1]), 'picks are in value-hierarchy tier order');
+
+// A robustness (hinge/calf) session must NOT contain chest pressing (hpush) — off-target.
+assert(picks.every((p) => p.ex.pattern !== 'hpush'), 'no chest/hpush work in a robustness session');
+
+// Stopping rule: a LOW budget yields no more working items than a HIGH budget.
+const lowReq = { ...runReq, objective: { ...runReq.objective, fatigueBudget: { level: 'low' } } };
+const highReq = { ...runReq, objective: { ...runReq.objective, fatigueBudget: { level: 'high' } } };
+const lowN = selectInterventions({ req: lowReq, equip: FULL, level: 3, levelName: 'advanced', sport: 'run', skbIds: new Set(), ledger: { weeklyDelivered: {}, weeklyCeiling: bigCeiling }, makePick }).length;
+const highN = selectInterventions({ req: highReq, equip: FULL, level: 3, levelName: 'advanced', sport: 'run', skbIds: new Set(), ledger: { weeklyDelivered: {}, weeklyCeiling: bigCeiling }, makePick }).length;
+assert(lowN <= highN, 'a lower fatigue budget selects no more items (stopping rule)');
+
+// MRV ledger gate: a ceiling of 0 everywhere admits nothing beyond the guaranteed anchor.
+const tight = selectInterventions({ req: runReq, equip: FULL, level: 3, levelName: 'advanced', sport: 'run', skbIds: new Set(), ledger: { weeklyDelivered: {}, weeklyCeiling: {} }, makePick });
+assert(tight.length <= picks.length, 'a tighter MRV ceiling never admits more than a loose one');
+
+// SKB transfer boost changes ranking, not legality: with a boost the boosted id ranks earlier.
+const boosted = selectInterventions({ req: runReq, equip: FULL, level: 3, levelName: 'advanced', sport: 'run', skbIds: new Set(['nordic_curl']), ledger: { weeklyDelivered: {}, weeklyCeiling: bigCeiling }, makePick });
+const idxBoosted = boosted.findIndex((p) => p.ex.id === 'nordic_curl');
+const idxPlain = picks.findIndex((p) => p.ex.id === 'nordic_curl');
+assert(idxBoosted === -1 || idxPlain === -1 || idxBoosted <= idxPlain, 'SKB-boosted exercise ranks no later');
+
+// Deterministic.
+assert(JSON.stringify(selectInterventions({ req: runReq, equip: FULL, level: 3, levelName: 'advanced', sport: 'run', skbIds: new Set(), ledger: { weeklyDelivered: {}, weeklyCeiling: bigCeiling }, makePick })) === JSON.stringify(picks), 'deterministic');
