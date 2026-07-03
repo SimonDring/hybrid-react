@@ -1,6 +1,6 @@
 // tests/session-archetypes.js — Sprint 7 headline: the EDS §22 runner vs sprinter come out
 // categorically different (same sport, different diagnosis → different session specs).
-import { BLANK_ANSWERS, answersToAthleteModelInputs, localISODate } from '../src/lib/onboardingModel.js';
+import { BLANK_ANSWERS, answersToAthleteModelInputs } from '../src/lib/onboardingModel.js';
 import { derivePerformanceModel } from '@performance-os/engine/lib/performance/index.js';
 import { deriveSessionSpecs, regionOf } from '@performance-os/engine/lib/session/sessionSpecs.js';
 
