@@ -8,5 +8,8 @@
     ".": "./index.js",
     "./lib/*": "./src/lib/*",
     "./data/*": "./src/data/*"
+  },
+  "scripts": {
+    "test": "node ../../apps/mobile/tests/run-all.mjs"
   }
 }
