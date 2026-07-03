@@ -34,6 +34,10 @@ function tierOf(ex, target, sport) {
   if (isCompound(ex) && role === 'primary') return 1;
   if (isCompound(ex) && role === 'secondary') return 2;
   if ((ex.loadClass === 'health') && ex.pattern !== 'mobility') return 3;   // prehab
+  // Ordering note: a SPORT-TAGGED movement is tier 4 (sport-demanded — legitimately selected), so a
+  // sport-specific iso (e.g. nordic/calf/glute-med prehab) is chosen as sport work, NOT MEV-gated.
+  // GENERIC hypertrophy isolations carry no sportTags → they fall through to tier 5 and ARE MEV-gated
+  // (only added when a muscle is genuinely below MEV). Both tiers are still bounded by the MRV ledger.
   if (sport && (ex.sportTags || []).includes(sport)) return 4;              // sport-demanded movement
   if (ex.role === 'iso' && role) return 5;                                  // lagging-muscle hypertrophy (MEV-gated below)
   if (ex.pattern === 'core') return 6;

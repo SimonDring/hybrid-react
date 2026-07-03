@@ -7,7 +7,6 @@ import { muscleContribution } from '@performance-os/engine/lib/plan/contribution
 function assert(c, m) { if (!c) { console.error('FAIL:', m); process.exitCode = 1; } else console.log('PASS:', m); }
 
 // A stub makePick mirroring the allocator's shape: 3 working sets, real muscle contribution.
-const EX_BY_ID = new Map(EXERCISES.map((e) => [e.id, e]));
 const makePick = (ex) => ({ ex, sets: ex.role === 'primary' ? 4 : 3, contrib: muscleContribution(ex), effectiveRole: ex.role });
 const FULL = new Set(['barbell', 'dumbbell', 'machine', 'cable', 'bodyweight', 'band', 'kettlebell']);
 const bigCeiling = {}; for (const e of EXERCISES) for (const m in muscleContribution(e)) bigCeiling[m] = 999;
@@ -36,9 +35,16 @@ const lowN = selectInterventions({ req: lowReq, equip: FULL, level: 3, levelName
 const highN = selectInterventions({ req: highReq, equip: FULL, level: 3, levelName: 'advanced', sport: 'run', skbIds: new Set(), ledger: { weeklyDelivered: {}, weeklyCeiling: bigCeiling }, makePick }).length;
 assert(lowN <= highN, 'a lower fatigue budget selects no more items (stopping rule)');
 
-// MRV ledger gate: a ceiling of 0 everywhere admits nothing beyond the guaranteed anchor.
-const tight = selectInterventions({ req: runReq, equip: FULL, level: 3, levelName: 'advanced', sport: 'run', skbIds: new Set(), ledger: { weeklyDelivered: {}, weeklyCeiling: {} }, makePick });
-assert(tight.length <= picks.length, 'a tighter MRV ceiling never admits more than a loose one');
+// MRV ledger gate: zero the ceiling for a specific quality-driver compound's muscles and confirm THAT
+// exercise is excluded (it appears under a loose ceiling). A tight ceiling does not reduce total count —
+// lower/zero-volume tiers backfill the freed budget — so we assert the specific over-ceiling exercise is
+// blocked, not that fewer items appear.
+const compound = picks.find((p) => p.tier <= 2);
+assert(compound, 'a loose ceiling admits a quality-driver compound');
+const zeroCeil = { ...bigCeiling };
+for (const m in compound.contrib) zeroCeil[m] = 0;
+const gated = selectInterventions({ req: runReq, equip: FULL, level: 3, levelName: 'advanced', sport: 'run', skbIds: new Set(), ledger: { weeklyDelivered: {}, weeklyCeiling: zeroCeil }, makePick });
+assert(!gated.some((p) => p.ex.id === compound.ex.id), 'MRV gate blocks the exercise whose muscles are at ceiling');
 
 // SKB transfer boost changes ranking, not legality: with a boost the boosted id ranks earlier.
 const boosted = selectInterventions({ req: runReq, equip: FULL, level: 3, levelName: 'advanced', sport: 'run', skbIds: new Set(['nordic_curl']), ledger: { weeklyDelivered: {}, weeklyCeiling: bigCeiling }, makePick });
