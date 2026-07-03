@@ -48,6 +48,19 @@ export function assignTargetQualities(priorityQualities, sessionCount, goalPrima
   return Array.from({ length: n }, (_, i) => targets[i % targets.length]);
 }
 
+// Competency gate (EDS L4 / §22 novice sprinter): a low-competency athlete can't express a quality
+// whose prerequisite strength base isn't built — a novice can't train explosiveStrength/reactiveStrength
+// (their exercises are level-gated), so the session would collapse to prehab-only. For a BEGINNER,
+// substitute the target quality's prerequisite (e.g. explosiveStrength → maxStrength) so they build the
+// base first; every non-beginner keeps their diagnosed target.
+export function competencyAdjustedTarget(qualityId, level) {
+  const beginner = level === 'beginner' || level === 0;
+  if (!beginner) return qualityId;
+  const q = getQuality(qualityId);
+  const prereq = q && Array.isArray(q.prerequisites) ? q.prerequisites[0] : null;
+  return prereq || qualityId;
+}
+
 // Coarse fatigue level (0..2) from a quality's dominant fatigue cost.
 function fatigueLevel(quality) {
   const fc = (quality && quality.fatigueCost) || {};

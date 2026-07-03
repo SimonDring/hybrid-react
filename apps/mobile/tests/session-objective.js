@@ -1,5 +1,5 @@
 // tests/session-objective.js — Sprint 7 D9: per-session objective from the diagnosis.
-import { gymTrainableTargets, assignTargetQualities, deriveSessionObjective } from '@performance-os/engine/lib/session/sessionObjective.js';
+import { gymTrainableTargets, assignTargetQualities, deriveSessionObjective, competencyAdjustedTarget } from '@performance-os/engine/lib/session/sessionObjective.js';
 
 function assert(c, m) { if (!c) { console.error('FAIL:', m); process.exitCode = 1; } else console.log('PASS:', m); }
 
@@ -16,6 +16,13 @@ assert(JSON.stringify(gymTrainableTargets([], null)) === JSON.stringify(['maxStr
 assert(JSON.stringify(gymTrainableTargets([{ qualityId: 'mobility' }], null)) === JSON.stringify(['robustness']), 'mobility priority → robustness (never an all-mobility session)');
 assert(JSON.stringify(gymTrainableTargets([{ qualityId: 'stability' }], null)) === JSON.stringify(['robustness']), 'stability priority → robustness');
 assert(JSON.stringify(gymTrainableTargets([{ qualityId: 'maxStrength' }], null)) === JSON.stringify(['maxStrength']), 'a strength quality still passes through');
+
+// Sprint 8 competency gate: a BEGINNER targeting a power quality builds the max-strength base first
+// (EDS §22 novice sprinter); non-beginners keep the diagnosed target.
+assert(competencyAdjustedTarget('explosiveStrength', 'beginner') === 'maxStrength', 'beginner explosiveStrength → maxStrength base');
+assert(competencyAdjustedTarget('reactiveStrength', 'beginner') === 'maxStrength', 'beginner reactiveStrength → maxStrength base');
+assert(competencyAdjustedTarget('explosiveStrength', 'advanced') === 'explosiveStrength', 'advanced keeps the power target');
+assert(competencyAdjustedTarget('robustness', 'beginner') === 'robustness', 'beginner robustness (no prerequisite) unchanged');
 
 // Round-robin assignment across sessions.
 const a = assignTargetQualities([{ qualityId: 'aerobicCapacity' }], 4, null); // → [robustness,reactiveStrength]

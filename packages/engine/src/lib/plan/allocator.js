@@ -39,7 +39,7 @@ import { applyWeights } from '../liftProgression.js';
 import { stimulusFactor } from '../strength/stimulus.js';
 import { AXIAL_SESSION_CAP, axialOf } from './axial.js';
 import { selectInterventions } from './selectInterventions.js';
-import { deriveSessionObjective, assignTargetQualities } from '../session/sessionObjective.js';
+import { deriveSessionObjective, assignTargetQualities, competencyAdjustedTarget } from '../session/sessionObjective.js';
 import { deriveMovementRequirements } from '../session/movementRequirements.js';
 import { regionOf } from '../session/sessionSpecs.js';
 
@@ -764,8 +764,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const targetsD11 = assignTargetQualities(priorityQualities, work.length, goalPrimaryD11);
     work.forEach((slot, i) => {
       const region = regionOf(slot.focusLabel);
-      const objective = deriveSessionObjective({ targetQuality: targetsD11[i], region, phaseIntent: intent, deload, taper, season: ctx.season });
-      const requirements = deriveMovementRequirements({ targetQuality: targetsD11[i], region, level: levelName, contraindicatedPatterns: new Set() });
+      // Competency gate: a beginner targeting a power quality builds the max-strength base first (EDS §22).
+      const targetQuality = competencyAdjustedTarget(targetsD11[i], levelName);
+      const objective = deriveSessionObjective({ targetQuality, region, phaseIntent: intent, deload, taper, season: ctx.season });
+      const requirements = deriveMovementRequirements({ targetQuality, region, level: levelName, contraindicatedPatterns: new Set() });
       const req = { objective, requirements };
       const makePick = (ex) => {
         const effectiveRole = effectiveRoleOf(ex, slot.level, demotePress);
