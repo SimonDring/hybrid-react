@@ -41,6 +41,12 @@ Seven merged PRs on **`main`**:
 | #59 | **D9/D10** (Sprint 7) — session objective + movement requirements | no (parallel spec) |
 | **#60** | **D11 re-seat** (Sprint 8) — **run/cycle selection is now diagnosis-driven** | **YES (run + cycle)** |
 
+Plus **PRs #61–#66** (2026-07-03): **Phase A of the audit backlog** — deploy gated on tests, the
+date-flaky test fixed, the engine's three clock leaks closed (Art 18), **Train Now on the D11
+brain**, a reflow D11 regression test, and a worktree-resolution guard. Details in the Phase A
+entry below; the audit (`docs/architecture/PHASE3-ARCHITECTURAL-AUDIT.md`) is the current backlog —
+next band is **Phase B (confidence tiers → deload thresholds → recovery honesty → validator suite)**.
+
 **The reasoning chain, now WIRED into the live plan for run/cycle:**
 
 ```
@@ -95,14 +101,16 @@ spec → plan → subagent-driven-development, per "How work is run" below). In 
 3. **D12 — dose schemes keyed by quality** (not style). Move the `allocator.js scheme()` rep/RPE/rest
    tables into `knowledge/programming` keyed by the target quality; readiness scales volume AND intensity.
 4. **Small follow-ups (quick, low-risk):**
-   - **Wire D11 into "Train Now"** — `generateTrainNow` in `PlanService.js` is a separate `allocateGym`
-     call site that still uses the legacy fill, so a run/cycle athlete's on-demand session gets chest
-     flyes etc. Thread the same `priorityQualities`/`season`/`skbIds` into its ctx (3-line change, same
-     pattern as `gymCtx`); the allocator D11 gate does the rest.
-   - **Reflow-specific D11 regression test** — the reflow D11 wiring is proven by inspection only; add a
-     test that drives a run profile through `PlanService.getPhases()`/`adaptedPhases()` (with `setRuntime`)
-     and asserts D11 content, cloned from `d11-runner-quality.js`.
-   - **Enrich the D4 neutral seams** — `trainability`/`injuryRisk` are still `1.0` in `diagnose.js`.
+   - ~~Wire D11 into "Train Now"~~ **DONE** (PR #64, Phase A — see the 2026-07-03 Phase A entry below).
+   - ~~Reflow-specific D11 regression test~~ **DONE** (PR #65 — `tests/reflow-d11-quality.js`).
+   - **Enrich the D4 neutral seams** — `trainability`/`injuryRisk` are still `1.0` in `diagnose.js`
+     (= audit WP-36).
+   - **NEW FINDING (from PR #65): the reflow collapses D11 day differentiation** — the baseline
+     generator alternates a runner's week (Lower vs Lower Explosive pogo/reactive days) but the reflow
+     rebuilds each horizon slot independently and every pending day comes out identical (the durability
+     list), losing the D9 quality rotation in what the athlete actually sees. Documented as a known gap
+     in `tests/reflow-d11-quality.js`; belongs to the WP-24 reflow re-seat (add the ≥2-distinct-days
+     assertion when fixed).
 
 **The general lesson from Sprint 8 (carry into every sport re-seat):** the diagnosis→gym-target mapping
 breaks when a sport's top limiting factor is **not a gym-trainable strength driver**. Three cases seen,
@@ -194,6 +202,36 @@ robustness`); **raw vitals never enter the model** (Constitution Art 11 — `dai
 owner-only). Deferred cosmetic minors (non-blocking): a `diagnose.js` comment overstatement; the
 `prioritise.js` unknown-confidence→k=1 fallback is undocumented; `selectable.js` sport labels use
 `humanize(id)` (e.g. "Running Sprint") since flagship `meta` has no display label.
+
+## Latest work — Phase A of the audit backlog: hygiene & safety, WP-01…WP-06 (2026-07-03)
+
+Six small, independent PRs (**#61–#66**, all merged to `main`) executing Phase A of the Phase 3
+audit's backlog (`docs/architecture/PHASE3-ARCHITECTURAL-AUDIT.md` §8). Suite now **120/120**
+(three new test files). WP-07 (migration discipline + staging) is the one Phase A item left —
+repo-side work queued as a task chip; the staging Supabase project needs Simon's account.
+
+- **#61 WP-01** — `deploy.yml` gains a `test` job that `build` needs: a red suite can no longer
+  reach GitHub Pages (V15's cheapest fix).
+- **#62 WP-02** — `reflow-start-consistency.js` de-flaked: fixed-clock Date shim (`FAKE_TODAY`
+  override) + the candidate scan widened to the whole plan (a Sunday plan-start left week 1's gym
+  days all in the past — the real weekday flake). Proven green on all 7 weekdays.
+- **#63 WP-03 (V4)** — the three determinism clock leaks closed: race-taper anchor
+  (`PlanGenerator.js`), `deriveSeason` (now measures the event window from `asOf` =
+  `plan_start_date`), `continueBlock` (caller supplies `todayISO`; the engine THROWS rather than
+  read the clock — BlockCheckin.jsx passes it). New `tests/determinism-clock.js` pins byte-identical
+  plans across mocked clock days months apart, dated AND undated profiles. Golden master untouched.
+  Undated profiles (synthetic/dev only — onboarding always sets a start date) now deterministically
+  get no race taper / intent-derived season instead of clock-derived.
+- **#64 WP-04 (A5)** — **Train Now is on the D11 brain**: `generateTrainNow`'s ctx carries
+  `sport/power/priorityQualities/season/skbIds` like `gymCtx`. Runner's on-demand session = hinge/
+  durability work, no chest flyes. Build byte-identical at the allocator (pinned by
+  `tests/train-now-d11.js`); swim probed byte-identical.
+- **#65 WP-05** — `tests/reflow-d11-quality.js`: run profile through the real read path
+  (`getPhases()` → reflow) asserts D11 content idle + mid-week. Surfaced the reflow
+  day-differentiation collapse (see the finding in the follow-ups list above).
+- **#66 WP-06** — `packages/engine` gets `npm test`; `run-all.mjs` guards that
+  `@performance-os/engine` resolves INSIDE the current checkout and fails with instructions
+  otherwise (the recorded worktree trap, now automated).
 
 ## Latest work — Sprint 8: D11 intervention-selection re-seat (run + cycle) (2026-07-03)
 
