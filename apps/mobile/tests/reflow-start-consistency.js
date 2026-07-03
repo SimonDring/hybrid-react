@@ -18,6 +18,20 @@
 
 process.env.TZ = 'Europe/London';
 
+// Freeze the clock BEFORE any module under test loads (Database/PlanService read the
+// real clock). The scenario is date-relative — the plan starts "today" — so with a
+// live clock the set of in-horizon sessions (and thus what the test exercises) shifted
+// with the real calendar, making the test flaky by weekday. All imports below are
+// dynamic, so this shim is in place before any app code runs. FAKE_TODAY=YYYY-MM-DD
+// lets CI/devs prove the test holds on any weekday.
+const FAKE_TODAY = process.env.FAKE_TODAY || '2026-07-06'; // a Monday
+const RealDate = Date;
+const fixedNow = new RealDate(`${FAKE_TODAY}T10:00:00`).getTime();
+globalThis.Date = class extends RealDate {
+  constructor(...args) { args.length ? super(...args) : super(fixedNow); }
+  static now() { return fixedNow; }
+};
+
 // localStorage shim must exist BEFORE Database.js boots (it writes on import).
 const _ls = {};
 globalThis.localStorage = {
@@ -73,22 +87,28 @@ const badgeFor = (phaseId, weekNum, idx) => {
   return s ? !!s._trainNow : null;
 };
 
-// Current-week gym sessions whose scheduled date is inside the reflow horizon
-// (today .. today + WINDOW_DAYS) — the only ones the reflow reshapes, i.e. the only
-// ones whose contents could ever change on Start.
-const phase = Plan.getPhases().find(p => (p.weeks || []).some(w => w.num === cw));
-const week = phase.weeks.find(w => w.num === cw);
+// Gym sessions whose scheduled date is inside the reflow horizon (today ..
+// today + WINDOW_DAYS) — the only ones the reflow reshapes, i.e. the only ones whose
+// contents could ever change on Start. Scan the WHOLE plan, not just the current
+// week: a plan that starts late in its calendar week (e.g. Sunday) has all of week
+// 1's gym days in the past, and the in-horizon sessions live in week 2.
 const today = new Date(); today.setHours(0, 0, 0, 0);
 const horizonEnd = today.getTime() + 10 * 86400000;
 
 const candidates = [];
-week.sessions.forEach((s, i) => {
-  if (Plan.sessionDiscipline(s) !== 'gym') return;
-  const d = Plan.dateForSession(week.num, s.title);
-  if (!d) return;
-  const ms = d.getTime();
-  if (ms >= today.getTime() && ms <= horizonEnd) candidates.push({ i, title: s.title });
-});
+for (const phase of Plan.getPhases()) {
+  for (const week of (phase.weeks || [])) {
+    week.sessions.forEach((s, i) => {
+      if (Plan.sessionDiscipline(s) !== 'gym') return;
+      const d = Plan.dateForSession(week.num, s.title);
+      if (!d) return;
+      const ms = d.getTime();
+      if (ms >= today.getTime() && ms <= horizonEnd) {
+        candidates.push({ phase, week, i, title: `wk${week.num} ${s.title}` });
+      }
+    });
+  }
+}
 
 assert(candidates.length > 0, `repro.1 found ${candidates.length} in-horizon gym session(s) this week to test`);
 
@@ -96,11 +116,11 @@ assert(candidates.length > 0, `repro.1 found ${candidates.length} in-horizon gym
 // capture again. Pressing Start must not change the exercises — and the frozen
 // session must NOT be mislabelled as an "ADAPTED" (Train Now) session.
 for (const c of candidates) {
-  const preview = itemsFor(phase.id, week.num, c.i);
+  const preview = itemsFor(c.phase.id, c.week.num, c.i);
 
-  store().startSession(`p${phase.id}_wk${week.num}_s${c.i}`);
+  store().startSession(`p${c.phase.id}_wk${c.week.num}_s${c.i}`);
 
-  const started = itemsFor(phase.id, week.num, c.i);
+  const started = itemsFor(c.phase.id, c.week.num, c.i);
   const same = JSON.stringify(preview) === JSON.stringify(started);
   if (!same) {
     console.error(`  ↳ ${c.title}`);
@@ -108,8 +128,8 @@ for (const c of candidates) {
     console.error(`    started: ${JSON.stringify(started)}`);
   }
   assert(same, `repro.2 [${c.title}] exercises are identical before vs after Start`);
-  assert(store().sessions[`p${phase.id}_wk${week.num}_s${c.i}`].started === true,
+  assert(store().sessions[`p${c.phase.id}_wk${c.week.num}_s${c.i}`].started === true,
     `repro.3 [${c.title}] is marked started`);
-  assert(badgeFor(phase.id, week.num, c.i) === false,
+  assert(badgeFor(c.phase.id, c.week.num, c.i) === false,
     `repro.4 [${c.title}] a normal started session is not flagged ADAPTED`);
 }
