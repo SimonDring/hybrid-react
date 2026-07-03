@@ -797,7 +797,12 @@ export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
   const specs = allocateGym({
     targets: fillTarget,
     slots: [{ minutes: functionalSlotMinutes(gctx.style, minutes), equip: equipArr }],
-    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, bodyweight: gctx.bodyweight, exercisePriority: gctx.exercisePriority, priorityByIntent: gctx.priorityByIntent }
+    // Same ctx shape the weekly plan + reflow use (gymCtx) — including the D11 fields
+    // (sport/power/priorityQualities/season/skbIds), so a run/cycle athlete's on-demand
+    // session is selected by the same diagnosis-driven brain as their plan, not the
+    // legacy muscle-deficit fill. Build profiles have no priorityQualities, so the D11
+    // gate can't fire for them and their Train Now output is unchanged.
+    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, bodyweight: gctx.bodyweight, exercisePriority: gctx.exercisePriority, priorityByIntent: gctx.priorityByIntent, sport: gctx.sport, power: gctx.power, priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds }
   });
   const session = specs[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
   return { session: decorateSections(session, equipArr), why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };
