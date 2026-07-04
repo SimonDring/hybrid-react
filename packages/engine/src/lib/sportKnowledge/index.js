@@ -35,8 +35,25 @@ export function ids() { return PROFILES.map(p => p.id); }
 
 // Map a legacy short sport id (used by onboarding / saved profiles) to its canonical SKB
 // profile id, so engine code can look a sport up consistently (e.g. 'swim' → 'swimming').
-const ID_ALIASES = { swim: 'swimming', run: 'running', cycle: 'cycling' };
+// NOTE: 'run' is NOT aliased here — running splits by discipline (running_sprint/middle/
+// long) and must resolve through skbSportIdFor below. (The old 'run' → 'running' alias
+// pointed at a profile that does not exist, which silently dropped every discipline-less
+// runner off the diagnosis path.)
+const ID_ALIASES = { swim: 'swimming', cycle: 'cycling' };
 export function normalizeSportId(id) { if (!id) return null; return ID_ALIASES[id] || id; }
+
+/**
+ * The ONE derivation from an engine sport id (profile.sport) + run discipline to the SKB
+ * profile that knows it. A runner who never stated a discipline gets running_middle — the
+ * generic runner prior (deliberate default, 2026-07-04): the D4/D5 diagnosis must never
+ * silently vanish because one optional answer is missing. Every caller (the athlete-model
+ * adapter, the reflow decision rules) resolves through here so the mapping cannot drift.
+ */
+export function skbSportIdFor(sport, runDiscipline) {
+  if (!sport) return null;
+  if (sport === 'run') return `running_${runDiscipline || 'middle'}`;
+  return normalizeSportId(sport) || sport;
+}
 
 /** One section of a profile (e.g. section('hurling', 'positions')). Undefined if missing. */
 export function section(id, name) {

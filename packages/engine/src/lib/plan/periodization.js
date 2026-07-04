@@ -100,9 +100,10 @@ export function resolvePeriodization(profile = {}) {
     const mod = sports.get(profile.sport);   // undefined for an unknown sport → generic blocks
     const season = deriveSeason(profile) || 'off';
     // Run sub-disciplines (sprint/middle) override the season block; a season the
-    // discipline doesn't override (and 'long' / no discipline) falls back to the
-    // module's generic SPORT_BLOCKS — matching the prior branching exactly.
-    const disc = profile.sport === 'run' ? profile.run_discipline : null;
+    // discipline doesn't override (and 'long') falls back to the module's generic
+    // SPORT_BLOCKS. An unstated discipline defaults to 'middle' — the same prior as
+    // the SKB lookup (skbSportIdFor): one athlete, one assumed discipline.
+    const disc = profile.sport === 'run' ? (profile.run_discipline || 'middle') : null;
     const byD = disc && mod && mod.byDiscipline ? mod.byDiscipline[disc] : null;
     return (byD && byD.periodization && byD.periodization[season])
       || (mod && mod.periodization && mod.periodization[season])
