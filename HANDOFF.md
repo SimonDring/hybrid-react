@@ -425,13 +425,46 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   Suite **137/137**, ZERO snapshot movement. (Note: tests/skb-rules.js was green all along
   because it passes SKB ids as `profile.sport` — a shape real profiles never have;
   tests/skb-gaa-routing.js uses the genuine runtime shape.)
-- **⇒ NEXT:** **WP-29** (Atlas re-base onto the Performance Model — renders
-  getPerformanceModel() capabilities + D4 gaps, pillar mapping becomes presentation config,
-  retires atlas capability maths + data/sports/; user-visible, preview-verify), **WP-28**
-  (portable freezes), **WP-31** (sync outbox). **Team spine WP-32/33** blocked on WP-07's
-  staging TODO (Simon's Supabase account). WP-22/23 (build flip) last. Staged H9 leftovers
-  unchanged. (Dev note: /dev remounts periodically — do click+assert in ONE preview_eval;
-  and a preset click + Generate in the same tick generates from STALE answers.)
+- **PR #95 — WP-29: Atlas re-based onto the Performance Model (V6 CLOSED).** The parallel
+  assessment DELETED (atlas/signals maths + data/sports pillar picks + invented
+  top-5%/elite benchmarks, −428 lines). The Atlas renders the SAME model the planner
+  diagnoses from: sport athletes see capability inside the sport's demand ring and the
+  focus IS the engine's top D4 limiting factor with its own emitted rationale (tested for
+  run middle/sprint, swim, hurling); build athletes get a capability view and NO invented
+  focus. NEW apps/mobile/src/lib/atlas.js is presentation-only. Suite 137/137.
+- **PR #96 — the SKB profile review (Simon's ask).** Full verdict matrix at
+  docs/engine/07-SKB-PROFILE-REVIEW.md: schema valid ×10, 21 sections ×10, 8 flagships at
+  completeness 1.00, rugby/soccer correctly gated scaffolds. THE GAP CLOSED: the five
+  endurance profiles' 50 decisionRules were PROSE-only (the reflow could execute none) —
+  39 structured with the GAA/swim trigger conventions (prose/evidence untouched), 11 left
+  prose BY DESIGN (D13 scheduling / medical referral / pure emphasis — documented).
+  +22 activation gates in skb-rules.js. Live: low-readiness runners autoregulate, ACWR
+  spikes force-deload cyclists, tri A-race proximity sheds soreness work.
+- **PR #97 — Field Hockey (Simon's ask): the 11th SKB profile, flagship depth.** All 21
+  sections, completeness 1.00; hockey-specific science encoded (crouched-posture lumbar
+  overload + a dedicated structured rule, one-sided-stick asymmetry, strike volume counted
+  like sprint volume, turf ankle exposure); 12 structured rules from day one; 14
+  catalogue-joined exercises; binds engineSport 'gaa'; onboarding-selectable automatically
+  (4 positions). KNOWLEDGE_SET_VERSION 1.0.0 → 1.1.0 (re-baseline audit: 28 lines, all the
+  version string). End-to-end proven: Midfielder onboards → plan stamped 1.1.0 → 7-quality
+  demand → anaerobic-capacity diagnosis → 2-match week fires the congestion rule → Atlas
+  renders it.
+- **PR #98 — Train Now REMOVED (Simon's decision, 2026-07-04).** Screen/route/store
+  action/generateTrainNow/ADAPTED badge/engine trainNowSpec/_trainNow decoration/KB entry
+  programming.train_now/tests — all deleted. THE PUBLIC API IS FIVE CALLS: plan · reflow ·
+  deriveReadiness · deriveLoad · validate. KEPT deliberately: the sessionOverrides
+  pin/freeze-on-start mechanism (predates Train Now; still guards Start-freeze +
+  substitutions); old stored Train Now overrides degrade to plain pinned snapshots, and a
+  guard asserts _trainNow never reappears. Suite 136/136.
+- **⇒ NEXT:** staged H9 corrections C3/C5/C9–C14 (knowledge tagging fixes, audited
+  re-baselines), **WP-36** (enrich D4 seams: injuryRisk from the injury registry,
+  trainability from quality registry × training age), **WP-31** (sync outbox — repo-side),
+  **WP-28** (portable freezes — check if pins can ride an existing column before any
+  migration). **Team spine WP-32/33** blocked on WP-07's staging TODO (Simon's Supabase
+  account). WP-22/23 (build flip) last. (Dev notes: /dev remounts periodically — click +
+  assert in ONE preview_eval; a preset click + Generate in the same tick generates from
+  STALE answers. Vercel hobby-tier deploy rate limit can FAIL the web preview check for
+  24 h — an infra flake; merge on engine-suite green, documented in PR #98's merge.)
 - ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
