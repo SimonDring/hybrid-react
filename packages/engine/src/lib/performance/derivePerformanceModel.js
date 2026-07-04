@@ -3,7 +3,7 @@
 // the diagnosis — limitingFactors (D4) + priorityAdaptations (D5) — are computed here as model
 // output; they do not yet steer plan generation (that re-seating is a later sprint).
 import { qualityIds } from '../../data/qualities.js';
-import { estimateCapability } from './estimation.js';
+import { estimateCapability, bandForModel } from './estimation.js';
 import { buildDemandProfile } from './demandProfile.js';
 import { diagnoseLimitingFactors } from './diagnose.js';
 import { prioritiseQualities } from './prioritise.js';
@@ -14,7 +14,10 @@ export function derivePerformanceModel(model, asOf) {
   const sc = m.sportingContext || {};
   const dp = sc.primarySport ? buildDemandProfile(sc.primarySport, sc.position || null) : [];
   const demandProfile = dp.length ? dp : null;
-  const limitingFactors = diagnoseLimitingFactors(capabilities, demandProfile);
+  const limitingFactors = diagnoseLimitingFactors(capabilities, demandProfile, {
+    trainingAgeBand: bandForModel(m),
+    injuryHistory: (m.constraints && m.constraints.injuryHistory) || [],
+  });
   const priorityAdaptations = prioritiseQualities(limitingFactors);
   return {
     athleteId: m.athleteId || null,
