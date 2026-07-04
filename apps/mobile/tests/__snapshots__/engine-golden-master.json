@@ -33776,15 +33776,9 @@
         "limitingFactors": [
           {
             "confidence": "low",
-            "magnitude": 0.5,
+            "magnitude": 0.48,
             "qualityId": "aerobicCapacity",
-            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5."
-          },
-          {
-            "confidence": "low",
-            "magnitude": 0.14,
-            "qualityId": "anaerobicCapacity",
-            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2."
+            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -33794,15 +33788,21 @@
           },
           {
             "confidence": "low",
-            "magnitude": 0.14,
+            "magnitude": 0.13,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.95."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.13,
             "qualityId": "maxStrength",
-            "rationale": "demands maxStrength at 0.7; your level is 0.5 (inferred) — gap 0.2."
+            "rationale": "demands maxStrength at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.9."
           },
           {
             "confidence": "low",
             "magnitude": 0.06,
             "qualityId": "stability",
-            "rationale": "demands stability at 0.6; your level is 0.5 (inferred) — gap 0.1."
+            "rationale": "demands stability at 0.6; your level is 0.5 (inferred) — gap 0.1. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -33821,7 +33821,7 @@
           {
             "order": 1,
             "qualityId": "aerobicCapacity",
-            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.5); develop via mitochondrial_density, stroke_volume, capillary_density."
+            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.48); develop via mitochondrial_density, stroke_volume, capillary_density."
           }
         ],
         "sport": "cycle"
@@ -34474,15 +34474,9 @@
         "limitingFactors": [
           {
             "confidence": "low",
-            "magnitude": 0.5,
+            "magnitude": 0.48,
             "qualityId": "aerobicCapacity",
-            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5."
-          },
-          {
-            "confidence": "low",
-            "magnitude": 0.14,
-            "qualityId": "anaerobicCapacity",
-            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2."
+            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -34492,15 +34486,21 @@
           },
           {
             "confidence": "low",
-            "magnitude": 0.14,
+            "magnitude": 0.13,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.95."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.13,
             "qualityId": "maxStrength",
-            "rationale": "demands maxStrength at 0.7; your level is 0.5 (inferred) — gap 0.2."
+            "rationale": "demands maxStrength at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.9."
           },
           {
             "confidence": "low",
             "magnitude": 0.06,
             "qualityId": "stability",
-            "rationale": "demands stability at 0.6; your level is 0.5 (inferred) — gap 0.1."
+            "rationale": "demands stability at 0.6; your level is 0.5 (inferred) — gap 0.1. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -34519,7 +34519,7 @@
           {
             "order": 1,
             "qualityId": "aerobicCapacity",
-            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.5); develop via mitochondrial_density, stroke_volume, capillary_density."
+            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.48); develop via mitochondrial_density, stroke_volume, capillary_density."
           }
         ],
         "sport": "cycle"
@@ -37436,15 +37436,9 @@
         "limitingFactors": [
           {
             "confidence": "low",
-            "magnitude": 0.5,
+            "magnitude": 0.48,
             "qualityId": "aerobicCapacity",
-            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5."
-          },
-          {
-            "confidence": "low",
-            "magnitude": 0.14,
-            "qualityId": "anaerobicCapacity",
-            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2."
+            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -37454,15 +37448,21 @@
           },
           {
             "confidence": "low",
-            "magnitude": 0.14,
+            "magnitude": 0.13,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.95."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.13,
             "qualityId": "maxStrength",
-            "rationale": "demands maxStrength at 0.7; your level is 0.5 (inferred) — gap 0.2."
+            "rationale": "demands maxStrength at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.9."
           },
           {
             "confidence": "low",
             "magnitude": 0.06,
             "qualityId": "stability",
-            "rationale": "demands stability at 0.6; your level is 0.5 (inferred) — gap 0.1."
+            "rationale": "demands stability at 0.6; your level is 0.5 (inferred) — gap 0.1. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -37481,7 +37481,7 @@
           {
             "order": 1,
             "qualityId": "aerobicCapacity",
-            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.5); develop via mitochondrial_density, stroke_volume, capillary_density."
+            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.48); develop via mitochondrial_density, stroke_volume, capillary_density."
           }
         ],
         "sport": "cycle"
@@ -38456,9 +38456,9 @@
         "limitingFactors": [
           {
             "confidence": "low",
-            "magnitude": 0.5,
+            "magnitude": 0.48,
             "qualityId": "aerobicCapacity",
-            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5."
+            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -38468,9 +38468,9 @@
           },
           {
             "confidence": "low",
-            "magnitude": 0.24,
+            "magnitude": 0.22,
             "qualityId": "maxStrength",
-            "rationale": "demands maxStrength at 0.8; your level is 0.5 (inferred) — gap 0.3."
+            "rationale": "demands maxStrength at 0.8; your level is 0.5 (inferred) — gap 0.3. Responsiveness at your training age: ×0.9."
           },
           {
             "confidence": "low",
@@ -38480,9 +38480,9 @@
           },
           {
             "confidence": "low",
-            "magnitude": 0.14,
+            "magnitude": 0.13,
             "qualityId": "stability",
-            "rationale": "demands stability at 0.7; your level is 0.5 (inferred) — gap 0.2."
+            "rationale": "demands stability at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -38507,7 +38507,7 @@
           {
             "order": 1,
             "qualityId": "aerobicCapacity",
-            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.5); develop via mitochondrial_density, stroke_volume, capillary_density."
+            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.48); develop via mitochondrial_density, stroke_volume, capillary_density."
           }
         ],
         "sport": "run"
@@ -43134,9 +43134,9 @@
         "limitingFactors": [
           {
             "confidence": "low",
-            "magnitude": 0.5,
+            "magnitude": 0.48,
             "qualityId": "aerobicCapacity",
-            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5."
+            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -43146,9 +43146,9 @@
           },
           {
             "confidence": "low",
-            "magnitude": 0.24,
+            "magnitude": 0.22,
             "qualityId": "maxStrength",
-            "rationale": "demands maxStrength at 0.8; your level is 0.5 (inferred) — gap 0.3."
+            "rationale": "demands maxStrength at 0.8; your level is 0.5 (inferred) — gap 0.3. Responsiveness at your training age: ×0.9."
           },
           {
             "confidence": "low",
@@ -43158,9 +43158,9 @@
           },
           {
             "confidence": "low",
-            "magnitude": 0.14,
+            "magnitude": 0.13,
             "qualityId": "stability",
-            "rationale": "demands stability at 0.7; your level is 0.5 (inferred) — gap 0.2."
+            "rationale": "demands stability at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -43185,7 +43185,7 @@
           {
             "order": 1,
             "qualityId": "aerobicCapacity",
-            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.5); develop via mitochondrial_density, stroke_volume, capillary_density."
+            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.48); develop via mitochondrial_density, stroke_volume, capillary_density."
           }
         ],
         "sport": "run"
@@ -44940,21 +44940,15 @@
         "limitingFactors": [
           {
             "confidence": "low",
-            "magnitude": 0.36,
+            "magnitude": 0.34,
             "qualityId": "aerobicCapacity",
-            "rationale": "demands aerobicCapacity at 0.9; your level is 0.5 (inferred) — gap 0.4."
+            "rationale": "demands aerobicCapacity at 0.9; your level is 0.5 (inferred) — gap 0.4. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
-            "magnitude": 0.36,
+            "magnitude": 0.34,
             "qualityId": "anaerobicCapacity",
-            "rationale": "demands anaerobicCapacity at 0.9; your level is 0.5 (inferred) — gap 0.4."
-          },
-          {
-            "confidence": "low",
-            "magnitude": 0.24,
-            "qualityId": "maxStrength",
-            "rationale": "demands maxStrength at 0.8; your level is 0.5 (inferred) — gap 0.3."
+            "rationale": "demands anaerobicCapacity at 0.9; your level is 0.5 (inferred) — gap 0.4. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -44964,9 +44958,15 @@
           },
           {
             "confidence": "low",
-            "magnitude": 0.14,
+            "magnitude": 0.22,
+            "qualityId": "maxStrength",
+            "rationale": "demands maxStrength at 0.8; your level is 0.5 (inferred) — gap 0.3. Responsiveness at your training age: ×0.9."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.13,
             "qualityId": "stability",
-            "rationale": "demands stability at 0.7; your level is 0.5 (inferred) — gap 0.2."
+            "rationale": "demands stability at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -44991,7 +44991,7 @@
           {
             "order": 1,
             "qualityId": "aerobicCapacity",
-            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.36); develop via mitochondrial_density, stroke_volume, capillary_density."
+            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.34); develop via mitochondrial_density, stroke_volume, capillary_density."
           }
         ],
         "sport": "run"
@@ -48924,15 +48924,15 @@
         "limitingFactors": [
           {
             "confidence": "low",
-            "magnitude": 0.28,
+            "magnitude": 0.25,
             "qualityId": "explosiveStrength",
-            "rationale": "demands explosiveStrength at 1; your level is 0.72 (inferred) — gap 0.28."
+            "rationale": "demands explosiveStrength at 1; your level is 0.72 (inferred) — gap 0.28. Responsiveness at your training age: ×0.9."
           },
           {
             "confidence": "low",
-            "magnitude": 0.16,
+            "magnitude": 0.15,
             "qualityId": "reactiveStrength",
-            "rationale": "demands reactiveStrength at 0.9; your level is 0.72 (inferred) — gap 0.18."
+            "rationale": "demands reactiveStrength at 0.9; your level is 0.72 (inferred) — gap 0.18. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -48975,7 +48975,7 @@
           {
             "order": 1,
             "qualityId": "explosiveStrength",
-            "rationale": "prioritising explosiveStrength (limiter magnitude 0.28); develop via rate_coding, motor_unit_recruitment."
+            "rationale": "prioritising explosiveStrength (limiter magnitude 0.25); develop via rate_coding, motor_unit_recruitment."
           }
         ],
         "sport": "run"
@@ -50487,15 +50487,9 @@
           },
           {
             "confidence": "low",
-            "magnitude": 0.24,
+            "magnitude": 0.22,
             "qualityId": "maxStrength",
-            "rationale": "demands maxStrength at 0.8; your level is 0.5 (inferred) — gap 0.3."
-          },
-          {
-            "confidence": "low",
-            "magnitude": 0.14,
-            "qualityId": "anaerobicCapacity",
-            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2."
+            "rationale": "demands maxStrength at 0.8; your level is 0.5 (inferred) — gap 0.3. Responsiveness at your training age: ×0.9."
           },
           {
             "confidence": "low",
@@ -50505,9 +50499,15 @@
           },
           {
             "confidence": "low",
-            "magnitude": 0.14,
+            "magnitude": 0.13,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.95."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.13,
             "qualityId": "stability",
-            "rationale": "demands stability at 0.7; your level is 0.5 (inferred) — gap 0.2."
+            "rationale": "demands stability at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -53010,21 +53010,21 @@
         "limitingFactors": [
           {
             "confidence": "low",
-            "magnitude": 0.16,
+            "magnitude": 0.15,
             "qualityId": "mobility",
-            "rationale": "demands mobility at 0.9; your level is 0.72 (inferred) — gap 0.18."
+            "rationale": "demands mobility at 0.9; your level is 0.72 (inferred) — gap 0.18. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
             "magnitude": 0.06,
             "qualityId": "aerobicCapacity",
-            "rationale": "demands aerobicCapacity at 0.8; your level is 0.72 (inferred) — gap 0.08."
+            "rationale": "demands aerobicCapacity at 0.8; your level is 0.72 (inferred) — gap 0.08. Responsiveness at your training age: ×0.9."
           },
           {
             "confidence": "low",
             "magnitude": 0.06,
             "qualityId": "stability",
-            "rationale": "demands stability at 0.8; your level is 0.72 (inferred) — gap 0.08."
+            "rationale": "demands stability at 0.8; your level is 0.72 (inferred) — gap 0.08. Responsiveness at your training age: ×0.9."
           },
           {
             "confidence": "low",
@@ -53055,7 +53055,7 @@
           {
             "order": 1,
             "qualityId": "mobility",
-            "rationale": "prioritising mobility (limiter magnitude 0.16); develop via sarcomerogenesis, tissue_tolerance."
+            "rationale": "prioritising mobility (limiter magnitude 0.15); develop via sarcomerogenesis, tissue_tolerance."
           }
         ],
         "sport": "swim"
@@ -54007,21 +54007,15 @@
           },
           {
             "confidence": "low",
-            "magnitude": 0.24,
+            "magnitude": 0.23,
             "qualityId": "aerobicCapacity",
-            "rationale": "demands aerobicCapacity at 0.8; your level is 0.5 (inferred) — gap 0.3."
+            "rationale": "demands aerobicCapacity at 0.8; your level is 0.5 (inferred) — gap 0.3. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
-            "magnitude": 0.24,
+            "magnitude": 0.23,
             "qualityId": "stability",
-            "rationale": "demands stability at 0.8; your level is 0.5 (inferred) — gap 0.3."
-          },
-          {
-            "confidence": "low",
-            "magnitude": 0.14,
-            "qualityId": "anaerobicCapacity",
-            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2."
+            "rationale": "demands stability at 0.8; your level is 0.5 (inferred) — gap 0.3. Responsiveness at your training age: ×0.95."
           },
           {
             "confidence": "low",
@@ -54031,9 +54025,15 @@
           },
           {
             "confidence": "low",
-            "magnitude": 0.06,
+            "magnitude": 0.13,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.95."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.05,
             "qualityId": "maxStrength",
-            "rationale": "demands maxStrength at 0.6; your level is 0.5 (inferred) — gap 0.1."
+            "rationale": "demands maxStrength at 0.6; your level is 0.5 (inferred) — gap 0.1. Responsiveness at your training age: ×0.9."
           },
           {
             "confidence": "low",
