@@ -33769,7 +33769,7 @@
             "provisional": false,
             "sessions": [
               {
-                "axialLoad": 1,
+                "axialLoad": 2,
                 "dayIdx": 1,
                 "duration": "~30 min",
                 "items": [
@@ -33788,7 +33788,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -33796,18 +33797,20 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
@@ -33879,8 +33882,7 @@
                   },
                   {
                     "group": "B",
-                    "intent": "hip_thrust",
-                    "name": "Hip thrust",
+                    "name": "Hack / leg-press",
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
@@ -33888,18 +33890,20 @@
                     "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "107.5 kg"
+                    "weight": "135 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Band-assisted pull-up",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7→8",
                     "sets": "3 × 6",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "D",
@@ -33926,7 +33930,7 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Friday · Full body"
+                "title": "Friday · Lower"
               }
             ],
             "taper": false,
@@ -33938,7 +33942,7 @@
             "provisional": false,
             "sessions": [
               {
-                "axialLoad": 1,
+                "axialLoad": 2,
                 "dayIdx": 1,
                 "duration": "~30 min",
                 "items": [
@@ -33957,7 +33961,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -33965,18 +33970,20 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
@@ -34048,8 +34055,7 @@
                   },
                   {
                     "group": "B",
-                    "intent": "hip_thrust",
-                    "name": "Hip thrust",
+                    "name": "Hack / leg-press",
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
@@ -34057,18 +34063,20 @@
                     "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "107.5 kg"
+                    "weight": "135 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Band-assisted pull-up",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7→8",
                     "sets": "3 × 6",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "D",
@@ -34095,7 +34103,7 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Friday · Full body"
+                "title": "Friday · Lower"
               }
             ],
             "taper": false,
@@ -34107,7 +34115,7 @@
             "provisional": false,
             "sessions": [
               {
-                "axialLoad": 1,
+                "axialLoad": 2,
                 "dayIdx": 1,
                 "duration": "~30 min",
                 "items": [
@@ -34126,7 +34134,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -34134,18 +34143,20 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
@@ -34217,8 +34228,7 @@
                   },
                   {
                     "group": "B",
-                    "intent": "hip_thrust",
-                    "name": "Hip thrust",
+                    "name": "Hack / leg-press",
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
@@ -34226,18 +34236,20 @@
                     "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "107.5 kg"
+                    "weight": "135 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Band-assisted pull-up",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7→8",
                     "sets": "3 × 6",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "D",
@@ -34264,7 +34276,7 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Friday · Full body"
+                "title": "Friday · Lower"
               }
             ],
             "taper": false,
@@ -34295,7 +34307,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -34303,7 +34316,7 @@
                     "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "80 kg"
                   },
                   {
                     "group": "C",
@@ -34388,8 +34401,7 @@
                   },
                   {
                     "group": "B",
-                    "intent": "hip_thrust",
-                    "name": "Hip thrust",
+                    "name": "Hack / leg-press",
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
@@ -34397,7 +34409,7 @@
                     "sets": "2 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "112.5 kg"
+                    "weight": "142.5 kg"
                   },
                   {
                     "group": "C",
@@ -34530,7 +34542,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -34538,30 +34551,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -34621,10 +34635,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "130 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
@@ -34633,41 +34659,31 @@
                     "weight": "102.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 6",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -34689,7 +34705,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -34697,30 +34714,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -34790,7 +34808,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -34798,30 +34817,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -34881,10 +34901,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "130 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
@@ -34893,41 +34925,31 @@
                     "weight": "102.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 6",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -34949,7 +34971,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -34957,30 +34980,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -35050,7 +35074,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -35058,30 +35083,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -35141,10 +35167,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "130 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
@@ -35153,41 +35191,31 @@
                     "weight": "102.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 6",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -35209,7 +35237,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -35217,30 +35246,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -35310,7 +35340,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -35318,30 +35349,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -35401,10 +35433,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "130 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
@@ -35413,41 +35457,31 @@
                     "weight": "102.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 6",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -35469,7 +35503,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -35477,30 +35512,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -35551,7 +35587,7 @@
             "provisional": false,
             "sessions": [
               {
-                "axialLoad": 1,
+                "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~25 min",
                 "items": [
@@ -35570,7 +35606,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -35578,18 +35615,20 @@
                     "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "32.5 kg/hand"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 6",
-                    "sets": "2 × 10",
+                    "sets": "2 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
@@ -35674,8 +35713,7 @@
                   },
                   {
                     "group": "B",
-                    "intent": "hip_thrust",
-                    "name": "Hip thrust",
+                    "name": "Hack / leg-press",
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
@@ -35683,18 +35721,20 @@
                     "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "125 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Band-assisted pull-up",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 6",
                     "sets": "2 × 8",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "100 kg"
                   },
                   {
                     "group": "D",
@@ -35758,10 +35798,10 @@
                     "weight": "4 kg/hand"
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
-                "axialLoad": 1,
+                "axialLoad": 2,
                 "dayIdx": 4,
                 "duration": "~25 min",
                 "items": [
@@ -35780,7 +35820,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -35788,18 +35829,20 @@
                     "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "32.5 kg/hand"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 6",
-                    "sets": "2 × 10",
+                    "sets": "2 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
@@ -35916,7 +35959,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -35924,30 +35968,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -36007,10 +36052,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "135 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7→8",
                     "sets": "3 × 6",
@@ -36019,41 +36076,31 @@
                     "weight": "107.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -36075,7 +36122,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -36083,30 +36131,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -36176,7 +36225,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -36184,30 +36234,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -36267,10 +36318,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "135 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7→8",
                     "sets": "3 × 6",
@@ -36279,41 +36342,31 @@
                     "weight": "107.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -36335,7 +36388,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -36343,30 +36397,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -36436,7 +36491,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -36444,30 +36500,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -36527,10 +36584,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "135 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7→8",
                     "sets": "3 × 6",
@@ -36539,41 +36608,31 @@
                     "weight": "107.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -36595,7 +36654,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -36603,30 +36663,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -36696,7 +36757,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -36704,30 +36766,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -36787,10 +36850,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "135 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7→8",
                     "sets": "3 × 6",
@@ -36799,41 +36874,31 @@
                     "weight": "107.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -36855,7 +36920,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -36863,30 +36929,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -36937,7 +37004,7 @@
             "provisional": true,
             "sessions": [
               {
-                "axialLoad": 1,
+                "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~25 min",
                 "items": [
@@ -36956,7 +37023,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -36964,18 +37032,20 @@
                     "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "32.5 kg/hand"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 6",
-                    "sets": "2 × 10",
+                    "sets": "2 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
@@ -37060,8 +37130,7 @@
                   },
                   {
                     "group": "B",
-                    "intent": "hip_thrust",
-                    "name": "Hip thrust",
+                    "name": "Hack / leg-press",
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
@@ -37069,18 +37138,20 @@
                     "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "125 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Band-assisted pull-up",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 6",
                     "sets": "2 × 8",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "100 kg"
                   },
                   {
                     "group": "D",
@@ -37144,10 +37215,10 @@
                     "weight": "4 kg/hand"
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
-                "axialLoad": 1,
+                "axialLoad": 2,
                 "dayIdx": 4,
                 "duration": "~25 min",
                 "items": [
@@ -37166,7 +37237,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -37174,18 +37246,20 @@
                     "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "32.5 kg/hand"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 6",
-                    "sets": "2 × 10",
+                    "sets": "2 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
@@ -37280,7 +37354,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -37288,30 +37363,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -37371,10 +37447,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "135 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7→8",
                     "sets": "3 × 6",
@@ -37383,41 +37471,31 @@
                     "weight": "107.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -37439,7 +37517,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -37447,30 +37526,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -37540,7 +37620,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -37548,30 +37629,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -37631,10 +37713,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "135 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7→8",
                     "sets": "3 × 6",
@@ -37643,41 +37737,31 @@
                     "weight": "107.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -37699,7 +37783,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -37707,30 +37792,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -37838,7 +37924,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -37846,30 +37933,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -37929,10 +38017,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "130 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
@@ -37941,41 +38041,31 @@
                     "weight": "102.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 6",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -37997,7 +38087,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -38005,30 +38096,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -38098,7 +38190,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -38106,30 +38199,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -38189,10 +38283,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "130 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
@@ -38201,41 +38307,31 @@
                     "weight": "102.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 6",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -38257,7 +38353,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -38265,30 +38362,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -38358,7 +38456,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -38366,30 +38465,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -38449,10 +38549,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "130 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
@@ -38461,41 +38573,31 @@
                     "weight": "102.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 6",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -38517,7 +38619,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -38525,30 +38628,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -38618,7 +38722,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -38626,30 +38731,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
@@ -38709,10 +38815,22 @@
                   },
                   {
                     "group": "B",
+                    "name": "Hack / leg-press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "130 kg"
+                  },
+                  {
+                    "group": "C",
                     "intent": "hip_thrust",
                     "name": "Hip thrust",
                     "note": "",
-                    "num": "B1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 8",
@@ -38721,41 +38839,31 @@
                     "weight": "102.5 kg"
                   },
                   {
-                    "group": "C",
-                    "name": "Band-assisted pull-up",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
                     "group": "D",
-                    "name": "Band row",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "group": "E",
                     "name": "Thoracic Foam Roller Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 6",
                     "sets": "3 × 8",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "group": "E",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Wednesday · Full body"
+                "title": "Wednesday · Lower"
               },
               {
                 "axialLoad": 2,
@@ -38777,7 +38885,8 @@
                   },
                   {
                     "group": "B",
-                    "name": "DB Romanian deadlift",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
@@ -38785,30 +38894,31 @@
                     "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "C",
-                    "name": "Backpack carry",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 10",
+                    "sets": "3 × 10 ea.",
                     "superset": false,
-                    "volumeFactor": 0.4
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
                   },
                   {
                     "group": "D",
-                    "name": "Farmer carry",
+                    "name": "Backpack carry",
                     "note": "",
                     "num": "D1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 10",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "50 kg/hand"
+                    "volumeFactor": 0.4
                   },
                   {
                     "group": "E",
