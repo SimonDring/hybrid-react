@@ -50,8 +50,8 @@ assert(
 
 // ── T8: resolvePeriodization — no discipline falls back ───────────────────
 assert(
-  resolvePeriodization({ goal_type: 'sport', sport: 'run', sport_intent: 'build_base' }).totalWeeks === 12,
-  'T8 no run_discipline → 12 weeks (existing sportOff fallback)'
+  resolvePeriodization({ goal_type: 'sport', sport: 'run', sport_intent: 'build_base' }).totalWeeks === 10,
+  'T8 no run_discipline → the middle prior, 10 weeks (deliberate default 2026-07-04 — was the generic sportOff fallback)'
 );
 
 // ── T9–T10: resolveProgram — priority list ────────────────────────────────

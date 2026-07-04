@@ -32,8 +32,10 @@ export function resolveProgram(profile = {}) {
     const mod = sports.get(sport);   // undefined for an unknown sport → generic defaults
     // Season: an explicit override wins, else derive from event date / intent.
     const season = profile.sport_season || deriveSeason(profile) || 'off';
-    // Run sub-disciplines (sprint/middle/long) override the module's defaults.
-    const disc = sport === 'run' ? profile.run_discipline : null;
+    // Run sub-disciplines (sprint/middle/long) override the module's defaults. An
+    // unstated discipline defaults to 'middle' — the SAME generic-runner prior as the
+    // SKB lookup (sportKnowledge skbSportIdFor): one athlete, one assumed discipline.
+    const disc = sport === 'run' ? (profile.run_discipline || 'middle') : null;
     const byD = disc && mod && mod.byDiscipline ? mod.byDiscipline[disc] : null;
     const sportPriority = (byD && byD.priorityExercises) || (mod && mod.priorityExercises) || [];
     const equip = availableEquip(profile.access || []);

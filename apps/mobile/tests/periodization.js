@@ -49,8 +49,8 @@ assert(totalWeeks({ strength_style: 'strength' }) === 12,
   'T10 strength → 12-week block');
 assert(totalWeeks({ strength_style: 'functional' }) === 8,
   'T11 functional → 8-week block');
-assert(totalWeeks({ goal_type: 'sport', sport: 'run', sport_intent: 'build_base' }) === 12,
-  'T12 sport off-season → 12-week block');
+assert(totalWeeks({ goal_type: 'sport', sport: 'run', sport_intent: 'build_base' }) === 10,
+  'T12 sport off-season, no discipline → the middle prior (10-week block; deliberate default 2026-07-04)');
 assert(totalWeeks({ goal_type: 'sport', sport: 'run', sport_intent: 'compete' }) === 4,
   'T13 sport in-season → 4-week rolling block');
 assert(totalWeeks({ goal_type: 'sport', sport: 'run', plan_start_date: ANCHOR, event_date: PRE_RACE }) === 6,

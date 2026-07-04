@@ -36,9 +36,11 @@ const cy = resolveProgram({ goal_type: 'sport', sport: 'cycle', sport_intent: 'r
 assert(cy.emphasis.quads === 1.3 && cy.volumeScalar === 0.855, 'cycle emphasis unchanged; off-season volume pulled back (0.90×0.95 = 0.855)');
 const cyIn = resolveProgram({ goal_type: 'sport', sport: 'cycle', sport_intent: 'compete', event_date: soon });
 assert(cyIn.season === 'in' && cyIn.volumeScalar === 0.57, 'in-season volume scalar (0.60×0.95 = 0.57)');
-// run with no declared discipline → balanced "run" fallback map
+// run with no declared discipline → the middle-distance prior (deliberate default
+// 2026-07-04; one athlete, one assumed discipline — same prior as the SKB lookup)
 const rNo = resolveProgram({ goal_type: 'sport', sport: 'run', sport_intent: 'recreational' });
-assert(rNo.emphasis.calves === 1.30 && rNo.exercisePriority[0] === 'nordic_curl', 'run (no discipline) uses the fallback map');
+const rMid = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'middle', sport_intent: 'recreational' });
+assert(JSON.stringify(rNo) === JSON.stringify(rMid) && rNo.exercisePriority[0] === 'nordic_curl', 'run (no discipline) resolves as middle');
 
 // ── resolvePeriodization parity ────────────────────────────────────────────────
 assert(resolvePeriodization({ goal_type: 'sport', sport: 'run', run_discipline: 'sprint', sport_intent: 'recreational' }).totalWeeks === 6, 'run-sprint off → 6-week block');

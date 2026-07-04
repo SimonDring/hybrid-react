@@ -2,15 +2,12 @@
 // the source side of the round-trip golden master). Preserves everything the engine reads.
 import { buildAthleteModel } from '../athlete/buildAthleteModel.js';
 import { legacyToOutcome } from './goalMapping.js';
-import { normalizeSportId } from '../sportKnowledge/index.js';
+import { skbSportIdFor } from '../sportKnowledge/index.js';
 
-// Legacy engine sport (+ run discipline) → SKB profile id. Running splits by discipline; others
-// use the alias map. Falls back to normalizeSportId when there's no finer id.
-function toSkbSportId(sport, runDiscipline) {
-  if (!sport) return null;
-  if (sport === 'run') return runDiscipline ? `running_${runDiscipline}` : normalizeSportId('run');
-  return normalizeSportId(sport) || sport;
-}
+// Legacy engine sport (+ run discipline) → SKB profile id. ONE derivation, shared with the
+// reflow decision rules (sportKnowledge/index.js skbSportIdFor): running splits by
+// discipline, defaulting to running_middle when none was stated (deliberate 2026-07-04).
+const toSkbSportId = skbSportIdFor;
 
 export function profileToAthleteModel(profile = {}, asOf) {
   const p = profile || {};
