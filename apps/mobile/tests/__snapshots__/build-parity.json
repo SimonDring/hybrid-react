@@ -1,6 +1,10 @@
 {
   "build·bodybuilding·advanced·6d·75·full": {
     "meta": {
+      "provenance": {
+        "engineVersion": "1.0.0",
+        "knowledgeSetVersion": "1.0.0"
+      },
       "validation": {
         "checked": 6,
         "pass": true,
@@ -3737,6 +3741,10 @@
   },
   "build·bodybuilding·intermediate·4d·60·full": {
     "meta": {
+      "provenance": {
+        "engineVersion": "1.0.0",
+        "knowledgeSetVersion": "1.0.0"
+      },
       "validation": {
         "checked": 6,
         "pass": true,
@@ -6719,6 +6727,10 @@
   },
   "build·functional·advanced·7d·60·bodyweight(edge)": {
     "meta": {
+      "provenance": {
+        "engineVersion": "1.0.0",
+        "knowledgeSetVersion": "1.0.0"
+      },
       "validation": {
         "checked": 8,
         "pass": true,
@@ -12582,6 +12594,10 @@
   },
   "build·functional·beginner·3d·20·bodyweight(edge)": {
     "meta": {
+      "provenance": {
+        "engineVersion": "1.0.0",
+        "knowledgeSetVersion": "1.0.0"
+      },
       "validation": {
         "checked": 8,
         "pass": true,
@@ -15439,6 +15455,10 @@
   },
   "build·functional·intermediate·3d·45·dumbbell": {
     "meta": {
+      "provenance": {
+        "engineVersion": "1.0.0",
+        "knowledgeSetVersion": "1.0.0"
+      },
       "validation": {
         "checked": 8,
         "pass": true,
@@ -18563,6 +18583,10 @@
   },
   "build·strength·advanced·5d·75·full": {
     "meta": {
+      "provenance": {
+        "engineVersion": "1.0.0",
+        "knowledgeSetVersion": "1.0.0"
+      },
       "validation": {
         "checked": 12,
         "pass": true,
@@ -23611,6 +23635,10 @@
   },
   "build·strength·beginner·3d·45·full": {
     "meta": {
+      "provenance": {
+        "engineVersion": "1.0.0",
+        "knowledgeSetVersion": "1.0.0"
+      },
       "validation": {
         "checked": 12,
         "pass": true,
@@ -27433,6 +27461,10 @@
   },
   "build·strength·intermediate·1d·60·full(edge)": {
     "meta": {
+      "provenance": {
+        "engineVersion": "1.0.0",
+        "knowledgeSetVersion": "1.0.0"
+      },
       "validation": {
         "checked": 12,
         "pass": true,
@@ -29706,6 +29738,10 @@
   },
   "build·strength·intermediate·4d·60·full": {
     "meta": {
+      "provenance": {
+        "engineVersion": "1.0.0",
+        "knowledgeSetVersion": "1.0.0"
+      },
       "validation": {
         "checked": 12,
         "pass": true,
