@@ -28,12 +28,11 @@ import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 import { MUSCLE_LABELS } from '@performance-os/engine/data/muscleVolume.js';
 import { readinessIndex } from '@performance-os/engine/lib/indices/index.js';
-import { computeReadiness } from '@performance-os/engine';
+import { computeReadiness, getGymLevel } from '@performance-os/engine';
 import { exerciseQualities } from '@performance-os/engine/data/exerciseQualities.js';
 import { EXERCISES } from '@performance-os/engine/data/strengthExercises.js';
 import { answersToAthleteModelInputs, localISODate } from '../lib/onboardingModel.js';
 import { derivePerformanceModel } from '@performance-os/engine/lib/performance/index.js';
-import { getGymLevel } from '@performance-os/engine/lib/Utils.js';
 import { deriveSessionObjective, deriveMovementRequirements, gymTrainableTargets } from '@performance-os/engine';
 
 // Session items carry a display `name`, not the exercise id — map name → id so we can

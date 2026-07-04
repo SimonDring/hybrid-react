@@ -20,15 +20,7 @@ const SRC = join(dirname(fileURLToPath(import.meta.url)), '..', 'src');
 // file (relative to src) → allowed deep paths, with the owner that retires them.
 const ALLOWLIST = {
   'lib/PlanService.js': ['lib/plan/reflow.js'],                    // namespace form of API symbols (all on the barrel)
-  'lib/atlas/signals.js': ['lib/Readiness.js', 'lib/Utils.js', 'lib/liftProgression.js', 'lib/strength/program.js'], // WP-29 replaces Atlas
-  'lib/atlas/pillars.js': ['data/muscleVolume.js', 'lib/strength/program.js'],   // WP-29
-  'data/activityTypes.js': ['lib/Utils.js'],                       // WP-26 moves the UI helpers out of the engine
-  'screens/PhaseDetail.jsx': ['lib/Utils.js'],                     // WP-26 (parseExercise/escapeHtml UI helpers)
-  'screens/Plan.jsx': ['lib/Utils.js'],                            // WP-26
-  'screens/SessionDetail.jsx': ['lib/Utils.js'],                   // WP-26
-  'screens/SessionRunner.jsx': ['lib/Utils.js'],                   // WP-26
-  'screens/WeekDetail.jsx': ['lib/Utils.js'],                      // WP-26
-  'screens/DevPlayground.jsx': ['lib/strength/targets.js', 'lib/strength/program.js', 'lib/indices/index.js', 'lib/performance/index.js', 'lib/Utils.js', 'lib/PlanGenerator.js', 'lib/plan/volume.js', 'data/exerciseQualities.js', 'data/muscleVolume.js', 'data/strengthExercises.js'], // dev tooling reads internals by design
+  'screens/DevPlayground.jsx': ['lib/strength/targets.js', 'lib/strength/program.js', 'lib/indices/index.js', 'lib/performance/index.js', 'lib/PlanGenerator.js', 'lib/plan/volume.js', 'data/exerciseQualities.js', 'data/muscleVolume.js', 'data/strengthExercises.js'], // dev tooling reads internals by design
 };
 
 const files = [];

@@ -27,7 +27,7 @@
  * a single value like a distance doesn't decompose into multiple columns).
  */
 
-import { parseExercise } from '@performance-os/engine/lib/Utils.js';
+import { parseExercise } from '../lib/uiHelpers.js';
 
 // Clean an RPE/effort string of the redundant "RPE " prefix
 function cleanEffort(v) {
