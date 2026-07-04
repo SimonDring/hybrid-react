@@ -2,12 +2,7 @@
 // the source side of the round-trip golden master). Preserves everything the engine reads.
 import { buildAthleteModel } from '../athlete/buildAthleteModel.js';
 import { legacyToOutcome } from './goalMapping.js';
-import { skbSportIdFor } from '../sportKnowledge/index.js';
-
-// Legacy engine sport (+ run discipline) → SKB profile id. ONE derivation, shared with the
-// reflow decision rules (sportKnowledge/index.js skbSportIdFor): running splits by
-// discipline, defaulting to running_middle when none was stated (deliberate 2026-07-04).
-const toSkbSportId = skbSportIdFor;
+import { skbSportIdOf } from '../sportKnowledge/index.js';
 
 export function profileToAthleteModel(profile = {}, asOf) {
   const p = profile || {};
@@ -36,7 +31,7 @@ export function profileToAthleteModel(profile = {}, asOf) {
     identity: { age: p.age ?? null, biologicalSex: p.sex ?? null, bodyMassKg: p.bodyweight_kg ?? null, heightCm: p.height_cm ?? null },
     goals: [{ id: 'primary', outcome, priority: 1, sportRef: p.sport || null }],
     sportingContext: {
-      primarySport: toSkbSportId(p.sport, p.run_discipline),
+      primarySport: skbSportIdOf(p),
       seasonPhase: p.sport_season || null,
       competitionCalendar: p.event_date ? [{ label: 'event', date: p.event_date }] : [],
       weeklySportSchedule,

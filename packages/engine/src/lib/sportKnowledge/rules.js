@@ -4,7 +4,7 @@
  * fire. The CALLER (PlanService reflow) decides how to apply each effect. Reserved effect
  * types are returned too; the reflow ignores the ones it can't act on yet.
  */
-import skb, { skbSportIdFor } from './index.js';
+import skb, { skbSportIdOf } from './index.js';
 
 function ctxValue(signal, ctx) {
   switch (signal) {
@@ -39,7 +39,7 @@ function fires(trigger, ctx) {
 }
 
 export function evaluateRules(profile = {}, context = {}) {
-  const prof = skb.get(skbSportIdFor(profile.sport, profile.run_discipline));
+  const prof = skb.get(skbSportIdOf(profile));
   if (!prof || !Array.isArray(prof.decisionRules)) return { effects: [] };
   const effects = [];
   for (const r of prof.decisionRules) {
