@@ -3,7 +3,6 @@
   "schemaVersion": "1.0.0",
   "label": "Triathlon (swim/bike/run)",
   "lastReviewed": "2026-06-29",
-
   "meta": {
     "sport": "Triathlon",
     "category": "Endurance — individual (multi-discipline, sequential swim→bike→run)",
@@ -15,34 +14,150 @@
     "offseasonLengthWeeks": 6,
     "competitionFrequencyPerWeek": "0-1 races/week in season; an athlete targets 1-3 'A' races/year with B/C races as preparation",
     "trainingFrequencyPerWeek": "8-14 swim/bike/run sessions (often doubles) + 1-2 gym",
-    "sessionDurationMin": { "match": 150, "pitch": 90, "gym": 45 },
+    "sessionDurationMin": {
+      "match": 150,
+      "pitch": 90,
+      "gym": 45
+    },
     "notes": "One continuous race across three disciplines (swim → T1 → bike → T2 → run). Demands scale enormously with distance — Sprint (~1h) to Ironman (8-17h) — so the engine should read the distance archetype (positions) rather than one split. The GYM is endurance SUPPORT: it improves economy, durability and (for the swim) shoulder health, and must never add fatigue that degrades the key swim/bike/run sessions or rob the legs before a long run. Two facts shape everything: the RUN is the highest-injury discipline (impact + it comes last, on fatigued legs), and the combined volume of three sports makes DURABILITY and energy availability the usual limiters, not the aerobic engine."
   },
-
   "physicalProfile": {
     "qualities": {
-      "aerobicEndurance": { "importance": 10, "why": "The dominant determinant of performance across all three legs and every distance — the engine the whole race runs on.", "confidence": "high", "evidenceLevel": "L1", "source": "endurance physiology literature (Joyner & Coyle 2008); triathlon physiology (Millet 2009)" },
-      "durability": { "importance": 9, "why": "Tissue tolerance to very high COMBINED weekly volume across three sports — in practice the limiter on how much an athlete can absorb, especially the run's repetitive impact.", "confidence": "moderate", "evidenceLevel": "L3", "source": "triathlon injury epidemiology (Vleck 2010; Andersen 2013); training-load literature" },
-      "relativeStrength": { "importance": 7, "why": "Strength-to-mass drives power-to-weight for the run and the climb; neural strength supports economy WITHOUT adding non-propulsive mass to carry.", "confidence": "moderate", "evidenceLevel": "L2", "source": "Rønnestad & Mujika 2014; Beattie 2017 (strength & running economy)" },
-      "maxStrength": { "importance": 5, "why": "Underpins economy, durability and end-of-race/hill force, but triathlon is not max-strength limited — train it neurally (low volume) to avoid hypertrophy and interference.", "confidence": "moderate", "evidenceLevel": "L2", "source": "Rønnestad & Mujika 2014; Beattie 2014" },
-      "explosivePower": { "importance": 4, "why": "Minor and intermittent — run finish kick, standing climbs, draft-legal surges; not a power sport.", "confidence": "moderate", "evidenceLevel": "L4", "source": "expert consensus" },
-      "reactiveStrength": { "importance": 6, "why": "Running is a stretch-shorten activity — lower-limb tendon stiffness improves running economy, the key trainable land quality for the run leg.", "confidence": "moderate", "evidenceLevel": "L3", "source": "running-economy literature (Barnes & Kilding 2015); plyometric & economy reviews" },
-      "sprintSpeed": { "importance": 3, "why": "Only the run finish and short draft-legal accelerations; the race is endurance-paced, so land sprint speed has low priority.", "confidence": "low", "evidenceLevel": "L4", "source": "expert consensus (specificity)" },
-      "acceleration": { "importance": 4, "why": "Transitions, mounts/dismounts and draft-legal pack surges need brief acceleration; modest overall.", "confidence": "low", "evidenceLevel": "L4", "source": "expert consensus" },
-      "deceleration": { "importance": 2, "why": "Minimal braking demand — only dismount and turnarounds. Low priority.", "confidence": "low", "evidenceLevel": "L5", "source": "expert consensus" },
-      "changeOfDirection": { "importance": 2, "why": "Open-water buoy turns and bike cornering only; negligible land COD. Low priority.", "confidence": "low", "evidenceLevel": "L5", "source": "expert consensus" },
-      "anaerobicEndurance": { "importance": 6, "why": "Draft-legal short-course racing (bike pack surges + a flat-out run off the bike) and hill/finish efforts tax glycolytic capacity; far lower for steady non-drafting long course.", "confidence": "moderate", "evidenceLevel": "L3", "source": "short-course triathlon demands (Bentley 2002); event-dependent" },
-      "repeatSprintAbility": { "importance": 5, "why": "Draft-legal bike legs are stochastic — repeated accelerations out of corners and to hold the pack; irrelevant to non-drafting time-trial racing.", "confidence": "low", "evidenceLevel": "L4", "source": "draft-legal racing analysis; expert consensus" },
-      "mobility": { "importance": 6, "why": "Multi-discipline range: shoulder/thoracic for the swim, ankle for swim kick + run, and hip range to hold an efficient aero position without low-back or hamstring cost.", "confidence": "moderate", "evidenceLevel": "L3", "source": "swim/cycling biomechanics; aero-position literature" },
-      "stability": { "importance": 7, "why": "Hip/pelvic and trunk stability transfer force and protect tissues across single-leg running, the aero position, and the swim; instability drives run overuse and aero-position back pain.", "confidence": "moderate", "evidenceLevel": "L3", "source": "running-injury & lumbopelvic-control literature; expert consensus" },
-      "rotationalPower": { "importance": 4, "why": "Long-axis body roll in the swim and trunk anti-rotation in running; otherwise low.", "confidence": "low", "evidenceLevel": "L4", "source": "swimming biomechanics; expert consensus" },
-      "gripStrength": { "importance": 2, "why": "Forearm 'catch' in the swim aside, grip is not a limiter. Low priority.", "confidence": "low", "evidenceLevel": "L5", "source": "expert consensus" },
-      "neckStrength": { "importance": 3, "why": "Sustained cervical extension in the aero position and open-water sighting create low-grade neck demand; modest but real.", "confidence": "low", "evidenceLevel": "L4", "source": "cycling aero-position literature; expert consensus" },
-      "balance": { "importance": 5, "why": "Single-leg running stability, bike handling and open-water orientation; moderate.", "confidence": "low", "evidenceLevel": "L4", "source": "expert consensus" },
-      "coordination": { "importance": 6, "why": "Three distinct techniques plus transitions and the brick (running on bike-fatigued legs) make motor competence higher than for a single-sport endurance athlete.", "confidence": "moderate", "evidenceLevel": "L4", "source": "triathlon coaching literature; expert consensus" }
+      "aerobicEndurance": {
+        "importance": 10,
+        "why": "The dominant determinant of performance across all three legs and every distance — the engine the whole race runs on.",
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "endurance physiology literature (Joyner & Coyle 2008); triathlon physiology (Millet 2009)"
+      },
+      "durability": {
+        "importance": 9,
+        "why": "Tissue tolerance to very high COMBINED weekly volume across three sports — in practice the limiter on how much an athlete can absorb, especially the run's repetitive impact.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "triathlon injury epidemiology (Vleck 2010; Andersen 2013); training-load literature"
+      },
+      "relativeStrength": {
+        "importance": 7,
+        "why": "Strength-to-mass drives power-to-weight for the run and the climb; neural strength supports economy WITHOUT adding non-propulsive mass to carry.",
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "Rønnestad & Mujika 2014; Beattie 2017 (strength & running economy)"
+      },
+      "maxStrength": {
+        "importance": 5,
+        "why": "Underpins economy, durability and end-of-race/hill force, but triathlon is not max-strength limited — train it neurally (low volume) to avoid hypertrophy and interference.",
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "Rønnestad & Mujika 2014; Beattie 2014"
+      },
+      "explosivePower": {
+        "importance": 4,
+        "why": "Minor and intermittent — run finish kick, standing climbs, draft-legal surges; not a power sport.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "expert consensus"
+      },
+      "reactiveStrength": {
+        "importance": 6,
+        "why": "Running is a stretch-shorten activity — lower-limb tendon stiffness improves running economy, the key trainable land quality for the run leg.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "running-economy literature (Barnes & Kilding 2015); plyometric & economy reviews"
+      },
+      "sprintSpeed": {
+        "importance": 3,
+        "why": "Only the run finish and short draft-legal accelerations; the race is endurance-paced, so land sprint speed has low priority.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "expert consensus (specificity)"
+      },
+      "acceleration": {
+        "importance": 4,
+        "why": "Transitions, mounts/dismounts and draft-legal pack surges need brief acceleration; modest overall.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "expert consensus"
+      },
+      "deceleration": {
+        "importance": 2,
+        "why": "Minimal braking demand — only dismount and turnarounds. Low priority.",
+        "confidence": "low",
+        "evidenceLevel": "L5",
+        "source": "expert consensus"
+      },
+      "changeOfDirection": {
+        "importance": 2,
+        "why": "Open-water buoy turns and bike cornering only; negligible land COD. Low priority.",
+        "confidence": "low",
+        "evidenceLevel": "L5",
+        "source": "expert consensus"
+      },
+      "anaerobicEndurance": {
+        "importance": 6,
+        "why": "Draft-legal short-course racing (bike pack surges + a flat-out run off the bike) and hill/finish efforts tax glycolytic capacity; far lower for steady non-drafting long course.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "short-course triathlon demands (Bentley 2002); event-dependent"
+      },
+      "repeatSprintAbility": {
+        "importance": 5,
+        "why": "Draft-legal bike legs are stochastic — repeated accelerations out of corners and to hold the pack; irrelevant to non-drafting time-trial racing.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "draft-legal racing analysis; expert consensus"
+      },
+      "mobility": {
+        "importance": 6,
+        "why": "Multi-discipline range: shoulder/thoracic for the swim, ankle for swim kick + run, and hip range to hold an efficient aero position without low-back or hamstring cost.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "swim/cycling biomechanics; aero-position literature"
+      },
+      "stability": {
+        "importance": 7,
+        "why": "Hip/pelvic and trunk stability transfer force and protect tissues across single-leg running, the aero position, and the swim; instability drives run overuse and aero-position back pain.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "running-injury & lumbopelvic-control literature; expert consensus"
+      },
+      "rotationalPower": {
+        "importance": 4,
+        "why": "Long-axis body roll in the swim and trunk anti-rotation in running; otherwise low.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "swimming biomechanics; expert consensus"
+      },
+      "gripStrength": {
+        "importance": 2,
+        "why": "Forearm 'catch' in the swim aside, grip is not a limiter. Low priority.",
+        "confidence": "low",
+        "evidenceLevel": "L5",
+        "source": "expert consensus"
+      },
+      "neckStrength": {
+        "importance": 3,
+        "why": "Sustained cervical extension in the aero position and open-water sighting create low-grade neck demand; modest but real.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "cycling aero-position literature; expert consensus"
+      },
+      "balance": {
+        "importance": 5,
+        "why": "Single-leg running stability, bike handling and open-water orientation; moderate.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "expert consensus"
+      },
+      "coordination": {
+        "importance": 6,
+        "why": "Three distinct techniques plus transitions and the brick (running on bike-fatigued legs) make motor competence higher than for a single-sport endurance athlete.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "triathlon coaching literature; expert consensus"
+      }
     }
   },
-
   "energySystems": {
     "aerobicPct": 89,
     "glycolyticPct": 8,
@@ -56,10 +171,19 @@
     "source": "triathlon physiology (Millet 2009; Bentley 2002); event-specific estimates vary — treat as indicative",
     "notes": "Because the demand spans Sprint to Ironman, the engine should read the distance archetype (positions) rather than this single split."
   },
-
   "movementProfile": {
-    "primaryPatterns": ["swim pull (overhead catch-pull-push propulsion)", "flutter kick", "cyclic pedalling (hip/knee/ankle)", "repetitive running gait (single-leg, impact)", "transitions / run-off-the-bike (brick)"],
-    "planes": ["sagittal (pedal, run, kick)", "transverse (swim long-axis roll, running anti-rotation)", "frontal (swim pull sweep, hip/pelvis control in run)"],
+    "primaryPatterns": [
+      "swim pull (overhead catch-pull-push propulsion)",
+      "flutter kick",
+      "cyclic pedalling (hip/knee/ankle)",
+      "repetitive running gait (single-leg, impact)",
+      "transitions / run-off-the-bike (brick)"
+    ],
+    "planes": [
+      "sagittal (pedal, run, kick)",
+      "transverse (swim long-axis roll, running anti-rotation)",
+      "frontal (swim pull sweep, hip/pelvis control in run)"
+    ],
     "jointLoading": "Repetitive shoulder load (swim); sustained flexed hip/spine load in the aero position (bike); high repetitive lower-limb impact through the ankle/knee/hip + bone (run) — the run is the dominant tissue-stress source.",
     "groundContacts": "Very HIGH during the run leg (repetitive impact is the central durability driver); none in the swim; none in the bike (the run is what breaks triathletes).",
     "landingDemands": "Continuous low-level landing/impact attenuation in running; dryland plyometrics add a deliberate, carefully dosed stiffness stimulus.",
@@ -71,66 +195,730 @@
     "collisions": "None (incidental open-water and draft-legal pack contact aside).",
     "repeatedImpacts": "The run leg is high repetitive impact; swim and bike are low/no impact — so impact exposure is concentrated and comes LAST, on pre-fatigued legs.",
     "asymmetricLoading": "Breathing-side swim preference, left/right pedalling asymmetry and running gait asymmetry each accumulate across very high volume; bike-fit and gait asymmetries compound.",
-    "dominantMuscleGroups": ["lats", "shoulders / rotator cuff", "quadriceps", "glutes", "hamstrings", "calves / soleus", "hip flexors", "core / trunk"],
-    "commonDeficiencies": ["posterior chain relative to quad dominance", "hip/pelvic + trunk stability for single-leg running", "calf/Achilles capacity for run volume", "scapular control + posterior cuff for swim volume", "hip & thoracic mobility for the aero position"]
+    "dominantMuscleGroups": [
+      "lats",
+      "shoulders / rotator cuff",
+      "quadriceps",
+      "glutes",
+      "hamstrings",
+      "calves / soleus",
+      "hip flexors",
+      "core / trunk"
+    ],
+    "commonDeficiencies": [
+      "posterior chain relative to quad dominance",
+      "hip/pelvic + trunk stability for single-leg running",
+      "calf/Achilles capacity for run volume",
+      "scapular control + posterior cuff for swim volume",
+      "hip & thoracic mobility for the aero position"
+    ]
   },
-
   "injuryProfile": {
     "common": [
-      { "name": "Running overuse — Achilles / calf tendinopathy", "incidence": "high (the run leg accounts for the majority of triathlon injuries)", "severity": "low-moderate but often chronic/recurrent", "mechanism": "high repetitive impact and ankle plantarflexor load, frequently on legs pre-fatigued by the bike; run-volume spikes; reduced calf capacity", "highRiskTissues": ["Achilles tendon", "soleus / gastrocnemius"], "riskFactors": { "modifiable": ["run-volume/intensity spikes", "low calf capacity", "footwear/surface changes", "fatigue from concurrent bike load", "poor running mechanics"], "nonModifiable": ["prior Achilles injury", "anthropometry", "age"] }, "rtpConsiderations": "Progressive calf-loading (isometric → heavy-slow → energy-storage), graded return to run volume, manage brick exposure.", "confidence": "moderate", "evidenceLevel": "L3", "source": "triathlon injury epidemiology (Vleck 2010; Andersen 2013); Achilles tendinopathy literature (Alfredson; Silbernagel)" },
-      { "name": "Patellofemoral pain (runner's / cyclist's knee)", "incidence": "high (both run impact and high pedalling volume load the patellofemoral joint)", "severity": "low-moderate", "mechanism": "repetitive anterior-knee load; hip/quad weakness and poor frontal-plane control in running; high-cadence/high-volume cycling and bike-fit issues", "highRiskTissues": ["patellofemoral joint", "patellar tendon"], "riskFactors": { "modifiable": ["hip/glute strength + control", "training-volume spikes", "bike fit (saddle height/position)", "run mechanics"], "nonModifiable": ["patellar anatomy/alignment", "prior knee injury"] }, "rtpConsiderations": "Hip/quad strengthening, load management across both run and bike, bike-fit review.", "confidence": "moderate", "evidenceLevel": "L3", "source": "PFP literature (Crossley; Barton); cycling-overuse reviews" },
-      { "name": "Bone stress injury / stress fracture (tibia, metatarsal, femoral neck)", "incidence": "moderate (run-driven; elevated where energy availability is low)", "severity": "high (significant time loss; femoral-neck is a medical emergency)", "mechanism": "repetitive bone loading outpacing remodelling; run-volume spikes; strongly amplified by low energy availability / RED-S, common given triathlon's huge volume and leanness pressure", "highRiskTissues": ["tibia", "metatarsals", "femoral neck", "navicular"], "riskFactors": { "modifiable": ["run-load progression", "energy availability / fuelling", "bone-loading strength + plyometric exposure", "menstrual function (where applicable)"], "nonModifiable": ["bone geometry", "prior bone stress injury", "sex/hormonal factors"] }, "rtpConsiderations": "Medical management; address energy availability FIRST; very graded return to impact; never run through localised bony pain.", "confidence": "moderate", "evidenceLevel": "L2", "source": "bone-stress-injury literature (Warden 2014); RED-S consensus (Mountjoy 2018)" },
-      { "name": "Swimmer's shoulder (subacromial / rotator-cuff)", "incidence": "moderate (lower swim volume than pure swimmers, but present)", "severity": "low-moderate, often chronic", "mechanism": "repetitive overhead swim loading; scapular dyskinesis and internal>external rotator imbalance; paddle/volume spikes", "highRiskTissues": ["supraspinatus", "rotator cuff", "long head of biceps"], "riskFactors": { "modifiable": ["swim-volume/paddle spikes", "weak external rotators / scapular control", "reduced thoracic mobility", "technique", "fatigue"], "nonModifiable": ["glenohumeral laxity", "prior shoulder injury"] }, "rtpConsiderations": "Posterior-cuff + scapular strengthening, thoracic mobility, graded swim-volume return, reduce paddles.", "confidence": "moderate", "evidenceLevel": "L3", "source": "Bak 2010; Sein 2010 (swimming shoulder, applied at lower triathlon swim volume)" },
-      { "name": "Cycling-position low back & neck pain", "incidence": "moderate-high (sustained aero position)", "severity": "low-moderate", "mechanism": "prolonged lumbar flexion + cervical extension in the aero/TT position; weak anti-extension and postural endurance; poor bike fit; compounded by run-derived lumbopelvic load", "highRiskTissues": ["lumbar soft tissue/facets", "cervical extensors"], "riskFactors": { "modifiable": ["core/postural endurance", "hip & thoracic mobility", "bike fit", "aero-position adaptation time"], "nonModifiable": ["spinal anatomy", "prior back injury"] }, "rtpConsiderations": "Core endurance + mobility, progressive aero-position exposure, professional bike fit.", "confidence": "low", "evidenceLevel": "L4", "source": "cycling aero-position literature; expert consensus" }
+      {
+        "name": "Running overuse — Achilles / calf tendinopathy",
+        "incidence": "high (the run leg accounts for the majority of triathlon injuries)",
+        "severity": "low-moderate but often chronic/recurrent",
+        "mechanism": "high repetitive impact and ankle plantarflexor load, frequently on legs pre-fatigued by the bike; run-volume spikes; reduced calf capacity",
+        "highRiskTissues": [
+          "Achilles tendon",
+          "soleus / gastrocnemius"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "run-volume/intensity spikes",
+            "low calf capacity",
+            "footwear/surface changes",
+            "fatigue from concurrent bike load",
+            "poor running mechanics"
+          ],
+          "nonModifiable": [
+            "prior Achilles injury",
+            "anthropometry",
+            "age"
+          ]
+        },
+        "rtpConsiderations": "Progressive calf-loading (isometric → heavy-slow → energy-storage), graded return to run volume, manage brick exposure.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "triathlon injury epidemiology (Vleck 2010; Andersen 2013); Achilles tendinopathy literature (Alfredson; Silbernagel)"
+      },
+      {
+        "name": "Patellofemoral pain (runner's / cyclist's knee)",
+        "incidence": "high (both run impact and high pedalling volume load the patellofemoral joint)",
+        "severity": "low-moderate",
+        "mechanism": "repetitive anterior-knee load; hip/quad weakness and poor frontal-plane control in running; high-cadence/high-volume cycling and bike-fit issues",
+        "highRiskTissues": [
+          "patellofemoral joint",
+          "patellar tendon"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "hip/glute strength + control",
+            "training-volume spikes",
+            "bike fit (saddle height/position)",
+            "run mechanics"
+          ],
+          "nonModifiable": [
+            "patellar anatomy/alignment",
+            "prior knee injury"
+          ]
+        },
+        "rtpConsiderations": "Hip/quad strengthening, load management across both run and bike, bike-fit review.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "PFP literature (Crossley; Barton); cycling-overuse reviews"
+      },
+      {
+        "name": "Bone stress injury / stress fracture (tibia, metatarsal, femoral neck)",
+        "incidence": "moderate (run-driven; elevated where energy availability is low)",
+        "severity": "high (significant time loss; femoral-neck is a medical emergency)",
+        "mechanism": "repetitive bone loading outpacing remodelling; run-volume spikes; strongly amplified by low energy availability / RED-S, common given triathlon's huge volume and leanness pressure",
+        "highRiskTissues": [
+          "tibia",
+          "metatarsals",
+          "femoral neck",
+          "navicular"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "run-load progression",
+            "energy availability / fuelling",
+            "bone-loading strength + plyometric exposure",
+            "menstrual function (where applicable)"
+          ],
+          "nonModifiable": [
+            "bone geometry",
+            "prior bone stress injury",
+            "sex/hormonal factors"
+          ]
+        },
+        "rtpConsiderations": "Medical management; address energy availability FIRST; very graded return to impact; never run through localised bony pain.",
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "bone-stress-injury literature (Warden 2014); RED-S consensus (Mountjoy 2018)"
+      },
+      {
+        "name": "Swimmer's shoulder (subacromial / rotator-cuff)",
+        "incidence": "moderate (lower swim volume than pure swimmers, but present)",
+        "severity": "low-moderate, often chronic",
+        "mechanism": "repetitive overhead swim loading; scapular dyskinesis and internal>external rotator imbalance; paddle/volume spikes",
+        "highRiskTissues": [
+          "supraspinatus",
+          "rotator cuff",
+          "long head of biceps"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "swim-volume/paddle spikes",
+            "weak external rotators / scapular control",
+            "reduced thoracic mobility",
+            "technique",
+            "fatigue"
+          ],
+          "nonModifiable": [
+            "glenohumeral laxity",
+            "prior shoulder injury"
+          ]
+        },
+        "rtpConsiderations": "Posterior-cuff + scapular strengthening, thoracic mobility, graded swim-volume return, reduce paddles.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Bak 2010; Sein 2010 (swimming shoulder, applied at lower triathlon swim volume)"
+      },
+      {
+        "name": "Cycling-position low back & neck pain",
+        "incidence": "moderate-high (sustained aero position)",
+        "severity": "low-moderate",
+        "mechanism": "prolonged lumbar flexion + cervical extension in the aero/TT position; weak anti-extension and postural endurance; poor bike fit; compounded by run-derived lumbopelvic load",
+        "highRiskTissues": [
+          "lumbar soft tissue/facets",
+          "cervical extensors"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "core/postural endurance",
+            "hip & thoracic mobility",
+            "bike fit",
+            "aero-position adaptation time"
+          ],
+          "nonModifiable": [
+            "spinal anatomy",
+            "prior back injury"
+          ]
+        },
+        "rtpConsiderations": "Core endurance + mobility, progressive aero-position exposure, professional bike fit.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "cycling aero-position literature; expert consensus"
+      }
     ],
     "summary": "Overwhelmingly OVERUSE injuries spread across three disciplines, with the RUN the dominant source (impact, and it comes last on fatigued legs). The trainable levers are run-load management, lower-limb/calf capacity, hip-glute strength, swim-shoulder prehab, and aero-position core endurance. Bone stress + RED-S (low energy availability against very high combined volume) is the highest-severity risk and a fuelling-first problem, not only a training problem."
   },
-
   "positions": [
-    { "name": "Sprint distance (~750m / 20km / 5km)", "role": "Shortest standard race — high relative intensity, often draft-legal at age-group/junior level.", "movementDemands": "Near-threshold across all three legs; sharp run off the bike; transitions matter proportionally more.", "runningDemands": "5km flat-out off the bike — high relative running intensity.", "collisionDemands": "open-water + draft-legal pack contention", "speedReq": "high (relative)", "powerReq": "moderate", "strengthReq": "moderate (economy + run durability)", "bodyComposition": "Lean, higher tolerance of intensity; strong run.", "primaryQualities": ["aerobicEndurance", "anaerobicEndurance", "reactiveStrength", "durability"], "secondaryQualities": ["relativeStrength", "stability"], "commonInjuries": ["Achilles/calf", "patellofemoral pain"], "gymPriorities": ["lower-body strength for run economy", "calf capacity", "plyometric stiffness (dosed)"], "recoveryConsiderations": "Higher intensity, lower absolute volume — tolerates a little more dryland power emphasis." },
-    { "name": "Olympic / Standard (1.5km / 40km / 10km)", "role": "The classic distance — draft-legal at elite/WTCS, non-drafting for most age-groupers.", "movementDemands": "Sustained sub-threshold to threshold; the 10km run off the bike decides most races.", "runningDemands": "10km off the bike — run durability + economy are decisive.", "collisionDemands": "open-water + (draft-legal) pack", "speedReq": "moderate-high", "powerReq": "moderate", "strengthReq": "moderate", "bodyComposition": "Lean, balanced; strong run-off-bike.", "primaryQualities": ["aerobicEndurance", "durability", "relativeStrength", "stability"], "secondaryQualities": ["reactiveStrength", "anaerobicEndurance", "mobility"], "commonInjuries": ["Achilles/calf", "patellofemoral pain", "swimmer's shoulder"], "gymPriorities": ["lower-body strength (economy)", "hip/glute durability", "swim-shoulder prehab", "anti-rotation core"], "recoveryConsiderations": "High combined load — strength placed away from key run/bike quality + long sessions." },
-    { "name": "Middle / 70.3 (1.9km / 90km / 21.1km)", "role": "Half-distance — sustained sub-threshold; pacing, fuelling and durability dominate.", "movementDemands": "Long steady efforts; the half-marathon off the bike is a durability test.", "runningDemands": "21.1km off the bike on accumulated fatigue — durability is the limiter.", "collisionDemands": "non-drafting (open-water start aside)", "speedReq": "moderate", "powerReq": "low-moderate", "strengthReq": "moderate (durability-focused)", "bodyComposition": "Lean, efficient, durable.", "primaryQualities": ["aerobicEndurance", "durability", "stability", "relativeStrength"], "secondaryQualities": ["mobility", "reactiveStrength"], "commonInjuries": ["Achilles/calf", "bone stress (RED-S risk)", "aero-position back/neck"], "gymPriorities": ["minimal-fatigue strength maintenance", "calf + posterior-chain durability", "aero-position core endurance", "swim-shoulder prehab"], "recoveryConsiderations": "Very high training volume — gym is low-volume support; protect the legs for long runs." },
-    { "name": "Long / Ironman (3.8km / 180km / 42.2km)", "role": "Full-distance endurance — 8-17h; fuelling, pacing and tissue durability are everything.", "movementDemands": "Prolonged sub-threshold output; a marathon off the bike where mechanics degrade with fatigue and depletion.", "runningDemands": "42.2km off the bike — the ultimate durability + fuelling test.", "collisionDemands": "non-drafting", "speedReq": "low", "powerReq": "low", "strengthReq": "moderate (durability + fatigue-resistance)", "bodyComposition": "Lean, highly efficient, robust to repetitive load.", "primaryQualities": ["aerobicEndurance", "durability", "stability", "relativeStrength"], "secondaryQualities": ["mobility"], "commonInjuries": ["bone stress / RED-S", "Achilles/calf", "ITB/patellofemoral", "aero-position back"], "gymPriorities": ["durability + tissue capacity (calf, hip, posterior chain)", "postural/core endurance", "very low-fatigue strength maintenance", "swim-shoulder prehab"], "recoveryConsiderations": "Highest volume + highest RED-S/bone-stress risk — fuelling and recovery are primary; gym is durability insurance, never a fatigue source." },
-    { "name": "Draft-legal / short-course racer (WTCS / Olympic-distance elite)", "role": "Pack-based, surge-heavy racing where the bike is stochastic and the run is a flat-out 10k off the bike.", "movementDemands": "Repeated high-intensity bike surges + a fast run off the bike; transitions are decisive.", "runningDemands": "Fast 5-10km off the bike at high relative intensity.", "collisionDemands": "close pack riding + open-water contact", "speedReq": "high", "powerReq": "moderate-high", "strengthReq": "moderate", "bodyComposition": "Lean-powerful; explosive for the run finish.", "primaryQualities": ["aerobicEndurance", "anaerobicEndurance", "repeatSprintAbility", "reactiveStrength"], "secondaryQualities": ["relativeStrength", "durability", "stability"], "commonInjuries": ["Achilles/calf", "patellofemoral pain", "swimmer's shoulder"], "gymPriorities": ["lower-body power + economy", "plyometric stiffness (dosed)", "run-durability strength", "anti-rotation core"], "recoveryConsiderations": "Highest intensity profile — manage CNS/run-impact load; strength biased to power away from key brick sessions." }
+    {
+      "name": "Sprint distance (~750m / 20km / 5km)",
+      "role": "Shortest standard race — high relative intensity, often draft-legal at age-group/junior level.",
+      "movementDemands": "Near-threshold across all three legs; sharp run off the bike; transitions matter proportionally more.",
+      "runningDemands": "5km flat-out off the bike — high relative running intensity.",
+      "collisionDemands": "open-water + draft-legal pack contention",
+      "speedReq": "high (relative)",
+      "powerReq": "moderate",
+      "strengthReq": "moderate (economy + run durability)",
+      "bodyComposition": "Lean, higher tolerance of intensity; strong run.",
+      "primaryQualities": [
+        "aerobicEndurance",
+        "anaerobicEndurance",
+        "reactiveStrength",
+        "durability"
+      ],
+      "secondaryQualities": [
+        "relativeStrength",
+        "stability"
+      ],
+      "commonInjuries": [
+        "Achilles/calf",
+        "patellofemoral pain"
+      ],
+      "gymPriorities": [
+        "lower-body strength for run economy",
+        "calf capacity",
+        "plyometric stiffness (dosed)"
+      ],
+      "recoveryConsiderations": "Higher intensity, lower absolute volume — tolerates a little more dryland power emphasis."
+    },
+    {
+      "name": "Olympic / Standard (1.5km / 40km / 10km)",
+      "role": "The classic distance — draft-legal at elite/WTCS, non-drafting for most age-groupers.",
+      "movementDemands": "Sustained sub-threshold to threshold; the 10km run off the bike decides most races.",
+      "runningDemands": "10km off the bike — run durability + economy are decisive.",
+      "collisionDemands": "open-water + (draft-legal) pack",
+      "speedReq": "moderate-high",
+      "powerReq": "moderate",
+      "strengthReq": "moderate",
+      "bodyComposition": "Lean, balanced; strong run-off-bike.",
+      "primaryQualities": [
+        "aerobicEndurance",
+        "durability",
+        "relativeStrength",
+        "stability"
+      ],
+      "secondaryQualities": [
+        "reactiveStrength",
+        "anaerobicEndurance",
+        "mobility"
+      ],
+      "commonInjuries": [
+        "Achilles/calf",
+        "patellofemoral pain",
+        "swimmer's shoulder"
+      ],
+      "gymPriorities": [
+        "lower-body strength (economy)",
+        "hip/glute durability",
+        "swim-shoulder prehab",
+        "anti-rotation core"
+      ],
+      "recoveryConsiderations": "High combined load — strength placed away from key run/bike quality + long sessions."
+    },
+    {
+      "name": "Middle / 70.3 (1.9km / 90km / 21.1km)",
+      "role": "Half-distance — sustained sub-threshold; pacing, fuelling and durability dominate.",
+      "movementDemands": "Long steady efforts; the half-marathon off the bike is a durability test.",
+      "runningDemands": "21.1km off the bike on accumulated fatigue — durability is the limiter.",
+      "collisionDemands": "non-drafting (open-water start aside)",
+      "speedReq": "moderate",
+      "powerReq": "low-moderate",
+      "strengthReq": "moderate (durability-focused)",
+      "bodyComposition": "Lean, efficient, durable.",
+      "primaryQualities": [
+        "aerobicEndurance",
+        "durability",
+        "stability",
+        "relativeStrength"
+      ],
+      "secondaryQualities": [
+        "mobility",
+        "reactiveStrength"
+      ],
+      "commonInjuries": [
+        "Achilles/calf",
+        "bone stress (RED-S risk)",
+        "aero-position back/neck"
+      ],
+      "gymPriorities": [
+        "minimal-fatigue strength maintenance",
+        "calf + posterior-chain durability",
+        "aero-position core endurance",
+        "swim-shoulder prehab"
+      ],
+      "recoveryConsiderations": "Very high training volume — gym is low-volume support; protect the legs for long runs."
+    },
+    {
+      "name": "Long / Ironman (3.8km / 180km / 42.2km)",
+      "role": "Full-distance endurance — 8-17h; fuelling, pacing and tissue durability are everything.",
+      "movementDemands": "Prolonged sub-threshold output; a marathon off the bike where mechanics degrade with fatigue and depletion.",
+      "runningDemands": "42.2km off the bike — the ultimate durability + fuelling test.",
+      "collisionDemands": "non-drafting",
+      "speedReq": "low",
+      "powerReq": "low",
+      "strengthReq": "moderate (durability + fatigue-resistance)",
+      "bodyComposition": "Lean, highly efficient, robust to repetitive load.",
+      "primaryQualities": [
+        "aerobicEndurance",
+        "durability",
+        "stability",
+        "relativeStrength"
+      ],
+      "secondaryQualities": [
+        "mobility"
+      ],
+      "commonInjuries": [
+        "bone stress / RED-S",
+        "Achilles/calf",
+        "ITB/patellofemoral",
+        "aero-position back"
+      ],
+      "gymPriorities": [
+        "durability + tissue capacity (calf, hip, posterior chain)",
+        "postural/core endurance",
+        "very low-fatigue strength maintenance",
+        "swim-shoulder prehab"
+      ],
+      "recoveryConsiderations": "Highest volume + highest RED-S/bone-stress risk — fuelling and recovery are primary; gym is durability insurance, never a fatigue source."
+    },
+    {
+      "name": "Draft-legal / short-course racer (WTCS / Olympic-distance elite)",
+      "role": "Pack-based, surge-heavy racing where the bike is stochastic and the run is a flat-out 10k off the bike.",
+      "movementDemands": "Repeated high-intensity bike surges + a fast run off the bike; transitions are decisive.",
+      "runningDemands": "Fast 5-10km off the bike at high relative intensity.",
+      "collisionDemands": "close pack riding + open-water contact",
+      "speedReq": "high",
+      "powerReq": "moderate-high",
+      "strengthReq": "moderate",
+      "bodyComposition": "Lean-powerful; explosive for the run finish.",
+      "primaryQualities": [
+        "aerobicEndurance",
+        "anaerobicEndurance",
+        "repeatSprintAbility",
+        "reactiveStrength"
+      ],
+      "secondaryQualities": [
+        "relativeStrength",
+        "durability",
+        "stability"
+      ],
+      "commonInjuries": [
+        "Achilles/calf",
+        "patellofemoral pain",
+        "swimmer's shoulder"
+      ],
+      "gymPriorities": [
+        "lower-body power + economy",
+        "plyometric stiffness (dosed)",
+        "run-durability strength",
+        "anti-rotation core"
+      ],
+      "recoveryConsiderations": "Highest intensity profile — manage CNS/run-impact load; strength biased to power away from key brick sessions."
+    }
   ],
-
   "assessments": [
-    { "name": "Discipline thresholds (bike FTP, run critical speed, swim CSS)", "category": "aerobic", "essential": true, "purpose": "Individualise training zones for all three disciplines and track aerobic adaptation per leg.", "frequency": "per training block", "targets": { "elite": "improving power/speed at threshold; balanced across disciplines vs the athlete's weakest leg", "beginner": "establish baseline per discipline", "youth": "track trend; technique-first" }, "equipment": ["power meter", "GPS watch", "pace clock"], "wearableEstimable": true, "confidence": "moderate", "evidenceLevel": "L3", "source": "endurance threshold-testing practice; Wakayoshi (CSS); Allen/Coggan (FTP)" },
-    { "name": "Brick run-off-bike pace decoupling", "category": "performance", "essential": true, "purpose": "Quantify how much run pace/economy degrades off the bike vs fresh — the signature triathlon quality.", "frequency": "per block", "targets": { "elite": "minimal decoupling at race intensity", "beginner": "establish baseline", "youth": "introduce gently" }, "equipment": ["GPS watch", "power meter", "trainer/bike"], "wearableEstimable": true, "confidence": "low", "evidenceLevel": "L4", "source": "triathlon coaching practice; expert consensus" },
-    { "name": "Single-leg + calf capacity (heel-raise endurance, isometric calf)", "category": "strength", "essential": true, "purpose": "Screen the lower-limb capacity that protects against the run's dominant overuse injuries (Achilles/calf, PFP).", "frequency": "monthly", "targets": { "elite": "high symmetrical calf endurance; balanced single-leg strength", "beginner": "baseline + competency", "youth": "bodyweight competency" }, "equipment": ["step", "dynamometer (optional)"], "wearableEstimable": false, "confidence": "moderate", "evidenceLevel": "L3", "source": "Achilles/PFP rehab literature (Silbernagel; Crossley)" },
-    { "name": "Shoulder ER strength + mobility screen", "category": "mobility", "essential": true, "purpose": "Detect the internal>external rotator imbalance + ROM loss behind swimmer's shoulder.", "frequency": "monthly", "targets": { "elite": "ER:IR ~0.66-0.75; symmetrical ROM", "beginner": "baseline", "youth": "baseline" }, "equipment": ["hand-held dynamometer", "goniometer"], "wearableEstimable": false, "confidence": "moderate", "evidenceLevel": "L3", "source": "Bak 2010; Kibler (scapular)" },
-    { "name": "Hip/ankle/thoracic mobility + aero-position screen", "category": "mobility", "essential": true, "purpose": "Confirm the range to hold an efficient aero position and run economically without compensatory low-back/hamstring cost.", "frequency": "per block", "targets": { "elite": "holds aero with neutral spine; symmetrical hip/ankle ROM", "beginner": "baseline", "youth": "baseline" }, "equipment": ["inclinometer", "bike/trainer"], "wearableEstimable": false, "confidence": "low", "evidenceLevel": "L4", "source": "bike-fit + mobility-screen practice; expert consensus" },
-    { "name": "Countermovement jump (CMJ)", "category": "power", "essential": true, "purpose": "Neuromuscular fatigue monitoring across heavy combined-load weeks + a coarse lower-limb power/stiffness proxy.", "frequency": "weekly monitor + block test", "targets": { "elite": "within ~10% of rolling baseline (fatigue); trend for power", "beginner": "baseline", "youth": "track trend" }, "equipment": ["jump mat / force plate / phone app"], "wearableEstimable": true, "confidence": "moderate", "evidenceLevel": "L3", "source": "Claudino 2017 (CMJ monitoring)" },
-    { "name": "Energy availability / RED-S screen (incl. LEAF-Q where applicable)", "category": "performance", "essential": true, "purpose": "Screen for low energy availability — the upstream driver of bone stress, hormonal disruption and stalled adaptation in high-volume triathletes.", "frequency": "per block + on red flags", "targets": { "elite": "adequate energy availability; normal menstrual function where applicable", "beginner": "education + baseline", "youth": "monitor growth + fuelling carefully" }, "equipment": ["questionnaire (LEAF-Q)", "dietary review", "medical referral"], "wearableEstimable": false, "confidence": "moderate", "evidenceLevel": "L2", "source": "RED-S IOC consensus (Mountjoy 2014/2018)" }
+    {
+      "name": "Discipline thresholds (bike FTP, run critical speed, swim CSS)",
+      "category": "aerobic",
+      "essential": true,
+      "purpose": "Individualise training zones for all three disciplines and track aerobic adaptation per leg.",
+      "frequency": "per training block",
+      "targets": {
+        "elite": "improving power/speed at threshold; balanced across disciplines vs the athlete's weakest leg",
+        "beginner": "establish baseline per discipline",
+        "youth": "track trend; technique-first"
+      },
+      "equipment": [
+        "power meter",
+        "GPS watch",
+        "pace clock"
+      ],
+      "wearableEstimable": true,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "endurance threshold-testing practice; Wakayoshi (CSS); Allen/Coggan (FTP)"
+    },
+    {
+      "name": "Brick run-off-bike pace decoupling",
+      "category": "performance",
+      "essential": true,
+      "purpose": "Quantify how much run pace/economy degrades off the bike vs fresh — the signature triathlon quality.",
+      "frequency": "per block",
+      "targets": {
+        "elite": "minimal decoupling at race intensity",
+        "beginner": "establish baseline",
+        "youth": "introduce gently"
+      },
+      "equipment": [
+        "GPS watch",
+        "power meter",
+        "trainer/bike"
+      ],
+      "wearableEstimable": true,
+      "confidence": "low",
+      "evidenceLevel": "L4",
+      "source": "triathlon coaching practice; expert consensus"
+    },
+    {
+      "name": "Single-leg + calf capacity (heel-raise endurance, isometric calf)",
+      "category": "strength",
+      "essential": true,
+      "purpose": "Screen the lower-limb capacity that protects against the run's dominant overuse injuries (Achilles/calf, PFP).",
+      "frequency": "monthly",
+      "targets": {
+        "elite": "high symmetrical calf endurance; balanced single-leg strength",
+        "beginner": "baseline + competency",
+        "youth": "bodyweight competency"
+      },
+      "equipment": [
+        "step",
+        "dynamometer (optional)"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Achilles/PFP rehab literature (Silbernagel; Crossley)"
+    },
+    {
+      "name": "Shoulder ER strength + mobility screen",
+      "category": "mobility",
+      "essential": true,
+      "purpose": "Detect the internal>external rotator imbalance + ROM loss behind swimmer's shoulder.",
+      "frequency": "monthly",
+      "targets": {
+        "elite": "ER:IR ~0.66-0.75; symmetrical ROM",
+        "beginner": "baseline",
+        "youth": "baseline"
+      },
+      "equipment": [
+        "hand-held dynamometer",
+        "goniometer"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Bak 2010; Kibler (scapular)"
+    },
+    {
+      "name": "Hip/ankle/thoracic mobility + aero-position screen",
+      "category": "mobility",
+      "essential": true,
+      "purpose": "Confirm the range to hold an efficient aero position and run economically without compensatory low-back/hamstring cost.",
+      "frequency": "per block",
+      "targets": {
+        "elite": "holds aero with neutral spine; symmetrical hip/ankle ROM",
+        "beginner": "baseline",
+        "youth": "baseline"
+      },
+      "equipment": [
+        "inclinometer",
+        "bike/trainer"
+      ],
+      "wearableEstimable": false,
+      "confidence": "low",
+      "evidenceLevel": "L4",
+      "source": "bike-fit + mobility-screen practice; expert consensus"
+    },
+    {
+      "name": "Countermovement jump (CMJ)",
+      "category": "power",
+      "essential": true,
+      "purpose": "Neuromuscular fatigue monitoring across heavy combined-load weeks + a coarse lower-limb power/stiffness proxy.",
+      "frequency": "weekly monitor + block test",
+      "targets": {
+        "elite": "within ~10% of rolling baseline (fatigue); trend for power",
+        "beginner": "baseline",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "jump mat / force plate / phone app"
+      ],
+      "wearableEstimable": true,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Claudino 2017 (CMJ monitoring)"
+    },
+    {
+      "name": "Energy availability / RED-S screen (incl. LEAF-Q where applicable)",
+      "category": "performance",
+      "essential": true,
+      "purpose": "Screen for low energy availability — the upstream driver of bone stress, hormonal disruption and stalled adaptation in high-volume triathletes.",
+      "frequency": "per block + on red flags",
+      "targets": {
+        "elite": "adequate energy availability; normal menstrual function where applicable",
+        "beginner": "education + baseline",
+        "youth": "monitor growth + fuelling carefully"
+      },
+      "equipment": [
+        "questionnaire (LEAF-Q)",
+        "dietary review",
+        "medical referral"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L2",
+      "source": "RED-S IOC consensus (Mountjoy 2014/2018)"
+    }
   ],
-
   "developmentPriorities": {
-    "youth": { "highest": ["technique across all three disciplines", "broad aerobic base + general athleticism", "movement competency + mobility habits", "enjoyment and long-term engagement"], "lowest": ["high combined volume", "early single-discipline specialisation", "heavy strength loading"], "trainingEmphasis": "Multi-sport literacy (swim/bike/run skills), fun, bodyweight + band strength and mobility; protect against early overuse from premature volume.", "commonMistakes": ["adult-style volume on young athletes", "early specialisation", "neglecting swim technique", "ignoring growth-related load sensitivity"] },
-    "development": { "highest": ["aerobic capacity per discipline", "run + lower-limb durability foundation", "strength base for economy", "consistency + load-monitoring habits"], "lowest": ["maximal in-season fatigue", "advanced plyometrics before competency", "race-volume spikes"], "trainingEmphasis": "Build the aerobic engine and tissue capacity (especially the run), establish a low-volume strength habit, embed fuelling + load tracking.", "commonMistakes": ["dropping strength when volume rises", "run-volume spikes", "no energy-availability education", "ignoring the weakest discipline"] },
-    "senior": { "highest": ["distance-specific aerobic + durability", "run-off-bike (brick) capacity", "minimal-fatigue strength maintenance", "fuelling + taper execution"], "lowest": ["novel high-risk gym work in season", "non-specific hypertrophy", "junk-volume"], "trainingEmphasis": "Individualised distance preparation; maintain strength/economy at low fatigue; protect the legs for key run/brick sessions; nail fuelling and the taper.", "commonMistakes": ["heavy legs before long runs", "abandoning prehab when busy", "under-fuelling high-volume blocks", "poor taper"] },
-    "elite": { "highest": ["marginal economy/durability gains", "availability (run tissue + shoulder)", "individualised periodisation + taper", "objective monitoring + energy availability"], "lowest": ["generic group gym", "unmonitored load or fuelling"], "trainingEmphasis": "Data-led individualisation across three disciplines; precise concurrent-training sequencing; protect availability and energy availability.", "commonMistakes": ["interference from poorly placed strength", "testing without acting", "ignoring early bone-stress/shoulder signals"] },
-    "masters": { "highest": ["durability + tissue capacity", "strength/power retention against age", "recovery management", "longevity + enjoyment"], "lowest": ["maximal volume", "aggressive run-volume spikes"], "trainingEmphasis": "Retain strength/power and mobility, manage run impact conservatively, allow longer recovery between key sessions.", "commonMistakes": ["chasing younger volume", "skipping strength (accelerates age-related power loss)", "running through niggles"] }
+    "youth": {
+      "highest": [
+        "technique across all three disciplines",
+        "broad aerobic base + general athleticism",
+        "movement competency + mobility habits",
+        "enjoyment and long-term engagement"
+      ],
+      "lowest": [
+        "high combined volume",
+        "early single-discipline specialisation",
+        "heavy strength loading"
+      ],
+      "trainingEmphasis": "Multi-sport literacy (swim/bike/run skills), fun, bodyweight + band strength and mobility; protect against early overuse from premature volume.",
+      "commonMistakes": [
+        "adult-style volume on young athletes",
+        "early specialisation",
+        "neglecting swim technique",
+        "ignoring growth-related load sensitivity"
+      ]
+    },
+    "development": {
+      "highest": [
+        "aerobic capacity per discipline",
+        "run + lower-limb durability foundation",
+        "strength base for economy",
+        "consistency + load-monitoring habits"
+      ],
+      "lowest": [
+        "maximal in-season fatigue",
+        "advanced plyometrics before competency",
+        "race-volume spikes"
+      ],
+      "trainingEmphasis": "Build the aerobic engine and tissue capacity (especially the run), establish a low-volume strength habit, embed fuelling + load tracking.",
+      "commonMistakes": [
+        "dropping strength when volume rises",
+        "run-volume spikes",
+        "no energy-availability education",
+        "ignoring the weakest discipline"
+      ]
+    },
+    "senior": {
+      "highest": [
+        "distance-specific aerobic + durability",
+        "run-off-bike (brick) capacity",
+        "minimal-fatigue strength maintenance",
+        "fuelling + taper execution"
+      ],
+      "lowest": [
+        "novel high-risk gym work in season",
+        "non-specific hypertrophy",
+        "junk-volume"
+      ],
+      "trainingEmphasis": "Individualised distance preparation; maintain strength/economy at low fatigue; protect the legs for key run/brick sessions; nail fuelling and the taper.",
+      "commonMistakes": [
+        "heavy legs before long runs",
+        "abandoning prehab when busy",
+        "under-fuelling high-volume blocks",
+        "poor taper"
+      ]
+    },
+    "elite": {
+      "highest": [
+        "marginal economy/durability gains",
+        "availability (run tissue + shoulder)",
+        "individualised periodisation + taper",
+        "objective monitoring + energy availability"
+      ],
+      "lowest": [
+        "generic group gym",
+        "unmonitored load or fuelling"
+      ],
+      "trainingEmphasis": "Data-led individualisation across three disciplines; precise concurrent-training sequencing; protect availability and energy availability.",
+      "commonMistakes": [
+        "interference from poorly placed strength",
+        "testing without acting",
+        "ignoring early bone-stress/shoulder signals"
+      ]
+    },
+    "masters": {
+      "highest": [
+        "durability + tissue capacity",
+        "strength/power retention against age",
+        "recovery management",
+        "longevity + enjoyment"
+      ],
+      "lowest": [
+        "maximal volume",
+        "aggressive run-volume spikes"
+      ],
+      "trainingEmphasis": "Retain strength/power and mobility, manage run impact conservatively, allow longer recovery between key sessions.",
+      "commonMistakes": [
+        "chasing younger volume",
+        "skipping strength (accelerates age-related power loss)",
+        "running through niggles"
+      ]
+    }
   },
-
   "seasonalModel": {
-    "offSeason": { "primaryObjective": "Restore tissues; build the strength foundation and general aerobic base.", "trainingEmphasis": "Aerobic base across disciplines, gym MAX-STRENGTH + tissue capacity (calf/hip/posterior chain), mobility, address the weakest discipline.", "gymFrequencyPerWeek": "2-3", "volume": "moderate (aerobic) + moderate-high (strength)", "intensity": "moderate (building)", "fatigueTolerance": "high", "recoveryEmphasis": "moderate", "testingRecommendations": ["discipline thresholds baseline", "single-leg/calf capacity", "CMJ", "RED-S/energy-availability screen"] },
-    "preSeason": { "primaryObjective": "Convert base to race-specific endurance + brick capacity.", "trainingEmphasis": "Threshold + race-pace work, brick (run-off-bike) sessions, strength shifts to low-volume maintenance/power; mobility + prehab embedded.", "gymFrequencyPerWeek": "1-2", "volume": "high (sport) + low (gym)", "intensity": "high (sport)", "fatigueTolerance": "moderate-high", "recoveryEmphasis": "moderate-high", "testingRecommendations": ["thresholds", "brick decoupling", "CMJ"] },
-    "competition": { "primaryObjective": "Maintain qualities; sharpen; race well.", "trainingEmphasis": "Race-specific sessions, maintained strength at minimal effective volume (away from key sessions), full prehab, careful run-load management.", "gymFrequencyPerWeek": "1 (low volume)", "volume": "moderate (sport) + minimal (gym)", "intensity": "high (sport)", "fatigueTolerance": "moderate", "recoveryEmphasis": "high", "testingRecommendations": ["readiness + run-load monitoring", "brick check (low volume)"] },
-    "playoffs": { "primaryObjective": "Peak for the A-race via a structured taper.", "trainingEmphasis": "Reduced total volume (~40-60%) with maintained intensity; sharpening + race-pace primers; gym is priming/maintenance only; maximise recovery + fuelling.", "gymFrequencyPerWeek": "0-1 (priming only)", "volume": "very low", "intensity": "high (very low volume)", "fatigueTolerance": "very low (protect the race)", "recoveryEmphasis": "very high", "testingRecommendations": ["readiness monitoring only — no fatiguing tests"] },
-    "recovery": { "primaryObjective": "Physical + mental recovery; restore carried niggles; restore energy availability.", "trainingEmphasis": "Low/unstructured cross-training, mobility, light strength; rehab any carried Achilles/shoulder/back issues; rebuild fuelling.", "gymFrequencyPerWeek": "0-2 (optional)", "volume": "very low", "intensity": "low", "fatigueTolerance": "n/a", "recoveryEmphasis": "very high", "testingRecommendations": ["none fatiguing; medical/dietary review of carried issues + energy availability"] }
+    "offSeason": {
+      "primaryObjective": "Restore tissues; build the strength foundation and general aerobic base.",
+      "trainingEmphasis": "Aerobic base across disciplines, gym MAX-STRENGTH + tissue capacity (calf/hip/posterior chain), mobility, address the weakest discipline.",
+      "gymFrequencyPerWeek": "2-3",
+      "volume": "moderate (aerobic) + moderate-high (strength)",
+      "intensity": "moderate (building)",
+      "fatigueTolerance": "high",
+      "recoveryEmphasis": "moderate",
+      "testingRecommendations": [
+        "discipline thresholds baseline",
+        "single-leg/calf capacity",
+        "CMJ",
+        "RED-S/energy-availability screen"
+      ]
+    },
+    "preSeason": {
+      "primaryObjective": "Convert base to race-specific endurance + brick capacity.",
+      "trainingEmphasis": "Threshold + race-pace work, brick (run-off-bike) sessions, strength shifts to low-volume maintenance/power; mobility + prehab embedded.",
+      "gymFrequencyPerWeek": "1-2",
+      "volume": "high (sport) + low (gym)",
+      "intensity": "high (sport)",
+      "fatigueTolerance": "moderate-high",
+      "recoveryEmphasis": "moderate-high",
+      "testingRecommendations": [
+        "thresholds",
+        "brick decoupling",
+        "CMJ"
+      ]
+    },
+    "competition": {
+      "primaryObjective": "Maintain qualities; sharpen; race well.",
+      "trainingEmphasis": "Race-specific sessions, maintained strength at minimal effective volume (away from key sessions), full prehab, careful run-load management.",
+      "gymFrequencyPerWeek": "1 (low volume)",
+      "volume": "moderate (sport) + minimal (gym)",
+      "intensity": "high (sport)",
+      "fatigueTolerance": "moderate",
+      "recoveryEmphasis": "high",
+      "testingRecommendations": [
+        "readiness + run-load monitoring",
+        "brick check (low volume)"
+      ]
+    },
+    "playoffs": {
+      "primaryObjective": "Peak for the A-race via a structured taper.",
+      "trainingEmphasis": "Reduced total volume (~40-60%) with maintained intensity; sharpening + race-pace primers; gym is priming/maintenance only; maximise recovery + fuelling.",
+      "gymFrequencyPerWeek": "0-1 (priming only)",
+      "volume": "very low",
+      "intensity": "high (very low volume)",
+      "fatigueTolerance": "very low (protect the race)",
+      "recoveryEmphasis": "very high",
+      "testingRecommendations": [
+        "readiness monitoring only — no fatiguing tests"
+      ]
+    },
+    "recovery": {
+      "primaryObjective": "Physical + mental recovery; restore carried niggles; restore energy availability.",
+      "trainingEmphasis": "Low/unstructured cross-training, mobility, light strength; rehab any carried Achilles/shoulder/back issues; rebuild fuelling.",
+      "gymFrequencyPerWeek": "0-2 (optional)",
+      "volume": "very low",
+      "intensity": "low",
+      "fatigueTolerance": "n/a",
+      "recoveryEmphasis": "very high",
+      "testingRecommendations": [
+        "none fatiguing; medical/dietary review of carried issues + energy availability"
+      ]
+    }
   },
-
   "microcycles": {
-    "oneMatchPerWeek": { "pattern": "A typical race-prep week built around the key endurance sessions (one quality bike, one quality/long run, one swim-quality, one long ride, plus the brick). Gym is placed to NOT fatigue the legs before the key run/brick or long ride.", "heavyDay": "early-week, away from the key run/brick and long ride", "powerDay": "mid-week low-volume power/plyometric (away from high run-volume days)", "recoveryDay": "after the long ride/run + the day before a race", "mobilityDay": "daily (hip/ankle/thoracic + shoulder)", "injuryPreventionDay": "calf + shoulder prehab embedded daily; primary strength dose early-week", "typicalLoadingPattern": "Strength + base early → quality bike/run mid → brick → long session → easy/taper before race.", "avoidHeavyLiftingDays": ["day before the key/long run", "day before the key brick", "day before racing", "race day"], "preferExplosiveWorkDays": ["mid-week power day away from high-impact run sessions"] },
-    "twoMatchesPerWeek": { "pattern": "A race weekend or two races in a week: recovery-first; no heavy gym.", "heavyDay": "none", "powerDay": "brief race-morning priming only if used", "recoveryDay": "between races + after each", "mobilityDay": "daily", "injuryPreventionDay": "low-dose calf/shoulder maintenance only", "typicalLoadingPattern": "Race → recover → race → recover. Gym is priming/maintenance only.", "avoidHeavyLiftingDays": ["all race days + the day before each"], "preferExplosiveWorkDays": ["brief race-morning primers only"] },
-    "tournamentOrCongested": { "pattern": "A multi-day stage event or a congested block of racing/travel: pure freshness + durability management.", "heavyDay": "none", "powerDay": "race-morning priming only", "recoveryDay": "every gap between efforts", "mobilityDay": "daily", "injuryPreventionDay": "minimal-dose only", "typicalLoadingPattern": "Protect the legs + fuelling between efforts; gym is priming, never development.", "avoidHeavyLiftingDays": ["entire block"], "preferExplosiveWorkDays": ["race-morning primers only"] }
+    "oneMatchPerWeek": {
+      "pattern": "A typical race-prep week built around the key endurance sessions (one quality bike, one quality/long run, one swim-quality, one long ride, plus the brick). Gym is placed to NOT fatigue the legs before the key run/brick or long ride.",
+      "heavyDay": "early-week, away from the key run/brick and long ride",
+      "powerDay": "mid-week low-volume power/plyometric (away from high run-volume days)",
+      "recoveryDay": "after the long ride/run + the day before a race",
+      "mobilityDay": "daily (hip/ankle/thoracic + shoulder)",
+      "injuryPreventionDay": "calf + shoulder prehab embedded daily; primary strength dose early-week",
+      "typicalLoadingPattern": "Strength + base early → quality bike/run mid → brick → long session → easy/taper before race.",
+      "avoidHeavyLiftingDays": [
+        "day before the key/long run",
+        "day before the key brick",
+        "day before racing",
+        "race day"
+      ],
+      "preferExplosiveWorkDays": [
+        "mid-week power day away from high-impact run sessions"
+      ]
+    },
+    "twoMatchesPerWeek": {
+      "pattern": "A race weekend or two races in a week: recovery-first; no heavy gym.",
+      "heavyDay": "none",
+      "powerDay": "brief race-morning priming only if used",
+      "recoveryDay": "between races + after each",
+      "mobilityDay": "daily",
+      "injuryPreventionDay": "low-dose calf/shoulder maintenance only",
+      "typicalLoadingPattern": "Race → recover → race → recover. Gym is priming/maintenance only.",
+      "avoidHeavyLiftingDays": [
+        "all race days + the day before each"
+      ],
+      "preferExplosiveWorkDays": [
+        "brief race-morning primers only"
+      ]
+    },
+    "tournamentOrCongested": {
+      "pattern": "A multi-day stage event or a congested block of racing/travel: pure freshness + durability management.",
+      "heavyDay": "none",
+      "powerDay": "race-morning priming only",
+      "recoveryDay": "every gap between efforts",
+      "mobilityDay": "daily",
+      "injuryPreventionDay": "minimal-dose only",
+      "typicalLoadingPattern": "Protect the legs + fuelling between efforts; gym is priming, never development.",
+      "avoidHeavyLiftingDays": [
+        "entire block"
+      ],
+      "preferExplosiveWorkDays": [
+        "race-morning primers only"
+      ]
+    }
   },
-
   "gymPhilosophy": {
-    "transfersWell": ["back/front squat (lower-body strength → running economy)", "trap-bar deadlift (posterior chain, lower spinal load)", "Romanian deadlift (hamstring/posterior chain)", "single-leg work — split squat / step-up (run-specific strength + durability)", "single-leg calf raise (Achilles/calf capacity — run durability)", "hip thrust / glute bridge (run power + durability)", "pogo / low-amplitude plyometrics (run stiffness/economy, dosed)", "pull-up / lat pulldown + rows (swim propulsion + shoulder balance)", "band external rotation + scapular work (swim-shoulder prehab)", "anti-rotation + anti-extension core (aero position + run posture)", "hip/ankle/thoracic mobility"],
-    "limitedValue": ["high-volume hypertrophy / bodybuilding splits (adds non-propulsive mass to carry)", "training to failure (excess fatigue interferes with key endurance sessions)", "heavy barbell bench press (worsens swimmer's-shoulder internal-rotator dominance)", "heavy strict overhead press (impingement risk in an overhead-loaded swim athlete)", "long grinding strength sessions near key run/bike work"],
-    "essentialMovementPatterns": ["squat", "hip hinge", "single-leg stance + strength", "vertical + horizontal pull", "anti-rotation + anti-extension core", "calf / plantarflexor loading", "scapular control + external rotation"],
-    "accessoryPriorities": ["calf / soleus capacity (run durability — priority)", "glute + hip stabiliser strength", "posterior cuff / scapular control (swim prehab)", "core endurance for the aero position", "hamstring + posterior chain"],
+    "transfersWell": [
+      "back/front squat (lower-body strength → running economy)",
+      "trap-bar deadlift (posterior chain, lower spinal load)",
+      "Romanian deadlift (hamstring/posterior chain)",
+      "single-leg work — split squat / step-up (run-specific strength + durability)",
+      "single-leg calf raise (Achilles/calf capacity — run durability)",
+      "hip thrust / glute bridge (run power + durability)",
+      "pogo / low-amplitude plyometrics (run stiffness/economy, dosed)",
+      "pull-up / lat pulldown + rows (swim propulsion + shoulder balance)",
+      "band external rotation + scapular work (swim-shoulder prehab)",
+      "anti-rotation + anti-extension core (aero position + run posture)",
+      "hip/ankle/thoracic mobility"
+    ],
+    "limitedValue": [
+      "high-volume hypertrophy / bodybuilding splits (adds non-propulsive mass to carry)",
+      "training to failure (excess fatigue interferes with key endurance sessions)",
+      "heavy barbell bench press (worsens swimmer's-shoulder internal-rotator dominance)",
+      "heavy strict overhead press (impingement risk in an overhead-loaded swim athlete)",
+      "long grinding strength sessions near key run/bike work"
+    ],
+    "essentialMovementPatterns": [
+      "squat",
+      "hip hinge",
+      "single-leg stance + strength",
+      "vertical + horizontal pull",
+      "anti-rotation + anti-extension core",
+      "calf / plantarflexor loading",
+      "scapular control + external rotation"
+    ],
+    "accessoryPriorities": [
+      "calf / soleus capacity (run durability — priority)",
+      "glute + hip stabiliser strength",
+      "posterior cuff / scapular control (swim prehab)",
+      "core endurance for the aero position",
+      "hamstring + posterior chain"
+    ],
     "singleLegEmphasis": "HIGH — running is a single-leg, repetitive-impact activity; single-leg strength, stability and calf capacity are central to both durability and economy. This is a key contrast with pool swimming.",
     "olympicLiftingSuitability": "Optional/advanced — jumps + med-ball deliver most of the needed power/stiffness at lower technical and fatigue cost; not necessary for an endurance athlete.",
     "plyometricEmphasis": "Moderate, carefully dosed — low-amplitude plyometrics improve running economy via tendon stiffness, but they add IMPACT to an athlete already impact-loaded by run volume; progress off a strength base and place away from high run-volume blocks.",
@@ -142,52 +930,732 @@
     "tempoRecommendations": "Controlled tempo for prehab/tendon work; heavy, low-rep, explosive-intent strength for economy (few reps, long rests, well short of failure); never grind near key endurance sessions.",
     "velocityRecommendations": "Strength = high force, low volume, max intent; plyometrics = quality over quantity. The legs must be fresh for the run — quality and recovery beat gym volume."
   },
-
   "exerciseLibrary": {
-    "categories": ["lower-body strength", "posterior chain", "single-leg / run durability", "calf / plantarflexor", "plyometric / stiffness", "upper-body pull", "shoulder prehab", "core anti-rotation", "core anti-extension", "hip / glute", "mobility"],
+    "categories": [
+      "lower-body strength",
+      "posterior chain",
+      "single-leg / run durability",
+      "calf / plantarflexor",
+      "plyometric / stiffness",
+      "upper-body pull",
+      "shoulder prehab",
+      "core anti-rotation",
+      "core anti-extension",
+      "hip / glute",
+      "mobility"
+    ],
     "exercises": [
-      { "id": "back_squat", "name": "Back / front squat", "category": "lower-body strength", "movementPattern": "squat", "primaryAdaptation": "lower-body max strength (running economy)", "secondaryAdaptation": "tendon/tissue robustness", "fatigueCost": "high", "sorenessCost": "moderate-high", "recoveryTimeH": 48, "jointLoading": "moderate", "equipment": ["barbell / rack"], "difficulty": "intermediate", "regressions": ["goblet squat", "box squat"], "progressions": ["heavier (low rep)", "tempo"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": false, "suitableBeginners": false, "suitableElite": true, "transferToSportRating": 7, "injuryPreventionRating": 5 },
-      { "id": "trap_bar_deadlift", "name": "Trap-bar deadlift", "category": "posterior chain", "movementPattern": "hinge/squat hybrid", "primaryAdaptation": "posterior-chain + lower-body strength (economy)", "secondaryAdaptation": "trunk stability", "fatigueCost": "high", "sorenessCost": "moderate", "recoveryTimeH": 48, "jointLoading": "moderate (lower spinal load than straight-bar)", "equipment": ["trap bar"], "difficulty": "beginner-friendly", "regressions": ["kettlebell deadlift", "hip-hinge drill"], "progressions": ["heavier", "trap-bar jump"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 7, "injuryPreventionRating": 6 },
-      { "id": "romanian_deadlift", "name": "Romanian deadlift", "category": "posterior chain", "movementPattern": "hip hinge", "primaryAdaptation": "hamstring + posterior-chain strength", "secondaryAdaptation": "run durability / hamstring robustness", "fatigueCost": "moderate", "sorenessCost": "moderate-high", "recoveryTimeH": 48, "jointLoading": "low-moderate", "equipment": ["barbell / dumbbell"], "difficulty": "intermediate", "regressions": ["dumbbell RDL", "hip hinge"], "progressions": ["single-leg RDL", "heavier"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": false, "suitableElite": true, "transferToSportRating": 6, "injuryPreventionRating": 7 },
-      { "id": "split_squat", "name": "Bulgarian split squat / step-up", "category": "single-leg / run durability", "movementPattern": "single-leg squat", "primaryAdaptation": "single-leg strength + hip/knee control (run)", "secondaryAdaptation": "frontal-plane stability (PFP protection)", "fatigueCost": "moderate", "sorenessCost": "moderate-high", "recoveryTimeH": 48, "jointLoading": "moderate", "equipment": ["dumbbells / bench"], "difficulty": "intermediate", "regressions": ["split squat (no rear foot raise)", "assisted"], "progressions": ["loaded", "deficit"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": false, "suitableElite": true, "transferToSportRating": 8, "injuryPreventionRating": 8 },
-      { "id": "single_leg_calf_raise", "name": "Single-leg calf raise (straight + bent knee)", "category": "calf / plantarflexor", "movementPattern": "ankle plantarflexion", "primaryAdaptation": "calf/soleus + Achilles capacity (run durability)", "secondaryAdaptation": "Achilles-tendinopathy protection", "fatigueCost": "low-moderate", "sorenessCost": "moderate", "recoveryTimeH": 24, "jointLoading": "low", "equipment": ["step / dumbbell"], "difficulty": "beginner-friendly", "regressions": ["double-leg", "bodyweight"], "progressions": ["loaded", "heavy-slow", "tempo"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 7, "injuryPreventionRating": 10 },
-      { "id": "hip_thrust", "name": "Hip thrust / glute bridge", "category": "hip / glute", "movementPattern": "hip extension", "primaryAdaptation": "glute strength (run power + durability)", "secondaryAdaptation": "pelvic control", "fatigueCost": "moderate", "sorenessCost": "low-moderate", "recoveryTimeH": 24, "jointLoading": "low", "equipment": ["barbell / bench"], "difficulty": "beginner-friendly", "regressions": ["bodyweight glute bridge"], "progressions": ["single-leg", "heavier"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 6, "injuryPreventionRating": 7 },
-      { "id": "pogo_plyo", "name": "Pogo hops / low-amplitude plyometrics", "category": "plyometric / stiffness", "movementPattern": "reactive jump", "primaryAdaptation": "lower-limb stiffness (running economy)", "secondaryAdaptation": "tendon resilience", "fatigueCost": "low-moderate", "sorenessCost": "moderate", "recoveryTimeH": 24, "jointLoading": "moderate (impact)", "equipment": ["none"], "difficulty": "intermediate", "regressions": ["ankle hops (low)", "submaximal"], "progressions": ["higher amplitude", "single-leg"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": false, "suitableBeginners": false, "suitableElite": true, "transferToSportRating": 7, "injuryPreventionRating": 4 },
-      { "id": "pull_up", "name": "Pull-up / lat pulldown", "category": "upper-body pull", "movementPattern": "vertical pull", "primaryAdaptation": "lat/pulling strength (swim propulsion)", "secondaryAdaptation": "scapular control", "fatigueCost": "moderate", "sorenessCost": "moderate", "recoveryTimeH": 48, "jointLoading": "moderate (shoulder)", "equipment": ["bar / cable"], "difficulty": "intermediate", "regressions": ["band-assisted", "lat pulldown"], "progressions": ["weighted", "tempo"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": false, "suitableElite": true, "transferToSportRating": 6, "injuryPreventionRating": 5 },
-      { "id": "bent_row", "name": "Bent-over / cable row", "category": "upper-body pull", "movementPattern": "horizontal pull", "primaryAdaptation": "mid-back + posterior-shoulder strength", "secondaryAdaptation": "shoulder balance (swim prehab)", "fatigueCost": "moderate", "sorenessCost": "moderate", "recoveryTimeH": 48, "jointLoading": "low-moderate", "equipment": ["barbell / dumbbell / cable"], "difficulty": "beginner-friendly", "regressions": ["chest-supported row"], "progressions": ["heavier", "tempo"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 5, "injuryPreventionRating": 7 },
-      { "id": "band_external_rotation", "name": "Band external rotation (cuff)", "category": "shoulder prehab", "movementPattern": "shoulder external rotation", "primaryAdaptation": "posterior rotator-cuff strength", "secondaryAdaptation": "ER:IR balance (swimmer's-shoulder protection)", "fatigueCost": "low", "sorenessCost": "low", "recoveryTimeH": 12, "jointLoading": "low", "equipment": ["band"], "difficulty": "beginner-friendly", "regressions": ["lighter band"], "progressions": ["side-lying DB ER", "added load"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 4, "injuryPreventionRating": 9 },
-      { "id": "pallof_press", "name": "Pallof press (anti-rotation)", "category": "core anti-rotation", "movementPattern": "anti-rotation", "primaryAdaptation": "trunk anti-rotation + pelvic control", "secondaryAdaptation": "running posture + force transfer", "fatigueCost": "low", "sorenessCost": "low", "recoveryTimeH": 12, "jointLoading": "low", "equipment": ["cable / band"], "difficulty": "beginner-friendly", "regressions": ["tall-kneeling Pallof"], "progressions": ["split-stance", "added range"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 6, "injuryPreventionRating": 6 },
-      { "id": "dead_bug", "name": "Dead bug / anti-extension core", "category": "core anti-extension", "movementPattern": "anti-extension", "primaryAdaptation": "trunk anti-extension control", "secondaryAdaptation": "low-back protection (aero position)", "fatigueCost": "low", "sorenessCost": "low", "recoveryTimeH": 12, "jointLoading": "low", "equipment": ["none / band"], "difficulty": "beginner-friendly", "regressions": ["bent-knee dead bug"], "progressions": ["loaded", "hollow hold"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 6, "injuryPreventionRating": 7 },
-      { "id": "copenhagen", "name": "Copenhagen adduction", "category": "hip / glute", "movementPattern": "hip adduction (side plank)", "primaryAdaptation": "adductor + hip strength", "secondaryAdaptation": "hip/groin robustness for run + bike", "fatigueCost": "moderate", "sorenessCost": "high (early)", "recoveryTimeH": 72, "jointLoading": "low", "equipment": ["bench"], "difficulty": "intermediate", "regressions": ["short-lever", "iso adductor squeeze"], "progressions": ["long-lever"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": false, "suitableElite": true, "transferToSportRating": 5, "injuryPreventionRating": 7 },
-      { "id": "mobility_flow", "name": "Hip / ankle / thoracic mobility flow", "category": "mobility", "movementPattern": "multi-joint ROM", "primaryAdaptation": "aero-position + run/swim range", "secondaryAdaptation": "injury-risk reduction", "fatigueCost": "very low", "sorenessCost": "very low", "recoveryTimeH": 6, "jointLoading": "low", "equipment": ["foam roller / band"], "difficulty": "beginner-friendly", "regressions": ["assisted ranges"], "progressions": ["loaded end-range holds"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 5, "injuryPreventionRating": 8 }
+      {
+        "id": "back_squat",
+        "name": "Back / front squat",
+        "category": "lower-body strength",
+        "movementPattern": "squat",
+        "primaryAdaptation": "lower-body max strength (running economy)",
+        "secondaryAdaptation": "tendon/tissue robustness",
+        "fatigueCost": "high",
+        "sorenessCost": "moderate-high",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate",
+        "equipment": [
+          "barbell / rack"
+        ],
+        "difficulty": "intermediate",
+        "regressions": [
+          "goblet squat",
+          "box squat"
+        ],
+        "progressions": [
+          "heavier (low rep)",
+          "tempo"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": false,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 5
+      },
+      {
+        "id": "trap_bar_dl",
+        "name": "Trap-bar deadlift",
+        "category": "posterior chain",
+        "movementPattern": "hinge/squat hybrid",
+        "primaryAdaptation": "posterior-chain + lower-body strength (economy)",
+        "secondaryAdaptation": "trunk stability",
+        "fatigueCost": "high",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate (lower spinal load than straight-bar)",
+        "equipment": [
+          "trap bar"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "kettlebell deadlift",
+          "hip-hinge drill"
+        ],
+        "progressions": [
+          "heavier",
+          "trap-bar jump"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 6
+      },
+      {
+        "id": "rdl",
+        "name": "Romanian deadlift",
+        "category": "posterior chain",
+        "movementPattern": "hip hinge",
+        "primaryAdaptation": "hamstring + posterior-chain strength",
+        "secondaryAdaptation": "run durability / hamstring robustness",
+        "fatigueCost": "moderate",
+        "sorenessCost": "moderate-high",
+        "recoveryTimeH": 48,
+        "jointLoading": "low-moderate",
+        "equipment": [
+          "barbell / dumbbell"
+        ],
+        "difficulty": "intermediate",
+        "regressions": [
+          "dumbbell RDL",
+          "hip hinge"
+        ],
+        "progressions": [
+          "single-leg RDL",
+          "heavier"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "split_squat",
+        "name": "Bulgarian split squat / step-up",
+        "category": "single-leg / run durability",
+        "movementPattern": "single-leg squat",
+        "primaryAdaptation": "single-leg strength + hip/knee control (run)",
+        "secondaryAdaptation": "frontal-plane stability (PFP protection)",
+        "fatigueCost": "moderate",
+        "sorenessCost": "moderate-high",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate",
+        "equipment": [
+          "dumbbells / bench"
+        ],
+        "difficulty": "intermediate",
+        "regressions": [
+          "split squat (no rear foot raise)",
+          "assisted"
+        ],
+        "progressions": [
+          "loaded",
+          "deficit"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 8,
+        "injuryPreventionRating": 8
+      },
+      {
+        "id": "sl_calf",
+        "name": "Single-leg calf raise (straight + bent knee)",
+        "category": "calf / plantarflexor",
+        "movementPattern": "ankle plantarflexion",
+        "primaryAdaptation": "calf/soleus + Achilles capacity (run durability)",
+        "secondaryAdaptation": "Achilles-tendinopathy protection",
+        "fatigueCost": "low-moderate",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 24,
+        "jointLoading": "low",
+        "equipment": [
+          "step / dumbbell"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "double-leg",
+          "bodyweight"
+        ],
+        "progressions": [
+          "loaded",
+          "heavy-slow",
+          "tempo"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 10
+      },
+      {
+        "id": "hip_thrust",
+        "name": "Hip thrust / glute bridge",
+        "category": "hip / glute",
+        "movementPattern": "hip extension",
+        "primaryAdaptation": "glute strength (run power + durability)",
+        "secondaryAdaptation": "pelvic control",
+        "fatigueCost": "moderate",
+        "sorenessCost": "low-moderate",
+        "recoveryTimeH": 24,
+        "jointLoading": "low",
+        "equipment": [
+          "barbell / bench"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "bodyweight glute bridge"
+        ],
+        "progressions": [
+          "single-leg",
+          "heavier"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "double_leg_pogo",
+        "name": "Pogo hops / low-amplitude plyometrics",
+        "category": "plyometric / stiffness",
+        "movementPattern": "reactive jump",
+        "primaryAdaptation": "lower-limb stiffness (running economy)",
+        "secondaryAdaptation": "tendon resilience",
+        "fatigueCost": "low-moderate",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 24,
+        "jointLoading": "moderate (impact)",
+        "equipment": [
+          "none"
+        ],
+        "difficulty": "intermediate",
+        "regressions": [
+          "ankle hops (low)",
+          "submaximal"
+        ],
+        "progressions": [
+          "higher amplitude",
+          "single-leg"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": false,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 4
+      },
+      {
+        "id": "pullup",
+        "name": "Pull-up / lat pulldown",
+        "category": "upper-body pull",
+        "movementPattern": "vertical pull",
+        "primaryAdaptation": "lat/pulling strength (swim propulsion)",
+        "secondaryAdaptation": "scapular control",
+        "fatigueCost": "moderate",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate (shoulder)",
+        "equipment": [
+          "bar / cable"
+        ],
+        "difficulty": "intermediate",
+        "regressions": [
+          "band-assisted",
+          "lat pulldown"
+        ],
+        "progressions": [
+          "weighted",
+          "tempo"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 5
+      },
+      {
+        "id": "barbell_row",
+        "name": "Bent-over / cable row",
+        "category": "upper-body pull",
+        "movementPattern": "horizontal pull",
+        "primaryAdaptation": "mid-back + posterior-shoulder strength",
+        "secondaryAdaptation": "shoulder balance (swim prehab)",
+        "fatigueCost": "moderate",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "low-moderate",
+        "equipment": [
+          "barbell / dumbbell / cable"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "chest-supported row"
+        ],
+        "progressions": [
+          "heavier",
+          "tempo"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 5,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "cable_ext_rotation_90",
+        "name": "Band external rotation (cuff)",
+        "category": "shoulder prehab",
+        "movementPattern": "shoulder external rotation",
+        "primaryAdaptation": "posterior rotator-cuff strength",
+        "secondaryAdaptation": "ER:IR balance (swimmer's-shoulder protection)",
+        "fatigueCost": "low",
+        "sorenessCost": "low",
+        "recoveryTimeH": 12,
+        "jointLoading": "low",
+        "equipment": [
+          "band"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "lighter band"
+        ],
+        "progressions": [
+          "side-lying DB ER",
+          "added load"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 4,
+        "injuryPreventionRating": 9
+      },
+      {
+        "id": "pallof",
+        "name": "Pallof press (anti-rotation)",
+        "category": "core anti-rotation",
+        "movementPattern": "anti-rotation",
+        "primaryAdaptation": "trunk anti-rotation + pelvic control",
+        "secondaryAdaptation": "running posture + force transfer",
+        "fatigueCost": "low",
+        "sorenessCost": "low",
+        "recoveryTimeH": 12,
+        "jointLoading": "low",
+        "equipment": [
+          "cable / band"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "tall-kneeling Pallof"
+        ],
+        "progressions": [
+          "split-stance",
+          "added range"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 6
+      },
+      {
+        "id": "dead_bug",
+        "name": "Dead bug / anti-extension core",
+        "category": "core anti-extension",
+        "movementPattern": "anti-extension",
+        "primaryAdaptation": "trunk anti-extension control",
+        "secondaryAdaptation": "low-back protection (aero position)",
+        "fatigueCost": "low",
+        "sorenessCost": "low",
+        "recoveryTimeH": 12,
+        "jointLoading": "low",
+        "equipment": [
+          "none / band"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "bent-knee dead bug"
+        ],
+        "progressions": [
+          "loaded",
+          "hollow hold"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "copenhagen",
+        "name": "Copenhagen adduction",
+        "category": "hip / glute",
+        "movementPattern": "hip adduction (side plank)",
+        "primaryAdaptation": "adductor + hip strength",
+        "secondaryAdaptation": "hip/groin robustness for run + bike",
+        "fatigueCost": "moderate",
+        "sorenessCost": "high (early)",
+        "recoveryTimeH": 72,
+        "jointLoading": "low",
+        "equipment": [
+          "bench"
+        ],
+        "difficulty": "intermediate",
+        "regressions": [
+          "short-lever",
+          "iso adductor squeeze"
+        ],
+        "progressions": [
+          "long-lever"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 5,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "cat_camel_thoracic",
+        "name": "Hip / ankle / thoracic mobility flow",
+        "category": "mobility",
+        "movementPattern": "multi-joint ROM",
+        "primaryAdaptation": "aero-position + run/swim range",
+        "secondaryAdaptation": "injury-risk reduction",
+        "fatigueCost": "very low",
+        "sorenessCost": "very low",
+        "recoveryTimeH": 6,
+        "jointLoading": "low",
+        "equipment": [
+          "foam roller / band"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "assisted ranges"
+        ],
+        "progressions": [
+          "loaded end-range holds"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 5,
+        "injuryPreventionRating": 8
+      }
     ]
   },
-
   "injuryPreventionLibrary": [
-    { "injury": "Achilles / calf tendinopathy (run)", "riskFactors": ["run-volume/intensity spikes", "low calf capacity", "footwear/surface change", "fatigue from concurrent bike load"], "warningSigns": ["morning Achilles stiffness", "calf/Achilles pain warming up then easing", "pain on single-leg heel raises"], "preventativeExercises": ["single_leg_calf_raise", "split_squat", "mobility_flow"], "recommendedFrequency": "calf loading 2-3x/week + gradual run progression", "suitableSeason": "all", "exercisesToAvoid": ["sudden hill/speed volume", "high-amplitude plyometrics on a sore Achilles", "running through sharp tendon pain"], "monitoringRecommendations": ["weekly calf/Achilles soreness check", "run-load vs chronic baseline"], "evidenceLevel": "L3", "source": "Silbernagel; Alfredson (Achilles loading); triathlon injury epidemiology (Vleck 2010)", "confidence": "moderate" },
-    { "injury": "Patellofemoral pain (run + bike)", "riskFactors": ["hip/glute weakness", "training-volume spikes", "bike fit (saddle height/position)", "poor frontal-plane run control"], "warningSigns": ["anterior knee pain on stairs/hills/after sitting", "pain with high cycling volume or downhill running"], "preventativeExercises": ["split_squat", "hip_thrust", "pallof_press"], "recommendedFrequency": "hip/quad strength 2x/week + load management", "suitableSeason": "all", "exercisesToAvoid": ["deep loaded knee positions while symptomatic", "rapid bike-volume + run-volume spikes together"], "monitoringRecommendations": ["anterior-knee soreness check", "bike-fit review on flare"], "evidenceLevel": "L3", "source": "PFP literature (Crossley; Barton); expert consensus", "confidence": "moderate" },
-    { "injury": "Bone stress injury / RED-S", "riskFactors": ["run-load progression too fast", "low energy availability / under-fuelling", "menstrual dysfunction (where applicable)", "low bone-loading strength exposure"], "warningSigns": ["localised bony pain on impact (worsening run-to-run)", "night pain", "fatigue + stalled performance + recurrent illness"], "preventativeExercises": ["back_squat", "single_leg_calf_raise", "pogo_plyo"], "recommendedFrequency": "strength 2x/week + adequate fuelling + graded run progression", "suitableSeason": "all", "exercisesToAvoid": ["running through localised bony pain", "stacking volume on an under-fuelled athlete"], "monitoringRecommendations": ["energy-availability/RED-S screen", "weekly run-load + localised bone-pain check; medical referral on suspicion"], "evidenceLevel": "L2", "source": "Warden 2014 (bone stress); Mountjoy 2018 (RED-S IOC consensus)", "confidence": "moderate" },
-    { "injury": "Swimmer's shoulder (swim)", "riskFactors": ["swim-volume/paddle spikes", "weak external rotators / scapular dyskinesis", "reduced thoracic mobility", "fatigue"], "warningSigns": ["pain on entry/pull phase", "ER strength drop", "reduced total rotation ROM"], "preventativeExercises": ["band_external_rotation", "bent_row", "mobility_flow"], "recommendedFrequency": "shoulder prehab 3-4x/week + technique work", "suitableSeason": "all", "exercisesToAvoid": ["heavy bench/overhead press into impingement", "paddle-volume spikes", "swimming through sharp shoulder pain"], "monitoringRecommendations": ["monthly ER:IR + ROM", "swim-volume vs chronic baseline"], "evidenceLevel": "L3", "source": "Bak 2010; Kibler (scapular)", "confidence": "moderate" }
+    {
+      "injury": "Achilles / calf tendinopathy (run)",
+      "riskFactors": [
+        "run-volume/intensity spikes",
+        "low calf capacity",
+        "footwear/surface change",
+        "fatigue from concurrent bike load"
+      ],
+      "warningSigns": [
+        "morning Achilles stiffness",
+        "calf/Achilles pain warming up then easing",
+        "pain on single-leg heel raises"
+      ],
+      "preventativeExercises": [
+        "single_leg_calf_raise",
+        "split_squat",
+        "mobility_flow"
+      ],
+      "recommendedFrequency": "calf loading 2-3x/week + gradual run progression",
+      "suitableSeason": "all",
+      "exercisesToAvoid": [
+        "sudden hill/speed volume",
+        "high-amplitude plyometrics on a sore Achilles",
+        "running through sharp tendon pain"
+      ],
+      "monitoringRecommendations": [
+        "weekly calf/Achilles soreness check",
+        "run-load vs chronic baseline"
+      ],
+      "evidenceLevel": "L3",
+      "source": "Silbernagel; Alfredson (Achilles loading); triathlon injury epidemiology (Vleck 2010)",
+      "confidence": "moderate"
+    },
+    {
+      "injury": "Patellofemoral pain (run + bike)",
+      "riskFactors": [
+        "hip/glute weakness",
+        "training-volume spikes",
+        "bike fit (saddle height/position)",
+        "poor frontal-plane run control"
+      ],
+      "warningSigns": [
+        "anterior knee pain on stairs/hills/after sitting",
+        "pain with high cycling volume or downhill running"
+      ],
+      "preventativeExercises": [
+        "split_squat",
+        "hip_thrust",
+        "pallof_press"
+      ],
+      "recommendedFrequency": "hip/quad strength 2x/week + load management",
+      "suitableSeason": "all",
+      "exercisesToAvoid": [
+        "deep loaded knee positions while symptomatic",
+        "rapid bike-volume + run-volume spikes together"
+      ],
+      "monitoringRecommendations": [
+        "anterior-knee soreness check",
+        "bike-fit review on flare"
+      ],
+      "evidenceLevel": "L3",
+      "source": "PFP literature (Crossley; Barton); expert consensus",
+      "confidence": "moderate"
+    },
+    {
+      "injury": "Bone stress injury / RED-S",
+      "riskFactors": [
+        "run-load progression too fast",
+        "low energy availability / under-fuelling",
+        "menstrual dysfunction (where applicable)",
+        "low bone-loading strength exposure"
+      ],
+      "warningSigns": [
+        "localised bony pain on impact (worsening run-to-run)",
+        "night pain",
+        "fatigue + stalled performance + recurrent illness"
+      ],
+      "preventativeExercises": [
+        "back_squat",
+        "single_leg_calf_raise",
+        "pogo_plyo"
+      ],
+      "recommendedFrequency": "strength 2x/week + adequate fuelling + graded run progression",
+      "suitableSeason": "all",
+      "exercisesToAvoid": [
+        "running through localised bony pain",
+        "stacking volume on an under-fuelled athlete"
+      ],
+      "monitoringRecommendations": [
+        "energy-availability/RED-S screen",
+        "weekly run-load + localised bone-pain check; medical referral on suspicion"
+      ],
+      "evidenceLevel": "L2",
+      "source": "Warden 2014 (bone stress); Mountjoy 2018 (RED-S IOC consensus)",
+      "confidence": "moderate"
+    },
+    {
+      "injury": "Swimmer's shoulder (swim)",
+      "riskFactors": [
+        "swim-volume/paddle spikes",
+        "weak external rotators / scapular dyskinesis",
+        "reduced thoracic mobility",
+        "fatigue"
+      ],
+      "warningSigns": [
+        "pain on entry/pull phase",
+        "ER strength drop",
+        "reduced total rotation ROM"
+      ],
+      "preventativeExercises": [
+        "band_external_rotation",
+        "bent_row",
+        "mobility_flow"
+      ],
+      "recommendedFrequency": "shoulder prehab 3-4x/week + technique work",
+      "suitableSeason": "all",
+      "exercisesToAvoid": [
+        "heavy bench/overhead press into impingement",
+        "paddle-volume spikes",
+        "swimming through sharp shoulder pain"
+      ],
+      "monitoringRecommendations": [
+        "monthly ER:IR + ROM",
+        "swim-volume vs chronic baseline"
+      ],
+      "evidenceLevel": "L3",
+      "source": "Bak 2010; Kibler (scapular)",
+      "confidence": "moderate"
+    }
   ],
-
   "decisionRules": [
-    { "id": "run_load_spike_pull_back", "if": "run volume/impact ACWR > 1.5 (or a >~10-15% week-to-week run-load jump)", "then": "cap run volume this week, hold or reduce brick exposure, prioritise calf/lower-limb prehab; the run is the binding tissue ceiling", "priority": 1, "confidence": "low", "evidenceLevel": "L3", "source": "Gabbett 2016 (contested — Impellizzeri 2020, Lolli 2019); applied to run impact load", "appliesTo": ["load"] },
-    { "id": "no_heavy_legs_before_key_run", "if": "a key/long run or key brick session is scheduled within 24 hours", "then": "avoid heavy or high-soreness lower-body gym work the day before — preserve fresh legs for the run (the discipline that decides the race)", "priority": 1, "confidence": "moderate", "evidenceLevel": "L4", "source": "concurrent-training sequencing; expert consensus", "appliesTo": ["legs"] },
-    { "id": "concurrent_sequencing", "if": "strength and a key endurance session fall on the same day", "then": "separate by the longest feasible window and run the priority quality first; lift for neural strength (low volume, short of failure) to minimise the interference effect", "priority": 2, "confidence": "moderate", "evidenceLevel": "L2", "source": "concurrent-training literature (Coffey & Hawley; Fyfe 2014)", "appliesTo": ["legs"] },
-    { "id": "competition_within_72h_taper", "if": "an A-race is within 72 hours", "then": "remove high-soreness gym (heavy strength, novel plyometrics, high-volume eccentric); allow only low-fatigue priming; cut endurance volume, keep some intensity", "priority": 1, "confidence": "high", "evidenceLevel": "L1", "source": "taper meta-analysis (Bosquet 2007); Mujika & Padilla", "appliesTo": ["volume"] },
-    { "id": "shoulder_soreness_reduce_swim_overhead", "if": "athlete reports shoulder pain on the swim pull OR ER strength drop >15% vs baseline", "then": "reduce swim pull/paddle volume + overhead gym; switch to pain-free scapular + ER prehab; flag for review", "priority": 1, "confidence": "moderate", "evidenceLevel": "L3", "source": "Bak 2010; shoulder-monitoring consensus", "appliesTo": ["shoulder"] },
-    { "id": "bone_pain_stop_running", "if": "athlete reports localised bony pain on impact that worsens run-to-run", "then": "stop running on it, treat as suspected bone stress injury, refer medically, and screen energy availability — do NOT train through it", "priority": 1, "confidence": "moderate", "evidenceLevel": "L2", "source": "Warden 2014; RED-S consensus (Mountjoy 2018)", "appliesTo": ["bone"] },
-    { "id": "low_energy_availability_flag", "if": "RED-S/low-energy-availability indicators present (under-fuelling, menstrual dysfunction, recurrent illness, stalled adaptation)", "then": "prioritise fuelling, reduce volume, refer to medical/dietetic support; do not chase volume or leanness", "priority": 1, "confidence": "moderate", "evidenceLevel": "L2", "source": "Mountjoy 2014/2018 (RED-S IOC consensus)", "appliesTo": ["readiness"] },
-    { "id": "low_readiness_autoregulate", "if": "readiness score low (poor sleep + high soreness + low wellness)", "then": "autoregulate down one step; prioritise easy aerobic + recovery; do not test", "priority": 1, "confidence": "high", "evidenceLevel": "L1", "source": "Saw 2016", "appliesTo": ["readiness"] },
-    { "id": "cmj_drop_flag_fatigue", "if": "CMJ >10-15% below rolling baseline", "then": "treat as neuromuscular fatigue: reduce gym power/impact load, emphasise recovery, recheck", "priority": 2, "confidence": "moderate", "evidenceLevel": "L3", "source": "Claudino 2017", "appliesTo": ["readiness"] },
-    { "id": "inseason_strength_minimal_effective", "if": "in competition phase", "then": "hold strength at minimal effective volume (1 low-volume session, high quality, away from key swim/bike/run sessions); maintain calf + shoulder prehab", "priority": 2, "confidence": "high", "evidenceLevel": "L2", "source": "in-season strength-maintenance literature (Rønnestad & Mujika 2014)", "appliesTo": ["volume"] },
-    { "id": "illness_no_training", "if": "athlete reports systemic illness (fever / below-neck symptoms)", "then": "withhold training until symptom-free; resume gradually", "priority": 1, "confidence": "high", "evidenceLevel": "L4", "source": "exercise-immunology consensus", "appliesTo": ["readiness"] }
+    {
+      "id": "run_load_spike_pull_back",
+      "if": "run volume/impact ACWR > 1.5 (or a >~10-15% week-to-week run-load jump)",
+      "then": "cap run volume this week, hold or reduce brick exposure, prioritise calf/lower-limb prehab; the run is the binding tissue ceiling",
+      "priority": 1,
+      "confidence": "low",
+      "evidenceLevel": "L3",
+      "source": "Gabbett 2016 (contested — Impellizzeri 2020, Lolli 2019); applied to run impact load",
+      "appliesTo": [
+        "load"
+      ]
+    },
+    {
+      "id": "no_heavy_legs_before_key_run",
+      "if": "a key/long run or key brick session is scheduled within 24 hours",
+      "then": "avoid heavy or high-soreness lower-body gym work the day before — preserve fresh legs for the run (the discipline that decides the race)",
+      "priority": 1,
+      "confidence": "moderate",
+      "evidenceLevel": "L4",
+      "source": "concurrent-training sequencing; expert consensus",
+      "appliesTo": [
+        "legs"
+      ]
+    },
+    {
+      "id": "concurrent_sequencing",
+      "if": "strength and a key endurance session fall on the same day",
+      "then": "separate by the longest feasible window and run the priority quality first; lift for neural strength (low volume, short of failure) to minimise the interference effect",
+      "priority": 2,
+      "confidence": "moderate",
+      "evidenceLevel": "L2",
+      "source": "concurrent-training literature (Coffey & Hawley; Fyfe 2014)",
+      "appliesTo": [
+        "legs"
+      ]
+    },
+    {
+      "id": "competition_within_72h_taper",
+      "if": "an A-race is within 72 hours",
+      "then": "remove high-soreness gym (heavy strength, novel plyometrics, high-volume eccentric); allow only low-fatigue priming; cut endurance volume, keep some intensity",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L1",
+      "source": "taper meta-analysis (Bosquet 2007); Mujika & Padilla",
+      "appliesTo": [
+        "volume"
+      ]
+    },
+    {
+      "id": "shoulder_soreness_reduce_swim_overhead",
+      "if": "athlete reports shoulder pain on the swim pull OR ER strength drop >15% vs baseline",
+      "then": "reduce swim pull/paddle volume + overhead gym; switch to pain-free scapular + ER prehab; flag for review",
+      "priority": 1,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Bak 2010; shoulder-monitoring consensus",
+      "appliesTo": [
+        "shoulder"
+      ]
+    },
+    {
+      "id": "bone_pain_stop_running",
+      "if": "athlete reports localised bony pain on impact that worsens run-to-run",
+      "then": "stop running on it, treat as suspected bone stress injury, refer medically, and screen energy availability — do NOT train through it",
+      "priority": 1,
+      "confidence": "moderate",
+      "evidenceLevel": "L2",
+      "source": "Warden 2014; RED-S consensus (Mountjoy 2018)",
+      "appliesTo": [
+        "bone"
+      ]
+    },
+    {
+      "id": "low_energy_availability_flag",
+      "if": "RED-S/low-energy-availability indicators present (under-fuelling, menstrual dysfunction, recurrent illness, stalled adaptation)",
+      "then": "prioritise fuelling, reduce volume, refer to medical/dietetic support; do not chase volume or leanness",
+      "priority": 1,
+      "confidence": "moderate",
+      "evidenceLevel": "L2",
+      "source": "Mountjoy 2014/2018 (RED-S IOC consensus)",
+      "appliesTo": [
+        "readiness"
+      ]
+    },
+    {
+      "id": "low_readiness_autoregulate",
+      "if": "readiness score low (poor sleep + high soreness + low wellness)",
+      "then": "autoregulate down one step; prioritise easy aerobic + recovery; do not test",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L1",
+      "source": "Saw 2016",
+      "appliesTo": [
+        "readiness"
+      ]
+    },
+    {
+      "id": "cmj_drop_flag_fatigue",
+      "if": "CMJ >10-15% below rolling baseline",
+      "then": "treat as neuromuscular fatigue: reduce gym power/impact load, emphasise recovery, recheck",
+      "priority": 2,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Claudino 2017",
+      "appliesTo": [
+        "readiness"
+      ]
+    },
+    {
+      "id": "inseason_strength_minimal_effective",
+      "if": "in competition phase",
+      "then": "hold strength at minimal effective volume (1 low-volume session, high quality, away from key swim/bike/run sessions); maintain calf + shoulder prehab",
+      "priority": 2,
+      "confidence": "high",
+      "evidenceLevel": "L2",
+      "source": "in-season strength-maintenance literature (Rønnestad & Mujika 2014)",
+      "appliesTo": [
+        "volume"
+      ]
+    },
+    {
+      "id": "illness_no_training",
+      "if": "athlete reports systemic illness (fever / below-neck symptoms)",
+      "then": "withhold training until symptom-free; resume gradually",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L4",
+      "source": "exercise-immunology consensus",
+      "appliesTo": [
+        "readiness"
+      ]
+    }
   ],
-
   "loadManagement": {
-    "acwr": { "model": "acute (7-day) : chronic (28-day) tracked PER DISCIPLINE (run impact, bike volume, swim volume) and as combined sRPE load; rolling/EWMA preferred. Run impact is the priority signal.", "sweetSpotLow": 0.8, "sweetSpotHigh": 1.3, "highRiskAbove": 1.5, "confidence": "low", "evidenceLevel": "L3", "source": "Gabbett 2016 applied per discipline — methodology contested (Impellizzeri 2020, Lolli 2019); soft monitoring input" },
+    "acwr": {
+      "model": "acute (7-day) : chronic (28-day) tracked PER DISCIPLINE (run impact, bike volume, swim volume) and as combined sRPE load; rolling/EWMA preferred. Run impact is the priority signal.",
+      "sweetSpotLow": 0.8,
+      "sweetSpotHigh": 1.3,
+      "highRiskAbove": 1.5,
+      "confidence": "low",
+      "evidenceLevel": "L3",
+      "source": "Gabbett 2016 applied per discipline — methodology contested (Impellizzeri 2020, Lolli 2019); soft monitoring input"
+    },
     "weeklyProgressionGuideline": "Avoid >~10-15% week-to-week spikes, especially in RUN volume — run impact is the load-limited tissue. Build the three disciplines' loads semi-independently.",
-    "gymVolumeRanges": { "offSeason": "moderate-high (2-3 sessions; max strength + tissue capacity)", "preSeason": "low-moderate (1-2 sessions; maintenance/power)", "inSeason": "low maintenance (1 session; low volume, high quality) + daily calf/shoulder prehab", "taper": "very low (0-1 session; priming only)" },
+    "gymVolumeRanges": {
+      "offSeason": "moderate-high (2-3 sessions; max strength + tissue capacity)",
+      "preSeason": "low-moderate (1-2 sessions; maintenance/power)",
+      "inSeason": "low maintenance (1 session; low volume, high quality) + daily calf/shoulder prehab",
+      "taper": "very low (0-1 session; priming only)"
+    },
     "minimumEffectiveVolume": "~1 low-volume strength session/week sustains strength/economy in-season; calf + shoulder prehab should not drop below a low ongoing dose.",
     "maximumAdaptiveVolume": "Off-season — build strength + tissue capacity + aerobic base here, while combined endurance volume is lower.",
     "maximumRecoverableVolume": "Constrained by TOTAL combined three-discipline load and lower-limb (run) tissue tolerance AND energy availability; gym must never compromise the key endurance sessions or the legs before the run — combined load + fuelling is the binding ceiling.",
@@ -199,133 +1667,890 @@
     "evidenceLevel": "L3",
     "source": "Bosquet/Mujika (taper); Gabbett (load — contested); Rønnestad & Mujika (maintenance); Mountjoy (RED-S); expert consensus"
   },
-
   "readinessModel": {
     "factors": [
-      { "name": "Lower-limb soreness (run-specific)", "metric": "localised_soreness", "importance": 9, "thresholds": [{ "when": "calf/Achilles/knee soreness or localised bony pain", "modifier": "cut run impact + heavy legs; prehab/mobility only; refer if bony pain" }], "confidence": "moderate", "evidenceLevel": "L3", "source": "triathlon injury epidemiology; expert consensus" },
-      { "name": "Subjective wellness (soreness/energy/mood)", "metric": "subjective_wellness", "importance": 9, "thresholds": [{ "when": "≥1 SD below baseline", "modifier": "reduce session load one step" }, { "when": "multiple sub-scores red", "modifier": "convert to easy aerobic / recovery" }], "confidence": "high", "evidenceLevel": "L1", "source": "Saw 2016" },
-      { "name": "Energy availability / fuelling (RED-S)", "metric": "energy_availability", "importance": 8, "thresholds": [{ "when": "under-fuelling signs vs very high volume", "modifier": "prioritise fuelling, reduce volume, refer" }], "confidence": "moderate", "evidenceLevel": "L2", "source": "Mountjoy 2014/2018 (RED-S)" },
-      { "name": "Sleep", "metric": "sleep", "importance": 8, "thresholds": [{ "when": "<6 h or markedly below baseline", "modifier": "reduce intensity; emphasise recovery" }], "confidence": "high", "evidenceLevel": "L2", "source": "Milewski 2014" },
-      { "name": "Previous session RPE (combined 3-discipline + gym load)", "metric": "session_rpe", "importance": 8, "thresholds": [{ "when": "high prior load + short recovery", "modifier": "lower today's load" }], "confidence": "high", "evidenceLevel": "L2", "source": "Foster sRPE; Haddad 2017" },
-      { "name": "Shoulder soreness (swim)", "metric": "shoulder_soreness", "importance": 6, "thresholds": [{ "when": "pain on swim pull or ER strength drop", "modifier": "cut swim pull/paddles + overhead gym; prehab only" }], "confidence": "moderate", "evidenceLevel": "L3", "source": "Bak 2010" },
-      { "name": "CMJ / neuromuscular", "metric": "cmj", "importance": 6, "thresholds": [{ "when": ">10-15% below baseline", "modifier": "reduce gym power/impact load" }], "confidence": "moderate", "evidenceLevel": "L3", "source": "Claudino 2017" },
-      { "name": "HRV", "metric": "hrv", "importance": 6, "thresholds": [{ "when": "sustained suppression vs baseline", "modifier": "treat as accumulating fatigue; ease load" }], "confidence": "moderate", "evidenceLevel": "L3", "source": "Plews 2013 (trends, not single days)" },
-      { "name": "Resting HR", "metric": "resting_hr", "importance": 5, "thresholds": [{ "when": "elevated vs baseline", "modifier": "possible fatigue/illness — caution" }], "confidence": "low", "evidenceLevel": "L4", "source": "expert consensus" },
-      { "name": "Stress (life/work)", "metric": "life_stress", "importance": 6, "thresholds": [{ "when": "high non-training stress", "modifier": "reduce load" }], "confidence": "moderate", "evidenceLevel": "L3", "source": "Mann 2016; expert consensus" },
-      { "name": "Illness", "metric": "illness", "importance": 9, "thresholds": [{ "when": "systemic/below-neck symptoms", "modifier": "withhold training" }], "confidence": "high", "evidenceLevel": "L4", "source": "exercise-immunology consensus" },
-      { "name": "Race congestion / travel", "metric": "fixture_congestion", "importance": 6, "thresholds": [{ "when": "racing block or long travel <48 h ago", "modifier": "recovery-first; gym priming only" }], "confidence": "moderate", "evidenceLevel": "L4", "source": "fixture-congestion + travel-fatigue literature" }
+      {
+        "name": "Lower-limb soreness (run-specific)",
+        "metric": "localised_soreness",
+        "importance": 9,
+        "thresholds": [
+          {
+            "when": "calf/Achilles/knee soreness or localised bony pain",
+            "modifier": "cut run impact + heavy legs; prehab/mobility only; refer if bony pain"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "triathlon injury epidemiology; expert consensus"
+      },
+      {
+        "name": "Subjective wellness (soreness/energy/mood)",
+        "metric": "subjective_wellness",
+        "importance": 9,
+        "thresholds": [
+          {
+            "when": "≥1 SD below baseline",
+            "modifier": "reduce session load one step"
+          },
+          {
+            "when": "multiple sub-scores red",
+            "modifier": "convert to easy aerobic / recovery"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Saw 2016"
+      },
+      {
+        "name": "Energy availability / fuelling (RED-S)",
+        "metric": "energy_availability",
+        "importance": 8,
+        "thresholds": [
+          {
+            "when": "under-fuelling signs vs very high volume",
+            "modifier": "prioritise fuelling, reduce volume, refer"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "Mountjoy 2014/2018 (RED-S)"
+      },
+      {
+        "name": "Sleep",
+        "metric": "sleep",
+        "importance": 8,
+        "thresholds": [
+          {
+            "when": "<6 h or markedly below baseline",
+            "modifier": "reduce intensity; emphasise recovery"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Milewski 2014"
+      },
+      {
+        "name": "Previous session RPE (combined 3-discipline + gym load)",
+        "metric": "session_rpe",
+        "importance": 8,
+        "thresholds": [
+          {
+            "when": "high prior load + short recovery",
+            "modifier": "lower today's load"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Foster sRPE; Haddad 2017"
+      },
+      {
+        "name": "Shoulder soreness (swim)",
+        "metric": "shoulder_soreness",
+        "importance": 6,
+        "thresholds": [
+          {
+            "when": "pain on swim pull or ER strength drop",
+            "modifier": "cut swim pull/paddles + overhead gym; prehab only"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Bak 2010"
+      },
+      {
+        "name": "CMJ / neuromuscular",
+        "metric": "cmj",
+        "importance": 6,
+        "thresholds": [
+          {
+            "when": ">10-15% below baseline",
+            "modifier": "reduce gym power/impact load"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Claudino 2017"
+      },
+      {
+        "name": "HRV",
+        "metric": "hrv",
+        "importance": 6,
+        "thresholds": [
+          {
+            "when": "sustained suppression vs baseline",
+            "modifier": "treat as accumulating fatigue; ease load"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Plews 2013 (trends, not single days)"
+      },
+      {
+        "name": "Resting HR",
+        "metric": "resting_hr",
+        "importance": 5,
+        "thresholds": [
+          {
+            "when": "elevated vs baseline",
+            "modifier": "possible fatigue/illness — caution"
+          }
+        ],
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "expert consensus"
+      },
+      {
+        "name": "Stress (life/work)",
+        "metric": "life_stress",
+        "importance": 6,
+        "thresholds": [
+          {
+            "when": "high non-training stress",
+            "modifier": "reduce load"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Mann 2016; expert consensus"
+      },
+      {
+        "name": "Illness",
+        "metric": "illness",
+        "importance": 9,
+        "thresholds": [
+          {
+            "when": "systemic/below-neck symptoms",
+            "modifier": "withhold training"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L4",
+        "source": "exercise-immunology consensus"
+      },
+      {
+        "name": "Race congestion / travel",
+        "metric": "fixture_congestion",
+        "importance": 6,
+        "thresholds": [
+          {
+            "when": "racing block or long travel <48 h ago",
+            "modifier": "recovery-first; gym priming only"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "fixture-congestion + travel-fatigue literature"
+      }
     ],
     "notes": "Lower-limb (run) soreness is elevated to a top-weight, triathlon-specific input — the run is the highest-injury discipline. Energy availability is included explicitly given the RED-S risk in high-volume triathlon. Subjective wellness + sleep + prior combined load carry the most general weight; objective vitals (HRV/RHR) are trend-only signals. Raw vitals stay private to the athlete; a coach sees only the derived readiness score (see TEAM-ARCHITECTURE.md)."
   },
-
   "coachDashboard": {
     "principle": "Coach sees DERIVED and availability signals only — never an individual's raw HRV/sleep/resting-HR. Aggregated, plain-English, action-oriented.",
-    "mostUsefulKpis": ["squad readiness (derived, traffic-light)", "training availability (fit/modified/out — esp. lower-limb)", "per-discipline weekly load distribution", "high-risk athlete flags (run-load spike, bone-pain, shoulder)", "training completion/compliance", "run-load ACWR distribution", "race readiness / taper status", "energy-availability/RED-S flags (status only)"],
-    "mostUsefulAlerts": ["run-load ACWR >1.5", "readiness red ≥2 days", "localised bone-pain flag", "shoulder-monitoring flag", "missed prehab work", "RED-S risk flag (status only)"],
-    "weeklyReports": ["squad availability trend", "per-discipline load vs plan", "injury/illness summary (status only)", "compliance %"],
+    "mostUsefulKpis": [
+      "squad readiness (derived, traffic-light)",
+      "training availability (fit/modified/out — esp. lower-limb)",
+      "per-discipline weekly load distribution",
+      "high-risk athlete flags (run-load spike, bone-pain, shoulder)",
+      "training completion/compliance",
+      "run-load ACWR distribution",
+      "race readiness / taper status",
+      "energy-availability/RED-S flags (status only)"
+    ],
+    "mostUsefulAlerts": [
+      "run-load ACWR >1.5",
+      "readiness red ≥2 days",
+      "localised bone-pain flag",
+      "shoulder-monitoring flag",
+      "missed prehab work",
+      "RED-S risk flag (status only)"
+    ],
+    "weeklyReports": [
+      "squad availability trend",
+      "per-discipline load vs plan",
+      "injury/illness summary (status only)",
+      "compliance %"
+    ],
     "trafficLightIndicators": "Per-athlete green/amber/red from the derived readiness + load state (no underlying numbers shown).",
-    "teamReadinessMetrics": ["% squad green", "mean derived readiness", "fatigue distribution"],
-    "complianceMetrics": ["% prescribed gym completed", "% calf/shoulder-prehab completed", "wellness check-in completion"],
+    "teamReadinessMetrics": [
+      "% squad green",
+      "mean derived readiness",
+      "fatigue distribution"
+    ],
+    "complianceMetrics": [
+      "% prescribed gym completed",
+      "% calf/shoulder-prehab completed",
+      "wellness check-in completion"
+    ],
     "privacyNote": "All per-athlete entries here are DERIVED (readiness score, load_state, ACWR, adherence %, availability/RED-S status). Raw vitals are excluded by design and enforced by the schema validator."
   },
-
   "athleteDashboard": {
-    "mostUsefulMetrics": ["readiness (today)", "weekly consistency", "per-discipline performance trend (threshold/CSS/FTP)", "run-off-bike (brick) score", "lower-limb durability score", "shoulder resilience score", "mobility score", "availability streak"],
-    "progressIndicators": ["threshold/FTP/CSS trends", "brick decoupling trend", "single-leg/calf-capacity trend", "race-time PBs vs baseline"],
-    "recoveryIndicators": ["sleep trend (private)", "lower-limb soreness trend", "readiness trend", "fuelling/energy-availability check"],
-    "performanceIndicators": ["aerobic/threshold score (per discipline)", "run-durability score", "brick score", "sport-specific performance score"],
-    "motivationalMetrics": ["injury-free (lower-limb-healthy) weeks", "consistency streak", "prehab streak", "testing-battery completion"],
-    "educationTips": ["why calf strength protects your Achilles and improves run economy", "why strength training doesn't make endurance athletes slow (neural, not bulk)", "why the taper works (less volume, keep intensity)", "why fuelling enough protects your bones (RED-S)", "what your readiness colour means today"]
+    "mostUsefulMetrics": [
+      "readiness (today)",
+      "weekly consistency",
+      "per-discipline performance trend (threshold/CSS/FTP)",
+      "run-off-bike (brick) score",
+      "lower-limb durability score",
+      "shoulder resilience score",
+      "mobility score",
+      "availability streak"
+    ],
+    "progressIndicators": [
+      "threshold/FTP/CSS trends",
+      "brick decoupling trend",
+      "single-leg/calf-capacity trend",
+      "race-time PBs vs baseline"
+    ],
+    "recoveryIndicators": [
+      "sleep trend (private)",
+      "lower-limb soreness trend",
+      "readiness trend",
+      "fuelling/energy-availability check"
+    ],
+    "performanceIndicators": [
+      "aerobic/threshold score (per discipline)",
+      "run-durability score",
+      "brick score",
+      "sport-specific performance score"
+    ],
+    "motivationalMetrics": [
+      "injury-free (lower-limb-healthy) weeks",
+      "consistency streak",
+      "prehab streak",
+      "testing-battery completion"
+    ],
+    "educationTips": [
+      "why calf strength protects your Achilles and improves run economy",
+      "why strength training doesn't make endurance athletes slow (neural, not bulk)",
+      "why the taper works (less volume, keep intensity)",
+      "why fuelling enough protects your bones (RED-S)",
+      "what your readiness colour means today"
+    ]
   },
-
   "validation": {
-    "strongEvidence": ["the taper improves performance — reduce volume, maintain intensity (Bosquet 2007; Mujika & Padilla)", "heavy/explosive strength training improves running and cycling economy without added mass in endurance athletes (Rønnestad & Mujika 2014; Beattie 2017)", "subjective wellness is a sensitive readiness measure (Saw 2016)", "low energy availability drives bone stress injury + impaired health/performance (Mountjoy 2018)"],
-    "weakEvidence": ["exact ACWR thresholds applied per discipline (contested)", "precise event energy-system percentages by distance", "magnitude of strength transfer to in-race triathlon performance specifically (vs single-sport economy studies)", "CMJ as a precise performance predictor", "plyometric dosing that improves economy without raising run-injury risk"],
-    "areasRequiringExpertJudgement": ["concurrent-training sequencing for the individual (when to lift vs key endurance)", "individual run-load and bone-stress ceilings", "energy-availability assessment + management", "taper individualisation by distance", "balancing three disciplines against the athlete's weakest leg"],
-    "areasRequiringFutureResearch": ["triathlon-specific strength-transfer and brick-economy studies", "run-load monitoring thresholds in multi-discipline athletes", "RED-S prevalence + management in age-group triathletes", "long-term durability of high-volume multi-sport training"],
-    "potentialRisksIfMisimplemented": ["heavy gym placed before key run/brick work, robbing the legs", "adding hypertrophy volume that increases mass to carry", "treating ACWR as a hard rule", "missing low energy availability and driving bone stress injury", "running through localised bony pain", "exposing raw vitals to coaches (privacy + trust breach)", "botched taper costing peak performance"]
+    "strongEvidence": [
+      "the taper improves performance — reduce volume, maintain intensity (Bosquet 2007; Mujika & Padilla)",
+      "heavy/explosive strength training improves running and cycling economy without added mass in endurance athletes (Rønnestad & Mujika 2014; Beattie 2017)",
+      "subjective wellness is a sensitive readiness measure (Saw 2016)",
+      "low energy availability drives bone stress injury + impaired health/performance (Mountjoy 2018)"
+    ],
+    "weakEvidence": [
+      "exact ACWR thresholds applied per discipline (contested)",
+      "precise event energy-system percentages by distance",
+      "magnitude of strength transfer to in-race triathlon performance specifically (vs single-sport economy studies)",
+      "CMJ as a precise performance predictor",
+      "plyometric dosing that improves economy without raising run-injury risk"
+    ],
+    "areasRequiringExpertJudgement": [
+      "concurrent-training sequencing for the individual (when to lift vs key endurance)",
+      "individual run-load and bone-stress ceilings",
+      "energy-availability assessment + management",
+      "taper individualisation by distance",
+      "balancing three disciplines against the athlete's weakest leg"
+    ],
+    "areasRequiringFutureResearch": [
+      "triathlon-specific strength-transfer and brick-economy studies",
+      "run-load monitoring thresholds in multi-discipline athletes",
+      "RED-S prevalence + management in age-group triathletes",
+      "long-term durability of high-volume multi-sport training"
+    ],
+    "potentialRisksIfMisimplemented": [
+      "heavy gym placed before key run/brick work, robbing the legs",
+      "adding hypertrophy volume that increases mass to carry",
+      "treating ACWR as a hard rule",
+      "missing low energy availability and driving bone stress injury",
+      "running through localised bony pain",
+      "exposing raw vitals to coaches (privacy + trust breach)",
+      "botched taper costing peak performance"
+    ]
   },
-
   "references": [
-    { "key": "RonnestadMujika2014", "citation": "Rønnestad BR, Mujika I (2014). Optimizing strength training for running and cycling endurance performance: a review. Scand J Med Sci Sports.", "governingBody": null, "type": "review" },
-    { "key": "Beattie2017", "citation": "Beattie K, et al. (2017). The effect of strength training on performance indicators in distance runners. J Strength Cond Res (and Beattie 2014 review, Sports Med).", "governingBody": null, "type": "original research / review" },
-    { "key": "Millet2009", "citation": "Millet GP, Vleck VE, Bentley DJ (2009). Physiological differences between cycling and running and triathlon-specific demands. Sports Med.", "governingBody": null, "type": "review" },
-    { "key": "Vleck2010", "citation": "Vleck VE, Bentley DJ, et al. Triathlon injury epidemiology and training-load relationships. (and Andersen CA 2013, Scand J Med Sci Sports — triathlon injuries).", "governingBody": null, "type": "original research" },
-    { "key": "Bosquet2007", "citation": "Bosquet L, et al. (2007). Effects of tapering on performance: a meta-analysis. Med Sci Sports Exerc.", "governingBody": null, "type": "meta-analysis" },
-    { "key": "Mountjoy2018", "citation": "Mountjoy M, et al. (2018). IOC consensus statement on Relative Energy Deficiency in Sport (RED-S): 2018 update. Br J Sports Med.", "governingBody": "IOC", "type": "consensus statement" },
-    { "key": "Warden2014", "citation": "Warden SJ, Davis IS, Fredericson M (2014). Management and prevention of bone stress injuries in runners. J Orthop Sports Phys Ther.", "governingBody": null, "type": "review" },
-    { "key": "Saw2016", "citation": "Saw AE, Main LC, Gastin PB (2016). Monitoring the athlete training response: subjective measures trump objective measures. Br J Sports Med.", "governingBody": null, "type": "systematic review" },
-    { "key": "Gabbett2016", "citation": "Gabbett TJ (2016). The training-injury prevention paradox. Br J Sports Med. (with methodological critiques: Impellizzeri 2020; Lolli 2019).", "governingBody": null, "type": "review / critique" },
-    { "key": "Fyfe2014", "citation": "Fyfe JJ, Bishop DJ, Stepto NK (2014). Interference between concurrent resistance and endurance exercise: molecular bases and application. Sports Med.", "governingBody": null, "type": "review" },
-    { "key": "Bak2010", "citation": "Bak K (2010). The practical management of swimmer's painful shoulder. Clin J Sport Med.", "governingBody": null, "type": "review" },
-    { "key": "WorldTriathlon", "citation": "World Triathlon — competition rules, distances and draft-legal regulations.", "governingBody": "World Triathlon", "type": "governing body" }
+    {
+      "key": "RonnestadMujika2014",
+      "citation": "Rønnestad BR, Mujika I (2014). Optimizing strength training for running and cycling endurance performance: a review. Scand J Med Sci Sports.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "Beattie2017",
+      "citation": "Beattie K, et al. (2017). The effect of strength training on performance indicators in distance runners. J Strength Cond Res (and Beattie 2014 review, Sports Med).",
+      "governingBody": null,
+      "type": "original research / review"
+    },
+    {
+      "key": "Millet2009",
+      "citation": "Millet GP, Vleck VE, Bentley DJ (2009). Physiological differences between cycling and running and triathlon-specific demands. Sports Med.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "Vleck2010",
+      "citation": "Vleck VE, Bentley DJ, et al. Triathlon injury epidemiology and training-load relationships. (and Andersen CA 2013, Scand J Med Sci Sports — triathlon injuries).",
+      "governingBody": null,
+      "type": "original research"
+    },
+    {
+      "key": "Bosquet2007",
+      "citation": "Bosquet L, et al. (2007). Effects of tapering on performance: a meta-analysis. Med Sci Sports Exerc.",
+      "governingBody": null,
+      "type": "meta-analysis"
+    },
+    {
+      "key": "Mountjoy2018",
+      "citation": "Mountjoy M, et al. (2018). IOC consensus statement on Relative Energy Deficiency in Sport (RED-S): 2018 update. Br J Sports Med.",
+      "governingBody": "IOC",
+      "type": "consensus statement"
+    },
+    {
+      "key": "Warden2014",
+      "citation": "Warden SJ, Davis IS, Fredericson M (2014). Management and prevention of bone stress injuries in runners. J Orthop Sports Phys Ther.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "Saw2016",
+      "citation": "Saw AE, Main LC, Gastin PB (2016). Monitoring the athlete training response: subjective measures trump objective measures. Br J Sports Med.",
+      "governingBody": null,
+      "type": "systematic review"
+    },
+    {
+      "key": "Gabbett2016",
+      "citation": "Gabbett TJ (2016). The training-injury prevention paradox. Br J Sports Med. (with methodological critiques: Impellizzeri 2020; Lolli 2019).",
+      "governingBody": null,
+      "type": "review / critique"
+    },
+    {
+      "key": "Fyfe2014",
+      "citation": "Fyfe JJ, Bishop DJ, Stepto NK (2014). Interference between concurrent resistance and endurance exercise: molecular bases and application. Sports Med.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "Bak2010",
+      "citation": "Bak K (2010). The practical management of swimmer's painful shoulder. Clin J Sport Med.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "WorldTriathlon",
+      "citation": "World Triathlon — competition rules, distances and draft-legal regulations.",
+      "governingBody": "World Triathlon",
+      "type": "governing body"
+    }
   ],
-
   "kpiFramework": {
     "kpis": [
-      { "name": "Readiness", "metric": "readiness", "category": "Recovery", "leadingOrLagging": "leading", "importance": 9, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": true, "measurementMethod": "Composite of subjective wellness + sleep + prior combined load + lower-limb soreness (+ optional HRV trend), normalised to baseline", "testingFrequency": "daily", "targetRange": "green vs personal baseline", "eliteBenchmark": "consistently green pre-race", "beginnerBenchmark": "establish baseline", "youthBenchmark": "track trend", "equipmentRequired": ["app (+ optional wearable)"], "wearableEstimable": true, "autoCalculable": true, "confidence": "high", "evidenceLevel": "L1", "source": "Saw 2016; derived score (raw vitals stay private)" },
-      { "name": "Weekly consistency", "metric": "consistency", "category": "Team", "leadingOrLagging": "leading", "importance": 8, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": true, "measurementMethod": "% prescribed sessions (swim + bike + run + gym + prehab + check-ins) completed", "testingFrequency": "weekly", "targetRange": "≥85%", "eliteBenchmark": "≥90%", "beginnerBenchmark": "≥70%", "youthBenchmark": "habit-building", "equipmentRequired": ["app"], "wearableEstimable": false, "autoCalculable": true, "confidence": "high", "evidenceLevel": "L4", "source": "adherence literature; expert consensus" },
-      { "name": "Training availability", "metric": "availability", "category": "Availability", "leadingOrLagging": "lagging", "importance": 9, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": true, "measurementMethod": "fit / modified / out (status only — esp. lower-limb)", "testingFrequency": "daily", "targetRange": "maximise 'fit'", "eliteBenchmark": "high availability", "beginnerBenchmark": "n/a", "youthBenchmark": "n/a", "equipmentRequired": ["app"], "wearableEstimable": false, "autoCalculable": true, "confidence": "high", "evidenceLevel": "L2", "source": "availability-performance link; expert consensus" },
-      { "name": "Run-off-bike (brick) decoupling", "metric": "brick_decoupling", "category": "Performance", "leadingOrLagging": "lagging", "importance": 8, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": false, "measurementMethod": "Run pace/HR decoupling off the bike vs fresh at matched intensity", "testingFrequency": "per block", "targetRange": "minimal decoupling at race intensity", "eliteBenchmark": "near-fresh run economy off the bike", "beginnerBenchmark": "baseline", "youthBenchmark": "introduce gently", "equipmentRequired": ["GPS watch", "power meter"], "wearableEstimable": true, "autoCalculable": false, "confidence": "low", "evidenceLevel": "L4", "source": "triathlon coaching practice; expert consensus" },
-      { "name": "Run threshold / critical speed", "metric": "run_threshold", "category": "Performance", "leadingOrLagging": "lagging", "importance": 9, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": false, "measurementMethod": "Critical speed / threshold pace from time trials", "testingFrequency": "per block", "targetRange": "improving pace at threshold", "eliteBenchmark": "distance-relative standards", "beginnerBenchmark": "baseline", "youthBenchmark": "track trend", "equipmentRequired": ["GPS watch / track"], "wearableEstimable": true, "autoCalculable": false, "confidence": "moderate", "evidenceLevel": "L3", "source": "critical-speed literature; expert consensus" },
-      { "name": "Bike FTP", "metric": "ftp", "category": "Performance", "leadingOrLagging": "lagging", "importance": 8, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": false, "measurementMethod": "Functional threshold power (W and W/kg)", "testingFrequency": "per block", "targetRange": "improving W/kg", "eliteBenchmark": "distance-relative", "beginnerBenchmark": "baseline", "youthBenchmark": "track trend", "equipmentRequired": ["power meter"], "wearableEstimable": true, "autoCalculable": true, "confidence": "moderate", "evidenceLevel": "L3", "source": "Allen & Coggan (FTP)" },
-      { "name": "Swim critical speed (CSS)", "metric": "css", "category": "Performance", "leadingOrLagging": "lagging", "importance": 7, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": false, "measurementMethod": "CSS from time trials", "testingFrequency": "per block", "targetRange": "improving CSS", "eliteBenchmark": "distance-relative", "beginnerBenchmark": "baseline", "youthBenchmark": "track trend", "equipmentRequired": ["pace clock"], "wearableEstimable": false, "autoCalculable": false, "confidence": "moderate", "evidenceLevel": "L3", "source": "Wakayoshi (critical swimming velocity)" },
-      { "name": "Single-leg / calf capacity", "metric": "calf_capacity", "category": "Availability", "leadingOrLagging": "leading", "importance": 8, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": false, "measurementMethod": "Single-leg heel-raise endurance + single-leg strength symmetry", "testingFrequency": "monthly", "targetRange": "high symmetrical capacity", "eliteBenchmark": "robust + symmetrical", "beginnerBenchmark": "baseline + competency", "youthBenchmark": "bodyweight competency", "equipmentRequired": ["step"], "wearableEstimable": false, "autoCalculable": false, "confidence": "moderate", "evidenceLevel": "L3", "source": "Achilles/PFP rehab literature (Silbernagel; Crossley)" },
-      { "name": "Run-load ACWR", "metric": "acwr", "category": "Recovery", "leadingOrLagging": "leading", "importance": 7, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": true, "measurementMethod": "7-day:28-day run impact load (per-discipline)", "testingFrequency": "weekly (rolling)", "targetRange": "0.8-1.3", "eliteBenchmark": "stable in range", "beginnerBenchmark": "n/a", "youthBenchmark": "n/a", "equipmentRequired": ["training log / GPS"], "wearableEstimable": true, "autoCalculable": true, "confidence": "low", "evidenceLevel": "L3", "source": "Gabbett 2016 (contested — soft input)" },
-      { "name": "Session RPE load", "metric": "session_rpe", "category": "Recovery", "leadingOrLagging": "lagging", "importance": 7, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": true, "measurementMethod": "RPE × duration across all disciplines + gym", "testingFrequency": "every session", "targetRange": "planned vs actual", "eliteBenchmark": "matches plan", "beginnerBenchmark": "learn scale", "youthBenchmark": "learn scale", "equipmentRequired": ["app"], "wearableEstimable": false, "autoCalculable": true, "confidence": "high", "evidenceLevel": "L2", "source": "Foster sRPE; Haddad 2017" },
-      { "name": "Energy availability / RED-S status", "metric": "energy_availability", "category": "Availability", "leadingOrLagging": "leading", "importance": 8, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": false, "measurementMethod": "RED-S screen (LEAF-Q where applicable) + dietary/medical review — status only on shared surfaces", "testingFrequency": "per block + on flags", "targetRange": "adequate energy availability", "eliteBenchmark": "no RED-S indicators", "beginnerBenchmark": "education + baseline", "youthBenchmark": "monitor carefully", "equipmentRequired": ["questionnaire", "medical referral"], "wearableEstimable": false, "autoCalculable": false, "confidence": "moderate", "evidenceLevel": "L2", "source": "Mountjoy 2018 (RED-S IOC consensus)" },
-      { "name": "Sleep", "metric": "sleep", "category": "Recovery", "leadingOrLagging": "leading", "importance": 7, "athleteDashboard": true, "coachDashboard": false, "teamDashboard": false, "measurementMethod": "Wearable/self-report sleep duration & quality", "testingFrequency": "daily", "targetRange": "≥7-9 h", "eliteBenchmark": "consistent ≥8 h", "beginnerBenchmark": "improve consistency", "youthBenchmark": "≥8-10 h", "equipmentRequired": ["wearable / self-report"], "wearableEstimable": true, "autoCalculable": true, "confidence": "high", "evidenceLevel": "L2", "source": "Milewski 2014 (PRIVATE — athlete-only; rolls into readiness)" },
-      { "name": "HRV", "metric": "hrv", "category": "Recovery", "leadingOrLagging": "leading", "importance": 6, "athleteDashboard": true, "coachDashboard": false, "teamDashboard": false, "measurementMethod": "Morning HRV (rMSSD), trend vs baseline", "testingFrequency": "daily", "targetRange": "stable vs baseline", "eliteBenchmark": "stable trend", "beginnerBenchmark": "baseline", "youthBenchmark": "n/a", "equipmentRequired": ["wearable"], "wearableEstimable": true, "autoCalculable": true, "confidence": "moderate", "evidenceLevel": "L3", "source": "Plews 2013 (PRIVATE — athlete-only; rolls into readiness)" },
-      { "name": "Resting HR", "metric": "resting_hr", "category": "Recovery", "leadingOrLagging": "leading", "importance": 5, "athleteDashboard": true, "coachDashboard": false, "teamDashboard": false, "measurementMethod": "Morning resting heart rate vs baseline", "testingFrequency": "daily", "targetRange": "stable vs baseline", "eliteBenchmark": "stable/low", "beginnerBenchmark": "baseline", "youthBenchmark": "n/a", "equipmentRequired": ["wearable"], "wearableEstimable": true, "autoCalculable": true, "confidence": "low", "evidenceLevel": "L4", "source": "expert consensus (PRIVATE — athlete-only; rolls into readiness)" }
+      {
+        "name": "Readiness",
+        "metric": "readiness",
+        "category": "Recovery",
+        "leadingOrLagging": "leading",
+        "importance": 9,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "Composite of subjective wellness + sleep + prior combined load + lower-limb soreness (+ optional HRV trend), normalised to baseline",
+        "testingFrequency": "daily",
+        "targetRange": "green vs personal baseline",
+        "eliteBenchmark": "consistently green pre-race",
+        "beginnerBenchmark": "establish baseline",
+        "youthBenchmark": "track trend",
+        "equipmentRequired": [
+          "app (+ optional wearable)"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Saw 2016; derived score (raw vitals stay private)"
+      },
+      {
+        "name": "Weekly consistency",
+        "metric": "consistency",
+        "category": "Team",
+        "leadingOrLagging": "leading",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "% prescribed sessions (swim + bike + run + gym + prehab + check-ins) completed",
+        "testingFrequency": "weekly",
+        "targetRange": "≥85%",
+        "eliteBenchmark": "≥90%",
+        "beginnerBenchmark": "≥70%",
+        "youthBenchmark": "habit-building",
+        "equipmentRequired": [
+          "app"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L4",
+        "source": "adherence literature; expert consensus"
+      },
+      {
+        "name": "Training availability",
+        "metric": "availability",
+        "category": "Availability",
+        "leadingOrLagging": "lagging",
+        "importance": 9,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "fit / modified / out (status only — esp. lower-limb)",
+        "testingFrequency": "daily",
+        "targetRange": "maximise 'fit'",
+        "eliteBenchmark": "high availability",
+        "beginnerBenchmark": "n/a",
+        "youthBenchmark": "n/a",
+        "equipmentRequired": [
+          "app"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "availability-performance link; expert consensus"
+      },
+      {
+        "name": "Run-off-bike (brick) decoupling",
+        "metric": "brick_decoupling",
+        "category": "Performance",
+        "leadingOrLagging": "lagging",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": false,
+        "measurementMethod": "Run pace/HR decoupling off the bike vs fresh at matched intensity",
+        "testingFrequency": "per block",
+        "targetRange": "minimal decoupling at race intensity",
+        "eliteBenchmark": "near-fresh run economy off the bike",
+        "beginnerBenchmark": "baseline",
+        "youthBenchmark": "introduce gently",
+        "equipmentRequired": [
+          "GPS watch",
+          "power meter"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": false,
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "triathlon coaching practice; expert consensus"
+      },
+      {
+        "name": "Run threshold / critical speed",
+        "metric": "run_threshold",
+        "category": "Performance",
+        "leadingOrLagging": "lagging",
+        "importance": 9,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": false,
+        "measurementMethod": "Critical speed / threshold pace from time trials",
+        "testingFrequency": "per block",
+        "targetRange": "improving pace at threshold",
+        "eliteBenchmark": "distance-relative standards",
+        "beginnerBenchmark": "baseline",
+        "youthBenchmark": "track trend",
+        "equipmentRequired": [
+          "GPS watch / track"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": false,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "critical-speed literature; expert consensus"
+      },
+      {
+        "name": "Bike FTP",
+        "metric": "ftp",
+        "category": "Performance",
+        "leadingOrLagging": "lagging",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": false,
+        "measurementMethod": "Functional threshold power (W and W/kg)",
+        "testingFrequency": "per block",
+        "targetRange": "improving W/kg",
+        "eliteBenchmark": "distance-relative",
+        "beginnerBenchmark": "baseline",
+        "youthBenchmark": "track trend",
+        "equipmentRequired": [
+          "power meter"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Allen & Coggan (FTP)"
+      },
+      {
+        "name": "Swim critical speed (CSS)",
+        "metric": "css",
+        "category": "Performance",
+        "leadingOrLagging": "lagging",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": false,
+        "measurementMethod": "CSS from time trials",
+        "testingFrequency": "per block",
+        "targetRange": "improving CSS",
+        "eliteBenchmark": "distance-relative",
+        "beginnerBenchmark": "baseline",
+        "youthBenchmark": "track trend",
+        "equipmentRequired": [
+          "pace clock"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Wakayoshi (critical swimming velocity)"
+      },
+      {
+        "name": "Single-leg / calf capacity",
+        "metric": "calf_capacity",
+        "category": "Availability",
+        "leadingOrLagging": "leading",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": false,
+        "measurementMethod": "Single-leg heel-raise endurance + single-leg strength symmetry",
+        "testingFrequency": "monthly",
+        "targetRange": "high symmetrical capacity",
+        "eliteBenchmark": "robust + symmetrical",
+        "beginnerBenchmark": "baseline + competency",
+        "youthBenchmark": "bodyweight competency",
+        "equipmentRequired": [
+          "step"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Achilles/PFP rehab literature (Silbernagel; Crossley)"
+      },
+      {
+        "name": "Run-load ACWR",
+        "metric": "acwr",
+        "category": "Recovery",
+        "leadingOrLagging": "leading",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "7-day:28-day run impact load (per-discipline)",
+        "testingFrequency": "weekly (rolling)",
+        "targetRange": "0.8-1.3",
+        "eliteBenchmark": "stable in range",
+        "beginnerBenchmark": "n/a",
+        "youthBenchmark": "n/a",
+        "equipmentRequired": [
+          "training log / GPS"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "low",
+        "evidenceLevel": "L3",
+        "source": "Gabbett 2016 (contested — soft input)"
+      },
+      {
+        "name": "Session RPE load",
+        "metric": "session_rpe",
+        "category": "Recovery",
+        "leadingOrLagging": "lagging",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "RPE × duration across all disciplines + gym",
+        "testingFrequency": "every session",
+        "targetRange": "planned vs actual",
+        "eliteBenchmark": "matches plan",
+        "beginnerBenchmark": "learn scale",
+        "youthBenchmark": "learn scale",
+        "equipmentRequired": [
+          "app"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Foster sRPE; Haddad 2017"
+      },
+      {
+        "name": "Energy availability / RED-S status",
+        "metric": "energy_availability",
+        "category": "Availability",
+        "leadingOrLagging": "leading",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": false,
+        "measurementMethod": "RED-S screen (LEAF-Q where applicable) + dietary/medical review — status only on shared surfaces",
+        "testingFrequency": "per block + on flags",
+        "targetRange": "adequate energy availability",
+        "eliteBenchmark": "no RED-S indicators",
+        "beginnerBenchmark": "education + baseline",
+        "youthBenchmark": "monitor carefully",
+        "equipmentRequired": [
+          "questionnaire",
+          "medical referral"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "Mountjoy 2018 (RED-S IOC consensus)"
+      },
+      {
+        "name": "Sleep",
+        "metric": "sleep",
+        "category": "Recovery",
+        "leadingOrLagging": "leading",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Wearable/self-report sleep duration & quality",
+        "testingFrequency": "daily",
+        "targetRange": "≥7-9 h",
+        "eliteBenchmark": "consistent ≥8 h",
+        "beginnerBenchmark": "improve consistency",
+        "youthBenchmark": "≥8-10 h",
+        "equipmentRequired": [
+          "wearable / self-report"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Milewski 2014 (PRIVATE — athlete-only; rolls into readiness)"
+      },
+      {
+        "name": "HRV",
+        "metric": "hrv",
+        "category": "Recovery",
+        "leadingOrLagging": "leading",
+        "importance": 6,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Morning HRV (rMSSD), trend vs baseline",
+        "testingFrequency": "daily",
+        "targetRange": "stable vs baseline",
+        "eliteBenchmark": "stable trend",
+        "beginnerBenchmark": "baseline",
+        "youthBenchmark": "n/a",
+        "equipmentRequired": [
+          "wearable"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Plews 2013 (PRIVATE — athlete-only; rolls into readiness)"
+      },
+      {
+        "name": "Resting HR",
+        "metric": "resting_hr",
+        "category": "Recovery",
+        "leadingOrLagging": "leading",
+        "importance": 5,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Morning resting heart rate vs baseline",
+        "testingFrequency": "daily",
+        "targetRange": "stable vs baseline",
+        "eliteBenchmark": "stable/low",
+        "beginnerBenchmark": "baseline",
+        "youthBenchmark": "n/a",
+        "equipmentRequired": [
+          "wearable"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "expert consensus (PRIVATE — athlete-only; rolls into readiness)"
+      }
     ],
     "athleteDashboardKpis": [
-      { "name": "Readiness", "why": "One daily number telling the triathlete whether to push or back off across a heavy three-sport load." },
-      { "name": "Weekly consistency", "why": "Rewards showing up across a high-frequency, multi-discipline programme; consistency beats hero weeks." },
-      { "name": "Performance trend (per discipline)", "why": "Threshold/FTP/CSS improvement is the outcome the athlete trains for, shown per leg so the weakest is visible." },
-      { "name": "Run-off-bike (brick) score", "why": "The signature triathlon quality — a controllable margin the athlete can see improving." },
-      { "name": "Lower-limb durability", "why": "Turns invisible calf/hip prehab into a tracked score protecting the tissue that ends most triathletes' seasons." },
-      { "name": "Mobility score", "why": "Hip/ankle/shoulder range serves both economy and injury protection — reinforces the daily habit." },
-      { "name": "Recovery / fuelling score", "why": "Teaches that recovery and adequate fuelling (RED-S) are training, not optional." },
-      { "name": "Availability streak", "why": "Celebrates injury-free, training-able time across all three disciplines — framed positively." }
+      {
+        "name": "Readiness",
+        "why": "One daily number telling the triathlete whether to push or back off across a heavy three-sport load."
+      },
+      {
+        "name": "Weekly consistency",
+        "why": "Rewards showing up across a high-frequency, multi-discipline programme; consistency beats hero weeks."
+      },
+      {
+        "name": "Performance trend (per discipline)",
+        "why": "Threshold/FTP/CSS improvement is the outcome the athlete trains for, shown per leg so the weakest is visible."
+      },
+      {
+        "name": "Run-off-bike (brick) score",
+        "why": "The signature triathlon quality — a controllable margin the athlete can see improving."
+      },
+      {
+        "name": "Lower-limb durability",
+        "why": "Turns invisible calf/hip prehab into a tracked score protecting the tissue that ends most triathletes' seasons."
+      },
+      {
+        "name": "Mobility score",
+        "why": "Hip/ankle/shoulder range serves both economy and injury protection — reinforces the daily habit."
+      },
+      {
+        "name": "Recovery / fuelling score",
+        "why": "Teaches that recovery and adequate fuelling (RED-S) are training, not optional."
+      },
+      {
+        "name": "Availability streak",
+        "why": "Celebrates injury-free, training-able time across all three disciplines — framed positively."
+      }
     ],
     "coachDashboardKpis": [
-      { "name": "Squad readiness", "why": "At-a-glance freshness (traffic-light, derived) to shape the session before it starts." },
-      { "name": "Training availability", "why": "Who is fit / modified / out (especially lower-limb) — the key planning input." },
-      { "name": "High-risk athlete flags", "why": "Surfaces athletes needing attention (run-load spike, bone-pain, shoulder, red readiness)." },
-      { "name": "Per-discipline load distribution", "why": "Shows who is over/under-loaded in swim/bike/run to balance the week and protect the run." },
-      { "name": "Run-load ACWR distribution", "why": "Flags spike-risk athletes (soft input) on the highest-injury discipline." },
-      { "name": "Race readiness / taper status", "why": "Freshness picture into A-races — pacing + lineup decisions." },
-      { "name": "Training completion / compliance", "why": "Whether prescribed gym + prehab is actually being done." },
-      { "name": "Recovery trend (squad)", "why": "Derived readiness trend warns of accumulating fatigue across a block." },
-      { "name": "Injury/illness status summary", "why": "Availability picture (status only) for planning + medical liaison." },
-      { "name": "Energy-availability/RED-S flags", "why": "Surfaces the highest-severity, fuelling-driven risk (status only — never raw data)." },
-      { "name": "Prehab compliance (calf + shoulder)", "why": "Whether the controllable injury levers are being pulled." },
-      { "name": "Fatigue distribution", "why": "Spread of green/amber/red shows if the whole squad or just individuals are cooked." }
+      {
+        "name": "Squad readiness",
+        "why": "At-a-glance freshness (traffic-light, derived) to shape the session before it starts."
+      },
+      {
+        "name": "Training availability",
+        "why": "Who is fit / modified / out (especially lower-limb) — the key planning input."
+      },
+      {
+        "name": "High-risk athlete flags",
+        "why": "Surfaces athletes needing attention (run-load spike, bone-pain, shoulder, red readiness)."
+      },
+      {
+        "name": "Per-discipline load distribution",
+        "why": "Shows who is over/under-loaded in swim/bike/run to balance the week and protect the run."
+      },
+      {
+        "name": "Run-load ACWR distribution",
+        "why": "Flags spike-risk athletes (soft input) on the highest-injury discipline."
+      },
+      {
+        "name": "Race readiness / taper status",
+        "why": "Freshness picture into A-races — pacing + lineup decisions."
+      },
+      {
+        "name": "Training completion / compliance",
+        "why": "Whether prescribed gym + prehab is actually being done."
+      },
+      {
+        "name": "Recovery trend (squad)",
+        "why": "Derived readiness trend warns of accumulating fatigue across a block."
+      },
+      {
+        "name": "Injury/illness status summary",
+        "why": "Availability picture (status only) for planning + medical liaison."
+      },
+      {
+        "name": "Energy-availability/RED-S flags",
+        "why": "Surfaces the highest-severity, fuelling-driven risk (status only — never raw data)."
+      },
+      {
+        "name": "Prehab compliance (calf + shoulder)",
+        "why": "Whether the controllable injury levers are being pulled."
+      },
+      {
+        "name": "Fatigue distribution",
+        "why": "Spread of green/amber/red shows if the whole squad or just individuals are cooked."
+      }
     ],
     "performanceScore": {
       "range": "0-100",
       "philosophy": "Reflects progress toward the demands of the athlete's triathlon distance, weighted to aerobic capacity, durability and run-off-bike ability, rewarding consistency and availability and penalising excessive fatigue/poor recovery or low energy availability — never rewarding unsafe run loading or under-fuelling.",
       "components": [
-        { "kpi": "consistency", "weight": 0.18, "rationale": "Consistency drives adaptation across a high-volume three-sport programme." },
-        { "kpi": "availability", "weight": 0.20, "rationale": "Injury-free (especially lower-limb) availability is the strongest performance lever in triathlon." },
-        { "kpi": "aerobic_performance", "weight": 0.20, "rationale": "Threshold/FTP/CSS across disciplines is the core performance outcome." },
-        { "kpi": "brick", "weight": 0.10, "rationale": "Run-off-bike capacity is the decisive, controllable triathlon-specific margin." },
-        { "kpi": "durability", "weight": 0.12, "rationale": "Lower-limb tissue capacity is both protective and performance-relevant." },
-        { "kpi": "mobility", "weight": 0.06, "rationale": "Range for aero position + run/swim economy and protection." },
-        { "kpi": "strength", "weight": 0.06, "rationale": "Strength underpins economy + durability without added mass." },
-        { "kpi": "recovery", "weight": 0.08, "rationale": "Penalises chronic fatigue / poor recovery / low energy availability; keeps the score sustainable." }
+        {
+          "kpi": "consistency",
+          "weight": 0.18,
+          "rationale": "Consistency drives adaptation across a high-volume three-sport programme."
+        },
+        {
+          "kpi": "availability",
+          "weight": 0.2,
+          "rationale": "Injury-free (especially lower-limb) availability is the strongest performance lever in triathlon."
+        },
+        {
+          "kpi": "aerobic_performance",
+          "weight": 0.2,
+          "rationale": "Threshold/FTP/CSS across disciplines is the core performance outcome."
+        },
+        {
+          "kpi": "brick",
+          "weight": 0.1,
+          "rationale": "Run-off-bike capacity is the decisive, controllable triathlon-specific margin."
+        },
+        {
+          "kpi": "durability",
+          "weight": 0.12,
+          "rationale": "Lower-limb tissue capacity is both protective and performance-relevant."
+        },
+        {
+          "kpi": "mobility",
+          "weight": 0.06,
+          "rationale": "Range for aero position + run/swim economy and protection."
+        },
+        {
+          "kpi": "strength",
+          "weight": 0.06,
+          "rationale": "Strength underpins economy + durability without added mass."
+        },
+        {
+          "kpi": "recovery",
+          "weight": 0.08,
+          "rationale": "Penalises chronic fatigue / poor recovery / low energy availability; keeps the score sustainable."
+        }
       ],
-      "guardrails": ["never increases for training through localised bone/tendon pain, red readiness or injury", "consistency + availability dominate so the score can't be gamed by occasional max efforts", "low energy availability / poor recovery caps the score", "does not reward adding mass or junk volume"],
+      "guardrails": [
+        "never increases for training through localised bone/tendon pain, red readiness or injury",
+        "consistency + availability dominate so the score can't be gamed by occasional max efforts",
+        "low energy availability / poor recovery caps the score",
+        "does not reward adding mass or junk volume"
+      ],
       "explainability": "Each component is shown with its contribution so the athlete sees why the score moved and what to work on next."
     },
     "gamification": [
-      { "name": "Injury-free weeks", "type": "streak", "rewards": "Consecutive weeks available + completing calf/shoulder prehab — motivation tied to the sport's key injuries." },
-      { "name": "Consistency streak", "type": "streak", "rewards": "Unbroken weeks hitting prescribed swim/bike/run + gym sessions; rewards process over outcome." },
-      { "name": "Prehab badge", "type": "habit", "rewards": "Completing the calf + shoulder programme each week — makes the unglamorous work visible." },
-      { "name": "Brick milestone", "type": "milestone", "rewards": "Improving run-off-bike pace/decoupling — a triathlon-specific development goal." },
-      { "name": "Three-discipline balance", "type": "progression", "rewards": "Bringing the weakest discipline up toward the others — rewards addressing the limiter." },
-      { "name": "Testing-battery completion", "type": "milestone", "rewards": "Completing each testing block (thresholds / calf capacity / CMJ / RED-S screen) — encourages objective tracking." },
-      { "name": "Personal-best milestones", "type": "milestone", "rewards": "Race-time + threshold PRs vs the athlete's own baseline — self-referenced, not leaderboard." }
+      {
+        "name": "Injury-free weeks",
+        "type": "streak",
+        "rewards": "Consecutive weeks available + completing calf/shoulder prehab — motivation tied to the sport's key injuries."
+      },
+      {
+        "name": "Consistency streak",
+        "type": "streak",
+        "rewards": "Unbroken weeks hitting prescribed swim/bike/run + gym sessions; rewards process over outcome."
+      },
+      {
+        "name": "Prehab badge",
+        "type": "habit",
+        "rewards": "Completing the calf + shoulder programme each week — makes the unglamorous work visible."
+      },
+      {
+        "name": "Brick milestone",
+        "type": "milestone",
+        "rewards": "Improving run-off-bike pace/decoupling — a triathlon-specific development goal."
+      },
+      {
+        "name": "Three-discipline balance",
+        "type": "progression",
+        "rewards": "Bringing the weakest discipline up toward the others — rewards addressing the limiter."
+      },
+      {
+        "name": "Testing-battery completion",
+        "type": "milestone",
+        "rewards": "Completing each testing block (thresholds / calf capacity / CMJ / RED-S screen) — encourages objective tracking."
+      },
+      {
+        "name": "Personal-best milestones",
+        "type": "milestone",
+        "rewards": "Race-time + threshold PRs vs the athlete's own baseline — self-referenced, not leaderboard."
+      }
     ]
   }
 }

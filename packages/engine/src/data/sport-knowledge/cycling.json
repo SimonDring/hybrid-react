@@ -3,7 +3,6 @@
   "schemaVersion": "1.0.0",
   "label": "Cycling (road / endurance)",
   "lastReviewed": "2026-06-29",
-
   "meta": {
     "sport": "Cycling",
     "category": "Endurance / power — individual (cyclic, low-impact)",
@@ -15,33 +14,143 @@
     "offseasonLengthWeeks": 6,
     "competitionFrequencyPerWeek": "varies — 0-3 races/week (road) or single target events / stage races; not a fixed weekly fixture",
     "trainingFrequencyPerWeek": "5-12 rides (often long) + 1-2 gym",
-    "sessionDurationMin": { "match": 180, "pitch": 120, "gym": 45 },
+    "sessionDurationMin": {
+      "match": 180,
+      "pitch": 120,
+      "gym": 45
+    },
     "notes": "Low-impact, high-volume (elite riders accumulate huge weekly hours / TSS with no ground impact). The discipline drives the demand: road GC/climbing is power-to-weight + sustained aerobic; the sprint and track sprint are near-maximal neuromuscular power; the time trial is sustained threshold in an aero position. Energy-system demand varies dramatically by discipline — model it via the 'positions' (discipline) archetypes. The GYM is support: heavy strength improves cycling economy, time-to-exhaustion and sprint power (Rønnestad/Sunde/Aagaard) and protects the knee/low-back; it must never add leg fatigue that degrades a key ride or race."
   },
-
   "physicalProfile": {
     "qualities": {
-      "maxStrength": { "importance": 6, "why": "Cycling is not max-strength limited, but heavy leg strength improves cycling economy and time-to-exhaustion and underpins sprint/attack force — the gym's clearest evidence-based win (more so for sprint/track).", "confidence": "high", "evidenceLevel": "L2", "source": "Rønnestad & Mujika 2014; Sunde 2010; Aagaard 2011" },
-      "relativeStrength": { "importance": 7, "why": "Power-to-weight (W/kg) is THE currency of climbing and GC performance; strength gained without non-functional mass directly raises relative power.", "confidence": "high", "evidenceLevel": "L2", "source": "cycling performance literature; Rønnestad & Mujika 2014" },
-      "explosivePower": { "importance": 7, "why": "Sprints, attacks, accelerations out of corners and bridging moves are decided by peak neuromuscular power (decisive for sprinters/track; situational for GC).", "confidence": "high", "evidenceLevel": "L2", "source": "track/sprint power literature; expert consensus" },
-      "reactiveStrength": { "importance": 3, "why": "Minimal stretch-shorten / plyometric demand on the bike (no ground contact); relevant only as a gym means to build RFD.", "confidence": "low", "evidenceLevel": "L4", "source": "expert consensus (specificity)" },
-      "sprintSpeed": { "importance": 6, "why": "In-bike sprint velocity (peak power at speed) is the performance itself for sprinters; LAND sprint speed has low direct transfer, so this land quality is rated for modest relevance.", "confidence": "moderate", "evidenceLevel": "L4", "source": "expert consensus (specificity)" },
-      "acceleration": { "importance": 6, "why": "Surges, attacks and corner exits in road races/criteriums; brief but often race-deciding.", "confidence": "moderate", "evidenceLevel": "L3", "source": "race-demands literature; expert consensus" },
-      "deceleration": { "importance": 2, "why": "Minimal — descending/braking control only; no repeated land braking demand.", "confidence": "low", "evidenceLevel": "L5", "source": "expert consensus" },
-      "changeOfDirection": { "importance": 3, "why": "Bike handling / cornering matters, but there is no land-style multidirectional COD (higher in cyclocross/BMX, low for road).", "confidence": "low", "evidenceLevel": "L4", "source": "expert consensus" },
-      "aerobicEndurance": { "importance": 10, "why": "The dominant determinant of endurance cycling performance — VO2max, threshold power (FTP) and economy set the ceiling for every discipline except the pure track/sprint.", "confidence": "high", "evidenceLevel": "L1", "source": "endurance physiology literature (Coyle; Jeukendrup)" },
-      "anaerobicEndurance": { "importance": 7, "why": "Breakaways, repeated climbs, the final kilometre and criterium efforts are heavily glycolytic — anaerobic capacity (W') and lactate tolerance decide many races.", "confidence": "high", "evidenceLevel": "L2", "source": "cycling physiology; W' / critical-power literature (Jones)" },
-      "repeatSprintAbility": { "importance": 7, "why": "Road races and criteriums are won on repeated surges (cover moves, corner-exits, late attacks); a single effort rarely settles a road race.", "confidence": "moderate", "evidenceLevel": "L3", "source": "race-demands literature; expert consensus" },
-      "mobility": { "importance": 5, "why": "Hip flexion, hamstring length and thoracic mobility enable an efficient, comfortable aero position and protect the low back; not a defining performance quality but a real comfort/durability lever.", "confidence": "moderate", "evidenceLevel": "L3", "source": "bike-fit & cycling low-back literature; expert consensus" },
-      "stability": { "importance": 6, "why": "Lumbo-pelvic / core stability transfers leg power to the pedals and holds a fixed aero position under fatigue; weakness costs efficiency and drives low-back pain.", "confidence": "moderate", "evidenceLevel": "L3", "source": "cycling biomechanics; core-endurance literature (McGill)" },
-      "rotationalPower": { "importance": 2, "why": "Cycling is near-symmetric and sagittal — minimal trunk rotation demand. Low priority.", "confidence": "low", "evidenceLevel": "L5", "source": "expert consensus" },
-      "gripStrength": { "importance": 2, "why": "Bar control and sprint pulling on the bars use grip, but it is not a performance limiter.", "confidence": "low", "evidenceLevel": "L5", "source": "expert consensus" },
-      "neckStrength": { "importance": 3, "why": "Sustained cervical extension to look ahead from a flexed/aero position drives neck pain — modest relevance for durability, not performance.", "confidence": "low", "evidenceLevel": "L4", "source": "cycling neck-pain literature; expert consensus" },
-      "balance": { "importance": 4, "why": "Bike handling and balance matter for safety/efficiency, but LAND balance has low transfer.", "confidence": "low", "evidenceLevel": "L4", "source": "expert consensus" },
-      "coordination": { "importance": 6, "why": "Pedalling efficiency, bike handling and pacing/skill are real performance contributors, though far less skill-dense than a stroke- or stick-based sport.", "confidence": "moderate", "evidenceLevel": "L4", "source": "cycling biomechanics; expert consensus" }
+      "maxStrength": {
+        "importance": 6,
+        "why": "Cycling is not max-strength limited, but heavy leg strength improves cycling economy and time-to-exhaustion and underpins sprint/attack force — the gym's clearest evidence-based win (more so for sprint/track).",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Rønnestad & Mujika 2014; Sunde 2010; Aagaard 2011"
+      },
+      "relativeStrength": {
+        "importance": 7,
+        "why": "Power-to-weight (W/kg) is THE currency of climbing and GC performance; strength gained without non-functional mass directly raises relative power.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "cycling performance literature; Rønnestad & Mujika 2014"
+      },
+      "explosivePower": {
+        "importance": 7,
+        "why": "Sprints, attacks, accelerations out of corners and bridging moves are decided by peak neuromuscular power (decisive for sprinters/track; situational for GC).",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "track/sprint power literature; expert consensus"
+      },
+      "reactiveStrength": {
+        "importance": 3,
+        "why": "Minimal stretch-shorten / plyometric demand on the bike (no ground contact); relevant only as a gym means to build RFD.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "expert consensus (specificity)"
+      },
+      "sprintSpeed": {
+        "importance": 6,
+        "why": "In-bike sprint velocity (peak power at speed) is the performance itself for sprinters; LAND sprint speed has low direct transfer, so this land quality is rated for modest relevance.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "expert consensus (specificity)"
+      },
+      "acceleration": {
+        "importance": 6,
+        "why": "Surges, attacks and corner exits in road races/criteriums; brief but often race-deciding.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "race-demands literature; expert consensus"
+      },
+      "deceleration": {
+        "importance": 2,
+        "why": "Minimal — descending/braking control only; no repeated land braking demand.",
+        "confidence": "low",
+        "evidenceLevel": "L5",
+        "source": "expert consensus"
+      },
+      "changeOfDirection": {
+        "importance": 3,
+        "why": "Bike handling / cornering matters, but there is no land-style multidirectional COD (higher in cyclocross/BMX, low for road).",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "expert consensus"
+      },
+      "aerobicEndurance": {
+        "importance": 10,
+        "why": "The dominant determinant of endurance cycling performance — VO2max, threshold power (FTP) and economy set the ceiling for every discipline except the pure track/sprint.",
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "endurance physiology literature (Coyle; Jeukendrup)"
+      },
+      "anaerobicEndurance": {
+        "importance": 7,
+        "why": "Breakaways, repeated climbs, the final kilometre and criterium efforts are heavily glycolytic — anaerobic capacity (W') and lactate tolerance decide many races.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "cycling physiology; W' / critical-power literature (Jones)"
+      },
+      "repeatSprintAbility": {
+        "importance": 7,
+        "why": "Road races and criteriums are won on repeated surges (cover moves, corner-exits, late attacks); a single effort rarely settles a road race.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "race-demands literature; expert consensus"
+      },
+      "mobility": {
+        "importance": 5,
+        "why": "Hip flexion, hamstring length and thoracic mobility enable an efficient, comfortable aero position and protect the low back; not a defining performance quality but a real comfort/durability lever.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "bike-fit & cycling low-back literature; expert consensus"
+      },
+      "stability": {
+        "importance": 6,
+        "why": "Lumbo-pelvic / core stability transfers leg power to the pedals and holds a fixed aero position under fatigue; weakness costs efficiency and drives low-back pain.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "cycling biomechanics; core-endurance literature (McGill)"
+      },
+      "rotationalPower": {
+        "importance": 2,
+        "why": "Cycling is near-symmetric and sagittal — minimal trunk rotation demand. Low priority.",
+        "confidence": "low",
+        "evidenceLevel": "L5",
+        "source": "expert consensus"
+      },
+      "gripStrength": {
+        "importance": 2,
+        "why": "Bar control and sprint pulling on the bars use grip, but it is not a performance limiter.",
+        "confidence": "low",
+        "evidenceLevel": "L5",
+        "source": "expert consensus"
+      },
+      "neckStrength": {
+        "importance": 3,
+        "why": "Sustained cervical extension to look ahead from a flexed/aero position drives neck pain — modest relevance for durability, not performance.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "cycling neck-pain literature; expert consensus"
+      },
+      "balance": {
+        "importance": 4,
+        "why": "Bike handling and balance matter for safety/efficiency, but LAND balance has low transfer.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "expert consensus"
+      },
+      "coordination": {
+        "importance": 6,
+        "why": "Pedalling efficiency, bike handling and pacing/skill are real performance contributors, though far less skill-dense than a stroke- or stick-based sport.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "cycling biomechanics; expert consensus"
+      }
     }
   },
-
   "energySystems": {
     "aerobicPct": 82,
     "glycolyticPct": 12,
@@ -55,10 +164,16 @@
     "source": "cycling physiology (Coyle; Jeukendrup; Jones critical power); discipline-specific estimates vary — treat as indicative",
     "notes": "Because the spectrum is so wide, the engine should read the discipline archetype (positions) rather than this single split."
   },
-
   "movementProfile": {
-    "primaryPatterns": ["repetitive pedalling (hip/knee/ankle triple extension under load)", "sustained hip-flexed aero/road posture", "standing/out-of-saddle climbing + sprinting (bilateral leg drive + bar pull)", "bike handling / cornering"],
-    "planes": ["sagittal (pedalling, hinge at the hips)"],
+    "primaryPatterns": [
+      "repetitive pedalling (hip/knee/ankle triple extension under load)",
+      "sustained hip-flexed aero/road posture",
+      "standing/out-of-saddle climbing + sprinting (bilateral leg drive + bar pull)",
+      "bike handling / cornering"
+    ],
+    "planes": [
+      "sagittal (pedalling, hinge at the hips)"
+    ],
     "jointLoading": "High repetitive KNEE load (patellofemoral compression through flexion-extension under pedal force); sustained lumbar FLEXION load (aero/road posture); cervical extension load (head-up in a flexed trunk); perineal/saddle pressure load.",
     "groundContacts": "None (low-impact — the major durability advantage of cycling). Load is continuous pedal force, not impact.",
     "landingDemands": "None on the bike; any dryland plyometric/landing load is a deliberate added stimulus, dosed carefully.",
@@ -70,68 +185,761 @@
     "collisions": "None in normal riding, but PELOTON CRASH risk is the source of cycling's severe acute injuries (clavicle, AC joint, wrist, road rash).",
     "repeatedImpacts": "No ground impact, but very high repetitive KNEE and lumbar cycles (the dominant cumulative overuse load).",
     "asymmetricLoading": "Left/right pedalling-force asymmetries, leg-length differences and cleat/saddle setup create unilateral overuse patterns to monitor.",
-    "dominantMuscleGroups": ["quadriceps", "glutes", "hamstrings", "calves", "hip flexors", "lumbo-pelvic / core", "forearms (bar control)"],
-    "commonDeficiencies": ["posterior chain (hamstring/glute) relative to quad dominance", "lumbo-pelvic / core anti-flexion endurance", "hip + thoracic mobility (aero position)", "single-leg force symmetry", "upper-body + bone-loading stimulus (cycling is non-osteogenic)"]
+    "dominantMuscleGroups": [
+      "quadriceps",
+      "glutes",
+      "hamstrings",
+      "calves",
+      "hip flexors",
+      "lumbo-pelvic / core",
+      "forearms (bar control)"
+    ],
+    "commonDeficiencies": [
+      "posterior chain (hamstring/glute) relative to quad dominance",
+      "lumbo-pelvic / core anti-flexion endurance",
+      "hip + thoracic mobility (aero position)",
+      "single-leg force symmetry",
+      "upper-body + bone-loading stimulus (cycling is non-osteogenic)"
+    ]
   },
-
   "injuryProfile": {
     "common": [
-      { "name": "Anterior knee pain (patellofemoral pain syndrome)", "incidence": "the most common overuse complaint in cyclists (highest of the non-traumatic injuries)", "severity": "low-moderate but often chronic/recurrent", "mechanism": "high repetitive patellofemoral load through flexion-extension under pedal force; sudden volume/intensity/gear spikes; poor bike fit (low saddle, fore-aft, cleat malalignment); quad dominance / weak hip abductors", "highRiskTissues": ["patellofemoral joint", "patellar tendon", "quadriceps tendon"], "riskFactors": { "modifiable": ["training-load spikes", "bike fit (saddle height/fore-aft, cleat position)", "gear selection / low cadence grinding", "hip + quad strength", "hip-abductor control"], "nonModifiable": ["patellofemoral anatomy / Q-angle", "prior knee injury"] }, "rtpConsiderations": "Address bike fit FIRST, then graded volume, hip + quad strengthening, cadence/gearing management.", "confidence": "moderate", "evidenceLevel": "L3", "source": "Clarsen 2010 (overuse injuries in pro road cyclists); Wanich 2007 (lower-extremity cycling injuries)" },
-      { "name": "Low back pain (flexion / sustained-posture)", "incidence": "very high (the most reported overuse pain alongside the knee)", "severity": "low-moderate", "mechanism": "prolonged lumbar flexion + static loading in the riding/aero position; weak lumbo-pelvic endurance; limited hip/hamstring/thoracic mobility; bike fit too long/low", "highRiskTissues": ["lumbar discs / soft tissue", "lumbar erectors (fatigue)"], "riskFactors": { "modifiable": ["core / lumbo-pelvic endurance", "hip + hamstring + thoracic mobility", "bike fit (reach/drop)", "ride duration progression"], "nonModifiable": ["anatomy", "prior back injury"] }, "rtpConsiderations": "Core endurance (McGill-style anti-flexion/anti-extension), hip mobility, bike-fit review, progressive aero-position tolerance.", "confidence": "moderate", "evidenceLevel": "L3", "source": "Clarsen 2010; cycling low-back literature; expert consensus" },
-      { "name": "Neck / cervical pain", "incidence": "high (especially TT / long road positions)", "severity": "low", "mechanism": "sustained cervical extension to look ahead from a flexed trunk; static load on cervical extensors; aggressive aero position", "highRiskTissues": ["cervical extensors / soft tissue"], "riskFactors": { "modifiable": ["neck + thoracic strength/mobility", "bike fit (drop/reach)", "position breaks", "ride duration"], "nonModifiable": ["anatomy"] }, "rtpConsiderations": "Neck isometrics, thoracic mobility, position/fit adjustment, gradual aero exposure.", "confidence": "low", "evidenceLevel": "L4", "source": "cycling neck-pain literature; expert consensus" },
-      { "name": "Iliotibial band syndrome / lateral knee pain", "incidence": "moderate", "severity": "low-moderate", "mechanism": "repetitive friction at the lateral knee from cleat malalignment, leg-length asymmetry, sudden volume spikes; weak hip abductors", "highRiskTissues": ["iliotibial band", "lateral femoral condyle"], "riskFactors": { "modifiable": ["cleat alignment / float", "hip-abductor strength", "volume progression"], "nonModifiable": ["anatomy / alignment"] }, "rtpConsiderations": "Cleat/fit correction, hip-abductor strengthening, load management.", "confidence": "low", "evidenceLevel": "L4", "source": "Wanich 2007; expert consensus" },
-      { "name": "Pressure / compression neuropathies (saddle + handlebar)", "incidence": "common (often under-reported)", "severity": "low (but quality-of-life relevant)", "mechanism": "sustained perineal pressure (pudendal — numbness/saddle sores) and ulnar/median pressure at the bars (handlebar palsy, carpal compression) from prolonged static loading", "highRiskTissues": ["pudendal nerve", "ulnar / median nerve at the wrist", "perineal soft tissue"], "riskFactors": { "modifiable": ["saddle choice/angle/position", "bar setup + hand-position variation", "padded kit / gloves", "core support reducing weight on hands", "ride duration"], "nonModifiable": ["anatomy"] }, "rtpConsiderations": "Bike-fit / saddle review, hand-position variation, core support; usually conservative.", "confidence": "low", "evidenceLevel": "L4", "source": "cycling overuse / neuropathy literature; expert consensus" },
-      { "name": "Crash trauma (clavicle fracture / AC joint / wrist / road rash)", "incidence": "the signature ACUTE cycling injury (peloton/descending crashes)", "severity": "moderate-high (fractures, surgery, time loss)", "mechanism": "high-speed falls; outstretched-hand or shoulder impact; the clavicle is the classic cycling fracture", "highRiskTissues": ["clavicle", "acromioclavicular joint", "scaphoid / wrist", "skin"], "riskFactors": { "modifiable": ["bike-handling skill", "fatigue (late-race crashes)", "group-riding craft", "protective kit"], "nonModifiable": ["racing exposure", "road/weather conditions", "others' actions"] }, "rtpConsiderations": "Medically managed (often surgical fixation for clavicle); graded return; maintain aerobic fitness on a trainer where safe; rebuild bone-loading + upper-body capacity.", "confidence": "moderate", "evidenceLevel": "L4", "source": "cycling trauma epidemiology; expert consensus" }
+      {
+        "name": "Anterior knee pain (patellofemoral pain syndrome)",
+        "incidence": "the most common overuse complaint in cyclists (highest of the non-traumatic injuries)",
+        "severity": "low-moderate but often chronic/recurrent",
+        "mechanism": "high repetitive patellofemoral load through flexion-extension under pedal force; sudden volume/intensity/gear spikes; poor bike fit (low saddle, fore-aft, cleat malalignment); quad dominance / weak hip abductors",
+        "highRiskTissues": [
+          "patellofemoral joint",
+          "patellar tendon",
+          "quadriceps tendon"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "training-load spikes",
+            "bike fit (saddle height/fore-aft, cleat position)",
+            "gear selection / low cadence grinding",
+            "hip + quad strength",
+            "hip-abductor control"
+          ],
+          "nonModifiable": [
+            "patellofemoral anatomy / Q-angle",
+            "prior knee injury"
+          ]
+        },
+        "rtpConsiderations": "Address bike fit FIRST, then graded volume, hip + quad strengthening, cadence/gearing management.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Clarsen 2010 (overuse injuries in pro road cyclists); Wanich 2007 (lower-extremity cycling injuries)"
+      },
+      {
+        "name": "Low back pain (flexion / sustained-posture)",
+        "incidence": "very high (the most reported overuse pain alongside the knee)",
+        "severity": "low-moderate",
+        "mechanism": "prolonged lumbar flexion + static loading in the riding/aero position; weak lumbo-pelvic endurance; limited hip/hamstring/thoracic mobility; bike fit too long/low",
+        "highRiskTissues": [
+          "lumbar discs / soft tissue",
+          "lumbar erectors (fatigue)"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "core / lumbo-pelvic endurance",
+            "hip + hamstring + thoracic mobility",
+            "bike fit (reach/drop)",
+            "ride duration progression"
+          ],
+          "nonModifiable": [
+            "anatomy",
+            "prior back injury"
+          ]
+        },
+        "rtpConsiderations": "Core endurance (McGill-style anti-flexion/anti-extension), hip mobility, bike-fit review, progressive aero-position tolerance.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Clarsen 2010; cycling low-back literature; expert consensus"
+      },
+      {
+        "name": "Neck / cervical pain",
+        "incidence": "high (especially TT / long road positions)",
+        "severity": "low",
+        "mechanism": "sustained cervical extension to look ahead from a flexed trunk; static load on cervical extensors; aggressive aero position",
+        "highRiskTissues": [
+          "cervical extensors / soft tissue"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "neck + thoracic strength/mobility",
+            "bike fit (drop/reach)",
+            "position breaks",
+            "ride duration"
+          ],
+          "nonModifiable": [
+            "anatomy"
+          ]
+        },
+        "rtpConsiderations": "Neck isometrics, thoracic mobility, position/fit adjustment, gradual aero exposure.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "cycling neck-pain literature; expert consensus"
+      },
+      {
+        "name": "Iliotibial band syndrome / lateral knee pain",
+        "incidence": "moderate",
+        "severity": "low-moderate",
+        "mechanism": "repetitive friction at the lateral knee from cleat malalignment, leg-length asymmetry, sudden volume spikes; weak hip abductors",
+        "highRiskTissues": [
+          "iliotibial band",
+          "lateral femoral condyle"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "cleat alignment / float",
+            "hip-abductor strength",
+            "volume progression"
+          ],
+          "nonModifiable": [
+            "anatomy / alignment"
+          ]
+        },
+        "rtpConsiderations": "Cleat/fit correction, hip-abductor strengthening, load management.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "Wanich 2007; expert consensus"
+      },
+      {
+        "name": "Pressure / compression neuropathies (saddle + handlebar)",
+        "incidence": "common (often under-reported)",
+        "severity": "low (but quality-of-life relevant)",
+        "mechanism": "sustained perineal pressure (pudendal — numbness/saddle sores) and ulnar/median pressure at the bars (handlebar palsy, carpal compression) from prolonged static loading",
+        "highRiskTissues": [
+          "pudendal nerve",
+          "ulnar / median nerve at the wrist",
+          "perineal soft tissue"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "saddle choice/angle/position",
+            "bar setup + hand-position variation",
+            "padded kit / gloves",
+            "core support reducing weight on hands",
+            "ride duration"
+          ],
+          "nonModifiable": [
+            "anatomy"
+          ]
+        },
+        "rtpConsiderations": "Bike-fit / saddle review, hand-position variation, core support; usually conservative.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "cycling overuse / neuropathy literature; expert consensus"
+      },
+      {
+        "name": "Crash trauma (clavicle fracture / AC joint / wrist / road rash)",
+        "incidence": "the signature ACUTE cycling injury (peloton/descending crashes)",
+        "severity": "moderate-high (fractures, surgery, time loss)",
+        "mechanism": "high-speed falls; outstretched-hand or shoulder impact; the clavicle is the classic cycling fracture",
+        "highRiskTissues": [
+          "clavicle",
+          "acromioclavicular joint",
+          "scaphoid / wrist",
+          "skin"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "bike-handling skill",
+            "fatigue (late-race crashes)",
+            "group-riding craft",
+            "protective kit"
+          ],
+          "nonModifiable": [
+            "racing exposure",
+            "road/weather conditions",
+            "others' actions"
+          ]
+        },
+        "rtpConsiderations": "Medically managed (often surgical fixation for clavicle); graded return; maintain aerobic fitness on a trainer where safe; rebuild bone-loading + upper-body capacity.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "cycling trauma epidemiology; expert consensus"
+      }
     ],
     "summary": "Two faces: a long tail of OVERUSE injuries (the upside of a no-impact sport) — anterior knee pain and low-back pain lead, with neck, ITB and saddle/bar neuropathies behind — almost all modifiable via BIKE FIT, strength and load management; and ACUTE crash trauma (clavicle fracture the signature), which strength can only partly mitigate. Cycling is also non-osteogenic, so bone health is a background concern the gym should serve."
   },
-
   "positions": [
-    { "name": "GC / Climber (road)", "role": "General-classification + climbing — power-to-weight over sustained climbs and stage races.", "movementDemands": "Sustained high aerobic output; repeated VO2max efforts on climbs; long durations.", "runningDemands": "n/a (in-bike); decisive sustained + repeated climbing power.", "collisionDemands": "peloton crash risk", "speedReq": "moderate (sprint), high (sustained climbing power)", "powerReq": "high (sustained), moderate (peak)", "strengthReq": "moderate (relative-strength / economy focus, minimal added mass)", "bodyComposition": "Lean, low mass — power-to-weight optimised.", "primaryQualities": ["aerobicEndurance", "relativeStrength", "anaerobicEndurance", "stability"], "secondaryQualities": ["explosivePower", "mobility"], "commonInjuries": ["anterior knee pain", "low back pain", "crash trauma"], "gymPriorities": ["low-volume heavy strength for economy (no mass)", "core endurance", "knee-protective hip/quad strength"], "recoveryConsiderations": "Highest aerobic volume — keep gym low-fatigue so it never blunts climbing legs." },
-    { "name": "Sprinter (road)", "role": "Bunch-sprint finisher — peak neuromuscular power off a long aerobic day.", "movementDemands": "Repeated positioning surges then a maximal 10-20 s sprint; lead-out craft.", "runningDemands": "n/a", "collisionDemands": "high (sprint-finish crash risk)", "speedReq": "very high (peak power)", "powerReq": "very high", "strengthReq": "high (max strength + power emphasis)", "bodyComposition": "Powerful, muscular, higher mass than climbers.", "primaryQualities": ["explosivePower", "maxStrength", "anaerobicEndurance", "repeatSprintAbility"], "secondaryQualities": ["sprintSpeed", "aerobicEndurance"], "commonInjuries": ["anterior knee pain", "low back pain", "crash trauma"], "gymPriorities": ["heavy strength + power (squat, hip thrust, jumps, Olympic-lift derivatives)", "core anti-flexion", "knee/hip robustness"], "recoveryConsiderations": "Tolerates and benefits from more gym power work; place it away from sprint-quality days." },
-    { "name": "Time-trialist (TT)", "role": "Race against the clock — sustained threshold power in an aero position.", "movementDemands": "Single maximal sustained effort at/near threshold; static aero posture.", "runningDemands": "n/a", "collisionDemands": "low", "speedReq": "high (sustained)", "powerReq": "high (threshold)", "strengthReq": "moderate", "bodyComposition": "Lean-powerful; aerodynamic position tolerance.", "primaryQualities": ["aerobicEndurance", "anaerobicEndurance", "stability", "mobility"], "secondaryQualities": ["relativeStrength", "maxStrength"], "commonInjuries": ["low back pain", "neck pain", "anterior knee pain"], "gymPriorities": ["core + low-back endurance (hold the position)", "hip/thoracic mobility", "low-volume strength for economy"], "recoveryConsiderations": "Position tolerance is trainable — core/mobility carry as much value as raw strength here." },
-    { "name": "Criterium / Puncheur", "role": "Short, sharp races + punchy finishes — repeated maximal surges.", "movementDemands": "Continuous corner-exit accelerations and repeated short maximal efforts on an aerobic base.", "runningDemands": "n/a", "collisionDemands": "high (technical, close-quarters)", "speedReq": "high", "powerReq": "very high (repeatable)", "strengthReq": "moderate-high", "bodyComposition": "Powerful, lean.", "primaryQualities": ["repeatSprintAbility", "explosivePower", "anaerobicEndurance", "acceleration"], "secondaryQualities": ["aerobicEndurance", "maxStrength"], "commonInjuries": ["anterior knee pain", "crash trauma", "low back pain"], "gymPriorities": ["strength + power for repeatable surges", "core stability", "knee/hip robustness"], "recoveryConsiderations": "High glycolytic + crash exposure — manage freshness and handling fatigue." },
-    { "name": "Track sprinter", "role": "Pure short-duration maximal power (match sprint, keirin, 200 m, kilo).", "movementDemands": "Maximal neuromuscular power; standing starts; very short efforts with full recovery.", "runningDemands": "n/a", "collisionDemands": "moderate (track racing)", "speedReq": "very high (peak power)", "powerReq": "very high (the highest in cycling)", "strengthReq": "very high (the gym-heaviest cyclists — heavy squat / Olympic lifts core to the event)", "bodyComposition": "Highly muscular, high lean mass — the most powerful cyclists.", "primaryQualities": ["explosivePower", "maxStrength", "sprintSpeed", "acceleration"], "secondaryQualities": ["anaerobicEndurance", "reactiveStrength"], "commonInjuries": ["low back pain (heavy lifting + standing starts)", "anterior knee pain", "crash trauma"], "gymPriorities": ["maximal strength + power (heavy squat, hip thrust, Olympic lifts, jumps)", "core anti-extension for starts", "tendon-robust knee/hip strength"], "recoveryConsiderations": "Strength training IS event preparation here — periodise it like a strength/power athlete." },
-    { "name": "Endurance / Gran Fondo / Domestique", "role": "Sustained durability over very long durations; support roles.", "movementDemands": "Very long aerobic output; fatigue-resistance and fuelling over hours.", "runningDemands": "n/a", "collisionDemands": "peloton crash risk", "speedReq": "moderate", "powerReq": "moderate (sustained)", "strengthReq": "low-moderate (durability + economy)", "bodyComposition": "Lean, efficient, durable.", "primaryQualities": ["aerobicEndurance", "stability", "mobility", "relativeStrength"], "secondaryQualities": ["anaerobicEndurance", "repeatSprintAbility"], "commonInjuries": ["low back pain (long static posture)", "anterior knee pain", "saddle/bar neuropathies", "crash trauma"], "gymPriorities": ["core + low-back endurance", "minimal-fatigue strength maintenance", "hip mobility + knee robustness"], "recoveryConsiderations": "Highest volume exposure — durability + recovery, gym strictly low-fatigue." }
+    {
+      "name": "GC / Climber (road)",
+      "role": "General-classification + climbing — power-to-weight over sustained climbs and stage races.",
+      "movementDemands": "Sustained high aerobic output; repeated VO2max efforts on climbs; long durations.",
+      "runningDemands": "n/a (in-bike); decisive sustained + repeated climbing power.",
+      "collisionDemands": "peloton crash risk",
+      "speedReq": "moderate (sprint), high (sustained climbing power)",
+      "powerReq": "high (sustained), moderate (peak)",
+      "strengthReq": "moderate (relative-strength / economy focus, minimal added mass)",
+      "bodyComposition": "Lean, low mass — power-to-weight optimised.",
+      "primaryQualities": [
+        "aerobicEndurance",
+        "relativeStrength",
+        "anaerobicEndurance",
+        "stability"
+      ],
+      "secondaryQualities": [
+        "explosivePower",
+        "mobility"
+      ],
+      "commonInjuries": [
+        "anterior knee pain",
+        "low back pain",
+        "crash trauma"
+      ],
+      "gymPriorities": [
+        "low-volume heavy strength for economy (no mass)",
+        "core endurance",
+        "knee-protective hip/quad strength"
+      ],
+      "recoveryConsiderations": "Highest aerobic volume — keep gym low-fatigue so it never blunts climbing legs."
+    },
+    {
+      "name": "Sprinter (road)",
+      "role": "Bunch-sprint finisher — peak neuromuscular power off a long aerobic day.",
+      "movementDemands": "Repeated positioning surges then a maximal 10-20 s sprint; lead-out craft.",
+      "runningDemands": "n/a",
+      "collisionDemands": "high (sprint-finish crash risk)",
+      "speedReq": "very high (peak power)",
+      "powerReq": "very high",
+      "strengthReq": "high (max strength + power emphasis)",
+      "bodyComposition": "Powerful, muscular, higher mass than climbers.",
+      "primaryQualities": [
+        "explosivePower",
+        "maxStrength",
+        "anaerobicEndurance",
+        "repeatSprintAbility"
+      ],
+      "secondaryQualities": [
+        "sprintSpeed",
+        "aerobicEndurance"
+      ],
+      "commonInjuries": [
+        "anterior knee pain",
+        "low back pain",
+        "crash trauma"
+      ],
+      "gymPriorities": [
+        "heavy strength + power (squat, hip thrust, jumps, Olympic-lift derivatives)",
+        "core anti-flexion",
+        "knee/hip robustness"
+      ],
+      "recoveryConsiderations": "Tolerates and benefits from more gym power work; place it away from sprint-quality days."
+    },
+    {
+      "name": "Time-trialist (TT)",
+      "role": "Race against the clock — sustained threshold power in an aero position.",
+      "movementDemands": "Single maximal sustained effort at/near threshold; static aero posture.",
+      "runningDemands": "n/a",
+      "collisionDemands": "low",
+      "speedReq": "high (sustained)",
+      "powerReq": "high (threshold)",
+      "strengthReq": "moderate",
+      "bodyComposition": "Lean-powerful; aerodynamic position tolerance.",
+      "primaryQualities": [
+        "aerobicEndurance",
+        "anaerobicEndurance",
+        "stability",
+        "mobility"
+      ],
+      "secondaryQualities": [
+        "relativeStrength",
+        "maxStrength"
+      ],
+      "commonInjuries": [
+        "low back pain",
+        "neck pain",
+        "anterior knee pain"
+      ],
+      "gymPriorities": [
+        "core + low-back endurance (hold the position)",
+        "hip/thoracic mobility",
+        "low-volume strength for economy"
+      ],
+      "recoveryConsiderations": "Position tolerance is trainable — core/mobility carry as much value as raw strength here."
+    },
+    {
+      "name": "Criterium / Puncheur",
+      "role": "Short, sharp races + punchy finishes — repeated maximal surges.",
+      "movementDemands": "Continuous corner-exit accelerations and repeated short maximal efforts on an aerobic base.",
+      "runningDemands": "n/a",
+      "collisionDemands": "high (technical, close-quarters)",
+      "speedReq": "high",
+      "powerReq": "very high (repeatable)",
+      "strengthReq": "moderate-high",
+      "bodyComposition": "Powerful, lean.",
+      "primaryQualities": [
+        "repeatSprintAbility",
+        "explosivePower",
+        "anaerobicEndurance",
+        "acceleration"
+      ],
+      "secondaryQualities": [
+        "aerobicEndurance",
+        "maxStrength"
+      ],
+      "commonInjuries": [
+        "anterior knee pain",
+        "crash trauma",
+        "low back pain"
+      ],
+      "gymPriorities": [
+        "strength + power for repeatable surges",
+        "core stability",
+        "knee/hip robustness"
+      ],
+      "recoveryConsiderations": "High glycolytic + crash exposure — manage freshness and handling fatigue."
+    },
+    {
+      "name": "Track sprinter",
+      "role": "Pure short-duration maximal power (match sprint, keirin, 200 m, kilo).",
+      "movementDemands": "Maximal neuromuscular power; standing starts; very short efforts with full recovery.",
+      "runningDemands": "n/a",
+      "collisionDemands": "moderate (track racing)",
+      "speedReq": "very high (peak power)",
+      "powerReq": "very high (the highest in cycling)",
+      "strengthReq": "very high (the gym-heaviest cyclists — heavy squat / Olympic lifts core to the event)",
+      "bodyComposition": "Highly muscular, high lean mass — the most powerful cyclists.",
+      "primaryQualities": [
+        "explosivePower",
+        "maxStrength",
+        "sprintSpeed",
+        "acceleration"
+      ],
+      "secondaryQualities": [
+        "anaerobicEndurance",
+        "reactiveStrength"
+      ],
+      "commonInjuries": [
+        "low back pain (heavy lifting + standing starts)",
+        "anterior knee pain",
+        "crash trauma"
+      ],
+      "gymPriorities": [
+        "maximal strength + power (heavy squat, hip thrust, Olympic lifts, jumps)",
+        "core anti-extension for starts",
+        "tendon-robust knee/hip strength"
+      ],
+      "recoveryConsiderations": "Strength training IS event preparation here — periodise it like a strength/power athlete."
+    },
+    {
+      "name": "Endurance / Gran Fondo / Domestique",
+      "role": "Sustained durability over very long durations; support roles.",
+      "movementDemands": "Very long aerobic output; fatigue-resistance and fuelling over hours.",
+      "runningDemands": "n/a",
+      "collisionDemands": "peloton crash risk",
+      "speedReq": "moderate",
+      "powerReq": "moderate (sustained)",
+      "strengthReq": "low-moderate (durability + economy)",
+      "bodyComposition": "Lean, efficient, durable.",
+      "primaryQualities": [
+        "aerobicEndurance",
+        "stability",
+        "mobility",
+        "relativeStrength"
+      ],
+      "secondaryQualities": [
+        "anaerobicEndurance",
+        "repeatSprintAbility"
+      ],
+      "commonInjuries": [
+        "low back pain (long static posture)",
+        "anterior knee pain",
+        "saddle/bar neuropathies",
+        "crash trauma"
+      ],
+      "gymPriorities": [
+        "core + low-back endurance",
+        "minimal-fatigue strength maintenance",
+        "hip mobility + knee robustness"
+      ],
+      "recoveryConsiderations": "Highest volume exposure — durability + recovery, gym strictly low-fatigue."
+    }
   ],
-
   "assessments": [
-    { "name": "Functional threshold power (FTP) test", "category": "performance", "essential": true, "purpose": "Sustainable threshold power (20-min or ramp-derived) — the core training-zone anchor and a key performance benchmark; report absolute W and W/kg.", "frequency": "per training block (4-6 weeks)", "targets": { "elite": "high W/kg; improving at fixed body mass", "beginner": "establish baseline + zones", "youth": "track trend (avoid early maximal testing)" }, "equipment": ["power meter / smart trainer"], "wearableEstimable": true, "confidence": "high", "evidenceLevel": "L3", "source": "cycling training-zone practice (Allen & Coggan); expert consensus" },
-    { "name": "VO2max / maximal aerobic power (ramp test)", "category": "aerobic", "essential": true, "purpose": "Aerobic ceiling (VO2max / MAP) — sets the upper bound on endurance performance and informs VO2max-interval prescription.", "frequency": "per block / season phases", "targets": { "elite": "high MAP; track trend", "beginner": "baseline", "youth": "track trend" }, "equipment": ["power meter / metabolic cart (lab)"], "wearableEstimable": false, "confidence": "high", "evidenceLevel": "L2", "source": "endurance physiology (Coyle; Hawley)" },
-    { "name": "Peak power profile / sprint power (5-15 s) + Wingate", "category": "power", "essential": true, "purpose": "Neuromuscular peak power (sprint) and anaerobic capacity (W') — discipline-defining for sprinters/track and decisive moments for road.", "frequency": "per block", "targets": { "elite": "high peak W + W/kg; discipline-relevant W'", "beginner": "baseline", "youth": "track trend" }, "equipment": ["power meter / ergometer"], "wearableEstimable": false, "confidence": "moderate", "evidenceLevel": "L3", "source": "power-profiling literature; critical-power model (Jones)" },
-    { "name": "Maximal lower-body strength (squat / trap-bar 1RM or 3-5RM)", "category": "strength", "essential": true, "purpose": "Dryland max strength — the evidence-based lever for cycling economy, time-to-exhaustion and sprint power; track relative to body mass.", "frequency": "per block", "targets": { "elite": "strong relative to mass; maintained in-season", "beginner": "movement competency + baseline", "youth": "bodyweight competency first" }, "equipment": ["barbell / trap bar / rack"], "wearableEstimable": false, "confidence": "high", "evidenceLevel": "L2", "source": "Rønnestad & Mujika 2014; Sunde 2010; Aagaard 2011" },
-    { "name": "Countermovement jump (CMJ)", "category": "power", "essential": true, "purpose": "Lower-body power proxy + daily neuromuscular-fatigue monitoring (a drop flags accumulated fatigue).", "frequency": "weekly monitor + block test", "targets": { "elite": "track trend; within ~10% of baseline for freshness", "beginner": "baseline", "youth": "track trend" }, "equipment": ["jump mat / force plate / app"], "wearableEstimable": false, "confidence": "moderate", "evidenceLevel": "L3", "source": "Claudino 2017 (CMJ fatigue monitoring)" },
-    { "name": "Bike-fit + hip/hamstring/thoracic mobility screen", "category": "mobility", "essential": true, "purpose": "Position-related injury screen — hip flexion, hamstring length, thoracic extension/rotation and saddle/cleat setup drive knee/low-back/neck overuse.", "frequency": "season start + on any niggle", "targets": { "elite": "optimised, pain-free aero position", "beginner": "comfortable, safe baseline fit", "youth": "growth-aware fit check" }, "equipment": ["bike-fit tools / goniometer"], "wearableEstimable": false, "confidence": "moderate", "evidenceLevel": "L3", "source": "bike-fit & cycling-injury literature; expert consensus" },
-    { "name": "Core / lumbo-pelvic endurance battery", "category": "strength", "essential": false, "purpose": "Trunk-endurance baseline (e.g. plank / side-plank / Sorensen holds) — supports position tolerance and low-back protection.", "frequency": "per block", "targets": { "elite": "balanced flexor/extensor endurance", "beginner": "baseline", "youth": "movement competency" }, "equipment": ["stopwatch / mat"], "wearableEstimable": false, "confidence": "low", "evidenceLevel": "L4", "source": "McGill core-endurance literature; expert consensus" }
+    {
+      "name": "Functional threshold power (FTP) test",
+      "category": "performance",
+      "essential": true,
+      "purpose": "Sustainable threshold power (20-min or ramp-derived) — the core training-zone anchor and a key performance benchmark; report absolute W and W/kg.",
+      "frequency": "per training block (4-6 weeks)",
+      "targets": {
+        "elite": "high W/kg; improving at fixed body mass",
+        "beginner": "establish baseline + zones",
+        "youth": "track trend (avoid early maximal testing)"
+      },
+      "equipment": [
+        "power meter / smart trainer"
+      ],
+      "wearableEstimable": true,
+      "confidence": "high",
+      "evidenceLevel": "L3",
+      "source": "cycling training-zone practice (Allen & Coggan); expert consensus"
+    },
+    {
+      "name": "VO2max / maximal aerobic power (ramp test)",
+      "category": "aerobic",
+      "essential": true,
+      "purpose": "Aerobic ceiling (VO2max / MAP) — sets the upper bound on endurance performance and informs VO2max-interval prescription.",
+      "frequency": "per block / season phases",
+      "targets": {
+        "elite": "high MAP; track trend",
+        "beginner": "baseline",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "power meter / metabolic cart (lab)"
+      ],
+      "wearableEstimable": false,
+      "confidence": "high",
+      "evidenceLevel": "L2",
+      "source": "endurance physiology (Coyle; Hawley)"
+    },
+    {
+      "name": "Peak power profile / sprint power (5-15 s) + Wingate",
+      "category": "power",
+      "essential": true,
+      "purpose": "Neuromuscular peak power (sprint) and anaerobic capacity (W') — discipline-defining for sprinters/track and decisive moments for road.",
+      "frequency": "per block",
+      "targets": {
+        "elite": "high peak W + W/kg; discipline-relevant W'",
+        "beginner": "baseline",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "power meter / ergometer"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "power-profiling literature; critical-power model (Jones)"
+    },
+    {
+      "name": "Maximal lower-body strength (squat / trap-bar 1RM or 3-5RM)",
+      "category": "strength",
+      "essential": true,
+      "purpose": "Dryland max strength — the evidence-based lever for cycling economy, time-to-exhaustion and sprint power; track relative to body mass.",
+      "frequency": "per block",
+      "targets": {
+        "elite": "strong relative to mass; maintained in-season",
+        "beginner": "movement competency + baseline",
+        "youth": "bodyweight competency first"
+      },
+      "equipment": [
+        "barbell / trap bar / rack"
+      ],
+      "wearableEstimable": false,
+      "confidence": "high",
+      "evidenceLevel": "L2",
+      "source": "Rønnestad & Mujika 2014; Sunde 2010; Aagaard 2011"
+    },
+    {
+      "name": "Countermovement jump (CMJ)",
+      "category": "power",
+      "essential": true,
+      "purpose": "Lower-body power proxy + daily neuromuscular-fatigue monitoring (a drop flags accumulated fatigue).",
+      "frequency": "weekly monitor + block test",
+      "targets": {
+        "elite": "track trend; within ~10% of baseline for freshness",
+        "beginner": "baseline",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "jump mat / force plate / app"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Claudino 2017 (CMJ fatigue monitoring)"
+    },
+    {
+      "name": "Bike-fit + hip/hamstring/thoracic mobility screen",
+      "category": "mobility",
+      "essential": true,
+      "purpose": "Position-related injury screen — hip flexion, hamstring length, thoracic extension/rotation and saddle/cleat setup drive knee/low-back/neck overuse.",
+      "frequency": "season start + on any niggle",
+      "targets": {
+        "elite": "optimised, pain-free aero position",
+        "beginner": "comfortable, safe baseline fit",
+        "youth": "growth-aware fit check"
+      },
+      "equipment": [
+        "bike-fit tools / goniometer"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "bike-fit & cycling-injury literature; expert consensus"
+    },
+    {
+      "name": "Core / lumbo-pelvic endurance battery",
+      "category": "strength",
+      "essential": false,
+      "purpose": "Trunk-endurance baseline (e.g. plank / side-plank / Sorensen holds) — supports position tolerance and low-back protection.",
+      "frequency": "per block",
+      "targets": {
+        "elite": "balanced flexor/extensor endurance",
+        "beginner": "baseline",
+        "youth": "movement competency"
+      },
+      "equipment": [
+        "stopwatch / mat"
+      ],
+      "wearableEstimable": false,
+      "confidence": "low",
+      "evidenceLevel": "L4",
+      "source": "McGill core-endurance literature; expert consensus"
+    }
   ],
-
   "developmentPriorities": {
-    "youth": { "highest": ["broad aerobic base + bike-handling skill", "movement competency (squat/hinge) with bodyweight", "growth-aware bike fit", "enjoyment + multi-discipline exposure"], "lowest": ["maximal gym loading", "early discipline specialisation", "high-volume monotonous training"], "trainingEmphasis": "Skill, aerobic enjoyment, bodyweight + band strength, mobility; build bone-loading habits (cycling is non-osteogenic). Avoid early specialisation and overload.", "commonMistakes": ["chasing power numbers too early", "skipping bike fit during growth spurts", "no strength/bone-loading work"] },
-    "development": { "highest": ["aerobic capacity + threshold development", "gym strength base (squat/hinge competency → load)", "core endurance + position tolerance", "load monitoring habits"], "lowest": ["in-season fatigue from novel gym work", "advanced plyometrics before competency"], "trainingEmphasis": "Build FTP/VO2max, lay a real strength base for economy, embed core + bike-fit habits, introduce TSS/volume monitoring.", "commonMistakes": ["neglecting strength (economy lever)", "volume spikes → knee/back overuse", "no load tracking"] },
-    "senior": { "highest": ["discipline-specific power/endurance", "knee + low-back durability", "in-season strength maintenance", "load + taper management"], "lowest": ["novel high-fatigue gym work in-season", "non-specific hypertrophy that adds non-functional mass"], "trainingEmphasis": "Individualise to the discipline; maintain strength/power at low fatigue; protect the knee/back; nail event tapers.", "commonMistakes": ["dropping strength in-season (losing the economy gain)", "heavy legs before key rides", "ignoring early knee/back niggles"] },
-    "elite": { "highest": ["marginal performance gains (W/kg, aero)", "availability (knee/back + crash recovery)", "individualised periodisation + taper modelling", "objective monitoring (power + readiness)"], "lowest": ["generic squad gym work", "unmonitored training-load spikes"], "trainingEmphasis": "Data-led individualisation; precise strength + taper periodisation; protect availability around a dense race calendar.", "commonMistakes": ["one-size-fits-all gym dosing", "testing without acting", "ignoring fatigue trends"] },
-    "masters": { "highest": ["strength/power + bone-health retention", "knee/back health + mobility", "recovery management", "longevity + enjoyment"], "lowest": ["maximal volume", "aggressive volume/intensity spikes"], "trainingEmphasis": "Maintain strength/power (counter age-related loss + cycling's non-osteogenic nature), manage volume conservatively, protect joints, longer recovery.", "commonMistakes": ["dropping strength training", "chasing younger riders' volume", "ignoring bone health"] }
+    "youth": {
+      "highest": [
+        "broad aerobic base + bike-handling skill",
+        "movement competency (squat/hinge) with bodyweight",
+        "growth-aware bike fit",
+        "enjoyment + multi-discipline exposure"
+      ],
+      "lowest": [
+        "maximal gym loading",
+        "early discipline specialisation",
+        "high-volume monotonous training"
+      ],
+      "trainingEmphasis": "Skill, aerobic enjoyment, bodyweight + band strength, mobility; build bone-loading habits (cycling is non-osteogenic). Avoid early specialisation and overload.",
+      "commonMistakes": [
+        "chasing power numbers too early",
+        "skipping bike fit during growth spurts",
+        "no strength/bone-loading work"
+      ]
+    },
+    "development": {
+      "highest": [
+        "aerobic capacity + threshold development",
+        "gym strength base (squat/hinge competency → load)",
+        "core endurance + position tolerance",
+        "load monitoring habits"
+      ],
+      "lowest": [
+        "in-season fatigue from novel gym work",
+        "advanced plyometrics before competency"
+      ],
+      "trainingEmphasis": "Build FTP/VO2max, lay a real strength base for economy, embed core + bike-fit habits, introduce TSS/volume monitoring.",
+      "commonMistakes": [
+        "neglecting strength (economy lever)",
+        "volume spikes → knee/back overuse",
+        "no load tracking"
+      ]
+    },
+    "senior": {
+      "highest": [
+        "discipline-specific power/endurance",
+        "knee + low-back durability",
+        "in-season strength maintenance",
+        "load + taper management"
+      ],
+      "lowest": [
+        "novel high-fatigue gym work in-season",
+        "non-specific hypertrophy that adds non-functional mass"
+      ],
+      "trainingEmphasis": "Individualise to the discipline; maintain strength/power at low fatigue; protect the knee/back; nail event tapers.",
+      "commonMistakes": [
+        "dropping strength in-season (losing the economy gain)",
+        "heavy legs before key rides",
+        "ignoring early knee/back niggles"
+      ]
+    },
+    "elite": {
+      "highest": [
+        "marginal performance gains (W/kg, aero)",
+        "availability (knee/back + crash recovery)",
+        "individualised periodisation + taper modelling",
+        "objective monitoring (power + readiness)"
+      ],
+      "lowest": [
+        "generic squad gym work",
+        "unmonitored training-load spikes"
+      ],
+      "trainingEmphasis": "Data-led individualisation; precise strength + taper periodisation; protect availability around a dense race calendar.",
+      "commonMistakes": [
+        "one-size-fits-all gym dosing",
+        "testing without acting",
+        "ignoring fatigue trends"
+      ]
+    },
+    "masters": {
+      "highest": [
+        "strength/power + bone-health retention",
+        "knee/back health + mobility",
+        "recovery management",
+        "longevity + enjoyment"
+      ],
+      "lowest": [
+        "maximal volume",
+        "aggressive volume/intensity spikes"
+      ],
+      "trainingEmphasis": "Maintain strength/power (counter age-related loss + cycling's non-osteogenic nature), manage volume conservatively, protect joints, longer recovery.",
+      "commonMistakes": [
+        "dropping strength training",
+        "chasing younger riders' volume",
+        "ignoring bone health"
+      ]
+    }
   },
-
   "seasonalModel": {
-    "offSeason": { "primaryObjective": "Build aerobic base + a genuine gym strength foundation; restore knee/back health and mobility.", "trainingEmphasis": "High aerobic volume (zone 2), heavy gym strength (the best phase to build it — improves economy), core, mobility, bike-fit review.", "gymFrequencyPerWeek": "2-3", "volume": "high (aerobic) + moderate-high (strength)", "intensity": "moderate (building) — heavy strength", "fatigueTolerance": "high", "recoveryEmphasis": "moderate", "testingRecommendations": ["strength baseline (squat)", "VO2max/MAP", "FTP", "mobility / bike-fit screen", "CMJ"] },
-    "preSeason": { "primaryObjective": "Convert base to discipline-specific power/threshold; build race-pace capacity; shift gym from strength to power.", "trainingEmphasis": "Threshold + VO2max + race-pace intervals, gym power (lower volume, explosive intent), maintain core; reduce gym volume as bike intensity rises.", "gymFrequencyPerWeek": "2", "volume": "moderate", "intensity": "high", "fatigueTolerance": "moderate-high", "recoveryEmphasis": "moderate-high", "testingRecommendations": ["FTP", "peak/sprint power", "CMJ"] },
-    "competition": { "primaryObjective": "Maintain qualities; sharpen; keep strength with minimal fatigue; peak for target events.", "trainingEmphasis": "Race-specific intensity, MAINTAINED strength at low volume (1-2 short heavy sessions — preserves the economy gain), full core/prehab, freshness management.", "gymFrequencyPerWeek": "1-2 (low volume, high quality)", "volume": "low (gym)", "intensity": "high (bike), heavy-but-brief (gym)", "fatigueTolerance": "low (protect race legs)", "recoveryEmphasis": "high", "testingRecommendations": ["readiness + CMJ monitoring", "race-pace / FTP check (low fatigue)"] },
-    "playoffs": { "primaryObjective": "Peak taper for a target event or stage race.", "trainingEmphasis": "Reduced volume, maintained intensity, sharpening; gym is priming/maintenance only; maximise recovery and fuelling.", "gymFrequencyPerWeek": "0-1", "volume": "very low", "intensity": "high (very low volume)", "fatigueTolerance": "very low", "recoveryEmphasis": "very high", "testingRecommendations": ["readiness monitoring only — no fatiguing tests"] },
-    "recovery": { "primaryObjective": "Physical and mental recovery; restore knee/back; address carried niggles.", "trainingEmphasis": "Low/unstructured riding, mobility, light cross-training + bone-loading; rehab any carried knee/back issues.", "gymFrequencyPerWeek": "0-2 (optional)", "volume": "very low", "intensity": "low", "fatigueTolerance": "n/a", "recoveryEmphasis": "very high", "testingRecommendations": ["none; medical review of carried knee/back issues"] }
+    "offSeason": {
+      "primaryObjective": "Build aerobic base + a genuine gym strength foundation; restore knee/back health and mobility.",
+      "trainingEmphasis": "High aerobic volume (zone 2), heavy gym strength (the best phase to build it — improves economy), core, mobility, bike-fit review.",
+      "gymFrequencyPerWeek": "2-3",
+      "volume": "high (aerobic) + moderate-high (strength)",
+      "intensity": "moderate (building) — heavy strength",
+      "fatigueTolerance": "high",
+      "recoveryEmphasis": "moderate",
+      "testingRecommendations": [
+        "strength baseline (squat)",
+        "VO2max/MAP",
+        "FTP",
+        "mobility / bike-fit screen",
+        "CMJ"
+      ]
+    },
+    "preSeason": {
+      "primaryObjective": "Convert base to discipline-specific power/threshold; build race-pace capacity; shift gym from strength to power.",
+      "trainingEmphasis": "Threshold + VO2max + race-pace intervals, gym power (lower volume, explosive intent), maintain core; reduce gym volume as bike intensity rises.",
+      "gymFrequencyPerWeek": "2",
+      "volume": "moderate",
+      "intensity": "high",
+      "fatigueTolerance": "moderate-high",
+      "recoveryEmphasis": "moderate-high",
+      "testingRecommendations": [
+        "FTP",
+        "peak/sprint power",
+        "CMJ"
+      ]
+    },
+    "competition": {
+      "primaryObjective": "Maintain qualities; sharpen; keep strength with minimal fatigue; peak for target events.",
+      "trainingEmphasis": "Race-specific intensity, MAINTAINED strength at low volume (1-2 short heavy sessions — preserves the economy gain), full core/prehab, freshness management.",
+      "gymFrequencyPerWeek": "1-2 (low volume, high quality)",
+      "volume": "low (gym)",
+      "intensity": "high (bike), heavy-but-brief (gym)",
+      "fatigueTolerance": "low (protect race legs)",
+      "recoveryEmphasis": "high",
+      "testingRecommendations": [
+        "readiness + CMJ monitoring",
+        "race-pace / FTP check (low fatigue)"
+      ]
+    },
+    "playoffs": {
+      "primaryObjective": "Peak taper for a target event or stage race.",
+      "trainingEmphasis": "Reduced volume, maintained intensity, sharpening; gym is priming/maintenance only; maximise recovery and fuelling.",
+      "gymFrequencyPerWeek": "0-1",
+      "volume": "very low",
+      "intensity": "high (very low volume)",
+      "fatigueTolerance": "very low",
+      "recoveryEmphasis": "very high",
+      "testingRecommendations": [
+        "readiness monitoring only — no fatiguing tests"
+      ]
+    },
+    "recovery": {
+      "primaryObjective": "Physical and mental recovery; restore knee/back; address carried niggles.",
+      "trainingEmphasis": "Low/unstructured riding, mobility, light cross-training + bone-loading; rehab any carried knee/back issues.",
+      "gymFrequencyPerWeek": "0-2 (optional)",
+      "volume": "very low",
+      "intensity": "low",
+      "fatigueTolerance": "n/a",
+      "recoveryEmphasis": "very high",
+      "testingRecommendations": [
+        "none; medical review of carried knee/back issues"
+      ]
+    }
   },
-
   "microcycles": {
-    "oneMatchPerWeek": { "pattern": "Built around key quality rides (threshold/VO2max/race); gym placed to NOT fatigue the legs before quality or racing.", "heavyDay": "early-week, away from key quality rides and racing (often paired with an easier ride)", "powerDay": "mid-week low-volume power (jumps, sprints, med-ball)", "recoveryDay": "post-key-session + pre-race day (easy spin)", "mobilityDay": "daily (hip/thoracic + core)", "injuryPreventionDay": "core + knee/hip prehab embedded; primary strength dose early-week", "typicalLoadingPattern": "Strength + base early → threshold/VO2max mid → sharpen → easy pre-race → race.", "avoidHeavyLiftingDays": ["day before a key quality ride", "day before racing", "race day"], "preferExplosiveWorkDays": ["mid-week power day (away from racing)"] },
-    "twoMatchesPerWeek": { "pattern": "Two races / hard rides in a week: recovery-first between them; no heavy gym.", "heavyDay": "none (or a very light maintenance dose mid-block)", "powerDay": "CNS priming only on race mornings if used", "recoveryDay": "between the two efforts + after each", "mobilityDay": "daily", "injuryPreventionDay": "low-dose core + knee prehab only", "typicalLoadingPattern": "Race → recovery → race → recovery. Gym is priming/maintenance only.", "avoidHeavyLiftingDays": ["both race days + the day before each"], "preferExplosiveWorkDays": ["brief race-morning priming only"] },
-    "tournamentOrCongested": { "pattern": "Stage race / dense block (consecutive race days): pure freshness + fuelling management.", "heavyDay": "none", "powerDay": "race-morning priming only", "recoveryDay": "every evening / rest day", "mobilityDay": "daily", "injuryPreventionDay": "minimal-dose only", "typicalLoadingPattern": "Protect recovery + fuelling between stages; gym is priming, never development.", "avoidHeavyLiftingDays": ["entire block"], "preferExplosiveWorkDays": ["race-morning primers only"] }
+    "oneMatchPerWeek": {
+      "pattern": "Built around key quality rides (threshold/VO2max/race); gym placed to NOT fatigue the legs before quality or racing.",
+      "heavyDay": "early-week, away from key quality rides and racing (often paired with an easier ride)",
+      "powerDay": "mid-week low-volume power (jumps, sprints, med-ball)",
+      "recoveryDay": "post-key-session + pre-race day (easy spin)",
+      "mobilityDay": "daily (hip/thoracic + core)",
+      "injuryPreventionDay": "core + knee/hip prehab embedded; primary strength dose early-week",
+      "typicalLoadingPattern": "Strength + base early → threshold/VO2max mid → sharpen → easy pre-race → race.",
+      "avoidHeavyLiftingDays": [
+        "day before a key quality ride",
+        "day before racing",
+        "race day"
+      ],
+      "preferExplosiveWorkDays": [
+        "mid-week power day (away from racing)"
+      ]
+    },
+    "twoMatchesPerWeek": {
+      "pattern": "Two races / hard rides in a week: recovery-first between them; no heavy gym.",
+      "heavyDay": "none (or a very light maintenance dose mid-block)",
+      "powerDay": "CNS priming only on race mornings if used",
+      "recoveryDay": "between the two efforts + after each",
+      "mobilityDay": "daily",
+      "injuryPreventionDay": "low-dose core + knee prehab only",
+      "typicalLoadingPattern": "Race → recovery → race → recovery. Gym is priming/maintenance only.",
+      "avoidHeavyLiftingDays": [
+        "both race days + the day before each"
+      ],
+      "preferExplosiveWorkDays": [
+        "brief race-morning priming only"
+      ]
+    },
+    "tournamentOrCongested": {
+      "pattern": "Stage race / dense block (consecutive race days): pure freshness + fuelling management.",
+      "heavyDay": "none",
+      "powerDay": "race-morning priming only",
+      "recoveryDay": "every evening / rest day",
+      "mobilityDay": "daily",
+      "injuryPreventionDay": "minimal-dose only",
+      "typicalLoadingPattern": "Protect recovery + fuelling between stages; gym is priming, never development.",
+      "avoidHeavyLiftingDays": [
+        "entire block"
+      ],
+      "preferExplosiveWorkDays": [
+        "race-morning primers only"
+      ]
+    }
   },
-
   "gymPhilosophy": {
-    "transfersWell": ["back / front squat (max strength → economy + sprint power)", "trap-bar deadlift + Romanian deadlift (posterior chain, balance quad dominance)", "hip thrust (hip-extension / sprint power)", "Bulgarian split squat + single-leg work (correct L/R asymmetry)", "leg press (high-load quad strength, low skill — in-season maintenance)", "box jump / CMJ (lower-body power, RFD)", "Olympic-lift derivatives (track/sprint power, advanced)", "core anti-flexion + anti-extension + anti-rotation (position tolerance, force transfer)", "hip + thoracic mobility (aero position)", "calf raises (lower-leg stiffness + bone loading)"],
-    "limitedValue": ["high-volume bodybuilding hypertrophy that adds non-functional mass (hurts W/kg, especially for climbers)", "heavy bilateral rotational/COD work (no transfer to a sagittal sport)", "endless high-rep core flexion (crunches) — endurance/anti-movement core transfers more", "long slow grinding gym circuits that just add leg fatigue"],
-    "essentialMovementPatterns": ["squat", "hip hinge", "single-leg strength", "vertical jump (power)", "anti-flexion + anti-extension + anti-rotation core", "hip + thoracic mobility"],
-    "accessoryPriorities": ["posterior chain (hamstring/glute) to balance quad dominance", "hip abductors / glute medius (knee tracking, ITB)", "core / lumbo-pelvic endurance", "calves + foot/ankle", "neck + upper-back (position prehab)"],
+    "transfersWell": [
+      "back / front squat (max strength → economy + sprint power)",
+      "trap-bar deadlift + Romanian deadlift (posterior chain, balance quad dominance)",
+      "hip thrust (hip-extension / sprint power)",
+      "Bulgarian split squat + single-leg work (correct L/R asymmetry)",
+      "leg press (high-load quad strength, low skill — in-season maintenance)",
+      "box jump / CMJ (lower-body power, RFD)",
+      "Olympic-lift derivatives (track/sprint power, advanced)",
+      "core anti-flexion + anti-extension + anti-rotation (position tolerance, force transfer)",
+      "hip + thoracic mobility (aero position)",
+      "calf raises (lower-leg stiffness + bone loading)"
+    ],
+    "limitedValue": [
+      "high-volume bodybuilding hypertrophy that adds non-functional mass (hurts W/kg, especially for climbers)",
+      "heavy bilateral rotational/COD work (no transfer to a sagittal sport)",
+      "endless high-rep core flexion (crunches) — endurance/anti-movement core transfers more",
+      "long slow grinding gym circuits that just add leg fatigue"
+    ],
+    "essentialMovementPatterns": [
+      "squat",
+      "hip hinge",
+      "single-leg strength",
+      "vertical jump (power)",
+      "anti-flexion + anti-extension + anti-rotation core",
+      "hip + thoracic mobility"
+    ],
+    "accessoryPriorities": [
+      "posterior chain (hamstring/glute) to balance quad dominance",
+      "hip abductors / glute medius (knee tracking, ITB)",
+      "core / lumbo-pelvic endurance",
+      "calves + foot/ankle",
+      "neck + upper-back (position prehab)"
+    ],
     "singleLegEmphasis": "Moderate-high — pedalling is alternating single-leg; split squats, single-leg RDLs and step-ups correct left/right force asymmetries and protect the knee, while bilateral squats build the heavy strength.",
     "olympicLiftingSuitability": "Optional/advanced — high value for TRACK/sprint power if competent; for road riders, jumps + hip thrust deliver much of the power benefit at lower technical/fatigue cost.",
     "plyometricEmphasis": "Moderate, dosed — cycling is non-impact, so dryland jumps/throws add a deliberate impact + RFD + bone-loading stimulus; progress off a strength base.",
@@ -143,51 +951,683 @@
     "tempoRecommendations": "Controlled tempo for prehab/core; explosive concentric intent for strength + power (intent drives RFD); avoid grinding fatigue near key rides.",
     "velocityRecommendations": "Heavy strength at high intent + low reps for economy/power; the legs are the limiter, so prioritise quality and recovery over gym volume in-season."
   },
-
   "exerciseLibrary": {
-    "categories": ["lower-body bilateral strength", "single-leg strength", "posterior chain", "sprint / explosive power", "core / trunk", "mobility", "posture / neck prehab", "calf / lower leg"],
+    "categories": [
+      "lower-body bilateral strength",
+      "single-leg strength",
+      "posterior chain",
+      "sprint / explosive power",
+      "core / trunk",
+      "mobility",
+      "posture / neck prehab",
+      "calf / lower leg"
+    ],
     "exercises": [
-      { "id": "back_squat", "name": "Back / front squat", "category": "lower-body bilateral strength", "movementPattern": "squat", "primaryAdaptation": "lower-body max strength (economy + power base)", "secondaryAdaptation": "trunk stability", "fatigueCost": "high", "sorenessCost": "moderate-high", "recoveryTimeH": 48, "jointLoading": "moderate (knee/hip/spine)", "equipment": ["barbell", "rack"], "difficulty": "intermediate", "regressions": ["goblet squat", "box squat", "leg press"], "progressions": ["heavier", "pause/tempo", "front squat"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": false, "suitableBeginners": false, "suitableElite": true, "transferToSportRating": 8, "injuryPreventionRating": 5 },
-      { "id": "trap_bar_deadlift", "name": "Trap-bar deadlift", "category": "posterior chain", "movementPattern": "hinge/squat hybrid", "primaryAdaptation": "posterior-chain + total-body strength (sprint/attack base)", "secondaryAdaptation": "trunk stability; balances quad dominance", "fatigueCost": "high", "sorenessCost": "moderate", "recoveryTimeH": 48, "jointLoading": "moderate", "equipment": ["trap bar"], "difficulty": "beginner-friendly", "regressions": ["kettlebell deadlift", "hip-hinge drill"], "progressions": ["heavier", "trap-bar jump"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 7, "injuryPreventionRating": 6 },
-      { "id": "romanian_deadlift", "name": "Romanian deadlift", "category": "posterior chain", "movementPattern": "hip hinge", "primaryAdaptation": "hamstring/glute strength (balance quad dominance)", "secondaryAdaptation": "low-back robustness", "fatigueCost": "moderate", "sorenessCost": "moderate-high", "recoveryTimeH": 48, "jointLoading": "low-moderate", "equipment": ["barbell / dumbbells"], "difficulty": "beginner-friendly", "regressions": ["dumbbell RDL", "hip-hinge drill"], "progressions": ["heavier", "single-leg RDL"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 6, "injuryPreventionRating": 7 },
-      { "id": "bulgarian_split_squat", "name": "Bulgarian split squat / single-leg work", "category": "single-leg strength", "movementPattern": "single-leg squat", "primaryAdaptation": "unilateral leg strength (correct L/R asymmetry)", "secondaryAdaptation": "hip/knee stability + control", "fatigueCost": "moderate", "sorenessCost": "high (early)", "recoveryTimeH": 48, "jointLoading": "low-moderate", "equipment": ["dumbbells / bench"], "difficulty": "intermediate", "regressions": ["split squat", "step-up"], "progressions": ["loaded", "deficit", "rear-foot-elevated"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": false, "suitableElite": true, "transferToSportRating": 7, "injuryPreventionRating": 7 },
-      { "id": "leg_press", "name": "Leg press", "category": "lower-body bilateral strength", "movementPattern": "squat (machine)", "primaryAdaptation": "high-load quad/glute strength, low skill", "secondaryAdaptation": "in-season strength maintenance with low spinal load", "fatigueCost": "moderate", "sorenessCost": "moderate", "recoveryTimeH": 48, "jointLoading": "low-moderate (no spinal load)", "equipment": ["leg-press machine"], "difficulty": "beginner-friendly", "regressions": ["lighter load", "partial range"], "progressions": ["heavier", "single-leg press"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 6, "injuryPreventionRating": 4 },
-      { "id": "hip_thrust", "name": "Barbell hip thrust", "category": "sprint / explosive power", "movementPattern": "hip extension", "primaryAdaptation": "glute/hip-extension strength + power (sprint)", "secondaryAdaptation": "posterior chain; spares the knee", "fatigueCost": "moderate", "sorenessCost": "moderate", "recoveryTimeH": 48, "jointLoading": "low (knee-friendly)", "equipment": ["barbell / bench"], "difficulty": "beginner-friendly", "regressions": ["bodyweight glute bridge", "single-leg bridge"], "progressions": ["heavier", "paused", "single-leg hip thrust"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 7, "injuryPreventionRating": 5 },
-      { "id": "box_jump_cmj", "name": "Box jump / countermovement jump", "category": "sprint / explosive power", "movementPattern": "vertical jump", "primaryAdaptation": "lower-body power + RFD (sprint/attack)", "secondaryAdaptation": "bone-loading stimulus (non-osteogenic sport)", "fatigueCost": "low-moderate", "sorenessCost": "low-moderate", "recoveryTimeH": 24, "jointLoading": "moderate (landing)", "equipment": ["box / none"], "difficulty": "intermediate", "regressions": ["low box", "pogo hops"], "progressions": ["loaded jump", "depth jump (advanced)"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": false, "suitableBeginners": false, "suitableElite": true, "transferToSportRating": 6, "injuryPreventionRating": 4 },
-      { "id": "power_clean_pull", "name": "Power clean / clean pull (Olympic-lift derivative)", "category": "sprint / explosive power", "movementPattern": "triple-extension pull", "primaryAdaptation": "explosive triple-extension power (track/sprint)", "secondaryAdaptation": "RFD + full-body coordination", "fatigueCost": "moderate-high", "sorenessCost": "moderate", "recoveryTimeH": 48, "jointLoading": "moderate", "equipment": ["barbell / bumpers"], "difficulty": "advanced", "regressions": ["trap-bar jump", "kettlebell swing"], "progressions": ["heavier", "full clean"], "suitableInSeason": false, "suitableOffSeason": true, "suitableReturnToPlay": false, "suitableBeginners": false, "suitableElite": true, "transferToSportRating": 6, "injuryPreventionRating": 3 },
-      { "id": "plank_iso_back", "name": "Plank / side-plank / Sorensen hold (core endurance)", "category": "core / trunk", "movementPattern": "anti-flexion / anti-lateral-flexion isometric", "primaryAdaptation": "trunk-endurance for position tolerance", "secondaryAdaptation": "low-back protection (riding posture)", "fatigueCost": "low", "sorenessCost": "low", "recoveryTimeH": 12, "jointLoading": "low", "equipment": ["mat"], "difficulty": "beginner-friendly", "regressions": ["short holds", "knee plank"], "progressions": ["longer holds", "loaded / long-lever"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 6, "injuryPreventionRating": 8 },
-      { "id": "pallof_press", "name": "Pallof press (anti-rotation)", "category": "core / trunk", "movementPattern": "anti-rotation", "primaryAdaptation": "trunk anti-rotation (leg-to-pedal force transfer)", "secondaryAdaptation": "lumbo-pelvic control", "fatigueCost": "low", "sorenessCost": "low", "recoveryTimeH": 12, "jointLoading": "low", "equipment": ["cable / band"], "difficulty": "beginner-friendly", "regressions": ["tall-kneeling Pallof"], "progressions": ["split-stance", "added range"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 6, "injuryPreventionRating": 6 },
-      { "id": "hip_thoracic_mobility", "name": "Hip-flexor + hamstring + thoracic mobility flow", "category": "mobility", "movementPattern": "hip + thoracic ROM", "primaryAdaptation": "aero-position range + comfort", "secondaryAdaptation": "low-back + knee injury reduction", "fatigueCost": "very low", "sorenessCost": "very low", "recoveryTimeH": 6, "jointLoading": "low", "equipment": ["foam roller / band"], "difficulty": "beginner-friendly", "regressions": ["assisted ranges"], "progressions": ["loaded end-range holds"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 5, "injuryPreventionRating": 8 },
-      { "id": "neck_isometrics", "name": "Neck isometrics + thoracic extension", "category": "posture / neck prehab", "movementPattern": "cervical isometric + thoracic extension", "primaryAdaptation": "cervical-extensor endurance (long/aero position)", "secondaryAdaptation": "upper-back posture", "fatigueCost": "very low", "sorenessCost": "low", "recoveryTimeH": 12, "jointLoading": "low", "equipment": ["band / none"], "difficulty": "beginner-friendly", "regressions": ["shorter holds"], "progressions": ["added load / time"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 3, "injuryPreventionRating": 7 },
-      { "id": "calf_raise", "name": "Calf raise (straight + bent knee)", "category": "calf / lower leg", "movementPattern": "ankle plantarflexion", "primaryAdaptation": "lower-leg strength + ankle stiffness (pedal force transfer)", "secondaryAdaptation": "bone-loading stimulus", "fatigueCost": "low", "sorenessCost": "low-moderate", "recoveryTimeH": 24, "jointLoading": "low", "equipment": ["step / dumbbells / machine"], "difficulty": "beginner-friendly", "regressions": ["bodyweight"], "progressions": ["loaded", "single-leg"], "suitableInSeason": true, "suitableOffSeason": true, "suitableReturnToPlay": true, "suitableBeginners": true, "suitableElite": true, "transferToSportRating": 4, "injuryPreventionRating": 5 }
+      {
+        "id": "back_squat",
+        "name": "Back / front squat",
+        "category": "lower-body bilateral strength",
+        "movementPattern": "squat",
+        "primaryAdaptation": "lower-body max strength (economy + power base)",
+        "secondaryAdaptation": "trunk stability",
+        "fatigueCost": "high",
+        "sorenessCost": "moderate-high",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate (knee/hip/spine)",
+        "equipment": [
+          "barbell",
+          "rack"
+        ],
+        "difficulty": "intermediate",
+        "regressions": [
+          "goblet squat",
+          "box squat",
+          "leg press"
+        ],
+        "progressions": [
+          "heavier",
+          "pause/tempo",
+          "front squat"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": false,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 8,
+        "injuryPreventionRating": 5
+      },
+      {
+        "id": "trap_bar_dl",
+        "name": "Trap-bar deadlift",
+        "category": "posterior chain",
+        "movementPattern": "hinge/squat hybrid",
+        "primaryAdaptation": "posterior-chain + total-body strength (sprint/attack base)",
+        "secondaryAdaptation": "trunk stability; balances quad dominance",
+        "fatigueCost": "high",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate",
+        "equipment": [
+          "trap bar"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "kettlebell deadlift",
+          "hip-hinge drill"
+        ],
+        "progressions": [
+          "heavier",
+          "trap-bar jump"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 6
+      },
+      {
+        "id": "rdl",
+        "name": "Romanian deadlift",
+        "category": "posterior chain",
+        "movementPattern": "hip hinge",
+        "primaryAdaptation": "hamstring/glute strength (balance quad dominance)",
+        "secondaryAdaptation": "low-back robustness",
+        "fatigueCost": "moderate",
+        "sorenessCost": "moderate-high",
+        "recoveryTimeH": 48,
+        "jointLoading": "low-moderate",
+        "equipment": [
+          "barbell / dumbbells"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "dumbbell RDL",
+          "hip-hinge drill"
+        ],
+        "progressions": [
+          "heavier",
+          "single-leg RDL"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "split_squat",
+        "name": "Bulgarian split squat / single-leg work",
+        "category": "single-leg strength",
+        "movementPattern": "single-leg squat",
+        "primaryAdaptation": "unilateral leg strength (correct L/R asymmetry)",
+        "secondaryAdaptation": "hip/knee stability + control",
+        "fatigueCost": "moderate",
+        "sorenessCost": "high (early)",
+        "recoveryTimeH": 48,
+        "jointLoading": "low-moderate",
+        "equipment": [
+          "dumbbells / bench"
+        ],
+        "difficulty": "intermediate",
+        "regressions": [
+          "split squat",
+          "step-up"
+        ],
+        "progressions": [
+          "loaded",
+          "deficit",
+          "rear-foot-elevated"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "hack_squat",
+        "name": "Leg press",
+        "category": "lower-body bilateral strength",
+        "movementPattern": "squat (machine)",
+        "primaryAdaptation": "high-load quad/glute strength, low skill",
+        "secondaryAdaptation": "in-season strength maintenance with low spinal load",
+        "fatigueCost": "moderate",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "low-moderate (no spinal load)",
+        "equipment": [
+          "leg-press machine"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "lighter load",
+          "partial range"
+        ],
+        "progressions": [
+          "heavier",
+          "single-leg press"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 4
+      },
+      {
+        "id": "hip_thrust",
+        "name": "Barbell hip thrust",
+        "category": "sprint / explosive power",
+        "movementPattern": "hip extension",
+        "primaryAdaptation": "glute/hip-extension strength + power (sprint)",
+        "secondaryAdaptation": "posterior chain; spares the knee",
+        "fatigueCost": "moderate",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "low (knee-friendly)",
+        "equipment": [
+          "barbell / bench"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "bodyweight glute bridge",
+          "single-leg bridge"
+        ],
+        "progressions": [
+          "heavier",
+          "paused",
+          "single-leg hip thrust"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 5
+      },
+      {
+        "id": "seated_box_jump",
+        "name": "Box jump / countermovement jump",
+        "category": "sprint / explosive power",
+        "movementPattern": "vertical jump",
+        "primaryAdaptation": "lower-body power + RFD (sprint/attack)",
+        "secondaryAdaptation": "bone-loading stimulus (non-osteogenic sport)",
+        "fatigueCost": "low-moderate",
+        "sorenessCost": "low-moderate",
+        "recoveryTimeH": 24,
+        "jointLoading": "moderate (landing)",
+        "equipment": [
+          "box / none"
+        ],
+        "difficulty": "intermediate",
+        "regressions": [
+          "low box",
+          "pogo hops"
+        ],
+        "progressions": [
+          "loaded jump",
+          "depth jump (advanced)"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": false,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 4
+      },
+      {
+        "id": "hang_clean",
+        "name": "Power clean / clean pull (Olympic-lift derivative)",
+        "category": "sprint / explosive power",
+        "movementPattern": "triple-extension pull",
+        "primaryAdaptation": "explosive triple-extension power (track/sprint)",
+        "secondaryAdaptation": "RFD + full-body coordination",
+        "fatigueCost": "moderate-high",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate",
+        "equipment": [
+          "barbell / bumpers"
+        ],
+        "difficulty": "advanced",
+        "regressions": [
+          "trap-bar jump",
+          "kettlebell swing"
+        ],
+        "progressions": [
+          "heavier",
+          "full clean"
+        ],
+        "suitableInSeason": false,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": false,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 3
+      },
+      {
+        "id": "plank",
+        "name": "Plank / side-plank / Sorensen hold (core endurance)",
+        "category": "core / trunk",
+        "movementPattern": "anti-flexion / anti-lateral-flexion isometric",
+        "primaryAdaptation": "trunk-endurance for position tolerance",
+        "secondaryAdaptation": "low-back protection (riding posture)",
+        "fatigueCost": "low",
+        "sorenessCost": "low",
+        "recoveryTimeH": 12,
+        "jointLoading": "low",
+        "equipment": [
+          "mat"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "short holds",
+          "knee plank"
+        ],
+        "progressions": [
+          "longer holds",
+          "loaded / long-lever"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 8
+      },
+      {
+        "id": "pallof",
+        "name": "Pallof press (anti-rotation)",
+        "category": "core / trunk",
+        "movementPattern": "anti-rotation",
+        "primaryAdaptation": "trunk anti-rotation (leg-to-pedal force transfer)",
+        "secondaryAdaptation": "lumbo-pelvic control",
+        "fatigueCost": "low",
+        "sorenessCost": "low",
+        "recoveryTimeH": 12,
+        "jointLoading": "low",
+        "equipment": [
+          "cable / band"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "tall-kneeling Pallof"
+        ],
+        "progressions": [
+          "split-stance",
+          "added range"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 6
+      },
+      {
+        "id": "cat_camel_thoracic",
+        "name": "Hip-flexor + hamstring + thoracic mobility flow",
+        "category": "mobility",
+        "movementPattern": "hip + thoracic ROM",
+        "primaryAdaptation": "aero-position range + comfort",
+        "secondaryAdaptation": "low-back + knee injury reduction",
+        "fatigueCost": "very low",
+        "sorenessCost": "very low",
+        "recoveryTimeH": 6,
+        "jointLoading": "low",
+        "equipment": [
+          "foam roller / band"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "assisted ranges"
+        ],
+        "progressions": [
+          "loaded end-range holds"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 5,
+        "injuryPreventionRating": 8
+      },
+      {
+        "id": "neck_isometrics",
+        "name": "Neck isometrics + thoracic extension",
+        "category": "posture / neck prehab",
+        "movementPattern": "cervical isometric + thoracic extension",
+        "primaryAdaptation": "cervical-extensor endurance (long/aero position)",
+        "secondaryAdaptation": "upper-back posture",
+        "fatigueCost": "very low",
+        "sorenessCost": "low",
+        "recoveryTimeH": 12,
+        "jointLoading": "low",
+        "equipment": [
+          "band / none"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "shorter holds"
+        ],
+        "progressions": [
+          "added load / time"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 3,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "calf_raise",
+        "name": "Calf raise (straight + bent knee)",
+        "category": "calf / lower leg",
+        "movementPattern": "ankle plantarflexion",
+        "primaryAdaptation": "lower-leg strength + ankle stiffness (pedal force transfer)",
+        "secondaryAdaptation": "bone-loading stimulus",
+        "fatigueCost": "low",
+        "sorenessCost": "low-moderate",
+        "recoveryTimeH": 24,
+        "jointLoading": "low",
+        "equipment": [
+          "step / dumbbells / machine"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "bodyweight"
+        ],
+        "progressions": [
+          "loaded",
+          "single-leg"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 4,
+        "injuryPreventionRating": 5
+      }
     ]
   },
-
   "injuryPreventionLibrary": [
-    { "injury": "Anterior knee pain (patellofemoral)", "riskFactors": ["training-load / gear spikes", "poor bike fit (saddle height/fore-aft, cleat)", "quad dominance / weak hip abductors", "low cadence grinding"], "warningSigns": ["anterior knee pain during/after riding", "pain climbing stairs", "discomfort with sudden volume/gear increases"], "preventativeExercises": ["bulgarian_split_squat", "hip_thrust", "back_squat", "hip_thoracic_mobility"], "recommendedFrequency": "strength 2x/week + bike-fit review; mobility most days", "suitableSeason": "all", "evidenceLevel": "L3", "exercisesToAvoid": ["heavy deep-knee load during a flare", "sudden gear/volume spikes", "riding through sharp knee pain"], "monitoringRecommendations": ["bike-fit at season start + on any niggle", "weekly knee-soreness check", "volume/gear progression vs baseline"], "source": "Clarsen 2010; Wanich 2007; expert consensus", "confidence": "moderate" },
-    { "injury": "Low back pain (flexion / sustained-posture)", "riskFactors": ["weak lumbo-pelvic endurance", "limited hip/hamstring/thoracic mobility", "aggressive/long aero position", "ride-duration spikes"], "warningSigns": ["low-back ache on long/aero rides", "pain easing off the bike", "loss of position tolerance"], "preventativeExercises": ["plank_iso_back", "pallof_press", "romanian_deadlift", "hip_thoracic_mobility"], "recommendedFrequency": "core 3x/week + daily mobility; bike-fit review", "suitableSeason": "all", "evidenceLevel": "L3", "exercisesToAvoid": ["high-volume loaded spinal flexion", "abrupt jumps in aero-ride duration"], "monitoringRecommendations": ["low-back soreness check on long-ride weeks", "core-endurance retest per block"], "source": "Clarsen 2010; McGill core-endurance literature; expert consensus", "confidence": "moderate" },
-    { "injury": "Cervical / neck pain", "riskFactors": ["sustained aero/long-ride extension", "weak cervical/thoracic endurance", "aggressive drop/reach fit"], "warningSigns": ["neck/upper-back ache on long or TT rides", "needing to sit up frequently"], "preventativeExercises": ["neck_isometrics", "hip_thoracic_mobility", "plank_iso_back"], "recommendedFrequency": "neck/thoracic prehab 2-3x/week; bike-fit review", "suitableSeason": "all", "evidenceLevel": "L4", "exercisesToAvoid": ["abrupt increases in aero-position time"], "monitoringRecommendations": ["neck-soreness check on TT/long-ride weeks"], "source": "cycling neck-pain literature; expert consensus", "confidence": "low" }
+    {
+      "injury": "Anterior knee pain (patellofemoral)",
+      "riskFactors": [
+        "training-load / gear spikes",
+        "poor bike fit (saddle height/fore-aft, cleat)",
+        "quad dominance / weak hip abductors",
+        "low cadence grinding"
+      ],
+      "warningSigns": [
+        "anterior knee pain during/after riding",
+        "pain climbing stairs",
+        "discomfort with sudden volume/gear increases"
+      ],
+      "preventativeExercises": [
+        "bulgarian_split_squat",
+        "hip_thrust",
+        "back_squat",
+        "hip_thoracic_mobility"
+      ],
+      "recommendedFrequency": "strength 2x/week + bike-fit review; mobility most days",
+      "suitableSeason": "all",
+      "evidenceLevel": "L3",
+      "exercisesToAvoid": [
+        "heavy deep-knee load during a flare",
+        "sudden gear/volume spikes",
+        "riding through sharp knee pain"
+      ],
+      "monitoringRecommendations": [
+        "bike-fit at season start + on any niggle",
+        "weekly knee-soreness check",
+        "volume/gear progression vs baseline"
+      ],
+      "source": "Clarsen 2010; Wanich 2007; expert consensus",
+      "confidence": "moderate"
+    },
+    {
+      "injury": "Low back pain (flexion / sustained-posture)",
+      "riskFactors": [
+        "weak lumbo-pelvic endurance",
+        "limited hip/hamstring/thoracic mobility",
+        "aggressive/long aero position",
+        "ride-duration spikes"
+      ],
+      "warningSigns": [
+        "low-back ache on long/aero rides",
+        "pain easing off the bike",
+        "loss of position tolerance"
+      ],
+      "preventativeExercises": [
+        "plank_iso_back",
+        "pallof_press",
+        "romanian_deadlift",
+        "hip_thoracic_mobility"
+      ],
+      "recommendedFrequency": "core 3x/week + daily mobility; bike-fit review",
+      "suitableSeason": "all",
+      "evidenceLevel": "L3",
+      "exercisesToAvoid": [
+        "high-volume loaded spinal flexion",
+        "abrupt jumps in aero-ride duration"
+      ],
+      "monitoringRecommendations": [
+        "low-back soreness check on long-ride weeks",
+        "core-endurance retest per block"
+      ],
+      "source": "Clarsen 2010; McGill core-endurance literature; expert consensus",
+      "confidence": "moderate"
+    },
+    {
+      "injury": "Cervical / neck pain",
+      "riskFactors": [
+        "sustained aero/long-ride extension",
+        "weak cervical/thoracic endurance",
+        "aggressive drop/reach fit"
+      ],
+      "warningSigns": [
+        "neck/upper-back ache on long or TT rides",
+        "needing to sit up frequently"
+      ],
+      "preventativeExercises": [
+        "neck_isometrics",
+        "hip_thoracic_mobility",
+        "plank_iso_back"
+      ],
+      "recommendedFrequency": "neck/thoracic prehab 2-3x/week; bike-fit review",
+      "suitableSeason": "all",
+      "evidenceLevel": "L4",
+      "exercisesToAvoid": [
+        "abrupt increases in aero-position time"
+      ],
+      "monitoringRecommendations": [
+        "neck-soreness check on TT/long-ride weeks"
+      ],
+      "source": "cycling neck-pain literature; expert consensus",
+      "confidence": "low"
+    }
   ],
-
   "decisionRules": [
-    { "id": "knee_pain_reduce_check_fit", "if": "athlete reports anterior knee pain/soreness OR knee niggle after volume/gear increase", "then": "review bike fit (saddle height/fore-aft, cleat) FIRST; reduce volume + heavy deep-knee loading; emphasise hip-abductor/glute + pain-free strength; flag for review", "priority": 1, "confidence": "moderate", "evidenceLevel": "L3", "source": "Clarsen 2010; cycling knee-pain literature", "appliesTo": ["knee"] },
-    { "id": "low_back_pain_modify", "if": "athlete reports low-back pain linked to riding/aero position", "then": "emphasise core endurance + hip/thoracic mobility; review bike fit (reach/drop); reduce heavy spinal-loaded lifting and abrupt aero-ride-duration increases", "priority": 2, "confidence": "moderate", "evidenceLevel": "L3", "source": "Clarsen 2010; McGill core-endurance literature", "appliesTo": ["lowBack"] },
-    { "id": "competition_within_48h_no_high_soreness", "if": "race within 48 hours", "then": "remove high-soreness gym (heavy strength, novel plyometrics, high-volume eccentric); allow only low-fatigue priming", "priority": 1, "confidence": "high", "evidenceLevel": "L3", "source": "taper/DOMS literature (Bosquet 2007)", "appliesTo": ["volume"] },
-    { "id": "no_heavy_legs_before_key_ride", "if": "a key quality ride or race is scheduled within 24 hours", "then": "avoid heavy/high-volume lower-body gym the day before (preserve leg freshness for the bike)", "priority": 2, "confidence": "moderate", "evidenceLevel": "L4", "source": "expert consensus (bike-priority sequencing)", "appliesTo": ["volume"] },
-    { "id": "race_day_priming_only", "if": "race day or within 24 hours", "then": "gym is CNS priming only (a few jumps/sprints) or none; no strength development", "priority": 1, "confidence": "moderate", "evidenceLevel": "L3", "source": "priming-session literature; expert consensus", "appliesTo": ["volume"] },
-    { "id": "training_load_acwr_spike", "if": "weekly training load (TSS / volume) ACWR > 1.5", "then": "cap this week's volume; do not add lower-body gym volume; monitor knee/back daily", "priority": 1, "confidence": "low", "evidenceLevel": "L3", "source": "Gabbett 2016 (contested — Impellizzeri 2020 / Lolli 2019); applied to cycling TSS", "appliesTo": ["load"] },
-    { "id": "low_readiness_autoregulate", "if": "readiness score low (poor sleep + high soreness + low wellness)", "then": "autoregulate down one step; prioritise easy aerobic / recovery; do not test", "priority": 1, "confidence": "high", "evidenceLevel": "L1", "source": "Saw 2016", "appliesTo": ["readiness"] },
-    { "id": "cmj_drop_flag_fatigue", "if": "CMJ >10-15% below rolling baseline", "then": "treat as neuromuscular fatigue: reduce gym-power + high-intensity bike load, emphasise recovery, recheck", "priority": 2, "confidence": "moderate", "evidenceLevel": "L3", "source": "Claudino 2017", "appliesTo": ["readiness"] },
-    { "id": "illness_no_training", "if": "athlete reports systemic illness (fever / below-neck symptoms)", "then": "withhold training until symptom-free; resume gradually", "priority": 1, "confidence": "high", "evidenceLevel": "L4", "source": "exercise-immunology consensus", "appliesTo": ["readiness"] },
-    { "id": "taper_protocol", "if": "in taper phase before a target event", "then": "reduce TOTAL volume substantially (~40-60%) over ~1-3 weeks while MAINTAINING intensity; keep low-volume gym priming; maximise recovery + fuelling", "priority": 1, "confidence": "high", "evidenceLevel": "L1", "source": "Mujika & Padilla; Bosquet 2007 (taper meta-analysis)", "appliesTo": ["volume"] },
-    { "id": "inseason_strength_maintenance", "if": "in competition phase", "then": "MAINTAIN strength at minimal effective volume (1-2 short heavy sessions/week, low volume, away from key rides) — do not drop it, or the economy/power gain regresses", "priority": 2, "confidence": "high", "evidenceLevel": "L2", "source": "Rønnestad 2010 (in-season strength maintenance in cyclists)", "appliesTo": ["volume"] },
-    { "id": "offseason_build_strength_for_economy", "if": "in off-season / base phase", "then": "prioritise heavy lower-body strength alongside aerobic base — this is the phase that improves cycling economy and time-to-exhaustion", "priority": 2, "confidence": "high", "evidenceLevel": "L2", "source": "Rønnestad & Mujika 2014; Sunde 2010; Aagaard 2011", "appliesTo": ["volume"] }
+    {
+      "id": "knee_pain_reduce_check_fit",
+      "if": "athlete reports anterior knee pain/soreness OR knee niggle after volume/gear increase",
+      "then": "review bike fit (saddle height/fore-aft, cleat) FIRST; reduce volume + heavy deep-knee loading; emphasise hip-abductor/glute + pain-free strength; flag for review",
+      "priority": 1,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Clarsen 2010; cycling knee-pain literature",
+      "appliesTo": [
+        "knee"
+      ]
+    },
+    {
+      "id": "low_back_pain_modify",
+      "if": "athlete reports low-back pain linked to riding/aero position",
+      "then": "emphasise core endurance + hip/thoracic mobility; review bike fit (reach/drop); reduce heavy spinal-loaded lifting and abrupt aero-ride-duration increases",
+      "priority": 2,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Clarsen 2010; McGill core-endurance literature",
+      "appliesTo": [
+        "lowBack"
+      ]
+    },
+    {
+      "id": "competition_within_48h_no_high_soreness",
+      "if": "race within 48 hours",
+      "then": "remove high-soreness gym (heavy strength, novel plyometrics, high-volume eccentric); allow only low-fatigue priming",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L3",
+      "source": "taper/DOMS literature (Bosquet 2007)",
+      "appliesTo": [
+        "volume"
+      ]
+    },
+    {
+      "id": "no_heavy_legs_before_key_ride",
+      "if": "a key quality ride or race is scheduled within 24 hours",
+      "then": "avoid heavy/high-volume lower-body gym the day before (preserve leg freshness for the bike)",
+      "priority": 2,
+      "confidence": "moderate",
+      "evidenceLevel": "L4",
+      "source": "expert consensus (bike-priority sequencing)",
+      "appliesTo": [
+        "volume"
+      ]
+    },
+    {
+      "id": "race_day_priming_only",
+      "if": "race day or within 24 hours",
+      "then": "gym is CNS priming only (a few jumps/sprints) or none; no strength development",
+      "priority": 1,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "priming-session literature; expert consensus",
+      "appliesTo": [
+        "volume"
+      ]
+    },
+    {
+      "id": "training_load_acwr_spike",
+      "if": "weekly training load (TSS / volume) ACWR > 1.5",
+      "then": "cap this week's volume; do not add lower-body gym volume; monitor knee/back daily",
+      "priority": 1,
+      "confidence": "low",
+      "evidenceLevel": "L3",
+      "source": "Gabbett 2016 (contested — Impellizzeri 2020 / Lolli 2019); applied to cycling TSS",
+      "appliesTo": [
+        "load"
+      ]
+    },
+    {
+      "id": "low_readiness_autoregulate",
+      "if": "readiness score low (poor sleep + high soreness + low wellness)",
+      "then": "autoregulate down one step; prioritise easy aerobic / recovery; do not test",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L1",
+      "source": "Saw 2016",
+      "appliesTo": [
+        "readiness"
+      ]
+    },
+    {
+      "id": "cmj_drop_flag_fatigue",
+      "if": "CMJ >10-15% below rolling baseline",
+      "then": "treat as neuromuscular fatigue: reduce gym-power + high-intensity bike load, emphasise recovery, recheck",
+      "priority": 2,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Claudino 2017",
+      "appliesTo": [
+        "readiness"
+      ]
+    },
+    {
+      "id": "illness_no_training",
+      "if": "athlete reports systemic illness (fever / below-neck symptoms)",
+      "then": "withhold training until symptom-free; resume gradually",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L4",
+      "source": "exercise-immunology consensus",
+      "appliesTo": [
+        "readiness"
+      ]
+    },
+    {
+      "id": "taper_protocol",
+      "if": "in taper phase before a target event",
+      "then": "reduce TOTAL volume substantially (~40-60%) over ~1-3 weeks while MAINTAINING intensity; keep low-volume gym priming; maximise recovery + fuelling",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L1",
+      "source": "Mujika & Padilla; Bosquet 2007 (taper meta-analysis)",
+      "appliesTo": [
+        "volume"
+      ]
+    },
+    {
+      "id": "inseason_strength_maintenance",
+      "if": "in competition phase",
+      "then": "MAINTAIN strength at minimal effective volume (1-2 short heavy sessions/week, low volume, away from key rides) — do not drop it, or the economy/power gain regresses",
+      "priority": 2,
+      "confidence": "high",
+      "evidenceLevel": "L2",
+      "source": "Rønnestad 2010 (in-season strength maintenance in cyclists)",
+      "appliesTo": [
+        "volume"
+      ]
+    },
+    {
+      "id": "offseason_build_strength_for_economy",
+      "if": "in off-season / base phase",
+      "then": "prioritise heavy lower-body strength alongside aerobic base — this is the phase that improves cycling economy and time-to-exhaustion",
+      "priority": 2,
+      "confidence": "high",
+      "evidenceLevel": "L2",
+      "source": "Rønnestad & Mujika 2014; Sunde 2010; Aagaard 2011",
+      "appliesTo": [
+        "volume"
+      ]
+    }
   ],
-
   "loadManagement": {
-    "acwr": { "model": "acute (7-day) : chronic (28-day) of training load (TSS) and/or ride volume/duration; rolling/EWMA preferred", "sweetSpotLow": 0.8, "sweetSpotHigh": 1.3, "highRiskAbove": 1.5, "confidence": "low", "evidenceLevel": "L3", "source": "Gabbett 2016 applied to cycling TSS — methodology contested (Impellizzeri 2020, Lolli 2019); soft monitoring input" },
+    "acwr": {
+      "model": "acute (7-day) : chronic (28-day) of training load (TSS) and/or ride volume/duration; rolling/EWMA preferred",
+      "sweetSpotLow": 0.8,
+      "sweetSpotHigh": 1.3,
+      "highRiskAbove": 1.5,
+      "confidence": "low",
+      "evidenceLevel": "L3",
+      "source": "Gabbett 2016 applied to cycling TSS — methodology contested (Impellizzeri 2020, Lolli 2019); soft monitoring input"
+    },
     "weeklyProgressionGuideline": "Avoid >~10-15% week-to-week spikes in ride volume / TSS; the knee and low back are the load-limited tissues for overuse.",
-    "gymVolumeRanges": { "offSeason": "moderate-high (2-3 sessions; heavy strength + core)", "preSeason": "moderate (2 sessions; power-biased)", "inSeason": "low maintenance (1-2 short heavy sessions; low volume, high quality) + core/prehab", "taper": "very low (0-1 session; priming only)" },
+    "gymVolumeRanges": {
+      "offSeason": "moderate-high (2-3 sessions; heavy strength + core)",
+      "preSeason": "moderate (2 sessions; power-biased)",
+      "inSeason": "low maintenance (1-2 short heavy sessions; low volume, high quality) + core/prehab",
+      "taper": "very low (0-1 session; priming only)"
+    },
     "minimumEffectiveVolume": "~1-2 short heavy gym sessions/week SUSTAIN the strength/economy gain in-season (Rønnestad); core/knee prehab should not drop below a low weekly dose.",
     "maximumAdaptiveVolume": "Off-season — build gym strength + aerobic base here, when fatigue tolerance is highest.",
     "maximumRecoverableVolume": "Constrained by total ride volume + leg-fatigue tolerance; gym must never compromise key ride quality — total LEG load is the binding ceiling.",
@@ -199,132 +1639,854 @@
     "evidenceLevel": "L3",
     "source": "Mujika/Bosquet (taper); Rønnestad (strength + maintenance); Gabbett (load — contested); expert consensus"
   },
-
   "readinessModel": {
     "factors": [
-      { "name": "Leg / quad soreness (sport-specific)", "metric": "localised_soreness", "importance": 9, "thresholds": [{ "when": "high quad/knee soreness or a knee niggle", "modifier": "cut heavy lower-body gym + high-intensity bike efforts; easy aerobic + prehab only; check bike fit" }], "confidence": "moderate", "evidenceLevel": "L3", "source": "Clarsen 2010; soreness-monitoring consensus" },
-      { "name": "Subjective wellness (soreness/energy/mood)", "metric": "subjective_wellness", "importance": 9, "thresholds": [{ "when": "≥1 SD below baseline", "modifier": "reduce session load one step" }, { "when": "multiple sub-scores red", "modifier": "convert to recovery / easy aerobic ride" }], "confidence": "high", "evidenceLevel": "L1", "source": "Saw 2016" },
-      { "name": "Sleep", "metric": "sleep", "importance": 8, "thresholds": [{ "when": "<6 h or markedly below baseline", "modifier": "reduce intensity; emphasise recovery" }], "confidence": "high", "evidenceLevel": "L2", "source": "Milewski 2014" },
-      { "name": "Previous session RPE / TSS (bike + gym load)", "metric": "session_rpe", "importance": 8, "thresholds": [{ "when": "high prior load + short recovery", "modifier": "lower today's load" }], "confidence": "high", "evidenceLevel": "L2", "source": "Foster sRPE; Haddad 2017" },
-      { "name": "CMJ / neuromuscular", "metric": "cmj", "importance": 6, "thresholds": [{ "when": ">10-15% below baseline", "modifier": "reduce CNS / gym-power + high-intensity load" }], "confidence": "moderate", "evidenceLevel": "L3", "source": "Claudino 2017" },
-      { "name": "HRV", "metric": "hrv", "importance": 6, "thresholds": [{ "when": "sustained suppression vs baseline", "modifier": "treat as accumulating fatigue; ease load" }], "confidence": "moderate", "evidenceLevel": "L3", "source": "Plews 2013 (trends, not single days)" },
-      { "name": "Resting HR", "metric": "resting_hr", "importance": 5, "thresholds": [{ "when": "elevated vs baseline", "modifier": "possible fatigue/illness — caution" }], "confidence": "low", "evidenceLevel": "L4", "source": "expert consensus" },
-      { "name": "Stress (life/work/study)", "metric": "life_stress", "importance": 6, "thresholds": [{ "when": "high non-training stress", "modifier": "reduce load" }], "confidence": "moderate", "evidenceLevel": "L3", "source": "Mann 2016; expert consensus" },
-      { "name": "Illness", "metric": "illness", "importance": 9, "thresholds": [{ "when": "systemic / below-neck symptoms", "modifier": "withhold training" }], "confidence": "high", "evidenceLevel": "L4", "source": "exercise-immunology consensus" },
-      { "name": "Race congestion (calendar / stage race)", "metric": "fixture_congestion", "importance": 7, "thresholds": [{ "when": "stage race / multiple races in a block", "modifier": "recovery-first; gym priming/maintenance only" }], "confidence": "moderate", "evidenceLevel": "L4", "source": "fixture-congestion literature; expert consensus" },
-      { "name": "Travel", "metric": "travel", "importance": 4, "thresholds": [{ "when": "long travel <48 h ago", "modifier": "reduce intensity; prioritise sleep" }], "confidence": "low", "evidenceLevel": "L4", "source": "travel-fatigue literature" }
+      {
+        "name": "Leg / quad soreness (sport-specific)",
+        "metric": "localised_soreness",
+        "importance": 9,
+        "thresholds": [
+          {
+            "when": "high quad/knee soreness or a knee niggle",
+            "modifier": "cut heavy lower-body gym + high-intensity bike efforts; easy aerobic + prehab only; check bike fit"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Clarsen 2010; soreness-monitoring consensus"
+      },
+      {
+        "name": "Subjective wellness (soreness/energy/mood)",
+        "metric": "subjective_wellness",
+        "importance": 9,
+        "thresholds": [
+          {
+            "when": "≥1 SD below baseline",
+            "modifier": "reduce session load one step"
+          },
+          {
+            "when": "multiple sub-scores red",
+            "modifier": "convert to recovery / easy aerobic ride"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Saw 2016"
+      },
+      {
+        "name": "Sleep",
+        "metric": "sleep",
+        "importance": 8,
+        "thresholds": [
+          {
+            "when": "<6 h or markedly below baseline",
+            "modifier": "reduce intensity; emphasise recovery"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Milewski 2014"
+      },
+      {
+        "name": "Previous session RPE / TSS (bike + gym load)",
+        "metric": "session_rpe",
+        "importance": 8,
+        "thresholds": [
+          {
+            "when": "high prior load + short recovery",
+            "modifier": "lower today's load"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Foster sRPE; Haddad 2017"
+      },
+      {
+        "name": "CMJ / neuromuscular",
+        "metric": "cmj",
+        "importance": 6,
+        "thresholds": [
+          {
+            "when": ">10-15% below baseline",
+            "modifier": "reduce CNS / gym-power + high-intensity load"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Claudino 2017"
+      },
+      {
+        "name": "HRV",
+        "metric": "hrv",
+        "importance": 6,
+        "thresholds": [
+          {
+            "when": "sustained suppression vs baseline",
+            "modifier": "treat as accumulating fatigue; ease load"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Plews 2013 (trends, not single days)"
+      },
+      {
+        "name": "Resting HR",
+        "metric": "resting_hr",
+        "importance": 5,
+        "thresholds": [
+          {
+            "when": "elevated vs baseline",
+            "modifier": "possible fatigue/illness — caution"
+          }
+        ],
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "expert consensus"
+      },
+      {
+        "name": "Stress (life/work/study)",
+        "metric": "life_stress",
+        "importance": 6,
+        "thresholds": [
+          {
+            "when": "high non-training stress",
+            "modifier": "reduce load"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Mann 2016; expert consensus"
+      },
+      {
+        "name": "Illness",
+        "metric": "illness",
+        "importance": 9,
+        "thresholds": [
+          {
+            "when": "systemic / below-neck symptoms",
+            "modifier": "withhold training"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L4",
+        "source": "exercise-immunology consensus"
+      },
+      {
+        "name": "Race congestion (calendar / stage race)",
+        "metric": "fixture_congestion",
+        "importance": 7,
+        "thresholds": [
+          {
+            "when": "stage race / multiple races in a block",
+            "modifier": "recovery-first; gym priming/maintenance only"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "fixture-congestion literature; expert consensus"
+      },
+      {
+        "name": "Travel",
+        "metric": "travel",
+        "importance": 4,
+        "thresholds": [
+          {
+            "when": "long travel <48 h ago",
+            "modifier": "reduce intensity; prioritise sleep"
+          }
+        ],
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "travel-fatigue literature"
+      }
     ],
     "notes": "Leg/quad soreness is elevated to a top-weight, cycling-specific readiness input (the knee is the overuse target). Subjective wellness + sleep + prior load (sRPE/TSS) carry the most general weight; objective vitals (HRV/RHR) are trend signals. Raw vitals stay private to the athlete; a coach sees only the derived readiness score (see TEAM-ARCHITECTURE.md)."
   },
-
   "coachDashboard": {
     "principle": "Coach sees DERIVED and availability signals only — never an individual's raw HRV/sleep/resting-HR. Aggregated, plain-English, action-oriented.",
-    "mostUsefulKpis": ["squad readiness (derived, traffic-light)", "training availability (fit/modified/out — esp. knee/back + crash recovery)", "weekly training-load (TSS) distribution", "high-risk athlete flags (knee/back, load spike)", "training completion/compliance", "load ACWR distribution", "discipline-group comparison (climber/sprint/TT)", "event readiness"],
-    "mostUsefulAlerts": ["athlete load ACWR >1.5", "readiness red ≥2 days", "knee/back-monitoring flag", "missed strength/prehab work", "return-to-ride milestone due (post-crash)"],
-    "weeklyReports": ["squad availability trend", "training load vs plan (squad + per discipline group)", "injury/illness summary (status only)", "compliance %"],
+    "mostUsefulKpis": [
+      "squad readiness (derived, traffic-light)",
+      "training availability (fit/modified/out — esp. knee/back + crash recovery)",
+      "weekly training-load (TSS) distribution",
+      "high-risk athlete flags (knee/back, load spike)",
+      "training completion/compliance",
+      "load ACWR distribution",
+      "discipline-group comparison (climber/sprint/TT)",
+      "event readiness"
+    ],
+    "mostUsefulAlerts": [
+      "athlete load ACWR >1.5",
+      "readiness red ≥2 days",
+      "knee/back-monitoring flag",
+      "missed strength/prehab work",
+      "return-to-ride milestone due (post-crash)"
+    ],
+    "weeklyReports": [
+      "squad availability trend",
+      "training load vs plan (squad + per discipline group)",
+      "injury/illness summary (status only)",
+      "compliance %"
+    ],
     "trafficLightIndicators": "Per-rider green/amber/red from the derived readiness + load state (no underlying numbers shown).",
-    "teamReadinessMetrics": ["% squad green", "mean derived readiness", "fatigue distribution"],
-    "complianceMetrics": ["% prescribed gym completed", "% knee/back prehab completed", "wellness check-in completion"],
+    "teamReadinessMetrics": [
+      "% squad green",
+      "mean derived readiness",
+      "fatigue distribution"
+    ],
+    "complianceMetrics": [
+      "% prescribed gym completed",
+      "% knee/back prehab completed",
+      "wellness check-in completion"
+    ],
     "privacyNote": "All per-athlete entries here are DERIVED (readiness score, load_state, ACWR, adherence %, injury availability). Raw vitals are excluded by design and enforced by the schema validator."
   },
-
   "athleteDashboard": {
-    "mostUsefulMetrics": ["readiness (today)", "weekly consistency", "performance trend (FTP / W·kg)", "sprint-power score", "knee/back resilience score", "mobility / position score", "recovery score", "availability streak"],
-    "progressIndicators": ["FTP + W/kg vs baseline", "VO2max / MAP trend", "peak/sprint-power trend", "strength (squat) trend"],
-    "recoveryIndicators": ["sleep trend (private)", "leg/knee-soreness trend", "readiness trend"],
-    "performanceIndicators": ["aerobic / FTP score", "sprint / power score", "strength score", "sport-specific performance score"],
-    "motivationalMetrics": ["injury-free (knee/back-healthy) weeks", "consistency streak", "strength/prehab streak", "testing-battery completion"],
-    "educationTips": ["why heavy strength makes you a more economical (faster) rider", "why power-to-weight (W/kg) matters for climbing", "why core endurance protects your low back in the aero position", "what your readiness colour means today"]
+    "mostUsefulMetrics": [
+      "readiness (today)",
+      "weekly consistency",
+      "performance trend (FTP / W·kg)",
+      "sprint-power score",
+      "knee/back resilience score",
+      "mobility / position score",
+      "recovery score",
+      "availability streak"
+    ],
+    "progressIndicators": [
+      "FTP + W/kg vs baseline",
+      "VO2max / MAP trend",
+      "peak/sprint-power trend",
+      "strength (squat) trend"
+    ],
+    "recoveryIndicators": [
+      "sleep trend (private)",
+      "leg/knee-soreness trend",
+      "readiness trend"
+    ],
+    "performanceIndicators": [
+      "aerobic / FTP score",
+      "sprint / power score",
+      "strength score",
+      "sport-specific performance score"
+    ],
+    "motivationalMetrics": [
+      "injury-free (knee/back-healthy) weeks",
+      "consistency streak",
+      "strength/prehab streak",
+      "testing-battery completion"
+    ],
+    "educationTips": [
+      "why heavy strength makes you a more economical (faster) rider",
+      "why power-to-weight (W/kg) matters for climbing",
+      "why core endurance protects your low back in the aero position",
+      "what your readiness colour means today"
+    ]
   },
-
   "validation": {
-    "strongEvidence": ["heavy strength training improves cycling economy, time-to-exhaustion and short-sprint performance (Rønnestad & Mujika 2014; Sunde 2010; Aagaard 2011)", "in-season strength MAINTENANCE preserves the gains (Rønnestad 2010)", "the taper improves performance — reduce volume, maintain intensity (Mujika/Padilla; Bosquet 2007)", "subjective wellness is a sensitive readiness measure (Saw 2016)", "knee + low-back overuse are the dominant non-traumatic cycling injuries (Clarsen 2010)"],
-    "weakEvidence": ["exact ACWR thresholds applied to cycling TSS (contested)", "precise discipline energy-system percentages", "bike-fit interventions reducing injury INCIDENCE (mechanistically strong, RCT evidence modest)", "CMJ as a precise sprint-performance predictor in cyclists", "Olympic-lifting superiority over jumps/hip-thrust for road power"],
-    "areasRequiringExpertJudgement": ["how much gym mass a climber can carry before W/kg suffers", "individual knee/back load ceilings + bike-fit specifics", "taper individualisation (duration/magnitude) per discipline", "in-season strength dosing around a dense race calendar"],
-    "areasRequiringFutureResearch": ["load-monitoring thresholds specific to cycling", "strength-training transfer to long-duration road performance (vs short efforts)", "bone-health interventions for a non-osteogenic sport", "masters / para-cycling injury profiles"],
-    "potentialRisksIfMisimplemented": ["adding gym leg volume that fatigues the legs before key rides", "treating ACWR as a hard rule", "dropping in-season strength (losing the economy gain)", "ignoring bike fit when knee/back pain appears", "adding non-functional mass that worsens W/kg for climbers", "exposing raw vitals to coaches (privacy + trust breach)", "botched taper costing peak performance"]
+    "strongEvidence": [
+      "heavy strength training improves cycling economy, time-to-exhaustion and short-sprint performance (Rønnestad & Mujika 2014; Sunde 2010; Aagaard 2011)",
+      "in-season strength MAINTENANCE preserves the gains (Rønnestad 2010)",
+      "the taper improves performance — reduce volume, maintain intensity (Mujika/Padilla; Bosquet 2007)",
+      "subjective wellness is a sensitive readiness measure (Saw 2016)",
+      "knee + low-back overuse are the dominant non-traumatic cycling injuries (Clarsen 2010)"
+    ],
+    "weakEvidence": [
+      "exact ACWR thresholds applied to cycling TSS (contested)",
+      "precise discipline energy-system percentages",
+      "bike-fit interventions reducing injury INCIDENCE (mechanistically strong, RCT evidence modest)",
+      "CMJ as a precise sprint-performance predictor in cyclists",
+      "Olympic-lifting superiority over jumps/hip-thrust for road power"
+    ],
+    "areasRequiringExpertJudgement": [
+      "how much gym mass a climber can carry before W/kg suffers",
+      "individual knee/back load ceilings + bike-fit specifics",
+      "taper individualisation (duration/magnitude) per discipline",
+      "in-season strength dosing around a dense race calendar"
+    ],
+    "areasRequiringFutureResearch": [
+      "load-monitoring thresholds specific to cycling",
+      "strength-training transfer to long-duration road performance (vs short efforts)",
+      "bone-health interventions for a non-osteogenic sport",
+      "masters / para-cycling injury profiles"
+    ],
+    "potentialRisksIfMisimplemented": [
+      "adding gym leg volume that fatigues the legs before key rides",
+      "treating ACWR as a hard rule",
+      "dropping in-season strength (losing the economy gain)",
+      "ignoring bike fit when knee/back pain appears",
+      "adding non-functional mass that worsens W/kg for climbers",
+      "exposing raw vitals to coaches (privacy + trust breach)",
+      "botched taper costing peak performance"
+    ]
   },
-
   "references": [
-    { "key": "RonnestadMujika2014", "citation": "Rønnestad BR, Mujika I (2014). Optimizing strength training for running and cycling endurance performance: a review. Scand J Med Sci Sports 24(4):603-612.", "governingBody": null, "type": "review" },
-    { "key": "Sunde2010", "citation": "Sunde A, Støren O, Bjerkaas M, et al. (2010). Maximal strength training improves cycling economy in competitive cyclists. J Strength Cond Res 24(8):2157-2165.", "governingBody": null, "type": "original research" },
-    { "key": "Aagaard2011", "citation": "Aagaard P, Andersen JL, Bennekou M, et al. (2011). Effects of resistance training on endurance capacity and muscle fiber composition in young top-level cyclists. Scand J Med Sci Sports 21(6):e298-e307.", "governingBody": null, "type": "original research" },
-    { "key": "Ronnestad2010", "citation": "Rønnestad BR, Hansen EA, Raastad T (2010). In-season strength maintenance training increases well-trained cyclists' performance. Eur J Appl Physiol 110(6):1269-1282.", "governingBody": null, "type": "original research" },
-    { "key": "Clarsen2010", "citation": "Clarsen B, Krosshaug T, Bahr R (2010). Overuse injuries in professional road cyclists. Am J Sports Med 38(12):2494-2501.", "governingBody": null, "type": "original research" },
-    { "key": "Wanich2007", "citation": "Wanich T, Hodgkins C, Columbier JA, Muraski E, Kennedy JG (2007). Cycling injuries of the lower extremity. J Am Acad Orthop Surg 15(12):748-756.", "governingBody": null, "type": "review" },
-    { "key": "MujikaPadilla", "citation": "Mujika I, Padilla S. Scientific bases for precompetition tapering strategies. Med Sci Sports Exerc / Sports Med.", "governingBody": null, "type": "review" },
-    { "key": "Bosquet2007", "citation": "Bosquet L, et al. (2007). Effects of tapering on performance: a meta-analysis. Med Sci Sports Exerc.", "governingBody": null, "type": "meta-analysis" },
-    { "key": "Saw2016", "citation": "Saw AE, Main LC, Gastin PB (2016). Monitoring the athlete training response: subjective measures trump objective measures. Br J Sports Med.", "governingBody": null, "type": "systematic review" },
-    { "key": "Soligard2016", "citation": "Soligard T, et al. (2016). IOC consensus statement: load in sport and risk of injury. Br J Sports Med.", "governingBody": "IOC", "type": "consensus statement" },
-    { "key": "Gabbett2016", "citation": "Gabbett TJ (2016). The training-injury prevention paradox. Br J Sports Med.", "governingBody": null, "type": "review" },
-    { "key": "Impellizzeri2020", "citation": "Impellizzeri FM, et al. (2020). Acute:chronic workload ratio: conceptual and methodological issues. Int J Sports Physiol Perform.", "governingBody": null, "type": "methodological critique" },
-    { "key": "UCI", "citation": "Union Cycliste Internationale (UCI) — competition structure and discipline regulations.", "governingBody": "UCI", "type": "governing body" }
+    {
+      "key": "RonnestadMujika2014",
+      "citation": "Rønnestad BR, Mujika I (2014). Optimizing strength training for running and cycling endurance performance: a review. Scand J Med Sci Sports 24(4):603-612.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "Sunde2010",
+      "citation": "Sunde A, Støren O, Bjerkaas M, et al. (2010). Maximal strength training improves cycling economy in competitive cyclists. J Strength Cond Res 24(8):2157-2165.",
+      "governingBody": null,
+      "type": "original research"
+    },
+    {
+      "key": "Aagaard2011",
+      "citation": "Aagaard P, Andersen JL, Bennekou M, et al. (2011). Effects of resistance training on endurance capacity and muscle fiber composition in young top-level cyclists. Scand J Med Sci Sports 21(6):e298-e307.",
+      "governingBody": null,
+      "type": "original research"
+    },
+    {
+      "key": "Ronnestad2010",
+      "citation": "Rønnestad BR, Hansen EA, Raastad T (2010). In-season strength maintenance training increases well-trained cyclists' performance. Eur J Appl Physiol 110(6):1269-1282.",
+      "governingBody": null,
+      "type": "original research"
+    },
+    {
+      "key": "Clarsen2010",
+      "citation": "Clarsen B, Krosshaug T, Bahr R (2010). Overuse injuries in professional road cyclists. Am J Sports Med 38(12):2494-2501.",
+      "governingBody": null,
+      "type": "original research"
+    },
+    {
+      "key": "Wanich2007",
+      "citation": "Wanich T, Hodgkins C, Columbier JA, Muraski E, Kennedy JG (2007). Cycling injuries of the lower extremity. J Am Acad Orthop Surg 15(12):748-756.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "MujikaPadilla",
+      "citation": "Mujika I, Padilla S. Scientific bases for precompetition tapering strategies. Med Sci Sports Exerc / Sports Med.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "Bosquet2007",
+      "citation": "Bosquet L, et al. (2007). Effects of tapering on performance: a meta-analysis. Med Sci Sports Exerc.",
+      "governingBody": null,
+      "type": "meta-analysis"
+    },
+    {
+      "key": "Saw2016",
+      "citation": "Saw AE, Main LC, Gastin PB (2016). Monitoring the athlete training response: subjective measures trump objective measures. Br J Sports Med.",
+      "governingBody": null,
+      "type": "systematic review"
+    },
+    {
+      "key": "Soligard2016",
+      "citation": "Soligard T, et al. (2016). IOC consensus statement: load in sport and risk of injury. Br J Sports Med.",
+      "governingBody": "IOC",
+      "type": "consensus statement"
+    },
+    {
+      "key": "Gabbett2016",
+      "citation": "Gabbett TJ (2016). The training-injury prevention paradox. Br J Sports Med.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "Impellizzeri2020",
+      "citation": "Impellizzeri FM, et al. (2020). Acute:chronic workload ratio: conceptual and methodological issues. Int J Sports Physiol Perform.",
+      "governingBody": null,
+      "type": "methodological critique"
+    },
+    {
+      "key": "UCI",
+      "citation": "Union Cycliste Internationale (UCI) — competition structure and discipline regulations.",
+      "governingBody": "UCI",
+      "type": "governing body"
+    }
   ],
-
   "kpiFramework": {
     "kpis": [
-      { "name": "Readiness", "metric": "readiness", "category": "Recovery", "leadingOrLagging": "leading", "importance": 9, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": true, "measurementMethod": "Composite of subjective wellness + sleep + prior load + leg soreness (+ optional HRV trend), normalised to baseline", "testingFrequency": "daily", "targetRange": "green vs personal baseline", "eliteBenchmark": "consistently green pre-race", "beginnerBenchmark": "establish baseline", "youthBenchmark": "track trend", "equipmentRequired": ["app (+ optional wearable)"], "wearableEstimable": true, "autoCalculable": true, "confidence": "high", "evidenceLevel": "L1", "source": "Saw 2016; derived score (raw vitals stay private)" },
-      { "name": "Weekly consistency", "metric": "consistency", "category": "Team", "leadingOrLagging": "leading", "importance": 8, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": true, "measurementMethod": "% prescribed sessions (rides + gym + prehab + check-ins) completed", "testingFrequency": "weekly", "targetRange": "≥85%", "eliteBenchmark": "≥90%", "beginnerBenchmark": "≥70%", "youthBenchmark": "habit-building", "equipmentRequired": ["app"], "wearableEstimable": false, "autoCalculable": true, "confidence": "high", "evidenceLevel": "L4", "source": "adherence literature; expert consensus" },
-      { "name": "Functional threshold power to weight (FTP W/kg)", "metric": "ftp_wkg", "category": "Performance", "leadingOrLagging": "lagging", "importance": 9, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": false, "measurementMethod": "FTP (W) divided by body mass (kg) — the climbing/GC currency; also report absolute W", "testingFrequency": "per block + key events", "targetRange": "improving W/kg at stable mass; discipline-relative", "eliteBenchmark": "high W/kg (discipline-dependent)", "beginnerBenchmark": "baseline + zones", "youthBenchmark": "track trend", "equipmentRequired": ["power meter / smart trainer", "scale"], "wearableEstimable": true, "autoCalculable": true, "confidence": "high", "evidenceLevel": "L3", "source": "cycling power-profiling (Allen & Coggan); expert consensus" },
-      { "name": "Peak / sprint power (5-15 s, W and W/kg)", "metric": "sprint_power", "category": "Performance", "leadingOrLagging": "lagging", "importance": 7, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": false, "measurementMethod": "Peak short-duration power from a sprint / power-profile test", "testingFrequency": "per block", "targetRange": "discipline-relative; trend up", "eliteBenchmark": "high peak W (sprint/track)", "beginnerBenchmark": "baseline", "youthBenchmark": "track trend", "equipmentRequired": ["power meter"], "wearableEstimable": false, "autoCalculable": true, "confidence": "moderate", "evidenceLevel": "L3", "source": "power-profiling literature; critical-power model (Jones)" },
-      { "name": "Maximal lower-body strength (relative)", "metric": "max_strength", "category": "Performance", "leadingOrLagging": "leading", "importance": 7, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": false, "measurementMethod": "Squat / trap-bar 1RM (or estimated) relative to body mass", "testingFrequency": "per block", "targetRange": "discipline-relative; maintained in-season", "eliteBenchmark": "strong relative to mass", "beginnerBenchmark": "movement competency + baseline", "youthBenchmark": "bodyweight competency", "equipmentRequired": ["barbell / rack"], "wearableEstimable": false, "autoCalculable": false, "confidence": "high", "evidenceLevel": "L2", "source": "Rønnestad & Mujika 2014; Sunde 2010" },
-      { "name": "Knee / low-back availability", "metric": "joint_health", "category": "Availability", "leadingOrLagging": "leading", "importance": 8, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": false, "measurementMethod": "Knee + low-back soreness/pain status + bike-fit review flag", "testingFrequency": "weekly (+ on any niggle)", "targetRange": "symptom-free", "eliteBenchmark": "pain-free riding", "beginnerBenchmark": "baseline", "youthBenchmark": "baseline", "equipmentRequired": ["self-report / clinician"], "wearableEstimable": false, "autoCalculable": false, "confidence": "moderate", "evidenceLevel": "L3", "source": "Clarsen 2010; expert consensus" },
-      { "name": "Start/turn / neuromuscular power (CMJ)", "metric": "cmj", "category": "Performance", "leadingOrLagging": "leading", "importance": 6, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": false, "measurementMethod": "Countermovement jump height / flight-time", "testingFrequency": "weekly monitor + block test", "targetRange": "within ~10% of baseline for fatigue; trend up for power", "eliteBenchmark": "individualised", "beginnerBenchmark": "baseline", "youthBenchmark": "track trend", "equipmentRequired": ["jump mat / app"], "wearableEstimable": false, "autoCalculable": true, "confidence": "moderate", "evidenceLevel": "L3", "source": "Claudino 2017" },
-      { "name": "Training-load ACWR", "metric": "acwr", "category": "Recovery", "leadingOrLagging": "leading", "importance": 7, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": true, "measurementMethod": "7-day:28-day training load (TSS) / ride volume", "testingFrequency": "weekly (rolling)", "targetRange": "0.8-1.3", "eliteBenchmark": "stable in range", "beginnerBenchmark": "n/a", "youthBenchmark": "n/a", "equipmentRequired": ["training log / power meter"], "wearableEstimable": true, "autoCalculable": true, "confidence": "low", "evidenceLevel": "L3", "source": "Gabbett 2016 (contested — soft input)" },
-      { "name": "Training availability", "metric": "availability", "category": "Availability", "leadingOrLagging": "lagging", "importance": 9, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": true, "measurementMethod": "fit / modified / out (status only — esp. knee/back + crash recovery)", "testingFrequency": "daily", "targetRange": "maximise 'fit'", "eliteBenchmark": "high squad availability", "beginnerBenchmark": "n/a", "youthBenchmark": "n/a", "equipmentRequired": ["app"], "wearableEstimable": false, "autoCalculable": true, "confidence": "high", "evidenceLevel": "L2", "source": "availability-performance link; expert consensus" },
-      { "name": "Session RPE load", "metric": "session_rpe", "category": "Recovery", "leadingOrLagging": "lagging", "importance": 7, "athleteDashboard": true, "coachDashboard": true, "teamDashboard": true, "measurementMethod": "RPE × duration (ride + gym); cross-checks TSS", "testingFrequency": "every session", "targetRange": "planned vs actual", "eliteBenchmark": "matches plan", "beginnerBenchmark": "learn scale", "youthBenchmark": "learn scale", "equipmentRequired": ["app"], "wearableEstimable": false, "autoCalculable": true, "confidence": "high", "evidenceLevel": "L2", "source": "Foster sRPE; Haddad 2017" },
-      { "name": "Sleep", "metric": "sleep", "category": "Recovery", "leadingOrLagging": "leading", "importance": 7, "athleteDashboard": true, "coachDashboard": false, "teamDashboard": false, "measurementMethod": "Wearable/self-report sleep duration & quality", "testingFrequency": "daily", "targetRange": "≥7-9 h", "eliteBenchmark": "consistent ≥8 h", "beginnerBenchmark": "improve consistency", "youthBenchmark": "≥8-10 h", "equipmentRequired": ["wearable / self-report"], "wearableEstimable": true, "autoCalculable": true, "confidence": "high", "evidenceLevel": "L2", "source": "Milewski 2014 (PRIVATE — athlete-only; rolls into readiness)" },
-      { "name": "HRV", "metric": "hrv", "category": "Recovery", "leadingOrLagging": "leading", "importance": 6, "athleteDashboard": true, "coachDashboard": false, "teamDashboard": false, "measurementMethod": "Morning HRV (rMSSD), trend vs baseline", "testingFrequency": "daily", "targetRange": "stable vs baseline", "eliteBenchmark": "stable trend", "beginnerBenchmark": "baseline", "youthBenchmark": "n/a", "equipmentRequired": ["wearable"], "wearableEstimable": true, "autoCalculable": true, "confidence": "moderate", "evidenceLevel": "L3", "source": "Plews 2013 (PRIVATE — athlete-only; rolls into readiness)" },
-      { "name": "Resting HR", "metric": "resting_hr", "category": "Recovery", "leadingOrLagging": "leading", "importance": 5, "athleteDashboard": true, "coachDashboard": false, "teamDashboard": false, "measurementMethod": "Morning resting heart rate vs baseline", "testingFrequency": "daily", "targetRange": "stable vs baseline", "eliteBenchmark": "stable/low", "beginnerBenchmark": "baseline", "youthBenchmark": "n/a", "equipmentRequired": ["wearable"], "wearableEstimable": true, "autoCalculable": true, "confidence": "low", "evidenceLevel": "L4", "source": "expert consensus (PRIVATE — athlete-only; rolls into readiness)" }
+      {
+        "name": "Readiness",
+        "metric": "readiness",
+        "category": "Recovery",
+        "leadingOrLagging": "leading",
+        "importance": 9,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "Composite of subjective wellness + sleep + prior load + leg soreness (+ optional HRV trend), normalised to baseline",
+        "testingFrequency": "daily",
+        "targetRange": "green vs personal baseline",
+        "eliteBenchmark": "consistently green pre-race",
+        "beginnerBenchmark": "establish baseline",
+        "youthBenchmark": "track trend",
+        "equipmentRequired": [
+          "app (+ optional wearable)"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Saw 2016; derived score (raw vitals stay private)"
+      },
+      {
+        "name": "Weekly consistency",
+        "metric": "consistency",
+        "category": "Team",
+        "leadingOrLagging": "leading",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "% prescribed sessions (rides + gym + prehab + check-ins) completed",
+        "testingFrequency": "weekly",
+        "targetRange": "≥85%",
+        "eliteBenchmark": "≥90%",
+        "beginnerBenchmark": "≥70%",
+        "youthBenchmark": "habit-building",
+        "equipmentRequired": [
+          "app"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L4",
+        "source": "adherence literature; expert consensus"
+      },
+      {
+        "name": "Functional threshold power to weight (FTP W/kg)",
+        "metric": "ftp_wkg",
+        "category": "Performance",
+        "leadingOrLagging": "lagging",
+        "importance": 9,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": false,
+        "measurementMethod": "FTP (W) divided by body mass (kg) — the climbing/GC currency; also report absolute W",
+        "testingFrequency": "per block + key events",
+        "targetRange": "improving W/kg at stable mass; discipline-relative",
+        "eliteBenchmark": "high W/kg (discipline-dependent)",
+        "beginnerBenchmark": "baseline + zones",
+        "youthBenchmark": "track trend",
+        "equipmentRequired": [
+          "power meter / smart trainer",
+          "scale"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "cycling power-profiling (Allen & Coggan); expert consensus"
+      },
+      {
+        "name": "Peak / sprint power (5-15 s, W and W/kg)",
+        "metric": "sprint_power",
+        "category": "Performance",
+        "leadingOrLagging": "lagging",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": false,
+        "measurementMethod": "Peak short-duration power from a sprint / power-profile test",
+        "testingFrequency": "per block",
+        "targetRange": "discipline-relative; trend up",
+        "eliteBenchmark": "high peak W (sprint/track)",
+        "beginnerBenchmark": "baseline",
+        "youthBenchmark": "track trend",
+        "equipmentRequired": [
+          "power meter"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "power-profiling literature; critical-power model (Jones)"
+      },
+      {
+        "name": "Maximal lower-body strength (relative)",
+        "metric": "max_strength",
+        "category": "Performance",
+        "leadingOrLagging": "leading",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": false,
+        "measurementMethod": "Squat / trap-bar 1RM (or estimated) relative to body mass",
+        "testingFrequency": "per block",
+        "targetRange": "discipline-relative; maintained in-season",
+        "eliteBenchmark": "strong relative to mass",
+        "beginnerBenchmark": "movement competency + baseline",
+        "youthBenchmark": "bodyweight competency",
+        "equipmentRequired": [
+          "barbell / rack"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Rønnestad & Mujika 2014; Sunde 2010"
+      },
+      {
+        "name": "Knee / low-back availability",
+        "metric": "joint_health",
+        "category": "Availability",
+        "leadingOrLagging": "leading",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": false,
+        "measurementMethod": "Knee + low-back soreness/pain status + bike-fit review flag",
+        "testingFrequency": "weekly (+ on any niggle)",
+        "targetRange": "symptom-free",
+        "eliteBenchmark": "pain-free riding",
+        "beginnerBenchmark": "baseline",
+        "youthBenchmark": "baseline",
+        "equipmentRequired": [
+          "self-report / clinician"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Clarsen 2010; expert consensus"
+      },
+      {
+        "name": "Start/turn / neuromuscular power (CMJ)",
+        "metric": "cmj",
+        "category": "Performance",
+        "leadingOrLagging": "leading",
+        "importance": 6,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": false,
+        "measurementMethod": "Countermovement jump height / flight-time",
+        "testingFrequency": "weekly monitor + block test",
+        "targetRange": "within ~10% of baseline for fatigue; trend up for power",
+        "eliteBenchmark": "individualised",
+        "beginnerBenchmark": "baseline",
+        "youthBenchmark": "track trend",
+        "equipmentRequired": [
+          "jump mat / app"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Claudino 2017"
+      },
+      {
+        "name": "Training-load ACWR",
+        "metric": "acwr",
+        "category": "Recovery",
+        "leadingOrLagging": "leading",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "7-day:28-day training load (TSS) / ride volume",
+        "testingFrequency": "weekly (rolling)",
+        "targetRange": "0.8-1.3",
+        "eliteBenchmark": "stable in range",
+        "beginnerBenchmark": "n/a",
+        "youthBenchmark": "n/a",
+        "equipmentRequired": [
+          "training log / power meter"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "low",
+        "evidenceLevel": "L3",
+        "source": "Gabbett 2016 (contested — soft input)"
+      },
+      {
+        "name": "Training availability",
+        "metric": "availability",
+        "category": "Availability",
+        "leadingOrLagging": "lagging",
+        "importance": 9,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "fit / modified / out (status only — esp. knee/back + crash recovery)",
+        "testingFrequency": "daily",
+        "targetRange": "maximise 'fit'",
+        "eliteBenchmark": "high squad availability",
+        "beginnerBenchmark": "n/a",
+        "youthBenchmark": "n/a",
+        "equipmentRequired": [
+          "app"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "availability-performance link; expert consensus"
+      },
+      {
+        "name": "Session RPE load",
+        "metric": "session_rpe",
+        "category": "Recovery",
+        "leadingOrLagging": "lagging",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "RPE × duration (ride + gym); cross-checks TSS",
+        "testingFrequency": "every session",
+        "targetRange": "planned vs actual",
+        "eliteBenchmark": "matches plan",
+        "beginnerBenchmark": "learn scale",
+        "youthBenchmark": "learn scale",
+        "equipmentRequired": [
+          "app"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Foster sRPE; Haddad 2017"
+      },
+      {
+        "name": "Sleep",
+        "metric": "sleep",
+        "category": "Recovery",
+        "leadingOrLagging": "leading",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Wearable/self-report sleep duration & quality",
+        "testingFrequency": "daily",
+        "targetRange": "≥7-9 h",
+        "eliteBenchmark": "consistent ≥8 h",
+        "beginnerBenchmark": "improve consistency",
+        "youthBenchmark": "≥8-10 h",
+        "equipmentRequired": [
+          "wearable / self-report"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Milewski 2014 (PRIVATE — athlete-only; rolls into readiness)"
+      },
+      {
+        "name": "HRV",
+        "metric": "hrv",
+        "category": "Recovery",
+        "leadingOrLagging": "leading",
+        "importance": 6,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Morning HRV (rMSSD), trend vs baseline",
+        "testingFrequency": "daily",
+        "targetRange": "stable vs baseline",
+        "eliteBenchmark": "stable trend",
+        "beginnerBenchmark": "baseline",
+        "youthBenchmark": "n/a",
+        "equipmentRequired": [
+          "wearable"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Plews 2013 (PRIVATE — athlete-only; rolls into readiness)"
+      },
+      {
+        "name": "Resting HR",
+        "metric": "resting_hr",
+        "category": "Recovery",
+        "leadingOrLagging": "leading",
+        "importance": 5,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Morning resting heart rate vs baseline",
+        "testingFrequency": "daily",
+        "targetRange": "stable vs baseline",
+        "eliteBenchmark": "stable/low",
+        "beginnerBenchmark": "baseline",
+        "youthBenchmark": "n/a",
+        "equipmentRequired": [
+          "wearable"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "expert consensus (PRIVATE — athlete-only; rolls into readiness)"
+      }
     ],
     "athleteDashboardKpis": [
-      { "name": "Readiness", "why": "One daily number telling the rider whether to push or back off — actionable and motivating." },
-      { "name": "Weekly consistency", "why": "Rewards showing up across a high-volume programme; consistency beats occasional perfect weeks." },
-      { "name": "FTP / W·kg trend", "why": "Power-to-weight improvement is the outcome road riders care about most." },
-      { "name": "Sprint power", "why": "A controllable, visible margin for sprinters/criterium riders." },
-      { "name": "Knee/back resilience", "why": "Turns invisible prehab + bike-fit habits into a tracked, improving score — protects the tissues that end cyclists' seasons." },
-      { "name": "Mobility / position score", "why": "Aero-position range + comfort is both performance and injury-protection — reinforces the habit." },
-      { "name": "Recovery score", "why": "Teaches that recovery (and the taper) is training; nudges sleep/soreness habits." },
-      { "name": "Availability streak", "why": "Celebrates knee/back-healthy, on-the-bike time — the ultimate goal, framed positively." }
+      {
+        "name": "Readiness",
+        "why": "One daily number telling the rider whether to push or back off — actionable and motivating."
+      },
+      {
+        "name": "Weekly consistency",
+        "why": "Rewards showing up across a high-volume programme; consistency beats occasional perfect weeks."
+      },
+      {
+        "name": "FTP / W·kg trend",
+        "why": "Power-to-weight improvement is the outcome road riders care about most."
+      },
+      {
+        "name": "Sprint power",
+        "why": "A controllable, visible margin for sprinters/criterium riders."
+      },
+      {
+        "name": "Knee/back resilience",
+        "why": "Turns invisible prehab + bike-fit habits into a tracked, improving score — protects the tissues that end cyclists' seasons."
+      },
+      {
+        "name": "Mobility / position score",
+        "why": "Aero-position range + comfort is both performance and injury-protection — reinforces the habit."
+      },
+      {
+        "name": "Recovery score",
+        "why": "Teaches that recovery (and the taper) is training; nudges sleep/soreness habits."
+      },
+      {
+        "name": "Availability streak",
+        "why": "Celebrates knee/back-healthy, on-the-bike time — the ultimate goal, framed positively."
+      }
     ],
     "coachDashboardKpis": [
-      { "name": "Squad readiness", "why": "At-a-glance freshness (traffic-light, derived) to shape the session before it starts." },
-      { "name": "Training availability", "why": "Who is fit / modified / out (esp. knee/back + crash recovery) — the key planning input." },
-      { "name": "High-risk athlete flags", "why": "Surfaces riders needing attention (knee/back flag, load spike, red readiness)." },
-      { "name": "Weekly training-load (TSS) distribution", "why": "Shows who is over/under-loaded to balance the week and protect joints." },
-      { "name": "Load ACWR distribution", "why": "Flags spike-risk riders (soft input) for proactive adjustment." },
-      { "name": "Discipline-group comparison", "why": "Climbers vs sprinters vs TT carry different demands — manage groups appropriately." },
-      { "name": "Training completion / compliance", "why": "Whether prescribed gym + prehab is actually being done." },
-      { "name": "Event readiness", "why": "Taper/freshness picture into a target event or stage race — selection decisions." },
-      { "name": "Recovery trend (squad)", "why": "Derived readiness trend warns of accumulating fatigue across a block." },
-      { "name": "Injury/illness status summary", "why": "Availability picture (status only) for planning + medical liaison." },
-      { "name": "Strength/prehab compliance", "why": "Whether the controllable levers (strength + knee/back prehab) are being pulled." },
-      { "name": "Fatigue distribution", "why": "Spread of green/amber/red shows if the whole squad or just individuals are cooked." }
+      {
+        "name": "Squad readiness",
+        "why": "At-a-glance freshness (traffic-light, derived) to shape the session before it starts."
+      },
+      {
+        "name": "Training availability",
+        "why": "Who is fit / modified / out (esp. knee/back + crash recovery) — the key planning input."
+      },
+      {
+        "name": "High-risk athlete flags",
+        "why": "Surfaces riders needing attention (knee/back flag, load spike, red readiness)."
+      },
+      {
+        "name": "Weekly training-load (TSS) distribution",
+        "why": "Shows who is over/under-loaded to balance the week and protect joints."
+      },
+      {
+        "name": "Load ACWR distribution",
+        "why": "Flags spike-risk riders (soft input) for proactive adjustment."
+      },
+      {
+        "name": "Discipline-group comparison",
+        "why": "Climbers vs sprinters vs TT carry different demands — manage groups appropriately."
+      },
+      {
+        "name": "Training completion / compliance",
+        "why": "Whether prescribed gym + prehab is actually being done."
+      },
+      {
+        "name": "Event readiness",
+        "why": "Taper/freshness picture into a target event or stage race — selection decisions."
+      },
+      {
+        "name": "Recovery trend (squad)",
+        "why": "Derived readiness trend warns of accumulating fatigue across a block."
+      },
+      {
+        "name": "Injury/illness status summary",
+        "why": "Availability picture (status only) for planning + medical liaison."
+      },
+      {
+        "name": "Strength/prehab compliance",
+        "why": "Whether the controllable levers (strength + knee/back prehab) are being pulled."
+      },
+      {
+        "name": "Fatigue distribution",
+        "why": "Spread of green/amber/red shows if the whole squad or just individuals are cooked."
+      }
     ],
     "performanceScore": {
       "range": "0-100",
       "philosophy": "Reflects progress toward the demands of competitive cycling, weighted to discipline-relevant qualities, rewarding consistency and (knee/back) availability and penalising excessive fatigue/poor recovery — never rewarding training through knee/back pain or red readiness.",
       "components": [
-        { "kpi": "consistency", "weight": 0.16, "rationale": "Consistency drives adaptation across a high-volume programme." },
-        { "kpi": "availability", "weight": 0.18, "rationale": "Knee/back-healthy, crash-free availability is the strongest performance lever." },
-        { "kpi": "performance_ftp", "weight": 0.20, "rationale": "FTP / W·kg is the core road-performance outcome." },
-        { "kpi": "power_sprint", "weight": 0.10, "rationale": "Sprint/peak power is a controllable, decisive margin (discipline-weighted)." },
-        { "kpi": "strength", "weight": 0.10, "rationale": "Gym strength underpins economy + sprint power (evidence-based gain)." },
-        { "kpi": "mobility", "weight": 0.06, "rationale": "Position range/comfort is both performance and protection." },
-        { "kpi": "joint_resilience", "weight": 0.08, "rationale": "Knee/back capacity — protective and trainable." },
-        { "kpi": "recovery", "weight": 0.12, "rationale": "Penalises chronic fatigue/poor recovery; keeps the score sustainable." }
+        {
+          "kpi": "consistency",
+          "weight": 0.16,
+          "rationale": "Consistency drives adaptation across a high-volume programme."
+        },
+        {
+          "kpi": "availability",
+          "weight": 0.18,
+          "rationale": "Knee/back-healthy, crash-free availability is the strongest performance lever."
+        },
+        {
+          "kpi": "performance_ftp",
+          "weight": 0.2,
+          "rationale": "FTP / W·kg is the core road-performance outcome."
+        },
+        {
+          "kpi": "power_sprint",
+          "weight": 0.1,
+          "rationale": "Sprint/peak power is a controllable, decisive margin (discipline-weighted)."
+        },
+        {
+          "kpi": "strength",
+          "weight": 0.1,
+          "rationale": "Gym strength underpins economy + sprint power (evidence-based gain)."
+        },
+        {
+          "kpi": "mobility",
+          "weight": 0.06,
+          "rationale": "Position range/comfort is both performance and protection."
+        },
+        {
+          "kpi": "joint_resilience",
+          "weight": 0.08,
+          "rationale": "Knee/back capacity — protective and trainable."
+        },
+        {
+          "kpi": "recovery",
+          "weight": 0.12,
+          "rationale": "Penalises chronic fatigue/poor recovery; keeps the score sustainable."
+        }
       ],
-      "guardrails": ["never increases for training through knee/back pain, red readiness or injury", "consistency + availability dominate so the score can't be gamed by occasional max efforts", "fatigue/recovery caps the score when recovery is poor", "does not reward added mass that worsens W/kg"],
+      "guardrails": [
+        "never increases for training through knee/back pain, red readiness or injury",
+        "consistency + availability dominate so the score can't be gamed by occasional max efforts",
+        "fatigue/recovery caps the score when recovery is poor",
+        "does not reward added mass that worsens W/kg"
+      ],
       "explainability": "Each component is shown with its contribution so the rider sees why the score moved and what to work on next."
     },
     "gamification": [
-      { "name": "Knee/back-healthy weeks", "type": "streak", "rewards": "Consecutive weeks available + completing knee/back prehab — motivation tied to the sport's key overuse injuries." },
-      { "name": "Consistency streak", "type": "streak", "rewards": "Unbroken weeks hitting prescribed rides + gym sessions; rewards process over outcome." },
-      { "name": "Strength/prehab badge", "type": "habit", "rewards": "Completing the strength + core/prehab programme each week — makes the unglamorous (but economy-boosting) work visible." },
-      { "name": "Position / mobility milestone", "type": "milestone", "rewards": "Reaching/maintaining hip + thoracic ROM targets for a comfortable aero position." },
-      { "name": "Testing-battery completion", "type": "milestone", "rewards": "Completing each testing block (FTP / power profile / squat / CMJ) — encourages objective tracking." },
-      { "name": "Personal-best milestones", "type": "milestone", "rewards": "FTP, W/kg + gym PRs vs the rider's own baseline — self-referenced, not leaderboard." },
-      { "name": "Long-term development arc", "type": "progression", "rewards": "Season-over-season power + capability growth — frames the long game over short-term volume grinding." }
+      {
+        "name": "Knee/back-healthy weeks",
+        "type": "streak",
+        "rewards": "Consecutive weeks available + completing knee/back prehab — motivation tied to the sport's key overuse injuries."
+      },
+      {
+        "name": "Consistency streak",
+        "type": "streak",
+        "rewards": "Unbroken weeks hitting prescribed rides + gym sessions; rewards process over outcome."
+      },
+      {
+        "name": "Strength/prehab badge",
+        "type": "habit",
+        "rewards": "Completing the strength + core/prehab programme each week — makes the unglamorous (but economy-boosting) work visible."
+      },
+      {
+        "name": "Position / mobility milestone",
+        "type": "milestone",
+        "rewards": "Reaching/maintaining hip + thoracic ROM targets for a comfortable aero position."
+      },
+      {
+        "name": "Testing-battery completion",
+        "type": "milestone",
+        "rewards": "Completing each testing block (FTP / power profile / squat / CMJ) — encourages objective tracking."
+      },
+      {
+        "name": "Personal-best milestones",
+        "type": "milestone",
+        "rewards": "FTP, W/kg + gym PRs vs the rider's own baseline — self-referenced, not leaderboard."
+      },
+      {
+        "name": "Long-term development arc",
+        "type": "progression",
+        "rewards": "Season-over-season power + capability growth — frames the long game over short-term volume grinding."
+      }
     ]
   }
 }
