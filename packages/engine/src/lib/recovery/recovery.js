@@ -24,23 +24,28 @@
 // working while the index layer owns the single implementation.
 import { subjectiveScore } from '../indices/wellnessIndex.js';
 import { recoveryIndex } from '../indices/recoveryIndex.js';
+import kb from '../knowledge/kb.js';
 export { subjectiveScore };
 
-function bandFromScore(score, greenCut = 70) {
+// Bands + volume modifiers are governed knowledge (recovery.bands /
+// recovery.volume_modifiers) — the cut-points carry provenance and can be reviewed
+// without touching this logic. greenCut stays a parameter: the v2 readiness
+// weighting passes 67 explicitly; the KB value is the default.
+const BANDS = kb.value('recovery.bands');
+const VOL_MOD = kb.value('recovery.volume_modifiers');
+
+function bandFromScore(score, greenCut = BANDS.greenCut) {
   if (score == null) return 'unknown';
   if (score >= greenCut) return 'high';
-  if (score >= 50) return 'moderate';
+  if (score >= BANDS.moderateCut) return 'moderate';
   return 'low';
 }
 
-// Volume modifier preserves the engine's prior readiness mapping (1 / 0.9 / 0.78), so
-// behaviour is unchanged when only an objective score is present. greenCut defaults to
-// 70 (legacy); the v2 readiness weighting passes 67.
-function volumeFromScore(score, greenCut = 70) {
-  if (score == null) return 1;
-  if (score >= greenCut) return 1;
-  if (score >= 50) return 0.9;
-  return 0.78;
+function volumeFromScore(score, greenCut = BANDS.greenCut) {
+  if (score == null) return VOL_MOD.high;
+  if (score >= greenCut) return VOL_MOD.high;
+  if (score >= BANDS.moderateCut) return VOL_MOD.moderate;
+  return VOL_MOD.low;
 }
 
 /**

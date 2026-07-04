@@ -125,9 +125,12 @@ export function combinedMultiplier(rm, decision = { action: 'none', multiplier: 
 //   scheduledDeload is the current week already a planned deload?
 // → { action: 'force' | 'defer' | 'none', reason }
 export function deloadRecommendation({ loadAction = null, readiness = null, recentRecovery = null, illness = false, scheduledDeload = false } = {}) {
+  // Cut-points are governed knowledge (recovery.deload_thresholds) — the strongest
+  // behavioural call in the runtime layer now carries provenance.
+  const DT = kb.value('recovery.deload_thresholds');
   const loadDeload = loadAction === 'deload';
-  const lowReadiness = readiness != null && readiness < 50;
-  const poorRecovery = recentRecovery != null && recentRecovery <= 2;
+  const lowReadiness = readiness != null && readiness < DT.readinessLow;
+  const poorRecovery = recentRecovery != null && recentRecovery <= DT.recoveryPoor;
   // Fatigued: illness, OR low readiness backed by poor recovery, OR a high-load signal
   // CORROBORATED by low readiness / poor recovery. Whether ACWR may force alone is a
   // property of its knowledge authority (confidence:'low' → 'reported' → it may not);
@@ -136,8 +139,8 @@ export function deloadRecommendation({ loadAction = null, readiness = null, rece
   const fatigued = illness || (lowReadiness && poorRecovery)
     || (loadDeload && (acwrForcesAlone || lowReadiness || poorRecovery));
   // Fresh: high readiness, good recovery, and load not elevated.
-  const fresh = readiness != null && readiness >= 70
-    && (recentRecovery == null || recentRecovery >= 4)
+  const fresh = readiness != null && readiness >= DT.readinessFresh
+    && (recentRecovery == null || recentRecovery >= DT.recoveryFresh)
     && loadAction !== 'deload' && loadAction !== 'ease';
 
   if (!scheduledDeload && fatigued) {
