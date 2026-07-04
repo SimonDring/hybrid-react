@@ -263,6 +263,15 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   **Known quality gap (task chip filed):** an injured runner's sessions are legal but
   all-accessory — when a target quality's drivers are blocked, D9/D11 should re-target the
   next priority quality (squats/lunges are legal for a hamstring strain and should appear).
+- **PR #75 — D9 constraint gate (WP-13 follow-on).** When an injury removes a target
+  quality's drivers, the session RE-TARGETS the athlete's next trainable priority (fallback:
+  maxStrength base) via `constraintAdjustedTarget` (sessionObjective.js), mirroring the
+  competency-gate precedent. The feasibility oracle mirrors selection's FULL driver gate
+  (tier legality alone was wrong — robustness had legal squat drivers that its own
+  post-subtraction ideal patterns excluded; `tierOf` now exported). Outcome: the hamstring
+  runner's sessions contain a REAL strength compound (Back squat) instead of accessory-only;
+  all WP-13 guarantees hold. NOTE for Sprint 9: the quality-tags × movement-requirements
+  vocabulary mismatch is the same family as the swim gap (H5).
 - **⇒ NEXT (in order): the H9 seed-evidence pass** (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
