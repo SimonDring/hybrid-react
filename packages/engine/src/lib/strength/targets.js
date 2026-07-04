@@ -20,6 +20,7 @@
 import { MUSCLE_GROUPS, VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
 import { LEVELS } from '../../data/strengthExercises.js';
 import { roundHalf } from '../Utils.js';
+import kb from '../knowledge/kb.js';
 
 // Every style STARTS a block near MEV (conservative, room to progress). Style
 // only changes where the ramp ENDS, as a fraction of the productive band:
@@ -28,13 +29,12 @@ import { roundHalf } from '../Utils.js';
 //   bodybuilding  → ends past MAV toward MRV (volume is the driver; overreach
 //                   into the back of the block, then deload).
 // 0 = MEV, 1 = MAV, >1 = into the MAV→MRV zone.
-const STYLE_TOP = { strength: 0.6, functional: 1.0, bodybuilding: 1.4, sport: 0.6 };
+const STYLE_TOP = kb.value('volume.style_top');   // governed (WP-15)
 
 // Experience scales the BAND, not a flat multiplier. LEVEL_START = how far up the
 // MEV→top ramp week 1 begins (an adapted athlete never starts at a novice's MEV).
 // LEVEL_TOP_BONUS = extra band height for advanced (ramps deeper toward MRV).
-const LEVEL_START     = { beginner: 0.00, returning: 0.20, intermediate: 0.40, advanced: 0.60 };
-const LEVEL_TOP_BONUS = { beginner: 0,    returning: 0,    intermediate: 0,    advanced: 0.30 };
+const { start: LEVEL_START, topBonus: LEVEL_TOP_BONUS } = kb.value('volume.level_bands');   // governed (WP-15)
 
 const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
 

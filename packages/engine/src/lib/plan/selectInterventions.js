@@ -11,15 +11,27 @@ import { EXERCISES } from '../../data/strengthExercises.js';
 import { exerciseQualities } from '../../data/exerciseQualities.js';
 import { stimulusFactor } from '../strength/stimulus.js';
 import { VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
+import kb from '../knowledge/kb.js';
 
-// Fatigue-budget ceiling by D9 level; each exercise costs 1|2|3 fatigue-units (its S5 dominant cost).
-const FATIGUE_BUDGET = { low: 4, moderate: 6, high: 8 };
-const UNIT = { low: 1, moderate: 2, high: 3 };
+// The §34 selection weights are governed knowledge (WP-15) — confidence tags per the
+// H9 review §4 (the budget/transfer numbers are honest low-confidence heuristics;
+// the pattern cap is the one uncontested rule).
+const FATIGUE_BUDGET = kb.value('selection.fatigue_budget');
+const { unit: UNIT, combineWeights: COMBINE } = kb.value('selection.fatigue_units');
+const TRANSFER = kb.value('selection.transfer_weights');
+const PATTERN_CAP = kb.value('selection.pattern_cap');
 
+// H9 C4/F7: the 3-D fatigue vector combines by WEIGHTED MEAN, not max() — max()
+// equalised five of eight exercise classes at 3 units, so a heavy squat, an Olympic
+// pull and a leg extension all cost the same in the transfer-per-fatigue denominator.
+// The mean preserves the neural/metabolic/mechanical model (a metabolic-only cost no
+// longer masquerades as a full-CNS one); the weights are governed knowledge.
 function fatigueScalar(ex) {
   const fc = exerciseQualities(ex.id)?.fatigueCost;
   if (!fc) return 2;
-  return Math.max(UNIT[fc.neural] || 1, UNIT[fc.metabolic] || 1, UNIT[fc.mechanical] || 1);
+  const w = COMBINE;
+  const num = (w.neural * (UNIT[fc.neural] || 1)) + (w.metabolic * (UNIT[fc.metabolic] || 1)) + (w.mechanical * (UNIT[fc.mechanical] || 1));
+  return num / (w.neural + w.metabolic + w.mechanical);
 }
 // 'primary' | 'secondary' | null — does the exercise train the target quality (S5 tags)?
 function trainsTarget(ex, target) {
@@ -44,11 +56,11 @@ export function tierOf(ex, target, sport) {
   if (ex.pattern === 'mobility') return 7;
   return null;
 }
-// transfer-per-fatigue: quality match (primary 2 / secondary 1 / support 0.5) × SKB boost, ÷ fatigue.
+// transfer-per-fatigue: quality match × SKB boost, ÷ fatigue (weights: selection.transfer_weights).
 function valueOf(ex, target, skbIds) {
   const role = trainsTarget(ex, target);
-  const match = role === 'primary' ? 2 : role === 'secondary' ? 1 : 0.5;
-  const boost = skbIds && skbIds.has(ex.id) ? 1.5 : 1.0;
+  const match = role === 'primary' ? TRANSFER.primary : role === 'secondary' ? TRANSFER.secondary : TRANSFER.support;
+  const boost = skbIds && skbIds.has(ex.id) ? TRANSFER.skbBoost : 1.0;
   return (match * boost) / fatigueScalar(ex);
 }
 
@@ -85,7 +97,7 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
     if (fatigue >= budget && picks.length >= 1) break;           // stopping rule — bank the rest (L5)
     // Variety: at most 2 exercises per movement pattern (EDS §34 primary + secondary compound). This
     // stops a session collapsing to 3+ variants of the target quality's one pattern (e.g. 3 deadlifts).
-    if ((patternCount[c.ex.pattern] || 0) >= 2) continue;
+    if ((patternCount[c.ex.pattern] || 0) >= PATTERN_CAP) continue;
     const pick = makePick(c.ex);
     if (!pick || !(pick.sets > 0)) continue;
     const vf = stimulusFactor(c.ex, levelName);

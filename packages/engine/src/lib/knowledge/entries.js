@@ -60,6 +60,70 @@ export const ENTRIES = [
     appliesTo: ['knowledge', 'load', 'recovery']
   },
 
+  // ── D11 selection weights (EDS §34; confidence per the H9 review §4) ──────────
+  {
+    id: 'selection.fatigue_budget',
+    rule: 'Fatigue-unit budget per session by the D9 objective\'s fatigue level — selection stops when the budget is spent (bank the rest, L5).',
+    value: { low: 4, moderate: 6, high: 8 },
+    evidenceLevel: 'L5',
+    source: 'Internal heuristic — no literature anchors a "fatigue unit budget"; produces sensible 2–4-exercise sessions (H9 review §4: defensible heuristic)',
+    confidence: 'low',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['selection']
+  },
+  {
+    id: 'selection.fatigue_units',
+    rule: 'Exercise fatigue cost from its 3-D fatigueCost tags: each dimension maps low/moderate/high → 1/2/3 units, combined by a weighted mean (combineWeights) — preserving the neural/metabolic/mechanical model instead of collapsing to max() (H9 C4/F7).',
+    value: { unit: { low: 1, moderate: 2, high: 3 }, combineWeights: { neural: 1, metabolic: 1, mechanical: 1 } },
+    evidenceLevel: 'L5',
+    source: 'Internal ordinal model; the weighted-mean combine is the H9 review\'s C4 correction (max() equalised 5 of 8 exercise classes at 3 units)',
+    confidence: 'low',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['selection']
+  },
+  {
+    id: 'selection.transfer_weights',
+    rule: 'Transfer-per-fatigue numerator: quality match primary/secondary/support → 2/1/0.5, × skbBoost when the sport\'s SKB exercise library lists the movement.',
+    value: { primary: 2, secondary: 1, support: 0.5, skbBoost: 1.5 },
+    evidenceLevel: 'L5',
+    source: 'Monotonic ordinal transfer proxy; skbBoost numerically unjustified (H9 review §4 — tier sorting dominates, so it only breaks within-tier ties)',
+    confidence: 'low',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['selection']
+  },
+  {
+    id: 'selection.pattern_cap',
+    rule: 'At most N exercises per movement pattern per session — the variety guard (stops "3 deadlifts"); EDS §34 primary + secondary compound.',
+    value: 2,
+    evidenceLevel: 'L5',
+    source: 'EDS §34; H9 review §4 rates it CLEAR (sound, uncontested)',
+    confidence: 'moderate',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['selection']
+  },
+
+  // ── Volume ramp bands (weekly targets) ────────────────────────────────────────
+  {
+    id: 'volume.style_top',
+    rule: 'Where the MEV→ ramp ENDS per style, as a fraction of the productive band (0 = MEV, 1 = MAV, >1 = into MAV→MRV): strength/sport end low (intensity carries it), bodybuilding overreaches past MAV.',
+    value: { strength: 0.6, functional: 1.0, bodybuilding: 1.4, sport: 0.6 },
+    evidenceLevel: 'L4',
+    source: 'RP-style volume-band programming (Israetel) applied per style; internal calibration',
+    confidence: 'low',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['volume']
+  },
+  {
+    id: 'volume.level_bands',
+    rule: 'Experience scales the volume BAND: start = how far up the MEV→top ramp week 1 begins (an adapted athlete never starts at a novice\'s MEV); topBonus = extra band height for advanced (deeper toward MRV).',
+    value: { start: { beginner: 0.0, returning: 0.2, intermediate: 0.4, advanced: 0.6 }, topBonus: { beginner: 0, returning: 0, intermediate: 0, advanced: 0.3 } },
+    evidenceLevel: 'L5',
+    source: 'Internal calibration on the RP band model',
+    confidence: 'low',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['volume']
+  },
+
   // ── Validation policies (D14) ─────────────────────────────────────────────────
   {
     id: 'programming.session_ceiling',
