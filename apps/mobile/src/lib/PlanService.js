@@ -19,18 +19,16 @@ import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets.js';
 import { allocateGym, SESSION_CEILING_MIN } from '@performance-os/engine/lib/plan/allocator.js';
 import { functionalSlotMinutes } from '@performance-os/engine/lib/plan/strength.js';
-import { resolveSplit } from '@performance-os/engine/lib/plan/split.js';
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 import { countWeeklyVolume } from '@performance-os/engine/lib/plan/volume.js';
-import { distributeAcrossSlots, WINDOW_DAYS } from '@performance-os/engine/lib/plan/rollingVolume.js';
-import { despineWeek } from '@performance-os/engine/lib/plan/despine.js';
+import { WINDOW_DAYS } from '@performance-os/engine/lib/plan/rollingVolume.js';
 import { resolveLifts } from '@performance-os/engine/lib/liftProgression.js';
 import { MUSCLE_GROUPS, MUSCLE_LABELS } from '@performance-os/engine/data/muscleVolume.js';
 import { getOverrides } from './sessionOverrides.js';
 import { applyInjuryRules, applyPrevention } from '@performance-os/engine/lib/injury/injuryFilter.js';
-import { combinedMultiplier, deloadRecommendation } from '@performance-os/engine/lib/plan/trainingLoad.js';
+import { deloadRecommendation } from '@performance-os/engine/lib/plan/trainingLoad.js';
 import { ruleVolumeAdjustment } from '@performance-os/engine/lib/sportKnowledge/reflowAdjust.js';
-import { deriveConstraints, lightenItems } from '@performance-os/engine/lib/plan/constraints.js';
+import { deriveConstraints } from '@performance-os/engine/lib/plan/constraints.js';
 import { contraindicatedPatternsForInjuries, blockedNameRegexesForInjuries } from '@performance-os/engine/lib/session/movementRequirements.js';
 import { categoryPlanFor } from '@performance-os/engine/lib/session/categoryCoverage.js';
 import * as reflowLib from '@performance-os/engine/lib/plan/reflow.js';
@@ -199,11 +197,7 @@ function adaptedPhases() {
   // ---- adaptive deload (F9): promote fatigue signals into a TRUE deload on the
   // current week, or DEFER a planned one when the athlete is clearly fresh. ACWR is
   // demoted — it only corroborates (see deloadRecommendation). ----
-  const recVals = Object.values(_runtime.sessions)
-    .filter(s => s.completed && s.recovery != null && withinEpoch(s))
-    .sort((a, b) => String(b.completedAt || '').localeCompare(String(a.completedAt || '')))
-    .slice(0, 4).map(s => s.recovery);
-  const recentRecovery = recVals.length ? recVals.reduce((a, b) => a + b, 0) / recVals.length : null;
+  const recentRecovery = reflowLib.recentSessionRecovery(_runtime.sessions, epochStartISO());
   const cwWeek = g.phases.flatMap(p => p.weeks || []).find(w => w.num === cw) || {};
   const rec = reverted ? { action: 'none', reason: null } : deloadRecommendation({
     loadAction, readiness: recovery ? recovery.score : null, recentRecovery,
@@ -238,145 +232,17 @@ function adaptedPhases() {
   const key = `${_cache.sig}|${cw}|${localISO(today)}|${stateSig}|${band}|${ovSig}|${loadAction}|${recBand}|${rec.action}|${override || ''}|${reverted ? 'r' : ''}|${ruleAdj.ruleIds.join('.')}|inj:${injSig}`;
   if (_adaptCache.key === key) return _adaptCache.phases;
 
-  // Effective deload for a week — the force/defer decision applies to the current week only.
-  const effDeload = (week) => {
-    if (week.num !== cw) return !!week.deload;
-    if (rec.action === 'force' || ruleAdj.forceDeload) return true;
-    if (rec.action === 'defer') return false;
-    return !!week.deload;
-  };
-
-  // ---- rolling ledger: the per-muscle volume MISSED in the trailing window
-  // (skipped or past-due, never done) — the concrete shortfall to spread forward ----
-  const gctx = gymCtx(profile);
-  const { busyDays: sportBusy } = deriveConstraints(profile);
-  const gymList = gymSessionsWithDates(g.phases);
-  const deficit = missedWindowVolume(gymList, overrides, today);
-
-  // ---- spread across the horizon's pending slots, each carrying its week's share ----
-  const slots = horizonSlots(gymList, overrides, today);
-  const gymCountByWeek = {};
-  gymList.forEach(x => { const k = `${x.phase.id}_${x.week.num}`; gymCountByWeek[k] = (gymCountByWeek[k] || 0) + 1; });
-  const slotInputs = slots.map(s => {
-    const wt = weekTarget(s.phase, s.week, gctx, effDeload(s.week) || !!s.week.taper);
-    const n = gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1;
-    // Use the SAME split as the baseline generator so the reflowed current week keeps
-    // its curated structure (an Upper day stays Upper). Sport's split is even, so its
-    // share stays wt/n and its sessions are unchanged.
-    const day = resolveSplit({ gymDays: n, style: gctx.style })[s.i] || {};
-    const weights = day.weights;
-    const normalShare = {};
-    for (const m of MUSCLE_GROUPS) normalShare[m] = weights ? (wt[m] || 0) * (weights[m] || 0) : (wt[m] || 0) / n;
-    return { normalShare, anchors: day.anchors || null, focus: gctx.style === 'sport' ? null : (weights || null) };
+  // WP-24b: the reflow POLICY is pure engine code (reflowLib.reflowPhases). This
+  // orchestrator only gathers state, keys the memo (from the same engine-derived
+  // signals the policy uses — rec/ruleAdj above — so key and policy cannot drift),
+  // delegates, and caches. `load` is already nulled when the athlete reverted.
+  const { phases, forgiven } = reflowLib.reflowPhases({
+    phases: g.phases, currentWeek: cw, today, gctx: gymCtx(profile), profile,
+    sessions: _runtime.sessions, recovery, load, reverted, overrides, activeInjuries,
+    dateFor: dateForSession, totalWeeks: totalWeeks(),
+    startDate: getStartDate(), startISO: epochStartISO(),
   });
-  const { perSlot, forgiven } = distributeAcrossSlots({ slots: slotInputs, deficit, windowDays: WINDOW_DAYS });
   _lastForgiven = forgiven;
-
-  // Recovery trims session length; load (ACWR, demoted) gently trims/restores; a
-  // travel 'easy' override trims further. Conservative — take the smallest sensible cut.
-  let mult = combinedMultiplier(
-    recovery ? recovery.volumeModifier : 1,
-    { action: loadAction, multiplier: load ? load.loadModifier : 1 }
-  );
-  // Travel policy is governed knowledge (recovery.travel_policy): an easy day is
-  // both SHORTER (volume cap) and LIGHTER (RPE offset, below).
-  const travelPolicy = kb.value('recovery.travel_policy');
-  if (!reverted && override === 'easy') mult = Math.min(mult, travelPolicy.volumeCap);
-  mult *= ruleAdj.volumeMult;   // sport decision-rule reduction (≤1; conservative — only trims)
-  // Intensity honesty (WP-10, recovery.intensity_policy): the readiness band's target-
-  // RPE offset rides into the allocator ctx; suggested loads follow via applyWeights.
-  // Travel-easy also lightens; the two take the MINIMUM (they never stack below one step).
-  // Readiness applies even when the athlete reverted to plan (same as the volume rule).
-  let rpeOffset = recovery ? (recovery.rpeOffset || 0) : 0;
-  if (!reverted && override === 'easy') rpeOffset = Math.min(rpeOffset, travelPolicy.rpeOffset);
-  const specByKey = {};
-  slots.forEach((s, idx) => {
-    const spec = allocateGym({
-      targets: perSlot[idx],
-      slots: [{ minutes: Math.round(functionalSlotMinutes(gctx.style, gctx.minutes) * mult), equip: gctx.access,
-                anchors: slotInputs[idx].anchors, focus: slotInputs[idx].focus }],
-      ctx: {
-        style: gctx.style, intent: intentOfTitle(s.phase.title), deload: effDeload(s.week), taper: !!s.week.taper,
-        weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,
-        bodyweight: gctx.bodyweight, priorityByIntent: gctx.priorityByIntent,
-        exercisePriority: gctx.exercisePriority, sport: gctx.sport, power: gctx.power,
-        priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds,
-        // The slot's baseline identity within its week, so the D11 target-quality
-        // rotation matches the weekly builder's (same mechanism as resolveSplit[s.i]
-        // above) — without it every single-slot rebuild pinned the same top-priority
-        // quality and a runner's explosive days collapsed into the durability day.
-        weekGymCount: gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, weekSlotIdx: s.i,
-        rpeOffset, contraindicatedPatterns, blockedNameRegexes,
-        categoryPlan: categoryPlanFor(gctx.skbSportId, gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, { levelName: gctx.level, season: gctx.season })
-      }
-    })[0];
-    if (spec) {
-      let built = spec;   // primer is added later by decorateSections (buildPrimer)
-      // Lighten a reshaped session that lands on a sport day (JS Sun=0 → Mon=0 index).
-      const wd = s.date ? (s.date.getDay() === 0 ? 6 : s.date.getDay() - 1) : null;
-      if (wd != null && sportBusy.includes(wd)) built = { ...built, items: lightenItems(built.items), lightened: true };
-      specByKey[s.key] = built;
-    }
-  });
-
-  // ---- rebuild in place: horizon specs + train-now snapshots; everything else as-is ----
-  const phases = g.phases.map(phase => {
-    if (!phase.weeks || !phase.weeks.some(w => weeksTouched.includes(w.num))) return phase;
-    return {
-      ...phase,
-      weeks: phase.weeks.map(week => {
-        if (!weeksTouched.includes(week.num)) return week;
-        let changed = false;
-        const newSessions = week.sessions.slice();
-        const reshapedIdx = new Set();           // sessions the reflow freshly rebuilt this pass
-        const swap = (i, focus, duration, items, flag) => {
-          const dayPrefix = (newSessions[i].title.split('·')[0] || '').trim();
-          newSessions[i] = { ...newSessions[i], title: dayPrefix ? `${dayPrefix} · ${focus}` : focus, duration, items, ...flag };
-          changed = true;
-        };
-        week.sessions.forEach((s, i) => {
-          const k = sessionKey(phase.id, week.num, i);
-          const ov = overrides[k];
-          // A Train Now override is a genuinely on-demand session (show the ADAPTED
-          // badge); a pin-on-start override is just the normal session frozen at the
-          // moment of starting (no badge — nothing was swapped out from under them).
-          if (ov) { swap(i, ov.focus, ov.duration, ov.items, { _trainNow: !ov.pinnedAtStart }); return; }
-          const spec = specByKey[k];
-          // Carry the reshaped lifts' real axialLoad (not the original slot's) so the
-          // cross-day de-spine below reads the right "yesterday was spine-heavy" signal.
-          if (spec) { swap(i, spec.focus, spec.duration, spec.items, { _trainNow: false, axialLoad: spec.axialLoad || 0 }); reshapedIdx.add(i); }
-        });
-
-        // De-spine the reflowed week, exactly as the baseline generator does after
-        // scheduling: where a high-axial day is followed (adjacently) by a training
-        // day carrying a high-axial intent lift, swap that lift for the lowest-axial
-        // member of its intent. Only the freshly RESHAPED sessions may change; started
-        // / Train Now / untouched-baseline sessions are passed as read-only context
-        // (deep-cloned) so a heavy "yesterday" still registers without recomputing a
-        // session the athlete has committed to — honouring freeze-on-start.
-        if (reshapedIdx.size) {
-          const forDespine = newSessions.map((s, i) =>
-            reshapedIdx.has(i) ? s : { ...s, items: (s.items || []).map(it => ({ ...it })) });
-          despineWeek(forDespine, {
-            priorityByIntent: gctx.priorityByIntent, lifts: gctx.lifts,
-            level: gctx.level, bodyweight: gctx.bodyweight
-          });
-        }
-        // Surface an adaptive deload (or its deferral) on the current week.
-        const forceDl = week.num === cw && rec.action === 'force';
-        const deferDl = week.num === cw && rec.action === 'defer';
-        if (!changed && !forceDl && !deferDl) return week;
-        const out = { ...week, sessions: newSessions, _adapted: changed };
-        // Explainability seam (surfacing is WP-30): why this week trains lighter.
-        if (changed && rpeOffset < 0 && reshapedIdx.size) {
-          out._intensityEased = override === 'easy' ? 'travel — eased' : 'low readiness — eased';
-        }
-        if (forceDl) { out.deload = true; out.autoDeload = true; out.deloadReason = rec.reason; }
-        if (deferDl) { out.deload = false; out.deloadDeferred = true; }
-        return out;
-      })
-    };
-  });
   _adaptCache = { key, phases };
   return phases;
 }
