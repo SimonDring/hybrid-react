@@ -80,6 +80,8 @@ const itemsFor = (phaseId, weekNum, idx) => {
   const s = week && week.sessions[idx];
   return s ? s.items.filter(it => !it.substituted).map(it => it.name) : null;
 };
+// Train Now was removed (2026-07-04); the flag must never reappear on any session —
+// this now guards against stale decoration leaking from old stored overrides.
 const badgeFor = (phaseId, weekNum, idx) => {
   const phase = Plan.getPhase(phaseId);
   const week = phase && phase.weeks.find(w => w.num === weekNum);

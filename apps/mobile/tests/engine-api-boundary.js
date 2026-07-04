@@ -52,8 +52,8 @@ for (const [rel, paths] of Object.entries(ALLOWLIST)) {
 }
 assert(stale.length === 0, `allowlist entries are still real (stale: ${stale.join(', ') || 'none'})`);
 
-// The six named calls exist on the barrel.
+// The five named calls exist on the barrel (trainNow was removed with the feature, 2026-07-04).
 const api = await import('@performance-os/engine');
-for (const name of ['plan', 'reflow', 'trainNow', 'deriveReadiness', 'deriveLoad', 'validate']) {
+for (const name of ['plan', 'reflow', 'deriveReadiness', 'deriveLoad', 'validate']) {
   assert(typeof api[name] === 'function', `API call "${name}" is exported`);
 }

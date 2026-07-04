@@ -9,8 +9,6 @@
 //   explain / rollUp            → RESERVED: explain lands with WP-30 (the decision
 //                                 read-model); rollUp with the Team package (WP-34,
 //                                 TAS Appendix A). Not stubbed — no speculative seams.
-// Plus trainNow(inputs) — the on-demand session decision (reflow-adjacent, WP-24c).
-//
 // Every consumer surface (the PWA's PlanService/store, apps/web, future Edge
 // Functions) should import from THIS barrel. Deep "./lib/*" subpaths remain for
 // tests and for the documented residue in tests/engine-api-boundary.js — that
@@ -18,7 +16,7 @@
 // Database/store/overrides into these pure functions.
 export { generatePlan, generatePlan as plan } from './src/lib/PlanGenerator.js';
 export {
-  reflowPhases, reflowPhases as reflow, trainNowSpec, trainNowSpec as trainNow,
+  reflowPhases, reflowPhases as reflow,
   weekTarget, missedWindowVolume, horizonSlots, gymSessionsWithDates, withinEpoch,
   recentSessionRecovery, sessionKey, intentOfTitle, localISO, sessionDiscipline
 } from './src/lib/plan/reflow.js';

@@ -14,7 +14,6 @@ import TabBar from './components/TabBar.jsx';
 import ScreenContainer from './components/ScreenContainer.jsx';
 
 import Home from './screens/Home.jsx';
-import TrainNow from './screens/TrainNow.jsx';
 import PlanScreen from './screens/Plan.jsx';
 import PhaseDetail from './screens/PhaseDetail.jsx';
 import WeekDetail from './screens/WeekDetail.jsx';
@@ -37,7 +36,6 @@ import TrainingLoad from './screens/TrainingLoad.jsx';
 
 const routeMeta = {
   '/': { title: '', topLevel: true, tab: 'home' },
-  '/train-now': { title: 'Train now', topLevel: false, tab: 'home' },
   '/plan': { title: 'Plan', topLevel: true, tab: 'plan' },
   '/phases/:phaseId': { title: 'Phase', topLevel: false, tab: 'plan' },
   '/phases/:phaseId/weeks/:weekNum': { title: 'Week', topLevel: false, tab: 'plan' },
@@ -165,7 +163,6 @@ export default function App() {
       <ScreenContainer pathname={location.pathname}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/train-now" element={<TrainNow />} />
           <Route path="/plan" element={<PlanScreen />} />
           <Route path="/phases" element={<Navigate to="/plan" replace />} />
           <Route path="/phases/:phaseId" element={<PhaseDetail />} />

@@ -142,7 +142,7 @@ function missedWindowVolume(gymList, overrides, today) {
 
 // Pending gym slots whose scheduled date falls in [today, today + WINDOW_DAYS] —
 // the sessions we may (re)shape now. Settled (completed/started/skipped in-epoch)
-// and train-now-pinned slots are excluded; they're locked. Returned in date order.
+// and pinned slots are excluded; they're locked. Returned in date order.
 function horizonSlots(gymList, overrides, today) {
   return reflowLib.horizonSlots(gymList, overrides, today,
     { sessions: runtime().sessions, startISO: epochStartISO() });
@@ -153,7 +153,7 @@ function horizonSlots(gymList, overrides, today) {
  * gym sessions inside a rolling WINDOW_DAYS horizon (current week + the start of
  * next) so volume you're behind on is spread smoothly across them — capped per
  * session, with anything past the recoverable ceiling forgiven (never crammed,
- * never silently dropped). Completed / started / missed / train-now-pinned
+ * never silently dropped). Completed / started / missed / pinned
  * sessions, all non-gym sessions, and everything outside the horizon are returned
  * untouched, in place — so completion keys (p{phase}_wk{week}_s{idx}) stay valid.
  * Returns null for legacy plans (no start date → no reflow).
@@ -604,47 +604,4 @@ function nextPendingGymTarget() {
   return null;
 }
 
-export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
-  const profile = Database.services.getProfile() || {};
-  const gctx = gymCtx(profile);
-  const equipArr = (equip && equip.length) ? equip : gctx.access;
-
-  // The biggest gaps RIGHT NOW = volume MISSED across the trailing window. If
-  // nothing's owed you're on track, so this becomes a balanced bonus session
-  // toward the current week's target. Same ledger the weekly reflow uses.
-  let weeklyTgt = null, missed = {}, tnPhase = null, tnWeek = null;
-  const cw = currentWeekNumber();
-  if (cw != null) {
-    const g = generated();
-    const today = new Date(); today.setHours(0, 0, 0, 0);
-    for (const p of (g ? g.phases : [])) { const w = (p.weeks || []).find(w => w.num === cw); if (w) { tnPhase = p; tnWeek = w; break; } }
-    if (tnPhase && tnWeek) {
-      weeklyTgt = weekTarget(tnPhase, tnWeek, gctx);
-      missed = missedWindowVolume(gymSessionsWithDates(g.phases), getOverrides(), today);
-    }
-  }
-  // WP-24c: the DECISION (bonus-vs-catch-up, governed threshold, selection through
-  // the same allocator brain as the plan) is pure engine code; this orchestrator
-  // gathers state and decorates the result.
-  const { session: spec, bonus } = reflowLib.trainNowSpec({
-    gctx, minutes, equip: equipArr, currentWeek: cw, phase: tnPhase, week: tnWeek,
-    weeklyTarget: weeklyTgt, missed, recovery: runtime().recovery,
-    activeInjuries: Database.services.listActiveInjuries().filter(i => i.body_part_key)
-  });
-  const session = spec || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
-  return { session: decorateSections(session, equipArr), why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };
-}
-
-// Plain-language rationale shown with an on-demand session.
-function buildWhy(session, bonus, minutes) {
-  const vol = countWeeklyVolume([session]).counts;
-  const top = MUSCLE_GROUPS.filter(m => vol[m] > 0).sort((a, b) => vol[b] - vol[a]).slice(0, 3)
-    .map(m => MUSCLE_LABELS[m].toLowerCase());
-  const muscles = top.length > 1 ? `${top.slice(0, -1).join(', ')} and ${top[top.length - 1]}` : (top[0] || 'full body');
-  const lead = bonus
-    ? "You're on track across the last few days, so this is a balanced bonus session"
-    : "Built around the muscle groups you're furthest behind on";
-  return `${lead} — it leans into ${muscles}. Fitted to ~${Math.round(minutes / 5) * 5} min with the kit you picked, at your usual rep ranges and RPE.`;
-}
-
-export default { getPhases, getPhase, getWeek, adaptedSessionByKey, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO, setRuntime, currentAdaptation, weekVolumeProgressFor, currentWeekVolumeProgress, generateTrainNow, sessionDiscipline, lastForgiven };
+export default { getPhases, getPhase, getWeek, adaptedSessionByKey, findNextSession, recommendedSession, currentWeekNumber, dateForSession, getStartDate, buildCalendar, localISO, setRuntime, currentAdaptation, weekVolumeProgressFor, currentWeekVolumeProgress, sessionDiscipline, lastForgiven };
