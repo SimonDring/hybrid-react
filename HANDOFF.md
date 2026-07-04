@@ -308,12 +308,24 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   Acceptance live: sprinter vs marathoner dose provably differently (signature test,
   19 assertions in `tests/dose-by-quality.js`). Re-baseline audited: the same 8 run/cycle
   archetypes; build+swim byte-identical. Suite **129/129**.
-- **⇒ NEXT: WP-15** (D11 weights → KB with the H9 §4 confidence tags: FATIGUE_BUDGET low,
-  transfer weights low, SKB boost low, 2/pattern cap CLEAR; plus C4's weighted-sum
-  fatigueScalar — a behaviour change for within-tier ordering, gate with the d11 quality
-  tests). Then **Sprint 9 (SKB-primary) + swim re-seat — STOP for Simon's design review
-  before flipping anything** (see the swim section below + audit WP-19/20; the H5
-  quality-vocabulary decision gets made there).
+- **PR #80 — WP-15: D11 weights → KB + C4 weighted-mean fatigue.** Two audited commits:
+  (1) six governed entries (selection.fatigue_budget / fatigue_units / transfer_weights /
+  pattern_cap + volume.style_top / level_bands) with the H9 §4 confidence tags — byte-
+  identical, goldens untouched at that commit; (2) **C4**: fatigueScalar = weighted MEAN of
+  the 3-D fatigue vector (governed combineWeights) instead of max() — a marathoner's
+  durability day now fits FOUR working movements (Bulgarian split squat joins — the F1
+  unilateral work — its metabolic-dominant cost no longer masquerading as full-CNS).
+  Re-baseline audited: same 8 run/cycle archetypes; build+swim byte-identical. Suite
+  **129/129**. Every scientific constant on the D11 path is now governed knowledge.
+- **⇒ NEXT: Sprint 9 (SKB-primary, audit WP-19) + the swim re-seat (WP-20) — ★ HARD STOP:
+  design review with SIMON before building/flipping anything.** The design must cover:
+  D2/D11 reading the SKB demand profile + `exerciseLibrary` transfer ratings directly;
+  deriving muscle-emphasis from demand; retiring `lib/sports/*` (one sport model); the H5
+  quality-vocabulary decision (route movement-specific needs through SKB library categories
+  vs extending the fixed-10 PM vocabulary — it broke swim once already); per-sport flip
+  strategy with the established gates. See "Swim re-seat — what's required" below +
+  audit §8 WP-19a/b/c + §9 H5. Remaining staged H9 items: C3/C5/C9–C14 (opportunistic);
+  C8 build rest floor + C7 48–72 h plyo spacing (D13) recorded for their owners.
 - ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
