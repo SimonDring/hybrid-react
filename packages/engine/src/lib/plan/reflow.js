@@ -17,7 +17,18 @@
  */
 import { weeklyMuscleTargets } from '../strength/targets.js';
 import { countWeeklyVolume } from './volume.js';
-import { WINDOW_DAYS } from './rollingVolume.js';
+import { WINDOW_DAYS, distributeAcrossSlots } from './rollingVolume.js';
+import { resolveSplit } from './split.js';
+import { MUSCLE_GROUPS } from '../../data/muscleVolume.js';
+import { allocateGym } from './allocator.js';
+import { functionalSlotMinutes } from './strength.js';
+import { despineWeek } from './despine.js';
+import { deriveConstraints, lightenItems } from './constraints.js';
+import { combinedMultiplier, deloadRecommendation } from './trainingLoad.js';
+import { ruleVolumeAdjustment } from '../sportKnowledge/reflowAdjust.js';
+import { contraindicatedPatternsForInjuries, blockedNameRegexesForInjuries } from '../session/movementRequirements.js';
+import { categoryPlanFor } from '../session/categoryCoverage.js';
+import kb from '../knowledge/kb.js';
 
 export const sessionKey = (phaseId, weekNum, idx) => `p${phaseId}_wk${weekNum}_s${idx}`;
 
@@ -140,4 +151,170 @@ export function horizonSlots(gymList, overrides, today, { sessions, startISO, wi
   return slots;
 }
 
-export default { sessionKey, intentOfTitle, localISO, sessionDiscipline, withinEpoch, weekTarget, gymSessionsWithDates, missedWindowVolume, horizonSlots };
+/** Mean of the athlete's most recent in-epoch session-recovery ratings (1–5). Used
+ *  by the deload decision AND the caller's memo key — one implementation, no drift. */
+export function recentSessionRecovery(sessions, startISO, n = 4) {
+  const vals = Object.values(sessions || {})
+    .filter((s) => s.completed && s.recovery != null && withinEpoch(s, startISO))
+    .sort((a, b) => String(b.completedAt || '').localeCompare(String(a.completedAt || '')))
+    .slice(0, n).map((s) => s.recovery);
+  return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+}
+
+/**
+ * reflowPhases — the runtime-adaptation POLICY, pure (WP-24b; audit V2/H2).
+ *
+ * Reshape only the PENDING gym sessions inside the rolling horizon: spread the
+ * missed-window shortfall across them (capped; the unrecoverable remainder is
+ * FORGIVEN, never crammed), apply the adaptive-deload force/defer decision to the
+ * current week, scale volume by recovery×load (travel caps it; SKB rules trim it),
+ * carry the readiness/travel RPE offset, lighten sport-day clashes, honour pins and
+ * freeze-on-start, and de-spine the rebuilt week exactly as the generator does.
+ * Moved VERBATIM from PlanService.adaptedPhases with every impure read as an
+ * argument. The caller owns memoisation and IO; `load` arrives already nulled when
+ * the athlete reverted to plan.
+ *
+ * @returns {{ phases: Array, forgiven: object }}
+ */
+export function reflowPhases({
+  phases: basePhases, currentWeek: cw, today, gctx, profile,
+  sessions, recovery, load, reverted, overrides, activeInjuries,
+  dateFor, totalWeeks, startDate, startISO,
+}) {
+  const weeksTouched = [cw, cw + 1];               // the horizon spans at most two weeks
+  const override = recovery ? recovery.sessionOverride : null;   // illness('rest') / travel('easy')
+  const loadAction = load && load.inputs ? load.inputs.action : 'none';
+
+  // Adaptive deload (F9): promote fatigue into a TRUE deload, or DEFER a planned one.
+  const recentRecovery = recentSessionRecovery(sessions, startISO);
+  const cwWeek = basePhases.flatMap((p) => p.weeks || []).find((w) => w.num === cw) || {};
+  const rec = reverted ? { action: 'none', reason: null } : deloadRecommendation({
+    loadAction, readiness: recovery ? recovery.score : null, recentRecovery,
+    illness: override === 'rest', scheduledDeload: !!cwWeek.deload
+  });
+
+  // SKB decision rules (sport-specific) → conservative reflow modifiers.
+  const ruleCtx = {
+    season: gctx.season || null,
+    readiness: recovery ? recovery.score : null,
+    illness: override === 'rest',
+    travel: override === 'easy',
+    acwr: (load && load.inputs && load.inputs.acwr != null) ? load.inputs.acwr : null,
+    competitionWithinH: profile.event_date ? Math.max(0, (new Date(profile.event_date).getTime() - today.getTime()) / 3600000) : null
+  };
+  const ruleAdj = ruleVolumeAdjustment(profile, ruleCtx);
+
+  // Constraints-first injuries (WP-13).
+  const contraindicatedPatterns = contraindicatedPatternsForInjuries(activeInjuries);
+  const blockedNameRegexes = blockedNameRegexesForInjuries(activeInjuries);
+
+  // Effective deload — the force/defer decision applies to the current week only.
+  const effDeload = (week) => {
+    if (week.num !== cw) return !!week.deload;
+    if (rec.action === 'force' || ruleAdj.forceDeload) return true;
+    if (rec.action === 'defer') return false;
+    return !!week.deload;
+  };
+
+  // Rolling ledger: the missed shortfall, spread across the horizon's pending slots.
+  const { busyDays: sportBusy } = deriveConstraints(profile);
+  const gymList = gymSessionsWithDates(basePhases, dateFor);
+  const deficit = missedWindowVolume(gymList, overrides, today, { sessions, start: startDate, startISO });
+  const slots = horizonSlots(gymList, overrides, today, { sessions, startISO });
+  const gymCountByWeek = {};
+  gymList.forEach((x) => { const k = `${x.phase.id}_${x.week.num}`; gymCountByWeek[k] = (gymCountByWeek[k] || 0) + 1; });
+  const slotInputs = slots.map((s) => {
+    const wt = weekTarget({ phase: s.phase, week: s.week, gctx, deloadOverride: effDeload(s.week) || !!s.week.taper, totalWeeks });
+    const n = gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1;
+    const day = resolveSplit({ gymDays: n, style: gctx.style })[s.i] || {};
+    const weights = day.weights;
+    const normalShare = {};
+    for (const m of MUSCLE_GROUPS) normalShare[m] = weights ? (wt[m] || 0) * (weights[m] || 0) : (wt[m] || 0) / n;
+    return { normalShare, anchors: day.anchors || null, focus: gctx.style === 'sport' ? null : (weights || null) };
+  });
+  const { perSlot, forgiven } = distributeAcrossSlots({ slots: slotInputs, deficit, windowDays: WINDOW_DAYS });
+
+  // Recovery trims; load (demoted) gently trims/restores; travel caps; rules trim.
+  let mult = combinedMultiplier(
+    recovery ? recovery.volumeModifier : 1,
+    { action: loadAction, multiplier: load ? load.loadModifier : 1 }
+  );
+  const travelPolicy = kb.value('recovery.travel_policy');
+  if (!reverted && override === 'easy') mult = Math.min(mult, travelPolicy.volumeCap);
+  mult *= ruleAdj.volumeMult;
+  let rpeOffset = recovery ? (recovery.rpeOffset || 0) : 0;
+  if (!reverted && override === 'easy') rpeOffset = Math.min(rpeOffset, travelPolicy.rpeOffset);
+
+  const specByKey = {};
+  slots.forEach((s, idx) => {
+    const spec = allocateGym({
+      targets: perSlot[idx],
+      slots: [{ minutes: Math.round(functionalSlotMinutes(gctx.style, gctx.minutes) * mult), equip: gctx.access,
+                anchors: slotInputs[idx].anchors, focus: slotInputs[idx].focus }],
+      ctx: {
+        style: gctx.style, intent: intentOfTitle(s.phase.title), deload: effDeload(s.week), taper: !!s.week.taper,
+        weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,
+        bodyweight: gctx.bodyweight, priorityByIntent: gctx.priorityByIntent,
+        exercisePriority: gctx.exercisePriority, sport: gctx.sport, power: gctx.power,
+        priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds,
+        weekGymCount: gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, weekSlotIdx: s.i,
+        rpeOffset, contraindicatedPatterns, blockedNameRegexes,
+        categoryPlan: categoryPlanFor(gctx.skbSportId, gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, { levelName: gctx.level, season: gctx.season })
+      }
+    })[0];
+    if (spec) {
+      let built = spec;   // primer is added later by the caller's decoration
+      const wd = s.date ? (s.date.getDay() === 0 ? 6 : s.date.getDay() - 1) : null;
+      if (wd != null && sportBusy.includes(wd)) built = { ...built, items: lightenItems(built.items), lightened: true };
+      specByKey[s.key] = built;
+    }
+  });
+
+  // Rebuild in place: horizon specs + pinned snapshots; everything else as-is.
+  const phases = basePhases.map((phase) => {
+    if (!phase.weeks || !phase.weeks.some((w) => weeksTouched.includes(w.num))) return phase;
+    return {
+      ...phase,
+      weeks: phase.weeks.map((week) => {
+        if (!weeksTouched.includes(week.num)) return week;
+        let changed = false;
+        const newSessions = week.sessions.slice();
+        const reshapedIdx = new Set();
+        const swap = (i, focus, duration, items, flag) => {
+          const dayPrefix = (newSessions[i].title.split('·')[0] || '').trim();
+          newSessions[i] = { ...newSessions[i], title: dayPrefix ? `${dayPrefix} · ${focus}` : focus, duration, items, ...flag };
+          changed = true;
+        };
+        week.sessions.forEach((s, i) => {
+          const k = sessionKey(phase.id, week.num, i);
+          const ov = overrides[k];
+          if (ov) { swap(i, ov.focus, ov.duration, ov.items, { _trainNow: !ov.pinnedAtStart }); return; }
+          const spec = specByKey[k];
+          if (spec) { swap(i, spec.focus, spec.duration, spec.items, { _trainNow: false, axialLoad: spec.axialLoad || 0 }); reshapedIdx.add(i); }
+        });
+
+        if (reshapedIdx.size) {
+          const forDespine = newSessions.map((s, i) =>
+            reshapedIdx.has(i) ? s : { ...s, items: (s.items || []).map((it) => ({ ...it })) });
+          despineWeek(forDespine, {
+            priorityByIntent: gctx.priorityByIntent, lifts: gctx.lifts,
+            level: gctx.level, bodyweight: gctx.bodyweight
+          });
+        }
+        const forceDl = week.num === cw && rec.action === 'force';
+        const deferDl = week.num === cw && rec.action === 'defer';
+        if (!changed && !forceDl && !deferDl) return week;
+        const out = { ...week, sessions: newSessions, _adapted: changed };
+        if (changed && rpeOffset < 0 && reshapedIdx.size) {
+          out._intensityEased = override === 'easy' ? 'travel — eased' : 'low readiness — eased';
+        }
+        if (forceDl) { out.deload = true; out.autoDeload = true; out.deloadReason = rec.reason; }
+        if (deferDl) { out.deload = false; out.deloadDeferred = true; }
+        return out;
+      })
+    };
+  });
+  return { phases, forgiven };
+}
+
+export default { sessionKey, intentOfTitle, localISO, sessionDiscipline, withinEpoch, weekTarget, gymSessionsWithDates, missedWindowVolume, horizonSlots, recentSessionRecovery, reflowPhases };
