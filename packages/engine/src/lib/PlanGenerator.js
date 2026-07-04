@@ -33,6 +33,7 @@ import { SESSION_CEILING_MIN } from './plan/allocator.js';
 import { performanceModelForProfile } from './performance/forProfile.js';
 import { profileToAthleteModel } from './adapters/profileToAthleteModel.js';
 import * as SKB from './sportKnowledge/index.js';
+import { validateWeek } from './validation/contract.js';
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
@@ -209,7 +210,26 @@ export function generatePlan(profile = {}, opts = {}) {
     });
   });
 
-  return { phases, totalWeeks: total };
+  // D14 (Art 19): the independent validation floor, surfaced on the plan. The
+  // constructor already enforces these rules in-loop; this is the PROOF the built
+  // plan complies — and the report any other construction path must produce.
+  // Profile-known context only (equipment); runtime context (active injuries)
+  // is validated where it's known (the app layer / tests).
+  const vctx = { access: profile.access || [] };
+  let allPass = true, checked = 0;
+  const problemWeeks = [];
+  for (const phase of phases) {
+    for (const week of phase.weeks) {
+      checked++;
+      const r = validateWeek(week, vctx);
+      if (!r.pass) {
+        allPass = false;
+        problemWeeks.push({ week: week.num, counts: r.counts, findings: r.findings.filter((f) => f.verdict !== 'pass') });
+      }
+    }
+  }
+
+  return { phases, totalWeeks: total, meta: { validation: { pass: allPass, checked, weeks: problemWeeks } } };
 }
 
 export default { generatePlan };

@@ -60,6 +60,38 @@ export const ENTRIES = [
     appliesTo: ['knowledge', 'load', 'recovery']
   },
 
+  // ── Validation policies (D14) ─────────────────────────────────────────────────
+  {
+    id: 'programming.session_ceiling',
+    rule: 'A session\'s honest realised duration must fit the product\'s session ceiling (75 min) within slack — the athlete\'s stated time is a commitment, not a suggestion (F5 honest durations).',
+    value: { minutes: 75, slackMin: 10 },
+    evidenceLevel: 'L5',
+    source: 'Product commitment (busy-athlete positioning; F5 "honest durations" shipped 2026-06); ceiling mirrors allocator SESSION_CEILING_MIN',
+    confidence: 'high',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['validation', 'programming']
+  },
+  {
+    id: 'validation.session_purpose',
+    rule: 'Every shipped gym session is coherent: it contains work (never empty), and a session labelled Upper/Lower delivers the majority of its volume in that region.',
+    value: { regionMajority: 0.5 },
+    evidenceLevel: 'L5',
+    source: 'Definitional coherence policy (Constitution Art 14 — a session must be what it says it is)',
+    confidence: 'high',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['validation']
+  },
+  {
+    id: 'injury.contraindication_policy',
+    rule: 'An active injury\'s contraindicated movements must never appear in a shipped session — a validated week is a FIXED POINT of the injury filter (applying it changes nothing).',
+    value: 'fixed-point',
+    evidenceLevel: 'L4',
+    source: 'Safety-definitional; the per-region contraindications themselves are evidence-tagged in injury/profiles.js',
+    confidence: 'high',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['validation', 'injury']
+  },
+
   // ── Training load ─────────────────────────────────────────────────────────────
   {
     id: 'load.acwr.thresholds',
