@@ -33,6 +33,7 @@ import { ruleVolumeAdjustment } from '@performance-os/engine/lib/sportKnowledge/
 import { deriveConstraints, lightenItems } from '@performance-os/engine/lib/plan/constraints.js';
 import { contraindicatedPatternsForInjuries, blockedNameRegexesForInjuries } from '@performance-os/engine/lib/session/movementRequirements.js';
 import { categoryPlanFor } from '@performance-os/engine/lib/session/categoryCoverage.js';
+import * as reflowLib from '@performance-os/engine/lib/plan/reflow.js';
 import { buildPrimer } from '@performance-os/engine/lib/plan/primers.js';
 import { performanceModelForProfile, kb } from '@performance-os/engine';
 import * as SKB from '@performance-os/engine/lib/sportKnowledge/index.js';
@@ -109,12 +110,11 @@ function gymCtx(profile) {
   };
 }
 
-const intentOfTitle = (title) => {
-  const t = (title || '').toLowerCase();
-  return t.includes('peak') ? 'peak' : t.includes('build') ? 'build' : 'base';
-};
-
-const sessionKey = (phaseId, weekNum, idx) => `p${phaseId}_wk${weekNum}_s${idx}`;
+// The reflow LEDGER lives in the engine (WP-24a — @performance-os/engine/lib/plan/
+// reflow.js); this file binds Database/_runtime state + the calendar onto it.
+const intentOfTitle = reflowLib.intentOfTitle;
+const sessionKey = reflowLib.sessionKey;
+const epochStartISO = () => { const st = getStartDate(); return st ? localISO(st) : null; };
 
 // A settled session (completed/started/skipped) only counts toward the CURRENT
 // plan if it was acted on within this plan's epoch — i.e. created on/after the
@@ -124,41 +124,19 @@ const sessionKey = (phaseId, weekNum, idx) => `p${phaseId}_wk${weekNum}_s${idx}`
 // slots done/missed and trigger a phantom catch-up. A plan with no start date has
 // no epoch, so everything counts (defensive fallback).
 export function withinEpoch(st) {
-  if (!st) return false;
-  const start = getStartDate();
-  if (!start) return true;
-  return !st.createdAt || st.createdAt >= localISO(start);
+  return reflowLib.withinEpoch(st, epochStartISO());
 }
 
-// This week's per-muscle set target (the "training debt").
+// This week's per-muscle set target (the "training debt") — engine-owned.
 function weekTarget(phase, week, gctx, deloadOverride) {
-  // Block-continuous ramp position — must match PlanGenerator's formula so the
-  // reflowed (trained) weeks stay in parity with the baseline plan.
-  const tw = totalWeeks();
-  const blockFrac = tw > 1 ? (week.num - 1) / (tw - 1) : 0.5;
-  const lighten = deloadOverride != null ? deloadOverride : (!!week.deload || !!week.taper);
-  return weeklyMuscleTargets({
-    style: gctx.style, intent: intentOfTitle(phase.title), level: gctx.level,
-    weekInPhase: week.num - phase.weekStart + 1,
-    phaseWeeks: phase.weekEnd - phase.weekStart + 1, deload: lighten,
-    emphasis: gctx.emphasis, volumeScalar: gctx.volumeScalar, blockFrac
-  });
+  return reflowLib.weekTarget({ phase, week, gctx, deloadOverride, totalWeeks: totalWeeks() });
 }
 
 // All gym sessions across the plan, each with its real scheduled date + key. Reads
 // BASELINE items — completed/locked sessions are never reflowed, so their baseline
 // items equal what was actually done, which is what the rolling ledger counts.
 function gymSessionsWithDates(phases) {
-  const out = [];
-  for (const phase of phases) {
-    for (const week of (phase.weeks || [])) {
-      week.sessions.forEach((s, i) => {
-        if (sessionDiscipline(s) !== 'gym') return;
-        out.push({ phase, week, i, s, key: sessionKey(phase.id, week.num, i), date: dateForSession(week.num, s.title) });
-      });
-    }
-  }
-  return out;
+  return reflowLib.gymSessionsWithDates(phases, dateForSession);
 }
 
 // Per-muscle baseline volume of gym sessions in the trailing window that were
@@ -168,39 +146,16 @@ function gymSessionsWithDates(phases) {
 // instead of "window target − banked" avoids double-counting normal forward
 // programming (which the per-slot normal share already covers).
 function missedWindowVolume(gymList, overrides, today) {
-  const start = getStartDate();
-  const windowStartMs = today.getTime() - WINDOW_DAYS * 86400000;
-  const missed = [];
-  for (const g of gymList) {
-    if (!g.date) continue;
-    const ms = g.date.getTime();
-    if (ms >= today.getTime() || ms < windowStartMs) continue;   // only past sessions inside the window
-    if (start && g.date < start) continue;                       // never "missed" before the plan began
-    const st = _runtime.sessions[g.key];
-    if (st && withinEpoch(st) && (st.completed || st.started)) continue; // did it → banked, not missed
-    const ov = overrides[g.key];
-    missed.push(ov ? { items: ov.items } : g.s);
-  }
-  return countWeeklyVolume(missed).counts;
+  return reflowLib.missedWindowVolume(gymList, overrides, today,
+    { sessions: _runtime.sessions, start: getStartDate(), startISO: epochStartISO() });
 }
 
 // Pending gym slots whose scheduled date falls in [today, today + WINDOW_DAYS] —
 // the sessions we may (re)shape now. Settled (completed/started/skipped in-epoch)
 // and train-now-pinned slots are excluded; they're locked. Returned in date order.
 function horizonSlots(gymList, overrides, today) {
-  const endMs = today.getTime() + WINDOW_DAYS * 86400000;
-  const slots = [];
-  for (const g of gymList) {
-    if (!g.date) continue;
-    const ms = g.date.getTime();
-    if (ms < today.getTime() || ms > endMs) continue;
-    if (overrides[g.key]) continue;
-    const st = _runtime.sessions[g.key];
-    if (st && withinEpoch(st) && (st.completed || st.skipped || st.started)) continue;
-    slots.push(g);
-  }
-  slots.sort((a, b) => a.date - b.date);
-  return slots;
+  return reflowLib.horizonSlots(gymList, overrides, today,
+    { sessions: _runtime.sessions, startISO: epochStartISO() });
 }
 
 /**
@@ -659,18 +614,10 @@ export function recommendedSession(sessions = {}) {
 // ---------------------------------------------------------------------------
 
 // Local YYYY-MM-DD (timezone-safe — avoids the UTC shift toISOString can cause).
-export function localISO(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
+export const localISO = reflowLib.localISO;
 
 // Which discipline a session belongs to, from its item tags (drives the colour).
-export function sessionDiscipline(s) {
-  const tags = new Set((s.items || []).map(it => it.tag).filter(Boolean));
-  if (tags.has('swim')) return 'swim';
-  if (tags.has('cycle')) return tags.has('run') ? 'brick' : 'cycle';
-  if (tags.has('run')) return 'run';
-  return 'gym';
-}
+export const sessionDiscipline = reflowLib.sessionDiscipline;
 
 /**
  * Build a calendar view of the plan: every session keyed by its real date, with
