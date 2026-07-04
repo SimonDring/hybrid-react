@@ -357,14 +357,22 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   verbatim, every read an argument). `recentSessionRecovery` is shared by policy AND memo key
   (no drift possible). PlanService.adaptedPhases = gather → key → delegate → cache. Parity:
   **132/132 with ZERO drift** across the whole reflow corpus, both stages.
-- **⇒ NEXT: WP-24c** — replace the `_runtime` module singleton with explicit state (design
-  note: the singleton exists because screens call getPhases() bare; 24c likely = an injected
-  state-getter set once by the store, or the store passing state per call — decide against the
-  TAS L3 contract, keep setRuntime's external signature if possible). Then **WP-25** (6-call
-  public API — mostly mechanical now), **WP-26** (engine/UI split), **WP-29** (Atlas re-base),
-  **Team spine WP-32/33** (blocked on WP-07's staging TODO — Simon's Supabase account).
-  WP-22/23 (build flip) after months of D11 confidence. Staged H9 leftovers: C3/C5/C9–C14
-  opportunistic; C8 build rest floor + C7 plyo spacing recorded for their owners.
+- **PR #88 — WP-24c: PlanService is the L3 orchestrator. THE REFLOW RE-SEAT IS COMPLETE
+  (V2 CLOSED).** `_runtime` → an immutable whole-swapped frozen snapshot behind one accessor
+  (setRuntime signature unchanged); Train Now's bonus-vs-catch-up decision → engine
+  `trainNowSpec` with the ≤5 threshold governed (`programming.train_now` — the last app-side
+  programming literal); dead derivations + 8 engine deep-imports pruned. PlanService 818+ →
+  **658 lines** of fetch/invoke/cache/persist + calendar/decoration glue. Zero drift at every
+  stage (24a/b/c); suite **132/132**.
+- **⇒ NEXT:** **WP-25** (the 6-call public API — plan · reflow · deriveReadiness/deriveLoad ·
+  validate · explain · rollUp on the barrel; narrow subpath exports; repoint the app's
+  remaining deep imports — smaller now), **WP-26** (engine/UI split: Readiness copy/theme
+  tokens + Utils DOM helpers out of the engine), **WP-27** (provenance stamps), **WP-29**
+  (Atlas re-base — user-visible; preview-verify), **WP-30** (explainability surfacing — the
+  _intensityEased / retarget / category rationales already emitted). **Team spine WP-32/33**
+  blocked on WP-07's staging TODO (Simon's Supabase account). WP-22/23 (build flip) last.
+  Staged H9 leftovers: C3/C5/C9–C14 opportunistic; C8 build rest floor + C7 plyo spacing
+  recorded for their owners.
 - ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
