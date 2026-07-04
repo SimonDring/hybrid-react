@@ -1,7 +1,4 @@
-import { resolvePeriodization } from '@performance-os/engine/lib/plan/periodization.js';
-import { pullupE1RM } from '@performance-os/engine/lib/liftProgression.js';
-import { profileToAthleteModel } from '@performance-os/engine/lib/adapters/profileToAthleteModel.js';
-import { bindingFor } from '@performance-os/engine/data/sportEngineBinding.js';
+import { resolvePeriodization, pullupE1RM, profileToAthleteModel, bindingFor } from '@performance-os/engine';
 
 /**
  * onboardingModel — the pure (non-UI) part of onboarding: the answer shape and
