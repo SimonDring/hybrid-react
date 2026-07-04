@@ -83,10 +83,10 @@ export const ENTRIES = [
   },
   {
     id: 'selection.transfer_weights',
-    rule: 'Transfer-per-fatigue numerator: quality match primary/secondary/support → 2/1/0.5, × skbBoost when the sport\'s SKB exercise library lists the movement.',
-    value: { primary: 2, secondary: 1, support: 0.5, skbBoost: 1.5 },
+    rule: 'Transfer-per-fatigue numerator: quality match primary/secondary/support → 2/1/0.5. A movement the sport\'s SKB library lists is ALSO valued by its authored transferToSportRating (1–10) ÷ skbRatingDivisor — the sport scientist\'s judgement, per movement, replaces the old blunt ×1.5 boost (Sprint 9 19a); the exercise takes the better of the two values.',
+    value: { primary: 2, secondary: 1, support: 0.5, skbRatingDivisor: 2, skbDefaultRating: 5 },
     evidenceLevel: 'L5',
-    source: 'Monotonic ordinal transfer proxy; skbBoost numerically unjustified (H9 review §4 — tier sorting dominates, so it only breaks within-tier ties)',
+    source: 'Monotonic ordinal transfer proxy; the divisor maps ratings (3–9 observed) to 1.5–4.5 — deliberately DOMINANT over the generic quality-match range (0.5–2) within a tier, because the library is the sport scientist\'s authored priority list; ratings carry SKB per-entry provenance',
     confidence: 'low',
     lastReviewed: '2026-07-04',
     appliesTo: ['selection']

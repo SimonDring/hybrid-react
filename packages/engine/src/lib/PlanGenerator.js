@@ -147,7 +147,9 @@ export function generatePlan(profile = {}, opts = {}) {
   const skbSportId = program.sport ? (profileToAthleteModel(profile, asOf)?.sportingContext?.primarySport || null) : null;
   const diag = {
     priorityQualities: (perf && perf.priorityAdaptations) || [],
-    skbIds: skbSportId ? new Set((SKB.section(skbSportId, 'exerciseLibrary')?.exercises || []).map((e) => e.id)) : new Set(),
+    // Map(id → transferToSportRating): the library's authored transfer judgement per
+    // movement (Sprint 9 19a) — membership grants §34 tier-4 standing, the rating values it.
+    skbIds: skbSportId ? new Map((SKB.section(skbSportId, 'exerciseLibrary')?.exercises || []).map((e) => [e.id, e.transferToSportRating])) : new Map(),
   };
   const { busyDays, sportMuscles } = deriveConstraints(profile);
   const availability = profile.availability || {};
