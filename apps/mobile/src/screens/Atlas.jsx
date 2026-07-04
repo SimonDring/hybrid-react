@@ -1,16 +1,17 @@
 /**
- * Atlas — the sport-specific athlete profile.
+ * Atlas — the athlete profile, read straight off the Performance Model (WP-29).
  *
- * A radar of the pillars that matter for the user's sport, with their shape inside
- * estimated top-5% / elite reference rings; ranked gap-bars (worst first) so the
- * laggards are obvious; a plain-language note tying the biggest gap back to what
- * the gym engine is emphasising; and the strength-progress goals (folded in from
- * the old Progress screen). iOS-first, single column.
+ * A radar of the qualities the athlete's SPORT demands (or, for build athletes, the
+ * qualities their plan trains), with the athlete's capability inside the demand ring;
+ * ranked gap-bars (worst first); and a focus panel that IS the engine's top limiting
+ * factor with its own emitted rationale — the same diagnosis the planner works from.
+ * The strength-progress goals stay folded in below. iOS-first, single column.
  */
 
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
-import { computePillars } from '../lib/atlas/pillars.js';
+import { localISO } from '@performance-os/engine';
+import { computeAtlas } from '../lib/atlas.js';
 import { goalMomentum } from '../lib/goals.js';
 import RadarChart from '../components/ui/RadarChart.jsx';
 import MetricRing from '../components/ui/MetricRing.jsx';
@@ -20,37 +21,37 @@ const PILL = { on_track: 'On track', building: 'Building', behind: 'Behind', nod
 export default function Atlas() {
   const profile = useTrainingStore(s => s.profile);
   const sessions = useTrainingStore(s => s.sessions);
-  const logs = useTrainingStore(s => s.logs);
-  const dailyMetrics = useTrainingStore(s => s.dailyMetrics);
-  const load = useTrainingStore(s => s.load);
 
   const currentWeek = Plan.currentWeekNumber();
-  const atlas = computePillars(profile, { sessions, logs, dailyMetrics, load, currentWeek });
+  const atlas = computeAtlas(profile, localISO(new Date()));
   const { goals } = goalMomentum(profile, sessions, currentWeek);
 
   const labels = atlas.pillars.map(p => p.label);
   const series = [
-    { name: 'Elite', color: 'var(--disc-run)', values: atlas.pillars.map(p => p.elite), dash: '2,3', width: 1.4 },
-    { name: 'Top 5%', color: 'var(--accent-warm)', values: atlas.pillars.map(p => p.top5), dash: '6,4', width: 1.4 },
+    ...(atlas.hasDemand ? [{ name: 'Your sport demands', color: 'var(--accent-warm)', values: atlas.pillars.map(p => p.demand), dash: '6,4', width: 1.4 }] : []),
     { name: 'You', color: 'var(--accent)', values: atlas.pillars.map(p => p.score), fill: 0.18, width: 2 }
   ];
-  const ranked = atlas.pillars.slice().sort((a, b) => b.gap - a.gap);
+  const ranked = atlas.pillars.slice().sort((a, b) =>
+    atlas.hasDemand ? (b.gap - a.gap) : (a.score - b.score));
 
   return (
     <>
       <div className="atlas-head">
         <div style={{ minWidth: 0 }}>
           <h1 className="h1" style={{ marginBottom: 2 }}>Atlas</h1>
-          <p className="sub" style={{ marginBottom: 0 }}>How you stack up across the pillars that matter for your sport.</p>
+          <p className="sub" style={{ marginBottom: 0 }}>
+            {atlas.hasDemand
+              ? 'Your capability against what your sport demands.'
+              : 'Your capability across the qualities your plan trains.'}
+          </p>
         </div>
         <span className="atlas-chip">{atlas.label}</span>
       </div>
 
       <div className="atlas-legend">
         <span className="al-key"><i style={{ background: 'var(--accent)' }} />You</span>
-        <span className="al-key"><i style={{ background: 'var(--accent-warm)' }} />Top 5%</span>
-        <span className="al-key"><i style={{ background: 'var(--disc-run)' }} />Elite</span>
-        <span className="atlas-est">Estimated benchmarks</span>
+        {atlas.hasDemand && <span className="al-key"><i style={{ background: 'var(--accent-warm)' }} />Sport demand</span>}
+        {atlas.estimated && <span className="atlas-est">Estimated from your training history — log lifts to sharpen it</span>}
       </div>
 
       <div className="atlas-radar">
@@ -59,8 +60,8 @@ export default function Atlas() {
 
       {atlas.focus && (
         <div className="atlas-focus">
-          <div className="af-eyebrow">Biggest gap</div>
-          <div className="af-title">{atlas.focus.label} · {atlas.focus.score}</div>
+          <div className="af-eyebrow">Your limiting factor</div>
+          <div className="af-title">{atlas.focus.label} · {atlas.focus.score} vs {atlas.focus.demand} demanded</div>
           <div className="af-why">{atlas.focus.why}</div>
         </div>
       )}
@@ -71,12 +72,11 @@ export default function Atlas() {
           <div className="pillar" key={p.id}>
             <div className="pillar-top">
               <span className="pillar-name">{p.label}</span>
-              {idx < 2 ? <span className="pillar-focus">Focus</span> : <span className="pillar-score">{p.score}</span>}
+              {atlas.hasDemand && idx < 2 ? <span className="pillar-focus">Focus</span> : <span className="pillar-score">{p.score}</span>}
             </div>
             <div className="pillar-track">
-              <div className="pillar-fill" style={{ width: `${p.score}%`, background: idx < 2 ? 'var(--status-strain)' : 'var(--accent)' }} />
-              <span className="pillar-mk" style={{ left: `${p.top5}%`, background: 'var(--accent-warm)' }} />
-              <span className="pillar-mk" style={{ left: `${p.elite}%`, background: 'var(--disc-run)' }} />
+              <div className="pillar-fill" style={{ width: `${p.score}%`, background: atlas.hasDemand && idx < 2 ? 'var(--status-strain)' : 'var(--accent)' }} />
+              {p.demand != null && <span className="pillar-mk" style={{ left: `${p.demand}%`, background: 'var(--accent-warm)' }} />}
             </div>
           </div>
         ))}
