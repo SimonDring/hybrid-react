@@ -1,8 +1,8 @@
 // tests/sport-schema-loadfactors.js — schema constants for sport-load awareness.
-import { DEFAULT_SEASON_VOLUME, SPORT_BLOCKS } from '@performance-os/engine/lib/sports/_schema.js';
-import swimming from '@performance-os/engine/lib/sports/swimming.js';
-import running from '@performance-os/engine/lib/sports/running.js';
-import cycling from '@performance-os/engine/lib/sports/cycling.js';
+import { DEFAULT_SEASON_VOLUME, SPORT_BLOCKS } from '@performance-os/engine/data/sportGymSupport/_schema.js';
+import swimming from '@performance-os/engine/data/sportGymSupport/swimming.js';
+import running from '@performance-os/engine/data/sportGymSupport/running.js';
+import cycling from '@performance-os/engine/data/sportGymSupport/cycling.js';
 let fails = 0;
 const eq = (got, want, msg) => { const ok = got === want; console.log((ok ? 'PASS' : 'FAIL') + ': ' + msg + (ok ? '' : ` (got ${got} want ${want})`)); if (!ok) fails++; };
 

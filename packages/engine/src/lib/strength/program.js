@@ -11,13 +11,13 @@
 
 import { deriveSeason } from '../plan/periodization.js';
 import { getGymLevel } from '../Utils.js';
-import sports from '../sports/index.js';
+import sports from '../../data/sportGymSupport/index.js';
 import { sportLoadScalar } from './sportLoad.js';
 import { availableEquip, LEVELS } from '../../data/strengthExercises.js';
 import { BUILD_INTENTS, resolveIntents } from './priorityIntents.js';
 
 // Sport emphasis vectors, priority-exercise lists and season volume scalars now live
-// in the pluggable sport modules (src/lib/sports/) behind a registry — adding a sport
+// in the pluggable sport modules (src/data/sportGymSupport/) behind a registry — adding a sport
 // no longer touches this file. Build-style priority lists now live in priorityIntents.js
 // as intent chains with equipment-ordered fallbacks (BUILD_INTENTS), so a dumbbell
 // athlete gets a curated list rather than a ~1-item stub.

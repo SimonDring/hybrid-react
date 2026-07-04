@@ -8,7 +8,7 @@
  * Team package's "coach schedule as constraints" (docs/product/TEAM-ARCHITECTURE.md)
  * — same shape, different source. Gym-only: sport days are constraints, not sessions.
  */
-import { get as getSportModule } from '../sports/index.js';
+import { get as getSportModule } from '../../data/sportGymSupport/index.js';
 
 export const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const KEY_IDX = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
