@@ -16,12 +16,9 @@
  * All pure — no side effects.
  */
 
-import { resolveLifts } from '@performance-os/engine/lib/liftProgression.js';
+import { resolveLifts, computeReadiness, resolveProgram, getGymLevel } from '@performance-os/engine';
 import STANDARDS from '../../data/strengthStandards.js';
-import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
 import { consistencyGoal } from '../goals.js';
-import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
-import { getGymLevel } from '@performance-os/engine/lib/Utils.js';
 
 const clamp = (n, lo = 0, hi = 100) => Math.max(lo, Math.min(hi, n));
 

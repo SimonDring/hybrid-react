@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
-import * as Utils from '@performance-os/engine/lib/Utils.js';
+import { sessionKey } from '@performance-os/engine';
 
 export default function PhaseDetail() {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ export default function PhaseDetail() {
         {(phase.weeks || []).map(wk => {
           let weekCompleted = 0;
           wk.sessions.forEach((_, i) => {
-            const k = Utils.weekKey(phase.id, wk.num, i);
+            const k = sessionKey(phase.id, wk.num, i);
             if (sessions[k] && sessions[k].completed) weekCompleted++;
           });
           const pct = wk.sessions.length > 0 ? Math.round(weekCompleted / wk.sessions.length * 100) : 0;

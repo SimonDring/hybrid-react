@@ -1,41 +1,22 @@
 /**
- * Readiness — turns the latest daily_metrics row into a plain-language status.
+ * Readiness — turns the latest daily_metrics row into a readiness signal.
  *
- * Pure functions, no side effects, no other-module dependencies (like Utils.js).
+ * Pure functions, no side effects, no other-module dependencies.
  *
- * This is the "translate stats into words" layer the Today screen renders from,
- * and the surface the AI coach will eventually write to (it just sets a
- * readiness_score + headline). Until then we show a real number when the
- * wearable/manual entry has one, a clearly-labelled ESTIMATE when we can only
- * derive it, and a friendly prompt when there's no data at all.
+ * This is the scoring layer the Today screen renders from, and the surface the
+ * AI coach will eventually write to (it just sets a readiness_score). We show a
+ * real number when the wearable/manual entry has one, a clearly-labelled
+ * ESTIMATE when we can only derive it, and status 'unknown' when there's no
+ * data at all.
+ *
+ * WP-26: the engine returns the DOMAIN signal only — { score, estimated,
+ * status, vitals, date }. Plain-language copy and theme accents are the app's
+ * job (presentation), not the engine's.
  *
  * IMPORTANT: the Google Health API does NOT return a readiness score (and often
  * not a sleep score), so in practice the estimate path below is what runs until
  * the user enters a readiness value manually. See memory/reference for details.
  */
-
-// Status → which approved theme accent token to colour the hero with.
-const ACCENT = { strong: 'moss', moderate: 'ochre', low: 'rust', unknown: 'ochre' };
-
-// Plain-language copy per status. note = the supporting "what to do" line.
-const COPY = {
-  strong: {
-    headline: 'Recovery looks solid',
-    note: "Good day to push — you're recovered for the hard session."
-  },
-  moderate: {
-    headline: 'Steady — train as planned',
-    note: "You're in decent shape. Train as planned and listen to your body."
-  },
-  low: {
-    headline: 'Ease in today',
-    note: "Recovery's down. Keep it light, or swap for mobility or easy work."
-  },
-  unknown: {
-    headline: 'How are you feeling?',
-    note: 'Connect Fitbit or log a morning check-in to see your readiness.'
-  }
-};
 
 // Map a 0-100 score to a status band.
 function bandFromScore(score) {
@@ -134,25 +115,16 @@ export function sleepScoreFor(metric) {
 }
 
 /**
- * Compute the day's readiness view-model for the Today screen.
+ * Compute the day's readiness signal.
  *
  * @param {object[]} dailyMetrics  rows from store.dailyMetrics (any order)
  * @param {object[]} logs          weekly check-ins (reserved for future use)
  * @returns {{
  *   score: number|null, estimated: boolean, status: string,
- *   headline: string, note: string, accent: string,
- *   vitals: { sleepHrs: number|null, hrv: number|null, rhr: number|null },
+ *   vitals: { sleepHrs: number|null, sleepMin: number|null, hrv: number|null, rhr: number|null },
  *   date: string|null
  * }}
  */
-// Format a sleep duration (minutes) as "7h 25m". Null when no data.
-export function fmtSleep(min) {
-  if (min == null) return null;
-  const h = Math.floor(min / 60);
-  const m = Math.round(min % 60);
-  return `${h}h ${String(m).padStart(2, '0')}m`;
-}
-
 export function computeReadiness(dailyMetrics = [], logs = []) {
   const sorted = [...dailyMetrics].sort((a, b) =>
     (b.date || '').localeCompare(a.date || '')
@@ -161,9 +133,7 @@ export function computeReadiness(dailyMetrics = [], logs = []) {
 
   const blank = {
     score: null, estimated: false, status: 'unknown',
-    headline: COPY.unknown.headline, note: COPY.unknown.note,
-    accent: ACCENT.unknown,
-    vitals: { sleepHrs: null, hrv: null, rhr: null },
+    vitals: { sleepHrs: null, sleepMin: null, hrv: null, rhr: null },
     date: null
   };
 
@@ -180,11 +150,9 @@ export function computeReadiness(dailyMetrics = [], logs = []) {
 
   const r = readinessFor(latest, sorted.slice(1, 8));
   if (r) {
-    const status = bandFromScore(r.score);
     return {
-      score: r.score, estimated: r.estimated, status,
-      headline: COPY[status].headline, note: COPY[status].note,
-      accent: ACCENT[status], vitals, date: latest.date || null
+      score: r.score, estimated: r.estimated, status: bandFromScore(r.score),
+      vitals, date: latest.date || null
     };
   }
 

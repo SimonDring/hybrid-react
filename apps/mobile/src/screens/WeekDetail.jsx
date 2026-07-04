@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
-import * as Utils from '@performance-os/engine/lib/Utils.js';
+import { sessionKey } from '@performance-os/engine';
 
 const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
@@ -47,7 +47,7 @@ export default function WeekDetail() {
   });
 
   const completedCount = week.sessions.filter((_, i) => {
-    const k = Utils.weekKey(phase.id, week.num, i);
+    const k = sessionKey(phase.id, week.num, i);
     return sessions[k] && sessions[k].completed;
   }).length;
 
@@ -93,7 +93,7 @@ export default function WeekDetail() {
         {DAYS.map((d, i) => {
           const idxs = dayMap[i] || [];
           const allDone = idxs.length > 0 && idxs.every(idx => {
-            const k = Utils.weekKey(phase.id, week.num, idx);
+            const k = sessionKey(phase.id, week.num, idx);
             return sessions[k] && sessions[k].completed;
           });
           const hasSession = idxs.length > 0;
@@ -118,7 +118,7 @@ export default function WeekDetail() {
       {/* Compact session list */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {week.sessions.map((s, i) => {
-          const key = Utils.weekKey(phase.id, week.num, i);
+          const key = sessionKey(phase.id, week.num, i);
           const st = sessions[key];
           const isDone = st && st.completed;
           const isStarted = st && st.startedAt && !st.completed;

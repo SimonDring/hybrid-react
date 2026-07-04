@@ -9,7 +9,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
-import * as Utils from '@performance-os/engine/lib/Utils.js';
+import { sessionKey } from '@performance-os/engine';
 import SessionRow from '../components/ui/SessionRow.jsx';
 
 export default function PlanScreen() {
@@ -33,7 +33,7 @@ export default function PlanScreen() {
     const total = w.sessions.length;
     let done = 0;
     w.sessions.forEach((_, i) => {
-      const k = Utils.weekKey(w.phaseId, w.num, i);
+      const k = sessionKey(w.phaseId, w.num, i);
       if (sessions[k] && sessions[k].completed) done++;
     });
     return { total, done, pct: total ? Math.round(done / total * 100) : 0 };
@@ -92,7 +92,7 @@ export default function PlanScreen() {
 
               <div className="wk-sessions">
                 {sel.sessions.map((s, i) => {
-                  const k = Utils.weekKey(sel.phaseId, sel.num, i);
+                  const k = sessionKey(sel.phaseId, sel.num, i);
                   const st = sessions[k];
                   return (
                     <SessionRow

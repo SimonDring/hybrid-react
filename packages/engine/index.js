@@ -29,7 +29,7 @@ export { allocateGym, SESSION_CEILING_MIN } from './src/lib/plan/allocator.js';
 export { assessRecovery, recoveryFromScore, subjectiveScore } from './src/lib/recovery/recovery.js';
 export { assessLoad, assessLoad as deriveLoad } from './src/lib/load/load.js';
 export { readinessIndex, readinessIndex as deriveReadiness } from './src/lib/indices/index.js';
-export { computeReadiness, readinessFor, sleepScoreFor, fmtSleep } from './src/lib/Readiness.js';
+export { computeReadiness, readinessFor, sleepScoreFor } from './src/lib/Readiness.js';
 export {
   dailyLoads, acuteChronic, acwr, acwrSeries, loadDecision,
   combinedMultiplier, deloadRecommendation, sessionLoad, workoutLoad

@@ -6,7 +6,7 @@
  */
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
-import { fmtSleep } from '@performance-os/engine';
+import { fmtSleep } from '../lib/uiHelpers.js';
 import { loadVerdict } from '../lib/verdicts.js';
 import { fitnessAge } from '../lib/fitnessAge.js';
 

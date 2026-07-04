@@ -2,11 +2,10 @@ import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
-import * as Utils from '@performance-os/engine/lib/Utils.js';
 import { activityFor } from '../data/activityTypes.js';
 import ExerciseInfo from '../components/ExerciseInfo.jsx';
 import { clearChecked } from '../lib/SessionProgress.js';
-import { trackedLiftsInSession } from '@performance-os/engine';
+import { trackedLiftsInSession, sessionKey } from '@performance-os/engine';
 
 // The single prescription string shown in the compact preview row — sets×reps for
 // strength ("4 × 5"), distance/target for run/swim/cycle. Weight & RPE are
@@ -103,7 +102,7 @@ export default function SessionDetail() {
   const phase = Plan.getPhase(Number(phaseId));
   const week = phase ? phase.weeks.find(w => w.num === Number(weekNum)) : null;
   const session = week ? week.sessions[Number(sessionIdx)] : null;
-  const key = Utils.weekKey(Number(phaseId), Number(weekNum), Number(sessionIdx));
+  const key = sessionKey(Number(phaseId), Number(weekNum), Number(sessionIdx));
   const state = sessions[key];
 
   useEffect(() => {
