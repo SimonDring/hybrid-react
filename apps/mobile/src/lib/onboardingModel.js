@@ -174,6 +174,10 @@ export function answersToProfilePatch(a) {
     primary: 'gym',
     strength_style: isBuild ? (a.strengthStyle || 'strength') : 'strength',
     sport: isSport ? (legacySport || null) : null,
+    // The exact SKB profile id the athlete chose (e.g. 'hurling', 'running_middle').
+    // The engine sport ('gaa') is AMBIGUOUS for GAA codes — persisting the real answer
+    // is what lets the SKB rules/diagnosis route to the right knowledge (2026-07-04).
+    sport_code: isSport ? (a.skbSport || null) : null,
     sport_intent: isSport ? (sportIntent || 'recreational') : null,
     sport_goal: goalOut,                           // recreational training goal | null
     event_date: isSport && a.eventDate ? a.eventDate : null,

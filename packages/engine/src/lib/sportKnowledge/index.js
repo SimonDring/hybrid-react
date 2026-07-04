@@ -55,6 +55,20 @@ export function skbSportIdFor(sport, runDiscipline) {
   return normalizeSportId(sport) || sport;
 }
 
+/**
+ * The SKB profile id for a PROFILE. Precedence: the athlete's stored answer
+ * (profile.sport_code — the exact SKB id onboarding collects), then the dual-written
+ * athlete model's primarySport (profiles saved before sport_code persisted), then the
+ * legacy derivation above. GAA matters here: profile.sport is 'gaa' for BOTH Gaelic
+ * football and hurling, so without the stored answer the id stays unresolved ('gaa'
+ * matches no profile) — deliberately inert rather than guessing the wrong code.
+ */
+export function skbSportIdOf(profile = {}) {
+  return profile.sport_code
+    || (profile.athlete_model && profile.athlete_model.sportingContext && profile.athlete_model.sportingContext.primarySport)
+    || skbSportIdFor(profile.sport, profile.run_discipline);
+}
+
 /** One section of a profile (e.g. section('hurling', 'positions')). Undefined if missing. */
 export function section(id, name) {
   const p = BY_ID.get(id);
