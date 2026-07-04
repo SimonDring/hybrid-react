@@ -894,12 +894,30 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   return work.map(slot => finaliseSlot(slot, style, ctx));
 }
 
+// Readiness intensity honesty (WP-10): shift a rendered 'RPE n' by the caller's
+// rpeOffset, floored (knowledge: recovery.intensity_policy). Applied BEFORE
+// applyWeights, so the suggested kg drop coherently via the inverse-Epley %1RM —
+// one lever, no second load model. The pure generator passes no offset (0) and is
+// byte-identical.
+function shiftRpe(items, rpeOffset, rpeFloor) {
+  if (!rpeOffset) return items;
+  for (const it of items) {
+    const m = /^RPE\s+(\d+(?:\.\d+)?)/i.exec(it.rpe || '');
+    if (!m) continue;
+    const n = Number(m[1]);
+    if (n <= rpeFloor) continue;   // already at/below the floor — never raise, never cut further
+    it.rpe = `RPE ${Math.max(rpeFloor, n + rpeOffset)}`;
+  }
+  return items;
+}
+
 // Finalise a single slot: structure into supersets/fillers, then a session spec.
 // Shared verbatim by the legacy fill path and the D11 sport path so BUILD output
 // stays byte-identical no matter which path populated slot.picks.
 function finaliseSlot(slot, style, ctx) {
   const deload = !!ctx.deload;
   const items = structureItems(slot.picks);
+  shiftRpe(items, ctx.rpeOffset || 0, ctx.rpeFloor != null ? ctx.rpeFloor : 5);
   applyWeights(items, ctx.lifts || {}, ctx.level, ctx.bodyweight);
   const total = Object.values(slot.muscleVol).reduce((a, b) => a + b, 0) || 1;
   const lower = (slot.muscleVol.quads || 0) + (slot.muscleVol.hamstrings || 0) +
