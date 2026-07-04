@@ -33781,10 +33781,10 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
@@ -33793,7 +33793,7 @@
                     "num": "B1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -33873,11 +33873,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -33940,10 +33940,10 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
@@ -33952,7 +33952,7 @@
                     "num": "B1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -34032,11 +34032,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -34099,10 +34099,10 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
@@ -34111,7 +34111,7 @@
                     "num": "B1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -34191,11 +34191,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -34258,10 +34258,10 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "2 × 5",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "110 kg"
+                    "weight": "102.5 kg"
                   },
                   {
                     "group": "B",
@@ -34270,10 +34270,10 @@
                     "num": "B1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "2 × 5",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "37.5 kg/hand"
+                    "weight": "35 kg/hand"
                   },
                   {
                     "group": "C",
@@ -34364,10 +34364,10 @@
                     "num": "B1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "2 × 5",
+                    "sets": "2 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "110 kg"
+                    "weight": "112.5 kg"
                   },
                   {
                     "group": "C",
@@ -34492,23 +34492,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -34516,8 +34516,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -34573,7 +34573,7 @@
                     "num": "A1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "4 × 5",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "92.5 kg"
@@ -34585,11 +34585,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "102.5 kg"
                   },
                   {
                     "group": "C",
@@ -34597,7 +34597,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1
@@ -34625,18 +34625,6 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
-                  },
-                  {
-                    "group": "F",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "note": "",
-                    "num": "F1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -34653,23 +34641,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -34677,8 +34665,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -34743,23 +34731,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -34767,8 +34755,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -34824,7 +34812,7 @@
                     "num": "A1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "4 × 5",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "92.5 kg"
@@ -34836,11 +34824,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "102.5 kg"
                   },
                   {
                     "group": "C",
@@ -34848,7 +34836,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1
@@ -34876,18 +34864,6 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
-                  },
-                  {
-                    "group": "F",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "note": "",
-                    "num": "F1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -34904,23 +34880,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -34928,8 +34904,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -34994,23 +34970,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -35018,8 +34994,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -35075,7 +35051,7 @@
                     "num": "A1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "4 × 5",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "92.5 kg"
@@ -35087,11 +35063,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "102.5 kg"
                   },
                   {
                     "group": "C",
@@ -35099,7 +35075,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1
@@ -35127,18 +35103,6 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
-                  },
-                  {
-                    "group": "F",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "note": "",
-                    "num": "F1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -35155,23 +35119,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -35179,8 +35143,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -35245,23 +35209,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -35269,8 +35233,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -35326,7 +35290,7 @@
                     "num": "A1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "4 × 5",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "92.5 kg"
@@ -35338,11 +35302,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "102.5 kg"
                   },
                   {
                     "group": "C",
@@ -35350,7 +35314,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1
@@ -35378,18 +35342,6 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
-                  },
-                  {
-                    "group": "F",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "note": "",
-                    "num": "F1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -35406,23 +35358,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -35430,8 +35382,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -35496,11 +35448,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "95 kg"
                   },
                   {
                     "group": "B",
@@ -35508,11 +35460,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "32.5 kg/hand"
                   },
                   {
                     "group": "C",
@@ -35589,8 +35541,8 @@
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "A1",
                     "restSec": 180,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 4",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 5",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "90 kg"
@@ -35602,11 +35554,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "100 kg"
                   },
                   {
                     "group": "C",
@@ -35684,11 +35636,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "95 kg"
                   },
                   {
                     "group": "B",
@@ -35696,11 +35648,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "32.5 kg/hand"
                   },
                   {
                     "group": "C",
@@ -35810,22 +35762,22 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "97.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -35834,7 +35786,7 @@
                     "num": "C1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -35890,11 +35842,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -35902,8 +35854,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1
                   },
@@ -35947,22 +35899,22 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "97.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -35971,7 +35923,7 @@
                     "num": "C1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -36025,22 +35977,22 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "97.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -36049,7 +36001,7 @@
                     "num": "C1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -36105,11 +36057,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -36117,8 +36069,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1
                   },
@@ -36162,22 +36114,22 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "97.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -36186,7 +36138,7 @@
                     "num": "C1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -36240,22 +36192,22 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "97.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -36264,7 +36216,7 @@
                     "num": "C1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -36320,11 +36272,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -36332,8 +36284,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1
                   },
@@ -36377,22 +36329,22 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "97.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -36401,7 +36353,7 @@
                     "num": "C1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -36455,22 +36407,22 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "97.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -36479,7 +36431,7 @@
                     "num": "C1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -36535,11 +36487,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -36547,8 +36499,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1
                   },
@@ -36592,22 +36544,22 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "97.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -36616,7 +36568,7 @@
                     "num": "C1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -36669,11 +36621,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "95 kg"
                   },
                   {
                     "group": "B",
@@ -36681,11 +36633,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "32.5 kg/hand"
                   },
                   {
                     "group": "C",
@@ -36762,8 +36714,8 @@
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "A1",
                     "restSec": 180,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 4",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 5",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "90 kg"
@@ -36775,11 +36727,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "100 kg"
                   },
                   {
                     "group": "C",
@@ -36857,11 +36809,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "95 kg"
                   },
                   {
                     "group": "B",
@@ -36869,11 +36821,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "35 kg/hand"
+                    "weight": "32.5 kg/hand"
                   },
                   {
                     "group": "C",
@@ -36961,22 +36913,22 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "97.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -36985,7 +36937,7 @@
                     "num": "C1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -37041,11 +36993,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -37053,8 +37005,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1
                   },
@@ -37098,22 +37050,22 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "97.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -37122,7 +37074,7 @@
                     "num": "C1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -37176,22 +37128,22 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "97.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -37200,7 +37152,7 @@
                     "num": "C1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -37256,11 +37208,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -37268,8 +37220,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1
                   },
@@ -37313,22 +37265,22 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "102.5 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "97.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -37337,7 +37289,7 @@
                     "num": "C1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -37428,23 +37380,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -37452,8 +37404,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -37509,7 +37461,7 @@
                     "num": "A1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "4 × 5",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "92.5 kg"
@@ -37521,11 +37473,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "102.5 kg"
                   },
                   {
                     "group": "C",
@@ -37533,7 +37485,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1
@@ -37561,18 +37513,6 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
-                  },
-                  {
-                    "group": "F",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "note": "",
-                    "num": "F1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -37589,23 +37529,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -37613,8 +37553,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -37679,23 +37619,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -37703,8 +37643,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -37760,7 +37700,7 @@
                     "num": "A1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "4 × 5",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "92.5 kg"
@@ -37772,11 +37712,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "102.5 kg"
                   },
                   {
                     "group": "C",
@@ -37784,7 +37724,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1
@@ -37812,18 +37752,6 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
-                  },
-                  {
-                    "group": "F",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "note": "",
-                    "num": "F1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -37840,23 +37768,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -37864,8 +37792,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -37930,23 +37858,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -37954,8 +37882,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -38011,7 +37939,7 @@
                     "num": "A1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "4 × 5",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "92.5 kg"
@@ -38023,11 +37951,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "102.5 kg"
                   },
                   {
                     "group": "C",
@@ -38035,7 +37963,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1
@@ -38063,18 +37991,6 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
-                  },
-                  {
-                    "group": "F",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "note": "",
-                    "num": "F1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -38091,23 +38007,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -38115,8 +38031,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -38181,23 +38097,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -38205,8 +38121,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -38262,7 +38178,7 @@
                     "num": "A1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "4 × 5",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "92.5 kg"
@@ -38274,11 +38190,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "102.5 kg"
                   },
                   {
                     "group": "C",
@@ -38286,7 +38202,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1
@@ -38314,18 +38230,6 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
-                  },
-                  {
-                    "group": "F",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "note": "",
-                    "num": "F1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -38342,23 +38246,23 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "97.5 kg"
                   },
                   {
                     "group": "B",
                     "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "92.5 kg"
+                    "weight": "85 kg"
                   },
                   {
                     "group": "C",
@@ -38366,8 +38270,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "35 kg/hand"
@@ -38470,24 +38374,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -38495,8 +38399,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -38629,24 +38533,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -38654,8 +38558,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -38797,24 +38701,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -38822,8 +38726,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -38956,24 +38860,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -38981,8 +38885,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -39124,24 +39028,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -39149,8 +39053,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -39283,24 +39187,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -39308,8 +39212,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -39451,24 +39355,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -39476,8 +39380,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -39610,24 +39514,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -39635,8 +39539,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -39778,11 +39682,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "B",
@@ -39791,11 +39695,11 @@
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 4",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "112.5 kg"
+                    "weight": "105 kg"
                   },
                   {
                     "group": "C",
@@ -39964,11 +39868,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "B",
@@ -39977,11 +39881,11 @@
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 4",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "112.5 kg"
+                    "weight": "105 kg"
                   },
                   {
                     "group": "C",
@@ -40182,23 +40086,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -40207,7 +40111,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -40271,7 +40175,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -40283,7 +40187,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -40329,23 +40233,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -40354,7 +40258,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -40418,7 +40322,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -40430,7 +40334,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -40485,23 +40389,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -40510,7 +40414,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -40574,7 +40478,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -40586,7 +40490,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -40632,23 +40536,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -40657,7 +40561,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -40721,7 +40625,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -40733,7 +40637,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -40788,23 +40692,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -40813,7 +40717,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -40877,7 +40781,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -40889,7 +40793,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -40935,23 +40839,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -40960,7 +40864,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -41024,7 +40928,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -41036,7 +40940,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -41091,23 +40995,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -41116,7 +41020,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -41180,7 +41084,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -41192,7 +41096,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -41238,23 +41142,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -41263,7 +41167,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -41327,7 +41231,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -41339,7 +41243,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -41393,11 +41297,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "B",
@@ -41406,11 +41310,11 @@
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 4",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "112.5 kg"
+                    "weight": "105 kg"
                   },
                   {
                     "group": "C",
@@ -41579,11 +41483,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "B",
@@ -41592,11 +41496,11 @@
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 4",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "112.5 kg"
+                    "weight": "105 kg"
                   },
                   {
                     "group": "C",
@@ -41775,23 +41679,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -41800,7 +41704,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -41864,7 +41768,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -41876,7 +41780,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -41922,23 +41826,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -41947,7 +41851,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -42011,7 +41915,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -42023,7 +41927,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -42078,23 +41982,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -42103,7 +42007,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -42167,7 +42071,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -42179,7 +42083,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -42225,23 +42129,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -42250,7 +42154,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -42314,7 +42218,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -42326,7 +42230,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -42418,24 +42322,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -42443,8 +42347,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -42577,24 +42481,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -42602,8 +42506,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -42667,24 +42571,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -42692,8 +42596,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -42826,24 +42730,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -42851,8 +42755,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -42916,24 +42820,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -42941,8 +42845,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -43075,24 +42979,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -43100,8 +43004,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -43188,23 +43092,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -43213,7 +43117,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -43277,7 +43181,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -43289,7 +43193,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -43335,23 +43239,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -43360,7 +43264,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -43413,23 +43317,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -43438,7 +43342,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -43502,7 +43406,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -43514,7 +43418,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -43560,23 +43464,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -43585,7 +43489,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -43637,11 +43541,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "B",
@@ -43650,11 +43554,11 @@
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 4",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "112.5 kg"
+                    "weight": "105 kg"
                   },
                   {
                     "group": "C",
@@ -43823,11 +43727,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "B",
@@ -43836,11 +43740,11 @@
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 4",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "112.5 kg"
+                    "weight": "105 kg"
                   },
                   {
                     "group": "C",
@@ -43965,24 +43869,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -43990,8 +43894,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -44126,24 +44030,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -44151,8 +44055,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -44296,24 +44200,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -44321,8 +44225,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -44457,24 +44361,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -44482,8 +44386,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -44627,24 +44531,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -44652,8 +44556,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -44788,24 +44692,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 7",
-                    "sets": "3 × 5",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "115 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -44813,8 +44717,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -44958,11 +44862,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "B",
@@ -44971,11 +44875,11 @@
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 4",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "112.5 kg"
+                    "weight": "105 kg"
                   },
                   {
                     "group": "C",
@@ -45146,11 +45050,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "B",
@@ -45159,11 +45063,11 @@
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 4",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "112.5 kg"
+                    "weight": "105 kg"
                   },
                   {
                     "group": "C",
@@ -45366,23 +45270,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -45391,7 +45295,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -45457,7 +45361,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -45469,7 +45373,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -45515,23 +45419,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -45540,7 +45444,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -45606,7 +45510,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -45618,7 +45522,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -45673,23 +45577,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -45698,7 +45602,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -45764,7 +45668,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -45776,7 +45680,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -45822,23 +45726,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -45847,7 +45751,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -45913,7 +45817,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -45925,7 +45829,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -45980,23 +45884,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -46005,7 +45909,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -46071,7 +45975,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -46083,7 +45987,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -46129,23 +46033,23 @@
                     "num": "A1",
                     "restSec": 150,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "77.5 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 4",
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "122.5 kg"
+                    "weight": "107.5 kg"
                   },
                   {
                     "group": "C",
@@ -46154,7 +46058,7 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 10",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -46220,7 +46124,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -46232,7 +46136,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 6→7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -46286,11 +46190,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "B",
@@ -46299,11 +46203,11 @@
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 4",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "112.5 kg"
+                    "weight": "105 kg"
                   },
                   {
                     "group": "C",
@@ -46474,11 +46378,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "weight": "75 kg"
                   },
                   {
                     "group": "B",
@@ -46487,11 +46391,11 @@
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 4",
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "112.5 kg"
+                    "weight": "105 kg"
                   },
                   {
                     "group": "C",
@@ -46693,24 +46597,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "85 kg"
+                    "weight": "80 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8→9",
-                    "sets": "4 × 3",
+                    "rpe": "RPE 8",
+                    "sets": "4 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "125 kg"
+                    "weight": "115 kg"
                   },
                   {
                     "group": "C",
@@ -46718,8 +46622,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -46785,7 +46689,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7→8",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -46797,7 +46701,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7→8",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -46842,24 +46746,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "85 kg"
+                    "weight": "80 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8→9",
-                    "sets": "4 × 3",
+                    "rpe": "RPE 8",
+                    "sets": "4 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "125 kg"
+                    "weight": "115 kg"
                   },
                   {
                     "group": "C",
@@ -46867,8 +46771,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -46934,7 +46838,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7→8",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -46946,7 +46850,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7→8",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -47000,24 +46904,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "85 kg"
+                    "weight": "80 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8→9",
-                    "sets": "4 × 3",
+                    "rpe": "RPE 8",
+                    "sets": "4 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "125 kg"
+                    "weight": "115 kg"
                   },
                   {
                     "group": "C",
@@ -47025,8 +46929,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -47092,7 +46996,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7→8",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -47104,7 +47008,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7→8",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -47149,24 +47053,24 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 150,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "85 kg"
+                    "weight": "80 kg"
                   },
                   {
                     "group": "B",
                     "intent": "trap_bar_dl",
                     "name": "Trap-bar deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
                     "num": "B1",
                     "restSec": 180,
-                    "rpe": "RPE 8→9",
-                    "sets": "4 × 3",
+                    "rpe": "RPE 8",
+                    "sets": "4 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "125 kg"
+                    "weight": "115 kg"
                   },
                   {
                     "group": "C",
@@ -47174,8 +47078,8 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 6",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
                     "superset": false,
                     "volumeFactor": 0.4
                   },
@@ -47241,7 +47145,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 7→8",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -47253,7 +47157,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 7→8",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -47410,10 +47314,10 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "45 kg"
+                    "weight": "47.5 kg"
                   },
                   {
                     "group": "B",
@@ -47446,7 +47350,7 @@
                     "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
@@ -47583,10 +47487,10 @@
                     "num": "B1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "45 kg"
+                    "weight": "47.5 kg"
                   },
                   {
                     "group": "C",
@@ -47730,10 +47634,10 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "45 kg"
+                    "weight": "47.5 kg"
                   },
                   {
                     "group": "B",
@@ -47766,7 +47670,7 @@
                     "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
@@ -47903,10 +47807,10 @@
                     "num": "B1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "45 kg"
+                    "weight": "47.5 kg"
                   },
                   {
                     "group": "C",
@@ -48050,10 +47954,10 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "45 kg"
+                    "weight": "47.5 kg"
                   },
                   {
                     "group": "B",
@@ -48086,7 +47990,7 @@
                     "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
@@ -48223,10 +48127,10 @@
                     "num": "B1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "45 kg"
+                    "weight": "47.5 kg"
                   },
                   {
                     "group": "C",
@@ -48722,11 +48626,11 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "D",
@@ -48766,11 +48670,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "B",
@@ -48778,7 +48682,7 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 60,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -48790,7 +48694,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -48802,8 +48706,8 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
@@ -48814,7 +48718,7 @@
                     "note": "",
                     "num": "E1",
                     "restSec": 60,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -48896,11 +48800,11 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "D",
@@ -48952,11 +48856,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "C",
@@ -48964,7 +48868,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -48976,7 +48880,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -49066,11 +48970,11 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "D",
@@ -49110,11 +49014,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "B",
@@ -49122,7 +49026,7 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 60,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -49134,7 +49038,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -49146,8 +49050,8 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
@@ -49158,7 +49062,7 @@
                     "note": "",
                     "num": "E1",
                     "restSec": 60,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -49240,11 +49144,11 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "D",
@@ -49296,11 +49200,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "C",
@@ -49308,7 +49212,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -49320,7 +49224,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 60,
-                    "rpe": "RPE 6",
+                    "rpe": "RPE 7",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -49433,10 +49337,10 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "D",
@@ -49477,10 +49381,10 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "B",
@@ -49513,7 +49417,7 @@
                     "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
@@ -49607,10 +49511,10 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "D",
@@ -49663,10 +49567,10 @@
                     "num": "B1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "C",
@@ -49777,10 +49681,10 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "D",
@@ -49821,10 +49725,10 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "B",
@@ -49857,7 +49761,7 @@
                     "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
@@ -49951,10 +49855,10 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "D",
@@ -50007,10 +49911,10 @@
                     "num": "B1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "C",
@@ -50121,10 +50025,10 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "D",
@@ -50165,10 +50069,10 @@
                     "num": "A1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "B",
@@ -50201,7 +50105,7 @@
                     "num": "D1",
                     "restSec": 75,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
@@ -50295,10 +50199,10 @@
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "D",
@@ -50351,10 +50255,10 @@
                     "num": "B1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 8",
+                    "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "C",
@@ -50543,11 +50447,11 @@
                     "note": "",
                     "num": "A1",
                     "restSec": 90,
-                    "rpe": "RPE 5",
+                    "rpe": "RPE 6",
                     "sets": "2 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "B",
@@ -50555,7 +50459,7 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 60,
-                    "rpe": "RPE 5",
+                    "rpe": "RPE 6",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -50567,7 +50471,7 @@
                     "note": "",
                     "num": "C1",
                     "restSec": 60,
-                    "rpe": "RPE 5",
+                    "rpe": "RPE 6",
                     "sets": "3 × 12",
                     "superset": false,
                     "tag": "mobility",
@@ -50579,7 +50483,7 @@
                     "note": "",
                     "num": "D1",
                     "restSec": 75,
-                    "rpe": "RPE 5",
+                    "rpe": "RPE 6",
                     "sets": "2 × 6",
                     "superset": false,
                     "tag": "mobility",
@@ -50754,11 +50658,11 @@
                     "note": "",
                     "num": "B1",
                     "restSec": 90,
-                    "rpe": "RPE 5",
+                    "rpe": "RPE 6",
                     "sets": "2 × 6",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "30 kg"
+                    "weight": "32.5 kg"
                   },
                   {
                     "group": "C",

@@ -40,7 +40,7 @@ import { stimulusFactor } from '../strength/stimulus.js';
 import { AXIAL_SESSION_CAP, axialOf } from './axial.js';
 import { selectInterventions, tierOf } from './selectInterventions.js';
 import { deriveSessionObjective, assignTargetQualities, competencyAdjustedTarget, constraintAdjustedTarget } from '../session/sessionObjective.js';
-import { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS } from '../../data/doseSchemes.js';
+import { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS, REACTIVE_LIMITS, doseForQuality } from '../../data/doseSchemes.js';
 import { deriveMovementRequirements } from '../session/movementRequirements.js';
 import { regionOf } from '../session/sessionSpecs.js';
 
@@ -247,7 +247,7 @@ function makeItem(ex, idx, s, style, deload, repBump, effectiveRole, taper) {
     return { num, name: ex.name, sets: POWER_SETS + per, rpe: POWER_RPE, note: POWER_NOTE, restSec };
   }
   if (role === 'primary') {
-    return { num, name: ex.name, sets: cap(s.main) + per, rpe: s.mainRpe, note: mainNote(deload, taper), restSec };
+    return { num, name: ex.name, sets: cap(s.main) + per, rpe: s.mainRpe, note: s.mainNote || mainNote(deload, taper), restSec };
   }
   if (ex.pattern === 'core') {
     const hold = /plank|hold|dead bug|copenhagen|hollow|bird dog/i.test(ex.name);
@@ -679,7 +679,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const place = (slot, pick) => {
     const { ex, sets, contrib, effectiveRole } = pick;
     const vf = stimulusFactor(ex, levelName);
-    const item = makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole, taper);
+    const item = makeItem(ex, slot.picks.length, slot.scheme || s, style, deload, repBump, effectiveRole, taper);
     item.volumeFactor = vf;
     if (vf === 0) item.tag = 'mobility';   // health/activation — render + count as zero
     slot.picks.push({ ex, effectiveRole, item });
@@ -780,9 +780,14 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       // guarantee-coverage fallback anchor below, which is pattern-blind by design.
       const requirements = deriveMovementRequirements({ targetQuality, region, level: levelName, contraindicatedPatterns: ctx.contraindicatedPatterns || new Set() });
       const req = { objective, requirements };
+      // D12 (WP-21): the session doses from its TARGET QUALITY when the quality has a
+      // scheme block (data/doseSchemes.js) — a robustness day runs HSR tempo work, an
+      // explosive day runs strength-speed triples — falling back to the style-bridged
+      // sportSupport composite otherwise. Build/swim/legacy never set slot.scheme.
+      slot.scheme = doseForQuality(targetQuality, intent, { deload, taper }) || s;
       const makePick = (ex) => {
         const effectiveRole = effectiveRoleOf(ex, slot.level, demotePress);
-        return { ex, sets: roleSetCount(ex, s, style, effectiveRole), contrib: muscleContribution(ex), effectiveRole };
+        return { ex, sets: roleSetCount(ex, slot.scheme, style, effectiveRole), contrib: muscleContribution(ex), effectiveRole };
       };
       const picks = selectInterventions({
         req, equip: slot.equip, level: slot.level, levelName, sport: ctx.sport,
@@ -792,9 +797,20 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       if (picks.length === 0) {
         // Guarantee coverage: fall back to a fundamental anchor (never an empty session).
         const anchor = patternAnchor(slot, slot.anchors || [FUNDAMENTAL[slot.idx % FUNDAMENTAL.length]]) || patternAnchor(slot, FUNDAMENTAL);
-        if (anchor) place(slot, { ex: anchor, sets: roleSetCount(anchor, s, style, effectiveRoleOf(anchor, slot.level, demotePress)), contrib: muscleContribution(anchor), effectiveRole: effectiveRoleOf(anchor, slot.level, demotePress) });
+        if (anchor) place(slot, { ex: anchor, sets: roleSetCount(anchor, slot.scheme, style, effectiveRoleOf(anchor, slot.level, demotePress)), contrib: muscleContribution(anchor), effectiveRole: effectiveRoleOf(anchor, slot.level, demotePress) });
       } else {
-        for (const p of picks) place(slot, p);
+        // Session foot-contact ceiling for reactive work (H9 C7, de Villarreal 2009):
+        // jumps stop when the level's contact budget is spent — quality over quantity.
+        const contactCeiling = REACTIVE_LIMITS.footContacts[levelName] ?? REACTIVE_LIMITS.footContacts.intermediate;
+        const powerContacts = (() => { const m = /(\d+)\s*×\s*(\d+)/.exec(POWER_DOSE.sets); return m ? Number(m[1]) * Number(m[2]) : 16; })();
+        let footContacts = 0;
+        for (const p of picks) {
+          if (p.ex.quality === 'power') {
+            if (footContacts + powerContacts > contactCeiling) continue;
+            footContacts += powerContacts;
+          }
+          place(slot, p);
+        }
       }
     });
     // Short D11 sessions get the same supportive finisher as the legacy path (factor-0
