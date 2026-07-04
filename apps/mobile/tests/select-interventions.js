@@ -48,6 +48,18 @@ assert(!gated.some((p) => p.ex.id === compound.ex.id), 'MRV gate blocks the exer
 
 // SKB transfer boost changes ranking, not legality: with a boost the boosted id ranks earlier.
 const boosted = selectInterventions({ req: runReq, equip: FULL, level: 3, levelName: 'advanced', sport: 'run', skbIds: new Set(['nordic_curl']), ledger: { weeklyDelivered: {}, weeklyCeiling: bigCeiling }, makePick });
+
+// Sprint 9 19a: a Map(id→transferToSportRating) values library movements by the sport
+// scientist's authored rating — a higher-rated movement outranks a lower-rated one of
+// the same tier, and a legacy Set still works (default rating).
+{
+  const rated = selectInterventions({ req: runReq, equip: FULL, level: 3, levelName: 'advanced', sport: 'run',
+    skbIds: new Map([['trap_bar_dl', 9], ['rdl', 6]]), ledger: { weeklyDelivered: {}, weeklyCeiling: bigCeiling }, makePick });
+  const names = rated.map((p) => p.ex.id);
+  const ti = names.indexOf('trap_bar_dl'), ri = names.indexOf('rdl');
+  if (ti === -1 || (ri !== -1 && ti > ri)) { console.error('FAIL: higher-rated library movement outranks lower-rated (trap@9 vs rdl@6):', names.join(',')); process.exitCode = 1; }
+  else console.log('PASS: higher-rated library movement outranks lower-rated (trap@9 before rdl@6)');
+}
 const idxBoosted = boosted.findIndex((p) => p.ex.id === 'nordic_curl');
 const idxPlain = picks.findIndex((p) => p.ex.id === 'nordic_curl');
 assert(idxBoosted === -1 || idxPlain === -1 || idxBoosted <= idxPlain, 'SKB-boosted exercise ranks no later');

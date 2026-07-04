@@ -40,8 +40,16 @@ function trainsTarget(ex, target) {
 }
 const isCompound = (ex) => ex.role === 'primary' || (ex.role === 'accessory' && !['iso', 'core', 'calf', 'mobility'].includes(ex.pattern));
 
+// The SKB library's transfer rating for an exercise: Map(id→rating) is the Sprint-9
+// form; a legacy Set (membership only) falls back to the default rating; absent → null.
+function skbRatingOf(skbIds, id) {
+  if (!skbIds) return null;
+  if (skbIds instanceof Map) return skbIds.has(id) ? (skbIds.get(id) ?? TRANSFER.skbDefaultRating) : null;
+  return skbIds.has && skbIds.has(id) ? TRANSFER.skbDefaultRating : null;
+}
+
 // EDS §34 tier, or null if the exercise is off-target for this sport session.
-export function tierOf(ex, target, sport) {
+export function tierOf(ex, target, sport, skbIds = null) {
   const role = trainsTarget(ex, target);
   if (isCompound(ex) && role === 'primary') return 1;
   if (isCompound(ex) && role === 'secondary') return 2;
@@ -50,18 +58,23 @@ export function tierOf(ex, target, sport) {
   // sport-specific iso (e.g. nordic/calf/glute-med prehab) is chosen as sport work, NOT MEV-gated.
   // GENERIC hypertrophy isolations carry no sportTags → they fall through to tier 5 and ARE MEV-gated
   // (only added when a muscle is genuinely below MEV). Both tiers are still bounded by the MRV ledger.
-  if (sport && (ex.sportTags || []).includes(sport)) return 4;              // sport-demanded movement
+  if (sport && ((ex.sportTags || []).includes(sport) || skbRatingOf(skbIds, ex.id) != null)) return 4;   // sport-demanded (catalogue tag or SKB library membership)
   if (ex.role === 'iso' && role) return 5;                                  // lagging-muscle hypertrophy (MEV-gated below)
   if (ex.pattern === 'core') return 6;
   if (ex.pattern === 'mobility') return 7;
   return null;
 }
-// transfer-per-fatigue: quality match × SKB boost, ÷ fatigue (weights: selection.transfer_weights).
+// transfer-per-fatigue (weights: selection.transfer_weights): the quality-match value,
+// OR the SKB library's authored per-movement transfer rating ÷ divisor — whichever is
+// better. The sport scientist's judgement (rating 1–10, per-entry provenance in the
+// SKB) replaces the old blunt ×1.5 membership boost (Sprint 9 19a).
 function valueOf(ex, target, skbIds) {
   const role = trainsTarget(ex, target);
   const match = role === 'primary' ? TRANSFER.primary : role === 'secondary' ? TRANSFER.secondary : TRANSFER.support;
-  const boost = skbIds && skbIds.has(ex.id) ? TRANSFER.skbBoost : 1.0;
-  return (match * boost) / fatigueScalar(ex);
+  const qualityValue = match / fatigueScalar(ex);
+  const rating = skbRatingOf(skbIds, ex.id);
+  const transferValue = rating != null ? (rating / TRANSFER.skbRatingDivisor) / fatigueScalar(ex) : 0;
+  return Math.max(qualityValue, transferValue);
 }
 
 export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [] } = {}) {
@@ -82,7 +95,7 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
     // coarse — a hamstring-protect block on jumping doesn't contraindicate the whole
     // 'calf' pattern, but pogo jumps must still never be SELECTED for that athlete.
     if (blockedNameRegexes.length && blockedNameRegexes.some((r) => r.test(ex.name))) continue;
-    const tier = tierOf(ex, target, sport);
+    const tier = tierOf(ex, target, sport, skbIds);
     if (tier == null) continue;
     // Quality-driver compounds must match a required movement pattern (D10).
     if ((tier === 1 || tier === 2) && reqPatterns.size && !reqPatterns.has(ex.pattern)) continue;

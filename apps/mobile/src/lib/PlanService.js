@@ -95,7 +95,7 @@ function gymCtx(profile) {
   const asOf = profile.plan_start_date || null;
   const perf = performanceModelForProfile(profile, asOf);
   const skbSportId = profile.sport ? (profileToAthleteModel(profile, asOf)?.sportingContext?.primarySport || null) : null;
-  const skbIds = skbSportId ? new Set((SKB.section(skbSportId, 'exerciseLibrary')?.exercises || []).map((e) => e.id)) : new Set();
+  const skbIds = skbSportId ? new Map((SKB.section(skbSportId, 'exerciseLibrary')?.exercises || []).map((e) => [e.id, e.transferToSportRating])) : new Map();
   return {
     style: program.style, level, minutes,
     access: profile.access || [], sex: profile.sex, lifts: resolveLifts(profile),
