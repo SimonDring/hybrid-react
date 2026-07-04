@@ -348,13 +348,23 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   templates — deleting the priority lists that remain the legacy-fallback net) is WP-23 work,
   recorded. **SPRINT 9 COMPLETE** — all sport knowledge lives in data (SKB primary + the residue
   table); run/cycle rating-driven, swim category-led, one id space, join guarded.
-- **⇒ NEXT (audit order):** the remaining staged H9 items (C3/C5/C9–C14 opportunistic; C8 build
-  rest floor + C7 48–72 h plyo spacing recorded for their owners) are small; the big rocks are
-  **WP-24 the reflow re-seat** (parity-first pattern; the reflow-differentiation lesson + the
-  WP-05/-20 reflow gates are the canaries) → **WP-29 Atlas re-base** → **WP-25 the 6-call public
-  API** → **Team spine WP-32/33** (blocked on WP-07's staging-project TODO — needs Simon's
-  Supabase account). WP-22/23 (build-goal demand profiles → the build flip) close the re-seat
-  after months of D11 confidence per the audit's sequencing.
+- **PRs #86/#87 — WP-24a/b: THE REFLOW RE-SEAT (2 of 3 stages).** The runtime coaching brain
+  is pure engine code: `plan/reflow.js` owns the LEDGER (withinEpoch/weekTarget — the
+  'must-match-PlanGenerator' mirror is ONE implementation now — gymSessionsWithDates/
+  missedWindowVolume/horizonSlots + sessionKey/intentOfTitle/localISO/sessionDiscipline) and
+  the POLICY (`reflowPhases(inputs)` — deload force/defer, missed-window spread + forgiveness,
+  recovery×load×travel×rule scaling, RPE offset, lightening, pins/freeze, rebuild + de-spine —
+  verbatim, every read an argument). `recentSessionRecovery` is shared by policy AND memo key
+  (no drift possible). PlanService.adaptedPhases = gather → key → delegate → cache. Parity:
+  **132/132 with ZERO drift** across the whole reflow corpus, both stages.
+- **⇒ NEXT: WP-24c** — replace the `_runtime` module singleton with explicit state (design
+  note: the singleton exists because screens call getPhases() bare; 24c likely = an injected
+  state-getter set once by the store, or the store passing state per call — decide against the
+  TAS L3 contract, keep setRuntime's external signature if possible). Then **WP-25** (6-call
+  public API — mostly mechanical now), **WP-26** (engine/UI split), **WP-29** (Atlas re-base),
+  **Team spine WP-32/33** (blocked on WP-07's staging TODO — Simon's Supabase account).
+  WP-22/23 (build flip) after months of D11 confidence. Staged H9 leftovers: C3/C5/C9–C14
+  opportunistic; C8 build rest floor + C7 plyo spacing recorded for their owners.
 - ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
