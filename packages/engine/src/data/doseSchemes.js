@@ -57,7 +57,52 @@ export const DOSE_SCHEMES = {
     taper:  { main: '2 × 3', acc: '2 × 5', mainRpe: 'RPE 8', accRpe: 'RPE 7' },
     evidence: ev('moderate', 'Strength-support-for-sport dosing (Rønnestad & Mujika 2014 heavy-low-volume); lower accessory RPE protects the sport (EDS L1)')
   },
+  robustness: {   // HSR — reviewed (H9 C6): heavy-slow resistance for tendon/tissue tolerance
+    base:   { main: '3 × 8', acc: '3 × 10', mainRpe: 'RPE 7', accRpe: 'RPE 7', mainNote: '3 s down, 3 s up — heavy, tendon-loading tempo' },
+    build:  { main: '4 × 8', acc: '3 × 10', mainRpe: 'RPE 7→8', accRpe: 'RPE 7', mainNote: '3 s down, 3 s up — heavy, tendon-loading tempo' },
+    peak:   { main: '4 × 6', acc: '3 × 8', mainRpe: 'RPE 8', accRpe: 'RPE 7', mainNote: '3 s down, 3 s up — heavy, tendon-loading tempo' },
+    deload: { main: '2 × 8', acc: '2 × 10', mainRpe: 'RPE 6', accRpe: 'RPE 6' },
+    taper:  { main: '2 × 6', acc: '2 × 8', mainRpe: 'RPE 8', accRpe: 'RPE 7' },
+    evidence: { level: 'reviewed', confidence: 'moderate', source: 'HSR for tendon load tolerance — Kongsgaard 2009; Beyer 2015 (HSR ≥ eccentric, tendinopathy); H9 review C6', needsReview: false }
+  },
+  explosiveStrength: {   // strength-speed — low reps, sub-max RPE, bar speed is the point
+    base:   { main: '4 × 3', acc: '3 × 6', mainRpe: 'RPE 7', accRpe: 'RPE 7' },
+    build:  { main: '5 × 3', acc: '3 × 6', mainRpe: 'RPE 7→8', accRpe: 'RPE 7' },
+    peak:   { main: '4 × 2', acc: '3 × 5', mainRpe: 'RPE 8', accRpe: 'RPE 7→8' },
+    deload: { main: '2 × 3', acc: '2 × 6', mainRpe: 'RPE 6', accRpe: 'RPE 6' },
+    taper:  { main: '3 × 2', acc: '2 × 5', mainRpe: 'RPE 8', accRpe: 'RPE 7' },
+    evidence: { level: 'reviewed', confidence: 'moderate', source: 'Strength-speed dosing (Haff & Nimphius 2012); power-quality exercises take POWER_DOSE', needsReview: false }
+  },
+  reactiveStrength: {   // reactive sessions are mostly power-quality items (POWER_DOSE); this doses the rest
+    base:   { main: '4 × 4', acc: '3 × 8', mainRpe: 'RPE 7', accRpe: 'RPE 6' },
+    build:  { main: '4 × 4', acc: '3 × 8', mainRpe: 'RPE 7', accRpe: 'RPE 6→7' },
+    peak:   { main: '4 × 3', acc: '3 × 6', mainRpe: 'RPE 7→8', accRpe: 'RPE 7' },
+    deload: { main: '2 × 4', acc: '2 × 6', mainRpe: 'RPE 5', accRpe: 'RPE 5' },
+    taper:  { main: '2 × 3', acc: '2 × 5', mainRpe: 'RPE 7', accRpe: 'RPE 7' },
+    evidence: { level: 'reviewed', confidence: 'moderate', source: 'Plyometric session dosing + contact ceilings — de Villarreal 2009; H9 review C7', needsReview: false }
+  },
 };
+
+// Session foot-contact ceilings for reactive/plyometric work (H9 C7 — de Villarreal
+// 2009): total jump contacts per session by training age. The 48–72 h spacing half of
+// C7 belongs to the scheduler (D13) — recorded there, not here.
+export const REACTIVE_LIMITS = {
+  footContacts: { beginner: 80, intermediate: 100, advanced: 120 },
+  evidence: { level: 'reviewed', confidence: 'moderate', source: 'de Villarreal 2009 (meta): moderate volumes suffice; H9 review C7', needsReview: false }
+};
+
+/**
+ * D12 dose lookup by TARGET QUALITY (WP-21): the scheme block for a session whose D9
+ * objective names `quality`, or null when the quality has no block — the caller falls
+ * back to its style-bridged scheme. deload/taper resolve inside the block (taper wins).
+ */
+export function doseForQuality(quality, intent, { deload = false, taper = false } = {}) {
+  const q = DOSE_SCHEMES[quality];
+  if (!q) return null;
+  if (taper) return q.taper;
+  if (deload) return q.deload;
+  return q[intent] || q.base;
+}
 
 // The legacy style vocabulary → scheme key. Unknown styles fall back exactly as the
 // old table did (→ the functional scheme).
@@ -106,4 +151,4 @@ export const REST_SECONDS = {
 export const ISO_SETS = { bodybuilding: '3 × 12–15', default: '3 × 12' };
 export const CORE_SETS = { light: '2 × 30s', default: '3 × 30s' };
 
-export default { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS };
+export default { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS, REACTIVE_LIMITS, doseForQuality };

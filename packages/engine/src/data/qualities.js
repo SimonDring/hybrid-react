@@ -8,7 +8,7 @@ export const QUALITIES = [
   { id: 'hypertrophy', family: 'structural', adaptations: ['myofibrillar_hypertrophy', 'sarcoplasmic_hypertrophy'],
     assessment: 'girth_or_bodyweight', fatigueCost: { neural: 'low', metabolic: 'high', mechanical: 'high' },
     recoveryTimeH: 48, prerequisites: [], evidence: 'seed',
-    doseResponse: { intensity: '60–80% 1RM', reps: '6–12', rir: '0–3', restType: 'moderate (60–120 s)' } },
+    doseResponse: { intensity: '~30–85% 1RM taken near failure (60–80% typical)', reps: '6–12 typical (5–30 effective near failure)', rir: '0–3', restType: 'compounds ≥2 min (Schoenfeld 2016); isolations 60–90 s' } },
   { id: 'explosiveStrength', family: 'power', adaptations: ['rate_coding', 'motor_unit_recruitment'],
     assessment: 'jump_or_imtp_rfd', fatigueCost: { neural: 'high', metabolic: 'low', mechanical: 'moderate' },
     recoveryTimeH: 48, prerequisites: ['maxStrength'], evidence: 'seed',
