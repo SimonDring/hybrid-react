@@ -23,6 +23,7 @@ const EPSILON = 0.51;   // half-set rounding slack — over by ≤ half a set is
 export const mrvCeilingValidator = {
   id: 'volume.mrv-ceiling',
   knowledgeId: 'volume.landmarks',
+  tier: 3,   // EDS §37 RECOVERABILITY — never exceed capacity (L3)
   run(week) {
     const { counts } = countWeeklyVolume(week.sessions || []);
     const findings = [];

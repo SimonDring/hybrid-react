@@ -1,5 +1,12 @@
 {
   "build·bodybuilding·advanced·6d·75·full": {
+    "meta": {
+      "validation": {
+        "checked": 6,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -3729,6 +3736,13 @@
     "totalWeeks": 6
   },
   "build·bodybuilding·intermediate·4d·60·full": {
+    "meta": {
+      "validation": {
+        "checked": 6,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -6704,6 +6718,13 @@
     "totalWeeks": 6
   },
   "build·functional·advanced·7d·60·bodyweight(edge)": {
+    "meta": {
+      "validation": {
+        "checked": 8,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -12560,6 +12581,13 @@
     "totalWeeks": 8
   },
   "build·functional·beginner·3d·20·bodyweight(edge)": {
+    "meta": {
+      "validation": {
+        "checked": 8,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -15410,6 +15438,13 @@
     "totalWeeks": 8
   },
   "build·functional·intermediate·3d·45·dumbbell": {
+    "meta": {
+      "validation": {
+        "checked": 8,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -18527,6 +18562,13 @@
     "totalWeeks": 8
   },
   "build·strength·advanced·5d·75·full": {
+    "meta": {
+      "validation": {
+        "checked": 12,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -23568,6 +23610,13 @@
     "totalWeeks": 12
   },
   "build·strength·beginner·3d·45·full": {
+    "meta": {
+      "validation": {
+        "checked": 12,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -27383,6 +27432,13 @@
     "totalWeeks": 12
   },
   "build·strength·intermediate·1d·60·full(edge)": {
+    "meta": {
+      "validation": {
+        "checked": 12,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -29649,6 +29705,13 @@
     "totalWeeks": 12
   },
   "build·strength·intermediate·4d·60·full": {
+    "meta": {
+      "validation": {
+        "checked": 12,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -33672,6 +33735,13 @@
     "totalWeeks": 12
   },
   "sport·cycle·intermediate·in·2d": {
+    "meta": {
+      "validation": {
+        "checked": 4,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -33987,6 +34057,13 @@
     "totalWeeks": 4
   },
   "sport·cycle·intermediate·off·3d": {
+    "meta": {
+      "validation": {
+        "checked": 12,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -36020,6 +36097,13 @@
     "totalWeeks": 12
   },
   "sport·cycle·intermediate·transition·3d": {
+    "meta": {
+      "validation": {
+        "checked": 4,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -36759,6 +36843,13 @@
     "totalWeeks": 4
   },
   "sport·run-long·intermediate·off·4d": {
+    "meta": {
+      "validation": {
+        "checked": 12,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -39416,6 +39507,13 @@
     "totalWeeks": 12
   },
   "sport·run-long·intermediate·pre·3d": {
+    "meta": {
+      "validation": {
+        "checked": 6,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -40471,6 +40569,13 @@
     "totalWeeks": 6
   },
   "sport·run-middle·intermediate·off·4d": {
+    "meta": {
+      "validation": {
+        "checked": 10,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -42724,6 +42829,13 @@
     "totalWeeks": 10
   },
   "sport·run-sprint·advanced·in·4d(taper)": {
+    "meta": {
+      "validation": {
+        "checked": 4,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -43379,6 +43491,13 @@
     "totalWeeks": 4
   },
   "sport·run-sprint·intermediate·off·4d": {
+    "meta": {
+      "validation": {
+        "checked": 6,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -44797,6 +44916,13 @@
     "totalWeeks": 6
   },
   "sport·swim·advanced·in·3d": {
+    "meta": {
+      "validation": {
+        "checked": 4,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -45853,6 +45979,13 @@
     "totalWeeks": 4
   },
   "sport·swim·intermediate·off·3d": {
+    "meta": {
+      "validation": {
+        "checked": 12,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [

@@ -1,5 +1,12 @@
 {
   "build·bodybuilding·advanced·6d·75·full": {
+    "meta": {
+      "validation": {
+        "checked": 6,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -3729,6 +3736,13 @@
     "totalWeeks": 6
   },
   "build·bodybuilding·intermediate·4d·60·full": {
+    "meta": {
+      "validation": {
+        "checked": 6,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -6704,6 +6718,13 @@
     "totalWeeks": 6
   },
   "build·functional·advanced·7d·60·bodyweight(edge)": {
+    "meta": {
+      "validation": {
+        "checked": 8,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -12560,6 +12581,13 @@
     "totalWeeks": 8
   },
   "build·functional·beginner·3d·20·bodyweight(edge)": {
+    "meta": {
+      "validation": {
+        "checked": 8,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -15410,6 +15438,13 @@
     "totalWeeks": 8
   },
   "build·functional·intermediate·3d·45·dumbbell": {
+    "meta": {
+      "validation": {
+        "checked": 8,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -18527,6 +18562,13 @@
     "totalWeeks": 8
   },
   "build·strength·advanced·5d·75·full": {
+    "meta": {
+      "validation": {
+        "checked": 12,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -23568,6 +23610,13 @@
     "totalWeeks": 12
   },
   "build·strength·beginner·3d·45·full": {
+    "meta": {
+      "validation": {
+        "checked": 12,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -27383,6 +27432,13 @@
     "totalWeeks": 12
   },
   "build·strength·intermediate·1d·60·full(edge)": {
+    "meta": {
+      "validation": {
+        "checked": 12,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [
@@ -29649,6 +29705,13 @@
     "totalWeeks": 12
   },
   "build·strength·intermediate·4d·60·full": {
+    "meta": {
+      "validation": {
+        "checked": 12,
+        "pass": true,
+        "weeks": []
+      }
+    },
     "phases": [
       {
         "gates": [

@@ -27,10 +27,28 @@
 import kb from '../knowledge/kb.js';
 import { authorityOf } from '../knowledge/authority.js';
 import { mrvCeilingValidator } from './mrvValidator.js';
+import { injuryContraindicationValidator, durationHonestyValidator, equipmentValidator, purposeCoherenceValidator } from './validators.js';
 
-// The registry. WP-12 adds duration honesty, equipment, session purpose, and
-// injury contraindication + the conflict order that arbitrates between them.
-export const VALIDATORS = [mrvCeilingValidator];
+// EDS §37 — the fixed conflict-resolution priority order ("the Engine Laws,
+// compiled"). Higher tiers win ABSOLUTELY; confidence modulates within a tier,
+// never across. Every validator declares its tier; the report is sorted by it.
+export const CONFLICT_ORDER = [
+  'SAFETY & LAW',        // 1 — never an unsafe or contraindicated prescription
+  'SPORT PROTECTION',    // 2 — never compromise the sport (L1)
+  'RECOVERABILITY',      // 3 — never exceed capacity (L3)
+  'ATHLETE INTENT',      // 4 — honour committed choices + stated constraints (L10)
+  'OBJECTIVE FIDELITY',  // 5 — serve the objective as fully as the above allow
+  'OPTIMISATION'         // 6 — efficiency, balance, variety, preference
+];
+
+// The registry, in tier order.
+export const VALIDATORS = [
+  injuryContraindicationValidator,   // tier 1
+  mrvCeilingValidator,               // tier 3
+  durationHonestyValidator,          // tier 4
+  equipmentValidator,                // tier 4
+  purposeCoherenceValidator          // tier 5
+];
 
 // A verdict may never exceed what the validator's knowledge authority allows:
 // reported → pass-only (it can observe, not act), soft → trim, gate → veto.
@@ -53,18 +71,21 @@ export function validateWeek(week, ctx = {}) {
   for (const v of VALIDATORS) {
     const entry = kb.get(v.knowledgeId);
     const authority = authorityOf(entry);
+    const tier = v.tier || 6;
     const raw = v.run(week, ctx) || [];
     if (raw.length === 0) {
       counts.pass++;
-      findings.push({ validatorId: v.id, verdict: 'pass', authority, confidence: entry.confidence, reason: null });
+      findings.push({ validatorId: v.id, tier, verdict: 'pass', authority, confidence: entry.confidence, reason: null });
       continue;
     }
     for (const f of raw) {
       const verdict = capVerdict(f.verdict, authority);
       counts[verdict]++;
-      findings.push({ validatorId: v.id, verdict, authority, confidence: entry.confidence, reason: f.reason, detail: f.detail });
+      findings.push({ validatorId: v.id, tier, verdict, authority, confidence: entry.confidence, reason: f.reason, detail: f.detail });
     }
   }
+  // Highest-priority problem first (§37: lower tier number wins), then by severity.
+  findings.sort((a, b) => (a.tier - b.tier) || (SEVERITY[b.verdict] - SEVERITY[a.verdict]));
   return { pass: counts.veto === 0 && counts.trim === 0, findings, counts };
 }
 
