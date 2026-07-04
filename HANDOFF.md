@@ -248,14 +248,27 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   19 + build-parity 9), proven structurally additive-only (old≡new after deleting meta) and
   every archetype's report ALL-PASS. New KB entries: programming.session_ceiling,
   validation.session_purpose, injury.contraindication_policy.
-- **⇒ NEXT: WP-13 constraints-first injuries** — pass REAL injuries into the live D10 call
-  (`allocator.js` D11 branch currently passes an empty contraindication set); on the D11 path
-  the post-filter becomes a validator backstop; legacy path keeps the filter until its own
-  flip. Accept: a run athlete with a hamstring strain never sees a hinge SELECTED (not
-  stripped after); build-parity green. Then the **H9 seed-evidence pass** (one-day review of
-  exerciseQualities.js + doseResponse before WP-21 doses from them), then WP-14 (dose schemes
-  → knowledge, D12 enabler). Sprint 9 (SKB-primary) is HIGH-risk — pause for Simon's review
-  before flipping.
+- **PR #74 — WP-13 constraints-first injuries (EDS L8).** The D11 reflow + Train Now pass
+  active injuries into SELECTION at two levels: pattern (new D10
+  `contraindicatedPatternsForInjuries`) + name (`selectInterventions` excludes candidates
+  matching the injury system's blocked regexes — the pattern vocabulary is majority-vote
+  coarse and can't say "no jumping"). A severity-4 hamstring runner now keeps ALL 7
+  in-horizon days (previously 3 collapsed into one-exercise rehab replacements); hinges
+  return on recovery (injury signature in the reflow memo key). The render-time filter stays
+  as the BACKSTOP (beyond-horizon baseline days, legacy build/swim, the coverage fallback)
+  and still appends rehab work. **WP-12 validator fixed along the way:** the fixed-point-diff
+  definition false-vetoed already-filtered weeks (the filter legitimately APPENDS rehab work);
+  now a direct no-shipped-item-matches-a-blocked-regex check (idempotent, catches
+  under-blocking). Suite 126/126; goldens + build-parity untouched.
+  **Known quality gap (task chip filed):** an injured runner's sessions are legal but
+  all-accessory — when a target quality's drivers are blocked, D9/D11 should re-target the
+  next priority quality (squats/lunges are legal for a hamstring strain and should appear).
+- **⇒ NEXT (in order): the H9 seed-evidence pass** (one-day scientific review of
+  `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
+  and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
+  **WP-14** (allocator `scheme()` dose tables → knowledge/programming keyed by (quality,
+  phase) with a byte-identical style bridge — the D12 enabler). Sprint 9 (SKB-primary) is
+  HIGH-risk — pause for Simon's review before flipping.
 
 ## Latest work — Phase A of the audit backlog: hygiene & safety, WP-01…WP-06 (2026-07-03)
 
