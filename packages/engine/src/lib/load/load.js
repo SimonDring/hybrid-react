@@ -21,10 +21,17 @@
  * @property {boolean} corroboratesDeload     ACWR is sustained-high (a soft corroborating signal)
  */
 import { loadDecision } from '../plan/trainingLoad.js';
+import { mayScaleAlone } from '../knowledge/authority.js';
 
 // ACWR alone may not cut volume below this. The former 0.5 "deload" multiplier is
 // retired as a solo lever — that depth of cut now requires a corroborated deload.
 const ACWR_ONLY_FLOOR = 0.85;
+
+// WHY the floor applies: the ACWR entries are confidence:'low' → authority
+// 'reported' (knowledge/authority.js), which may only adjust within a conservative
+// floor. If the science were ever upgraded (entry confidence raised), the floor
+// would lift by mechanism — not by someone remembering this constant.
+const ACWR_FLOORED = !mayScaleAlone('load.acwr.thresholds');
 
 /**
  * @param {Object} inputs
@@ -36,7 +43,7 @@ export function assessLoad({ acwrVal = null, recentAcwr = [] } = {}) {
   const d = loadDecision(acwrVal, recentAcwr);   // { action, multiplier, reason }
   return {
     riskLevel: d.action === 'deload' ? 'high' : d.action === 'ease' ? 'moderate' : 'low',
-    loadModifier: Math.max(ACWR_ONLY_FLOOR, d.multiplier),
+    loadModifier: ACWR_FLOORED ? Math.max(ACWR_ONLY_FLOOR, d.multiplier) : d.multiplier,
     loadRecommendation: d.reason,
     inputs: { acwr: acwrVal, action: d.action },
     confidence: 'low',

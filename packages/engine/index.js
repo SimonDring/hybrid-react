@@ -21,6 +21,7 @@ export {
 export { getContraindications } from './src/lib/injury/injuryRules.js';
 export { applyInjuryRules, applyPrevention } from './src/lib/injury/injuryFilter.js';
 export { default as kb } from './src/lib/knowledge/kb.js';
+export { authorityOf, mayForceAlone, mayScaleAlone } from './src/lib/knowledge/authority.js';
 export { default as sportKnowledge } from './src/lib/sportKnowledge/index.js';
 export { exerciseQualities, FORCE_VELOCITY } from './src/data/exerciseQualities.js';
 export { deriveSessionSpecs, regionOf } from './src/lib/session/sessionSpecs.js';

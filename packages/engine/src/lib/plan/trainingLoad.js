@@ -9,6 +9,7 @@
  * a soft input is a later, deliberate step (roadmap Phase 3).
  */
 import kb from '../knowledge/kb.js';
+import { mayForceAlone } from '../knowledge/authority.js';
 
 const DAY_MS = 86400000;
 const _T = kb.value('load.acwr.thresholds');
@@ -128,8 +129,12 @@ export function deloadRecommendation({ loadAction = null, readiness = null, rece
   const lowReadiness = readiness != null && readiness < 50;
   const poorRecovery = recentRecovery != null && recentRecovery <= 2;
   // Fatigued: illness, OR low readiness backed by poor recovery, OR a high-load signal
-  // CORROBORATED by low readiness / poor recovery (ACWR alone is not enough).
-  const fatigued = illness || (lowReadiness && poorRecovery) || (loadDeload && (lowReadiness || poorRecovery));
+  // CORROBORATED by low readiness / poor recovery. Whether ACWR may force alone is a
+  // property of its knowledge authority (confidence:'low' → 'reported' → it may not);
+  // the corroboration requirement is the mechanism, not a per-site convention.
+  const acwrForcesAlone = mayForceAlone('load.acwr.policy');
+  const fatigued = illness || (lowReadiness && poorRecovery)
+    || (loadDeload && (acwrForcesAlone || lowReadiness || poorRecovery));
   // Fresh: high readiness, good recovery, and load not elevated.
   const fresh = readiness != null && readiness >= 70
     && (recentRecovery == null || recentRecovery >= 4)
