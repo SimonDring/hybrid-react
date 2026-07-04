@@ -311,8 +311,17 @@ function adaptedPhases() {
     recovery ? recovery.volumeModifier : 1,
     { action: loadAction, multiplier: load ? load.loadModifier : 1 }
   );
-  if (!reverted && override === 'easy') mult = Math.min(mult, 0.7);
+  // Travel policy is governed knowledge (recovery.travel_policy): an easy day is
+  // both SHORTER (volume cap) and LIGHTER (RPE offset, below).
+  const travelPolicy = kb.value('recovery.travel_policy');
+  if (!reverted && override === 'easy') mult = Math.min(mult, travelPolicy.volumeCap);
   mult *= ruleAdj.volumeMult;   // sport decision-rule reduction (≤1; conservative — only trims)
+  // Intensity honesty (WP-10, recovery.intensity_policy): the readiness band's target-
+  // RPE offset rides into the allocator ctx; suggested loads follow via applyWeights.
+  // Travel-easy also lightens; the two take the MINIMUM (they never stack below one step).
+  // Readiness applies even when the athlete reverted to plan (same as the volume rule).
+  let rpeOffset = recovery ? (recovery.rpeOffset || 0) : 0;
+  if (!reverted && override === 'easy') rpeOffset = Math.min(rpeOffset, travelPolicy.rpeOffset);
   const specByKey = {};
   slots.forEach((s, idx) => {
     const spec = allocateGym({
@@ -329,7 +338,8 @@ function adaptedPhases() {
         // rotation matches the weekly builder's (same mechanism as resolveSplit[s.i]
         // above) — without it every single-slot rebuild pinned the same top-priority
         // quality and a runner's explosive days collapsed into the durability day.
-        weekGymCount: gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, weekSlotIdx: s.i
+        weekGymCount: gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, weekSlotIdx: s.i,
+        rpeOffset
       }
     })[0];
     if (spec) {
@@ -389,6 +399,10 @@ function adaptedPhases() {
         const deferDl = week.num === cw && rec.action === 'defer';
         if (!changed && !forceDl && !deferDl) return week;
         const out = { ...week, sessions: newSessions, _adapted: changed };
+        // Explainability seam (surfacing is WP-30): why this week trains lighter.
+        if (changed && rpeOffset < 0 && reshapedIdx.size) {
+          out._intensityEased = override === 'easy' ? 'travel — eased' : 'low readiness — eased';
+        }
         if (forceDl) { out.deload = true; out.autoDeload = true; out.deloadReason = rec.reason; }
         if (deferDl) { out.deload = false; out.deloadDeferred = true; }
         return out;
@@ -809,8 +823,9 @@ export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
     // (sport/power/priorityQualities/season/skbIds), so a run/cycle athlete's on-demand
     // session is selected by the same diagnosis-driven brain as their plan, not the
     // legacy muscle-deficit fill. Build profiles have no priorityQualities, so the D11
-    // gate can't fire for them and their Train Now output is unchanged.
-    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, bodyweight: gctx.bodyweight, exercisePriority: gctx.exercisePriority, priorityByIntent: gctx.priorityByIntent, sport: gctx.sport, power: gctx.power, priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds }
+    // gate can't fire for them and their Train Now output is unchanged. An on-demand
+    // session on a low-readiness day is honest too: same readiness rpeOffset (WP-10).
+    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, bodyweight: gctx.bodyweight, exercisePriority: gctx.exercisePriority, priorityByIntent: gctx.priorityByIntent, sport: gctx.sport, power: gctx.power, priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds, rpeOffset: _runtime.recovery ? (_runtime.recovery.rpeOffset || 0) : 0 }
   });
   const session = specs[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
   return { session: decorateSections(session, equipArr), why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };

@@ -14,7 +14,9 @@
  * @typedef {Object} RecoveryOutput
  * @property {'high'|'moderate'|'low'|'unknown'} readinessLevel
  * @property {number} volumeModifier     0.78..1.0 — scales the session's volume / length
- * @property {number} intensityModifier  0.85..1.0 — scales load/RPE (1.0 today; reserved)
+ * @property {number} rpeOffset           0 | -1 — target-RPE shift by readiness band (WP-10,
+ *                                        knowledge: recovery.intensity_policy); loads follow
+ * @property {number} intensityModifier  superseded by rpeOffset (still emitted as 1)
  * @property {null|'easy'|'rest'|'deload'} sessionOverride
  * @property {number|null} score          0..100 blended readiness (bands + diagnostics)
  */
@@ -33,6 +35,14 @@ export { subjectiveScore };
 // weighting passes 67 explicitly; the KB value is the default.
 const BANDS = kb.value('recovery.bands');
 const VOL_MOD = kb.value('recovery.volume_modifiers');
+const INTENSITY = kb.value('recovery.intensity_policy');
+
+// Readiness → target-RPE offset (intensity honesty). Governed knowledge; the
+// allocator applies it before weights are computed, so load follows RPE.
+function rpeOffsetFromScore(score, greenCut = BANDS.greenCut) {
+  const band = bandFromScore(score, greenCut);
+  return band === 'unknown' ? 0 : (INTENSITY.rpeOffsetByBand[band] || 0);
+}
 
 function bandFromScore(score, greenCut = BANDS.greenCut) {
   if (score == null) return 'unknown';
@@ -73,7 +83,8 @@ export function assessRecovery({ objectiveScore = null, subjective = null, illne
   return {
     readinessLevel: bandFromScore(score),
     volumeModifier: volumeFromScore(score),
-    intensityModifier: 1,   // reserved — readiness does not yet scale intensity
+    rpeOffset: rpeOffsetFromScore(score),
+    intensityModifier: 1,   // superseded by rpeOffset; kept for shape-compat
     sessionOverride,
     score,
     confidence: ri.confidence   // additive: how much to trust the score (0–1)
@@ -97,7 +108,8 @@ export function recoveryFromScore(score = null, { illness = false, travel = fals
   return {
     readinessLevel: bandFromScore(score, greenCut),
     volumeModifier: volumeFromScore(score, greenCut),
-    intensityModifier: 1,
+    rpeOffset: rpeOffsetFromScore(score, greenCut),
+    intensityModifier: 1,   // superseded by rpeOffset; kept for shape-compat
     sessionOverride,
     score,
     confidence

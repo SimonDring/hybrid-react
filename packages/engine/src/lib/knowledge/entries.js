@@ -124,6 +124,26 @@ export const ENTRIES = [
     appliesTo: ['recovery', 'load']
   },
   {
+    id: 'recovery.intensity_policy',
+    rule: 'Readiness scales INTENSITY as well as volume: on a low-readiness day the target RPE drops by 1 (never below rpeFloor); suggested loads follow via the inverse-Epley %1RM. Moderate readiness keeps intensity (volume already trims 10% there — no double-dipping on a middling day).',
+    value: { rpeOffsetByBand: { high: 0, moderate: 0, low: -1 }, rpeFloor: 5 },
+    evidenceLevel: 'L4',
+    source: 'RPE/RIR autoregulation — Helms et al. 2016 (RIR-based RPE scale), 2018 (autoregulated load prescription); magnitude (−1 RPE) internal-conservative',
+    confidence: 'moderate',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['recovery']
+  },
+  {
+    id: 'recovery.travel_policy',
+    rule: 'A travel "easy" day is both SHORTER and LIGHTER: session volume capped at volumeCap of plan, target RPE dropped by rpeOffset (not stacked below the readiness offset — the two take the minimum).',
+    value: { volumeCap: 0.7, rpeOffset: -1 },
+    evidenceLevel: 'L5',
+    source: 'Internal heuristic (the long-standing 0.7 cap, relocated from PlanService with provenance; lighter-not-just-shorter per common S&C travel practice)',
+    confidence: 'low',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['recovery']
+  },
+  {
     id: 'readiness.subjective_priority',
     rule: 'Subjective wellness (sleep quality, soreness, mood, stress, energy) is at least as sensitive as objective HRV/RHR for monitoring load response — weight it ≥ objective signals, and combine.',
     value: true,
