@@ -29,7 +29,7 @@ function trainsTarget(ex, target) {
 const isCompound = (ex) => ex.role === 'primary' || (ex.role === 'accessory' && !['iso', 'core', 'calf', 'mobility'].includes(ex.pattern));
 
 // EDS §34 tier, or null if the exercise is off-target for this sport session.
-function tierOf(ex, target, sport) {
+export function tierOf(ex, target, sport) {
   const role = trainsTarget(ex, target);
   if (isCompound(ex) && role === 'primary') return 1;
   if (isCompound(ex) && role === 'secondary') return 2;

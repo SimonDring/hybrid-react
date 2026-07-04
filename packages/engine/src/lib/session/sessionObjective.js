@@ -61,6 +61,32 @@ export function competencyAdjustedTarget(qualityId, level) {
   return prereq || qualityId;
 }
 
+// Constraint gate (EDS L8 + §37 tier 5 — "serve the objective as fully as the above
+// allow"; mirrors the competency gate above): when an active injury contraindicates a
+// target quality's DRIVERS (no legal tier-1/2 candidate exists — e.g. a hamstring
+// strain blocks the hinges that drive robustness and the jumps that drive reactive
+// strength), the session re-targets the athlete's next gym-trainable priority whose
+// drivers ARE legal, falling back to the maxStrength base — instead of collapsing to
+// accessory-only. Squats and lunges are legal for that hamstring athlete; they should
+// train them. The feasibility oracle (isTrainable) is supplied by the SELECTION layer,
+// which owns candidate legality (equipment × level × contraindicated patterns ×
+// blocked names); D9 owns only the re-target policy.
+export function constraintAdjustedTarget({ targetQuality, priorityQualities = [], goalPrimary = null, level, isTrainable } = {}) {
+  if (typeof isTrainable !== 'function' || isTrainable(targetQuality)) {
+    return { quality: targetQuality, retargetedFrom: null };
+  }
+  for (const cand of gymTrainableTargets(priorityQualities, goalPrimary)) {
+    const q = competencyAdjustedTarget(cand, level);
+    if (q !== targetQuality && isTrainable(q)) return { quality: q, retargetedFrom: targetQuality };
+  }
+  if (targetQuality !== 'maxStrength' && isTrainable('maxStrength')) {
+    return { quality: 'maxStrength', retargetedFrom: targetQuality };
+  }
+  // Nothing trainable under the constraints — support/prehab work plus the injury
+  // system's rehab additions is the honest session.
+  return { quality: targetQuality, retargetedFrom: null };
+}
+
 // Coarse fatigue level (0..2) from a quality's dominant fatigue cost.
 function fatigueLevel(quality) {
   const fc = (quality && quality.fatigueCost) || {};
@@ -101,4 +127,4 @@ export function deriveSessionObjective({ targetQuality, region = 'full', phaseIn
   };
 }
 
-export default { gymTrainableTargets, assignTargetQualities, deriveSessionObjective };
+export default { gymTrainableTargets, assignTargetQualities, deriveSessionObjective, constraintAdjustedTarget };

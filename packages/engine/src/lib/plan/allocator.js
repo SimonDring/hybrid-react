@@ -38,8 +38,8 @@ import { parseSetCount } from './volume.js';
 import { applyWeights } from '../liftProgression.js';
 import { stimulusFactor } from '../strength/stimulus.js';
 import { AXIAL_SESSION_CAP, axialOf } from './axial.js';
-import { selectInterventions } from './selectInterventions.js';
-import { deriveSessionObjective, assignTargetQualities, competencyAdjustedTarget } from '../session/sessionObjective.js';
+import { selectInterventions, tierOf } from './selectInterventions.js';
+import { deriveSessionObjective, assignTargetQualities, competencyAdjustedTarget, constraintAdjustedTarget } from '../session/sessionObjective.js';
 import { deriveMovementRequirements } from '../session/movementRequirements.js';
 import { regionOf } from '../session/sessionSpecs.js';
 
@@ -771,12 +771,43 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     // index within that week); absent, behaviour is exactly the old whole-week rotation.
     const weekCount = ctx.weekGymCount || work.length;
     const targetsD11 = assignTargetQualities(priorityQualities, weekCount, goalPrimaryD11);
+    const contraPatternsD11 = ctx.contraindicatedPatterns || new Set();
+    const blockedRxD11 = ctx.blockedNameRegexes || [];
+    const constrainedD11 = contraPatternsD11.size > 0 || blockedRxD11.length > 0;
     work.forEach((slot, i) => {
       const wi = ctx.weekSlotIdx != null ? (ctx.weekSlotIdx + i) % weekCount : i;
       const region = regionOf(slot.focusLabel);
       // Competency gate: a beginner targeting a power quality builds the max-strength base first (EDS §22).
-      const targetQuality = competencyAdjustedTarget(targetsD11[wi], levelName);
+      let targetQuality = competencyAdjustedTarget(targetsD11[wi], levelName);
+      // Constraint gate (D9): if injuries contraindicate this quality's drivers, re-target
+      // the next trainable priority (constraintAdjustedTarget). The oracle asks: does any
+      // legal tier-1/2 driver survive equipment × level × pattern × name constraints?
+      // Only evaluated when constraints exist — the pure generator path is untouched.
+      let retargetedFrom = null;
+      if (constrainedD11) {
+        // The oracle mirrors selection's FULL driver gate: a quality is trainable only if
+        // some exercise survives equipment × level × contraindicated-pattern × blocked-name
+        // AND is a tier-1/2 driver AND matches the quality's own post-subtraction ideal
+        // patterns (D10). Tier legality alone is not enough — a hamstring strain leaves
+        // robustness with squat-tagged drivers but lunge/calf ideal patterns, which the
+        // selection gate would reject; the session must re-target, not go accessory-only.
+        const isTrainable = (q) => {
+          const reqQ = deriveMovementRequirements({ targetQuality: q, region, level: levelName, contraindicatedPatterns: contraPatternsD11 });
+          if (!reqQ) return false;
+          const pats = new Set(reqQ.movementPatterns || []);
+          return EXERCISES.some((ex) =>
+            slot.equip.has(ex.equip) && (ex.level ?? 0) <= slot.level &&
+            !contraPatternsD11.has(ex.pattern) &&
+            !blockedRxD11.some((r) => r.test(ex.name)) &&
+            (tierOf(ex, q, ctx.sport) === 1 || tierOf(ex, q, ctx.sport) === 2) &&
+            (!pats.size || pats.has(ex.pattern)));
+        };
+        ({ quality: targetQuality, retargetedFrom } = constraintAdjustedTarget({
+          targetQuality, priorityQualities, level: levelName, isTrainable
+        }));
+      }
       const objective = deriveSessionObjective({ targetQuality, region, phaseIntent: intent, deload, taper, season: ctx.season });
+      if (retargetedFrom) objective.rationale += ` (re-targeted from ${retargetedFrom} — its drivers are contraindicated by an active injury)`;
       // Constraints before content (EDS L8, WP-13): callers that know the athlete's ACTIVE
       // injuries (the reflow, Train Now) pass ctx.contraindicatedPatterns, so D11 selects a
       // legal alternative instead of the post-filter stripping picks and leaving a hole. The
