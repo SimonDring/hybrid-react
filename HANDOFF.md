@@ -233,13 +233,29 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   Now inherits the offset; eased weeks carry `_intensityEased` (surfacing = WP-30). Knowledge:
   `recovery.intensity_policy` (L4 moderate → authority 'soft'), `recovery.travel_policy`.
   **Stale audit claim found:** subjective ≥ objective already held (0.6/0.4 Saw blend) — pinned.
-- **⇒ NEXT: WP-11/12 validator suite** (Art 19 — the largest structural conflict): `validation/`
-  scaffold + contract `{verdict: pass|trim|veto, reason, confidence, authority}` + runner +
-  ValidationReport; MRV ceiling as the first named GATE validator (in-loop cap stays for
-  efficiency, validator authoritative — assert zero residual violations); then duration/equipment/
-  purpose/injury validators + the six-tier conflict order (WP-12); then WP-13 constraints-first
-  injuries. After the band: H9 seed-evidence pass, then Sprint 9 (SKB-primary, HIGH-risk — pause
-  for Simon's review before flipping).
+- **PR #72 — WP-11 validator suite scaffold + MRV validator (Art 19).**
+  `packages/engine/src/lib/validation/` — contract + `validateWeek()` runner with **Art-13
+  verdict capping** (a validator's max verdict derives from its knowledge entry's authority:
+  reported→observe-only, soft→trim, gate→veto — contested science structurally cannot veto).
+  MRV = the first validator, verdict class TRIM (deliberate reconciliation vs the audit's
+  "GATE" wording: volume.landmarks is moderate-confidence → soft authority). Zero residual
+  violations across 7 archetypes; synthetic over-MRV week fails with a plain-English reason.
+- **PR #73 — WP-12 validators II + §37 conflict order + plan.meta.** Four more validators,
+  tiered per EDS §37 (injury contraindication t1/veto — a valid week is a FIXED POINT of the
+  injury filter; duration honesty + equipment t4; purpose coherence t5), `CONFLICT_ORDER`
+  verbatim from §37, findings sorted safety-first. `plan.meta.validation` = every generated
+  plan ships its compliance proof. **Deliberate re-baseline of BOTH snapshots** (golden-master
+  19 + build-parity 9), proven structurally additive-only (old≡new after deleting meta) and
+  every archetype's report ALL-PASS. New KB entries: programming.session_ceiling,
+  validation.session_purpose, injury.contraindication_policy.
+- **⇒ NEXT: WP-13 constraints-first injuries** — pass REAL injuries into the live D10 call
+  (`allocator.js` D11 branch currently passes an empty contraindication set); on the D11 path
+  the post-filter becomes a validator backstop; legacy path keeps the filter until its own
+  flip. Accept: a run athlete with a hamstring strain never sees a hinge SELECTED (not
+  stripped after); build-parity green. Then the **H9 seed-evidence pass** (one-day review of
+  exerciseQualities.js + doseResponse before WP-21 doses from them), then WP-14 (dose schemes
+  → knowledge, D12 enabler). Sprint 9 (SKB-primary) is HIGH-risk — pause for Simon's review
+  before flipping.
 
 ## Latest work — Phase A of the audit backlog: hygiene & safety, WP-01…WP-06 (2026-07-03)
 
