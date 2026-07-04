@@ -1,6 +1,6 @@
 # Sprint 9 — SKB-primary selection + the swim re-seat (DESIGN REVIEW)
 
-**Date:** 2026-07-04 · **Status:** ★ AWAITING SIMON'S REVIEW — nothing builds until approved ·
+**Date:** 2026-07-04 · **Status:** APPROVED by Simon 2026-07-04 — Option B · normalise ids + extend catalogue · run/cycle→swim flip order ·
 **Traces to:** Blueprint W7 / audit §8 WP-19a-c + WP-20 · EDS §32/§34 · KA Domain 2 (Sport) ·
 audit §9 H5 (the quality-vocabulary trap) · HANDOFF "Swim re-seat — what's required"
 
