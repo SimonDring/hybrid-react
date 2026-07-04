@@ -1476,7 +1476,18 @@
       "source": "Clarsen 2010; cycling knee-pain literature",
       "appliesTo": [
         "knee"
-      ]
+      ],
+      "trigger": {
+        "signal": "soreness_region",
+        "op": "high",
+        "value": "knee"
+      },
+      "effect": {
+        "type": "reduce_region_eccentric",
+        "params": {
+          "region": "knee"
+        }
+      }
     },
     {
       "id": "low_back_pain_modify",
@@ -1488,7 +1499,18 @@
       "source": "Clarsen 2010; McGill core-endurance literature",
       "appliesTo": [
         "lowBack"
-      ]
+      ],
+      "trigger": {
+        "signal": "soreness_region",
+        "op": "high",
+        "value": "lower_back"
+      },
+      "effect": {
+        "type": "reduce_region_eccentric",
+        "params": {
+          "region": "lower_back"
+        }
+      }
     },
     {
       "id": "competition_within_48h_no_high_soreness",
@@ -1500,7 +1522,18 @@
       "source": "taper/DOMS literature (Bosquet 2007)",
       "appliesTo": [
         "volume"
-      ]
+      ],
+      "trigger": {
+        "signal": "competition_within_h",
+        "op": "<=",
+        "value": 48
+      },
+      "effect": {
+        "type": "exclude_soreness_above",
+        "params": {
+          "level": "moderate"
+        }
+      }
     },
     {
       "id": "no_heavy_legs_before_key_ride",
@@ -1524,7 +1557,16 @@
       "source": "priming-session literature; expert consensus",
       "appliesTo": [
         "volume"
-      ]
+      ],
+      "trigger": {
+        "signal": "competition_within_h",
+        "op": "<=",
+        "value": 24
+      },
+      "effect": {
+        "type": "priming_only",
+        "params": {}
+      }
     },
     {
       "id": "training_load_acwr_spike",
@@ -1536,7 +1578,16 @@
       "source": "Gabbett 2016 (contested — Impellizzeri 2020 / Lolli 2019); applied to cycling TSS",
       "appliesTo": [
         "load"
-      ]
+      ],
+      "trigger": {
+        "signal": "acwr",
+        "op": ">",
+        "value": 1.5
+      },
+      "effect": {
+        "type": "force_deload",
+        "params": {}
+      }
     },
     {
       "id": "low_readiness_autoregulate",
@@ -1548,7 +1599,16 @@
       "source": "Saw 2016",
       "appliesTo": [
         "readiness"
-      ]
+      ],
+      "trigger": {
+        "signal": "readiness",
+        "op": "<",
+        "value": 40
+      },
+      "effect": {
+        "type": "reduce_one_step",
+        "params": {}
+      }
     },
     {
       "id": "cmj_drop_flag_fatigue",
@@ -1560,7 +1620,16 @@
       "source": "Claudino 2017",
       "appliesTo": [
         "readiness"
-      ]
+      ],
+      "trigger": {
+        "signal": "cmj_drop_pct",
+        "op": ">=",
+        "value": 12
+      },
+      "effect": {
+        "type": "reduce_one_step",
+        "params": {}
+      }
     },
     {
       "id": "illness_no_training",
@@ -1572,7 +1641,16 @@
       "source": "exercise-immunology consensus",
       "appliesTo": [
         "readiness"
-      ]
+      ],
+      "trigger": {
+        "signal": "illness",
+        "op": "==",
+        "value": true
+      },
+      "effect": {
+        "type": "withhold",
+        "params": {}
+      }
     },
     {
       "id": "taper_protocol",
@@ -1584,7 +1662,16 @@
       "source": "Mujika & Padilla; Bosquet 2007 (taper meta-analysis)",
       "appliesTo": [
         "volume"
-      ]
+      ],
+      "trigger": {
+        "signal": "competition_within_h",
+        "op": "<=",
+        "value": 336
+      },
+      "effect": {
+        "type": "taper",
+        "params": {}
+      }
     },
     {
       "id": "inseason_strength_maintenance",
@@ -1596,7 +1683,16 @@
       "source": "Rønnestad 2010 (in-season strength maintenance in cyclists)",
       "appliesTo": [
         "volume"
-      ]
+      ],
+      "trigger": {
+        "signal": "season",
+        "op": "==",
+        "value": "in"
+      },
+      "effect": {
+        "type": "minimal_effective_volume",
+        "params": {}
+      }
     },
     {
       "id": "offseason_build_strength_for_economy",
