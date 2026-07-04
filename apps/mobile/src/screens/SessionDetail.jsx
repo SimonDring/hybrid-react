@@ -197,11 +197,6 @@ export default function SessionDetail() {
       <h1 className="h1" style={{ fontSize: 24, marginBottom: 2 }}>{session.title}</h1>
       <p className="sub" style={{ marginBottom: 20 }}>
         {session.duration}
-        {session._trainNow && (
-          <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 700, color: 'var(--accent)', background: 'rgba(111,211,196,0.12)', borderRadius: 6, padding: '2px 7px' }}>
-            ADAPTED
-          </span>
-        )}
       </p>
 
       {/* WP-30b: the engine's OWN reason for this session (the D9 objective — emitted

@@ -115,14 +115,3 @@ assert(sharedT.length >= 1 && sharedT.every((n) => parseRpeNum(travelBy[n].rpe) 
   `travel easy day: target RPE one lower (${sharedT.length} compared)`);
 const easedTravelWeek = Plan.getPhases()[0].weeks[0];
 assert(easedTravelWeek._intensityEased === 'travel — eased', 'travel week carries the why');
-
-// ── Train Now honesty ────────────────────────────────────────────────────────
-Plan.setRuntime({ sessions: {}, recovery: recoveryFromScore(85), load: null });
-const tnHigh = Plan.generateTrainNow({ minutes: 45 });
-Plan.setRuntime({ sessions: {}, recovery: recoveryFromScore(40), load: null });
-const tnLow = Plan.generateTrainNow({ minutes: 45 });
-const mainOnly = (items) => (items || []).filter((it) => it.section !== 'primer');
-const tnHighBy = byName(mainOnly(tnHigh.session.items)), tnLowBy = byName(mainOnly(tnLow.session.items));
-const tnShared = Object.keys(tnHighBy).filter((n) => tnLowBy[n] && parseRpeNum(tnHighBy[n].rpe) != null && parseRpeNum(tnHighBy[n].rpe) > 5);
-assert(tnShared.length >= 1 && tnShared.every((n) => parseRpeNum(tnLowBy[n].rpe) === Math.max(5, parseRpeNum(tnHighBy[n].rpe) - 1)),
-  `Train Now on a low-readiness day is also one RPE lighter (${tnShared.length} compared)`);

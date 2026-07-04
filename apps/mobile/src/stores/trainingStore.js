@@ -333,12 +333,12 @@ export const useTrainingStore = create((set) => ({
   },
   uncompleteSession(templateRef) {
     Sync.uncompleteSession(templateRef).catch(e => console.error('uncompleteSession sync failed:', e));
-    clearOverride(templateRef);   // re-completing later rebuilds from the plan, not the old train-now snapshot
+    clearOverride(templateRef);   // re-completing later rebuilds from the plan, not the old pinned snapshot
     set(buildView());
   },
   cancelSession(templateRef) {
     Sync.cancelSession(templateRef).catch(e => console.error('cancelSession sync failed:', e));
-    clearOverride(templateRef);   // started by mistake → drop any train-now adaptation too
+    clearOverride(templateRef);   // started by mistake → drop the pinned snapshot too
     set(buildView());
   },
   // Log one completed set from the focused runner. Offline-first: the local write
@@ -390,11 +390,6 @@ export const useTrainingStore = create((set) => ({
   },
   // "Train now" → pin a generated session onto the slot you're about to do, then
   // the rest of the week reflows around it. Stored locally (see sessionOverrides).
-  applyTrainNow(sessionKey, snapshot) {
-    setOverride(sessionKey, snapshot);
-    set(buildView());
-  },
-
   // ----- Weekly check-ins -----
   async addLog(entry) {
     await Sync.addCheckin(entry);

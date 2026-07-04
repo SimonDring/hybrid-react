@@ -289,9 +289,9 @@ export function reflowPhases({
         week.sessions.forEach((s, i) => {
           const k = sessionKey(phase.id, week.num, i);
           const ov = overrides[k];
-          if (ov) { swap(i, ov.focus, ov.duration, ov.items, { _trainNow: !ov.pinnedAtStart }); return; }
+          if (ov) { swap(i, ov.focus, ov.duration, ov.items, {}); return; }
           const spec = specByKey[k];
-          if (spec) { swap(i, spec.focus, spec.duration, spec.items, { _trainNow: false, axialLoad: spec.axialLoad || 0 }); reshapedIdx.add(i); }
+          if (spec) { swap(i, spec.focus, spec.duration, spec.items, { axialLoad: spec.axialLoad || 0 }); reshapedIdx.add(i); }
         });
 
         if (reshapedIdx.size) {
@@ -318,44 +318,4 @@ export function reflowPhases({
   return { phases, forgiven, provenance: provenance() };
 }
 
-/**
- * trainNowSpec — the on-demand ("Train Now") session decision, pure (WP-24c).
- *
- * If the trailing window owes ≤ bonusMissedSetsMax sets (programming.train_now),
- * the session is a balanced BONUS toward the week's target; otherwise it is a
- * catch-up built around the missed muscles. Selection runs through the same
- * allocator brain as the plan (D11 fields, injuries, readiness offset, category
- * plan). The caller supplies all state; UI copy stays with the caller.
- *
- * @returns {{ session: object|null, bonus: boolean }}
- */
-export function trainNowSpec({
-  gctx, minutes = 45, equip, currentWeek = null, phase = null, week = null,
-  weeklyTarget = null, missed = {}, recovery = null, activeInjuries = [],
-}) {
-  const intent = phase ? intentOfTitle(phase.title) : 'base';
-  const weeklyTgt = weeklyTarget
-    || weeklyMuscleTargets({ style: gctx.style, intent, level: gctx.level, weekInPhase: 1, phaseWeeks: 1 });
-  const totalMissed = Object.values(missed).reduce((a, b) => a + (b || 0), 0);
-  const bonus = totalMissed <= kb.value('programming.train_now').bonusMissedSetsMax;
-  const fillTarget = bonus ? weeklyTgt : missed;
-
-  const specs = allocateGym({
-    targets: fillTarget,
-    slots: [{ minutes: functionalSlotMinutes(gctx.style, minutes), equip }],
-    ctx: {
-      style: gctx.style, intent, deload: false, weekNum: currentWeek || 1, level: gctx.level,
-      sex: gctx.sex, lifts: gctx.lifts, access: equip, bodyweight: gctx.bodyweight,
-      exercisePriority: gctx.exercisePriority, priorityByIntent: gctx.priorityByIntent,
-      sport: gctx.sport, power: gctx.power, priorityQualities: gctx.priorityQualities,
-      season: gctx.season, skbIds: gctx.skbIds,
-      rpeOffset: recovery ? (recovery.rpeOffset || 0) : 0,
-      contraindicatedPatterns: contraindicatedPatternsForInjuries(activeInjuries),
-      blockedNameRegexes: blockedNameRegexesForInjuries(activeInjuries),
-      categoryPlan: categoryPlanFor(gctx.skbSportId, 1, { levelName: gctx.level, season: gctx.season })
-    }
-  });
-  return { session: specs[0] || null, bonus };
-}
-
-export default { sessionKey, intentOfTitle, localISO, sessionDiscipline, withinEpoch, weekTarget, gymSessionsWithDates, missedWindowVolume, horizonSlots, recentSessionRecovery, reflowPhases, trainNowSpec };
+export default { sessionKey, intentOfTitle, localISO, sessionDiscipline, withinEpoch, weekTarget, gymSessionsWithDates, missedWindowVolume, horizonSlots, recentSessionRecovery, reflowPhases };
