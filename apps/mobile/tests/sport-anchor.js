@@ -4,6 +4,7 @@
 // with a compound or power quality-driver (the value-ordered pick). Swim is still on the legacy path
 // — it leads with a sport-priority-list exercise (the original F8 behaviour). Plus: sprint no longer
 // accrues a pile of non-specific chest volume.
+import * as SKB from '@performance-os/engine/lib/sportKnowledge/index.js';
 import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
@@ -20,7 +21,11 @@ const byName = {}; for (const e of EXERCISES) byName[e.name] = e;
 const mk = (o) => answersToProfile({ ...BLANK_ANSWERS, goalType: 'sport', sessionMinutes: 60, daysPerWeek: 4,
   equipment: FULL, sex: 'male', lifts: { squat: 140, bench: 100, deadlift: 180 }, experienceLevel: 'intermediate', sportIntent: 'build_base', ...o });
 
-const D11_SPORTS = new Set(['run', 'cycle']);        // diagnosis-driven selection (Sprint 8); swim = legacy
+const D11_SPORTS = new Set(['run', 'cycle']);        // diagnosis-driven selection (Sprint 8)
+// WP-20: swim is CATEGORY-LED — each session opens on its SKB category assignment's
+// top-rated movement (pull-up / broad jump / trap-bar / dead bug), not the legacy
+// priority list.
+const SWIM_LIB = new Set((SKB.section('swimming', 'exerciseLibrary')?.exercises || []).map((e) => e.id));
 const COMPOUND = new Set(['squat', 'hinge', 'hpush', 'vpush', 'hpull', 'vpull', 'lunge']);
 for (const cfg of [{ sport: 'swim' }, { sport: 'run', runDiscipline: 'sprint', experienceLevel: 'advanced' }, { sport: 'run', runDiscipline: 'long' }, { sport: 'cycle' }]) {
   const prof = mk(cfg);
@@ -33,10 +38,9 @@ for (const cfg of [{ sport: 'swim' }, { sport: 'run', runDiscipline: 'sprint', e
     const allLed = wk.sessions.every(s => { const d = byName[s.items[0] && s.items[0].name]; return d && (COMPOUND.has(d.pattern) || d.quality === 'power'); });
     assert(allLed, `${tag}: every session leads with a compound/power quality-driver (leads: ${leads})`);
   } else {
-    // Legacy sports (swim): lead with a sport-priority-list exercise (original F8 behaviour).
-    const prio = new Set(resolveProgram(prof).exercisePriority);
-    const allLed = wk.sessions.every(s => { const d = byName[s.items[0] && s.items[0].name]; return d && prio.has(d.id); });
-    assert(allLed, `${tag}: every session leads with a sport-priority exercise (leads: ${leads})`);
+    // Category-led sports (swim, WP-20): lead with a movement from the sport's SKB library.
+    const allLed = wk.sessions.every(s => { const d = byName[s.items[0] && s.items[0].name]; return d && SWIM_LIB.has(d.id); });
+    assert(allLed, `${tag}: every session leads with a swimming-library movement (leads: ${leads})`);
   }
 }
 

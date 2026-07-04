@@ -82,18 +82,16 @@ export function weekCategoryPlan(skbSportId, sessionCount, { levelName = 'interm
     s.exerciseIds.push(...c.exs.map((e) => e.id));
   });
 
-  // Each session's DOSE quality: the majority primary quality among its movements'
-  // tags (the D12 seam — an upper-pull day doses like the strength work it is);
-  // fallback when tags are thin: maxStrength.
+  // Each session's DOSE quality (the D12 seam): the primary quality tag of its
+  // HIGHEST-RATED movement — the day's main event sets the dose (a posterior-chain
+  // day doses like its trap-bar HSR, not like the prehab moves that outnumber it).
+  // Fallback: maxStrength.
+  const ratingById = new Map(usable.map((e) => [e.id, ratingOf(e)]));
   for (const s of sessions) {
-    const votes = {};
-    for (const id of s.exerciseIds) {
-      const primary = (exerciseQualities(id)?.qualities || []).find((q) => q.role === 'primary');
-      if (primary) votes[primary.id] = (votes[primary.id] || 0) + 1;
-    }
-    const winner = Object.entries(votes).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1))[0];
-    s.doseQuality = winner ? winner[0] : 'maxStrength';
-    s.rationale = `covers ${s.categories.join(' + ')} from the ${skbSportId} library; dosed as ${s.doseQuality}`;
+    const lead = s.exerciseIds.slice().sort((a, b) => (ratingById.get(b) || 0) - (ratingById.get(a) || 0) || (a < b ? -1 : 1))[0];
+    const primary = lead ? (exerciseQualities(lead)?.qualities || []).find((q) => q.role === 'primary') : null;
+    s.doseQuality = primary ? primary.id : 'maxStrength';
+    s.rationale = `covers ${s.categories.join(' + ')} from the ${skbSportId} library; dosed as ${s.doseQuality} (led by ${lead})`;
   }
 
   const covered = new Set(sessions.flatMap((s) => s.categories));
@@ -101,4 +99,14 @@ export function weekCategoryPlan(skbSportId, sessionCount, { levelName = 'interm
   return { sessions, uncovered };
 }
 
-export default { weekCategoryPlan };
+// Sports whose gym week is CATEGORY-LED (the quality diagnosis cannot express their
+// needs — swim's upper-pull; flipped per sport, WP-20). Run/cycle stay rating-based.
+const CATEGORY_LED = new Set(['swimming']);
+
+/** The category plan for a sport IF it is category-led; null otherwise. */
+export function categoryPlanFor(skbSportId, sessionCount, opts = {}) {
+  if (!skbSportId || !CATEGORY_LED.has(skbSportId)) return null;
+  return weekCategoryPlan(skbSportId, sessionCount, opts);
+}
+
+export default { weekCategoryPlan, categoryPlanFor };

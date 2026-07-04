@@ -722,7 +722,13 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   //    swimmer actually needs; swim keeps the legacy fill until the model surfaces that need.
   const D11_SPORTS = new Set(['run', 'cycle']);
   const priorityQualities = ctx.priorityQualities || [];
-  const useD11 = style === 'sport' && priorityQualities.length > 0 && D11_SPORTS.has(ctx.sport);
+  // Swim is CATEGORY-LED (WP-20): it joins the D11 path only when its SKB category
+  // plan is present (ctx.categoryPlan, built by the caller from the swimming
+  // library) — the plan's per-session assignments replace the quality rotation
+  // that mis-served it in Sprint 8.
+  const categoryPlan = ctx.categoryPlan || null;
+  const useD11 = style === 'sport' && ((priorityQualities.length > 0 && D11_SPORTS.has(ctx.sport))
+    || (ctx.sport === 'swim' && !!categoryPlan));
   if (useD11) {
     const goalPrimaryD11 = null;
     // The D9 target-quality rotation is a property of the WEEK, not of this call. The
@@ -741,14 +747,17 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     work.forEach((slot, i) => {
       const wi = ctx.weekSlotIdx != null ? (ctx.weekSlotIdx + i) % weekCount : i;
       const region = regionOf(slot.focusLabel);
+      // Category-led slot (WP-20): the SKB assignment names the day's coverage, its
+      // movements, and its dose quality (led by its highest-rated movement).
+      const assignment = categoryPlan ? categoryPlan.sessions[wi % categoryPlan.sessions.length] : null;
       // Competency gate: a beginner targeting a power quality builds the max-strength base first (EDS §22).
-      let targetQuality = competencyAdjustedTarget(targetsD11[wi], levelName);
+      let targetQuality = competencyAdjustedTarget(assignment ? assignment.doseQuality : targetsD11[wi], levelName);
       // Constraint gate (D9): if injuries contraindicate this quality's drivers, re-target
       // the next trainable priority (constraintAdjustedTarget). The oracle asks: does any
       // legal tier-1/2 driver survive equipment × level × pattern × name constraints?
       // Only evaluated when constraints exist — the pure generator path is untouched.
       let retargetedFrom = null;
-      if (constrainedD11) {
+      if (constrainedD11 && !assignment) {
         // The oracle mirrors selection's FULL driver gate: a quality is trainable only if
         // some exercise survives equipment × level × contraindicated-pattern × blocked-name
         // AND is a tier-1/2 driver AND matches the quality's own post-subtraction ideal
@@ -792,8 +801,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       const picks = selectInterventions({
         req, equip: slot.equip, level: slot.level, levelName, sport: ctx.sport,
         skbIds: ctx.skbIds || new Set(), ledger: { weeklyDelivered, weeklyCeiling }, makePick,
-        blockedNameRegexes: ctx.blockedNameRegexes || []
+        blockedNameRegexes: ctx.blockedNameRegexes || [],
+        categoryIds: assignment ? new Set(assignment.exerciseIds) : null
       });
+      if (assignment) objective.rationale += ` (${assignment.rationale})`;
       if (picks.length === 0) {
         // Guarantee coverage: fall back to a fundamental anchor (never an empty session).
         const anchor = patternAnchor(slot, slot.anchors || [FUNDAMENTAL[slot.idx % FUNDAMENTAL.length]]) || patternAnchor(slot, FUNDAMENTAL);
@@ -923,6 +934,9 @@ function addSupportiveFinishers(work, ctx, levelName, s, style, deload, taper, r
     let added = 0;
     for (const ex of finisherPool(slot, ctx, levelName)) {
       if (gap <= 2 || added >= FINISHER_CAP_MIN) break;
+      // Variety guard: the prone Y/T/W scapular trio is one movement family — never
+      // stack a second member into the same session (redundant prehab).
+      if (/prone [ytw] raise/i.test(ex.name) && slot.picks.some((p) => /prone [ytw] raise/i.test(p.ex.name))) continue;
       const effectiveRole = ex.role;
       const item = makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole, taper);
       item.volumeFactor = 0;
