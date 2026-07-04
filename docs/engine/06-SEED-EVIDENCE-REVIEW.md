@@ -315,6 +315,16 @@ Recorded here so the weights review is complete.
 | C13 | qualityMovementMap.js | `strengthEndurance.movementPatterns` | Drop `lunge` (no driver) or tag a lunge variant strengthEndurance | LOW |
 | C14 | exerciseQualities.js | nordic/GHR F–V | Optional `eccentric` F–V token vs the `eccentric-emphasis` contraction in the map | LOW |
 
+**Status (2026-07-05):** C1/C2 live (PR #79 era); C4 live (WP-15); C6/C7-part/C8-part live
+(WP-21). **C3, C5, C9, C11, C12, C13 landed** (this change), with two deliberate deviations:
+**C10 is PARTIAL** — glute_bridge re-tagged as specified; hip_thrust DEFERRED because its
+hinge-default robustness-primary standing is what keeps it selectable for cyclists (the
+quality-gate guard); the sport-specific value belongs to SKB-library ratings when they
+outrank pattern tiers (WP-22/23), not to a general-tag distortion. **C14 SKIPPED** as
+cosmetic — adding an `eccentric` F–V token would grow the vocabulary for zero behavioural
+gain. Still open: C7's 48–72 h plyo spacing (D13 scheduler), C8's build rest floor (the
+build flip).
+
 ### 5.2 (b) `needsReview` flags that can be cleared as-is (reviewed, correct)
 
 These entries were checked and are **defensible against the literature** — their

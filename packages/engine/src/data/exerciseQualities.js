@@ -23,6 +23,11 @@ export const FORCE_VELOCITY = [
 ];
 
 // Fatigue-cost presets by training class (mirrors the qualities.js fatigueCost shape).
+// NOTE (H9 C12): these are MOVEMENT-CLASS costs — what performing an exercise of this
+// class costs the athlete. data/qualities.js carries per-QUALITY fatigueCost vectors —
+// what developing that adaptation costs systemically. They are different measurements
+// on the same 3-D scale (neural/metabolic/mechanical), deliberately NOT unified: D11
+// budgets sessions by movement cost; D9 sets the fatigue budget by quality cost.
 const COST = {
   maxForce:    { neural: 'high',     metabolic: 'moderate', mechanical: 'high' },
   specialist:  { neural: 'high',     metabolic: 'low',      mechanical: 'high' },
@@ -48,14 +53,14 @@ const PATTERN_TAGS = {
   hinge: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'robustness', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }], forceVelocity: 'maximal-force', fatigueCost: COST.maxForce, confidence: 'moderate' },
   // H9 review C2: robustness secondary added — unilateral loaded work is a tissue-
   // tolerance staple, and the robustness movement map requires the lunge pattern.
-  lunge: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }, { id: 'stability', role: 'secondary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'controlled-hypertrophy', fatigueCost: COST.hypertrophy, confidence: 'low' },
+  lunge: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }, { id: 'stability', role: 'secondary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'maximal-force', fatigueCost: COST.maxForce, confidence: 'moderate' }, // maximal-force (H9 C5): the LOADED default matches its maxStrength primary; bodyweight lunges re-route via classTag
   hpush: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }], forceVelocity: 'maximal-force', fatigueCost: COST.maxForce, confidence: 'moderate' },
   vpush: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }, { id: 'stability', role: 'secondary' }], forceVelocity: 'maximal-force', fatigueCost: COST.maxForce, confidence: 'moderate' },
   hpull: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }], forceVelocity: 'controlled-hypertrophy', fatigueCost: COST.hypertrophy, confidence: 'low' },
   vpull: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }], forceVelocity: 'controlled-hypertrophy', fatigueCost: COST.hypertrophy, confidence: 'low' },
   carry: { qualities: [{ id: 'strengthEndurance', role: 'primary' }, { id: 'stability', role: 'secondary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'endurance', fatigueCost: COST.endurance, confidence: 'low' },
   core:  { qualities: [{ id: 'stability', role: 'primary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'isometric', fatigueCost: COST.isometric, confidence: 'moderate' },
-  calf:  { qualities: [{ id: 'strengthEndurance', role: 'primary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'endurance', fatigueCost: COST.endurance, confidence: 'low' },
+  calf:  { qualities: [{ id: 'robustness', role: 'primary' }, { id: 'strengthEndurance', role: 'secondary' }], forceVelocity: 'endurance', fatigueCost: COST.endurance, confidence: 'moderate' }, // robustness-primary (H9 C3): calf work is Achilles/tissue capacity first (Kongsgaard HSR)
   iso:   { qualities: [{ id: 'hypertrophy', role: 'primary' }], forceVelocity: 'controlled-hypertrophy', fatigueCost: COST.hypertrophy, confidence: 'low' },
   mobility: { qualities: [{ id: 'mobility', role: 'primary' }, { id: 'stability', role: 'secondary' }], forceVelocity: 'mobility', fatigueCost: COST.mobility, confidence: 'moderate' },
 };
@@ -73,6 +78,8 @@ function classTag(ex) {
     return { qualities: [{ id: 'hypertrophy', role: 'primary' }], forceVelocity: 'controlled-hypertrophy', fatigueCost: COST.hypertrophy, confidence: 'moderate' };
   if (ex.loadClass === 'isoCore')  // anti-movement trunk work
     return { qualities: [{ id: 'stability', role: 'primary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'isometric', fatigueCost: COST.isometric, confidence: 'moderate' };
+  if (ex.pattern === 'lunge' && ex.equip === 'bodyweight')  // unloaded lunge: rep-range work, not a maximal grind (H9 C5)
+    return { qualities: [{ id: 'hypertrophy', role: 'primary' }, { id: 'stability', role: 'secondary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'controlled-hypertrophy', fatigueCost: COST.hypertrophy, confidence: 'moderate' };
   return null;  // → pattern default
 }
 
@@ -88,7 +95,7 @@ const OVERRIDES = {
   sl_pogo_jump:    { qualities: [{ id: 'reactiveStrength', role: 'primary' }, { id: 'explosiveStrength', role: 'secondary' }] },
   bounding_a_skip: { qualities: [{ id: 'reactiveStrength', role: 'primary' }, { id: 'explosiveStrength', role: 'secondary' }] },
   // Sled push: horizontal acceleration → speed-strength.
-  sled_push: { forceVelocity: 'speed-strength' },
+  sled_push: { qualities: [{ id: 'explosiveStrength', role: 'primary' }, { id: 'maxStrength', role: 'secondary' }], forceVelocity: 'speed-strength', fatigueCost: COST.plyo }, // H9 C11: concentric-dominant, no SSC — explosive, never reactive
   // KB swing: ballistic hip hinge — explosive, not a maximal-force grind.
   kb_swing: { qualities: [{ id: 'explosiveStrength', role: 'primary' }, { id: 'strengthEndurance', role: 'secondary' }], forceVelocity: 'ballistic', fatigueCost: COST.plyo, confidence: 'moderate' },
   // Prehab / cuff / hip-stability isolations mis-default to hypertrophy → stability/robustness.
@@ -99,6 +106,15 @@ const OVERRIDES = {
   lateral_band_walk:     { qualities: [{ id: 'stability', role: 'primary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'controlled-hypertrophy', fatigueCost: COST.mobility, confidence: 'moderate' },
   sl_hip_abduction:      { qualities: [{ id: 'stability', role: 'primary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'controlled-hypertrophy', fatigueCost: COST.mobility, confidence: 'moderate' },
   tibialis_raise:        { qualities: [{ id: 'strengthEndurance', role: 'primary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'endurance', fatigueCost: COST.endurance, confidence: 'moderate' },
+  // Single-leg calf: tissue capacity first + ankle-stiffness contribution (H9 C3).
+  sl_calf: { qualities: [{ id: 'robustness', role: 'primary' }, { id: 'reactiveStrength', role: 'secondary' }], forceVelocity: 'endurance', fatigueCost: COST.endurance, confidence: 'moderate' },
+  // Glute bridge: rep-range glute work, not the maximal hinge grind the pattern
+  // default assumes (H9 C10; Contreras). hip_thrust's matching re-tag is DEFERRED:
+  // its hinge-default robustness-primary standing is what keeps it selectable for
+  // cyclists (a guarded coaching requirement — quality-gate.js), and the right home
+  // for that sport-specific value is the SKB-primary selection (WP-22/23), not a
+  // general-tag distortion. Revisit when library ratings outrank pattern tiers.
+  glute_bridge: { qualities: [{ id: 'hypertrophy', role: 'primary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'controlled-hypertrophy', fatigueCost: COST.hypertrophy, confidence: 'moderate' },
   // Nordic / glute-ham raise: eccentric hamstring robustness is the headline.
   nordic_curl:     { qualities: [{ id: 'robustness', role: 'primary' }, { id: 'maxStrength', role: 'secondary' }], forceVelocity: 'maximal-force', fatigueCost: COST.specialist, confidence: 'moderate' },
   glute_ham_raise: { qualities: [{ id: 'robustness', role: 'primary' }, { id: 'maxStrength', role: 'secondary' }], forceVelocity: 'maximal-force', fatigueCost: COST.specialist, confidence: 'moderate' },

@@ -13,9 +13,9 @@ const ev = (confidence) => ({ level: 'seed', confidence, source: 'seed movement 
 export const QUALITY_MOVEMENT = {
   maxStrength:       { movementPatterns: ['squat', 'hinge', 'hpush', 'vpush', 'hpull', 'vpull'], forceVelocity: 'maximal-force', contraction: 'grinding', evidence: ev('moderate') },
   hypertrophy:       { movementPatterns: ['squat', 'hinge', 'lunge', 'hpush', 'vpush', 'hpull', 'vpull', 'iso'], forceVelocity: 'controlled-hypertrophy', contraction: 'controlled', evidence: ev('moderate') },
-  explosiveStrength: { movementPatterns: ['squat', 'hinge'], forceVelocity: 'strength-speed', contraction: 'explosive-concentric', evidence: ev('moderate') },
+  explosiveStrength: { movementPatterns: ['squat', 'hinge', 'lunge'], forceVelocity: 'strength-speed', contraction: 'explosive-concentric', evidence: ev('moderate') }, // +lunge (H9 C9): unilateral explosive drivers (bounding, sled) are lunge-pattern
   reactiveStrength:  { movementPatterns: ['squat', 'calf'], forceVelocity: 'ballistic', contraction: 'fast-ssc', evidence: ev('moderate') },
-  strengthEndurance: { movementPatterns: ['lunge', 'carry', 'calf', 'iso'], forceVelocity: 'endurance', contraction: 'sustained', evidence: ev('low') },
+  strengthEndurance: { movementPatterns: ['carry', 'calf', 'iso'], forceVelocity: 'endurance', contraction: 'sustained', evidence: ev('low') }, // -lunge (H9 C13): no lunge driver carries an SE tag
   aerobicCapacity:   { movementPatterns: ['carry', 'lunge'], forceVelocity: 'endurance', contraction: 'sustained', note: 'gym-support only — developed by cardio, not the gym', evidence: ev('low') },
   anaerobicCapacity: { movementPatterns: ['carry', 'lunge'], forceVelocity: 'endurance', contraction: 'sustained', note: 'gym-support only — developed by cardio, not the gym', evidence: ev('low') },
   mobility:          { movementPatterns: ['mobility'], forceVelocity: 'mobility', contraction: 'end-range', evidence: ev('moderate') },
