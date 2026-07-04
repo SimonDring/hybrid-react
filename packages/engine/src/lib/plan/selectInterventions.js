@@ -17,14 +17,21 @@ import kb from '../knowledge/kb.js';
 // H9 review §4 (the budget/transfer numbers are honest low-confidence heuristics;
 // the pattern cap is the one uncontested rule).
 const FATIGUE_BUDGET = kb.value('selection.fatigue_budget');
-const { unit: UNIT } = kb.value('selection.fatigue_units');
+const { unit: UNIT, combineWeights: COMBINE } = kb.value('selection.fatigue_units');
 const TRANSFER = kb.value('selection.transfer_weights');
 const PATTERN_CAP = kb.value('selection.pattern_cap');
 
+// H9 C4/F7: the 3-D fatigue vector combines by WEIGHTED MEAN, not max() — max()
+// equalised five of eight exercise classes at 3 units, so a heavy squat, an Olympic
+// pull and a leg extension all cost the same in the transfer-per-fatigue denominator.
+// The mean preserves the neural/metabolic/mechanical model (a metabolic-only cost no
+// longer masquerades as a full-CNS one); the weights are governed knowledge.
 function fatigueScalar(ex) {
   const fc = exerciseQualities(ex.id)?.fatigueCost;
   if (!fc) return 2;
-  return Math.max(UNIT[fc.neural] || 1, UNIT[fc.metabolic] || 1, UNIT[fc.mechanical] || 1);
+  const w = COMBINE;
+  const num = (w.neural * (UNIT[fc.neural] || 1)) + (w.metabolic * (UNIT[fc.metabolic] || 1)) + (w.mechanical * (UNIT[fc.mechanical] || 1));
+  return num / (w.neural + w.metabolic + w.mechanical);
 }
 // 'primary' | 'secondary' | null — does the exercise train the target quality (S5 tags)?
 function trainsTarget(ex, target) {
