@@ -104,12 +104,15 @@ for (const name of ['cyclist', 'runnerFemale']) {
   assert(pressCapOk, `P4 press cap: ${name} has ≤1 horizontal-press slot per session`);
   assert(benchOk, `P4 no heavy bench: ${name} bench is an accessory (not a heavy 180s-rest primary)`);
 }
-{ // swim control: pressing is sport-specific for swimmers and must remain heavy
-  const hasHeavyPress = allItems(PLANS.swimmer.plan).some(it => {
+{ // WP-20 (Sprint 9): swim is CATEGORY-LED by its SKB library, whose authored
+  // gymPhilosophy carries NO press category (swimming itself loads the press
+  // pattern; balance = pull + shoulder ER). The old 'swimmers keep a heavy press'
+  // contract is retired with the flip — heavy PULL strength is the control instead.
+  const hasHeavyPull = allItems(PLANS.swimmer.plan).some(it => {
     const ex = exOf(it.name);
-    return ex && (ex.pattern === 'hpush' || ex.pattern === 'vpush') && ex.role === 'primary' && reps(it.sets) <= 5;
+    return ex && (ex.pattern === 'hpull' || ex.pattern === 'vpull') && reps(it.sets) <= 6;
   });
-  assert(hasHeavyPress, 'P4 swim control: swimmers still get a heavy press primary');
+  assert(hasHeavyPull, 'P4 swim control: swimmers get heavy PULL strength (category-led)');
 }
 
 // ── P5: variety — the prone Y/T/W trio never stacks in one session ──────────────

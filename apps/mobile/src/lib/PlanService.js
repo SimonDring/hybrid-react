@@ -32,6 +32,7 @@ import { combinedMultiplier, deloadRecommendation } from '@performance-os/engine
 import { ruleVolumeAdjustment } from '@performance-os/engine/lib/sportKnowledge/reflowAdjust.js';
 import { deriveConstraints, lightenItems } from '@performance-os/engine/lib/plan/constraints.js';
 import { contraindicatedPatternsForInjuries, blockedNameRegexesForInjuries } from '@performance-os/engine/lib/session/movementRequirements.js';
+import { categoryPlanFor } from '@performance-os/engine/lib/session/categoryCoverage.js';
 import { buildPrimer } from '@performance-os/engine/lib/plan/primers.js';
 import { performanceModelForProfile, kb } from '@performance-os/engine';
 import * as SKB from '@performance-os/engine/lib/sportKnowledge/index.js';
@@ -103,7 +104,8 @@ function gymCtx(profile) {
     emphasis: program.emphasis, volumeScalar: program.volumeScalar,
     exercisePriority: program.exercisePriority || [], priorityByIntent: program.priorityByIntent || new Map(),
     sport: profile.sport || null, power: !!program.power,
-    priorityQualities: (perf && perf.priorityAdaptations) || [], season: program.season, skbIds
+    priorityQualities: (perf && perf.priorityAdaptations) || [], season: program.season, skbIds,
+    skbSportId
   };
 }
 
@@ -349,7 +351,8 @@ function adaptedPhases() {
         // above) — without it every single-slot rebuild pinned the same top-priority
         // quality and a runner's explosive days collapsed into the durability day.
         weekGymCount: gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, weekSlotIdx: s.i,
-        rpeOffset, contraindicatedPatterns, blockedNameRegexes
+        rpeOffset, contraindicatedPatterns, blockedNameRegexes,
+        categoryPlan: categoryPlanFor(gctx.skbSportId, gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, { levelName: gctx.level, season: gctx.season })
       }
     })[0];
     if (spec) {
@@ -836,7 +839,7 @@ export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
     // legacy muscle-deficit fill. Build profiles have no priorityQualities, so the D11
     // gate can't fire for them and their Train Now output is unchanged. An on-demand
     // session on a low-readiness day is honest too: same readiness rpeOffset (WP-10).
-    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, bodyweight: gctx.bodyweight, exercisePriority: gctx.exercisePriority, priorityByIntent: gctx.priorityByIntent, sport: gctx.sport, power: gctx.power, priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds, rpeOffset: _runtime.recovery ? (_runtime.recovery.rpeOffset || 0) : 0, contraindicatedPatterns: contraindicatedPatternsForInjuries(tnInjuries), blockedNameRegexes: blockedNameRegexesForInjuries(tnInjuries) }
+    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, bodyweight: gctx.bodyweight, exercisePriority: gctx.exercisePriority, priorityByIntent: gctx.priorityByIntent, sport: gctx.sport, power: gctx.power, priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds, rpeOffset: _runtime.recovery ? (_runtime.recovery.rpeOffset || 0) : 0, contraindicatedPatterns: contraindicatedPatternsForInjuries(tnInjuries), blockedNameRegexes: blockedNameRegexesForInjuries(tnInjuries), categoryPlan: categoryPlanFor(gctx.skbSportId, 1, { levelName: gctx.level, season: gctx.season }) }
   });
   const session = specs[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
   return { session: decorateSections(session, equipArr), why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };

@@ -34,6 +34,7 @@ import { performanceModelForProfile } from './performance/forProfile.js';
 import { profileToAthleteModel } from './adapters/profileToAthleteModel.js';
 import * as SKB from './sportKnowledge/index.js';
 import { validateWeek } from './validation/contract.js';
+import { categoryPlanFor } from './session/categoryCoverage.js';
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
@@ -133,7 +134,8 @@ function buildGymWeek(count, ctx, profile, program, diag) {
     style: program.style, emphasis: program.emphasis, volumeScalar: program.volumeScalar,
     power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || [],
     priorityByIntent: program.priorityByIntent || new Map(),
-    priorityQualities: diag.priorityQualities, season: program.season, skbIds: diag.skbIds
+    priorityQualities: diag.priorityQualities, season: program.season, skbIds: diag.skbIds,
+    categoryPlan: diag.categoryPlan
   });
 }
 
@@ -147,6 +149,8 @@ export function generatePlan(profile = {}, opts = {}) {
   const skbSportId = program.sport ? (profileToAthleteModel(profile, asOf)?.sportingContext?.primarySport || null) : null;
   const diag = {
     priorityQualities: (perf && perf.priorityAdaptations) || [],
+    // Category-led sports (WP-20 — swim): the SKB library's per-session coverage plan.
+    categoryPlan: null,
     // Map(id → transferToSportRating): the library's authored transfer judgement per
     // movement (Sprint 9 19a) — membership grants §34 tier-4 standing, the rating values it.
     skbIds: skbSportId ? new Map((SKB.section(skbSportId, 'exerciseLibrary')?.exercises || []).map((e) => [e.id, e.transferToSportRating])) : new Map(),
@@ -154,6 +158,7 @@ export function generatePlan(profile = {}, opts = {}) {
   const { busyDays, sportMuscles } = deriveConstraints(profile);
   const availability = profile.availability || {};
   const totalDays = Math.max(1, Math.min(7, availability.days_per_week || 3));
+  diag.categoryPlan = categoryPlanFor(skbSportId, totalDays, { levelName: getGymLevel(profile), season: program.season });
   const minutes = SESSION_CEILING_MIN;   // session length is volume-driven; this is only the ceiling
   const totalSessions = totalDays;
 

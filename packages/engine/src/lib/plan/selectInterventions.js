@@ -77,7 +77,7 @@ function valueOf(ex, target, skbIds) {
   return Math.max(qualityValue, transferValue);
 }
 
-export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [] } = {}) {
+export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [], categoryIds = null } = {}) {
   const target = req?.objective?.targetQuality;
   const reqPatterns = new Set(req?.requirements?.movementPatterns || []);
   const contra = new Set((req?.requirements?.contraindicated || []).map((c) => c.pattern));
@@ -95,11 +95,23 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
     // coarse — a hamstring-protect block on jumping doesn't contraindicate the whole
     // 'calf' pattern, but pogo jumps must still never be SELECTED for that athlete.
     if (blockedNameRegexes.length && blockedNameRegexes.some((r) => r.test(ex.name))) continue;
-    const tier = tierOf(ex, target, sport, skbIds);
+    // Category-led sessions (WP-20): the slot's SKB category assignment IS the
+    // requirement — its movements are tier 1 and exempt from the quality-pattern
+    // gate (their legality was already filtered above: equip/level/contra/name).
+    // Mobility work never takes tier-1 standing (it stays a tier-7 finisher — a
+    // foam roller must not anchor a session at a working dose).
+    const isCategoryPick = categoryIds ? (categoryIds.has(ex.id) && ex.pattern !== 'mobility') : false;
+    const tier = isCategoryPick ? 1 : tierOf(ex, target, sport, skbIds);
     if (tier == null) continue;
     // Quality-driver compounds must match a required movement pattern (D10).
-    if ((tier === 1 || tier === 2) && reqPatterns.size && !reqPatterns.has(ex.pattern)) continue;
-    cand.push({ ex, tier, value: valueOf(ex, target, skbIds) });
+    if (!isCategoryPick && (tier === 1 || tier === 2) && reqPatterns.size && !reqPatterns.has(ex.pattern)) continue;
+    // Within a category assignment the authored rating alone orders picks — the
+    // transfer-per-fatigue division would let a cheap prehab move outrank the
+    // pull-up the assignment exists for; the fatigue BUDGET still bounds totals.
+    const value = isCategoryPick
+      ? (skbRatingOf(skbIds, ex.id) ?? TRANSFER.skbDefaultRating) / TRANSFER.skbRatingDivisor
+      : valueOf(ex, target, skbIds);
+    cand.push({ ex, tier, value });
   }
   cand.sort((a, b) => a.tier - b.tier || b.value - a.value || (a.ex.id < b.ex.id ? -1 : a.ex.id > b.ex.id ? 1 : 0));
 

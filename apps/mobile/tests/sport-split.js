@@ -4,6 +4,7 @@
 // days (e.g. a pull day, a press/shoulder day, a posterior/legs day), trains its
 // emphasised muscles ~2×/week and its de-emphasised ones ~1×, and still leads every
 // session with sport-priority work.
+import * as SKB from '@performance-os/engine/lib/sportKnowledge/index.js';
 import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
@@ -39,9 +40,11 @@ assert(legDays >= 1 && legDays <= 2, `S2 legs trained on 1–2 days, not every d
 // S3: the emphasised pulling muscles get real frequency (~2×/week).
 assert(daysTraining(wk.sessions, 'back') >= 2, `S3 back (swim's prime mover) trained >=2 days (got ${daysTraining(wk.sessions, 'back')})`);
 
-// S4: every session still leads with a sport-priority lift.
-const allLed = wk.sessions.every(s => { const d = byName[s.items[0] && s.items[0].name]; return d && prio.has(d.id); });
-assert(allLed, `S4 every swim session leads with a sport-priority exercise (leads: ${wk.sessions.map(s => s.items[0] && s.items[0].name).join(', ')})`);
+// S4 (WP-20): swim is category-led — every session leads with a swimming-library movement.
+const SWIM_LIB = new Set((SKB.section('swimming', 'exerciseLibrary')?.exercises || []).map((e) => e.id));
+const exByNameS4 = Object.fromEntries(EXERCISES.map((e) => [e.name, e]));
+const allLed = wk.sessions.every(s => { const d = exByNameS4[s.items[0] && s.items[0].name]; return d && SWIM_LIB.has(d.id); });
+assert(allLed, `S4 every swim session leads with a swimming-library movement (leads: ${wk.sessions.map(s => s.items[0] && s.items[0].name).join(', ')})`);
 
 // S5: weekly volume still tracks the target (split redistributes, never inflates).
 const tg = resolveProgram(prof);
