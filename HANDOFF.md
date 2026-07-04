@@ -272,7 +272,28 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   runner's sessions contain a REAL strength compound (Back squat) instead of accessory-only;
   all WP-13 guarantees hold. NOTE for Sprint 9: the quality-tags × movement-requirements
   vocabulary mismatch is the same family as the swim gap (H5).
-- **⇒ NEXT (in order): the H9 seed-evidence pass** (one-day scientific review of
+- **PR #76 — H9 seed-evidence review (docs).** `docs/engine/06-SEED-EVIDENCE-REVIEW.md`
+  (agent-authored, review-only): 14 proposed corrections (2 HIGH, 7 MED, 5 LOW) over
+  exerciseQualities/qualities/qualityMovementMap + the D11 weights, with a consumption-chain
+  impact model. Verdict: seed data safe to keep steering live plans while corrections land;
+  lists which needsReview flags can be cleared. **C3–C9 (MED) are STAGED — land with WP-21
+  before it doses from this data**; C10–C14 (LOW) opportunistic.
+- **PR #77 — H9 HIGH corrections applied (C1/C2 + completions).**
+  (1) `cardioGymSupport(quality, sport)` — cyclists/swimmers no longer get plyometrics from
+  the sport-agnostic aerobic translation (no SSC; heavy strength per Rønnestad/Aagaard);
+  runners keep reactive work. (2) Robustness tag×map coherence: squat/carry join its ideal
+  patterns, lunge gains a robustness tag, and the loaded **hinge is robustness-PRIMARY**
+  (nordic precedent; HSR/eccentric literature) — without which the F7 fatigue-collapse let a
+  backpack carry ANCHOR sessions over the RDL. (3) The supportive finisher is shared with the
+  D11 path (fatigue-bounded ≠ time-bounded; beginners get their prehab back). Live outcomes:
+  cyclist = zero plyos + squat-led; runner durability = RDL → trap-bar → carry. Re-baseline
+  audited key-by-key: exactly the 8 run/cycle archetypes moved; build + swim byte-identical.
+  Suite **127/127**.
+- **⇒ NEXT: WP-14** (allocator `scheme()` dose tables → knowledge/programming keyed by
+  (quality, phase) with a byte-identical style bridge — the D12 enabler), then WP-21 dosing
+  by quality WITH the staged C3–C9 corrections. Sprint 9 (SKB-primary) remains HIGH-risk —
+  pause for Simon's review before flipping.
+- ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
   **WP-14** (allocator `scheme()` dose tables → knowledge/programming keyed by (quality,
