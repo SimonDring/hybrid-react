@@ -16,12 +16,9 @@
 
 import Database from './Database.js';
 import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
-import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets.js';
-import { allocateGym, SESSION_CEILING_MIN } from '@performance-os/engine/lib/plan/allocator.js';
-import { functionalSlotMinutes } from '@performance-os/engine/lib/plan/strength.js';
+import { SESSION_CEILING_MIN } from '@performance-os/engine/lib/plan/allocator.js';
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 import { countWeeklyVolume } from '@performance-os/engine/lib/plan/volume.js';
-import { WINDOW_DAYS } from '@performance-os/engine/lib/plan/rollingVolume.js';
 import { resolveLifts } from '@performance-os/engine/lib/liftProgression.js';
 import { MUSCLE_GROUPS, MUSCLE_LABELS } from '@performance-os/engine/data/muscleVolume.js';
 import { getOverrides } from './sessionOverrides.js';
@@ -29,8 +26,6 @@ import { applyInjuryRules, applyPrevention } from '@performance-os/engine/lib/in
 import { deloadRecommendation } from '@performance-os/engine/lib/plan/trainingLoad.js';
 import { ruleVolumeAdjustment } from '@performance-os/engine/lib/sportKnowledge/reflowAdjust.js';
 import { deriveConstraints } from '@performance-os/engine/lib/plan/constraints.js';
-import { contraindicatedPatternsForInjuries, blockedNameRegexesForInjuries } from '@performance-os/engine/lib/session/movementRequirements.js';
-import { categoryPlanFor } from '@performance-os/engine/lib/session/categoryCoverage.js';
 import * as reflowLib from '@performance-os/engine/lib/plan/reflow.js';
 import { buildPrimer } from '@performance-os/engine/lib/plan/primers.js';
 import { performanceModelForProfile, kb } from '@performance-os/engine';
@@ -48,16 +43,21 @@ let _cache = { sig: null, plan: null };
 // ---------------------------------------------------------------------------
 // recovery = RecoveryOutput (src/lib/recovery), load = LoadOutput (src/lib/load) —
 // the store computes both each buildView and the reflow consumes the contracts here.
-let _runtime = { sessions: {}, recovery: null, load: null };
+// L3 contract (TAS §4.1, WP-24c): the orchestrator holds NO mutable coaching state.
+// The store supplies an immutable runtime SNAPSHOT — swapped whole on every
+// setRuntime, frozen so nothing can mutate it in place. Every read goes through
+// runtime(); the external setRuntime signature is unchanged (store + tests).
+let _snapshot = Object.freeze({ sessions: Object.freeze({}), recovery: null, load: null });
+const runtime = () => _snapshot;
 let _adaptCache = { key: null, phases: null };
 let _lastForgiven = null;   // per-muscle sets left unscheduled last reflow (over the safe ceiling)
 
 export function setRuntime(rt = {}) {
-  _runtime = {
+  _snapshot = Object.freeze({
     sessions: rt.sessions || {},
     recovery: rt.recovery ?? null,
     load: rt.load ?? null
-  };
+  });
 }
 
 // The active load adaptation for the current week, for the UI banner. Returns
@@ -68,7 +68,7 @@ export function currentAdaptation() {
   if (cw == null) return null;
   const profile = Database.services.getProfile() || {};
   const reverted = !!(profile.load_overrides && profile.load_overrides[cw] === 'plan');
-  const load = _runtime.load;
+  const load = runtime().load;
   const action = load && load.inputs ? load.inputs.action : null;
   if (reverted) {
     return (action && action !== 'none')
@@ -145,7 +145,7 @@ function gymSessionsWithDates(phases) {
 // programming (which the per-slot normal share already covers).
 function missedWindowVolume(gymList, overrides, today) {
   return reflowLib.missedWindowVolume(gymList, overrides, today,
-    { sessions: _runtime.sessions, start: getStartDate(), startISO: epochStartISO() });
+    { sessions: runtime().sessions, start: getStartDate(), startISO: epochStartISO() });
 }
 
 // Pending gym slots whose scheduled date falls in [today, today + WINDOW_DAYS] —
@@ -153,7 +153,7 @@ function missedWindowVolume(gymList, overrides, today) {
 // and train-now-pinned slots are excluded; they're locked. Returned in date order.
 function horizonSlots(gymList, overrides, today) {
   return reflowLib.horizonSlots(gymList, overrides, today,
-    { sessions: _runtime.sessions, startISO: epochStartISO() });
+    { sessions: runtime().sessions, startISO: epochStartISO() });
 }
 
 /**
@@ -180,24 +180,24 @@ function adaptedPhases() {
   // ---- memo key: recompute when settled state, readiness, load, overrides, the
   // generated plan, or the DAY (the rolling window slides) changes ----
   const inWeeks = (k) => weeksTouched.some(w => k.includes(`_wk${w}_`));
-  const stateSig = Object.keys(_runtime.sessions)
+  const stateSig = Object.keys(runtime().sessions)
     .filter(inWeeks)
-    .map(k => { const s = _runtime.sessions[k] || {}; return `${k}:${s.completed ? 'c' : ''}${s.skipped ? 's' : ''}${s.started ? 'p' : ''}${withinEpoch(s) ? '' : 'x'}`; })
+    .map(k => { const s = runtime().sessions[k] || {}; return `${k}:${s.completed ? 'c' : ''}${s.skipped ? 's' : ''}${s.started ? 'p' : ''}${withinEpoch(s) ? '' : 'x'}`; })
     .filter(x => !x.endsWith(':'))
     .sort().join(',');
-  const recovery = _runtime.recovery;                  // RecoveryOutput (or null)
+  const recovery = runtime().recovery;                  // RecoveryOutput (or null)
   const level = recovery ? recovery.readinessLevel : null;
   const band = level === 'high' ? 'h' : level === 'moderate' ? 'm' : level === 'low' ? 'l' : 'n';
   const override = recovery ? recovery.sessionOverride : null;   // illness('rest') / travel('easy')
   const ovSig = Object.keys(overrides).filter(inWeeks).map(k => `${k}@${overrides[k].createdAt || 0}`).sort().join(',');
   const reverted = !!(profile.load_overrides && profile.load_overrides[cw] === 'plan');
-  const load = reverted ? null : _runtime.load;        // LoadOutput (or null when reverted)
+  const load = reverted ? null : runtime().load;        // LoadOutput (or null when reverted)
   const loadAction = load && load.inputs ? load.inputs.action : 'none';
 
   // ---- adaptive deload (F9): promote fatigue signals into a TRUE deload on the
   // current week, or DEFER a planned one when the athlete is clearly fresh. ACWR is
   // demoted — it only corroborates (see deloadRecommendation). ----
-  const recentRecovery = reflowLib.recentSessionRecovery(_runtime.sessions, epochStartISO());
+  const recentRecovery = reflowLib.recentSessionRecovery(runtime().sessions, epochStartISO());
   const cwWeek = g.phases.flatMap(p => p.weeks || []).find(w => w.num === cw) || {};
   const rec = reverted ? { action: 'none', reason: null } : deloadRecommendation({
     loadAction, readiness: recovery ? recovery.score : null, recentRecovery,
@@ -225,8 +225,6 @@ function adaptedPhases() {
   // injuries — they join the memo key and the allocator ctx. The render-time
   // injury filter stays as the backstop on every path.
   const activeInjuries = Database.services.listActiveInjuries().filter(i => i.body_part_key);
-  const contraindicatedPatterns = contraindicatedPatternsForInjuries(activeInjuries);
-  const blockedNameRegexes = blockedNameRegexesForInjuries(activeInjuries);
   const injSig = activeInjuries.map(i => `${i.body_part_key}.${i.severity || 3}.${i.rehab_phase || ''}`).sort().join(',');
 
   const key = `${_cache.sig}|${cw}|${localISO(today)}|${stateSig}|${band}|${ovSig}|${loadAction}|${recBand}|${rec.action}|${override || ''}|${reverted ? 'r' : ''}|${ruleAdj.ruleIds.join('.')}|inj:${injSig}`;
@@ -238,7 +236,7 @@ function adaptedPhases() {
   // delegates, and caches. `load` is already nulled when the athlete reverted.
   const { phases, forgiven } = reflowLib.reflowPhases({
     phases: g.phases, currentWeek: cw, today, gctx: gymCtx(profile), profile,
-    sessions: _runtime.sessions, recovery, load, reverted, overrides, activeInjuries,
+    sessions: runtime().sessions, recovery, load, reverted, overrides, activeInjuries,
     dateFor: dateForSession, totalWeeks: totalWeeks(),
     startDate: getStartDate(), startISO: epochStartISO(),
   });
@@ -552,7 +550,7 @@ export function weekVolumeProgressFor(phase, week) {
   week.sessions.forEach((s, i) => {
     if (sessionDiscipline(s) !== 'gym') return;
     all.push(s);
-    const st = _runtime.sessions[sessionKey(phase.id, week.num, i)];
+    const st = runtime().sessions[sessionKey(phase.id, week.num, i)];
     if (st && st.completed && withinEpoch(st)) completed.push(s);
   });
   if (!all.length) return null;
@@ -603,7 +601,7 @@ function nextPendingGymTarget() {
       if (week.num < cw) continue;
       for (let i = 0; i < week.sessions.length; i++) {
         if (sessionDiscipline(week.sessions[i]) !== 'gym') continue;
-        const st = _runtime.sessions[sessionKey(phase.id, week.num, i)] || {};
+        const st = runtime().sessions[sessionKey(phase.id, week.num, i)] || {};
         const settled = withinEpoch(st) && (st.completed || st.skipped);
         if (!settled) {
           return { phaseId: phase.id, weekNum: week.num, idx: i, key: sessionKey(phase.id, week.num, i) };
@@ -622,39 +620,26 @@ export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
   // The biggest gaps RIGHT NOW = volume MISSED across the trailing window. If
   // nothing's owed you're on track, so this becomes a balanced bonus session
   // toward the current week's target. Same ledger the weekly reflow uses.
-  let weeklyTgt = null, missed = {}, intent = 'base';
+  let weeklyTgt = null, missed = {}, tnPhase = null, tnWeek = null;
   const cw = currentWeekNumber();
   if (cw != null) {
     const g = generated();
     const today = new Date(); today.setHours(0, 0, 0, 0);
-    let phase = null, week = null;
-    for (const p of (g ? g.phases : [])) { const w = (p.weeks || []).find(w => w.num === cw); if (w) { phase = p; week = w; break; } }
-    if (phase && week) {
-      intent = intentOfTitle(phase.title);
-      weeklyTgt = weekTarget(phase, week, gctx);
+    for (const p of (g ? g.phases : [])) { const w = (p.weeks || []).find(w => w.num === cw); if (w) { tnPhase = p; tnWeek = w; break; } }
+    if (tnPhase && tnWeek) {
+      weeklyTgt = weekTarget(tnPhase, tnWeek, gctx);
       missed = missedWindowVolume(gymSessionsWithDates(g.phases), getOverrides(), today);
     }
   }
-  if (!weeklyTgt) weeklyTgt = weeklyMuscleTargets({ style: gctx.style, intent, level: gctx.level, weekInPhase: 1, phaseWeeks: 1 });
-
-  // On track (nothing meaningful missed) → balanced bonus toward the week target.
-  const totalMissed = Object.values(missed).reduce((a, b) => a + (b || 0), 0);
-  const bonus = totalMissed <= 5;
-  const fillTarget = bonus ? weeklyTgt : missed;
-
-  const tnInjuries = Database.services.listActiveInjuries().filter(i => i.body_part_key);
-  const specs = allocateGym({
-    targets: fillTarget,
-    slots: [{ minutes: functionalSlotMinutes(gctx.style, minutes), equip: equipArr }],
-    // Same ctx shape the weekly plan + reflow use (gymCtx) — including the D11 fields
-    // (sport/power/priorityQualities/season/skbIds), so a run/cycle athlete's on-demand
-    // session is selected by the same diagnosis-driven brain as their plan, not the
-    // legacy muscle-deficit fill. Build profiles have no priorityQualities, so the D11
-    // gate can't fire for them and their Train Now output is unchanged. An on-demand
-    // session on a low-readiness day is honest too: same readiness rpeOffset (WP-10).
-    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, bodyweight: gctx.bodyweight, exercisePriority: gctx.exercisePriority, priorityByIntent: gctx.priorityByIntent, sport: gctx.sport, power: gctx.power, priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds, rpeOffset: _runtime.recovery ? (_runtime.recovery.rpeOffset || 0) : 0, contraindicatedPatterns: contraindicatedPatternsForInjuries(tnInjuries), blockedNameRegexes: blockedNameRegexesForInjuries(tnInjuries), categoryPlan: categoryPlanFor(gctx.skbSportId, 1, { levelName: gctx.level, season: gctx.season }) }
+  // WP-24c: the DECISION (bonus-vs-catch-up, governed threshold, selection through
+  // the same allocator brain as the plan) is pure engine code; this orchestrator
+  // gathers state and decorates the result.
+  const { session: spec, bonus } = reflowLib.trainNowSpec({
+    gctx, minutes, equip: equipArr, currentWeek: cw, phase: tnPhase, week: tnWeek,
+    weeklyTarget: weeklyTgt, missed, recovery: runtime().recovery,
+    activeInjuries: Database.services.listActiveInjuries().filter(i => i.body_part_key)
   });
-  const session = specs[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
+  const session = spec || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
   return { session: decorateSections(session, equipArr), why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };
 }
 

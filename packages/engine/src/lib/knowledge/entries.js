@@ -124,6 +124,17 @@ export const ENTRIES = [
     appliesTo: ['volume']
   },
 
+  {
+    id: 'programming.train_now',
+    rule: 'An on-demand session is a BONUS toward the week\'s target when the trailing-window missed volume is ≤ bonusMissedSetsMax; beyond that it becomes a catch-up built around the missed muscles.',
+    value: { bonusMissedSetsMax: 5 },
+    evidenceLevel: 'L5',
+    source: 'Internal heuristic (relocated from PlanService per audit §4.2 — the last app-side programming literal)',
+    confidence: 'low',
+    lastReviewed: '2026-07-05',
+    appliesTo: ['programming']
+  },
+
   // ── Validation policies (D14) ─────────────────────────────────────────────────
   {
     id: 'programming.session_ceiling',
