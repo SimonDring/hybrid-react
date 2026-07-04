@@ -400,13 +400,31 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   docs/superpowers/specs/2026-07-04-wp30-explainability-design.md. Suite **135/135**.
   Deferred + recorded: legacy-anchor rationale (free with the WP-22 build flip);
   substitution rationale (needs its own emission).
-- **⚠ FINDING (open follow-up, task chip spawned):** a runner profile WITHOUT
-  `run_discipline` maps to NO SKB id (`running_*` all need one — adapters/
-  profileToAthleteModel.js `toSkbSportId`) → no demand profile → no D4/D5 → the whole
-  diagnosis-first path silently drops to legacy. Real onboarding collects the discipline, so
-  this hits stored pre-discipline profiles + fixtures (the /dev Runner preset had it — fixed
-  in #92). The engine-side default (no-discipline run → running_middle?) flips a cohort
-  legacy→D11: a DELIBERATE coaching change with its own gates, not a bugfix.
+- **PR #93 — the discipline-less runner default (the WP-30 finding, done deliberately).**
+  One athlete, one assumed discipline: an unstated running discipline = MIDDLE DISTANCE
+  everywhere — NEW `sportKnowledge.skbSportIdFor(sport, runDiscipline)` is the ONE engine-
+  sport→SKB-id derivation (the dead `'run'→'running'` alias removed); the adapter, the
+  reflow rules lookup (which ALSO used the dead alias — no runner of ANY discipline ever
+  matched; inert since running's decisionRules are prose), and the legacy table reads
+  (strength/program.js + plan/periodization.js) all take the same prior, so the defaulted
+  athlete is BYTE-IDENTICAL to an explicit `runDiscipline:'middle'` athlete (tested).
+  Goldens byte-identical with NO re-baseline (every golden runner states a discipline —
+  zero keys allowed to move, zero moved); three tests re-pinned from the old generic
+  fallback to the new prior. Suite **136/136**.
+- **PR #94 — GAA players route to THEIR sport's SKB profile (persist the answer, never
+  guess).** `'gaa'` is ambiguous (Gaelic football AND hurling) and `skb.get('gaa')` matched
+  nothing — the only structured decisionRules besides swimming's (12 per code) NEVER fired
+  for real runtime profiles, and GAA athlete models got no primarySport → no diagnosis.
+  Onboarding already REQUIRES the exact SKB id (`answers.skbSport`) — it now PERSISTS as
+  `profile.sport_code` (JSON field, no migration), and every SKB lookup resolves through
+  NEW `skbSportIdOf(profile)`: sport_code → the dual-written athlete model's primarySport
+  (pre-sport_code profiles) → the skbSportIdFor floor. A code-less `'gaa'` profile stays
+  deliberately INERT (never the wrong code — tested). The activation: runtime-shaped GAA
+  profiles now fire their structured reflow rules (verified live: hurler + 2 matches →
+  `two_matches_reduce_gym_volume`); GAA is not in D11_SPORTS so no plan cohort moves.
+  Suite **137/137**, ZERO snapshot movement. (Note: tests/skb-rules.js was green all along
+  because it passes SKB ids as `profile.sport` — a shape real profiles never have;
+  tests/skb-gaa-routing.js uses the genuine runtime shape.)
 - **⇒ NEXT:** **WP-29** (Atlas re-base onto the Performance Model — renders
   getPerformanceModel() capabilities + D4 gaps, pillar mapping becomes presentation config,
   retires atlas capability maths + data/sports/; user-visible, preview-verify), **WP-28**
