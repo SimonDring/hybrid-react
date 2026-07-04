@@ -15,22 +15,14 @@
  */
 
 import Database from './Database.js';
-import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
-import { SESSION_CEILING_MIN } from '@performance-os/engine/lib/plan/allocator.js';
-import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
-import { countWeeklyVolume } from '@performance-os/engine/lib/plan/volume.js';
-import { resolveLifts } from '@performance-os/engine/lib/liftProgression.js';
-import { MUSCLE_GROUPS, MUSCLE_LABELS } from '@performance-os/engine/data/muscleVolume.js';
-import { getOverrides } from './sessionOverrides.js';
-import { applyInjuryRules, applyPrevention } from '@performance-os/engine/lib/injury/injuryFilter.js';
-import { deloadRecommendation } from '@performance-os/engine/lib/plan/trainingLoad.js';
-import { ruleVolumeAdjustment } from '@performance-os/engine/lib/sportKnowledge/reflowAdjust.js';
-import { deriveConstraints } from '@performance-os/engine/lib/plan/constraints.js';
+import {
+  generatePlan, SESSION_CEILING_MIN, resolveProgram, countWeeklyVolume, resolveLifts,
+  MUSCLE_GROUPS, MUSCLE_LABELS, applyInjuryRules, applyPrevention, deloadRecommendation,
+  ruleVolumeAdjustment, deriveConstraints, buildPrimer, performanceModelForProfile,
+  profileToAthleteModel, kb, sportKnowledge as SKB
+} from '@performance-os/engine';
 import * as reflowLib from '@performance-os/engine/lib/plan/reflow.js';
-import { buildPrimer } from '@performance-os/engine/lib/plan/primers.js';
-import { performanceModelForProfile, kb } from '@performance-os/engine';
-import * as SKB from '@performance-os/engine/lib/sportKnowledge/index.js';
-import { profileToAthleteModel } from '@performance-os/engine/lib/adapters/profileToAthleteModel.js';
+import { getOverrides } from './sessionOverrides.js';
 
 let _cache = { sig: null, plan: null };
 

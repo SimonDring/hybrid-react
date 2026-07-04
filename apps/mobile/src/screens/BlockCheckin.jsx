@@ -12,7 +12,7 @@
  */
 import { useState } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
-import { continueBlock } from '@performance-os/engine/lib/plan/periodization.js';
+import { continueBlock } from '@performance-os/engine';
 
 const STEPS = ['feel', 'changed', 'sameGoal', 'hitSessions'];
 

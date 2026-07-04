@@ -4,7 +4,7 @@ import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
 import * as Utils from '@performance-os/engine/lib/Utils.js';
 import { parseExercise } from '@performance-os/engine/lib/Utils.js';
-import { matchLift, parseReps, parseRpe } from '@performance-os/engine/lib/liftProgression.js';
+import { matchLift, parseReps, parseRpe } from '@performance-os/engine';
 import RestTimer from '../components/RestTimer.jsx';
 import { useWakeLock } from '../hooks/useWakeLock.js';
 import { ensureAudio } from '../lib/sound.js';

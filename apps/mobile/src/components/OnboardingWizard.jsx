@@ -10,10 +10,7 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { BLANK_ANSWERS, localISODate, resolveStartDate, answersToProfile } from '../lib/onboardingModel.js';
-import { epley1RM, pullupE1RM } from '@performance-os/engine/lib/liftProgression.js';
-import { suggestGymDays } from '@performance-os/engine/lib/plan/constraints.js';
-import { suggestOptimalFrequency } from '@performance-os/engine/lib/plan/frequency.js';
-import { selectableSports, positionsFor } from '@performance-os/engine/lib/sportKnowledge/selectable.js';
+import { epley1RM, pullupE1RM, suggestGymDays, suggestOptimalFrequency, selectableSports, positionsFor } from '@performance-os/engine';
 
 // ---- Option catalogues ----
 export const GOAL_TYPES = [

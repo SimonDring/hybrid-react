@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
-import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
+import { computeReadiness } from '@performance-os/engine';
 import WeekSchedule from '../components/WeekSchedule.jsx';
 import DailyCheckin from '../components/DailyCheckin.jsx';
 import RingTile from '../components/ui/RingTile.jsx';

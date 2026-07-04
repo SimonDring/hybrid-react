@@ -9,9 +9,7 @@
 import * as Sync from './SyncService.js';
 import Database from './Database.js';
 import { localISODate, answersToAthleteModelInputs } from './onboardingModel.js';
-import { createAthleteModel, ATHLETE_SCHEMA_VERSION } from '@performance-os/engine/lib/athlete/index.js';
-import { profileToAthleteModel } from '@performance-os/engine/lib/adapters/profileToAthleteModel.js';
-import { derivePerformanceModel } from '@performance-os/engine/lib/performance/index.js';
+import { createAthleteModel, ATHLETE_SCHEMA_VERSION, profileToAthleteModel, derivePerformanceModel } from '@performance-os/engine';
 
 // Build an Athlete Model from onboarding answers and persist it to users.profile.athlete_model.
 // Returns the saved model.

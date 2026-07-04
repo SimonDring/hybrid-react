@@ -4,7 +4,7 @@
  */
 import { useNavigate } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
-import { fmtSleep } from '@performance-os/engine/lib/Readiness.js';
+import { fmtSleep } from '@performance-os/engine';
 import Sparkline from '../components/ui/Sparkline.jsx';
 
 export default function SleepDetail() {

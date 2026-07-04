@@ -28,7 +28,7 @@ import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 import { MUSCLE_LABELS } from '@performance-os/engine/data/muscleVolume.js';
 import { readinessIndex } from '@performance-os/engine/lib/indices/index.js';
-import { computeReadiness } from '@performance-os/engine/lib/Readiness.js';
+import { computeReadiness } from '@performance-os/engine';
 import { exerciseQualities } from '@performance-os/engine/data/exerciseQualities.js';
 import { EXERCISES } from '@performance-os/engine/data/strengthExercises.js';
 import { answersToAthleteModelInputs, localISODate } from '../lib/onboardingModel.js';
