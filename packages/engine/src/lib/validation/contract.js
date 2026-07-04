@@ -1,0 +1,71 @@
+/**
+ * validation — the independent floor every constructed week must pass (D14).
+ *
+ * Constitution Art 19 / EDS §35: construction and validation are separate powers.
+ * The greedy fill (and one day the AI seam, or a human override) may build a week
+ * however it likes — a separable validator suite then judges the result. Today the
+ * deterministic constructor also enforces most constraints in-loop for efficiency;
+ * the validators are the AUTHORITATIVE, independently-testable statement of the
+ * rules, and the report is the proof a week complies. Construction proposes,
+ * validators dispose.
+ *
+ * A validator is a pure object:
+ *   { id,                    dotted id, e.g. 'volume.mrv-ceiling'
+ *     knowledgeId,           the KB entry whose science it enforces (drives authority)
+ *     run(week, ctx) →       findings: [{ verdict, reason, detail? }] — [] = pass }
+ *
+ * Verdicts: 'pass' | 'trim' (the week over-delivers and must be scaled — the
+ * maximum verdict a 'soft'-authority rule can issue) | 'veto' (the week is unsafe
+ * or incoherent and may not ship — reserved for 'gate'-authority rules, e.g.
+ * injury contraindication). A validator's ceiling verdict comes from its knowledge
+ * entry via knowledge/authority.js — contested science cannot veto (Art 13).
+ *
+ * validateWeek(week, ctx) runs the registry and returns a ValidationReport:
+ *   { pass, findings: [{ validatorId, verdict, authority, confidence, reason, detail }],
+ *     counts: { pass, trim, veto } }
+ */
+import kb from '../knowledge/kb.js';
+import { authorityOf } from '../knowledge/authority.js';
+import { mrvCeilingValidator } from './mrvValidator.js';
+
+// The registry. WP-12 adds duration honesty, equipment, session purpose, and
+// injury contraindication + the conflict order that arbitrates between them.
+export const VALIDATORS = [mrvCeilingValidator];
+
+// A verdict may never exceed what the validator's knowledge authority allows:
+// reported → pass-only (it can observe, not act), soft → trim, gate → veto.
+const CEILING = { reported: 'pass', soft: 'trim', gate: 'veto' };
+const SEVERITY = { pass: 0, trim: 1, veto: 2 };
+function capVerdict(verdict, authority) {
+  const cap = CEILING[authority] || 'pass';
+  return SEVERITY[verdict] > SEVERITY[cap] ? cap : verdict;
+}
+
+/**
+ * Run every registered validator over one constructed week.
+ * @param {object} week — { sessions: [...] } in the generated shape
+ * @param {object} ctx — optional context (athlete state, options) validators read
+ * @returns {{ pass: boolean, findings: object[], counts: {pass,trim,veto} }}
+ */
+export function validateWeek(week, ctx = {}) {
+  const findings = [];
+  const counts = { pass: 0, trim: 0, veto: 0 };
+  for (const v of VALIDATORS) {
+    const entry = kb.get(v.knowledgeId);
+    const authority = authorityOf(entry);
+    const raw = v.run(week, ctx) || [];
+    if (raw.length === 0) {
+      counts.pass++;
+      findings.push({ validatorId: v.id, verdict: 'pass', authority, confidence: entry.confidence, reason: null });
+      continue;
+    }
+    for (const f of raw) {
+      const verdict = capVerdict(f.verdict, authority);
+      counts[verdict]++;
+      findings.push({ validatorId: v.id, verdict, authority, confidence: entry.confidence, reason: f.reason, detail: f.detail });
+    }
+  }
+  return { pass: counts.veto === 0 && counts.trim === 0, findings, counts };
+}
+
+export default { VALIDATORS, validateWeek };
