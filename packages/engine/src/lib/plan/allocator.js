@@ -805,6 +805,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
         categoryIds: assignment ? new Set(assignment.exerciseIds) : null
       });
       if (assignment) objective.rationale += ` (${assignment.rationale})`;
+      // WP-30a: ship the D9 objective WITH the session — the rationale string now
+      // carries the re-target + category notes appended above. Annotation, not
+      // prescription (the _underscore convention, like the reflow's _adapted).
+      slot._objective = { quality: objective.targetQuality, purpose: objective.purpose, rationale: objective.rationale };
       if (picks.length === 0) {
         // Guarantee coverage: fall back to a fundamental anchor (never an empty session).
         const anchor = patternAnchor(slot, slot.anchors || [FUNDAMENTAL[slot.idx % FUNDAMENTAL.length]]) || patternAnchor(slot, FUNDAMENTAL);
@@ -972,7 +976,8 @@ function finaliseSlot(slot, style, ctx) {
     intensity: deload ? 'moderate' : 'hard',
     lowerBody: lower >= 0.4 * total,
     muscleVol: slot.muscleVol,   // realised per-muscle volume — lets the scheduler space same-muscle days
-    axialLoad: Object.values(slot.picks).reduce((a, p) => a + axialOf(p.ex), 0)
+    axialLoad: Object.values(slot.picks).reduce((a, p) => a + axialOf(p.ex), 0),
+    ...(slot._objective ? { _objective: slot._objective } : {})
   };
 }
 

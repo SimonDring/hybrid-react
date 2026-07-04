@@ -187,7 +187,8 @@ export function scheduleWeek({ sportSpecs = [], supSpecs = [], dayNames = [], al
       items,
       axialLoad: x.spec.axialLoad || 0,
       dayIdx: x.idx,
-      ...(onSportDay ? { lightened: true } : {})
+      ...(onSportDay ? { lightened: true } : {}),
+      ...(x.spec._objective ? { _objective: x.spec._objective } : {})
     };
   });
 }
