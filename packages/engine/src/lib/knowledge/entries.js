@@ -48,6 +48,18 @@ export const ENTRIES = [
     appliesTo: ['volume', 'allocator']
   },
 
+  // ── Knowledge governance ──────────────────────────────────────────────────────
+  {
+    id: 'knowledge.authority.mapping',
+    rule: 'Evidence confidence caps the authority a knowledge entry may exert on any decision: high → gate (may force/veto alone), moderate → soft (may scale alone within its rule), low → reported (rationale + conservative-floored adjustment + corroboration only; never acts alone). Consumed via knowledge/authority.js.',
+    value: { high: 'gate', moderate: 'soft', low: 'reported' },
+    evidenceLevel: 'L5',
+    source: 'Constitution Art 13 (confidence must be operative); EDS §28.3; the Impellizzeri/Lolli ACWR demotion as the working precedent',
+    confidence: 'high',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['knowledge', 'load', 'recovery']
+  },
+
   // ── Training load ─────────────────────────────────────────────────────────────
   {
     id: 'load.acwr.thresholds',
