@@ -13,6 +13,7 @@
  * the attribute, drop it (Vite imports .json natively) and load via fs in the node test.
  */
 import gaelicFootball from '../../data/sport-knowledge/gaelic_football.json' with { type: 'json' };
+import fieldHockey from '../../data/sport-knowledge/field_hockey.json' with { type: 'json' };
 import hurling from '../../data/sport-knowledge/hurling.json' with { type: 'json' };
 import rugby from '../../data/sport-knowledge/rugby.json' with { type: 'json' };
 import soccer from '../../data/sport-knowledge/soccer.json' with { type: 'json' };
@@ -25,7 +26,7 @@ import triathlon from '../../data/sport-knowledge/triathlon.json' with { type: '
 
 import { validateRegistry, SECTIONS } from './schema.js';
 
-const PROFILES = [gaelicFootball, hurling, rugby, soccer, runningSprint, runningMiddle, runningLong, cycling, swimming, triathlon];
+const PROFILES = [gaelicFootball, fieldHockey, hurling, rugby, soccer, runningSprint, runningMiddle, runningLong, cycling, swimming, triathlon];
 const BY_ID = new Map(PROFILES.map(p => [p.id, p]));
 
 export function get(id) { return BY_ID.get(id); }
