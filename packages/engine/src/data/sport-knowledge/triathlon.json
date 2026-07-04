@@ -1516,7 +1516,16 @@
       "source": "Gabbett 2016 (contested — Impellizzeri 2020, Lolli 2019); applied to run impact load",
       "appliesTo": [
         "load"
-      ]
+      ],
+      "trigger": {
+        "signal": "acwr",
+        "op": ">",
+        "value": 1.5
+      },
+      "effect": {
+        "type": "force_deload",
+        "params": {}
+      }
     },
     {
       "id": "no_heavy_legs_before_key_run",
@@ -1552,7 +1561,18 @@
       "source": "taper meta-analysis (Bosquet 2007); Mujika & Padilla",
       "appliesTo": [
         "volume"
-      ]
+      ],
+      "trigger": {
+        "signal": "competition_within_h",
+        "op": "<=",
+        "value": 72
+      },
+      "effect": {
+        "type": "exclude_soreness_above",
+        "params": {
+          "level": "moderate"
+        }
+      }
     },
     {
       "id": "shoulder_soreness_reduce_swim_overhead",
@@ -1564,7 +1584,18 @@
       "source": "Bak 2010; shoulder-monitoring consensus",
       "appliesTo": [
         "shoulder"
-      ]
+      ],
+      "trigger": {
+        "signal": "soreness_region",
+        "op": "high",
+        "value": "shoulder"
+      },
+      "effect": {
+        "type": "reduce_region_eccentric",
+        "params": {
+          "region": "shoulder"
+        }
+      }
     },
     {
       "id": "bone_pain_stop_running",
@@ -1600,7 +1631,16 @@
       "source": "Saw 2016",
       "appliesTo": [
         "readiness"
-      ]
+      ],
+      "trigger": {
+        "signal": "readiness",
+        "op": "<",
+        "value": 40
+      },
+      "effect": {
+        "type": "reduce_one_step",
+        "params": {}
+      }
     },
     {
       "id": "cmj_drop_flag_fatigue",
@@ -1612,7 +1652,16 @@
       "source": "Claudino 2017",
       "appliesTo": [
         "readiness"
-      ]
+      ],
+      "trigger": {
+        "signal": "cmj_drop_pct",
+        "op": ">=",
+        "value": 12
+      },
+      "effect": {
+        "type": "reduce_one_step",
+        "params": {}
+      }
     },
     {
       "id": "inseason_strength_minimal_effective",
@@ -1624,7 +1673,16 @@
       "source": "in-season strength-maintenance literature (Rønnestad & Mujika 2014)",
       "appliesTo": [
         "volume"
-      ]
+      ],
+      "trigger": {
+        "signal": "season",
+        "op": "==",
+        "value": "in"
+      },
+      "effect": {
+        "type": "minimal_effective_volume",
+        "params": {}
+      }
     },
     {
       "id": "illness_no_training",
@@ -1636,7 +1694,16 @@
       "source": "exercise-immunology consensus",
       "appliesTo": [
         "readiness"
-      ]
+      ],
+      "trigger": {
+        "signal": "illness",
+        "op": "==",
+        "value": true
+      },
+      "effect": {
+        "type": "withhold",
+        "params": {}
+      }
     }
   ],
   "loadManagement": {

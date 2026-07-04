@@ -43,14 +43,14 @@ const explicit = generatePlan(answersToProfile({ ...answers, runDiscipline: 'mid
 ok(JSON.stringify(plan) === JSON.stringify(explicit),
   'defaulted plan is byte-identical to the explicit runDiscipline:middle plan');
 
-// ── reflow rules honesty ─────────────────────────────────────────────────────
-// The lookup now finds the runner's real profile (it found NOTHING before — the old
-// 'running' alias pointed nowhere). Running's decisionRules are PROSE today, so no
-// effects fire at reflow yet: activation happens when the knowledge is structured,
-// not as a side effect of this fix.
-const eff = evaluateRules({ sport: 'run' }, { readiness: 10, soreness_region: { calf: 'high' } });
-ok(Array.isArray(eff.effects) && eff.effects.length === 0,
-  'running rules (prose) fire nothing at reflow — the fix flips planning only');
+// ── reflow rules ─────────────────────────────────────────────────────────────
+// The lookup finds the runner's real profile (it found NOTHING before — the old
+// 'running' alias pointed nowhere), and since the SKB review structured the
+// endurance decisionRules (2026-07-04), a runner's rules now FIRE at reflow:
+// low readiness → autoregulate one step, exactly as running_middle prescribes.
+const eff = evaluateRules({ sport: 'run' }, { readiness: 10 });
+ok(eff.effects.some((e) => e.ruleId === 'low_readiness_autoregulate' && e.type === 'reduce_one_step'),
+  "a low-readiness runner fires running_middle's autoregulate rule at reflow");
 const swimEff = evaluateRules({ sport: 'swim' }, {});
 ok(Array.isArray(swimEff.effects), 'swim lookup (structured rules) still resolves');
 

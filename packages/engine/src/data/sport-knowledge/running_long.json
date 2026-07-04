@@ -1405,7 +1405,16 @@
       "source": "Saw 2016",
       "appliesTo": [
         "readiness"
-      ]
+      ],
+      "trigger": {
+        "signal": "readiness",
+        "op": "<",
+        "value": 40
+      },
+      "effect": {
+        "type": "reduce_one_step",
+        "params": {}
+      }
     },
     {
       "id": "illness_no_training",
@@ -1417,7 +1426,16 @@
       "source": "exercise-immunology consensus",
       "appliesTo": [
         "readiness"
-      ]
+      ],
+      "trigger": {
+        "signal": "illness",
+        "op": "==",
+        "value": true
+      },
+      "effect": {
+        "type": "withhold",
+        "params": {}
+      }
     },
     {
       "id": "acwr_spike_pullback",
@@ -1429,7 +1447,16 @@
       "source": "Gabbett 2016 (methodology contested — Impellizzeri 2020, Lolli 2019); applied as a soft monitoring input",
       "appliesTo": [
         "load"
-      ]
+      ],
+      "trigger": {
+        "signal": "acwr",
+        "op": ">",
+        "value": 1.5
+      },
+      "effect": {
+        "type": "force_deload",
+        "params": {}
+      }
     },
     {
       "id": "taper_protocol",
@@ -1441,7 +1468,16 @@
       "source": "Mujika & Padilla; Bosquet 2007 taper meta-analysis",
       "appliesTo": [
         "volume"
-      ]
+      ],
+      "trigger": {
+        "signal": "competition_within_h",
+        "op": "<=",
+        "value": 336
+      },
+      "effect": {
+        "type": "taper",
+        "params": {}
+      }
     },
     {
       "id": "race_day_priming_only",
@@ -1453,7 +1489,16 @@
       "source": "priming-session literature; expert consensus",
       "appliesTo": [
         "volume"
-      ]
+      ],
+      "trigger": {
+        "signal": "competition_within_h",
+        "op": "<=",
+        "value": 24
+      },
+      "effect": {
+        "type": "priming_only",
+        "params": {}
+      }
     },
     {
       "id": "achilles_soreness_reduce_plyo_calf",
@@ -1466,7 +1511,18 @@
       "appliesTo": [
         "achilles",
         "plyometrics"
-      ]
+      ],
+      "trigger": {
+        "signal": "soreness_region",
+        "op": "high",
+        "value": "calf"
+      },
+      "effect": {
+        "type": "reduce_region_eccentric",
+        "params": {
+          "region": "calf"
+        }
+      }
     },
     {
       "id": "inseason_minimal_effective_strength",
@@ -1478,7 +1534,16 @@
       "source": "Rønnestad & Mujika 2014; Blagrove 2018",
       "appliesTo": [
         "volume"
-      ]
+      ],
+      "trigger": {
+        "signal": "season",
+        "op": "==",
+        "value": "in"
+      },
+      "effect": {
+        "type": "minimal_effective_volume",
+        "params": {}
+      }
     },
     {
       "id": "no_heavy_strength_before_key_run",
