@@ -387,13 +387,33 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   ENGINE_VERSION). `generatePlan` → meta.provenance; `reflowPhases` → the same stamp; barrel
   exports all three. Snapshot re-baseline audited line-by-line: 112 insertions / 0 deletions =
   exactly the 4 provenance lines × 28 keys. Suite **134/134**.
-- **⇒ NEXT:** **WP-30** (explainability surfacing, split 30a/30b: 30a = attach the D9
-  `objective.rationale` — already BUILT in allocator.js ~line 782 but DROPPED before the
-  session is emitted — as `session._objective = { quality, rationale }`, plus plan-meta
-  D4→D5→D9 chain summary; 30b = UI badges reading EMITTED reasons only: "why this session",
-  `_intensityEased`, `deloadReason`, forgiveness — user-visible, preview-verify),
-  **WP-29** (Atlas re-base). **Team spine WP-32/33** blocked on WP-07's staging TODO (Simon's
-  Supabase account). WP-22/23 (build flip) last. Staged H9 leftovers unchanged.
+- **PR #92 — WP-30: explainability surfacing (V5 CLOSED for the D11 cohort).** 30a: every
+  D11 session now SHIPS `_objective = { quality, purpose, rationale }` (the D9 objective was
+  built per slot — with the injury re-target + category-coverage notes appended — then
+  dropped; now threaded through finaliseSlot + the scheduler like axialLoad);
+  `plan.meta.diagnosis = { sport, limitingFactors, priorityQualities }` with the diagnosis's
+  own rationale strings, ABSENT on build (nothing invented). 30b: SessionDetail "Why this
+  session" line; WeekDetail "Eased this week" (`_intensityEased`) + current-week "Missed work
+  forgiven" callouts (forgiveness was dev-only — Art 10); DevPlayground per-session "why".
+  Golden re-baseline line-audited (1820 insertions / 0 deletions, all _objective/diagnosis
+  keys). Preview-verified live on /dev. Spec:
+  docs/superpowers/specs/2026-07-04-wp30-explainability-design.md. Suite **135/135**.
+  Deferred + recorded: legacy-anchor rationale (free with the WP-22 build flip);
+  substitution rationale (needs its own emission).
+- **⚠ FINDING (open follow-up, task chip spawned):** a runner profile WITHOUT
+  `run_discipline` maps to NO SKB id (`running_*` all need one — adapters/
+  profileToAthleteModel.js `toSkbSportId`) → no demand profile → no D4/D5 → the whole
+  diagnosis-first path silently drops to legacy. Real onboarding collects the discipline, so
+  this hits stored pre-discipline profiles + fixtures (the /dev Runner preset had it — fixed
+  in #92). The engine-side default (no-discipline run → running_middle?) flips a cohort
+  legacy→D11: a DELIBERATE coaching change with its own gates, not a bugfix.
+- **⇒ NEXT:** **WP-29** (Atlas re-base onto the Performance Model — renders
+  getPerformanceModel() capabilities + D4 gaps, pillar mapping becomes presentation config,
+  retires atlas capability maths + data/sports/; user-visible, preview-verify), **WP-28**
+  (portable freezes), **WP-31** (sync outbox). **Team spine WP-32/33** blocked on WP-07's
+  staging TODO (Simon's Supabase account). WP-22/23 (build flip) last. Staged H9 leftovers
+  unchanged. (Dev note: /dev remounts periodically — do click+assert in ONE preview_eval;
+  and a preset click + Generate in the same tick generates from STALE answers.)
 - ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
