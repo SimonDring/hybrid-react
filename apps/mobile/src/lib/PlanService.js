@@ -31,6 +31,7 @@ import { applyInjuryRules, applyPrevention } from '@performance-os/engine/lib/in
 import { combinedMultiplier, deloadRecommendation } from '@performance-os/engine/lib/plan/trainingLoad.js';
 import { ruleVolumeAdjustment } from '@performance-os/engine/lib/sportKnowledge/reflowAdjust.js';
 import { deriveConstraints, lightenItems } from '@performance-os/engine/lib/plan/constraints.js';
+import { contraindicatedPatternsForInjuries, blockedNameRegexesForInjuries } from '@performance-os/engine/lib/session/movementRequirements.js';
 import { buildPrimer } from '@performance-os/engine/lib/plan/primers.js';
 import { performanceModelForProfile, kb } from '@performance-os/engine';
 import * as SKB from '@performance-os/engine/lib/sportKnowledge/index.js';
@@ -268,7 +269,16 @@ function adaptedPhases() {
   };
   const ruleAdj = ruleVolumeAdjustment(profile, ruleCtx);
 
-  const key = `${_cache.sig}|${cw}|${localISO(today)}|${stateSig}|${band}|${ovSig}|${loadAction}|${recBand}|${rec.action}|${override || ''}|${reverted ? 'r' : ''}|${ruleAdj.ruleIds.join('.')}`;
+  // Constraints-first injuries (WP-13): D11 selection avoids contraindicated
+  // patterns up front, so the reflow's output depends on the athlete's active
+  // injuries — they join the memo key and the allocator ctx. The render-time
+  // injury filter stays as the backstop on every path.
+  const activeInjuries = Database.services.listActiveInjuries().filter(i => i.body_part_key);
+  const contraindicatedPatterns = contraindicatedPatternsForInjuries(activeInjuries);
+  const blockedNameRegexes = blockedNameRegexesForInjuries(activeInjuries);
+  const injSig = activeInjuries.map(i => `${i.body_part_key}.${i.severity || 3}.${i.rehab_phase || ''}`).sort().join(',');
+
+  const key = `${_cache.sig}|${cw}|${localISO(today)}|${stateSig}|${band}|${ovSig}|${loadAction}|${recBand}|${rec.action}|${override || ''}|${reverted ? 'r' : ''}|${ruleAdj.ruleIds.join('.')}|inj:${injSig}`;
   if (_adaptCache.key === key) return _adaptCache.phases;
 
   // Effective deload for a week — the force/defer decision applies to the current week only.
@@ -339,7 +349,7 @@ function adaptedPhases() {
         // above) — without it every single-slot rebuild pinned the same top-priority
         // quality and a runner's explosive days collapsed into the durability day.
         weekGymCount: gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, weekSlotIdx: s.i,
-        rpeOffset
+        rpeOffset, contraindicatedPatterns, blockedNameRegexes
       }
     })[0];
     if (spec) {
@@ -816,6 +826,7 @@ export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
   const bonus = totalMissed <= 5;
   const fillTarget = bonus ? weeklyTgt : missed;
 
+  const tnInjuries = Database.services.listActiveInjuries().filter(i => i.body_part_key);
   const specs = allocateGym({
     targets: fillTarget,
     slots: [{ minutes: functionalSlotMinutes(gctx.style, minutes), equip: equipArr }],
@@ -825,7 +836,7 @@ export function generateTrainNow({ minutes = 45, equip = [] } = {}) {
     // legacy muscle-deficit fill. Build profiles have no priorityQualities, so the D11
     // gate can't fire for them and their Train Now output is unchanged. An on-demand
     // session on a low-readiness day is honest too: same readiness rpeOffset (WP-10).
-    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, bodyweight: gctx.bodyweight, exercisePriority: gctx.exercisePriority, priorityByIntent: gctx.priorityByIntent, sport: gctx.sport, power: gctx.power, priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds, rpeOffset: _runtime.recovery ? (_runtime.recovery.rpeOffset || 0) : 0 }
+    ctx: { style: gctx.style, intent, deload: false, weekNum: cw || 1, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: equipArr, bodyweight: gctx.bodyweight, exercisePriority: gctx.exercisePriority, priorityByIntent: gctx.priorityByIntent, sport: gctx.sport, power: gctx.power, priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds, rpeOffset: _runtime.recovery ? (_runtime.recovery.rpeOffset || 0) : 0, contraindicatedPatterns: contraindicatedPatternsForInjuries(tnInjuries), blockedNameRegexes: blockedNameRegexesForInjuries(tnInjuries) }
   });
   const session = specs[0] || { discipline: 'gym', focus: 'Session', duration: `~${minutes} min`, items: [] };
   return { session: decorateSections(session, equipArr), why: buildWhy(session, bonus, minutes), target: nextPendingGymTarget(), minutes, equip: equipArr };

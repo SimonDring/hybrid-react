@@ -11,7 +11,7 @@
 import kb from '../knowledge/kb.js';
 import { EXERCISES, availableEquip } from '../../data/strengthExercises.js';
 import { parseSetCount, exerciseMuscles } from '../plan/volume.js';
-import { applyInjuryRules } from '../injury/injuryFilter.js';
+import { blockedNameRegexesForInjuries } from '../session/movementRequirements.js';
 
 const EX_BY_NAME = new Map(EXERCISES.map((e) => [e.name.toLowerCase(), e]));
 const UPPER = new Set(['chest', 'back', 'shoulders', 'biceps', 'triceps']);
@@ -21,31 +21,34 @@ const gymSessions = (week) => (week.sessions || []).filter((s) => !s.discipline 
 const mainItems = (s) => (s.items || []).filter((it) => it.section !== 'primer');
 
 // ── Tier 1 · SAFETY: contraindicated movements never ship ────────────────────
-// A validated week is a FIXED POINT of the injury filter: applying it changes
-// nothing. Runs only when the caller knows the athlete's active injuries.
+// Direct policy check: no shipped working item may match an active injury's
+// blocked name-regexes (the injury system's own severity/phase policy). This is
+// deliberately NOT a diff against the injury filter — the filter legitimately
+// APPENDS rehab work (not idempotent), and a diff can't catch pattern-level
+// under-blocking. Items the injury system itself prescribed (tag 'rehab') and
+// pain-free-range work are exempt by construction.
 export const injuryContraindicationValidator = {
   id: 'injury.contraindication',
   knowledgeId: 'injury.contraindication_policy',
   tier: 1,
   run(week, ctx = {}) {
-    const injuries = ctx.injuries || [];
+    const injuries = (ctx.injuries || []).filter((i) => i && i.body_part_key);
     if (!injuries.length) return [];
-    const before = gymSessions(week);
-    // Deep-clone: the validator must never alter the week it judges.
-    const filtered = applyInjuryRules({ sessions: JSON.parse(JSON.stringify(before)) }, injuries);
-    const after = filtered.sessions || [];
+    const blocked = blockedNameRegexesForInjuries(injuries);
+    if (!blocked.length) return [];
     const findings = [];
-    before.forEach((s, i) => {
-      const a = JSON.stringify((s.items || []).map((it) => it.name));
-      const b = JSON.stringify(((after[i] || {}).items || []).map((it) => it.name));
-      if (a !== b) {
-        findings.push({
-          verdict: 'veto',
-          reason: `${s.title || `session ${i}`}: contains movement(s) contraindicated by an active injury — the injury filter would alter it`,
-          detail: { session: s.title, before: JSON.parse(a), after: JSON.parse(b) }
-        });
+    for (const s of gymSessions(week)) {
+      for (const it of mainItems(s)) {
+        if (it.tag === 'rehab' || /pain-free/i.test(it.name || '')) continue;
+        if (blocked.some((r) => r.test(it.name || ''))) {
+          findings.push({
+            verdict: 'veto',
+            reason: `${s.title || 'session'}: "${it.name}" is contraindicated by an active injury`,
+            detail: { session: s.title, item: it.name }
+          });
+        }
       }
-    });
+    }
     return findings;
   }
 };
