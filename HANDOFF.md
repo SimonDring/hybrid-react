@@ -456,15 +456,37 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   pin/freeze-on-start mechanism (predates Train Now; still guards Start-freeze +
   substitutions); old stored Train Now overrides degrade to plain pinned snapshots, and a
   guard asserts _trainNow never reappears. Suite 136/136.
-- **⇒ NEXT:** staged H9 corrections C3/C5/C9–C14 (knowledge tagging fixes, audited
-  re-baselines), **WP-36** (enrich D4 seams: injuryRisk from the injury registry,
-  trainability from quality registry × training age), **WP-31** (sync outbox — repo-side),
-  **WP-28** (portable freezes — check if pins can ride an existing column before any
-  migration). **Team spine WP-32/33** blocked on WP-07's staging TODO (Simon's Supabase
-  account). WP-22/23 (build flip) last. (Dev notes: /dev remounts periodically — click +
-  assert in ONE preview_eval; a preset click + Generate in the same tick generates from
-  STALE answers. Vercel hobby-tier deploy rate limit can FAIL the web preview check for
-  24 h — an infra flake; merge on engine-suite green, documented in PR #98's merge.)
+- **PR #99 — the staged H9 corrections CLEARED** (C3 calf robustness-primary; C5 loaded-
+  lunge contradiction fixed + bodyweight lunges re-route via classTag; C9 explosive lunge
+  pattern; C11 sled never-reactive; C12 resolved as documentation — movement-class COST vs
+  per-quality fatigueCost are different measurements, deliberately not unified; C13 SE
+  drops the driverless lunge). **C10 PARTIAL**: glute_bridge re-tagged as specified;
+  hip_thrust DEFERRED with in-code reasons — its hinge-default robustness-primary standing
+  is what keeps it selectable for cyclists (the quality-gate guard); that sport value
+  belongs to SKB ratings when they outrank pattern tiers (WP-22/23). C14 skipped
+  (cosmetic). Golden audit BY KEY: 8 run/cycle archetypes moved, build + swim
+  byte-identical; filler carries lost their tie-break, tendon anchors stayed. 06-SEED-
+  EVIDENCE-REVIEW.md status table updated. Still open from H9: C7 plyo 48–72 h spacing
+  (D13), C8 build rest floor (build flip).
+- **PR #100 — WP-36: the D4 seams enriched.** trainability (NEW qualities.js
+  trainabilityByBand — Rhea 2003 diminishing-returns priors; tissue/control/range stay
+  responsive) × injuryRisk (NEW data/regionQualityRisk.js — hamstring→robustness ×1.25
+  etc., MAX not stacked, every history shape tolerated). Both are magnitude RE-RANKERS —
+  never gates, confidence untouched (the acceptance) — and both are EXPLAINED in the
+  emitted rationale, so the WP-30 surfaces show the why automatically. Acceptance proven:
+  a hamstring-history runner's robustness limiter boosts ×1.25 and tops the ranking
+  (tests/d4-seams.js, 13 checks). Goldens: 10/19 moved — run/cycle re-ranked; swim moved
+  in META.DIAGNOSIS ONLY (sessions byte-identical); build byte-identical. **Follow-up
+  chip spawned**: the app never populates athlete_model.constraints.injuryHistory — wire
+  the store's resolved injuries in so real athletes get the boost the engine now computes.
+- **⇒ NEXT:** **WP-31** (sync outbox — repo-side, simulated airplane-mode test), **WP-28**
+  (portable freezes — check whether pins can ride an existing sessions column before any
+  migration), **WP-37** (typed priors read-path). **Team spine WP-32/33** blocked on
+  WP-07's staging TODO (Simon's Supabase account). WP-22/23 (build flip) last. (Dev
+  notes: /dev remounts periodically — click + assert in ONE preview_eval; a preset click +
+  Generate in the same tick generates from STALE answers. Vercel hobby-tier deploy rate
+  limit can FAIL the web preview check for 24 h — an infra flake; merge on engine-suite
+  green, documented in PR #98's merge.)
 - ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
