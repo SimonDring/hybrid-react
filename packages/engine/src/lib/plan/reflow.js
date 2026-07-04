@@ -23,6 +23,7 @@ import { MUSCLE_GROUPS } from '../../data/muscleVolume.js';
 import { allocateGym } from './allocator.js';
 import { functionalSlotMinutes } from './strength.js';
 import { despineWeek } from './despine.js';
+import { provenance } from '../../version.js';
 import { deriveConstraints, lightenItems } from './constraints.js';
 import { combinedMultiplier, deloadRecommendation } from './trainingLoad.js';
 import { ruleVolumeAdjustment } from '../sportKnowledge/reflowAdjust.js';
@@ -314,7 +315,7 @@ export function reflowPhases({
       })
     };
   });
-  return { phases, forgiven };
+  return { phases, forgiven, provenance: provenance() };
 }
 
 /**

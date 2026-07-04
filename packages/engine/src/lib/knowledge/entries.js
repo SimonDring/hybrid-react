@@ -13,6 +13,14 @@
  * thresholds (readiness bands, taper, level/style scalars) will migrate next.
  */
 
+/**
+ * Versions the knowledge SET as a whole — entries here plus the science data
+ * tables the engine reads (doseSchemes, muscleVolume, exerciseQualities, the
+ * SKB…). Bump on any science change; stamped into every plan/reflow output as
+ * meta.provenance.knowledgeSetVersion (WP-27).
+ */
+export const KNOWLEDGE_SET_VERSION = '1.0.0';
+
 /** @type {import('./schema.js').KnowledgeEntry[]} */
 export const ENTRIES = [
   // ── Volume ──────────────────────────────────────────────────────────────────

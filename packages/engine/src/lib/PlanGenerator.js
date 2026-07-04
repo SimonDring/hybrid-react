@@ -35,6 +35,7 @@ import { profileToAthleteModel } from './adapters/profileToAthleteModel.js';
 import * as SKB from './sportKnowledge/index.js';
 import { validateWeek } from './validation/contract.js';
 import { categoryPlanFor } from './session/categoryCoverage.js';
+import { provenance } from '../version.js';
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
@@ -236,7 +237,7 @@ export function generatePlan(profile = {}, opts = {}) {
     }
   }
 
-  return { phases, totalWeeks: total, meta: { validation: { pass: allPass, checked, weeks: problemWeeks } } };
+  return { phases, totalWeeks: total, meta: { validation: { pass: allPass, checked, weeks: problemWeeks }, provenance: provenance() } };
 }
 
 export default { generatePlan };
