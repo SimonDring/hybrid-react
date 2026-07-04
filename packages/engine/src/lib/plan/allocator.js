@@ -777,11 +777,13 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       // Competency gate: a beginner targeting a power quality builds the max-strength base first (EDS §22).
       const targetQuality = competencyAdjustedTarget(targetsD11[wi], levelName);
       const objective = deriveSessionObjective({ targetQuality, region, phaseIntent: intent, deload, taper, season: ctx.season });
-      // contraindicatedPatterns is deliberately empty here: injuries are filtered downstream as a
-      // post-generation pass (PlanService applyInjuryRules/applyPrevention), same as the legacy path —
-      // allocateGym has never taken injury input. When D11 owns contraindication-aware SELECTION (so it
-      // backfills a legal alternative rather than leaving a filtered hole), thread the real patterns in.
-      const requirements = deriveMovementRequirements({ targetQuality, region, level: levelName, contraindicatedPatterns: new Set() });
+      // Constraints before content (EDS L8, WP-13): callers that know the athlete's ACTIVE
+      // injuries (the reflow, Train Now) pass ctx.contraindicatedPatterns, so D11 selects a
+      // legal alternative instead of the post-filter stripping picks and leaving a hole. The
+      // pure baseline stays injury-blind (injuries are runtime state, not profile) and the
+      // app-side post-filter remains the BACKSTOP on every path — it also catches the
+      // guarantee-coverage fallback anchor below, which is pattern-blind by design.
+      const requirements = deriveMovementRequirements({ targetQuality, region, level: levelName, contraindicatedPatterns: ctx.contraindicatedPatterns || new Set() });
       const req = { objective, requirements };
       const makePick = (ex) => {
         const effectiveRole = effectiveRoleOf(ex, slot.level, demotePress);
@@ -789,7 +791,8 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       };
       const picks = selectInterventions({
         req, equip: slot.equip, level: slot.level, levelName, sport: ctx.sport,
-        skbIds: ctx.skbIds || new Set(), ledger: { weeklyDelivered, weeklyCeiling }, makePick
+        skbIds: ctx.skbIds || new Set(), ledger: { weeklyDelivered, weeklyCeiling }, makePick,
+        blockedNameRegexes: ctx.blockedNameRegexes || []
       });
       if (picks.length === 0) {
         // Guarantee coverage: fall back to a fundamental anchor (never an empty session).

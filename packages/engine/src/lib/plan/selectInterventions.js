@@ -52,7 +52,7 @@ function valueOf(ex, target, skbIds) {
   return (match * boost) / fatigueScalar(ex);
 }
 
-export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick } = {}) {
+export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [] } = {}) {
   const target = req?.objective?.targetQuality;
   const reqPatterns = new Set(req?.requirements?.movementPatterns || []);
   const contra = new Set((req?.requirements?.contraindicated || []).map((c) => c.pattern));
@@ -66,6 +66,10 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
     if (equip && !equip.has(ex.equip)) continue;
     if ((ex.level ?? 0) > level) continue;
     if (contra.has(ex.pattern)) continue;
+    // Name-level contraindication (WP-13): the pattern vocabulary is majority-vote
+    // coarse — a hamstring-protect block on jumping doesn't contraindicate the whole
+    // 'calf' pattern, but pogo jumps must still never be SELECTED for that athlete.
+    if (blockedNameRegexes.length && blockedNameRegexes.some((r) => r.test(ex.name))) continue;
     const tier = tierOf(ex, target, sport);
     if (tier == null) continue;
     // Quality-driver compounds must match a required movement pattern (D10).

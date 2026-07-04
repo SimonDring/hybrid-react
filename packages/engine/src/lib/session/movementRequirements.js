@@ -6,6 +6,7 @@
  */
 import { movementRequirementsFor } from '../../data/qualityMovementMap.js';
 import { EXERCISES } from '../../data/strengthExercises.js';
+import { getContraindications } from '../injury/injuryRules.js';
 
 // Patterns that belong to each session region (a soft filter — see below).
 const REGION_PATTERNS = {
@@ -30,6 +31,25 @@ export function contraindicatedPatternsFrom(blockedRegexes = [], exercises = EXE
     if (blocked > exs.length / 2) out.add(p);
   }
   return out;
+}
+
+// The D10 entry point for callers holding the athlete's ACTIVE injuries (WP-13,
+// constraints-first): union each injury's blocked name-regexes (the injury system
+// applies its severity/phase policy), then map onto the movement-pattern vocabulary.
+// Selection then never PROPOSES a contraindicated pattern, instead of the post-
+// generation filter stripping it and leaving a hole (EDS L8).
+export function blockedNameRegexesForInjuries(activeInjuries = []) {
+  const regexes = [];
+  for (const inj of activeInjuries || []) {
+    if (!inj || !inj.body_part_key) continue;
+    const { blockedPatterns } = getContraindications(inj.body_part_key, inj.severity || 3, inj.rehab_phase || 'protect');
+    regexes.push(...blockedPatterns);
+  }
+  return regexes;
+}
+
+export function contraindicatedPatternsForInjuries(activeInjuries = [], exercises = EXERCISES) {
+  return contraindicatedPatternsFrom(blockedNameRegexesForInjuries(activeInjuries), exercises);
 }
 
 export function deriveMovementRequirements({ targetQuality, region = 'full', level = 'intermediate', contraindicatedPatterns = new Set() } = {}) {
@@ -67,4 +87,4 @@ export function deriveMovementRequirements({ targetQuality, region = 'full', lev
   return { movementPatterns: patterns, forceVelocity, contraction: base.contraction, contraindicated, competencyNote, rationale };
 }
 
-export default { deriveMovementRequirements, contraindicatedPatternsFrom };
+export default { deriveMovementRequirements, contraindicatedPatternsFrom, contraindicatedPatternsForInjuries, blockedNameRegexesForInjuries };
