@@ -18,9 +18,10 @@ export function regionOf(focusLabel = '') {
 export function deriveSessionSpecs({
   priorityQualities = [], goalPrimary = null, sessions = [], level = 'intermediate',
   phaseIntent = 'base', deload = false, taper = false, season = null, contraindicatedPatterns = new Set(),
+  sport = null,
 } = {}) {
   const list = Array.isArray(sessions) ? sessions : [];
-  const targets = assignTargetQualities(priorityQualities, list.length, goalPrimary);
+  const targets = assignTargetQualities(priorityQualities, list.length, goalPrimary, sport);
   return list.map((s, i) => {
     const targetQuality = targets[i] || targets[0];
     const region = regionOf(s && s.focus);

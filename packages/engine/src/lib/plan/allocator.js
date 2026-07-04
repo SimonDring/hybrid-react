@@ -770,7 +770,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     // ctx.weekGymCount (the week's gym-session count) + ctx.weekSlotIdx (this slot's
     // index within that week); absent, behaviour is exactly the old whole-week rotation.
     const weekCount = ctx.weekGymCount || work.length;
-    const targetsD11 = assignTargetQualities(priorityQualities, weekCount, goalPrimaryD11);
+    const targetsD11 = assignTargetQualities(priorityQualities, weekCount, goalPrimaryD11, ctx.sport);
     const contraPatternsD11 = ctx.contraindicatedPatterns || new Set();
     const blockedRxD11 = ctx.blockedNameRegexes || [];
     const constrainedD11 = contraPatternsD11.size > 0 || blockedRxD11.length > 0;
@@ -803,7 +803,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
             (!pats.size || pats.has(ex.pattern)));
         };
         ({ quality: targetQuality, retargetedFrom } = constraintAdjustedTarget({
-          targetQuality, priorityQualities, level: levelName, isTrainable
+          targetQuality, priorityQualities, sport: ctx.sport, level: levelName, isTrainable
         }));
       }
       const objective = deriveSessionObjective({ targetQuality, region, phaseIntent: intent, deload, taper, season: ctx.season });
@@ -833,6 +833,9 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
         for (const p of picks) place(slot, p);
       }
     });
+    // Short D11 sessions get the same supportive finisher as the legacy path (factor-0
+    // prehab — §34 tiers 6–7; the fatigue budget governs WORKING sets, not support work).
+    addSupportiveFinishers(work, ctx, levelName, s, style, deload, taper, repBump);
     // Finalise sport slots through the SAME structuring/weights/duration machinery, then return.
     return work.map(slot => finaliseSlot(slot, style, ctx));
   }
@@ -904,25 +907,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     place(slot, pick);
   }
 
-  // Supportive finisher: round out a short session with sport/goal-appropriate
-  // factor-0 work (counts nothing). The amount scales inversely to the realised
-  // working dose — a long session has no gap and gets nothing.
-  for (const slot of work) {
-    let gap = FINISHER_TARGET_MIN - slot.timeUsed;
-    if (gap <= 2) continue;
-    let added = 0;
-    for (const ex of finisherPool(slot, ctx, levelName)) {
-      if (gap <= 2 || added >= FINISHER_CAP_MIN) break;
-      const effectiveRole = ex.role;
-      const item = makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole, taper);
-      item.volumeFactor = 0;
-      item.tag = 'mobility';
-      slot.picks.push({ ex, effectiveRole, item });
-      slot.exUsed.add(ex.id);
-      const cost = (parseSetCount(item.sets) * perSetMin(ex, effectiveRole)) || 2;
-      slot.timeUsed += cost; gap -= cost; added += cost;
-    }
-  }
+  addSupportiveFinishers(work, ctx, levelName, s, style, deload, taper, repBump);
 
   // Finalise each slot: structure into supersets/fillers, then a session spec.
   return work.map(slot => finaliseSlot(slot, style, ctx));
@@ -943,6 +928,31 @@ function shiftRpe(items, rpeOffset, rpeFloor) {
     it.rpe = `RPE ${Math.max(rpeFloor, n + rpeOffset)}`;
   }
   return items;
+}
+
+// Supportive finisher: round out a short session with sport/goal-appropriate
+// factor-0 work (counts nothing toward volume). The amount scales inversely to the
+// realised working dose — a long session has no gap and gets nothing. Shared by the
+// legacy fill AND the D11 path: D11 sessions are FATIGUE-bounded, not time-bounded,
+// and §34 tiers 6–7 support work is exactly what should fill a short session's
+// remaining minutes (a beginner runner's 15-minute hinge day still gets its prehab).
+function addSupportiveFinishers(work, ctx, levelName, s, style, deload, taper, repBump) {
+  for (const slot of work) {
+    let gap = FINISHER_TARGET_MIN - slot.timeUsed;
+    if (gap <= 2) continue;
+    let added = 0;
+    for (const ex of finisherPool(slot, ctx, levelName)) {
+      if (gap <= 2 || added >= FINISHER_CAP_MIN) break;
+      const effectiveRole = ex.role;
+      const item = makeItem(ex, slot.picks.length, s, style, deload, repBump, effectiveRole, taper);
+      item.volumeFactor = 0;
+      item.tag = 'mobility';
+      slot.picks.push({ ex, effectiveRole, item });
+      slot.exUsed.add(ex.id);
+      const cost = (parseSetCount(item.sets) * perSetMin(ex, effectiveRole)) || 2;
+      slot.timeUsed += cost; gap -= cost; added += cost;
+    }
+  }
 }
 
 // Finalise a single slot: structure into supersets/fillers, then a session spec.
