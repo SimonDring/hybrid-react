@@ -297,14 +297,23 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   is a thin bridge lookup; byte-identity proven by UNTOUCHED golden masters (no re-baseline)
   + 42 assertions in `tests/dose-schemes.js` (per-cell fidelity incl. fallback semantics).
   Suite **128/128**.
-- **⇒ NEXT: WP-21** — dose D11 sessions from each session's TARGET QUALITY through
-  doseSchemes/doseResponse, applying the staged H9 C6–C8 dose corrections (robustness HSR,
-  reactive foot-contact ceilings, hypertrophy load/rest widening) in the same change.
-  Behaviour change for run/cycle → needs a committed spec + nature-of-change gates
-  (sprint-discipline runner gets power-appropriate doses distinct from long-distance).
-  Then **WP-15** (D11 weights → KB, confidence tags per the H9 §4 assessments; also C4's
-  weighted-sum fatigueScalar belongs there). Then **Sprint 9 (SKB-primary) — STOP for
-  Simon's design review before flipping anything.**
+- **PR #79 — WP-21: D12 dose-by-quality (spec:
+  `docs/superpowers/specs/2026-07-04-dose-by-quality-design.md`).** D11 sessions dose from
+  their D9 target quality via `doseForQuality()` + per-slot `slot.scheme` (fallback: the
+  sportSupport bridge). New REVIEWED blocks: robustness = **HSR** with the tempo cue on the
+  item note (H9 C6, Kongsgaard/Beyer); explosiveStrength = strength-speed triples;
+  reactiveStrength + **REACTIVE_LIMITS.footContacts {80/100/120}** enforced at placement
+  (H9 C7; the 48–72 h spacing half belongs to D13 — still open). C8 partial: hypertrophy
+  doseResponse text only; **the build accessory rest floor is DEFERRED to the build flip**.
+  Acceptance live: sprinter vs marathoner dose provably differently (signature test,
+  19 assertions in `tests/dose-by-quality.js`). Re-baseline audited: the same 8 run/cycle
+  archetypes; build+swim byte-identical. Suite **129/129**.
+- **⇒ NEXT: WP-15** (D11 weights → KB with the H9 §4 confidence tags: FATIGUE_BUDGET low,
+  transfer weights low, SKB boost low, 2/pattern cap CLEAR; plus C4's weighted-sum
+  fatigueScalar — a behaviour change for within-tier ordering, gate with the d11 quality
+  tests). Then **Sprint 9 (SKB-primary) + swim re-seat — STOP for Simon's design review
+  before flipping anything** (see the swim section below + audit WP-19/20; the H5
+  quality-vocabulary decision gets made there).
 - ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
