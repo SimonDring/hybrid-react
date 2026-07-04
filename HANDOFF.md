@@ -203,6 +203,44 @@ owner-only). Deferred cosmetic minors (non-blocking): a `diagnose.js` comment ov
 `prioritise.js` unknown-confidence→k=1 fallback is undocumented; `selectable.js` sport labels use
 `humanize(id)` (e.g. "Running Sprint") since flagship `meta` has no display label.
 
+## Latest work — Phase B (honesty band) begun: WP-08/09/10 + the reflow differentiation fix + WP-07 (2026-07-04)
+
+Continuous-iteration mode (Simon's standing charter 2026-07-03): merges of green low/medium-risk
+PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/123**.
+
+- **PR #67 — reflow D11 day differentiation fix.** The reflow rebuilt one slot per allocateGym
+  call, so the D9 quality rotation restarted at 0 and a runner's reflowed week collapsed to the
+  durability day (explosive/pogo days vanished). Fixed by threading each slot's baseline identity
+  (`ctx.weekGymCount` + `ctx.weekSlotIdx`) — same mechanism as the `resolveSplit[s.i]` share.
+  `reflow-d11-quality.js` now ENFORCES differentiation + baseline objective parity. No re-baseline.
+- **PR #68 — WP-07 migration discipline** (agent-built): migrations ledger
+  (`supabase/migrations/README.md`, keep-names/document-forward convention), schema.sql reconciled
+  with all 16 migrations (8 gaps fixed: wearable_connections, workouts, both RPCs, HR columns,
+  CHECKs, avatar policies, injury triage fields, NOT NULLs), `apps/mobile/.env.local.example`.
+  **Staging-project TODO for Simon** in the runbook (7 steps, needs his Supabase account).
+- **PR #69 — WP-08 confidence authority tiers (Art 13 operative).** `knowledge/authority.js`:
+  `authorityOf(entry) → gate|soft|reported` from KB confidence via the governed mapping entry
+  `knowledge.authority.mapping`. ACWR demotion now derived (load.js floor;
+  deloadRecommendation corroboration), not hardwired. Behaviour identical.
+- **PR #70 — WP-09 deload/recovery cut-points → KB.** `recovery.bands` /
+  `recovery.volume_modifiers` / `recovery.deload_thresholds` (honest L5-low tags); PlanService
+  memo-key band reads the same entry. Boundary-exact pins in `kb-recovery-thresholds.js`.
+- **PR #71 — WP-10 recovery honesty (FIRST deliberate behaviour change; spec:
+  `docs/superpowers/specs/2026-07-04-recovery-honesty-design.md`).** Low readiness → target RPE −1
+  (floor 5), suggested kg follow via the inverse-Epley coupling in applyWeights (allocator
+  `shiftRpe` in finaliseSlot, ctx.rpeOffset — pure generator passes none ⇒ byte-identical);
+  travel 'easy' = shorter (KB volumeCap 0.7) AND lighter (RPE −1), offsets take the min; Train
+  Now inherits the offset; eased weeks carry `_intensityEased` (surfacing = WP-30). Knowledge:
+  `recovery.intensity_policy` (L4 moderate → authority 'soft'), `recovery.travel_policy`.
+  **Stale audit claim found:** subjective ≥ objective already held (0.6/0.4 Saw blend) — pinned.
+- **⇒ NEXT: WP-11/12 validator suite** (Art 19 — the largest structural conflict): `validation/`
+  scaffold + contract `{verdict: pass|trim|veto, reason, confidence, authority}` + runner +
+  ValidationReport; MRV ceiling as the first named GATE validator (in-loop cap stays for
+  efficiency, validator authoritative — assert zero residual violations); then duration/equipment/
+  purpose/injury validators + the six-tier conflict order (WP-12); then WP-13 constraints-first
+  injuries. After the band: H9 seed-evidence pass, then Sprint 9 (SKB-primary, HIGH-risk — pause
+  for Simon's review before flipping).
+
 ## Latest work — Phase A of the audit backlog: hygiene & safety, WP-01…WP-06 (2026-07-03)
 
 Six small, independent PRs (**#61–#66**, all merged to `main`) executing Phase A of the Phase 3
