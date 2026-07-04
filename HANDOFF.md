@@ -289,10 +289,22 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   cyclist = zero plyos + squat-led; runner durability = RDL → trap-bar → carry. Re-baseline
   audited key-by-key: exactly the 8 run/cycle archetypes moved; build + swim byte-identical.
   Suite **127/127**.
-- **⇒ NEXT: WP-14** (allocator `scheme()` dose tables → knowledge/programming keyed by
-  (quality, phase) with a byte-identical style bridge — the D12 enabler), then WP-21 dosing
-  by quality WITH the staged C3–C9 corrections. Sprint 9 (SKB-primary) remains HIGH-risk —
-  pause for Simon's review before flipping.
+- **PR #78 — WP-14: the dose model is governed knowledge.** `data/doseSchemes.js`: all
+  rep/RPE schemes (styles × base/build/peak + deload/taper + light-equipment override),
+  POWER_DOSE, REST_SECONDS (incl. supersetB 20s), ISO/CORE strings — per-block provenance.
+  Keys are quality ids where true (maxStrength/hypertrophy/strengthEndurance);
+  `sportSupport` is the documented TRANSITIONAL composite until WP-21. `allocator.scheme()`
+  is a thin bridge lookup; byte-identity proven by UNTOUCHED golden masters (no re-baseline)
+  + 42 assertions in `tests/dose-schemes.js` (per-cell fidelity incl. fallback semantics).
+  Suite **128/128**.
+- **⇒ NEXT: WP-21** — dose D11 sessions from each session's TARGET QUALITY through
+  doseSchemes/doseResponse, applying the staged H9 C6–C8 dose corrections (robustness HSR,
+  reactive foot-contact ceilings, hypertrophy load/rest widening) in the same change.
+  Behaviour change for run/cycle → needs a committed spec + nature-of-change gates
+  (sprint-discipline runner gets power-appropriate doses distinct from long-distance).
+  Then **WP-15** (D11 weights → KB, confidence tags per the H9 §4 assessments; also C4's
+  weighted-sum fatigueScalar belongs there). Then **Sprint 9 (SKB-primary) — STOP for
+  Simon's design review before flipping anything.**
 - ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
