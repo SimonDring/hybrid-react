@@ -371,10 +371,27 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   `tests/engine-api-boundary.js` allowlists every remaining deep import WITH its retiring
   owner (Utils→WP-26, atlas→WP-29, DevPlayground=dev tooling) — new deep imports fail, stale
   entries fail, the list only shrinks. Suite **133/133**; production build clean.
-- **⇒ NEXT:** **WP-26** (Utils/Readiness UI helpers out of the engine — retires 6 allowlist
-  entries), **WP-27** (provenance stamps: plan.meta.provenance = {engineVersion,
-  knowledgeSetVersion}), **WP-30** (surface the emitted explanations: _intensityEased,
-  re-target rationale, category coverage, forgiveness — user-visible, preview-verify),
+- **PR #90 — WP-26: the engine/UI split (V11 remainder).** The pure engine no longer ships
+  presentation: `escapeHtml`/`chevronRight`/`countCompleted`/`formatDuration` DELETED (dead —
+  zero callers); `weekKey` DELETED (byte-identical duplicate of the barrel's `sessionKey`);
+  Readiness's ACCENT theme-token map + plain-English COPY block DELETED (dead — verdicts.js is
+  the app's copy layer; `computeReadiness` now returns the domain signal only);
+  `parseExercise` + `fmtSleep` MOVED to NEW `apps/mobile/src/lib/uiHelpers.js`. 12 app files
+  repointed; the atlas pair now imports ONLY from the barrel (its allowlist entries retired
+  ahead of WP-29). The boundary ALLOWLIST is **10 → 2 entries** (PlanService reflow namespace
+  + DevPlayground dev tooling). 133/133; /dev smoke clean.
+- **PR #91 — WP-27: provenance stamps.** Every plan + reflow output carries
+  `provenance = { engineVersion, knowledgeSetVersion }`: NEW `packages/engine/src/version.js`
+  (ENGINE_VERSION '1.0.0', package.json synced + test-enforced) and `KNOWLEDGE_SET_VERSION`
+  ('1.0.0') living WITH the KB in knowledge/entries.js (science bumps it; logic bumps
+  ENGINE_VERSION). `generatePlan` → meta.provenance; `reflowPhases` → the same stamp; barrel
+  exports all three. Snapshot re-baseline audited line-by-line: 112 insertions / 0 deletions =
+  exactly the 4 provenance lines × 28 keys. Suite **134/134**.
+- **⇒ NEXT:** **WP-30** (explainability surfacing, split 30a/30b: 30a = attach the D9
+  `objective.rationale` — already BUILT in allocator.js ~line 782 but DROPPED before the
+  session is emitted — as `session._objective = { quality, rationale }`, plus plan-meta
+  D4→D5→D9 chain summary; 30b = UI badges reading EMITTED reasons only: "why this session",
+  `_intensityEased`, `deloadReason`, forgiveness — user-visible, preview-verify),
   **WP-29** (Atlas re-base). **Team spine WP-32/33** blocked on WP-07's staging TODO (Simon's
   Supabase account). WP-22/23 (build flip) last. Staged H9 leftovers unchanged.
 - ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
