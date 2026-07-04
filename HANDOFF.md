@@ -317,15 +317,38 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   unilateral work — its metabolic-dominant cost no longer masquerading as full-CNS).
   Re-baseline audited: same 8 run/cycle archetypes; build+swim byte-identical. Suite
   **129/129**. Every scientific constant on the D11 path is now governed knowledge.
-- **⇒ NEXT: Sprint 9 (SKB-primary, audit WP-19) + the swim re-seat (WP-20) — ★ HARD STOP:
-  design review with SIMON before building/flipping anything.** The design must cover:
-  D2/D11 reading the SKB demand profile + `exerciseLibrary` transfer ratings directly;
-  deriving muscle-emphasis from demand; retiring `lib/sports/*` (one sport model); the H5
-  quality-vocabulary decision (route movement-specific needs through SKB library categories
-  vs extending the fixed-10 PM vocabulary — it broke swim once already); per-sport flip
-  strategy with the established gates. See "Swim re-seat — what's required" below +
-  audit §8 WP-19a/b/c + §9 H5. Remaining staged H9 items: C3/C5/C9–C14 (opportunistic);
-  C8 build rest floor + C7 48–72 h plyo spacing (D13) recorded for their owners.
+- **SPRINT 9 (design APPROVED by Simon 2026-07-04 — Option B / id-normalise / run-cycle-first;
+  spec: `docs/superpowers/specs/2026-07-04-sprint9-skb-primary-design.md`) — 4 of 5 steps SHIPPED:**
+  - **PR #81 — 19.0 the id join.** 35 SKB library ids normalised to catalogue ids; explicit
+    reasoned allowlist (cycling neck_isometrics; gaa/hurling distinct movements → WP-23);
+    `tests/skb-catalogue-join.js` makes rot loud; flip-line sports resolve 100%. Audited side
+    effect: cycle's dormant ×1.5 boost ACTIVATED (3 cycle archetypes re-baselined).
+  - **PR #82 — 19a rating-based value.** skbIds = Map(id→transferToSportRating); library value
+    = rating ÷ skbRatingDivisor(2, governed — deliberately DOMINANT within a tier) ÷ fatigue;
+    membership grants tier-4 standing; ×1.5 boost retired. quality-gate.js caught the first
+    calibration (divisor 4 → cyclist Wednesdays filled with pull-ups). Runner leads = trap-bar
+    (rating 9) over RDL (8) — authored ordering live. 6 run/cycle archetypes re-baselined.
+  - **PR #83 — 19b category-coverage planner (PARALLEL).** `session/categoryCoverage.js`:
+    weekCategoryPlan distributes library categories across sessions (differentiated by
+    construction; dose quality from the highest-rated movement; suitability/difficulty gates).
+    Scope decision: category-led = swim ONLY (CATEGORY_LED set); run/cycle stay rating-based.
+  - **PR #84 — WP-20 THE SWIM FLIP.** Swim joins D11 category-led (plan + reflow + Train Now).
+    The week: Mon Pull (pull-up 4×5/row 4×5/straight-arm/Pallof) · Tue Explosive (broad jump/
+    hang clean/swing/woodchop) · Thu trap-bar+pulls+ER+face pull · Sat core+carries. Gate
+    `tests/d11-swim-quality.js` (11 assertions). Contract retirements recorded in-test:
+    P4 heavy-press control → heavy-PULL control (the governed swim library has NO press
+    category — knowledge decision; revisit as a knowledge edit if wrong); sport-anchor/split
+    swim leads = library movements. P5 surfaced a real all-paths finisher bug (prone Y/T/W
+    stacking) — fixed. Re-baseline audited item-by-item: 2 swim + 1 run-sprint (finisher swap
+    only). Suite **132/132**.
+- **⇒ NEXT: Sprint 9 19c — retire `lib/sports/*` for the flipped sports (one sport model).**
+  Careful decomposition: the emphasis vectors still feed split/region + weekly targets even on
+  D11 paths; SPORT_BLOCKS → SKB `seasonalModel`; priority lists → the library (D11 sports no
+  longer read them for selection, but anchors/legacy callers may); systemic factors → sportLoad
+  knowledge. Per-sport, gates as established; build/gaa/rugby/soccer keep legacy until WP-22/23.
+  Then remaining staged H9 items (C3/C5/C9–C14 opportunistic; C8 build rest floor + C7 48–72 h
+  plyo spacing recorded for their owners), then the audit's Phase E/F (reflow re-seat WP-24;
+  Team spine WP-32/33 after WP-07's staging TODO).
 - ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
