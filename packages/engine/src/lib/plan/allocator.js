@@ -40,6 +40,7 @@ import { stimulusFactor } from '../strength/stimulus.js';
 import { AXIAL_SESSION_CAP, axialOf } from './axial.js';
 import { selectInterventions, tierOf } from './selectInterventions.js';
 import { deriveSessionObjective, assignTargetQualities, competencyAdjustedTarget, constraintAdjustedTarget } from '../session/sessionObjective.js';
+import { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS } from '../../data/doseSchemes.js';
 import { deriveMovementRequirements } from '../session/movementRequirements.js';
 import { regionOf } from '../session/sessionSpecs.js';
 
@@ -113,63 +114,26 @@ function stretchMult(ex, goalPrimary) {
   return (ex.stretchBias && goalPrimary === 'hypertrophy') ? 1.12 : 1.0;
 }
 
-// ---- rep / RPE / intensity scheme by style + phase (moved here from strength.js
-// so the allocator owns the prescription and there's no import cycle) ----
+// ---- rep / RPE / intensity scheme — the DOSE MODEL is governed knowledge now
+// (data/doseSchemes.js, WP-14): schemes keyed by (scheme key, phase) with per-block
+// provenance; this is a thin lookup through the style→scheme bridge, byte-identical
+// to the old style-keyed tables (golden masters prove it). Taper keeps intensity
+// (peaking — Bosquet 2007; Travis & Mujika 2020); deload drops it (recovery). ----
 function scheme(style, intent, deload, taper, light = false) {
-  // Event taper (peaking): cut VOLUME hard (2 sets, lean accessories) but KEEP
-  // intensity high — load/RPE stay near peak so the athlete sharpens, not detrains.
-  // This is the opposite of a deload (which drops intensity too). Evidence: Bosquet
-  // 2007 (endurance) + Travis & Mujika 2020 (maximal strength) — reduce volume
-  // ~40–60%, maintain intensity. Taper takes precedence over deload.
-  if (taper) {
-    const t = {
-      strength:     { main: '2 × 3', acc: '2 × 4', mainRpe: 'RPE 8', accRpe: 'RPE 7' },
-      bodybuilding: { main: '2 × 6', acc: '2 × 8', mainRpe: 'RPE 8', accRpe: 'RPE 8' },
-      functional:   { main: '2 × 4', acc: '2 × 6', mainRpe: 'RPE 8', accRpe: 'RPE 7' },
-      sport:        { main: '2 × 3', acc: '2 × 5', mainRpe: 'RPE 8', accRpe: 'RPE 7' }
-    };
-    return t[style] || t.functional;
-  }
-  if (deload) {
-    if (style === 'sport') return { main: '2 × 4', acc: '2 × 6', mainRpe: 'RPE 5', accRpe: 'RPE 5' };
-    return { main: '2 × 5', acc: '2 × 8', mainRpe: 'RPE 6', accRpe: 'RPE 6' };
-  }
-  const table = {
-    strength: {
-      base:  { main: '4 × 5', acc: '3 × 8', mainRpe: 'RPE 7',   accRpe: 'RPE 7' },
-      build: { main: '4 × 4', acc: '3 × 6', mainRpe: 'RPE 8',   accRpe: 'RPE 7→8' },
-      peak:  { main: '4 × 3', acc: '3 × 5', mainRpe: 'RPE 8→9', accRpe: 'RPE 8' }
-    },
-    bodybuilding: {
-      base:  { main: '3 × 12', acc: '3 × 12', mainRpe: 'RPE 7',   accRpe: 'RPE 8' },
-      build: { main: '4 × 10', acc: '3 × 12', mainRpe: 'RPE 8',   accRpe: 'RPE 8→9' },
-      peak:  { main: '4 × 8',  acc: '3 × 10', mainRpe: 'RPE 8→9', accRpe: 'RPE 9' }
-    },
-    functional: {
-      base:  { main: '3 × 8', acc: '3 × 10', mainRpe: 'RPE 7',   accRpe: 'RPE 7' },
-      build: { main: '4 × 6', acc: '3 × 8',  mainRpe: 'RPE 7→8', accRpe: 'RPE 7' },
-      peak:  { main: '3 × 5', acc: '3 × 6',  mainRpe: 'RPE 8',   accRpe: 'RPE 8' }
-    },
-    sport: {
-      base:  { main: '3 × 5', acc: '3 × 8', mainRpe: 'RPE 7',   accRpe: 'RPE 6' },
-      build: { main: '4 × 4', acc: '3 × 8', mainRpe: 'RPE 8',   accRpe: 'RPE 7' },
-      peak:  { main: '4 × 3', acc: '3 × 6', mainRpe: 'RPE 8→9', accRpe: 'RPE 7→8' }
-    }
-  };
-  let out = (table[style] || table.functional)[intent] || table.functional.base;
-  // Max-strength prescription needs a barbell. With only dumbbells/bodyweight, a
-  // 4×4 @ RPE 8 "max strength" can't be loaded heavily enough to mean anything —
-  // shift the mains to a strength-hypertrophy rep range DBs can actually train.
+  const q = DOSE_SCHEMES[STYLE_SCHEME_BRIDGE[style] || DEFAULT_SCHEME_KEY];
+  if (taper) return q.taper;
+  if (deload) return q.deload;
+  let out = q[intent] || DOSE_SCHEMES[DEFAULT_SCHEME_KEY].base;
+  // Max-strength mains need a barbell — light-equipment override (see the module).
   if (style === 'strength' && light) {
-    const h = { base: { main: '4 × 8', acc: '3 × 10' }, build: { main: '4 × 8', acc: '3 × 10' }, peak: { main: '4 × 6', acc: '3 × 8' } }[intent]
-      || { main: '4 × 8', acc: '3 × 10' };
+    const h = LIGHT_STRENGTH_MAINS[intent] || LIGHT_STRENGTH_MAINS.fallback;
     out = { ...out, main: h.main, acc: h.acc };
   }
   return out;
 }
 
-const isoStr = (style) => (style === 'bodybuilding' ? '3 × 12–15' : '3 × 12');
-const coreStr = (light) => (light ? '2 × 30s' : '3 × 30s');
+const isoStr = (style) => (style === 'bodybuilding' ? ISO_SETS.bodybuilding : ISO_SETS.default);
+const coreStr = (light) => (light ? CORE_SETS.light : CORE_SETS.default);
 const mainNote = (deload, taper) =>
   taper ? 'taper — keep the load, just fewer sets. Arrive fresh.'
     : deload ? 'deload — ~65% load, leave 3+ reps in the tank'
@@ -180,10 +144,10 @@ const mainNote = (deload, taper) =>
 // not failure), full recovery — and exempt from the female rep bump. This is how
 // jumps/cleans develop rate-of-force-development instead of being run as a
 // fatiguing 3×10 accessory.
-const POWER_SETS = '4 × 4';
-const POWER_RPE = 'RPE 7';
-const POWER_REST = 150;
-const POWER_NOTE = 'explosive — move fast, full recovery; stop the set if speed drops';
+const POWER_SETS = POWER_DOSE.sets;
+const POWER_RPE = POWER_DOSE.rpe;
+const POWER_REST = POWER_DOSE.restSec;
+const POWER_NOTE = POWER_DOSE.note;
 
 // Clamp the rep number(s) in a "sets" string to a per-exercise ceiling. Some
 // movements have a hard rep ceiling far below the generic accessory/iso scheme —
@@ -251,8 +215,8 @@ function roleSetCount(ex, s, style, effectiveRole) {
 function restForRole(ex, style, effectiveRole) {
   const role = effectiveRole != null ? effectiveRole : ex.role;
   if (ex.quality === 'power') return POWER_REST;
-  if (role === 'primary') return (style === 'strength' || style === 'sport') ? 180 : 120;
-  if (role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf') return 60;
+  if (role === 'primary') return (style === 'strength' || style === 'sport') ? REST_SECONDS.primaryHeavy : REST_SECONDS.primaryOther;
+  if (role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf') return REST_SECONDS.isoCoreCalf;
   // Accessory compound. A GENUINE high-CNS accessory (heavy RDL / Good morning / Rack
   // pull) now runs as a STRAIGHT SET, so it needs real rest — not the 75s that assumed
   // it would be tucked into another lift's rest gap; moderate accessories sit between.
@@ -260,10 +224,10 @@ function restForRole(ex, style, effectiveRole) {
   // keeps the lighter accessory rest — it's deliberately not loaded like a heavy main.
   if (ex.role === 'accessory') {
     const tier = cnsTier(ex);
-    if (tier === 'high') return 150;
-    if (tier === 'moderate') return 90;
+    if (tier === 'high') return REST_SECONDS.accessoryHighCns;
+    if (tier === 'moderate') return REST_SECONDS.accessoryModerateCns;
   }
-  return 75;
+  return REST_SECONDS.accessoryDefault;
 }
 
 // Build the rendered item for a chosen exercise at a given position in the slot.
@@ -414,7 +378,7 @@ function structureItems(picks) {
     const g = LET[Math.min(bi, 7)];
     const paired = blk.length > 1;
     blk.forEach((p, pos) => {
-      const restSec = (paired && pos > 0) ? 20 : p.item.restSec;
+      const restSec = (paired && pos > 0) ? REST_SECONDS.supersetB : p.item.restSec;
       items.push({ ...p.item, num: `${g}${pos + 1}`, group: g, superset: paired, restSec });
     });
   });
