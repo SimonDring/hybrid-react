@@ -51,5 +51,5 @@ assert(JSON.stringify(barrelAccessor(sample)) === JSON.stringify(exerciseQualiti
 assert(exerciseQualities('back_squat').qualities[0].id === 'maxStrength', 'back squat → maxStrength primary');
 assert(exerciseQualities('depth_jump').qualities[0].id === 'reactiveStrength', 'depth jump → reactiveStrength primary');
 assert(exerciseQualities('plank').qualities[0].id === 'stability', 'plank → stability primary');
-assert(exerciseQualities('calf_raise').qualities[0].id === 'strengthEndurance', 'calf raise → strengthEndurance primary');
+assert(exerciseQualities('calf_raise').qualities[0].id === 'robustness', 'calf raise → robustness primary (H9 C3: Achilles/tissue capacity first)');
 assert(exerciseQualities('biceps_curl').qualities[0].id === 'hypertrophy', 'biceps curl → hypertrophy primary');

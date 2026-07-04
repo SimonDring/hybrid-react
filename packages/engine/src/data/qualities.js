@@ -1,5 +1,8 @@
 // Seed physical-quality registry — the organising primitive of training content (EDS §31).
 // Representative, evidence-tagged; NOT exhaustive. fatigueCost values are 'low'|'moderate'|'high'.
+// NOTE (H9 C12): fatigueCost here is the QUALITY's systemic cost (what developing the
+// adaptation costs) — distinct from exerciseQualities.js COST (what performing a movement
+// class costs). Same 3-D scale, different measurements; deliberately not unified.
 export const QUALITIES = [
   { id: 'maxStrength', family: 'strength', adaptations: ['motor_unit_recruitment', 'myofibrillar_hypertrophy'],
     assessment: '1rm', fatigueCost: { neural: 'high', metabolic: 'low', mechanical: 'moderate' },
