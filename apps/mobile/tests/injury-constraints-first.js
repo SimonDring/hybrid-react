@@ -91,6 +91,13 @@ assert(!injured.some(({ items }) => items.some((it) => !/pain-free/i.test(it.nam
   'no jump/plyo is SELECTED either (name-level constraint — the pattern vocabulary alone could not say "no jumping")');
 assert(!injured.some(({ items }) => items.some((it) => it.substituted)),
   'zero post-filter substitutions — selection was already legal in the horizon');
+// D9 constraint gate: when the diagnosed targets' drivers are blocked (hinges for
+// robustness, jumps for reactive strength), the session re-targets the trainable
+// maxStrength base — the athlete still gets REAL strength work (squat/lunge legal
+// for a hamstring strain), not an accessory-only week.
+const STRENGTH_COMPOUND = /squat|leg press|lunge|step-up|split squat/i;
+assert(injured.every(({ items }) => items.some((it) => STRENGTH_COMPOUND.test(it.name))),
+  'every in-horizon session still contains a legal strength compound (constraint re-target)');
 assert(!injured.some(({ session }) => /rehab/i.test(session.title || '')),
   'no in-horizon session was replaced by a rehab session');
 // Beyond the reflow horizon the baseline stays injury-blind and the post-filter is
