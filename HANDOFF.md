@@ -364,15 +364,19 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   programming literal); dead derivations + 8 engine deep-imports pruned. PlanService 818+ →
   **658 lines** of fetch/invoke/cache/persist + calendar/decoration glue. Zero drift at every
   stage (24a/b/c); suite **132/132**.
-- **⇒ NEXT:** **WP-25** (the 6-call public API — plan · reflow · deriveReadiness/deriveLoad ·
-  validate · explain · rollUp on the barrel; narrow subpath exports; repoint the app's
-  remaining deep imports — smaller now), **WP-26** (engine/UI split: Readiness copy/theme
-  tokens + Utils DOM helpers out of the engine), **WP-27** (provenance stamps), **WP-29**
-  (Atlas re-base — user-visible; preview-verify), **WP-30** (explainability surfacing — the
-  _intensityEased / retarget / category rationales already emitted). **Team spine WP-32/33**
-  blocked on WP-07's staging TODO (Simon's Supabase account). WP-22/23 (build flip) last.
-  Staged H9 leftovers: C3/C5/C9–C14 opportunistic; C8 build rest floor + C7 plyo spacing
-  recorded for their owners.
+- **PR #89 — WP-25: the named public API + the deep-import RATCHET (V11/T21).** The barrel
+  headlines the six calls (plan · reflow · deriveReadiness · deriveLoad · validate + trainNow;
+  explain/rollUp documented RESERVED for WP-30/WP-34); curated domain exports; ~45 deep-import
+  lines repointed (PlanService, store, AthleteModelService, onboarding, 9 screens);
+  `tests/engine-api-boundary.js` allowlists every remaining deep import WITH its retiring
+  owner (Utils→WP-26, atlas→WP-29, DevPlayground=dev tooling) — new deep imports fail, stale
+  entries fail, the list only shrinks. Suite **133/133**; production build clean.
+- **⇒ NEXT:** **WP-26** (Utils/Readiness UI helpers out of the engine — retires 6 allowlist
+  entries), **WP-27** (provenance stamps: plan.meta.provenance = {engineVersion,
+  knowledgeSetVersion}), **WP-30** (surface the emitted explanations: _intensityEased,
+  re-target rationale, category coverage, forgiveness — user-visible, preview-verify),
+  **WP-29** (Atlas re-base). **Team spine WP-32/33** blocked on WP-07's staging TODO (Simon's
+  Supabase account). WP-22/23 (build flip) last. Staged H9 leftovers unchanged.
 - ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
