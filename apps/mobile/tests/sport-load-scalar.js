@@ -1,6 +1,6 @@
 // tests/sport-load-scalar.js — the sport-load volume scalar.
 import { sportLoadScalar, sportDayFactor } from '@performance-os/engine/lib/strength/sportLoad.js';
-import swimming from '@performance-os/engine/lib/sports/swimming.js';
+import swimming from '@performance-os/engine/data/sportGymSupport/swimming.js';
 let fails = 0;
 const near = (got, want, msg, tol = 0.005) => { const ok = Math.abs(got - want) <= tol; console.log((ok ? 'PASS' : 'FAIL') + ': ' + msg + (ok ? '' : ` (got ${got} want ${want})`)); if (!ok) fails++; };
 const days = (n) => Array.from({ length: n }, (_, i) => ['mon','tue','wed','thu','fri','sat','sun'][i]);

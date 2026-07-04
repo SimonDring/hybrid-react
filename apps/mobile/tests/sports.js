@@ -3,7 +3,7 @@
 // the resolvers read sports from the registry (parity with the old hardcoded maps),
 // and a brand-new scaffold sport produces a valid plan with ZERO core-engine edits.
 // See docs/engine/02-REFACTOR-ROADMAP.md (Phase 2).
-import sports from '@performance-os/engine/lib/sports/index.js';
+import sports from '@performance-os/engine/data/sportGymSupport/index.js';
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 import { resolvePeriodization } from '@performance-os/engine/lib/plan/periodization.js';
 import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';

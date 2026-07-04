@@ -14,11 +14,11 @@
  *  Post-event transition 4 wk: deload + active recovery, Mujika 2010
  *
  *  Sport block templates + the run-discipline branching now live in the pluggable
- *  sport modules (src/lib/sports/); this file owns the BUILD profiles + season
+ *  sport modules (src/data/sportGymSupport/); this file owns the BUILD profiles + season
  *  derivation and looks sports up via the registry. Adding a sport needs no edit here.
  */
-import sports from '../sports/index.js';
-import { SPORT_BLOCKS } from '../sports/_schema.js';
+import sports from '../../data/sportGymSupport/index.js';
+import { SPORT_BLOCKS } from '../../data/sportGymSupport/_schema.js';
 
 /**
  * Derive the current training season from the athlete's profile.
@@ -64,8 +64,8 @@ export function deriveSeason(profile = {}, asOf = profile.plan_start_date || nul
 // 'intent' maps to PHASE_META in PlanGenerator (base | build | peak).
 // deload is inserted automatically by PlanGenerator every 4th week within a phase.
 
-// BUILD profiles only. Sport block templates moved to src/lib/sports/_schema.js
-// (SPORT_BLOCKS) and the run-discipline variants to src/lib/sports/running.js.
+// BUILD profiles only. Sport block templates moved to src/data/sportGymSupport/_schema.js
+// (SPORT_BLOCKS) and the run-discipline variants to src/data/sportGymSupport/running.js.
 const PROFILES = {
   // RP hypertrophy mesocycle (Israetel): 4-week accumulation + 1 week peak + 1 deload
   hypertrophy: {

@@ -7,7 +7,7 @@
  * data flows; this is the proactive, day-one layer that needs no history.
  * See docs/superpowers/specs/2026-06-28-sport-load-aware-planning-design.md §5.
  */
-import { DEFAULT_SEASON_VOLUME } from '../sports/_schema.js';
+import { DEFAULT_SEASON_VOLUME } from '../../data/sportGymSupport/_schema.js';
 
 const GOAL_FACTOR = { build_base: 1.0, get_stronger: 0.90, stay_durable: 1.0 };
 export const VOLUME_FLOOR = 0.5, VOLUME_CEIL = 1.0;
