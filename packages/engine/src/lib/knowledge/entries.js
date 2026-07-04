@@ -94,6 +94,36 @@ export const ENTRIES = [
 
   // ── Recovery / readiness ──────────────────────────────────────────────────────
   {
+    id: 'recovery.bands',
+    rule: 'Readiness-score bands: ≥ greenCut = high (train as planned), ≥ moderateCut = moderate, below = low. greenCut default 70 (the v2 readiness weighting passes 67 explicitly).',
+    value: { greenCut: 70, moderateCut: 50 },
+    evidenceLevel: 'L5',
+    source: 'Internal heuristic cut-points layered on the validated readiness signal (Saw 2016 for the signal itself — readiness.subjective_priority)',
+    confidence: 'low',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['recovery']
+  },
+  {
+    id: 'recovery.volume_modifiers',
+    rule: 'Session volume scaling per readiness band: high = full plan, moderate = -10%, low = -22%. Conservative, graded — the strong cut (deload) requires corroboration.',
+    value: { high: 1, moderate: 0.9, low: 0.78 },
+    evidenceLevel: 'L5',
+    source: 'Internal heuristic; magnitudes chosen conservative (≤22% trim) pending outcome data',
+    confidence: 'low',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['recovery']
+  },
+  {
+    id: 'recovery.deload_thresholds',
+    rule: 'Adaptive-deload cut-points: readiness < readinessLow AND session-recovery ≤ recoveryPoor (1–5 scale) marks fatigue that can FORCE a deload; readiness ≥ readinessFresh AND session-recovery ≥ recoveryFresh marks freshness that can DEFER a planned one. The strongest behavioural call in the runtime layer — the signals are validated, these cut-points are heuristic.',
+    value: { readinessLow: 50, readinessFresh: 70, recoveryPoor: 2, recoveryFresh: 4 },
+    evidenceLevel: 'L5',
+    source: 'Internal heuristic cut-points on validated signals (Saw 2016 subjective priority; illness override per common S&C practice)',
+    confidence: 'low',
+    lastReviewed: '2026-07-04',
+    appliesTo: ['recovery', 'load']
+  },
+  {
     id: 'readiness.subjective_priority',
     rule: 'Subjective wellness (sleep quality, soreness, mood, stress, energy) is at least as sensitive as objective HRV/RHR for monitoring load response — weight it ≥ objective signals, and combine.',
     value: true,

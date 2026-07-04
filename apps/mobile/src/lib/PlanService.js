@@ -32,7 +32,7 @@ import { combinedMultiplier, deloadRecommendation } from '@performance-os/engine
 import { ruleVolumeAdjustment } from '@performance-os/engine/lib/sportKnowledge/reflowAdjust.js';
 import { deriveConstraints, lightenItems } from '@performance-os/engine/lib/plan/constraints.js';
 import { buildPrimer } from '@performance-os/engine/lib/plan/primers.js';
-import { performanceModelForProfile } from '@performance-os/engine';
+import { performanceModelForProfile, kb } from '@performance-os/engine';
 import * as SKB from '@performance-os/engine/lib/sportKnowledge/index.js';
 import { profileToAthleteModel } from '@performance-os/engine/lib/adapters/profileToAthleteModel.js';
 
@@ -251,7 +251,10 @@ function adaptedPhases() {
     loadAction, readiness: recovery ? recovery.score : null, recentRecovery,
     illness: override === 'rest', scheduledDeload: !!cwWeek.deload
   });
-  const recBand = recentRecovery == null ? 'n' : recentRecovery <= 2 ? 'l' : recentRecovery >= 4 ? 'h' : 'm';
+  // Memo-key band mirrors deloadRecommendation's cut-points — read from the same
+  // KB entry so the mirror can't drift from the decision it caches for.
+  const _dt = kb.value('recovery.deload_thresholds');
+  const recBand = recentRecovery == null ? 'n' : recentRecovery <= _dt.recoveryPoor ? 'l' : recentRecovery >= _dt.recoveryFresh ? 'h' : 'm';
 
   // SKB decision rules (sport-specific) → conservative reflow modifiers for the CURRENT week.
   // Dormant for non-sport profiles and sports whose rules carry no structured trigger/effect.
