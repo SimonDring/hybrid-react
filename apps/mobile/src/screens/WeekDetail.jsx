@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
-import { sessionKey } from '@performance-os/engine';
+import { sessionKey, MUSCLE_LABELS } from '@performance-os/engine';
 
 const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
@@ -51,6 +51,14 @@ export default function WeekDetail() {
     return sessions[k] && sessions[k].completed;
   }).length;
 
+  // WP-30b: forgiveness is only meaningful on the CURRENT week (it describes what
+  // this reflow just decided). Reads the reflow's emitted ledger via PlanService.
+  const isCurrent = Plan.currentWeekNumber() === week.num;
+  const forgiven = isCurrent ? (Plan.lastForgiven() || {}) : {};
+  const forgivenList = Object.entries(forgiven)
+    .filter(([, sets]) => sets > 0)
+    .map(([m, sets]) => `${MUSCLE_LABELS[m] || m} ${Math.round(sets)} set${Math.round(sets) !== 1 ? 's' : ''}`);
+
   return (
     <>
       <div className="eyebrow">Phase {phase.id} · {phase.title}</div>
@@ -87,6 +95,21 @@ export default function WeekDetail() {
           <strong>Deload week</strong> — Volume reduced. Mandatory.
         </div>
       ) : null}
+
+      {/* WP-30b: the reflow's OWN adjustment reasons (emitted, never re-derived).
+          _intensityEased = 'low readiness — eased' / 'travel — eased'; display trims
+          the shared suffix. Forgiveness (current week only): sets past the safe
+          catch-up window the plan moved on from — honest, no silent drops (Art 10). */}
+      {week._intensityEased && (
+        <div className="callout amber" style={{ marginBottom: 14 }}>
+          <strong>Eased this week</strong> — {week._intensityEased.replace(/ — eased$/, '')}. Effort targets sit a touch lower; the volume stays.
+        </div>
+      )}
+      {isCurrent && forgivenList.length > 0 && (
+        <div className="callout slate" style={{ marginBottom: 14 }}>
+          <strong>Missed work forgiven</strong> — {forgivenList.join(', ')} from earlier weeks {forgivenList.length === 1 ? 'was' : 'were'} past the safe catch-up window, so the plan moves on instead of cramming.
+        </div>
+      )}
 
       {/* Day strip */}
       <div className="week-strip" style={{ marginBottom: 20 }}>

@@ -33772,6 +33772,60 @@
   },
   "sport·cycle·intermediate·in·2d": {
     "meta": {
+      "diagnosis": {
+        "limitingFactors": [
+          {
+            "confidence": "low",
+            "magnitude": 0.5,
+            "qualityId": "aerobicCapacity",
+            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "explosiveStrength",
+            "rationale": "demands explosiveStrength at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "maxStrength",
+            "rationale": "demands maxStrength at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.06,
+            "qualityId": "stability",
+            "rationale": "demands stability at 0.6; your level is 0.5 (inferred) — gap 0.1."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "mobility",
+            "rationale": "you meet the mobility demand (0.5); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "reactiveStrength",
+            "rationale": "you meet the reactiveStrength demand (0.3); maintain it."
+          }
+        ],
+        "priorityQualities": [
+          {
+            "order": 1,
+            "qualityId": "aerobicCapacity",
+            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.5); develop via mitochondrial_density, stroke_volume, capillary_density."
+          }
+        ],
+        "sport": "cycle"
+      },
       "provenance": {
         "engineVersion": "1.0.0",
         "knowledgeSetVersion": "1.0.0"
@@ -33809,6 +33863,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Maintain robustness, minimal fatigue",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget moderate."
+                },
                 "axialLoad": 2,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -33879,6 +33938,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain max strength, minimal fatigue",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -33945,6 +34009,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Maintain robustness, minimal fatigue",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget moderate."
+                },
                 "axialLoad": 2,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -34015,6 +34084,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain max strength, minimal fatigue",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -34081,6 +34155,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Maintain robustness, minimal fatigue",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget moderate."
+                },
                 "axialLoad": 2,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -34151,6 +34230,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain max strength, minimal fatigue",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -34217,6 +34301,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Maintain robustness, minimal fatigue",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific — hold intensity, cut volume; fatigue budget low."
+                },
                 "axialLoad": 1,
                 "dayIdx": 1,
                 "duration": "~25 min",
@@ -34311,6 +34400,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain max strength, minimal fatigue",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM — hold intensity, cut volume; fatigue budget low."
+                },
                 "axialLoad": 2,
                 "dayIdx": 4,
                 "duration": "~25 min",
@@ -34415,6 +34509,60 @@
   },
   "sport·cycle·intermediate·off·3d": {
     "meta": {
+      "diagnosis": {
+        "limitingFactors": [
+          {
+            "confidence": "low",
+            "magnitude": 0.5,
+            "qualityId": "aerobicCapacity",
+            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "explosiveStrength",
+            "rationale": "demands explosiveStrength at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "maxStrength",
+            "rationale": "demands maxStrength at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.06,
+            "qualityId": "stability",
+            "rationale": "demands stability at 0.6; your level is 0.5 (inferred) — gap 0.1."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "mobility",
+            "rationale": "you meet the mobility demand (0.5); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "reactiveStrength",
+            "rationale": "you meet the reactiveStrength demand (0.3); maintain it."
+          }
+        ],
+        "priorityQualities": [
+          {
+            "order": 1,
+            "qualityId": "aerobicCapacity",
+            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.5); develop via mitochondrial_density, stroke_volume, capillary_density."
+          }
+        ],
+        "sport": "cycle"
+      },
       "provenance": {
         "engineVersion": "1.0.0",
         "knowledgeSetVersion": "1.0.0"
@@ -34456,6 +34604,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -34526,6 +34679,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -34617,6 +34775,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -34683,6 +34846,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -34753,6 +34921,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -34844,6 +35017,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -34910,6 +35088,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -34980,6 +35163,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -35071,6 +35259,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -35137,6 +35330,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -35207,6 +35405,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -35298,6 +35501,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -35364,6 +35572,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -35471,6 +35684,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -35577,6 +35795,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 2,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -35715,6 +35938,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -35773,6 +36001,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 2,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -35864,6 +36097,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -35930,6 +36168,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -35988,6 +36231,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 2,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -36079,6 +36327,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -36145,6 +36398,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -36203,6 +36461,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 2,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -36294,6 +36557,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -36360,6 +36628,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -36418,6 +36691,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 2,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -36509,6 +36787,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -36575,6 +36858,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -36682,6 +36970,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -36788,6 +37081,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 2,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -36904,6 +37202,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -36962,6 +37265,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 2,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -37053,6 +37361,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -37119,6 +37432,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -37177,6 +37495,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 2,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -37268,6 +37591,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -37335,6 +37663,60 @@
   },
   "sport·cycle·intermediate·transition·3d": {
     "meta": {
+      "diagnosis": {
+        "limitingFactors": [
+          {
+            "confidence": "low",
+            "magnitude": 0.5,
+            "qualityId": "aerobicCapacity",
+            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "explosiveStrength",
+            "rationale": "demands explosiveStrength at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "maxStrength",
+            "rationale": "demands maxStrength at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.06,
+            "qualityId": "stability",
+            "rationale": "demands stability at 0.6; your level is 0.5 (inferred) — gap 0.1."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "mobility",
+            "rationale": "you meet the mobility demand (0.5); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "reactiveStrength",
+            "rationale": "you meet the reactiveStrength demand (0.3); maintain it."
+          }
+        ],
+        "priorityQualities": [
+          {
+            "order": 1,
+            "qualityId": "aerobicCapacity",
+            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.5); develop via mitochondrial_density, stroke_volume, capillary_density."
+          }
+        ],
+        "sport": "cycle"
+      },
       "provenance": {
         "engineVersion": "1.0.0",
         "knowledgeSetVersion": "1.0.0"
@@ -37376,6 +37758,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -37446,6 +37833,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -37537,6 +37929,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -37603,6 +38000,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -37673,6 +38075,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -37764,6 +38171,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -37830,6 +38242,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -37900,6 +38317,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -37991,6 +38413,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -38057,6 +38484,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 4,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -38127,6 +38559,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -38218,6 +38655,11 @@
                 "title": "Wednesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -38285,6 +38727,66 @@
   },
   "sport·run-long·intermediate·off·4d": {
     "meta": {
+      "diagnosis": {
+        "limitingFactors": [
+          {
+            "confidence": "low",
+            "magnitude": 0.5,
+            "qualityId": "aerobicCapacity",
+            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.36,
+            "qualityId": "robustness",
+            "rationale": "demands robustness at 0.9; your level is 0.5 (inferred) — gap 0.4."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.24,
+            "qualityId": "maxStrength",
+            "rationale": "demands maxStrength at 0.8; your level is 0.5 (inferred) — gap 0.3."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "reactiveStrength",
+            "rationale": "demands reactiveStrength at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "stability",
+            "rationale": "demands stability at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.06,
+            "qualityId": "mobility",
+            "rationale": "demands mobility at 0.6; your level is 0.5 (inferred) — gap 0.1."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "you meet the anaerobicCapacity demand (0.5); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "explosiveStrength",
+            "rationale": "you meet the explosiveStrength demand (0.4); maintain it."
+          }
+        ],
+        "priorityQualities": [
+          {
+            "order": 1,
+            "qualityId": "aerobicCapacity",
+            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.5); develop via mitochondrial_density, stroke_volume, capillary_density."
+          }
+        ],
+        "sport": "run"
+      },
       "provenance": {
         "engineVersion": "1.0.0",
         "knowledgeSetVersion": "1.0.0"
@@ -38326,6 +38828,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -38408,6 +38915,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -38498,6 +39010,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -38580,6 +39097,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -38681,6 +39203,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -38763,6 +39290,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -38853,6 +39385,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -38935,6 +39472,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -39036,6 +39578,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -39118,6 +39665,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -39208,6 +39760,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -39290,6 +39847,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -39391,6 +39953,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -39473,6 +40040,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -39563,6 +40135,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -39645,6 +40222,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -39746,6 +40328,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -39854,6 +40441,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -39944,6 +40536,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -40052,6 +40649,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 0,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -40173,6 +40775,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -40243,6 +40850,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -40333,6 +40945,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -40438,6 +41055,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -40517,6 +41139,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -40587,6 +41214,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -40677,6 +41309,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -40782,6 +41419,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -40861,6 +41503,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -40931,6 +41578,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -41021,6 +41673,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -41126,6 +41783,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -41205,6 +41867,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -41275,6 +41942,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -41365,6 +42037,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -41470,6 +42147,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -41549,6 +42231,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -41657,6 +42344,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -41747,6 +42439,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -41855,6 +42552,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 0,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -41954,6 +42656,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -42024,6 +42731,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -42114,6 +42826,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -42219,6 +42936,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -42298,6 +43020,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -42368,6 +43095,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -42458,6 +43190,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -42563,6 +43300,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -42643,6 +43385,66 @@
   },
   "sport·run-long·intermediate·pre·3d": {
     "meta": {
+      "diagnosis": {
+        "limitingFactors": [
+          {
+            "confidence": "low",
+            "magnitude": 0.5,
+            "qualityId": "aerobicCapacity",
+            "rationale": "demands aerobicCapacity at 1; your level is 0.5 (inferred) — gap 0.5."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.36,
+            "qualityId": "robustness",
+            "rationale": "demands robustness at 0.9; your level is 0.5 (inferred) — gap 0.4."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.24,
+            "qualityId": "maxStrength",
+            "rationale": "demands maxStrength at 0.8; your level is 0.5 (inferred) — gap 0.3."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "reactiveStrength",
+            "rationale": "demands reactiveStrength at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "stability",
+            "rationale": "demands stability at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.06,
+            "qualityId": "mobility",
+            "rationale": "demands mobility at 0.6; your level is 0.5 (inferred) — gap 0.1."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "you meet the anaerobicCapacity demand (0.5); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "explosiveStrength",
+            "rationale": "you meet the explosiveStrength demand (0.4); maintain it."
+          }
+        ],
+        "priorityQualities": [
+          {
+            "order": 1,
+            "qualityId": "aerobicCapacity",
+            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.5); develop via mitochondrial_density, stroke_volume, capillary_density."
+          }
+        ],
+        "sport": "run"
+      },
       "provenance": {
         "engineVersion": "1.0.0",
         "knowledgeSetVersion": "1.0.0"
@@ -42684,6 +43486,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -42766,6 +43573,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -42856,6 +43668,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -42947,6 +43764,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -43029,6 +43851,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -43119,6 +43946,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -43210,6 +44042,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -43292,6 +44129,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -43382,6 +44224,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -43495,6 +44342,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -43565,6 +44417,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -43655,6 +44512,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -43734,6 +44596,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -43804,6 +44671,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -43894,6 +44766,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -43973,6 +44850,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -44081,6 +44963,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 0,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -44171,6 +45058,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -44289,6 +45181,66 @@
   },
   "sport·run-middle·intermediate·off·4d": {
     "meta": {
+      "diagnosis": {
+        "limitingFactors": [
+          {
+            "confidence": "low",
+            "magnitude": 0.36,
+            "qualityId": "aerobicCapacity",
+            "rationale": "demands aerobicCapacity at 0.9; your level is 0.5 (inferred) — gap 0.4."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.36,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "demands anaerobicCapacity at 0.9; your level is 0.5 (inferred) — gap 0.4."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.24,
+            "qualityId": "maxStrength",
+            "rationale": "demands maxStrength at 0.8; your level is 0.5 (inferred) — gap 0.3."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.24,
+            "qualityId": "reactiveStrength",
+            "rationale": "demands reactiveStrength at 0.8; your level is 0.5 (inferred) — gap 0.3."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "stability",
+            "rationale": "demands stability at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.06,
+            "qualityId": "explosiveStrength",
+            "rationale": "demands explosiveStrength at 0.6; your level is 0.5 (inferred) — gap 0.1."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.06,
+            "qualityId": "mobility",
+            "rationale": "demands mobility at 0.6; your level is 0.5 (inferred) — gap 0.1."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.06,
+            "qualityId": "robustness",
+            "rationale": "demands robustness at 0.6; your level is 0.5 (inferred) — gap 0.1."
+          }
+        ],
+        "priorityQualities": [
+          {
+            "order": 1,
+            "qualityId": "aerobicCapacity",
+            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.36); develop via mitochondrial_density, stroke_volume, capillary_density."
+          }
+        ],
+        "sport": "run"
+      },
       "provenance": {
         "engineVersion": "1.0.0",
         "knowledgeSetVersion": "1.0.0"
@@ -44330,6 +45282,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -44412,6 +45369,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -44504,6 +45466,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -44586,6 +45553,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -44688,6 +45660,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -44770,6 +45747,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -44862,6 +45844,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -44944,6 +45931,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -45046,6 +46038,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -45128,6 +46125,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -45220,6 +46222,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -45302,6 +46309,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -45404,6 +46416,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -45512,6 +46529,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -45604,6 +46626,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -45712,6 +46739,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 0,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -45835,6 +46867,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -45905,6 +46942,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -45997,6 +47039,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -46102,6 +47149,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -46181,6 +47233,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -46251,6 +47308,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -46343,6 +47405,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -46448,6 +47515,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -46527,6 +47599,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -46597,6 +47674,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -46689,6 +47771,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC, RIR quality only; fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -46794,6 +47881,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -46873,6 +47965,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -46981,6 +48078,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -47073,6 +48175,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 3,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -47181,6 +48288,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 0,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -47304,6 +48416,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific (top of range); fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -47374,6 +48491,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC (top of range); fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -47466,6 +48588,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC (top of range); fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -47571,6 +48698,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific (top of range); fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -47650,6 +48782,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific (top of range); fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -47720,6 +48857,11 @@
                 "title": "Monday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC (top of range); fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -47812,6 +48954,11 @@
                 "title": "Tuesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop reactive strength",
+                  "quality": "reactiveStrength",
+                  "rationale": "targeting reactive strength from the diagnosis; bodyweight–light, high SSC (top of range); fatigue budget high."
+                },
                 "axialLoad": 0,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -47917,6 +49064,11 @@
                 "title": "Thursday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific (top of range); fatigue budget high."
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -47997,6 +49149,66 @@
   },
   "sport·run-sprint·advanced·in·4d(taper)": {
     "meta": {
+      "diagnosis": {
+        "limitingFactors": [
+          {
+            "confidence": "low",
+            "magnitude": 0.28,
+            "qualityId": "explosiveStrength",
+            "rationale": "demands explosiveStrength at 1; your level is 0.72 (inferred) — gap 0.28."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.16,
+            "qualityId": "reactiveStrength",
+            "rationale": "demands reactiveStrength at 0.9; your level is 0.72 (inferred) — gap 0.18."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "aerobicCapacity",
+            "rationale": "you meet the aerobicCapacity demand (0.3); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "you meet the anaerobicCapacity demand (0.7); maintain it."
+          },
+          {
+            "confidence": "moderate",
+            "magnitude": 0,
+            "qualityId": "maxStrength",
+            "rationale": "you meet the maxStrength demand (0.8); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "mobility",
+            "rationale": "you meet the mobility demand (0.7); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "robustness",
+            "rationale": "you meet the robustness demand (0.3); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "stability",
+            "rationale": "you meet the stability demand (0.7); maintain it."
+          }
+        ],
+        "priorityQualities": [
+          {
+            "order": 1,
+            "qualityId": "explosiveStrength",
+            "rationale": "prioritising explosiveStrength (limiter magnitude 0.28); develop via rate_coding, motor_unit_recruitment."
+          }
+        ],
+        "sport": "run"
+      },
       "provenance": {
         "engineVersion": "1.0.0",
         "knowledgeSetVersion": "1.0.0"
@@ -48034,6 +49246,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -48103,6 +49320,11 @@
                 "title": "Monday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -48196,6 +49418,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -48265,6 +49492,11 @@
                 "title": "Thursday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -48366,6 +49598,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -48435,6 +49672,11 @@
                 "title": "Monday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -48528,6 +49770,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -48597,6 +49844,11 @@
                 "title": "Thursday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -48698,6 +49950,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -48767,6 +50024,11 @@
                 "title": "Monday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -48860,6 +50122,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -48929,6 +50196,11 @@
                 "title": "Thursday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -49030,6 +50302,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent — hold intensity, cut volume; fatigue budget low."
+                },
                 "axialLoad": 0,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -49112,6 +50389,11 @@
                 "title": "Monday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent — hold intensity, cut volume; fatigue budget low."
+                },
                 "axialLoad": 1,
                 "dayIdx": 1,
                 "duration": "~25 min",
@@ -49217,6 +50499,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent — hold intensity, cut volume; fatigue budget low."
+                },
                 "axialLoad": 0,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -49299,6 +50586,11 @@
                 "title": "Thursday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent — hold intensity, cut volume; fatigue budget low."
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~25 min",
@@ -49402,6 +50694,66 @@
   },
   "sport·run-sprint·intermediate·off·4d": {
     "meta": {
+      "diagnosis": {
+        "limitingFactors": [
+          {
+            "confidence": "low",
+            "magnitude": 0.5,
+            "qualityId": "explosiveStrength",
+            "rationale": "demands explosiveStrength at 1; your level is 0.5 (inferred) — gap 0.5."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.36,
+            "qualityId": "reactiveStrength",
+            "rationale": "demands reactiveStrength at 0.9; your level is 0.5 (inferred) — gap 0.4."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.24,
+            "qualityId": "maxStrength",
+            "rationale": "demands maxStrength at 0.8; your level is 0.5 (inferred) — gap 0.3."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "mobility",
+            "rationale": "demands mobility at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "stability",
+            "rationale": "demands stability at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "aerobicCapacity",
+            "rationale": "you meet the aerobicCapacity demand (0.3); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "robustness",
+            "rationale": "you meet the robustness demand (0.3); maintain it."
+          }
+        ],
+        "priorityQualities": [
+          {
+            "order": 1,
+            "qualityId": "explosiveStrength",
+            "rationale": "prioritising explosiveStrength (limiter magnitude 0.5); develop via rate_coding, motor_unit_recruitment."
+          }
+        ],
+        "sport": "run"
+      },
       "provenance": {
         "engineVersion": "1.0.0",
         "knowledgeSetVersion": "1.0.0"
@@ -49443,6 +50795,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -49512,6 +50869,11 @@
                 "title": "Monday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -49617,6 +50979,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -49686,6 +51053,11 @@
                 "title": "Thursday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -49788,6 +51160,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -49857,6 +51234,11 @@
                 "title": "Monday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -49962,6 +51344,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -50031,6 +51418,11 @@
                 "title": "Thursday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -50155,6 +51547,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -50224,6 +51621,11 @@
                 "title": "Monday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -50329,6 +51731,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -50398,6 +51805,11 @@
                 "title": "Thursday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -50500,6 +51912,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -50569,6 +51986,11 @@
                 "title": "Monday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -50674,6 +52096,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -50743,6 +52170,11 @@
                 "title": "Thursday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -50845,6 +52277,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -50914,6 +52351,11 @@
                 "title": "Monday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -51019,6 +52461,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -51088,6 +52535,11 @@
                 "title": "Thursday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -51212,6 +52664,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -51293,6 +52750,11 @@
                 "title": "Monday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 1,
                 "duration": "~30 min",
@@ -51410,6 +52872,11 @@
                 "title": "Tuesday · Lower"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 3,
                 "duration": "~30 min",
@@ -51491,6 +52958,11 @@
                 "title": "Thursday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -51606,6 +53078,60 @@
   },
   "sport·swim·advanced·in·3d": {
     "meta": {
+      "diagnosis": {
+        "limitingFactors": [
+          {
+            "confidence": "low",
+            "magnitude": 0.16,
+            "qualityId": "mobility",
+            "rationale": "demands mobility at 0.9; your level is 0.72 (inferred) — gap 0.18."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.06,
+            "qualityId": "aerobicCapacity",
+            "rationale": "demands aerobicCapacity at 0.8; your level is 0.72 (inferred) — gap 0.08."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.06,
+            "qualityId": "stability",
+            "rationale": "demands stability at 0.8; your level is 0.72 (inferred) — gap 0.08."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "you meet the anaerobicCapacity demand (0.7); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "explosiveStrength",
+            "rationale": "you meet the explosiveStrength demand (0.7); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "maxStrength",
+            "rationale": "you meet the maxStrength demand (0.6); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "reactiveStrength",
+            "rationale": "you meet the reactiveStrength demand (0.5); maintain it."
+          }
+        ],
+        "priorityQualities": [
+          {
+            "order": 1,
+            "qualityId": "mobility",
+            "rationale": "prioritising mobility (limiter magnitude 0.16); develop via sarcomerogenesis, tissue_tolerance."
+          }
+        ],
+        "sport": "swim"
+      },
       "provenance": {
         "engineVersion": "1.0.0",
         "knowledgeSetVersion": "1.0.0"
@@ -51643,6 +53169,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Maintain max strength, minimal fatigue",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget moderate. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -51700,6 +53231,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -51769,6 +53305,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain max strength, minimal fatigue",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget moderate. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -51831,6 +53372,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Maintain max strength, minimal fatigue",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget moderate. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -51888,6 +53434,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -51957,6 +53508,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain max strength, minimal fatigue",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget moderate. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -52019,6 +53575,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Maintain max strength, minimal fatigue",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget moderate. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -52076,6 +53637,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget moderate. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -52145,6 +53711,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain max strength, minimal fatigue",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget moderate. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -52207,6 +53778,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Maintain max strength, minimal fatigue",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM — hold intensity, cut volume; fatigue budget low. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 0,
                 "dayIdx": 0,
                 "duration": "~25 min",
@@ -52300,6 +53876,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain explosive strength, minimal fatigue",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent — hold intensity, cut volume; fatigue budget low. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 0,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -52381,6 +53962,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Maintain max strength, minimal fatigue",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM — hold intensity, cut volume; fatigue budget low. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~25 min",
@@ -52483,6 +54069,60 @@
   },
   "sport·swim·intermediate·off·3d": {
     "meta": {
+      "diagnosis": {
+        "limitingFactors": [
+          {
+            "confidence": "low",
+            "magnitude": 0.36,
+            "qualityId": "mobility",
+            "rationale": "demands mobility at 0.9; your level is 0.5 (inferred) — gap 0.4."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.24,
+            "qualityId": "aerobicCapacity",
+            "rationale": "demands aerobicCapacity at 0.8; your level is 0.5 (inferred) — gap 0.3."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.24,
+            "qualityId": "stability",
+            "rationale": "demands stability at 0.8; your level is 0.5 (inferred) — gap 0.3."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "demands anaerobicCapacity at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.14,
+            "qualityId": "explosiveStrength",
+            "rationale": "demands explosiveStrength at 0.7; your level is 0.5 (inferred) — gap 0.2."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.06,
+            "qualityId": "maxStrength",
+            "rationale": "demands maxStrength at 0.6; your level is 0.5 (inferred) — gap 0.1."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "reactiveStrength",
+            "rationale": "you meet the reactiveStrength demand (0.5); maintain it."
+          }
+        ],
+        "priorityQualities": [
+          {
+            "order": 1,
+            "qualityId": "mobility",
+            "rationale": "prioritising mobility (limiter magnitude 0.36); develop via sarcomerogenesis, tissue_tolerance."
+          }
+        ],
+        "sport": "swim"
+      },
       "provenance": {
         "engineVersion": "1.0.0",
         "knowledgeSetVersion": "1.0.0"
@@ -52524,6 +54164,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~35 min",
@@ -52591,6 +54236,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -52660,6 +54310,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~35 min",
@@ -52723,6 +54378,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~35 min",
@@ -52790,6 +54450,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -52859,6 +54524,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~35 min",
@@ -52922,6 +54592,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~35 min",
@@ -52989,6 +54664,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -53058,6 +54738,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~35 min",
@@ -53121,6 +54806,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~35 min",
@@ -53188,6 +54878,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -53257,6 +54952,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~35 min",
@@ -53320,6 +55020,11 @@
             "provisional": false,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -53425,6 +55130,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -53506,6 +55216,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -53628,6 +55343,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~35 min",
@@ -53695,6 +55415,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -53764,6 +55489,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~35 min",
@@ -53827,6 +55557,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~35 min",
@@ -53894,6 +55629,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -53963,6 +55703,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~35 min",
@@ -54026,6 +55771,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~35 min",
@@ -54093,6 +55843,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -54162,6 +55917,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~35 min",
@@ -54225,6 +55985,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~35 min",
@@ -54292,6 +56057,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -54361,6 +56131,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~35 min",
@@ -54424,6 +56199,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~30 min",
@@ -54529,6 +56309,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -54610,6 +56395,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 4,
                 "duration": "~30 min",
@@ -54710,6 +56500,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~35 min",
@@ -54777,6 +56572,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -54846,6 +56646,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~35 min",
@@ -54909,6 +56714,11 @@
             "provisional": true,
             "sessions": [
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers upper-body pull + core anti-extension + rotational power + shoulder prehab from the swimming library; dosed as maxStrength (led by pullup))"
+                },
                 "axialLoad": 2,
                 "dayIdx": 0,
                 "duration": "~35 min",
@@ -54976,6 +56786,11 @@
                 "title": "Monday · Pull"
               },
               {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high. (covers start/turn power + mobility + scapular control from the swimming library; dosed as explosiveStrength (led by broad_jump))"
+                },
                 "axialLoad": 1,
                 "dayIdx": 2,
                 "duration": "~30 min",
@@ -55045,6 +56860,11 @@
                 "title": "Wednesday · Lower Explosive"
               },
               {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers posterior chain + core anti-rotation + hip/breaststroke from the swimming library; dosed as maxStrength (led by trap_bar_dl))"
+                },
                 "axialLoad": 3,
                 "dayIdx": 4,
                 "duration": "~35 min",

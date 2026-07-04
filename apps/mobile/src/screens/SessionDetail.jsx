@@ -204,6 +204,14 @@ export default function SessionDetail() {
         )}
       </p>
 
+      {/* WP-30b: the engine's OWN reason for this session (the D9 objective — emitted
+          at generation, never re-derived here). Sport plans only until the build flip. */}
+      {session._objective && (
+        <p className="sub" style={{ marginTop: -14, marginBottom: 20, fontSize: 12.5, color: 'var(--txt-muted)' }}>
+          <strong style={{ color: 'var(--txt-body)', fontWeight: 600 }}>Why this session</strong> — {session._objective.rationale}
+        </p>
+      )}
+
       {/* Injury modification banner */}
       {session.injuryBanner && (
         <button

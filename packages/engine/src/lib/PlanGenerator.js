@@ -237,7 +237,15 @@ export function generatePlan(profile = {}, opts = {}) {
     }
   }
 
-  return { phases, totalWeeks: total, meta: { validation: { pass: allPass, checked, weeks: problemWeeks }, provenance: provenance() } };
+  // WP-30a: the D4→D5 chain summary every screen (and the future `explain` read-model)
+  // can cite — emitted reasons only, never re-derived. Absent when there is no diagnosis
+  // (build goals stay on the legacy path until WP-22).
+  const diagnosis = (diag.priorityQualities || []).length ? {
+    sport: program.sport || null,
+    limitingFactors: (perf.limitingFactors || []).map((f) => ({ qualityId: f.qualityId, magnitude: f.magnitude, confidence: f.confidence, rationale: f.rationale })),
+    priorityQualities: diag.priorityQualities.map((p) => ({ qualityId: p.qualityId, order: p.order, rationale: p.rationale })),
+  } : null;
+  return { phases, totalWeeks: total, meta: { validation: { pass: allPass, checked, weeks: problemWeeks }, provenance: provenance(), ...(diagnosis ? { diagnosis } : {}) } };
 }
 
 export default { generatePlan };
