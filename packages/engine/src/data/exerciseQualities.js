@@ -38,8 +38,17 @@ const COST = {
 // inherits when no class rule or override applies.
 const PATTERN_TAGS = {
   squat: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'maximal-force', fatigueCost: COST.maxForce, confidence: 'moderate' },
-  hinge: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'maximal-force', fatigueCost: COST.maxForce, confidence: 'moderate' },
-  lunge: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }, { id: 'stability', role: 'secondary' }], forceVelocity: 'controlled-hypertrophy', fatigueCost: COST.hypertrophy, confidence: 'low' },
+  // H9 C2-completion: robustness is PRIMARY for the loaded hinge — heavy hinge work is
+  // the canonical posterior-chain tissue-tolerance driver (heavy-slow resistance:
+  // Kongsgaard 2009; eccentric loading for injury prevention: Lauersen 2014), matching
+  // the nordic_curl override below and the robustness movement map (hinge listed
+  // first, eccentric-emphasis). As robustness-secondary, heavy hinges tied at tier 2
+  // with carries and the max()-collapsed fatigue denominator (review F7) let a light
+  // carry outrank — and ANCHOR the session over — an RDL.
+  hinge: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'robustness', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }], forceVelocity: 'maximal-force', fatigueCost: COST.maxForce, confidence: 'moderate' },
+  // H9 review C2: robustness secondary added — unilateral loaded work is a tissue-
+  // tolerance staple, and the robustness movement map requires the lunge pattern.
+  lunge: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }, { id: 'stability', role: 'secondary' }, { id: 'robustness', role: 'secondary' }], forceVelocity: 'controlled-hypertrophy', fatigueCost: COST.hypertrophy, confidence: 'low' },
   hpush: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }], forceVelocity: 'maximal-force', fatigueCost: COST.maxForce, confidence: 'moderate' },
   vpush: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }, { id: 'stability', role: 'secondary' }], forceVelocity: 'maximal-force', fatigueCost: COST.maxForce, confidence: 'moderate' },
   hpull: { qualities: [{ id: 'maxStrength', role: 'primary' }, { id: 'hypertrophy', role: 'secondary' }], forceVelocity: 'controlled-hypertrophy', fatigueCost: COST.hypertrophy, confidence: 'low' },

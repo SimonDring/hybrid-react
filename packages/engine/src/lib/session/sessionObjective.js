@@ -7,7 +7,7 @@
  * (empty diagnosis) uses the goal's primary quality.
  */
 import { getQuality } from '../../data/qualities.js';
-import { GYM_TRAINABLE, CARDIO_GYM_SUPPORT } from '../../data/qualityMovementMap.js';
+import { GYM_TRAINABLE, cardioGymSupport } from '../../data/qualityMovementMap.js';
 
 // Qualities that SUPPORT a gym session but don't DRIVE one: mobility/stability are value-hierarchy
 // support tiers (6/7), never a session's primary target (a "mobility session" is not a training
@@ -25,14 +25,17 @@ const QUALITY_LABEL = {
 const REGION_WORD = { lower: 'lower body', upper: 'upper body', core: 'trunk', full: '' };
 const idOf = (p) => (p && typeof p === 'object' ? p.qualityId : p);
 
-// The ordered, distinct gym-trainable target qualities for an athlete.
-export function gymTrainableTargets(priorityQualities = [], goalPrimary = null) {
+// The ordered, distinct gym-trainable target qualities for an athlete. The cardio
+// translation is sport-aware (H9 C1): reactive work supports aerobic economy only
+// for impact locomotion; non-impact sports (cycle/swim) get heavy strength instead.
+export function gymTrainableTargets(priorityQualities = [], goalPrimary = null, sport = null) {
   const out = [];
   for (const p of Array.isArray(priorityQualities) ? priorityQualities : []) {
     const q = idOf(p);
     if (!q) continue;
+    const cardio = cardioGymSupport(q, sport);
     if (SESSION_DRIVER.has(q)) out.push(q);
-    else if (CARDIO_GYM_SUPPORT[q]) out.push(...CARDIO_GYM_SUPPORT[q]);
+    else if (cardio) out.push(...cardio);
     else if (NON_DRIVER_SUPPORT[q]) out.push(...NON_DRIVER_SUPPORT[q]);
   }
   const distinct = [...new Set(out)];
@@ -42,8 +45,8 @@ export function gymTrainableTargets(priorityQualities = [], goalPrimary = null) 
 }
 
 // One target quality per session (round-robin over the gym-trainable targets).
-export function assignTargetQualities(priorityQualities, sessionCount, goalPrimary) {
-  const targets = gymTrainableTargets(priorityQualities, goalPrimary);
+export function assignTargetQualities(priorityQualities, sessionCount, goalPrimary, sport = null) {
+  const targets = gymTrainableTargets(priorityQualities, goalPrimary, sport);
   const n = Math.max(1, sessionCount || 1);
   return Array.from({ length: n }, (_, i) => targets[i % targets.length]);
 }
@@ -71,11 +74,11 @@ export function competencyAdjustedTarget(qualityId, level) {
 // train them. The feasibility oracle (isTrainable) is supplied by the SELECTION layer,
 // which owns candidate legality (equipment × level × contraindicated patterns ×
 // blocked names); D9 owns only the re-target policy.
-export function constraintAdjustedTarget({ targetQuality, priorityQualities = [], goalPrimary = null, level, isTrainable } = {}) {
+export function constraintAdjustedTarget({ targetQuality, priorityQualities = [], goalPrimary = null, sport = null, level, isTrainable } = {}) {
   if (typeof isTrainable !== 'function' || isTrainable(targetQuality)) {
     return { quality: targetQuality, retargetedFrom: null };
   }
-  for (const cand of gymTrainableTargets(priorityQualities, goalPrimary)) {
+  for (const cand of gymTrainableTargets(priorityQualities, goalPrimary, sport)) {
     const q = competencyAdjustedTarget(cand, level);
     if (q !== targetQuality && isTrainable(q)) return { quality: q, retargetedFrom: targetQuality };
   }
