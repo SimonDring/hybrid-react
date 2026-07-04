@@ -341,14 +341,20 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
     swim leads = library movements. P5 surfaced a real all-paths finisher bug (prone Y/T/W
     stacking) — fixed. Re-baseline audited item-by-item: 2 swim + 1 run-sprint (finisher swap
     only). Suite **132/132**.
-- **⇒ NEXT: Sprint 9 19c — retire `lib/sports/*` for the flipped sports (one sport model).**
-  Careful decomposition: the emphasis vectors still feed split/region + weekly targets even on
-  D11 paths; SPORT_BLOCKS → SKB `seasonalModel`; priority lists → the library (D11 sports no
-  longer read them for selection, but anchors/legacy callers may); systemic factors → sportLoad
-  knowledge. Per-sport, gates as established; build/gaa/rugby/soccer keep legacy until WP-22/23.
-  Then remaining staged H9 items (C3/C5/C9–C14 opportunistic; C8 build rest floor + C7 48–72 h
-  plyo spacing recorded for their owners), then the audit's Phase E/F (reflow re-seat WP-24;
-  Team spine WP-32/33 after WP-07's staging TODO).
+- **PR #85 — 19c (honest scope): the legacy sport tables are governed DATA.**
+  `lib/sports/*` → `data/sportGymSupport/` verbatim (byte-identical; Art 17), with a
+  field-by-field deprecation map in the registry header. Substantive retirement (demand-derived
+  emphasis, SPORT_BLOCKS → SKB seasonalModel — which is NARRATIVE today and can't carry block
+  templates — deleting the priority lists that remain the legacy-fallback net) is WP-23 work,
+  recorded. **SPRINT 9 COMPLETE** — all sport knowledge lives in data (SKB primary + the residue
+  table); run/cycle rating-driven, swim category-led, one id space, join guarded.
+- **⇒ NEXT (audit order):** the remaining staged H9 items (C3/C5/C9–C14 opportunistic; C8 build
+  rest floor + C7 48–72 h plyo spacing recorded for their owners) are small; the big rocks are
+  **WP-24 the reflow re-seat** (parity-first pattern; the reflow-differentiation lesson + the
+  WP-05/-20 reflow gates are the canaries) → **WP-29 Atlas re-base** → **WP-25 the 6-call public
+  API** → **Team spine WP-32/33** (blocked on WP-07's staging-project TODO — needs Simon's
+  Supabase account). WP-22/23 (build-goal demand profiles → the build flip) close the re-seat
+  after months of D11 confidence per the audit's sequencing.
 - ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
