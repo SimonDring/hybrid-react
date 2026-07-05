@@ -593,10 +593,23 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   scoping (chip: S11 server-side derivation). Needs NEXT_PUBLIC_SUPABASE_* in Vercel env
   (SECURITY-DEPLOY.md). S13 (next 14→16 major bump, HIGH advisories) deferred — a careful
   standalone migration before apps/web ships (chip open).
+- **PR #116 — S11: player_status safety fields are SERVER-AUTHORITATIVE.** A BEFORE
+  INSERT/UPDATE trigger (migration 20260708) overrides injury_status (from the player's
+  `injuries`) + readiness (from their logged `daily_metrics.readiness_score`) with server
+  truth — a player can no longer fake availability/readiness on the coach board. The soft
+  trend metrics (acwr/load_state/adherence) stay engine-computed (avoids EWMA-in-SQL drift)
+  + clamped. Spec: docs/superpowers/specs/2026-07-05-player-status-integrity.md. Harness
+  62/62. Prod apply of 20260708 batched (SECURITY-DEPLOY.md). Full-engine server derivation
+  = future Edge-Function option.
+- **SECURITY STATUS:** S1-S12 + S11 DONE (staging-proven). Remaining: S13 (next 14→16 major
+  bump — chip open, before apps/web ships), S14 (prod Auth: Confirm-email + rate-limit —
+  Simon dashboard), S15 (LOW nits). Prod DB/function deploy = the batched step in
+  supabase/SECURITY-DEPLOY.md (migrations 20260706/07/08 + 3 Edge Functions + Vercel env
+  for the dashboard).
 - **⇒ NEXT:** the Team founding/invite UI (player-side; makes the roll-up fire for real
-  teams) → wire the coach dashboard to LIVE player_status behind the S12 gate (after S11
-  server-side derivation + team-scoping). **WP-22/23 (build flip)** remains last
-  (HIGH-risk, PAUSE for Simon). (Dev notes: /dev remounts
+  teams) → wire the coach dashboard to LIVE player_status behind the S12 gate (the board is
+  now trustworthy per S11). **WP-22/23 (build flip)** remains last (HIGH-risk, PAUSE for
+  Simon). (Dev notes: /dev remounts
   periodically — click + assert in ONE preview_eval; a preset click + Generate in the same
   tick generates from STALE answers. Vercel hobby-tier deploy rate limit can FAIL the web
   preview check for 24 h — an infra flake; merge on engine-suite green, documented in PR
