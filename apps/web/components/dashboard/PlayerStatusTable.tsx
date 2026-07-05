@@ -13,7 +13,7 @@ import {
 } from "@/lib/dashboardUtils";
 import { SECTION } from "@/content/dashboardCopy";
 import { cn } from "@/lib/cn";
-import { formatLastCheckIn, pct } from "@/lib/formatting";
+import { formatRelativeTime, pct } from "@/lib/formatting";
 import { Card, SectionHeader } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Confidence } from "@/components/ui/Confidence";
@@ -27,12 +27,11 @@ interface Column {
 
 const COLUMNS: Column[] = [
   { key: "name", label: "Player" },
-  { key: null, label: "Position", className: "hidden lg:table-cell" },
   { key: "status", label: "Status" },
   { key: "readiness", label: "Readiness" },
   { key: "load", label: "Load", className: "hidden md:table-cell" },
   { key: "adherence", label: "Adherence", className: "hidden sm:table-cell" },
-  { key: null, label: "Last check-in", className: "hidden xl:table-cell" },
+  { key: null, label: "Updated", className: "hidden xl:table-cell" },
   { key: null, label: "Recommended action", className: "hidden lg:table-cell" },
   { key: null, label: "Confidence", className: "hidden md:table-cell" },
 ];
@@ -157,8 +156,13 @@ function PlayerRow({
 }) {
   const meta = getStatusMeta(player.status);
   const load = getLoadMeta(player.loadState);
+  const adherence = player.adherencePercent; // null = no logged sessions yet
   const adherenceTone =
-    player.adherencePercent >= 80 ? "ready" : player.adherencePercent >= 60 ? "monitor" : "adjust";
+    adherence !== null && adherence >= 80
+      ? "ready"
+      : adherence !== null && adherence >= 60
+        ? "monitor"
+        : "adjust";
 
   return (
     <tr
@@ -166,7 +170,6 @@ function PlayerRow({
       className="cursor-pointer border-b border-hairline/60 transition-colors last:border-0 hover:bg-surface-2"
     >
       <td className="px-3 py-3 font-medium text-strong">{player.name}</td>
-      <td className="hidden px-3 py-3 text-muted lg:table-cell">{player.position}</td>
       <td className="px-3 py-3">
         <Badge tone={meta.tone} dot>
           {meta.label}
@@ -183,18 +186,24 @@ function PlayerRow({
         </span>
       </td>
       <td className="hidden px-3 py-3 sm:table-cell">
-        <div className="flex items-center gap-2">
-          <span className="tnum text-xs text-body">{pct(player.adherencePercent)}</span>
-          <span className="h-1.5 w-12 overflow-hidden rounded-full bg-surface-3">
-            <span
-              className={cn("block h-full rounded-full", toneClasses(adherenceTone).bar)}
-              style={{ width: `${player.adherencePercent}%` }}
-            />
-          </span>
-        </div>
+        {adherence === null ? (
+          <span className="text-xs text-soft">—</span>
+        ) : (
+          <div className="flex items-center gap-2">
+            <span className="tnum text-xs text-body">{pct(adherence)}</span>
+            <span className="h-1.5 w-12 overflow-hidden rounded-full bg-surface-3">
+              <span
+                className={cn("block h-full rounded-full", toneClasses(adherenceTone).bar)}
+                style={{ width: `${adherence}%` }}
+              />
+            </span>
+          </div>
+        )}
       </td>
       <td className="hidden px-3 py-3 text-xs text-muted xl:table-cell">
-        {formatLastCheckIn(player.lastCheckIn, now)}
+        {player.lastUpdated === null
+          ? "—"
+          : formatRelativeTime(player.lastUpdated, now)}
       </td>
       <td className="hidden max-w-[220px] px-3 py-3 text-xs text-body lg:table-cell">
         <span className="line-clamp-2">{player.coachAction}</span>

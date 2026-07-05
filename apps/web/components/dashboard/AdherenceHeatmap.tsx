@@ -22,6 +22,20 @@ export function AdherenceHeatmap({
   players: CoachVisiblePlayer[];
   onSelectPlayer: (id: string) => void;
 }) {
+  // Live rows carry no per-day history yet — the grid appears when it exists.
+  const hasWeek = players.some((p) => p.weeklyAdherence.length > 0);
+
+  if (!hasWeek) {
+    return (
+      <Card className="flex h-full flex-col">
+        <SectionHeader title={SECTION.adherence} />
+        <p className="rounded-card bg-surface-2 p-4 text-sm text-body">
+          Appears as players log sessions.
+        </p>
+      </Card>
+    );
+  }
+
   return (
     <Card className="flex h-full flex-col">
       <SectionHeader

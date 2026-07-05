@@ -129,8 +129,13 @@ export interface LoadMeta {
 }
 
 export const LOAD_META: Record<LoadState, LoadMeta> = {
-  light: {
-    label: "Light",
+  "no-data": {
+    label: "No data",
+    note: "No training-load history yet — appears as sessions are logged.",
+    tone: "nodata",
+  },
+  ramping: {
+    label: "Building up",
     note: "Below their usual range — there's room to build back up.",
     tone: "monitor",
   },
@@ -139,13 +144,13 @@ export const LOAD_META: Record<LoadState, LoadMeta> = {
     note: "Right where you want it — the plan stays as written.",
     tone: "ready",
   },
-  ramping: {
-    label: "Building fast",
-    note: "Load has climbed quickly — easing slightly this week.",
-    tone: "monitor",
-  },
   high: {
     label: "High",
+    note: "Load has climbed quickly — worth easing this week.",
+    tone: "monitor",
+  },
+  overreaching: {
+    label: "Overreaching",
     note: "Well above baseline — ease off so they can absorb it.",
     tone: "adjust",
   },

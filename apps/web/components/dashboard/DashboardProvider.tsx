@@ -12,6 +12,7 @@ import type { ReactNode } from "react";
 import type {
   CoachVisiblePlayer,
   LoadTrendPoint,
+  RosterSummary,
   Team,
   TeamConstraints,
 } from "@/types/dashboard";
@@ -22,6 +23,7 @@ import { PlayerDetailDrawer } from "./PlayerDetailDrawer";
 interface DashboardContextValue {
   team: Team;
   players: CoachVisiblePlayer[];
+  roster: RosterSummary;
   loadTrend: LoadTrendPoint[];
   now: Date;
   constraints: TeamConstraints;
@@ -52,12 +54,14 @@ export function useDashboard(): DashboardContextValue {
 export function DashboardProvider({
   team,
   players,
+  roster,
   loadTrend,
   now: nowIso,
   children,
 }: {
   team: Team;
   players: CoachVisiblePlayer[];
+  roster?: RosterSummary;
   loadTrend: LoadTrendPoint[];
   now: string;
   children: ReactNode;
@@ -82,10 +86,16 @@ export function DashboardProvider({
     return () => clearTimeout(t);
   }, [toast]);
 
+  const rosterSummary = useMemo<RosterSummary>(
+    () => roster ?? { joined: players.length, reporting: players.length },
+    [roster, players.length],
+  );
+
   const value = useMemo<DashboardContextValue>(
     () => ({
       team,
       players,
+      roster: rosterSummary,
       loadTrend,
       now,
       constraints,
@@ -95,7 +105,7 @@ export function DashboardProvider({
       closePlayer,
       notify,
     }),
-    [team, players, loadTrend, now, constraints, selectedPlayer, openPlayer, closePlayer, notify],
+    [team, players, rosterSummary, loadTrend, now, constraints, selectedPlayer, openPlayer, closePlayer, notify],
   );
 
   return (

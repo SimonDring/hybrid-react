@@ -18,7 +18,9 @@ export function TeamDirectionPanel({
   constraints: TeamConstraints;
   now: Date;
 }) {
-  const d2m = daysUntil(team.nextFixture.date, now);
+  // No fixture on file yet → no taper maths; say so rather than invent a date.
+  const fixture = team.nextFixture ?? null;
+  const d2m = fixture ? daysUntil(fixture.date, now) : null;
   const dir = deriveTeamDirection(constraints, d2m);
 
   return (
@@ -68,8 +70,14 @@ export function TeamDirectionPanel({
       </div>
 
       <p className="mt-4 text-xs text-soft">
-        Next fixture: <span className="text-body">{team.nextFixture.label}</span> ·{" "}
-        {formatDate(team.nextFixture.date)} ({formatDaysUntil(team.nextFixture.date, now)})
+        {fixture ? (
+          <>
+            Next fixture: <span className="text-body">{fixture.label}</span> ·{" "}
+            {formatDate(fixture.date)} ({formatDaysUntil(fixture.date, now)})
+          </>
+        ) : (
+          "No upcoming fixture on file"
+        )}
       </p>
     </Card>
   );

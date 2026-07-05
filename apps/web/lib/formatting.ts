@@ -49,15 +49,6 @@ export function formatRelativeTime(iso: string, now: Date = new Date()): string 
   return `${days}d ago`;
 }
 
-/** "Last check-in: 2d ago" — or a clear empty state. */
-export function formatLastCheckIn(
-  iso: string | null,
-  now: Date = new Date(),
-): string {
-  if (!iso) return "No check-in yet";
-  return formatRelativeTime(iso, now);
-}
-
 function startOfDay(date: Date): Date {
   const d = new Date(date);
   d.setHours(0, 0, 0, 0);

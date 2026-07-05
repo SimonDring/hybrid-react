@@ -62,7 +62,8 @@ export function squadReadinessInterpretation(split: SquadSplit): string {
 /* ------------------------------------------------------------------ */
 
 export function isLowAdherence(p: CoachVisiblePlayer): boolean {
-  return p.adherencePercent < LOW_ADHERENCE_THRESHOLD;
+  // Unknown adherence (no logged sessions yet) is NOT "behind" — it's no data.
+  return p.adherencePercent !== null && p.adherencePercent < LOW_ADHERENCE_THRESHOLD;
 }
 
 /** Should this player surface in "Needs your attention"? */
@@ -85,9 +86,9 @@ export function compareAttention(
   const ra = attentionRank(a);
   const rb = attentionRank(b);
   if (ra !== rb) return ra - rb;
-  // within a tier: lower adherence first, then lower readiness first
+  // within a tier: lower adherence first (unknown last), then lower readiness
   if (a.adherencePercent !== b.adherencePercent) {
-    return a.adherencePercent - b.adherencePercent;
+    return (a.adherencePercent ?? 101) - (b.adherencePercent ?? 101);
   }
   return (a.readinessScore ?? 101) - (b.readinessScore ?? 101);
 }
@@ -118,7 +119,7 @@ export function filterPlayers(
   const search = opts.search.trim().toLowerCase();
   return players.filter((p) => {
     if (opts.status !== "all" && p.status !== opts.status) return false;
-    if (search && !p.name.toLowerCase().includes(search) && !p.position.toLowerCase().includes(search)) {
+    if (search && !p.name.toLowerCase().includes(search)) {
       return false;
     }
     return true;
@@ -138,9 +139,9 @@ export function sortPlayers(
       case "readiness":
         return factor * ((a.readinessScore ?? -1) - (b.readinessScore ?? -1));
       case "adherence":
-        return factor * (a.adherencePercent - b.adherencePercent);
+        return factor * ((a.adherencePercent ?? -1) - (b.adherencePercent ?? -1));
       case "load":
-        return factor * (a.weeklyLoad - b.weeklyLoad);
+        return factor * ((a.acwr ?? -1) - (b.acwr ?? -1));
       case "status":
       default:
         return (
@@ -156,22 +157,24 @@ export function sortPlayers(
 /* Team aggregates                                                     */
 /* ------------------------------------------------------------------ */
 
-export function teamAdherence(players: CoachVisiblePlayer[]): number {
-  if (players.length === 0) return 0;
-  const sum = players.reduce((acc, p) => acc + p.adherencePercent, 0);
-  return Math.round(sum / players.length);
+/** Squad-average adherence over players who have logged sessions; null when none have. */
+export function teamAdherence(players: CoachVisiblePlayer[]): number | null {
+  const logged = players.filter((p) => p.adherencePercent !== null);
+  if (logged.length === 0) return null;
+  const sum = logged.reduce((acc, p) => acc + (p.adherencePercent ?? 0), 0);
+  return Math.round(sum / logged.length);
 }
 
-/** How many players have checked in within the last 24h of `now`. */
-export function checkedInToday(
+/** How many players' status rows were updated within the last 24h of `now`. */
+export function updatedToday(
   players: CoachVisiblePlayer[],
   now: Date,
 ): number {
   const DAY = 86_400_000;
   return players.filter(
     (p) =>
-      p.lastCheckIn !== null &&
-      now.getTime() - new Date(p.lastCheckIn).getTime() <= DAY,
+      p.lastUpdated !== null &&
+      now.getTime() - new Date(p.lastUpdated).getTime() <= DAY,
   ).length;
 }
 
@@ -186,12 +189,15 @@ export function averageReadiness(
 
 export type TrendDirection = "up" | "down" | "flat";
 
-/** Direction of the squad's average readiness over the trend window. */
+/**
+ * Direction of the squad's average readiness over the trend window, or null
+ * when no player has trend history yet (the live board's state today).
+ */
 export function readinessTrendDirection(
   players: CoachVisiblePlayer[],
-): TrendDirection {
+): TrendDirection | null {
   const withTrend = players.filter((p) => p.readinessTrend.length >= 2);
-  if (withTrend.length === 0) return "flat";
+  if (withTrend.length === 0) return null;
   let startSum = 0;
   let endSum = 0;
   for (const p of withTrend) {
@@ -213,7 +219,7 @@ export function buildCoachActions(
   players: CoachVisiblePlayer[],
 ): CoachActionItem[] {
   const split = squadSplit(players);
-  const missingCheckIns = players.filter((p) => p.lastCheckIn === null).length;
+  const missingCheckIns = players.filter((p) => p.readinessScore === null).length;
   const behind = players.filter(isLowAdherence).length;
   const items: CoachActionItem[] = [];
 

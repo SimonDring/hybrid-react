@@ -107,7 +107,6 @@ function AttentionRow({
             <Badge tone={meta.tone} dot>
               {meta.label}
             </Badge>
-            <span className="truncate text-xs text-soft">{player.position}</span>
           </div>
           <p className="mt-1 truncate text-xs text-muted">
             {player.reasons.slice(0, 3).join(" · ")}

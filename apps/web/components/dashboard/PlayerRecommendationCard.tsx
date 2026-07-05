@@ -15,7 +15,7 @@ import { Confidence } from "@/components/ui/Confidence";
  * player's status in plain English, why, what the player should do, what the
  * coach should do, what the call is based on, how confident it is, and when to
  * look again. When an injury is flagged it shows conservative, non-medical
- * language (handled upstream in lib/derive.ts).
+ * language (handled upstream in lib/liveDerive.ts).
  */
 export function PlayerRecommendationCard({
   player,
@@ -44,10 +44,7 @@ export function PlayerRecommendationCard({
       <div className="flex items-start justify-between gap-3 border-b border-hairline p-4">
         <div className="flex items-center gap-3">
           <StatusDot status={player.status} size="lg" glow />
-          <div>
-            <p className="font-semibold text-strong">{player.name}</p>
-            <p className="text-xs text-muted">{player.position}</p>
-          </div>
+          <p className="font-semibold text-strong">{player.name}</p>
         </div>
         <div className="flex flex-col items-end gap-1.5">
           <Badge tone={meta.tone} dot>

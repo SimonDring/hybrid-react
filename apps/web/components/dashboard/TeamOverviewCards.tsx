@@ -5,10 +5,10 @@ import { Stat } from "@/components/ui/Stat";
 import { pct } from "@/lib/formatting";
 import {
   averageReadiness,
-  checkedInToday,
   readinessTrendDirection,
   squadSplit,
   teamAdherence,
+  updatedToday,
 } from "@/lib/dashboardUtils";
 
 interface OverviewCard {
@@ -46,15 +46,19 @@ export function TeamOverviewCards({
   const avg = averageReadiness(players);
   const adherence = teamAdherence(players);
   const dir = readinessTrendDirection(players);
-  const checkedIn = checkedInToday(players, now);
+  const updated = updatedToday(players, now);
   const load = loadStatus(loadTrend);
   const flagged = split.red + split.amber + split.grey;
 
-  const recovery = {
-    up: { value: "Improving", accessory: "↑", tone: "ready" as Tone },
-    down: { value: "Dipping", accessory: "↓", tone: "adjust" as Tone },
-    flat: { value: "Steady", accessory: "→", tone: undefined },
-  }[dir];
+  // dir is null until players have readiness history — an honest "building" state.
+  const recovery =
+    dir === null
+      ? { value: "Building history", accessory: undefined, tone: "nodata" as Tone }
+      : {
+          up: { value: "Improving", accessory: "↑", tone: "ready" as Tone },
+          down: { value: "Dipping", accessory: "↓", tone: "adjust" as Tone },
+          flat: { value: "Steady", accessory: "→", tone: undefined },
+        }[dir];
 
   const cards: OverviewCard[] = [
     {
@@ -71,9 +75,16 @@ export function TeamOverviewCards({
     },
     {
       label: "Sessions this week",
-      value: pct(adherence),
-      sub: "completed across the squad",
-      tone: adherence >= 80 ? "ready" : adherence >= 60 ? "monitor" : "adjust",
+      value: adherence === null ? "—" : pct(adherence),
+      sub: adherence === null ? "no sessions logged yet" : "completed across the squad",
+      tone:
+        adherence === null
+          ? "nodata"
+          : adherence >= 80
+            ? "ready"
+            : adherence >= 60
+              ? "monitor"
+              : "adjust",
     },
     {
       label: "Training load",
@@ -89,10 +100,10 @@ export function TeamOverviewCards({
       accessory: recovery.accessory,
     },
     {
-      label: "Checked in today",
-      value: `${checkedIn}/${split.total}`,
+      label: "Updated today",
+      value: `${updated}/${split.total}`,
       sub: `${split.grey} waiting on data`,
-      tone: checkedIn / Math.max(1, split.total) >= 0.8 ? "ready" : "monitor",
+      tone: updated / Math.max(1, split.total) >= 0.8 ? "ready" : "monitor",
     },
   ];
 
