@@ -15,8 +15,11 @@ import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, drainOutbox, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
 import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex } from '@performance-os/engine';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch, adaptedSessionByKey } from '../lib/PlanService.js';
+import * as Plan from '../lib/PlanService.js';
+import { consistencyGoal } from '../lib/goals.js';
 import { setOverride, clearOverride, getOverride, reconcileFromProfile } from '../lib/sessionOverrides.js';
 import * as AthleteModel from '../lib/AthleteModelService.js';
+import { syncTeamStatus } from '../lib/teamStatus.js';
 import { matchWorkoutToSession, sessionPhysiologyFromWorkout } from '../lib/sessionWorkoutMatch.js';
 import { validateProfile, validateDailyMetric, validateSessionLog, validateInjury } from '../lib/validation/validate.js';
 
@@ -176,6 +179,19 @@ export const useTrainingStore = create((set) => ({
 
   // Pull fresh data from Supabase into local cache, then re-render.
   // Call this when the user signs in or the app comes to foreground.
+  // Push the derived team status (readiness/load/adherence/availability) for
+  // every active membership. Fire-and-forget from the writes that change it.
+  refreshTeamStatus() {
+    const st = useTrainingStore.getState();
+    const readiness = computeReadiness(st.dailyMetrics || [], st.logs || []);
+    const consistencyPct = (() => {
+      try { return consistencyGoal(st.profile, st.sessions, Plan.currentWeekNumber()).pct; }
+      catch { return null; }
+    })();
+    syncTeamStatus({ readiness, load: st.load, injuries: st.injuries, consistencyPct })
+      .catch(() => {});
+  },
+
   async syncFromCloud() {
     set({ syncing: true });
     // Session D: push any pre-auth localStorage data to Supabase (no-op if done)
@@ -202,6 +218,7 @@ export const useTrainingStore = create((set) => ({
     if (connections.some(c => c.provider === 'fitbit')) {
       useTrainingStore.getState().enrichSessions();
     }
+    useTrainingStore.getState().refreshTeamStatus();   // the coach board reflects sign-in state
     return result;
   },
 
@@ -336,12 +353,14 @@ export const useTrainingStore = create((set) => ({
     if (!ok) return { ok: false, errors };
     Sync.completeSession(templateRef, value).catch(e => console.error('completeSession sync failed:', e));
     set(buildView());
+    useTrainingStore.getState().refreshTeamStatus();   // adherence + load changed
     return { ok: true };
   },
   uncompleteSession(templateRef) {
     Sync.uncompleteSession(templateRef).catch(e => console.error('uncompleteSession sync failed:', e));
     clearOverride(templateRef);   // re-completing later rebuilds from the plan, not the old pinned snapshot
     set(buildView());
+    useTrainingStore.getState().refreshTeamStatus();
   },
   cancelSession(templateRef) {
     Sync.cancelSession(templateRef).catch(e => console.error('cancelSession sync failed:', e));
@@ -394,9 +413,8 @@ export const useTrainingStore = create((set) => ({
   skipSession(templateRef) {
     Sync.skipSession(templateRef).catch(e => console.error('skipSession sync failed:', e));
     set(buildView());
+    useTrainingStore.getState().refreshTeamStatus();
   },
-  // "Train now" → pin a generated session onto the slot you're about to do, then
-  // the rest of the week reflows around it. Stored locally (see sessionOverrides).
   // ----- Weekly check-ins -----
   async addLog(entry) {
     await Sync.addCheckin(entry);
@@ -498,12 +516,14 @@ export const useTrainingStore = create((set) => ({
     await Sync.addInjury(value);
     set(buildView());
     AthleteModel.syncInjuryHistory().catch(() => {});   // keep the model's injury history current (WP-36)
+    useTrainingStore.getState().refreshTeamStatus();     // availability may have changed
     return { ok: true };
   },
   async updateInjury(id, patch) {
     await Sync.updateInjury(id, patch);
     set(buildView());
     AthleteModel.syncInjuryHistory().catch(() => {});   // resolution lands here (status → 'recovered')
+    useTrainingStore.getState().refreshTeamStatus();
   },
   async removeInjury(id) {
     await Sync.removeInjury(id);
@@ -521,6 +541,7 @@ export const useTrainingStore = create((set) => ({
     if (!ok) return { ok: false, errors };
     await Sync.upsertDailyMetric(value);
     set(buildView());
+    useTrainingStore.getState().refreshTeamStatus();   // readiness inputs changed
     return { ok: true };
   },
 

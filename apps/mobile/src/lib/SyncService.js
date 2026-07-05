@@ -650,6 +650,37 @@ export async function addRecoveryLogEntry(injuryId, entry) {
   return result;
 }
 
+// ---------- Team status (the player-side roll-up) ----------
+
+// The athlete's ACTIVE team memberships (own rows only — RLS enforces it too).
+export async function listMyActiveTeams() {
+  if (!canSync()) return [];
+  const userId = uid();
+  const { data, error } = await supabase
+    .from('team_members')
+    .select('team_id, role')
+    .eq('user_id', userId)
+    .eq('status', 'active');
+  if (error) { logError('listMyActiveTeams', error); return []; }
+  return data || [];
+}
+
+// Upsert the derived player_status rows (one per team). DERIVED SIGNALS ONLY —
+// the shape is built by lib/teamStatus.js against an explicit allowlist; this
+// function adds identity + timestamp and nothing else. No outbox entry: the
+// roll-up recomputes from local truth on every trigger, so a failed push is
+// self-healing on the next one.
+export async function pushPlayerStatus(rows) {
+  if (!canSync() || !rows || !rows.length) return { ok: false, skipped: true };
+  const userId = uid();
+  const stamped = rows.map((r) => ({ ...r, user_id: userId, updated_at: new Date().toISOString() }));
+  const { error } = await supabase
+    .from('player_status')
+    .upsert(stamped, { onConflict: 'team_id,user_id' });
+  if (error) { logError('pushPlayerStatus', error); return { ok: false, error: error.message }; }
+  return { ok: true };
+}
+
 // ---------- Fitbit ----------
 
 // Build the Google Health API OAuth URL.
