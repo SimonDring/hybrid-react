@@ -48,3 +48,26 @@ export function SectionHeader({
     </div>
   );
 }
+
+/**
+ * The shared honest-empty-state card: same frame + title as the populated
+ * panel, one plain-English line on what will fill it. Empty states are the
+ * live board's dominant state until the history/schedule feeds land — keep
+ * them consistent by using this, not hand-rolled copies.
+ */
+export function CardEmptyState({
+  title,
+  message,
+  className,
+}: {
+  title: string;
+  message: string;
+  className?: string;
+}) {
+  return (
+    <Card className={cn("flex h-full flex-col", className)}>
+      <SectionHeader title={title} />
+      <p className="rounded-card bg-surface-2 p-4 text-sm text-body">{message}</p>
+    </Card>
+  );
+}

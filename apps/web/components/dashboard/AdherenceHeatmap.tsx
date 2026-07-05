@@ -3,7 +3,7 @@
 import type { AdherenceState, CoachVisiblePlayer } from "@/types/dashboard";
 import { SECTION } from "@/content/dashboardCopy";
 import { cn } from "@/lib/cn";
-import { Card, SectionHeader } from "@/components/ui/Card";
+import { Card, CardEmptyState, SectionHeader } from "@/components/ui/Card";
 
 const CELL: Record<AdherenceState, { className: string; label: string }> = {
   completed: { className: "bg-ready", label: "Completed" },
@@ -22,6 +22,18 @@ export function AdherenceHeatmap({
   players: CoachVisiblePlayer[];
   onSelectPlayer: (id: string) => void;
 }) {
+  // Live rows carry no per-day history yet — the grid appears when it exists.
+  const hasWeek = players.some((p) => p.weeklyAdherence.length > 0);
+
+  if (!hasWeek) {
+    return (
+      <CardEmptyState
+        title={SECTION.adherence}
+        message="Appears as players log sessions."
+      />
+    );
+  }
+
   return (
     <Card className="flex h-full flex-col">
       <SectionHeader

@@ -6,7 +6,6 @@ import { AccountMenu } from "./AccountMenu";
 import { Button } from "@/components/ui/Button";
 import { MenuIcon } from "@/components/ui/icons";
 import { CTA } from "@/content/dashboardCopy";
-import { formatRelativeTime } from "@/lib/formatting";
 
 const TITLES: Record<string, { title: string; sub: string }> = {
   "/dashboard": { title: "Home", sub: "The squad situation at a glance" },
@@ -20,8 +19,14 @@ const TITLES: Record<string, { title: string; sub: string }> = {
 
 export function TopBar({ onOpenMobileNav }: { onOpenMobileNav: () => void }) {
   const pathname = usePathname();
-  const { team, now, notify } = useDashboard();
+  const { team, notify } = useDashboard();
   const meta = TITLES[pathname] ?? TITLES["/dashboard"];
+
+  // What we actually know about the team — sport/season come from the coach's
+  // own teams row; both are null when unset.
+  const teamFacts = [team.sport, team.seasonPhase]
+    .filter((v): v is string => Boolean(v))
+    .join(" · ");
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-hairline bg-app/85 px-4 backdrop-blur sm:px-6">
@@ -40,9 +45,9 @@ export function TopBar({ onOpenMobileNav }: { onOpenMobileNav: () => void }) {
         <p className="hidden truncate text-xs text-muted sm:block">{meta.sub}</p>
       </div>
 
-      <span className="hidden text-xs text-soft md:inline">
-        Synced {formatRelativeTime(team.lastSyncAt, now)}
-      </span>
+      {teamFacts && (
+        <span className="hidden text-xs text-soft md:inline">{teamFacts}</span>
+      )}
       <Button
         variant="secondary"
         size="sm"

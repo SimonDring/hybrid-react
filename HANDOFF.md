@@ -617,8 +617,32 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   signed-in non-coach there, and /get-started needs only a session); lib/teams.ts
   (create/list/rotate); AccountMenu "Manage teams" link. THE JOIN-CODE FLOW IS END-TO-END
   (coach founds on web → shares code → player joins on mobile → roll-up populates the board).
-  ⇒ NEXT: wire the coach dashboard to LIVE player_status (apps/web/data/mockApi.ts → real
-  reads behind the S12 gate; decision in TEAM-NEXT-STEPS: what the live board shows vs mock).
+- **PR #123 — THE COACH BOARD IS LIVE (2026-07-05, awaiting Simon's merge).** The dashboard
+  reads the live spine behind the S12 gate (spec:
+  docs/superpowers/specs/2026-07-05-live-coach-board-design.md): lib/liveBoard.ts (RSC read
+  under the coach's own RLS session; **query errors THROW** — a failed read must never
+  render as an empty board or bounce a coach to /get-started; status rows **reconciled
+  against the ACTIVE roster** so left members / a playing coach never render as players and
+  joined ≥ reporting always; soft-deleted teams excluded via teams!inner deleted_at) +
+  lib/liveDerive.ts (pure: the seven coach-safe fields → RAG/reasons/confidence; grey keeps
+  its real load/adherence reasons). The web adopted the DB load_state vocabulary
+  (no-data/ramping/balanced/high/overreaching); the mock squad chain + mockClock/
+  mockConstraints are DELETED (Constraints option lists live in lib/constraints.ts; the
+  provider seeds constraints from the LIVE team row — the "Football · In-season" mock leak
+  into Focus is gone); honest empty states via shared ui CardEmptyState + AwaitingSyncNote;
+  zero-player boards lead with the join code (keyed on the ROSTER, not reporting rows);
+  "Updated today" uses the roster denominator. Verified END-TO-END on staging (seeded coach
+  + green/red/grey/never-synced players via the RPCs, signed in through the real gate,
+  board/table/drawer/zero-state/Focus checked in-browser); an 8-angle self-review then
+  found 7 correctness issues (error swallowing, zero-state key, mock-constraints leak,
+  roster reconcile, soft-delete, denominator, grey reasons) — all fixed + re-verified live.
+  build + engine-suite (143/143) green; the two Vercel fails = the documented 24h
+  deploy-rate-limit flake. **Merge left for Simon** (the session's permission layer
+  declines self-authored-PR merges — the charter's autonomous-merge clause is narrower now).
+  ⇒ AFTER MERGE: TEAM-NEXT-STEPS §3 — team schedule → constraints (persist ConstraintsView
+  edits to teams.schedule jsonb — coach-update RLS is live — read back on load, then feed
+  each player's plan via the engine's constraints path). Board follow-ups recorded in the
+  spec: per-player history feed, team switcher, team-load aggregation.
 - **PR #118 — coach-board IDENTITY.** migration 20260709: player_status gains a
   server-derived `display_name` (a trigger stamps it from the player's profile, same
   un-spoofable pattern as S11; a coach can't read teammates' `users` rows, so the board
