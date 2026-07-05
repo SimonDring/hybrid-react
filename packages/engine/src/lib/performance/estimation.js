@@ -3,7 +3,7 @@
 // else inferred from training-age priors → low confidence. The D1 "assess" seed (in engine).
 // Seed normalisation coefficients — representative, to be validated.
 import { getQuality } from '../../data/qualities.js';
-import { priorLevel } from '../../data/capabilityPriors.js';
+import { capabilityPrior } from '../priors.js';
 import { bandForYears, bandForLegacyLevel } from '../../data/trainingAgeBands.js';
 
 const STRONG_BW_MULTIPLE = { male: 2.0, female: 1.5, other: 1.8 }; // squat 1RM/BW mapping to level 1.0
@@ -39,9 +39,18 @@ export function estimateCapability(qualityId, model, asOf) {
   model = model || {};
   const q = getQuality(qualityId);
   const band = bandForModel(model);
+  // WP-37: the assumed level resolves through the typed priors read-path. With no
+  // learned prior on the model (today's universal case) this is the population
+  // default and the evidence string is unchanged; a learned prior (the future D16
+  // writer's output) changes the level AND declares itself in the evidence.
+  const prior = capabilityPrior(qualityId, band, model.learnedPriors);
   const inferred = {
-    qualityId, level: priorLevel(qualityId, band), source: 'inferred',
-    confidence: 'low', evidence: `training-age band prior (${band})`, updatedAt: asOf || null,
+    qualityId, level: prior.value, source: 'inferred',
+    confidence: prior.source === 'population' ? 'low' : prior.confidence,
+    evidence: prior.source === 'population'
+      ? `training-age band prior (${band})`
+      : `learned prior (${prior.source}, ${band})`,
+    updatedAt: asOf || null,
   };
   if (!q) return inferred;
 
