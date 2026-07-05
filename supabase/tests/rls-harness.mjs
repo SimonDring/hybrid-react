@@ -281,6 +281,50 @@ async function main() {
   const { error: rejoinErr } = await B.client.from('team_members').update({ status: 'active' }).eq('team_id', team.id).eq('user_id', B.id);
   ok(!!rejoinErr, `S9: a removed member cannot flip their own status back to active (${rejoinErr ? 'blocked' : 'NOT BLOCKED!'})`);
 
+  // ══ Join codes (20260710) — founding + self-join ════════════════════════════
+  const { data: jt, error: ctErr } = await C.client.rpc('create_team', { p_name: 'JoinTest FC', p_sport: 'field_hockey' });
+  const joinTeam = Array.isArray(jt) ? jt[0] : jt;
+  ok(!ctErr && joinTeam && joinTeam.join_code && joinTeam.join_code.length === 6,
+    `join: a coach founds a team via create_team and gets a 6-char code (${joinTeam?.join_code})`);
+  // C is auto-seated as coach
+  const { data: cMem } = await C.client.from('team_members').select('role,status').eq('team_id', joinTeam.id).eq('user_id', C.id).single();
+  ok(cMem && cMem.role === 'coach' && cMem.status === 'active', 'join: the founder is auto-seated as active coach');
+
+  // A joins with the code (case-insensitive) → active player membership
+  const { data: joined, error: jErr } = await A.client.rpc('join_team_with_code', { p_code: joinTeam.join_code.toLowerCase() });
+  ok(!jErr && (Array.isArray(joined) ? joined[0] : joined)?.id === joinTeam.id, `join: a player self-joins by code (case-insensitive)${jErr ? ' — ' + jErr.message : ''}`);
+  const { data: aJoin } = await A.client.from('team_members').select('role,status').eq('team_id', joinTeam.id).eq('user_id', A.id).single();
+  ok(aJoin && aJoin.role === 'player' && aJoin.status === 'active', 'join: the joiner is an active player');
+
+  // idempotent: joining again is a no-op (still one membership, no error)
+  const { error: reErr } = await A.client.rpc('join_team_with_code', { p_code: joinTeam.join_code });
+  const { count: aCount } = await A.client.from('team_members').select('id', { count: 'exact', head: true }).eq('team_id', joinTeam.id).eq('user_id', A.id);
+  ok(!reErr && aCount === 1, 'join: re-joining is idempotent (one membership)');
+
+  // invalid code rejected
+  const { error: badErr } = await B.client.rpc('join_team_with_code', { p_code: 'ZZZZZZ' });
+  ok(!!badErr, 'join: an invalid code is rejected');
+
+  // rotate: coach-only; old code stops working, new code works
+  const { data: newCode, error: rotErr } = await C.client.rpc('rotate_team_code', { p_team: joinTeam.id });
+  ok(!rotErr && typeof newCode === 'string' && newCode !== joinTeam.join_code, `join: a coach rotates the code (${newCode})`);
+  const { error: oldErr } = await B.client.rpc('join_team_with_code', { p_code: joinTeam.join_code });
+  ok(!!oldErr, 'join: the OLD code no longer works after rotation');
+  const { error: bRotErr } = await B.client.rpc('rotate_team_code', { p_team: joinTeam.id });
+  ok(!!bRotErr, 'join: a non-coach cannot rotate the code');
+  const { error: bJoinErr } = await B.client.rpc('join_team_with_code', { p_code: newCode });
+  ok(!bJoinErr, 'join: the NEW code works');
+
+  // removal respected: C removes A, A cannot rejoin via code
+  await C.client.from('team_members').update({ status: 'left' }).eq('team_id', joinTeam.id).eq('user_id', A.id);
+  const { error: rejErr } = await A.client.rpc('join_team_with_code', { p_code: newCode });
+  ok(!!rejErr, 'join: a coach-removed player cannot rejoin via the code');
+
+  // join-code cleanup
+  await A.client.from('player_status').delete().eq('user_id', A.id);
+  await C.client.from('team_members').delete().eq('team_id', joinTeam.id);
+  await C.client.from('teams').update({ deleted_at: new Date().toISOString() }).eq('id', joinTeam.id);
+
   // Team-spine cleanup: statuses (own delete), roster (coach delete), team (soft-delete).
   await A.client.from('player_status').delete().eq('user_id', A.id);
   await B.client.from('player_status').delete().eq('user_id', B.id);
