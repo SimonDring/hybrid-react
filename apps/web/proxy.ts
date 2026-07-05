@@ -35,6 +35,12 @@ export async function proxy(req: NextRequest) {
   } = await supabase.auth.getUser();
   if (!user) return deny("signed_out");
 
+  // /get-started (found your first team) needs only a session — a brand-new coach
+  // isn't a coach of any team YET, so it must sit OUTSIDE the coach check.
+  if (req.nextUrl.pathname.startsWith("/get-started")) return res;
+
+  // /dashboard/* additionally requires an ACTIVE coach membership. A signed-in
+  // non-coach is sent to found their team (not bounced to /login).
   const { data: coachRows, error } = await supabase
     .from("team_members")
     .select("team_id")
@@ -42,9 +48,11 @@ export async function proxy(req: NextRequest) {
     .eq("role", "coach")
     .eq("status", "active")
     .limit(1);
-  if (error || !coachRows || coachRows.length === 0) return deny("not_coach");
+  if (error || !coachRows || coachRows.length === 0) {
+    return NextResponse.redirect(new URL("/get-started", req.url));
+  }
 
   return res;
 }
 
-export const config = { matcher: ["/dashboard", "/dashboard/:path*"] };
+export const config = { matcher: ["/dashboard", "/dashboard/:path*", "/get-started"] };

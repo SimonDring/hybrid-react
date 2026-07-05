@@ -7,7 +7,12 @@ carries a **server-derived display_name** (20260709); the coach dashboard is **g
 (S12, `apps/web/proxy.ts`). What's left to make it a usable product needs a few product
 decisions — laid out here so they can be made quickly and executed.
 
-## 1. Team founding + invite flow — DECISION NEEDED
+## 1. Team founding + invite flow — DONE (join codes)
+> Coach founds a team at `/get-started` (web, outside the coach-gate) and shares a 6-char code;
+> a player enters it in the mobile app (`/settings/teams`). RPCs create_team/join_team_with_code/
+> rotate_team_code (migration 20260710); harness 75/75. Original decision notes below (for history).
+
+### (original decision — resolved: join codes)
 A coach must be able to create a team and add players. The RLS already supports it
 (a coach founds a team + bootstraps their own coach row; a coach manages the roster;
 a player accepts by setting their own membership `status`). Open decisions:
@@ -42,8 +47,8 @@ constraints so gym work avoids sport load). The engine already takes constraints
 self-contained follow-up once teams exist.
 
 ## Recommended order
-1. **Founding + join-code invite** (decision: web dashboard + join code) → makes teams real.
-2. **Wire the dashboard to live player_status** (decision: live-board field set).
+1. ~~Founding + join-code invite~~ **DONE** (PRs #120–#122).
+2. **Wire the dashboard to live player_status** (decision: live-board field set) — NEXT.
 3. **Team schedule → constraints**.
 
 ## Not in Team scope (paused for Simon)

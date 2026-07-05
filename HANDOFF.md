@@ -611,9 +611,14 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   6-char code), join_team_with_code (self-join, case-insensitive, idempotent, respects
   coach removal), rotate_team_code (coach-only). Harness 75/75 (11 join checks). #121 the
   mobile join UI: Teams screen at /settings/teams (join by code + your-teams list + leave)
-  + a Settings nav card; SyncService joinTeamWithCode/listMyTeams/leaveTeam. NEXT: the WEB
-  founding UI (a coach creates a team + shares the code in apps/web); then wire the coach
-  dashboard to LIVE player_status (mockApi → real reads behind the S12 gate).
+  + a Settings nav card; SyncService joinTeamWithCode/listMyTeams/leaveTeam. #122 the WEB
+  founding UI: /get-started page (create team + share/rotate code + copy), reachable OUTSIDE
+  the coach-gate (a new coach isn't a coach until they found a team — the proxy sends a
+  signed-in non-coach there, and /get-started needs only a session); lib/teams.ts
+  (create/list/rotate); AccountMenu "Manage teams" link. THE JOIN-CODE FLOW IS END-TO-END
+  (coach founds on web → shares code → player joins on mobile → roll-up populates the board).
+  ⇒ NEXT: wire the coach dashboard to LIVE player_status (apps/web/data/mockApi.ts → real
+  reads behind the S12 gate; decision in TEAM-NEXT-STEPS: what the live board shows vs mock).
 - **PR #118 — coach-board IDENTITY.** migration 20260709: player_status gains a
   server-derived `display_name` (a trigger stamps it from the player's profile, same
   un-spoofable pattern as S11; a coach can't read teammates' `users` rows, so the board
