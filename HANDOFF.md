@@ -534,9 +534,28 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   H9 is now fully dispositioned: every correction landed, deferred-with-reasons
   (C10 hip_thrust), or skipped-as-cosmetic (C14); only C8's build rest floor rides the
   build flip.
-- **⇒ NEXT:** **Team spine WP-32/33** blocked on WP-07's staging TODO (Simon's Supabase
-  account). WP-22/23 (build flip: demand profiles for build goals, then the flip —
-  HIGH-risk, PAUSE for Simon) last. (Dev notes: /dev remounts
+- **PRs #106/#107 — THE TEAM SPINE IS LIVE (WP-32 + WP-33), staging-proven then
+  production-applied with Simon's approval (2026-07-05).** Simon created
+  hybrid-training-staging (ref nqlzashaqyqbwdlnaadw; 17/17 migrations baselined; CLI
+  linked to STAGING as the safe default — prod ggldomlmycvpwtzzjzcd is NOT linked).
+  #106: supabase/tests/rls-harness.mjs (on-demand, NOT in CI; hard prod-ref guard) proved
+  the existing isolation — 28/28. #107: migration 20260705_team_spine.sql — teams /
+  team_members / player_status (the ONLY coach-readable surface, derived signals only),
+  SECURITY DEFINER helpers, coach policies. TWO HOLES found in adversarial self-review
+  and closed BEFORE applying (member self-promotion → BEFORE UPDATE trigger; status
+  re-pointing → membership re-check). Harness grew to 46/46 incl. both attacks, teammate
+  isolation, outsider-coach isolation, coach-cannot-write, and the binding rule (coach
+  reads ZERO raw vitals + ZERO private injury detail of their own player). Simon then
+  baselined prod history (repair 001→20260701) + pushed 20260705; verified live on the
+  REAL prod ref (tables exist, RLS holding, raw vitals locked). NOTE: Simon's
+  .env.local.prod-backup was found to contain STAGING values — the prod anon pair is no
+  longer on his disk (harmless: dashboard/API-keys retrievable; GitHub Actions secrets
+  unaffected).
+- **⇒ NEXT (Team package, on the live spine):** the player-side STATUS ROLL-UP in
+  SyncService (derived readiness/load_state/acwr/adherence/injury_status →
+  player_status; raw vitals never leave owner-only tables), then team
+  founding/invite UI, then the coach dashboard in apps/web reading player_status.
+  **WP-22/23 (build flip)** remains last (HIGH-risk, PAUSE for Simon). (Dev notes: /dev remounts
   periodically — click + assert in ONE preview_eval; a preset click + Generate in the same
   tick generates from STALE answers. Vercel hobby-tier deploy rate limit can FAIL the web
   preview check for 24 h — an infra flake; merge on engine-suite green, documented in PR
