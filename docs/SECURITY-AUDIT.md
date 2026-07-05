@@ -400,6 +400,8 @@ review after the P0/P1 items land to re-score categories 1, 3, and 6.*
 
 # ADDENDUM — Multi-User Readiness Review (2026-07-05)
 
+> **STATUS (updated):** S1–S10 IMPLEMENTED + proven on staging (PRs #109–#113; harness 57/57). Production DB/function deploy is the batched step in `supabase/SECURITY-DEPLOY.md` (Simon). S11/S12/S13 tracked below; S14 is a dashboard setting.
+
 **Trigger:** the Team package went live (teams / team_members / player_status +
 the first cross-user RLS, PRs #106/#107) and the app is about to onboard MULTIPLE
 ACTIVE USERS, including a coach who reads OTHER users' derived data. This addendum
@@ -433,16 +435,16 @@ coach-shared surface.
 
 | # | Finding | Sev | Disposition |
 |---|---------|-----|-------------|
-| **S1** | **OAuth callbacks trust an unsigned `state` as `user_id`** and write provider tokens with service_role — token-planting / account-link hijack (fitbit + strava `-auth-callback`). | **CRITICAL** | FIX — signed nonce (`oauth_states` table + HMAC), issued at connect-time, verified+consumed in the callback. |
-| **S2** | **`wearable_connections` RLS `SELECT *` exposes raw `access_token`/`refresh_token`** to the owning browser — durable OAuth-credential leak under XSS. | **CRITICAL** | FIX — revoke column SELECT on the token columns; expose status via non-token columns only. |
-| **S3** | **DB has no bound on coach-visible free-text** — `injuries.body_part`, `users.profile` JSONB (display name / markers / athlete_model), and profile enums are validated in client JS only; the public anon key bypasses that. | **HIGH** | FIX — CHECK constraints + a `pg_column_size(profile)` cap; coach UI escapes all player text (React already does). |
-| **S4** | **Edge functions log raw vitals / PII** — `fitbit-sync` logs raw Google-Health payloads (HRV/RHR/sleep); `strava-sync` stores full activity incl. GPS in `workouts.raw`. | **HIGH** | FIX — remove/redact the raw `console.log`; the log store is a different trust boundary than RLS tables. |
-| **S5** | **`.env.local.prod-backup` is committed to git** (anon-only, so low-severity, but violates the repo's own rule and the `.prod-backup` suffix dodged `.gitignore`). | **MEDIUM** | FIX — `git rm` + `.gitignore` glob `.env.local*`; rotate the anon key at leisure. |
-| **S6** | **`delete_user()` + `deleteTrainingData()` miss `set_logs` and `workouts`** — per-set history + imported activities survive account deletion (GDPR erasure gap; UUID-reissue bleed). | **MEDIUM** | FIX — add both tables to the deletion set. |
-| **S7** | **Outbox drain can race the namespace switch** on a same-device user swap (two independent `onAuthStateChange` listeners, no ordering guarantee). | **MEDIUM** | FIX — make `syncFromCloud` (post-namespace) the sole drain trigger; drop the drain from the raw auth listener; re-assert uid in `drainOutbox`. |
-| **S8** | **Sync functions are unbounded** — a caller can pass a multi-year `date_from…date_to` or hammer the endpoints to burn shared Google/Strava quota + function minutes for all users. | **MEDIUM** | FIX — clamp the date span server-side (≤ ~92 days) + a per-user cooldown vs `last_synced_at`. |
-| **S9** | **member can flip their own `status` back to `active`** after a coach set it `left` (re-join a team they were removed from). | **MEDIUM** | FIX — constrain member-driven status transitions in `team_members_guard`. |
-| **S10** | **`handle_new_user()` trigger does not pin `search_path`** (low exploitability — Supabase-internal, fixed target — but inconsistent with every other DEFINER fn). | **LOW** | FIX — add `set search_path = public`. |
+| **S1** | **OAuth callbacks trust an unsigned `state` as `user_id`** and write provider tokens with service_role — token-planting / account-link hijack (fitbit + strava `-auth-callback`). | **CRITICAL** | **DONE** (PR #111, staging) — nonce table + issue/consume RPCs; client legacy-fallback; prod deploy pending (supabase/SECURITY-DEPLOY.md). |
+| **S2** | **`wearable_connections` RLS `SELECT *` exposes raw `access_token`/`refresh_token`** to the owning browser — durable OAuth-credential leak under XSS. | **CRITICAL** | **DONE** (PR #110, staging) — column SELECT revoked; harness proves denial 42501. |
+| **S3** | **DB has no bound on coach-visible free-text** — `injuries.body_part`, `users.profile` JSONB (display name / markers / athlete_model), and profile enums are validated in client JS only; the public anon key bypasses that. | **HIGH** | **DONE** (PR #110, staging) — body_part/team/status length checks + 256KB profile cap. |
+| **S4** | **Edge functions log raw vitals / PII** — `fitbit-sync` logs raw Google-Health payloads (HRV/RHR/sleep); `strava-sync` stores full activity incl. GPS in `workouts.raw`. | **HIGH** | **DONE** (PR #112) — raw-vitals log removed. |
+| **S5** | **`.env.local.prod-backup` is committed to git** (anon-only, so low-severity, but violates the repo's own rule and the `.prod-backup` suffix dodged `.gitignore`). | **MEDIUM** | **DONE** (PR #109) — removed + glob-ignored; rotate anon key at leisure. |
+| **S6** | **`delete_user()` + `deleteTrainingData()` miss `set_logs` and `workouts`** — per-set history + imported activities survive account deletion (GDPR erasure gap; UUID-reissue bleed). | **MEDIUM** | **DONE** (PR #110) — delete_user() explicit; soft-delete +workouts. |
+| **S7** | **Outbox drain can race the namespace switch** on a same-device user swap (two independent `onAuthStateChange` listeners, no ordering guarantee). | **MEDIUM** | **DONE** (PR #113) — raw-listener drains removed; syncFromCloud + 'online' only. |
+| **S8** | **Sync functions are unbounded** — a caller can pass a multi-year `date_from…date_to` or hammer the endpoints to burn shared Google/Strava quota + function minutes for all users. | **MEDIUM** | **DONE** (PR #112) — 92-day clamp (cooldown deferred, LOW). |
+| **S9** | **member can flip their own `status` back to `active`** after a coach set it `left` (re-join a team they were removed from). | **MEDIUM** | **DONE** (PR #110) — removed-member rejoin blocked. |
+| **S10** | **`handle_new_user()` trigger does not pin `search_path`** (low exploitability — Supabase-internal, fixed target — but inconsistent with every other DEFINER fn). | **LOW** | **DONE** (PR #110). |
 | **S11** | **`player_status` values are self-attested** by the player's client — a player can write dishonest coach-facing safety signals (RLS guarantees own-row, not honesty). | **HIGH (integrity)** | DESIGN — server-side derivation (Edge Function / trigger from owner-only tables). Deferred: no live player_status data yet; tracked as a follow-up. |
 | **S12** | **Coach dashboard `/dashboard` has no auth gate** (self-admitted stub) — will render other users' data the instant live rows are wired. apps/web is NOT deployed. | **HIGH (blocker)** | BLOCKER — gate on a real Supabase session + team scope in Next middleware BEFORE any live data source is connected. Enforced when the dashboard is built. |
 | **S13** | **`next@14` carries HIGH XSS advisories** (apps/web, not yet shipped). | **HIGH (pre-ship)** | FIX-BEFORE-SHIP — bump `next` off the advisory line before the coach dashboard deploys. |
