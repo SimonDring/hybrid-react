@@ -45,12 +45,27 @@ both stages autonomous, one PR each.
 - **Read path:** the player's app fetches their active team's `teams.schedule` (member-read
   RLS) alongside `listMyActiveTeams`, caches it in the store like other synced state.
 - **Matches block:** weekdays whose pattern type is `match` are removed from the player's
-  available gym days at generation and reflow (intersection with `profile.days`; if the
-  intersection would drop below 2 days, keep the player's own days and only soft-avoid —
-  never starve a plan).
-- **Fixtures taper:** the nearest upcoming fixture date feeds the engine's existing
-  event-taper input, which already handles "keep intensity, cut volume" and only engages
-  inside its own window — league fixtures outside the window change nothing.
+  explicit gym days (`availability.days`, with `days_per_week` following the shrunken
+  list) at generation and reflow; if removal would leave fewer than 2 days, the player's
+  own days stand and matches are only soft-avoided — never starve a plan. Players with
+  blank availability already get match days avoided via the sport-day union below.
+- **Implementation shape (refined during build):** ONE pure engine transform —
+  `applyTeamSchedule(profile, schedule, asOf)` in `packages/engine/src/lib/plan/
+  teamSchedule.js` — mapped onto fields the engine already honours: match days out of
+  `availability.days`, ALL team sport-load days (match/pitch/pool/track/conditioning)
+  unioned into `sport_days` (the scheduler's existing keep-away + lighten machinery),
+  the gated fixture into `event_date`. A null/invalid schedule returns the SAME profile
+  reference, so memo signatures and golden masters are untouched by construction.
+  PlanService applies the transform at its one profile-read seam; the existing
+  `profileSignature` already hashes the transformed fields, so schedule changes
+  regenerate automatically.
+- **Fixtures taper (peak-event gate — refined during build):** `event_date` shapes the
+  WHOLE periodization, so a league team's weekly fixture must never become "the event"
+  (it would collapse every plan into a permanent taper). A fixture feeds `event_date`
+  only when it plausibly IS the peak: the athlete has no event of their own, there is
+  exactly ONE upcoming match fixture, and it is ≥ 3 weeks out (relative to
+  `plan_start_date`, never the clock — Art 18). Routine weekly congestion remains the
+  reflow/SKB rules' job, not the periodizer's.
 - **Soft-avoid:** pitch/pool/track days get a scheduler penalty (the heavy-axial-adjacency
   penalty family), never a hard block.
 - **Determinism:** constraints enter as INPUT (profile/opts), `generatePlan` stays pure;

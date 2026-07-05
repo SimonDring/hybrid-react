@@ -11,6 +11,7 @@ import { joinTeamWithCode, listMyTeams, leaveTeam } from '../lib/SyncService.js'
 export default function Teams() {
   const authStatus = useAuthStore(s => s.status);
   const refreshTeamStatus = useTrainingStore(s => s.refreshTeamStatus);
+  const refreshTeamSchedule = useTrainingStore(s => s.refreshTeamSchedule);
 
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,6 +35,7 @@ export default function Teams() {
       setMsg({ kind: 'ok', text: `Joined ${res.team?.name || 'the team'} ✓` });
       setCode('');
       refreshTeamStatus?.();     // populate the coach board now
+      refreshTeamSchedule?.();   // pull the coach's schedule into the plan
       await load();
     } else {
       setMsg({ kind: 'err', text: res.error });
@@ -44,7 +46,7 @@ export default function Teams() {
   const onLeave = async (team) => {
     if (!confirm(`Leave ${team.name}? Your coach will no longer see your status for this team.`)) return;
     const res = await leaveTeam(team.team_id);
-    if (res.ok) await load();
+    if (res.ok) { refreshTeamSchedule?.(); await load(); }
     else setMsg({ kind: 'err', text: res.error || 'Could not leave.' });
   };
 

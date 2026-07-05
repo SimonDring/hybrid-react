@@ -65,6 +65,7 @@ export { getGymLevel } from './src/lib/Utils.js';
 export { buildPrimer } from './src/lib/plan/primers.js';
 export { countWeeklyVolume, gradeVolume, volumeReport, exerciseMuscles } from './src/lib/plan/volume.js';
 export { deriveConstraints, suggestGymDays, lightenItems } from './src/lib/plan/constraints.js';
+export { parseTeamSchedule, applyTeamSchedule } from './src/lib/plan/teamSchedule.js';
 export { ruleVolumeAdjustment } from './src/lib/sportKnowledge/reflowAdjust.js';
 export { MUSCLE_GROUPS, MUSCLE_LABELS, VOLUME_LANDMARKS } from './src/data/muscleVolume.js';
 export { EXERCISES, LEVELS, availableEquip } from './src/data/strengthExercises.js';

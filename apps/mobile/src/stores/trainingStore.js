@@ -20,6 +20,7 @@ import { consistencyGoal } from '../lib/goals.js';
 import { setOverride, clearOverride, getOverride, reconcileFromProfile } from '../lib/sessionOverrides.js';
 import * as AthleteModel from '../lib/AthleteModelService.js';
 import { syncTeamStatus } from '../lib/teamStatus.js';
+import { setTeamSchedule } from '../lib/teamScheduleCache.js';
 import { matchWorkoutToSession, sessionPhysiologyFromWorkout } from '../lib/sessionWorkoutMatch.js';
 import { validateProfile, validateDailyMetric, validateSessionLog, validateInjury } from '../lib/validation/validate.js';
 
@@ -181,6 +182,14 @@ export const useTrainingStore = create((set) => ({
   // Call this when the user signs in or the app comes to foreground.
   // Push the derived team status (readiness/load/adherence/availability) for
   // every active membership. Fire-and-forget from the writes that change it.
+  // Pull the coach-set team schedule into the local cache so plan generation
+  // (synchronous) can apply it as constraints. Fire-and-forget safe.
+  refreshTeamSchedule() {
+    Sync.fetchMyTeamSchedule()
+      .then((raw) => { setTeamSchedule(raw); set(buildView()); })
+      .catch(() => {});
+  },
+
   refreshTeamStatus() {
     const st = useTrainingStore.getState();
     const readiness = computeReadiness(st.dailyMetrics || [], st.logs || []);
@@ -219,6 +228,7 @@ export const useTrainingStore = create((set) => ({
       useTrainingStore.getState().enrichSessions();
     }
     useTrainingStore.getState().refreshTeamStatus();   // the coach board reflects sign-in state
+    useTrainingStore.getState().refreshTeamSchedule(); // coach-set constraints reach the plan
     return result;
   },
 

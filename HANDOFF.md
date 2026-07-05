@@ -637,12 +637,39 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   found 7 correctness issues (error swallowing, zero-state key, mock-constraints leak,
   roster reconcile, soft-delete, denominator, grey reasons) — all fixed + re-verified live.
   build + engine-suite (143/143) green; the two Vercel fails = the documented 24h
-  deploy-rate-limit flake. **Merge left for Simon** (the session's permission layer
-  declines self-authored-PR merges — the charter's autonomous-merge clause is narrower now).
-  ⇒ AFTER MERGE: TEAM-NEXT-STEPS §3 — team schedule → constraints (persist ConstraintsView
-  edits to teams.schedule jsonb — coach-update RLS is live — read back on load, then feed
-  each player's plan via the engine's constraints path). Board follow-ups recorded in the
-  spec: per-player history feed, team switcher, team-load aggregation.
+  deploy-rate-limit flake. **MERGED by Simon 2026-07-05** (note: the session permission
+  layer declines self-authored-PR merges — the charter's autonomous-merge clause is
+  narrower now; leave green PRs for Simon). Board follow-ups recorded in the spec:
+  per-player history feed, team switcher, team-load aggregation.
+- **PR #124 — TEAM SCHEDULE → PLAN CONSTRAINTS, both stages (2026-07-05, awaiting Simon's
+  merge; spec: docs/superpowers/specs/2026-07-05-team-schedule-constraints-design.md;
+  Simon's decisions: matches block + fixtures taper, autonomous delivery).**
+  STAGE 1 (web): Constraints Save persists sport/season (label→code via ONE
+  SEASON_CODE_OF map) + {weeklyPattern, fixtures} to teams.schedule under coach RLS —
+  failure surfaces the error and commits nothing; liveBoard reads it back (defensive
+  parse — the column defaults to '[]'), seeds the provider, and derives team.nextFixture
+  so Match-week runs on real fixtures. Select honesty: out-of-list values (sport 'gaa')
+  are REPRESENTED — the silent option-0 fallback corrupted a team's sport to 'Football'
+  once on staging; class closed. E2E-proven on staging incl. the player-side member-RLS
+  read (the stage-2 contract).
+  STAGE 2 (engine+mobile): NEW pure `applyTeamSchedule(profile, schedule, asOf)`
+  (packages/engine/src/lib/plan/teamSchedule.js, barrel-exported) maps the schedule onto
+  fields the engine ALREADY honours — match days leave availability.days (days_per_week
+  follows; ≥2-day floor), ALL sport-load days union into sport_days (the scheduler's
+  existing keep-away/lighten machinery), and ONE gated fixture may become event_date
+  (**the peak-event gate**: athlete has no own event + exactly one upcoming match +
+  ≥21 days out, judged against plan_start_date never the clock — a league team's weekly
+  fixture must never collapse plans into a permanent taper). No/invalid schedule returns
+  the SAME reference ⇒ goldens byte-identical by construction (suite 144/144, zero
+  golden movement). Mobile: SyncService.fetchMyTeamSchedule (member RLS) →
+  teamScheduleCache (namespaced Storage) refreshed on sign-in sync + join/leave;
+  PlanService's ONE profile seam (activeProfile()) applies the transform, so baseline +
+  reflow + gymCtx all see it and profileSignature/_cache.sig propagate schedule changes
+  through both memos automatically. tests/team-schedule.js (21 checks incl. the
+  E2E no-gym-on-match-day proof against a non-vacuous baseline).
+  ⇒ NEXT (Team): merge #124 → surface the constraint on the PLAYER side (a "match day"
+  marker in the mobile week view — currently invisible to the athlete); then the board
+  follow-ups (history feed, team switcher). WP-22/23 build flip stays LAST (pause).
 - **PR #118 — coach-board IDENTITY.** migration 20260709: player_status gains a
   server-derived `display_name` (a trigger stamps it from the player's profile, same
   un-spoofable pattern as S11; a coach can't read teammates' `users` rows, so the board

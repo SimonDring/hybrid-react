@@ -711,6 +711,27 @@ export async function listMyActiveTeams() {
   return data || [];
 }
 
+// The coach-set schedule for the player's team (member-read RLS): the FIRST
+// active membership whose team carries a schedule object. Returns the raw
+// jsonb value (the engine's parseTeamSchedule judges validity) or null.
+export async function fetchMyTeamSchedule() {
+  if (!canSync()) return null;
+  const userId = uid();
+  const { data, error } = await supabase
+    .from('team_members')
+    .select('team_id, teams(schedule, deleted_at)')
+    .eq('user_id', userId)
+    .eq('status', 'active');
+  if (error) { logError('fetchMyTeamSchedule', error); return null; }
+  for (const r of data || []) {
+    const t = Array.isArray(r.teams) ? r.teams[0] : r.teams;
+    if (t && !t.deleted_at && t.schedule && typeof t.schedule === 'object' && !Array.isArray(t.schedule)) {
+      return t.schedule;
+    }
+  }
+  return null;
+}
+
 // Upsert the derived player_status rows (one per team). DERIVED SIGNALS ONLY —
 // the shape is built by lib/teamStatus.js against an explicit allowlist; this
 // function adds identity + timestamp and nothing else. No outbox entry: the
