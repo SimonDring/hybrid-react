@@ -559,13 +559,35 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   (upsert onConflict team_id,user_id, real auth uid); store refreshTeamStatus() fires
   after every signal-changing write + sign-in, no outbox (self-heals from local truth).
   tests/team-status-rollup.js (10 checks, privacy guard led). Suite 143/143.
-- **⇒ IN PROGRESS — MULTI-USER SECURITY AUDIT + HARDENING (Simon's ask 2026-07-05,
-  while out).** Four parallel reviewers auditing: DB/RLS/auth, client XSS/secrets,
-  sync/isolation/edge-functions, deps/CI/config/validation. Synthesis →
-  docs/SECURITY-AUDIT.md (prioritized), then implement top-down PR by PR (auto-merge
-  green low/med; PAUSE on anything that needs prod DDL beyond the reviewed pattern or
-  changes coaching philosophy). THEN Team founding/invite UI + coach dashboard (apps/web).
-  **WP-22/23 (build flip)** remains last (HIGH-risk, PAUSE for Simon). (Dev notes: /dev remounts
+- **MULTI-USER SECURITY AUDIT + HARDENING (Simon's ask, 2026-07-05) — DONE (PRs
+  #109–#114).** Four parallel reviewers → docs/SECURITY-AUDIT.md addendum (15 findings,
+  prioritized). Implemented S1–S10, staging-proven (rls-harness 28→57 checks), main green
+  throughout:
+  - **S1 (CRITICAL, #111)**: OAuth `state` → single-use signed nonce (oauth_states table
+    + issue/consume RPCs); client legacy-fallback so the app deploys independently.
+  - **S2 (CRITICAL, #110)**: revoke column SELECT on wearable_connections tokens (browser
+    could exfiltrate refresh tokens).
+  - **S3/S6/S9/S10 (#110)**: DB CHECK constraints on coach-visible free-text + 256KB
+    profile cap; delete_user() completeness; removed-member rejoin blocked;
+    handle_new_user search_path.  ALSO recovered the WP-33 team-spine migration onto main
+    (PR #107 had stalled — the DB was live but the file never merged) and CLOSED #107.
+  - **S4/S8 (#112)**: stop logging raw vitals; clamp the sync date span (92d).
+  - **S5/S15 (#109)**: removed the git-tracked .env.local.prod-backup (glob-ignored);
+    encode OAuth state.
+  - **S7 (#113)**: closed the outbox-drain vs namespace-switch race (syncFromCloud is the
+    sole post-namespace drain trigger).
+  - Single-user isolation model audited CLEAN (namespaced cache, no service_role in
+    browser, React auto-escaping, CSP present).
+  - **⚠ PENDING FOR SIMON — supabase/SECURITY-DEPLOY.md**: apply migrations 20260706 +
+    20260707 to PROD + deploy 3–4 Edge Functions (the batched, human-gated step). The
+    app's legacy OAuth fallback keeps wearable connect working until then. Plus dashboard
+    Auth settings (Confirm email ON, rate limit — S14).
+  - **Deferred, task chips spawned**: S11 (player_status server-side derivation — it's
+    client-attested today; no live data yet), S12 (coach-dashboard auth gate — before any
+    live data wired), S13 (next bump before apps/web ships).
+- **⇒ NEXT:** the Team founding/invite UI (player-side; makes the roll-up fire for real
+  teams) → the coach dashboard in apps/web (gated per S12). **WP-22/23 (build flip)**
+  remains last (HIGH-risk, PAUSE for Simon). (Dev notes: /dev remounts
   periodically — click + assert in ONE preview_eval; a preset click + Generate in the same
   tick generates from STALE answers. Vercel hobby-tier deploy rate limit can FAIL the web
   preview check for 24 h — an infra flake; merge on engine-suite green, documented in PR
