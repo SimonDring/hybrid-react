@@ -16,6 +16,7 @@ import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, syncStrava, c
 import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex } from '@performance-os/engine';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch, adaptedSessionByKey } from '../lib/PlanService.js';
 import { setOverride, clearOverride, getOverride } from '../lib/sessionOverrides.js';
+import * as AthleteModel from '../lib/AthleteModelService.js';
 import { matchWorkoutToSession, sessionPhysiologyFromWorkout } from '../lib/sessionWorkoutMatch.js';
 import { validateProfile, validateDailyMetric, validateSessionLog, validateInjury } from '../lib/validation/validate.js';
 
@@ -490,15 +491,18 @@ export const useTrainingStore = create((set) => ({
     if (!ok) return { ok: false, errors };
     await Sync.addInjury(value);
     set(buildView());
+    AthleteModel.syncInjuryHistory().catch(() => {});   // keep the model's injury history current (WP-36)
     return { ok: true };
   },
   async updateInjury(id, patch) {
     await Sync.updateInjury(id, patch);
     set(buildView());
+    AthleteModel.syncInjuryHistory().catch(() => {});   // resolution lands here (status → 'recovered')
   },
   async removeInjury(id) {
     await Sync.removeInjury(id);
     set(buildView());
+    AthleteModel.syncInjuryHistory().catch(() => {});
   },
   async addRecoveryLogEntry(injuryId, entry) {
     await Sync.addRecoveryLogEntry(injuryId, entry);

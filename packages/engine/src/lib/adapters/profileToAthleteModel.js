@@ -41,6 +41,9 @@ export function profileToAthleteModel(profile = {}, asOf) {
       equipment: p.access || [],
       availableDays: (p.availability && p.availability.days) || [],
       daysPerWeek: (p.availability && p.availability.days_per_week) ?? null,
+      // Resolved-injury history rides the dual-written model on the profile (synced by
+      // AthleteModelService.syncInjuryHistory) — it feeds the D4 injuryRisk seam (WP-36).
+      injuryHistory: (p.athlete_model && p.athlete_model.constraints && p.athlete_model.constraints.injuryHistory) || [],
     },
     performanceMetrics,
     meta: { source: 'migration', planStartDate: p.plan_start_date || null, enginePassthrough },

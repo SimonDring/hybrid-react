@@ -46,6 +46,38 @@ export function getAthleteModel() {
   return null;
 }
 
+// Mirror the athlete's RESOLVED injuries into the persisted model's
+// constraints.injuryHistory, so the D4 diagnosis's injuryRisk seam (WP-36) sees them on
+// every read path (the adapter maps profile.athlete_model.constraints.injuryHistory).
+// Shape: [{ body_part: <taxonomy key>, resolvedAt }] — deduped by body part, newest
+// resolution kept. Persists via SyncService ONLY when the history actually changed;
+// no-ops without a profile. Fire-and-forget safe.
+export async function syncInjuryHistory() {
+  const profile = Database.services.getProfile();
+  if (!profile || !Object.keys(profile).length) return null;
+  const rows = Database.services.listInjuries() || [];
+  const byPart = new Map();
+  for (const r of rows) {
+    if (r.status !== 'recovered' || !r.body_part_key) continue;
+    const prev = byPart.get(r.body_part_key);
+    const when = r.date_recovered || null;
+    if (!prev || String(when || '') > String(prev.resolvedAt || '')) {
+      byPart.set(r.body_part_key, { body_part: r.body_part_key, resolvedAt: when });
+    }
+  }
+  const history = [...byPart.values()].sort((a, b) => a.body_part.localeCompare(b.body_part));
+
+  const model = getAthleteModel();               // stored, or lazily derived from legacy
+  if (!model) return null;
+  const current = (model.constraints && model.constraints.injuryHistory) || [];
+  if (JSON.stringify(current) === JSON.stringify(history)) return model;   // unchanged → no write
+
+  model.constraints = { ...model.constraints, injuryHistory: history };
+  model.updatedAt = new Date().toISOString();
+  await Sync.updateProfile({ athlete_model: model });
+  return model;
+}
+
 // Derive the Performance Model (capability-per-quality with confidence) from the current
 // Athlete Model. Returns null when there is no athlete model to derive from.
 export function getPerformanceModel() {
