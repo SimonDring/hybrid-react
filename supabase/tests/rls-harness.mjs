@@ -210,6 +210,21 @@ async function main() {
     ok((data || []).length === 0, `anon reads nothing from ${table}`);
   }
 
+  // ══ S1 — OAuth state nonces (20260707) ═══════════════════════════════════════
+  const { data: nonce, error: mintErr } = await A.client.rpc('issue_oauth_state', { p_provider: 'fitbit' });
+  ok(!mintErr && typeof nonce === 'string' && nonce.length >= 32, `S1: an authenticated user mints a state nonce (${nonce ? nonce.length : 0} chars)`);
+  const { error: badProv } = await A.client.rpc('issue_oauth_state', { p_provider: 'evil' });
+  ok(!!badProv, 'S1: minting rejects an unknown provider');
+  // the nonce table is NOT directly readable (no anon/authenticated policy) — a nonce is never client-visible
+  const { data: statePeek } = await A.client.from('oauth_states').select('nonce, user_id').limit(5);
+  ok((statePeek || []).length === 0, 'S1: oauth_states is not directly readable by a client (nonce stays secret)');
+  // consume is service_role-only — an authenticated client cannot resolve/forge identities
+  const { error: consumeErr } = await A.client.rpc('consume_oauth_state', { p_nonce: nonce, p_provider: 'fitbit' });
+  ok(!!consumeErr, 'S1: consume_oauth_state is denied to authenticated clients (service_role only)');
+  // an anon (signed-out) client cannot mint at all
+  const { error: anonMint } = await anon.rpc('issue_oauth_state', { p_provider: 'fitbit' });
+  ok(!!anonMint, 'S1: a signed-out client cannot mint a nonce');
+
   // ══ Security hardening (20260706) — token columns + free-text bounds ══════════
   // S2: the raw OAuth token columns are unreadable even by the owning session.
   const { error: tokErr } = await A.client.from('wearable_connections').select('access_token, refresh_token').limit(1);

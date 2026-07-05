@@ -28,9 +28,20 @@ Deno.serve(async (req: Request) => {
     return Response.redirect(`${APP_URL}?fitbit=error&reason=${reason}`)
   }
 
+  const supabaseUrl  = Deno.env.get('SUPABASE_URL')!
+  const supabase = createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
+
+  // S1: resolve the real user from the single-use signed `state` nonce — never
+  // trust the raw param as an identity. Rejects forged/expired/replayed states.
+  const { data: resolvedUserId, error: stateErr } =
+    await supabase.rpc('consume_oauth_state', { p_nonce: state, p_provider: 'fitbit' })
+  if (stateErr || !resolvedUserId) {
+    console.error('[fitbit-auth-callback] Invalid OAuth state:', stateErr?.message || 'no match')
+    return Response.redirect(`${APP_URL}?fitbit=error&reason=invalid_state`)
+  }
+
   const clientId     = Deno.env.get('FITBIT_CLIENT_ID')!
   const clientSecret = Deno.env.get('FITBIT_CLIENT_SECRET')!
-  const supabaseUrl  = Deno.env.get('SUPABASE_URL')!
   const redirectUri  = `${supabaseUrl}/functions/v1/fitbit-auth-callback`
   const tokenUrl     = Deno.env.get('FITBIT_TOKEN_URL') ?? 'https://oauth2.googleapis.com/token'
 
@@ -60,15 +71,10 @@ Deno.serve(async (req: Request) => {
     return Response.redirect(`${APP_URL}?fitbit=error&reason=no_refresh_token`)
   }
 
-  const supabase = createClient(
-    supabaseUrl,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-  )
-
   const { error: dbError } = await supabase
     .from('wearable_connections')
     .upsert({
-      user_id:          state,
+      user_id:          resolvedUserId,
       provider:         'fitbit',
       provider_user_id: tokens.user_id ?? null,
       access_token:     tokens.access_token,

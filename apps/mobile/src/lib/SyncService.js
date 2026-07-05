@@ -686,7 +686,19 @@ export async function pushPlayerStatus(rows) {
 // Build the Google Health API OAuth URL.
 // access_type=offline gets a refresh token. prompt=consent forces the consent screen
 // so a refresh token is always issued (required on first connect and after scope changes).
-export function getFitbitAuthUrl(userId) {
+// S1: mint a signed, single-use OAuth `state` nonce bound to the caller. Falls
+// back to the legacy state=userId ONLY when the RPC is absent (old DB) or errors,
+// so the app deploys independently of the coordinated function+migration deploy.
+async function oauthState(provider, userId) {
+  if (!isSupabaseConfigured || !supabase) return userId;
+  try {
+    const { data, error } = await supabase.rpc('issue_oauth_state', { p_provider: provider });
+    if (error || !data) return userId;   // RPC not deployed yet → legacy path
+    return data;
+  } catch { return userId; }
+}
+
+export async function getFitbitAuthUrl(userId) {
   const clientId    = import.meta.env.VITE_FITBIT_CLIENT_ID;
   // Use || not ??: the deployed build can set VITE_FITBIT_OAUTH_URL to an EMPTY
   // string (an unset GitHub Actions secret renders as ""), and ?? only falls back
@@ -701,7 +713,8 @@ export function getFitbitAuthUrl(userId) {
     'https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly',
     'https://www.googleapis.com/auth/googlehealth.sleep.readonly'
   ].join(' '));
-  return `${oauthBase}?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&state=${encodeURIComponent(userId)}&access_type=offline&prompt=consent`;
+  const state = encodeURIComponent(await oauthState('fitbit', userId));
+  return `${oauthBase}?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&state=${state}&access_type=offline&prompt=consent`;
 }
 
 // Check if Fitbit is connected for the signed-in user.
@@ -786,14 +799,15 @@ export async function syncFitbit(dateFrom, dateTo) {
 // Build the Strava OAuth authorize URL. client_id is public (browser-safe);
 // the secret stays in the Edge Function. scope=activity:read_all reads all
 // activities incl. ones marked private. state carries the Supabase user id.
-export function getStravaAuthUrl(userId) {
+export async function getStravaAuthUrl(userId) {
   const clientId    = import.meta.env.VITE_STRAVA_CLIENT_ID;
   const redirectUri = encodeURIComponent(
     `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/strava-auth-callback`
   );
+  const state = encodeURIComponent(await oauthState('strava', userId));
   return `https://www.strava.com/oauth/authorize?client_id=${clientId}` +
     `&response_type=code&redirect_uri=${redirectUri}` +
-    `&approval_prompt=force&scope=activity:read_all&state=${encodeURIComponent(userId)}`;
+    `&approval_prompt=force&scope=activity:read_all&state=${state}`;
 }
 
 // Trigger the strava-sync Edge Function. Reads the real failure reason from the
