@@ -30,15 +30,18 @@ a player accepts by setting their own membership `status`). Open decisions:
 - **Acceptance** — a player sees pending invites / enters a code in the mobile app, then
   their roll-up starts populating the coach's board.
 
-## 2. Wire the coach dashboard to LIVE player_status — READY once #1 exists
-The dashboard renders **mock data** (`apps/web/data/mockApi.ts`). To go live: replace
-`getDashboardData()` with a Supabase read (server component, behind the `proxy.ts` gate)
-that selects `player_status` for the coach's team. The board now has everything a coach
-needs and nothing they shouldn't: `display_name, readiness, load_state, acwr,
-adherence_pct, injury_status` — raw vitals never. Gap to close: the rich mock UI expects
-more per-player fields (avatars, per-day detail, recommendations) than the privacy-safe
-`player_status` exposes — **decide what the live board shows vs. the mock's richness**
-(some panels may become "available once the player logs more" empty states).
+## 2. Wire the coach dashboard to LIVE player_status — DONE (PR #123)
+> The dashboard reads the live spine behind the S12 gate: `lib/liveBoard.ts` (server
+> component; coach's own RLS session; errors THROW rather than render a lying empty
+> board; status rows reconciled against the active roster; soft-deleted teams skipped)
+> + `lib/liveDerive.ts` (pure: the seven coach-safe fields → RAG status, plain-English
+> reasons, confidence). **Decision resolved**: the board renders ONLY the coach-safe
+> surface; history/schedule panels are honest empty states until their feeds exist; a
+> zero-player board leads with the join code; the web adopted the DB load_state
+> vocabulary. The mock squad chain is deleted. Spec:
+> `docs/superpowers/specs/2026-07-05-live-coach-board-design.md`.
+> Follow-ups noted there: per-player history feed (fills trends/adherence panels), a
+> team switcher for multi-team coaches, team-load aggregation for the trend chart.
 
 ## 3. Team schedule → plan constraints — LATER
 `teams.schedule` (jsonb) is meant to feed each player's plan (fixtures/pitch sessions as
@@ -48,8 +51,12 @@ self-contained follow-up once teams exist.
 
 ## Recommended order
 1. ~~Founding + join-code invite~~ **DONE** (PRs #120–#122).
-2. **Wire the dashboard to live player_status** (decision: live-board field set) — NEXT.
-3. **Team schedule → constraints**.
+2. ~~Wire the dashboard to live player_status~~ **DONE** (PR #123).
+3. **Team schedule → constraints** — NEXT. The Constraints view already edits a
+   `TeamConstraints` shape that matches `teams.schedule` jsonb (now seeded from the
+   live team row, session-local only): persist the coach's edits to `teams.schedule`
+   (coach-update RLS is live), read it back on load, then feed it into each player's
+   plan generation via the engine's constraints path.
 
 ## Not in Team scope (paused for Simon)
 - **Build flip (WP-22/23)** — the last engine re-seat; HIGH-risk, explicitly paused.
