@@ -513,10 +513,30 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   simulation, 10 checks incl. THE ACCEPTANCE (device B shows device A's frozen content).
   One CI flake fixed properly: the test awaits an exposed flushMirror() promise instead of
   sleeping. Suite **140/140**.
-- **⇒ NEXT:** **WP-37** (typed priors read-path — learnedPriors formally read by D1
-  estimation + D12 dose with per-prior provenance, no writer yet), **C7** (48–72 h plyo
-  spacing at the D13 scheduler). **Team spine WP-32/33** blocked on WP-07's staging TODO
-  (Simon's Supabase account). WP-22/23 (build flip) last. (Dev notes: /dev remounts
+- **PR #104 — WP-37: the typed learned-priors read-path.** NEW lib/priors.js — every
+  fallback prior resolves through ONE typed interface with per-prior provenance
+  ({value, source, confidence}). NO WRITER (D16 future); live reads = population
+  defaults, output BYTE-IDENTICAL (goldens untouched in the same suite run). The seam is
+  real: D1 estimation reads capabilityPrior(quality, band, model.learnedPriors) — a
+  learned value changes the estimate and DECLARES itself in the evidence; D12 reads the
+  volumeTolerance prior inside resolveProgram (the ONE volume-scalar seam plan + reflow
+  share — 0.7 tolerance moved total sets 861→656 in test). recoveryRate stays typed but
+  unconsumed (runtime recovery layer, with D16). tests/typed-priors.js (12 checks).
+  Suite **141/141**.
+- **PR #105 — H9 C7 closed: 48–72 h plyometric spacing at the D13 scheduler.**
+  finaliseSlot stamps plyoLoad (both allocator paths; scheduling signal only, not
+  emitted); the scheduler pays a governed penalty for ADJACENT plyo-loaded days (the
+  heavy-axial rule's family); the constant lives with the contact ceilings
+  (REACTIVE_LIMITS.spacing, same C7 evidence). ZERO golden movement — the archetypes
+  already satisfied the window (the muscle-recovery penalty implicitly separated them),
+  so C7 lands as the GUARD + the pin (tests/plyo-spacing.js: sprint gaps 3, hurling 2–4,
+  cramped weeks still schedule — a penalty, never a gate). Suite **142/142**.
+  H9 is now fully dispositioned: every correction landed, deferred-with-reasons
+  (C10 hip_thrust), or skipped-as-cosmetic (C14); only C8's build rest floor rides the
+  build flip.
+- **⇒ NEXT:** **Team spine WP-32/33** blocked on WP-07's staging TODO (Simon's Supabase
+  account). WP-22/23 (build flip: demand profiles for build goals, then the flip —
+  HIGH-risk, PAUSE for Simon) last. (Dev notes: /dev remounts
   periodically — click + assert in ONE preview_eval; a preset click + Generate in the same
   tick generates from STALE answers. Vercel hobby-tier deploy rate limit can FAIL the web
   preview check for 24 h — an infra flake; merge on engine-suite green, documented in PR
