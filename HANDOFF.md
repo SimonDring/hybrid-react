@@ -585,9 +585,18 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   - **Deferred, task chips spawned**: S11 (player_status server-side derivation — it's
     client-attested today; no live data yet), S12 (coach-dashboard auth gate — before any
     live data wired), S13 (next bump before apps/web ships).
+- **PR #115 — S12: the coach dashboard is GATED.** apps/web `middleware.ts` gates
+  `/dashboard/*` server-side on a valid Supabase session + an active `team_members`
+  coach row (via @supabase/ssr cookie clients); `signInCoach` is real
+  (signInWithPassword + coach check); session.ts is now display-only. The dashboard
+  STILL renders MOCK data — live player_status/team reads stay behind the gate + team-
+  scoping (chip: S11 server-side derivation). Needs NEXT_PUBLIC_SUPABASE_* in Vercel env
+  (SECURITY-DEPLOY.md). S13 (next 14→16 major bump, HIGH advisories) deferred — a careful
+  standalone migration before apps/web ships (chip open).
 - **⇒ NEXT:** the Team founding/invite UI (player-side; makes the roll-up fire for real
-  teams) → the coach dashboard in apps/web (gated per S12). **WP-22/23 (build flip)**
-  remains last (HIGH-risk, PAUSE for Simon). (Dev notes: /dev remounts
+  teams) → wire the coach dashboard to LIVE player_status behind the S12 gate (after S11
+  server-side derivation + team-scoping). **WP-22/23 (build flip)** remains last
+  (HIGH-risk, PAUSE for Simon). (Dev notes: /dev remounts
   periodically — click + assert in ONE preview_eval; a preset click + Generate in the same
   tick generates from STALE answers. Vercel hobby-tier deploy rate limit can FAIL the web
   preview check for 24 h — an infra flake; merge on engine-suite green, documented in PR

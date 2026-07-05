@@ -55,7 +55,16 @@ migrations) and spot-check in the app that wearable connect still works.
 - **Auth → Confirm email: ON** (S14) — closes the open-signup abuse surface.
 - **Auth → Rate limits** — cap signups/OTP if the dashboard offers it.
 
+## Coach dashboard (apps/web) — when you deploy it
+- Set **`NEXT_PUBLIC_SUPABASE_URL`** + **`NEXT_PUBLIC_SUPABASE_ANON_KEY`** in the Vercel
+  project env (same prod values; anon key only). Without them, `/dashboard` redirects to
+  `/login` — the secure default. The gate (S12, PR #115) requires a valid session AND an
+  active `team_members` coach row; the dashboard still renders MOCK data until live reads
+  land behind it (S11).
+
 ## Still open (tracked, not blocking today)
+- **S12** — DONE (PR #115): `/dashboard/*` gated in Next middleware (session + active
+  coach). Live player data still NOT wired — keep it behind the gate + team-scoping.
 - **S11** — `player_status` is self-attested by the player's client. Server-side
   derivation (Edge Function/trigger) is the fix; deferred because there's no live
   player_status data yet. Follow-up.
