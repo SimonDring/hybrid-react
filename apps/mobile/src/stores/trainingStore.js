@@ -15,7 +15,7 @@ import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, drainOutbox, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
 import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex } from '@performance-os/engine';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch, adaptedSessionByKey } from '../lib/PlanService.js';
-import { setOverride, clearOverride, getOverride } from '../lib/sessionOverrides.js';
+import { setOverride, clearOverride, getOverride, reconcileFromProfile } from '../lib/sessionOverrides.js';
 import * as AthleteModel from '../lib/AthleteModelService.js';
 import { matchWorkoutToSession, sessionPhysiologyFromWorkout } from '../lib/sessionWorkoutMatch.js';
 import { validateProfile, validateDailyMetric, validateSessionLog, validateInjury } from '../lib/validation/validate.js';
@@ -184,6 +184,9 @@ export const useTrainingStore = create((set) => ({
     // replace local tables with stale cloud state and lose what was written offline.
     await drainOutbox();
     const result = await pullFromSupabase();
+    // WP-28: merge the pulled cloud pins with the local cache (frozen wins — Art 10),
+    // so a session started on another device shows ITS frozen content here too.
+    reconcileFromProfile((Database.services.getProfile() || {}).session_overrides);
     // Load all wearable connections; derive the Fitbit one for existing UI/logic.
     const connections = await checkConnections();
     const fitbitConnection = connections.find(c => c.provider === 'fitbit') || null;
