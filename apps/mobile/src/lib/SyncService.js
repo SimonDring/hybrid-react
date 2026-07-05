@@ -655,6 +655,47 @@ export async function addRecoveryLogEntry(injuryId, entry) {
   return result;
 }
 
+// ---------- Teams (player-side: join / leave / list) ----------
+
+// Join a team by its share code (server RPC validates + inserts the membership).
+// Returns { ok, team? , error? }. Triggers a status roll-up so the coach board
+// populates immediately.
+export async function joinTeamWithCode(code) {
+  if (!canSync()) return { ok: false, error: 'Sign in to join a team.' };
+  const { data, error } = await supabase.rpc('join_team_with_code', { p_code: (code || '').trim() });
+  if (error) return { ok: false, error: error.message || 'Could not join. Check the code.' };
+  const team = Array.isArray(data) ? data[0] : data;
+  return { ok: true, team };
+}
+
+// The athlete's teams with names + their role (for the Teams screen).
+export async function listMyTeams() {
+  if (!canSync()) return [];
+  const userId = uid();
+  const { data, error } = await supabase
+    .from('team_members')
+    .select('team_id, role, status, teams(name, sport)')
+    .eq('user_id', userId)
+    .eq('status', 'active');
+  if (error) { logError('listMyTeams', error); return []; }
+  return (data || []).map((r) => ({
+    team_id: r.team_id, role: r.role,
+    name: r.teams?.name || 'Team', sport: r.teams?.sport || null,
+  }));
+}
+
+// Leave a team (set own membership to 'left'; the coach-removal guard allows a
+// self-initiated leave). Clears the player's board row for that team.
+export async function leaveTeam(teamId) {
+  if (!canSync()) return { ok: false, error: 'not signed in' };
+  const userId = uid();
+  const { error } = await supabase
+    .from('team_members').update({ status: 'left' }).eq('team_id', teamId).eq('user_id', userId);
+  if (error) return { ok: false, error: error.message };
+  await supabase.from('player_status').delete().eq('team_id', teamId).eq('user_id', userId);
+  return { ok: true };
+}
+
 // ---------- Team status (the player-side roll-up) ----------
 
 // The athlete's ACTIVE team memberships (own rows only — RLS enforces it too).

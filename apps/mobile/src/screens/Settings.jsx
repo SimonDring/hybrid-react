@@ -133,6 +133,19 @@ export default function Settings() {
         Connect Fitbit, Garmin, Strava and choose your primary device.
       </p>
 
+      <h2 className="h3">Teams</h2>
+      <button
+        className="settings-row"
+        onClick={() => navigate('/settings/teams')}
+        style={{ width: '100%', textAlign: 'left' }}
+      >
+        Your teams
+        <span style={{ marginLeft: 'auto', color: 'var(--txt-muted)' }}>›</span>
+      </button>
+      <p className="sub" style={{ fontSize: 11, marginBottom: 20 }}>
+        Join a team with a coach's code and share your training status.
+      </p>
+
       <h2 className="h3">Data</h2>
       <div className="settings-group">
         {authStatus === 'signed_in' && (
