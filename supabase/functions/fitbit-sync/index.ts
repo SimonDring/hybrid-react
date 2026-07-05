@@ -85,8 +85,8 @@ async function fetchType(
     return null
   }
   const json = await res.json()
-  // Log raw response once so we can verify the field structure
-  console.log(`[fitbit-sync] ${dataType} raw:`, JSON.stringify(json).slice(0, 500))
+  // S4: do NOT log the raw payload — it carries private vitals (HRV/RHR/sleep),
+  // and function logs are a different trust boundary than the RLS-protected tables.
   return json
 }
 
@@ -244,8 +244,12 @@ Deno.serve(async (req: Request) => {
   const supabase = createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
   const body     = await req.json().catch(() => ({}))
   const today    = new Date().toISOString().split('T')[0]
-  const dateFrom = body.date_from ?? today
   const dateTo   = body.date_to   ?? today
+  // S8: cap the span at 92 days regardless of what the caller asks for.
+  const MAX_SPAN_DAYS = 92
+  const reqFrom  = body.date_from ?? today
+  const floorFrom = new Date(new Date(dateTo).getTime() - MAX_SPAN_DAYS * 86400000).toISOString().split('T')[0]
+  const dateFrom = reqFrom < floorFrom ? floorFrom : reqFrom
 
   const { data: connection, error: connError } = await supabase
     .from('wearable_connections')
