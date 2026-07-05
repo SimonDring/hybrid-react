@@ -72,7 +72,7 @@ migrations) and spot-check in the app that wearable connect still works.
 - **S12** — the `apps/web` coach dashboard has no auth gate (a stub). It is NOT deployed;
   the gate (Next middleware on a real session + team scope) must land **before** any live
   data source is wired in.
-- **S13** — bump `next` off its HIGH-advisory line **before** `apps/web` ships.
+- **S13** — DONE: next bumped to 16 (advisories cleared).
 - **S15 (LOW)** — CORS `*` on the JWT sync functions; `010` constraints are `NOT VALID`
   (enforce forward; `VALIDATE` over legacy rows when convenient); avatars are world-read
   by design.

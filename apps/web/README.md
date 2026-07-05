@@ -65,7 +65,7 @@ change. Asset slots + sizes: `public/images/README.md`.
   cookie banner; GA4 does under UK/EU law.
 - **Coach login** — `lib/auth.ts → signInCoach()` signs in against Supabase (same
   project as the mobile app) and verifies active-coach membership. `/dashboard/*` is
-  gated SERVER-SIDE by `middleware.ts` (valid session + active coach in `team_members`);
+  gated SERVER-SIDE by `proxy.ts` (Next 16's middleware convention) (valid session + active coach in `team_members`);
   without Supabase env the dashboard is denied (redirects to `/login`). Set
   `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` (see `.env.example`) to
   enable it. NOTE: the dashboard still renders MOCK data — live `player_status`/team

@@ -1,11 +1,11 @@
 /**
- * Supabase server client for middleware — reads/writes the auth cookies on the
+ * Supabase server client for the proxy (Next 16 middleware convention) — reads/writes the auth cookies on the
  * request/response so getUser() reflects the coach's real session server-side.
  */
 import { createServerClient } from "@supabase/ssr";
 import type { NextRequest, NextResponse } from "next/server";
 
-export function supabaseFromMiddleware(req: NextRequest, res: NextResponse) {
+export function supabaseFromProxy(req: NextRequest, res: NextResponse) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
   return createServerClient(url, anonKey, {

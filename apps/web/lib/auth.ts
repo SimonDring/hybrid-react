@@ -2,7 +2,7 @@
  * auth — coach sign-in against Supabase (the SAME project as the mobile app, so
  * the coach's existing email + password work). Anon key only.
  *
- * The middleware (middleware.ts) is the authoritative gate; signInCoach ALSO
+ * The middleware (proxy.ts) is the authoritative gate; signInCoach ALSO
  * verifies active-coach membership here purely for a clean error message (so a
  * non-coach sees "not a team coach" instead of a silent redirect bounce).
  */
