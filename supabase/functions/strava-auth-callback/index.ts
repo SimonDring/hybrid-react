@@ -25,6 +25,20 @@ Deno.serve(async (req: Request) => {
     return Response.redirect(`${APP_URL}?strava=error&reason=${reason}`)
   }
 
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  )
+
+  // S1: resolve the real user from the single-use signed `state` nonce — never
+  // trust the raw param as an identity. Rejects forged/expired/replayed states.
+  const { data: resolvedUserId, error: stateErr } =
+    await supabase.rpc('consume_oauth_state', { p_nonce: state, p_provider: 'strava' })
+  if (stateErr || !resolvedUserId) {
+    console.error('[strava-auth-callback] Invalid OAuth state:', stateErr?.message || 'no match')
+    return Response.redirect(`${APP_URL}?strava=error&reason=invalid_state`)
+  }
+
   const clientId     = Deno.env.get('STRAVA_CLIENT_ID')!
   const clientSecret = Deno.env.get('STRAVA_CLIENT_SECRET')!
 
@@ -52,14 +66,10 @@ Deno.serve(async (req: Request) => {
   }
 
   // Strava returns expires_at as an absolute epoch-seconds value.
-  const supabase = createClient(
-    Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-  )
   const { error: dbError } = await supabase
     .from('wearable_connections')
     .upsert({
-      user_id:          state,
+      user_id:          resolvedUserId,
       provider:         'strava',
       provider_user_id: tokens.athlete?.id ? String(tokens.athlete.id) : null,
       access_token:     tokens.access_token,

@@ -28,7 +28,7 @@ export default function Integrations() {
   // Per-provider OAuth authorize URL. Top-level redirect (NOT window.open) — the
   // app is a standalone PWA where popups flash blank and bounce back.
   const authUrlFor = (id) => id === 'strava' ? getStravaAuthUrl(user.id) : getFitbitAuthUrl(user.id);
-  const connectTo  = (id) => { if (user) window.location.href = authUrlFor(id); };
+  const connectTo  = async (id) => { if (user) window.location.href = await authUrlFor(id); };
 
   return (
     <div style={{ padding: '8px 4px 32px' }}>
