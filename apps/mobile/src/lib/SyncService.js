@@ -382,7 +382,7 @@ export async function deleteTrainingData() {
   if (!canSync()) return { ok: true, local: true };
   const userId = uid();
   const stamp = new Date().toISOString();
-  const tables = ['set_logs', 'session_logs', 'sessions', 'weekly_checkins', 'reassessments', 'daily_metrics', 'injuries'];
+  const tables = ['set_logs', 'session_logs', 'sessions', 'weekly_checkins', 'reassessments', 'daily_metrics', 'injuries', 'workouts'];  // S6: workouts was missing from erasure
   for (const t of tables) {
     const { error } = await supabase.from(t).update({ deleted_at: stamp }).eq('user_id', userId).is('deleted_at', null);
     if (error) { logError('deleteTrainingData:' + t, error); return { ok: false, error: error.message }; }
