@@ -63,10 +63,13 @@ change. Asset slots + sizes: `public/images/README.md`.
   (`NEXT_PUBLIC_PLAUSIBLE_DOMAIN`) and/or GA4 (`NEXT_PUBLIC_GA_ID`); both `track`
   targets are no-ops until configured, so it's always safe. Plausible needs no
   cookie banner; GA4 does under UK/EU law.
-- **Coach login** — `lib/auth.ts → signInCoach()` is a **stub** today that routes to
-  `/dashboard`; wire Supabase (same project as the mobile app, so the same coach
-  credentials work) per [Adding auth](#adding-auth). The dashboard is not yet gated
-  — `/login` is a front door, not a security boundary.
+- **Coach login** — `lib/auth.ts → signInCoach()` signs in against Supabase (same
+  project as the mobile app) and verifies active-coach membership. `/dashboard/*` is
+  gated SERVER-SIDE by `middleware.ts` (valid session + active coach in `team_members`);
+  without Supabase env the dashboard is denied (redirects to `/login`). Set
+  `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` (see `.env.example`) to
+  enable it. NOTE: the dashboard still renders MOCK data — live `player_status`/team
+  reads are a separate step (must stay behind this gate + team-scoping).
 
 ## Views (left sidebar)
 

@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signInCoach } from "@/lib/auth";
-import { signInSession, getCoachSession } from "@/lib/session";
+import { signInSession } from "@/lib/session";
+import { hasCoachSession } from "@/lib/auth";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
@@ -19,12 +20,21 @@ const fieldClass =
 
 export function LoginForm() {
   const router = useRouter();
+  const params = useSearchParams();
+  const redirectError = ({
+    not_coach: "That account isn't a team coach.",
+    signed_out: "Please sign in to view the dashboard.",
+    unavailable: "The dashboard isn't available right now.",
+  } as Record<string, string>)[params.get("error") ?? ""] ?? "";
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(redirectError);
 
-  // Already signed in? Skip the form and go straight to the dashboard.
+  // Already signed in (a REAL Supabase session)? Skip the form. Uses the real
+  // session, not the display marker, so there's no bounce with the middleware gate.
   useEffect(() => {
-    if (getCoachSession()) router.replace("/dashboard");
+    let active = true;
+    hasCoachSession().then((yes) => { if (active && yes) router.replace("/dashboard"); });
+    return () => { active = false; };
   }, [router]);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {

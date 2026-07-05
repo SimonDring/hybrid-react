@@ -3,10 +3,10 @@
  * complete before real auth exists: login sets it, the dashboard reads it to show
  * who's signed in + a log-out, and /login skips itself when it's present.
  *
- * ⚠️ This is UX state, NOT security. It's just localStorage — anyone can reach
- * /dashboard directly (it still runs on mock data). When Supabase auth lands
- * (lib/auth.ts), replace these reads with the real session and gate /dashboard in
- * middleware. The component API here won't need to change.
+ * This is a DISPLAY marker only (whose email to show in the account menu). The
+ * REAL security boundary is middleware.ts (server-side session + active-coach
+ * check); lib/auth.ts signInCoach mints the Supabase session, signOutSession ends
+ * it. This marker no longer protects anything — it's just UX.
  */
 
 const KEY = "po_coach";
@@ -43,4 +43,9 @@ export function signOutSession(): void {
   } catch {
     /* non-fatal */
   }
+  // End the REAL Supabase session too (fire-and-forget); the middleware gate then
+  // bounces any further /dashboard access to /login.
+  import("@/lib/supabase/browser")
+    .then(({ supabaseBrowser }) => supabaseBrowser()?.auth.signOut())
+    .catch(() => {});
 }
