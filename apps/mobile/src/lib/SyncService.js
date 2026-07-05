@@ -701,7 +701,7 @@ export function getFitbitAuthUrl(userId) {
     'https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly',
     'https://www.googleapis.com/auth/googlehealth.sleep.readonly'
   ].join(' '));
-  return `${oauthBase}?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&state=${userId}&access_type=offline&prompt=consent`;
+  return `${oauthBase}?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&state=${encodeURIComponent(userId)}&access_type=offline&prompt=consent`;
 }
 
 // Check if Fitbit is connected for the signed-in user.
@@ -793,7 +793,7 @@ export function getStravaAuthUrl(userId) {
   );
   return `https://www.strava.com/oauth/authorize?client_id=${clientId}` +
     `&response_type=code&redirect_uri=${redirectUri}` +
-    `&approval_prompt=force&scope=activity:read_all&state=${userId}`;
+    `&approval_prompt=force&scope=activity:read_all&state=${encodeURIComponent(userId)}`;
 }
 
 // Trigger the strava-sync Edge Function. Reads the real failure reason from the

@@ -5,6 +5,8 @@ dist
 *.log
 .env
 .env.local
+.env.local.*
+!.env.local.example
 
 # tooling / agent / local state
 .superpowers/
