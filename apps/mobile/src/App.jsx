@@ -145,7 +145,7 @@ export default function App() {
   // from an existing one on a fresh device — hold on the splash to avoid showing
   // either the wizard or the app on the wrong side of the sync.
   if (!isPreview && !isOnboarded && syncing) {
-    return <Splash />;
+    return <Splash syncing />;
   }
   if (!isPreview && !isOnboarded) {
     return <Onboarding />;
@@ -198,7 +198,23 @@ export default function App() {
 }
 
 // Minimal full-screen splash, shown while we resolve auth/sync state.
-function Splash() {
+function Splash({ syncing = false }) {
+  // First cloud pull on a fresh device (no local rows yet) — show skeleton
+  // blocks shaped like the Home screen so the wait reads as "loading", not
+  // "broken". The brief auth check keeps the plain wordmark.
+  if (syncing) {
+    return (
+      <div style={{ minHeight: '100dvh', maxWidth: 480, margin: '0 auto', padding: '72px 20px 0' }} aria-busy="true">
+        <div className="skeleton" style={{ height: 26, width: '55%', marginBottom: 10 }} />
+        <div className="skeleton" style={{ height: 13, width: '75%', marginBottom: 24 }} />
+        <div className="skeleton" style={{ height: 120, marginBottom: 12 }} />
+        <div className="skeleton" style={{ height: 120, marginBottom: 20 }} />
+        <p style={{ fontSize: 12, color: 'var(--txt-muted)', textAlign: 'center' }}>
+          Syncing your training…
+        </p>
+      </div>
+    );
+  }
   return (
     <div style={{
       minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center'

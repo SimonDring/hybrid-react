@@ -104,7 +104,16 @@ export default function Teams() {
       {/* My teams */}
       <h2 className="h3" style={{ marginTop: 12 }}>Your teams</h2>
       {loading ? (
-        <p className="sub" style={{ fontSize: 12 }}>Loading…</p>
+        /* Network fetch (listMyTeams → Supabase) — two rows shaped like the
+           team list below so the reveal doesn't jump. */
+        <div className="settings-group" aria-busy="true" aria-label="Loading your teams">
+          {[0, 1].map((i) => (
+            <div key={i} className="settings-row">
+              <div className="skeleton" style={{ height: 14, width: '55%', marginBottom: 7 }} />
+              <div className="skeleton" style={{ height: 10, width: '35%' }} />
+            </div>
+          ))}
+        </div>
       ) : teams.length === 0 ? (
         <p className="sub" style={{ fontSize: 12 }}>You haven't joined a team yet.</p>
       ) : (

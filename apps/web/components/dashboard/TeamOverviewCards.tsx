@@ -2,6 +2,8 @@ import type { CoachVisiblePlayer, LoadTrendPoint, RosterSummary } from "@/types/
 import type { Tone } from "@/lib/statusLogic";
 import { Card } from "@/components/ui/Card";
 import { Stat } from "@/components/ui/Stat";
+import { InfoTip } from "@/components/ui/InfoTip";
+import { JARGON, type JargonKey } from "@/content/dashboardCopy";
 import { pct } from "@/lib/formatting";
 import {
   averageReadiness,
@@ -13,6 +15,8 @@ import {
 
 interface OverviewCard {
   label: string;
+  /** Which JARGON entry explains this card (rendered as an ⓘ beside the label). */
+  jargonKey: JargonKey;
   value: string;
   sub: string;
   tone?: Tone;
@@ -65,18 +69,21 @@ export function TeamOverviewCards({
   const cards: OverviewCard[] = [
     {
       label: "Squad readiness",
+      jargonKey: "squadReadiness",
       value: avg === null ? "—" : `${avg}`,
       sub: `${split.green} of ${split.total} ready to train`,
       tone: avg === null ? "nodata" : avg >= 70 ? "ready" : avg >= 55 ? "monitor" : "adjust",
     },
     {
       label: "Needs attention",
+      jargonKey: "needsAttention",
       value: `${flagged}`,
       sub: "players to check before training",
       tone: split.red > 0 ? "adjust" : split.amber > 0 ? "monitor" : "ready",
     },
     {
       label: "Sessions this week",
+      jargonKey: "sessionsThisWeek",
       value: adherence === null ? "—" : pct(adherence),
       sub: adherence === null ? "no sessions logged yet" : "completed across the squad",
       tone:
@@ -90,12 +97,14 @@ export function TeamOverviewCards({
     },
     {
       label: "Training load",
+      jargonKey: "trainingLoadCard",
       value: load.value,
       sub: load.sub,
       tone: load.tone,
     },
     {
       label: "Recovery trend",
+      jargonKey: "recoveryTrend",
       value: recovery.value,
       sub: "squad average vs last week",
       tone: recovery.tone,
@@ -105,6 +114,7 @@ export function TeamOverviewCards({
       // Denominator is the ROSTER, not just reporting rows — 2/2 would read
       // "all current" when eight joined players have never synced at all.
       label: "Updated today",
+      jargonKey: "updatedToday",
       value: `${updated}/${roster.joined}`,
       sub: `${split.grey} without a readiness score`,
       tone: updated / Math.max(1, roster.joined) >= 0.8 ? "ready" : "monitor",
@@ -117,6 +127,7 @@ export function TeamOverviewCards({
         <Card key={c.label} className="p-4">
           <Stat
             label={c.label}
+            labelTip={<InfoTip {...JARGON[c.jargonKey]} />}
             value={c.value}
             sub={c.sub}
             tone={c.tone}

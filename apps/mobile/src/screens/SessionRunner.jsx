@@ -8,6 +8,8 @@ import RestTimer from '../components/RestTimer.jsx';
 import { useWakeLock } from '../hooks/useWakeLock.js';
 import { ensureAudio } from '../lib/sound.js';
 import SubstituteSheet from '../components/SubstituteSheet.jsx';
+import InfoTip from '../components/ui/InfoTip.jsx';
+import { GLOSSARY } from '../data/metricGlossary.js';
 
 const WEIGHT_STEP = 2.5;
 // Midnight palette: primer = teal (the app's primary accent), main = neutral. No rust.
@@ -348,7 +350,7 @@ export default function SessionRunner() {
                   onDec={() => bump('weight', -WEIGHT_STEP, 0)} onInc={() => bump('weight', WEIGHT_STEP)} />
               </div>
 
-              <div className="rn-rpe-label">RPE</div>
+              <div className="rn-rpe-label">RPE <InfoTip {...GLOSSARY.rpe} /></div>
               <div className="rating-row">
                 {[6, 7, 8, 9, 10].map(n => (
                   <button key={n} className={`rating-btn ${draft.rpe === n ? 'active' : ''}`} onClick={() => setDraft(d => ({ ...d, rpe: n }))}>{n}</button>

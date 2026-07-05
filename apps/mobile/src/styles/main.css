@@ -2598,3 +2598,49 @@ button:active,
   color: var(--rust);
   font-size: 13px;
 }
+
+/* ---------- Skeleton (loading placeholders) ---------- */
+/* Only for moments the UI genuinely waits on the network (first cloud sync,
+   team-list fetch). Screens that render from the local cache never show these.
+   A soft hairline-tinted sweep over a surface-2 block; static under reduced motion. */
+.skeleton { position: relative; overflow: hidden; background: var(--bg-surface-2); border: 1px solid var(--hairline); border-radius: var(--r-sm); }
+.skeleton::after { content: ''; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, var(--hairline), transparent); animation: skeleton-sweep 1.6s ease-in-out infinite; }
+@keyframes skeleton-sweep { to { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after { animation: none; }
+}
+
+/* ---------- InfoTip (tap-to-toggle metric glossary) ---------- */
+/* The ⓘ button matches the exercise-row .sx-info affordance; the popover is
+   portalled to <body> and positioned fixed by the component. Real vars only. */
+.infotip-btn {
+  background: none;
+  border: none;
+  color: var(--txt-muted);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  flex-shrink: 0;
+  vertical-align: baseline;
+}
+.infotip-btn:active { color: var(--txt-body); }
+.infotip-pop {
+  position: fixed;
+  z-index: 1200;
+  max-width: 260px;
+  background: var(--bg-surface-elev);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-md);
+  padding: 10px 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--txt-body);
+}
+.infotip-pop b {
+  display: block;
+  color: var(--txt-strong);
+  font-weight: 500;
+  margin-bottom: 4px;
+}

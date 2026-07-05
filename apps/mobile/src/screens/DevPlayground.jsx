@@ -20,6 +20,8 @@
 
 import { useState, useEffect } from 'react';
 import OnboardingWizard from '../components/OnboardingWizard.jsx';
+import InfoTip from '../components/ui/InfoTip.jsx';
+import { GLOSSARY } from '../data/metricGlossary.js';
 import { BLANK_ANSWERS, answersToProfile } from '../lib/onboardingModel.js';
 import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { activityFor } from '../data/activityTypes.js';
@@ -132,7 +134,8 @@ function VolumeReport({ phase, week, profile }) {
     <div style={{ border: '1px dashed var(--hairline)', borderRadius: 10, padding: '8px 10px' }}>
       <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', opacity: 0.5, marginBottom: 8 }}>
         WEEKLY SET VOLUME · actual / target ·{' '}
-        <span style={{ color: fillColor(totDone, totTgt) }}>{Math.round(totDone)}</span>/{Math.round(totTgt)} sets
+        <span style={{ color: fillColor(totDone, totTgt) }}>{Math.round(totDone)}</span>/{Math.round(totTgt)} sets{' '}
+        <InfoTip {...GLOSSARY.weeklyVolume} />
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
         {active.map(r => {

@@ -2,6 +2,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
 import { sessionKey, MUSCLE_LABELS } from '@performance-os/engine';
+import InfoTip from '../components/ui/InfoTip.jsx';
+import { GLOSSARY } from '../data/metricGlossary.js';
 
 const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
@@ -84,7 +86,7 @@ export default function WeekDetail() {
 
       {week.taper ? (
         <div className="callout amber" style={{ marginBottom: 14 }}>
-          <strong>Taper week</strong> — Volume cut, intensity kept. Sharpen and arrive fresh.
+          <strong>Taper week</strong> <InfoTip {...GLOSSARY.taper} /> — Volume cut, intensity kept. Sharpen and arrive fresh.
         </div>
       ) : week.autoDeload ? (
         <div className="callout amber" style={{ marginBottom: 14 }}>
@@ -92,7 +94,7 @@ export default function WeekDetail() {
         </div>
       ) : week.deload ? (
         <div className="callout amber" style={{ marginBottom: 14 }}>
-          <strong>Deload week</strong> — Volume reduced. Mandatory.
+          <strong>Deload week</strong> <InfoTip {...GLOSSARY.deload} /> — Volume reduced. Mandatory.
         </div>
       ) : null}
 

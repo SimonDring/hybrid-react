@@ -8,6 +8,8 @@ import { computeReadiness } from '@performance-os/engine';
 import { readinessVerdict, indexBandColor, confidenceNote } from '../lib/verdicts.js';
 import MetricRing from '../components/ui/MetricRing.jsx';
 import Sparkline from '../components/ui/Sparkline.jsx';
+import InfoTip from '../components/ui/InfoTip.jsx';
+import { GLOSSARY } from '../data/metricGlossary.js';
 
 // Pretty labels for the Readiness Index contributors.
 const IX_LABELS = {
@@ -41,7 +43,7 @@ export default function RecoveryDetail() {
 
   return (
     <>
-      <h1 className="h1">Recovery</h1>
+      <h1 className="h1">Recovery <InfoTip {...GLOSSARY.recovery} /></h1>
       <p className="sub">Readiness and the markers behind it.</p>
 
       <div className="health-card">
@@ -50,7 +52,7 @@ export default function RecoveryDetail() {
             <span className="hc-score">{readiness.score != null ? readiness.score : '—'}</span>
           </MetricRing>
           <div className="hc-copy">
-            <div className="hc-eyebrow">Readiness{readiness.estimated ? ' · estimate' : ''}</div>
+            <div className="hc-eyebrow">Readiness{readiness.estimated ? ' · estimate' : ''} <InfoTip {...GLOSSARY.readiness} /></div>
             <div className="hc-headline">{rv.headline}</div>
             <div className="hc-note">{rv.note}</div>
           </div>
