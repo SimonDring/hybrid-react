@@ -1,5 +1,5 @@
 /**
- * middleware — the REAL security boundary for the coach dashboard (S12).
+ * proxy — the REAL security boundary for the coach dashboard (S12).
  *
  * /dashboard/* is gated server-side: a valid Supabase session AND an active
  * coach membership (team_members role='coach' status='active', readable under the
@@ -11,9 +11,9 @@
  * auth we cannot verify, so it's denied — the secure default.
  */
 import { NextResponse, type NextRequest } from "next/server";
-import { supabaseFromMiddleware } from "@/lib/supabase/server";
+import { supabaseFromProxy } from "@/lib/supabase/server";
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const configured =
     Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
     Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
@@ -27,7 +27,7 @@ export async function middleware(req: NextRequest) {
   if (!configured) return deny("unavailable");
 
   const res = NextResponse.next({ request: req });
-  const supabase = supabaseFromMiddleware(req, res);
+  const supabase = supabaseFromProxy(req, res);
 
   // getUser() validates the JWT with the auth server (getSession only decodes it).
   const {

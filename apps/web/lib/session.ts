@@ -4,7 +4,7 @@
  * who's signed in + a log-out, and /login skips itself when it's present.
  *
  * This is a DISPLAY marker only (whose email to show in the account menu). The
- * REAL security boundary is middleware.ts (server-side session + active-coach
+ * REAL security boundary is proxy.ts (server-side session + active-coach
  * check); lib/auth.ts signInCoach mints the Supabase session, signOutSession ends
  * it. This marker no longer protects anything — it's just UX.
  */
