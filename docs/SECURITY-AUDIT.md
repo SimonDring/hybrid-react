@@ -394,3 +394,65 @@ intended signup policy (open vs invite-only) is unambiguous — and so the
 
 *Generated as a read-only audit. No application code was modified. Re-run the
 review after the P0/P1 items land to re-score categories 1, 3, and 6.*
+
+---
+---
+
+# ADDENDUM — Multi-User Readiness Review (2026-07-05)
+
+**Trigger:** the Team package went live (teams / team_members / player_status +
+the first cross-user RLS, PRs #106/#107) and the app is about to onboard MULTIPLE
+ACTIVE USERS, including a coach who reads OTHER users' derived data. This addendum
+re-audits from that angle. **Method:** four parallel domain reviews — (1) DB/RLS/auth,
+(2) client XSS/secrets, (3) sync/isolation/edge-functions, (4) deps/CI/config/validation
+— cross-checked against the actual source. The single-user isolation model held up
+well; the new exposure is at the **trust boundaries** the multi-user pivot introduces:
+the public OAuth callbacks, the public anon key vs client-only validation, and the
+coach-shared surface.
+
+## What was verified CLEAN (no action)
+- **Per-user cache isolation** on a shared device: every localStorage key is
+  `${base}_${namespace}` keyed on the Supabase uid; `signOut()` clears the auth token
+  AND `clearNamespace()` wipes the previous user's cache. Raw vitals cached under
+  `htp_daily_metrics_v4_<uid>` are namespaced + cleared. No leak across users.
+- **No `service_role` key** in any client or committed file. Only the anon JWT ships
+  (browser-safe, RLS-protected, and already in the bundle by design).
+- **No raw-HTML XSS sink** — no `innerHTML`/`dangerouslySetInnerHTML` fed by user text
+  in the mobile app; all user fields render through React's auto-escaping JSX. (The one
+  `dangerouslySetInnerHTML` in apps/web is static JSON-LD.)
+- **Deploy pipeline** ships only `VITE_` browser-safe vars, uses `npm ci`, gates on the
+  test suite, least-privilege permissions, no `pull_request_target`. **PWA cache** does
+  not cache authenticated Supabase responses. **Mobile CSP** exists (build-time meta:
+  `default-src 'self'; object-src 'none'; script-src 'self'` — no `unsafe-eval`).
+- RLS is enabled on **every** table with `auth.uid()` + matching `with check`; the two
+  prod RPCs (`delete_user`, `set_device_primary`) pin `search_path` and derive identity
+  from `auth.uid()`; the team spine's `is_coach_of` join cannot leak across teams and the
+  founder bootstrap only seats the caller themselves.
+
+## Prioritized findings + disposition
+
+| # | Finding | Sev | Disposition |
+|---|---------|-----|-------------|
+| **S1** | **OAuth callbacks trust an unsigned `state` as `user_id`** and write provider tokens with service_role — token-planting / account-link hijack (fitbit + strava `-auth-callback`). | **CRITICAL** | FIX — signed nonce (`oauth_states` table + HMAC), issued at connect-time, verified+consumed in the callback. |
+| **S2** | **`wearable_connections` RLS `SELECT *` exposes raw `access_token`/`refresh_token`** to the owning browser — durable OAuth-credential leak under XSS. | **CRITICAL** | FIX — revoke column SELECT on the token columns; expose status via non-token columns only. |
+| **S3** | **DB has no bound on coach-visible free-text** — `injuries.body_part`, `users.profile` JSONB (display name / markers / athlete_model), and profile enums are validated in client JS only; the public anon key bypasses that. | **HIGH** | FIX — CHECK constraints + a `pg_column_size(profile)` cap; coach UI escapes all player text (React already does). |
+| **S4** | **Edge functions log raw vitals / PII** — `fitbit-sync` logs raw Google-Health payloads (HRV/RHR/sleep); `strava-sync` stores full activity incl. GPS in `workouts.raw`. | **HIGH** | FIX — remove/redact the raw `console.log`; the log store is a different trust boundary than RLS tables. |
+| **S5** | **`.env.local.prod-backup` is committed to git** (anon-only, so low-severity, but violates the repo's own rule and the `.prod-backup` suffix dodged `.gitignore`). | **MEDIUM** | FIX — `git rm` + `.gitignore` glob `.env.local*`; rotate the anon key at leisure. |
+| **S6** | **`delete_user()` + `deleteTrainingData()` miss `set_logs` and `workouts`** — per-set history + imported activities survive account deletion (GDPR erasure gap; UUID-reissue bleed). | **MEDIUM** | FIX — add both tables to the deletion set. |
+| **S7** | **Outbox drain can race the namespace switch** on a same-device user swap (two independent `onAuthStateChange` listeners, no ordering guarantee). | **MEDIUM** | FIX — make `syncFromCloud` (post-namespace) the sole drain trigger; drop the drain from the raw auth listener; re-assert uid in `drainOutbox`. |
+| **S8** | **Sync functions are unbounded** — a caller can pass a multi-year `date_from…date_to` or hammer the endpoints to burn shared Google/Strava quota + function minutes for all users. | **MEDIUM** | FIX — clamp the date span server-side (≤ ~92 days) + a per-user cooldown vs `last_synced_at`. |
+| **S9** | **member can flip their own `status` back to `active`** after a coach set it `left` (re-join a team they were removed from). | **MEDIUM** | FIX — constrain member-driven status transitions in `team_members_guard`. |
+| **S10** | **`handle_new_user()` trigger does not pin `search_path`** (low exploitability — Supabase-internal, fixed target — but inconsistent with every other DEFINER fn). | **LOW** | FIX — add `set search_path = public`. |
+| **S11** | **`player_status` values are self-attested** by the player's client — a player can write dishonest coach-facing safety signals (RLS guarantees own-row, not honesty). | **HIGH (integrity)** | DESIGN — server-side derivation (Edge Function / trigger from owner-only tables). Deferred: no live player_status data yet; tracked as a follow-up. |
+| **S12** | **Coach dashboard `/dashboard` has no auth gate** (self-admitted stub) — will render other users' data the instant live rows are wired. apps/web is NOT deployed. | **HIGH (blocker)** | BLOCKER — gate on a real Supabase session + team scope in Next middleware BEFORE any live data source is connected. Enforced when the dashboard is built. |
+| **S13** | **`next@14` carries HIGH XSS advisories** (apps/web, not yet shipped). | **HIGH (pre-ship)** | FIX-BEFORE-SHIP — bump `next` off the advisory line before the coach dashboard deploys. |
+| **S14** | Open signup + no captcha/rate-limit; email-confirmation posture not captured in the repo. | **MEDIUM** | PARTLY SIMON — enable "Confirm email" + signup rate-limit in the prod Auth dashboard; document the intended posture in-repo. |
+| **S15** | Misc hygiene: CORS `*` on JWT functions; `state` not `encodeURIComponent`'d; `setReassessAnswer` loose `|| quarter===1` fallback; `010` constraints `NOT VALID` never `VALIDATE`d; avatars world-readable (by design). | **LOW** | FIX the code nits; document the by-design ones. |
+
+## Rollout discipline
+Every DB change lands on **staging** first (CLI stays linked to staging), is proven by
+`supabase/tests/rls-harness.mjs`, and the migration is committed to the repo — **production
+application is a deliberate, batched step for Simon's review** (the same human-gated
+boundary as the team spine). Edge-function code fixes are committed; deploying them
+(`supabase functions deploy`) is likewise a reviewed step. Nothing in this addendum runs
+DDL or deploys against production autonomously.
