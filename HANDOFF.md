@@ -606,7 +606,15 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   proxy.ts (Next 16 convention; the S12 gate unchanged). Merged past the Vercel
   hobby-tier deploy rate-limit flake (both Vercel checks 24h-limited; the real `build` +
   engine-suite checks passed).
-- **PR #118 (this) — coach-board IDENTITY.** migration 20260709: player_status gains a
+- **PRs #120/#121 — TEAM JOIN CODES (Simon chose join codes over email invites).**
+  #120 the RPC layer (migration 20260710): create_team (found + auto-coach + unique
+  6-char code), join_team_with_code (self-join, case-insensitive, idempotent, respects
+  coach removal), rotate_team_code (coach-only). Harness 75/75 (11 join checks). #121 the
+  mobile join UI: Teams screen at /settings/teams (join by code + your-teams list + leave)
+  + a Settings nav card; SyncService joinTeamWithCode/listMyTeams/leaveTeam. NEXT: the WEB
+  founding UI (a coach creates a team + shares the code in apps/web); then wire the coach
+  dashboard to LIVE player_status (mockApi → real reads behind the S12 gate).
+- **PR #118 — coach-board IDENTITY.** migration 20260709: player_status gains a
   server-derived `display_name` (a trigger stamps it from the player's profile, same
   un-spoofable pattern as S11; a coach can't read teammates' `users` rows, so the board
   needed this to name its rows). Harness 64/64. Also: docs/product/TEAM-NEXT-STEPS.md —
