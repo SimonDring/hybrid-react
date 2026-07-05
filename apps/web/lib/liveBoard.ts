@@ -17,27 +17,35 @@ import type {
   LoadTrendPoint,
   RosterSummary,
   Team,
+  TeamConstraints,
+  TeamFixture,
 } from "@/types/dashboard";
 import { supabaseRSC } from "./supabase/rsc";
 import { deriveLivePlayer, type PlayerStatusRow } from "./liveDerive";
+import { SEASON_LABEL_OF, constraintsForTeam, parseTeamSchedule } from "./constraints";
 
 export interface LiveDashboardData {
   team: Team;
   players: CoachVisiblePlayer[];
   roster: RosterSummary;
+  /** The saved teams.schedule (or honest defaults) — seeds the provider. */
+  initialConstraints: TeamConstraints;
   loadTrend: LoadTrendPoint[];
   now: string;
 }
 
-const SEASON_LABELS: Record<string, string> = {
-  in: "In-season",
-  off: "Off-season",
-  pre: "Pre-season",
-};
-
 function seasonPhaseOf(season: string | null): string | null {
   if (!season) return null;
-  return SEASON_LABELS[season] ?? season;
+  return SEASON_LABEL_OF[season] ?? season;
+}
+
+/** The earliest MATCH fixture dated today or later, if any. */
+function nextMatchFixture(fixtures: TeamFixture[], now: Date): TeamFixture | null {
+  const today = now.toISOString().slice(0, 10);
+  const upcoming = fixtures
+    .filter((f) => f.type === "match" && f.date >= today)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  return upcoming[0] ?? null;
 }
 
 /**
@@ -63,7 +71,7 @@ export async function getLiveDashboardData(): Promise<LiveDashboardData | null> 
   // !inner so a soft-deleted team's membership can't win the limit(1)).
   const { data: memberships, error: membershipError } = await supabase
     .from("team_members")
-    .select("team_id, created_at, teams!inner(id, name, sport, season, join_code, deleted_at)")
+    .select("team_id, created_at, teams!inner(id, name, sport, season, join_code, schedule, deleted_at)")
     .eq("user_id", user.id)
     .eq("role", "coach")
     .eq("status", "active")
@@ -78,7 +86,7 @@ export async function getLiveDashboardData(): Promise<LiveDashboardData | null> 
   // many-to-one embed: PostgREST returns an object, but tolerate an array shape.
   const embedded = membership?.teams;
   const teamRow = (Array.isArray(embedded) ? embedded[0] : embedded) as
-    | { id: string; name: string; sport: string | null; season: string | null; join_code: string | null }
+    | { id: string; name: string; sport: string | null; season: string | null; join_code: string | null; schedule: unknown }
     | null
     | undefined;
   if (!membership || !teamRow) return null;
@@ -123,10 +131,19 @@ export async function getLiveDashboardData(): Promise<LiveDashboardData | null> 
     joinCode: teamRow.join_code,
   };
 
+  // A saved schedule seeds the constraints AND lights up the match-week
+  // surfaces from real fixtures; no schedule yet = honest defaults.
+  const saved = parseTeamSchedule(teamRow.schedule);
+  const initialConstraints: TeamConstraints = saved
+    ? { ...constraintsForTeam(team), ...saved }
+    : constraintsForTeam(team);
+  if (saved) team.nextFixture = nextMatchFixture(saved.fixtures, now);
+
   return {
     team,
     players,
     roster: { joined: activePlayerIds.size, reporting: players.length },
+    initialConstraints,
     loadTrend: [],
     now: now.toISOString(),
   };

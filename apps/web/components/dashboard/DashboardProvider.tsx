@@ -55,6 +55,7 @@ export function DashboardProvider({
   team,
   players,
   roster,
+  initialConstraints,
   loadTrend,
   now: nowIso,
   children,
@@ -62,14 +63,16 @@ export function DashboardProvider({
   team: Team;
   players: CoachVisiblePlayer[];
   roster: RosterSummary;
+  initialConstraints?: TeamConstraints;
   loadTrend: LoadTrendPoint[];
   now: string;
   children: ReactNode;
 }) {
   const now = useMemo(() => new Date(nowIso), [nowIso]);
-  // Seeded from the coach's own teams row — never invented sport/fixtures.
-  const [constraints, setConstraints] = useState<TeamConstraints>(() =>
-    constraintsForTeam(team),
+  // Seeded from the SAVED teams.schedule when one exists, else the coach's
+  // own teams row — never invented sport/fixtures.
+  const [constraints, setConstraints] = useState<TeamConstraints>(
+    () => initialConstraints ?? constraintsForTeam(team),
   );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
