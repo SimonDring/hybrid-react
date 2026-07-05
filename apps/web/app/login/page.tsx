@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { Wordmark } from "@/components/marketing/ui/Wordmark";
 import { GlowBackdrop } from "@/components/marketing/ui/GlowBackdrop";
 import { LoginForm } from "@/components/marketing/sections/LoginForm";
@@ -23,7 +24,9 @@ export default function LoginPage() {
           </p>
 
           <div className="mt-7">
-            <LoginForm />
+            <Suspense fallback={null}>
+              <LoginForm />
+            </Suspense>
           </div>
         </div>
 
