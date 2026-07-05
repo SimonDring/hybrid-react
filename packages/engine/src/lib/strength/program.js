@@ -11,6 +11,7 @@
 
 import { deriveSeason } from '../plan/periodization.js';
 import { getGymLevel } from '../Utils.js';
+import { dosePrior } from '../priors.js';
 import sports from '../../data/sportGymSupport/index.js';
 import { sportLoadScalar } from './sportLoad.js';
 import { availableEquip, LEVELS } from '../../data/strengthExercises.js';
@@ -21,6 +22,14 @@ import { BUILD_INTENTS, resolveIntents } from './priorityIntents.js';
 // no longer touches this file. Build-style priority lists now live in priorityIntents.js
 // as intent chains with equipment-ordered fallbacks (BUILD_INTENTS), so a dumbbell
 // athlete gets a curated list rather than a ~1-item stub.
+
+// WP-37 (D12): the athlete's volume-tolerance prior scales the whole dose chain —
+// plan generation AND the reflow read volumeScalar from here, so one seam covers
+// both. Population default = 1 (byte-identical output); D16 writes real values later.
+function volumeToleranceOf(profile) {
+  const lp = profile && profile.athlete_model && profile.athlete_model.learnedPriors;
+  return dosePrior('volumeTolerance', lp).value;
+}
 
 export function resolveProgram(profile = {}) {
   // Programme resolution defaults an unset experience to 'intermediate'.
@@ -45,7 +54,7 @@ export function resolveProgram(profile = {}) {
     return {
       goalType: 'sport', style: 'sport',
       emphasis: (byD && byD.emphasis) || (mod && mod.emphasis) || {},
-      volumeScalar: sportLoadScalar(profile, { season, mod }),
+      volumeScalar: sportLoadScalar(profile, { season, mod }) * volumeToleranceOf(profile),
       power: mod ? !!mod.power : true, sport, season, level,
       exercisePriority: list, priorityByIntent: byIntent
     };
@@ -63,7 +72,7 @@ export function resolveProgram(profile = {}) {
   const lvlNum = LEVELS[level] ?? LEVELS.intermediate;
   const { list, byIntent } = resolveIntents(BUILD_INTENTS[style] || [], equip, lvlNum);
   return {
-    goalType: 'build', style, emphasis, volumeScalar: 1.0, power: style === 'functional',
+    goalType: 'build', style, emphasis, volumeScalar: 1.0 * volumeToleranceOf(profile), power: style === 'functional',
     sport: null, season: null, level,
     exercisePriority: list, priorityByIntent: byIntent
   };
