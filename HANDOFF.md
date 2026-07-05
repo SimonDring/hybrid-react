@@ -479,6 +479,16 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   in META.DIAGNOSIS ONLY (sessions byte-identical); build byte-identical. **Follow-up
   chip spawned**: the app never populates athlete_model.constraints.injuryHistory — wire
   the store's resolved injuries in so real athletes get the boost the engine now computes.
+- **PR #101 — the WP-36 follow-up chip: resolved injuries reach the diagnosis.**
+  AthleteModelService.syncInjuryHistory() mirrors RECOVERED injury rows (taxonomy
+  body_part_key) into the persisted model's constraints.injuryHistory — deduped per part
+  (newest resolution; recurrences never stack), ACTIVE injuries stay out, change-driven
+  writes only (idempotent); the store's three injury actions fire it; the adapter maps
+  the history from the dual-written model riding users.profile (the #94 pattern) so
+  EVERY read path sees it (Atlas, PlanService, generatePlan meta). A recovered-hamstring
+  runner's robustness limiter boosts ×1.25, ranked first, with the reason in the emitted
+  rationale. tests/injury-history-wiring.js (8 checks through the real localStorage-shim
+  app path). Suite **138/138**; goldens untouched.
 - **⇒ NEXT:** **WP-31** (sync outbox — repo-side, simulated airplane-mode test), **WP-28**
   (portable freezes — check whether pins can ride an existing sessions column before any
   migration), **WP-37** (typed priors read-path). **Team spine WP-32/33** blocked on
