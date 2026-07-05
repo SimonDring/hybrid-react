@@ -180,6 +180,11 @@ function table(name) {
     all() {
       return Object.values(tables[name]).filter(r => !r.deleted_at);
     },
+    // Read-only, includes soft-deleted rows — the sync outbox drain needs them to
+    // mirror offline deletes to the cloud (WP-31). Not for screens.
+    allWithDeleted() {
+      return Object.values(tables[name]);
+    },
     get(id) {
       const r = tables[name][id];
       return r && !r.deleted_at ? r : null;

@@ -35,21 +35,39 @@
 import { supabase, isSupabaseConfigured } from './supabaseClient.js';
 import Database from './Database.js';
 import * as Storage from './Storage.js';
+import * as Outbox from './syncOutbox.js';
 
 
 // ---------- Helpers ----------
 
-// Get the current Supabase user id. Returns null if not signed in.
-function uid() {
+// The current Supabase user id, kept fresh by the auth API itself (WP-31 — this
+// replaces the old hand-parse of the sb-*-auth-token localStorage blob, which was
+// coupled to supabase-js's private storage format). onAuthStateChange fires
+// INITIAL_SESSION/SIGNED_IN/SIGNED_OUT; getSession() covers the cold-boot read.
+let _uid = null;
+if (isSupabaseConfigured && supabase) {
+  supabase.auth.getSession().then(({ data }) => {
+    _uid = data?.session?.user?.id || null;
+    if (_uid) drainOutbox();               // a session arrived — push anything queued
+  }).catch(() => {});
+  supabase.auth.onAuthStateChange((_event, session) => {
+    const next = session?.user?.id || null;
+    const arrived = next && next !== _uid;
+    _uid = next;
+    if (arrived) drainOutbox();
+  });
+}
+function uid() { return _uid; }
+
+// Await the session at least once — the boot-time entry points (pull, drain) call
+// this so they never race the initial getSession() resolution.
+async function ensureUid() {
+  if (_uid || !isSupabaseConfigured || !supabase) return _uid;
   try {
-    // Supabase stores the session in localStorage; we can read it synchronously.
-    const raw = localStorage.getItem('sb-' + new URL(import.meta.env.VITE_SUPABASE_URL || 'https://x.x').hostname.split('.')[0] + '-auth-token');
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    return parsed?.user?.id || null;
-  } catch {
-    return null;
-  }
+    const { data } = await supabase.auth.getSession();
+    _uid = data?.session?.user?.id || null;
+  } catch { /* stay signed-out */ }
+  return _uid;
 }
 
 // Is Supabase available for use right now?
@@ -252,10 +270,88 @@ export async function pullFromSupabase() {
   }
 }
 
+// ---------- The sync outbox (WP-31) ----------
+
+// Table name → local rows (soft-deleted included, so offline deletes converge too).
+const OUTBOX_SOURCES = {
+  sessions:        () => Database.tables.sessions.allWithDeleted(),
+  session_logs:    () => Database.tables.sessionLogs.allWithDeleted(),
+  set_logs:        () => Database.tables.setLogs.allWithDeleted(),
+  weekly_checkins: () => Database.tables.weeklyCheckins.allWithDeleted(),
+  reassessments:   () => Database.tables.reassessments.allWithDeleted(),
+  daily_metrics:   () => Database.tables.dailyMetrics.allWithDeleted(),
+  injuries:        () => Database.tables.injuries.allWithDeleted(),
+};
+
+// Force the real auth uid onto every pushed row (offline-created rows carry the
+// local anon uuid; RLS requires auth.uid()). Same remap the D-migration proved.
+function outboxRow(r, userId) {
+  const out = {};
+  for (const [k, v] of Object.entries(r)) if (v !== undefined) out[k] = v;
+  out.user_id = userId;
+  return out;
+}
+
+let _draining = false;
+
+/**
+ * Push every dirty table's CURRENT local rows to Supabase, then clear the marks
+ * that succeeded. Idempotent (upsert by id) and re-entrant-safe. `client` is
+ * injectable for tests; defaults to the live Supabase client.
+ * @returns {{ ok:boolean, pushed:string[], remaining:string[] }}
+ */
+export async function drainOutbox(client = supabase) {
+  const dirty = Outbox.dirtyTables();
+  if (!dirty.length) return { ok: true, pushed: [], remaining: [] };
+  const userId = await ensureUid();
+  if (!isSupabaseConfigured || !userId || _draining) return { ok: false, pushed: [], remaining: dirty };
+  _draining = true;
+  const pushed = [];
+  try {
+    for (const table of dirty) {
+      try {
+        if (table === 'users') {
+          const profile = Database.services.getProfile();
+          if (profile) {
+            const { error } = await client.from('users')
+              .update({ profile, updated_at: new Date().toISOString() })
+              .eq('id', userId);
+            if (error) { logError('drainOutbox:users', error); continue; }
+          }
+        } else if (OUTBOX_SOURCES[table]) {
+          const rows = OUTBOX_SOURCES[table]().map((r) => outboxRow(r, userId));
+          if (rows.length) {
+            const { error } = await client.from(table).upsert(rows, { onConflict: 'id' });
+            if (error) { logError('drainOutbox:' + table, error); continue; }
+          }
+        }
+        Outbox.clearDirty(table);
+        pushed.push(table);
+      } catch (err) {
+        logError('drainOutbox:' + table, err);   // stays dirty; retried on the next trigger
+      }
+    }
+  } finally {
+    _draining = false;
+  }
+  return { ok: Outbox.isEmpty(), pushed, remaining: Outbox.dirtyTables() };
+}
+
+// A write could not reach the cloud (offline / no session / API error): the local
+// copy is already saved — record which tables now lead the cloud.
+function queueForSync(...tables) {
+  Outbox.markDirty(...tables);
+}
+
+// Reconnecting drains whatever queued while offline.
+if (typeof window !== 'undefined' && window.addEventListener) {
+  window.addEventListener('online', () => { drainOutbox(); });
+}
+
 // ---------- Profile / user ----------
 
 export async function updateProfile(patch) {
-  if (!canSync()) return Database.services.updateProfile(patch);
+  if (!canSync()) { queueForSync('users'); return Database.services.updateProfile(patch); }
   const userId = uid();
   const profile = { ...(Database.services.getProfile()), ...patch };
   const { error } = await supabase
@@ -264,6 +360,7 @@ export async function updateProfile(patch) {
     .eq('id', userId);
   if (error) {
     logError('updateProfile', error);
+    queueForSync('users');
     return Database.services.updateProfile(patch);
   }
   return Database.services.updateProfile(patch);
@@ -322,7 +419,7 @@ function reclaimDeleteOp(ops, before, current) {
 }
 
 export async function startSession(templateRef) {
-  if (!canSync()) return Database.services.startSession(templateRef);
+  if (!canSync()) { queueForSync('sessions'); return Database.services.startSession(templateRef); }
   const userId = uid();
   // Ensure local session record exists first
   const before = Database.tables.sessions.find(s => s.template_ref === templateRef);
@@ -332,11 +429,11 @@ export async function startSession(templateRef) {
   const ops = [supabase.from('sessions').upsert(clean(local, userId), { onConflict: 'id' })];
   reclaimDeleteOp(ops, before, local);
   const results = await Promise.all(ops);
-  results.forEach(r => { if (r.error) logError('startSession', r.error); });
+  results.forEach(r => { if (r.error) { logError('startSession', r.error); queueForSync('sessions'); } });
 }
 
 export async function completeSession(templateRef, payload) {
-  if (!canSync()) return Database.services.completeSession(templateRef, payload);
+  if (!canSync()) { queueForSync('sessions', 'session_logs'); return Database.services.completeSession(templateRef, payload); }
   const userId = uid();
   const before = Database.tables.sessions.find(s => s.template_ref === templateRef);
   Database.services.completeSession(templateRef, payload);
@@ -347,11 +444,11 @@ export async function completeSession(templateRef, payload) {
   if (log)     ops.push(supabase.from('session_logs').upsert(clean(log, userId), { onConflict: 'id' }));
   reclaimDeleteOp(ops, before, session);
   const results = await Promise.all(ops);
-  results.forEach(r => { if (r.error) logError('completeSession', r.error); });
+  results.forEach(r => { if (r.error) { logError('completeSession', r.error); queueForSync('sessions', 'session_logs'); } });
 }
 
 export async function uncompleteSession(templateRef) {
-  if (!canSync()) return Database.services.uncompleteSession(templateRef);
+  if (!canSync()) { queueForSync('sessions', 'session_logs', 'set_logs'); return Database.services.uncompleteSession(templateRef); }
   const userId = uid();
   const before = Database.tables.sessions.find(s => s.template_ref === templateRef);
   const log = before ? Database.tables.sessionLogs.find(l => l.session_id === before.id) : null;
@@ -374,11 +471,11 @@ export async function uncompleteSession(templateRef) {
       .eq('session_id', before.id).is('deleted_at', null)
   );
   const results = await Promise.all(ops);
-  results.forEach(r => { if (r.error) logError('uncompleteSession', r.error); });
+  results.forEach(r => { if (r.error) { logError('uncompleteSession', r.error); queueForSync('sessions', 'session_logs', 'set_logs'); } });
 }
 
 export async function cancelSession(templateRef) {
-  if (!canSync()) return Database.services.cancelSession(templateRef);
+  if (!canSync()) { queueForSync('sessions', 'session_logs', 'set_logs'); return Database.services.cancelSession(templateRef); }
   const userId = uid();
   const session = Database.tables.sessions.find(s => s.template_ref === templateRef);
   const log = session ? Database.tables.sessionLogs.find(l => l.session_id === session.id) : null;
@@ -400,11 +497,11 @@ export async function cancelSession(templateRef) {
       .eq('session_id', session.id).is('deleted_at', null)
   );
   const results = await Promise.all(ops);
-  results.forEach(r => { if (r.error) logError('cancelSession', r.error); });
+  results.forEach(r => { if (r.error) { logError('cancelSession', r.error); queueForSync('sessions', 'session_logs', 'set_logs'); } });
 }
 
 export async function skipSession(templateRef) {
-  if (!canSync()) return Database.services.skipSession(templateRef);
+  if (!canSync()) { queueForSync('sessions', 'session_logs', 'set_logs'); return Database.services.skipSession(templateRef); }
   const userId = uid();
   const before = Database.tables.sessions.find(s => s.template_ref === templateRef);
   const log = before ? Database.tables.sessionLogs.find(l => l.session_id === before.id) : null;
@@ -420,7 +517,7 @@ export async function skipSession(templateRef) {
   );
   reclaimDeleteOp(ops, before, updated);
   const results = await Promise.all(ops);
-  results.forEach(r => { if (r.error) logError('skipSession', r.error); });
+  results.forEach(r => { if (r.error) { logError('skipSession', r.error); queueForSync('sessions', 'session_logs', 'set_logs'); } });
 }
 
 // ---------- Set logs (per-set training history) ----------
@@ -430,21 +527,21 @@ export async function skipSession(templateRef) {
 // (migration 013 not applied), the upsert errors and is logged — the local write is
 // unaffected, so the runner keeps working. Mirrors addInjury.
 export async function saveSetLog(fields) {
-  if (!canSync()) return Database.services.logSet(fields);
+  if (!canSync()) { queueForSync('set_logs'); return Database.services.logSet(fields); }
   const userId = uid();
   const result = Database.services.logSet(fields);
   if (!result) return result;
   const { error } = await supabase
     .from('set_logs')
     .upsert(clean(result, userId), { onConflict: 'id' });
-  if (error) logError('saveSetLog', error);
+  if (error) { logError('saveSetLog', error); queueForSync('set_logs'); }
   return result;
 }
 
 // ---------- Weekly check-ins ----------
 
 export async function addCheckin(fields) {
-  if (!canSync()) return Database.services.addCheckin(fields);
+  if (!canSync()) { queueForSync('weekly_checkins'); return Database.services.addCheckin(fields); }
   const userId = uid();
   // addCheckin returns the created record (with its id) — use that directly
   // rather than guessing via sort order, which breaks for back-dated entries.
@@ -456,13 +553,14 @@ export async function addCheckin(fields) {
   const { error } = await supabase
     .from('weekly_checkins')
     .upsert(clean(created, userId), { onConflict: 'id' });
-  if (error) logError('addCheckin', error);
+  if (error) { logError('addCheckin', error); queueForSync('weekly_checkins'); }
   return created;
 }
 
 export async function deleteCheckin(id) {
   if (!canSync()) {
     Database.tables.weeklyCheckins.remove(id);
+    queueForSync('weekly_checkins');
     return;
   }
   Database.tables.weeklyCheckins.remove(id);
@@ -470,27 +568,27 @@ export async function deleteCheckin(id) {
     .from('weekly_checkins')
     .update({ deleted_at: new Date().toISOString() })
     .eq('id', id);
-  if (error) logError('deleteCheckin', error);
+  if (error) { logError('deleteCheckin', error); queueForSync('weekly_checkins'); }
 }
 
 // ---------- Daily metrics ----------
 
 export async function upsertDailyMetric(fields) {
-  if (!canSync()) return Database.services.upsertDailyMetric(fields);
+  if (!canSync()) { queueForSync('daily_metrics'); return Database.services.upsertDailyMetric(fields); }
   const userId = uid();
   const result = Database.services.upsertDailyMetric(fields);
   if (!result) return;
   const { error } = await supabase
     .from('daily_metrics')
     .upsert(clean(result, userId), { onConflict: 'id' });
-  if (error) logError('upsertDailyMetric', error);
+  if (error) { logError('upsertDailyMetric', error); queueForSync('daily_metrics'); }
   return result;
 }
 
 // ---------- Reassessments ----------
 
 export async function setReassessAnswer(qid, value) {
-  if (!canSync()) return Database.services.setReassessAnswer(qid, value);
+  if (!canSync()) { queueForSync('reassessments'); return Database.services.setReassessAnswer(qid, value); }
   const userId = uid();
   Database.services.setReassessAnswer(qid, value);
   const all = Database.tables.reassessments.all();
@@ -499,25 +597,25 @@ export async function setReassessAnswer(qid, value) {
   const { error } = await supabase
     .from('reassessments')
     .upsert(clean(record, userId), { onConflict: 'id' });
-  if (error) logError('setReassessAnswer', error);
+  if (error) { logError('setReassessAnswer', error); queueForSync('reassessments'); }
 }
 
 // ---------- Injuries ----------
 
 export async function addInjury(fields) {
-  if (!canSync()) return Database.services.addInjury(fields);
+  if (!canSync()) { queueForSync('injuries'); return Database.services.addInjury(fields); }
   const userId = uid();
   const result = Database.services.addInjury(fields);
   if (!result) return result;
   const { error } = await supabase
     .from('injuries')
     .upsert(clean(result, userId), { onConflict: 'id' });
-  if (error) logError('addInjury', error);
+  if (error) { logError('addInjury', error); queueForSync('injuries'); }
   return result;
 }
 
 export async function updateInjury(id, patch) {
-  if (!canSync()) return Database.services.updateInjury(id, patch);
+  if (!canSync()) { queueForSync('injuries'); return Database.services.updateInjury(id, patch); }
   const userId = uid();
   const result = Database.services.updateInjury(id, patch);
   const updated = Database.tables.injuries.get(id);
@@ -525,22 +623,22 @@ export async function updateInjury(id, patch) {
   const { error } = await supabase
     .from('injuries')
     .upsert(clean(updated, userId), { onConflict: 'id' });
-  if (error) logError('updateInjury', error);
+  if (error) { logError('updateInjury', error); queueForSync('injuries'); }
   return result;
 }
 
 export async function removeInjury(id) {
-  if (!canSync()) return Database.services.removeInjury(id);
+  if (!canSync()) { queueForSync('injuries'); return Database.services.removeInjury(id); }
   Database.services.removeInjury(id);
   const { error } = await supabase
     .from('injuries')
     .update({ deleted_at: new Date().toISOString() })
     .eq('id', id);
-  if (error) logError('removeInjury', error);
+  if (error) { logError('removeInjury', error); queueForSync('injuries'); }
 }
 
 export async function addRecoveryLogEntry(injuryId, entry) {
-  if (!canSync()) return Database.services.addRecoveryLogEntry(injuryId, entry);
+  if (!canSync()) { queueForSync('injuries'); return Database.services.addRecoveryLogEntry(injuryId, entry); }
   const userId = uid();
   const result = Database.services.addRecoveryLogEntry(injuryId, entry);
   const updated = Database.tables.injuries.get(injuryId);
@@ -548,7 +646,7 @@ export async function addRecoveryLogEntry(injuryId, entry) {
   const { error } = await supabase
     .from('injuries')
     .upsert(clean(updated, userId), { onConflict: 'id' });
-  if (error) logError('addRecoveryLogEntry', error);
+  if (error) { logError('addRecoveryLogEntry', error); queueForSync('injuries'); }
   return result;
 }
 
