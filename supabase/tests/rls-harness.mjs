@@ -169,6 +169,30 @@ async function main() {
   await B.client.from('player_status')
     .insert({ user_id: B.id, team_id: team.id, readiness: 44, load_state: 'ramping', injury_status: 'modified' });
 
+  // ══ S11 — player_status is SERVER-authoritative for the safety fields ═════════
+  // A published injury_status:'available' + readiness:71, but A carries an ACTIVE
+  // injury (seeded) and a logged readiness_score of 61 — the trigger overrides both.
+  const { data: aStatus } = await A.client.from('player_status')
+    .select('injury_status, readiness, load_state, adherence_pct').eq('user_id', A.id).single();
+  ok(aStatus && aStatus.injury_status === 'modified',
+    `S11: a player CANNOT publish a false availability — server derives 'modified' from their injuries (got '${aStatus?.injury_status}')`);
+  ok(aStatus && aStatus.readiness === 61,
+    `S11: a player CANNOT publish a fake readiness — server uses their logged score 61 (got ${aStatus?.readiness})`);
+  ok(aStatus && aStatus.load_state === 'balanced' && aStatus.adherence_pct === 88,
+    'S11: the soft engine-computed trend metrics pass through (no drift)');
+  // Escalate: give A a red-flagged injury, then A lies again — server derives 'out'.
+  await A.client.from('injuries').insert({ user_id: A.id, body_part: 'Left knee', title: 'ACL', status: 'active', red_flag_triggered: true });
+  await A.client.from('player_status').update({ injury_status: 'available', readiness: 99 }).eq('user_id', A.id);
+  const { data: aStatus2 } = await A.client.from('player_status')
+    .select('injury_status, readiness').eq('user_id', A.id).single();
+  ok(aStatus2 && aStatus2.injury_status === 'out',
+    `S11: a red-flagged injury forces 'out' regardless of what the player writes (got '${aStatus2?.injury_status}')`);
+  // garbage soft-metric is clamped, not stored raw
+  await A.client.from('player_status').update({ adherence_pct: 9999, load_state: 'HACKED' }).eq('user_id', A.id);
+  const { data: aStatus3 } = await A.client.from('player_status').select('adherence_pct, load_state').eq('user_id', A.id).single();
+  ok(aStatus3 && aStatus3.adherence_pct === 100 && aStatus3.load_state === null,
+    `S11: garbage soft metrics are clamped (adherence ${aStatus3?.adherence_pct}, load_state ${aStatus3?.load_state})`);
+
   // The coach reads the WHOLE team's derived board…
   const { data: board } = await C.client.from('player_status').select('user_id, readiness, load_state, injury_status').eq('team_id', team.id);
   ok((board || []).length === 2, `coach reads the team's derived board (${(board || []).length}/2 players)`);

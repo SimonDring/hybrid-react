@@ -14,6 +14,13 @@
  *                          self-healing: it recomputes from local truth on every
  *                          trigger, so a failed push is corrected by the next)
  *
+ * S11: the SERVER is authoritative for the safety fields — a BEFORE trigger on
+ * player_status (migration 20260708) OVERRIDES injury_status (from the player's
+ * injuries) and readiness (from their logged daily_metrics.readiness_score) with
+ * server truth, so a client cannot publish a dishonest availability/readiness. The
+ * values computed here are the player's honest proposal; they AGREE with the server
+ * in the normal case and are the offline fallback. The soft trend metrics pass through.
+ *
  * load_state is the coach-facing plain-English band from the SAME ACWR the
  * athlete's own screens use — one number, two audiences, no re-derivation:
  *   no data → 'no-data' · <0.8 'ramping' · 0.8–1.3 'balanced'
