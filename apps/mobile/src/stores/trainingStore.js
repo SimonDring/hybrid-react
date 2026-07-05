@@ -12,7 +12,7 @@
 
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
-import Sync, { pullFromSupabase, runSessionDMigration, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
+import Sync, { pullFromSupabase, runSessionDMigration, drainOutbox, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
 import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex } from '@performance-os/engine';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch, adaptedSessionByKey } from '../lib/PlanService.js';
 import { setOverride, clearOverride, getOverride } from '../lib/sessionOverrides.js';
@@ -180,6 +180,9 @@ export const useTrainingStore = create((set) => ({
     set({ syncing: true });
     // Session D: push any pre-auth localStorage data to Supabase (no-op if done)
     await runSessionDMigration();
+    // WP-31: drain queued offline writes BEFORE pulling — otherwise the pull would
+    // replace local tables with stale cloud state and lose what was written offline.
+    await drainOutbox();
     const result = await pullFromSupabase();
     // Load all wearable connections; derive the Fitbit one for existing UI/logic.
     const connections = await checkConnections();
