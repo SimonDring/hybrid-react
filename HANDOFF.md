@@ -1,6 +1,6 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-02. Keep this current at the end of each work session so the
+_Last updated: 2026-07-05. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
 
 ## Governance FROZEN — the five documents are locked at v1.0 (2026-07-01)
@@ -617,7 +617,7 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   signed-in non-coach there, and /get-started needs only a session); lib/teams.ts
   (create/list/rotate); AccountMenu "Manage teams" link. THE JOIN-CODE FLOW IS END-TO-END
   (coach founds on web → shares code → player joins on mobile → roll-up populates the board).
-- **PR #123 — THE COACH BOARD IS LIVE (2026-07-05, awaiting Simon's merge).** The dashboard
+- **PR #123 — THE COACH BOARD IS LIVE (2026-07-05, MERGED).** The dashboard
   reads the live spine behind the S12 gate (spec:
   docs/superpowers/specs/2026-07-05-live-coach-board-design.md): lib/liveBoard.ts (RSC read
   under the coach's own RLS session; **query errors THROW** — a failed read must never
@@ -641,8 +641,8 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   layer declines self-authored-PR merges — the charter's autonomous-merge clause is
   narrower now; leave green PRs for Simon). Board follow-ups recorded in the spec:
   per-player history feed, team switcher, team-load aggregation.
-- **PR #124 — TEAM SCHEDULE → PLAN CONSTRAINTS, both stages (2026-07-05, awaiting Simon's
-  merge; spec: docs/superpowers/specs/2026-07-05-team-schedule-constraints-design.md;
+- **PR #124 — TEAM SCHEDULE → PLAN CONSTRAINTS, both stages (2026-07-05, MERGED;
+  spec: docs/superpowers/specs/2026-07-05-team-schedule-constraints-design.md;
   Simon's decisions: matches block + fixtures taper, autonomous delivery).**
   STAGE 1 (web): Constraints Save persists sport/season (label→code via ONE
   SEASON_CODE_OF map) + {weeklyPattern, fixtures} to teams.schedule under coach RLS —
@@ -667,13 +667,15 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   reflow + gymCtx all see it and profileSignature/_cache.sig propagate schedule changes
   through both memos automatically. tests/team-schedule.js (21 checks incl. the
   E2E no-gym-on-match-day proof against a non-vacuous baseline).
-  ⇒ NEXT (Team): merge #124 → surface the constraint on the PLAYER side (a "match day"
-  marker in the mobile week view — currently invisible to the athlete); then the board
-  follow-ups (history feed, team switcher). WP-22/23 build flip stays LAST (pause).
-- **PR #125 — UI: skeleton loaders + jargon tooltips, both apps (2026-07-05, STACKED on
-  #124 — merge #124 first; spec: docs/superpowers/specs/2026-07-05-ui-skeletons-tooltips-
-  design.md; Simon's scope: per-panel web skeletons + mobile's genuine waits; tooltips on
-  every jargon term + metric card).** Skeletons: web Skeleton primitive +
+  ⇒ NEXT (Team): surface the constraint on the PLAYER side (a "match day" marker in the
+  mobile week view — currently invisible to the athlete); then the board follow-ups
+  (history feed, team switcher). WP-22/23 build flip stays LAST (pause).
+- **PR #126 — UI: skeleton loaders + jargon tooltips, both apps (2026-07-05, MERGED;
+  opened as #125 stacked on #124 — GitHub auto-closes a stacked PR when its squashed base
+  branch is deleted, so it re-landed rebased-onto-main as #126; spec:
+  docs/superpowers/specs/2026-07-05-ui-skeletons-tooltips-design.md; Simon's scope:
+  per-panel web skeletons + mobile's genuine waits; tooltips on every jargon term +
+  metric card).** Skeletons: web Skeleton primitive +
   app/dashboard/loading.tsx mirroring the Home frames; mobile ONE .skeleton class (real
   Midnight vars) at its only two real waits (first sign-in sync splash, Teams list fetch)
   — instant local-cache screens deliberately untouched. Tooltips: one accessible InfoTip
