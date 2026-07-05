@@ -46,15 +46,18 @@ import * as Outbox from './syncOutbox.js';
 // INITIAL_SESSION/SIGNED_IN/SIGNED_OUT; getSession() covers the cold-boot read.
 let _uid = null;
 if (isSupabaseConfigured && supabase) {
+  // These listeners ONLY track the live uid. They do NOT drain the outbox —
+  // that would race the Storage-namespace switch (a second, independent
+  // onAuthStateChange in authStore applies the namespace + reloads the DB, with
+  // no ordering guarantee), risking user A's still-loaded rows being pushed under
+  // B's uid on a same-device swap (S7). The drain runs from syncFromCloud instead,
+  // which authStore calls AFTER the namespace is applied — so namespace and uid
+  // always agree — plus the 'online' event below (namespace is stable there).
   supabase.auth.getSession().then(({ data }) => {
     _uid = data?.session?.user?.id || null;
-    if (_uid) drainOutbox();               // a session arrived — push anything queued
   }).catch(() => {});
   supabase.auth.onAuthStateChange((_event, session) => {
-    const next = session?.user?.id || null;
-    const arrived = next && next !== _uid;
-    _uid = next;
-    if (arrived) drainOutbox();
+    _uid = session?.user?.id || null;
   });
 }
 function uid() { return _uid; }
