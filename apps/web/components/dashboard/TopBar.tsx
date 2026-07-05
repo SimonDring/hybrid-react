@@ -23,9 +23,9 @@ export function TopBar({ onOpenMobileNav }: { onOpenMobileNav: () => void }) {
   const meta = TITLES[pathname] ?? TITLES["/dashboard"];
 
   // What we actually know about the team — sport/season come from the coach's
-  // own teams row ("—" = season unset, so skip it rather than render a dash).
+  // own teams row; both are null when unset.
   const teamFacts = [team.sport, team.seasonPhase]
-    .filter((v): v is string => Boolean(v) && v !== "—")
+    .filter((v): v is string => Boolean(v))
     .join(" · ");
 
   return (

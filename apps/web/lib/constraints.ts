@@ -1,10 +1,56 @@
 /**
  * Presentation + logic for team constraints:
  *  - SESSION_TYPE_META: colour + label per weekday session type
+ *  - the Constraints-form option lists
+ *  - constraintsForTeam: the honest starting state, seeded from the live team
  *  - deriveTeamDirection: turns sport + season + match proximity into the
  *    plain-English training direction shown on the Focus view.
  */
-import type { SessionType, TeamConstraints } from "@/types/dashboard";
+import type { SessionType, Team, TeamConstraints } from "@/types/dashboard";
+
+export const SPORT_OPTIONS = [
+  "Football",
+  "Rugby",
+  "Hockey",
+  "Basketball",
+  "Netball",
+  "Cricket",
+  "Rowing",
+];
+
+export const SEASON_OPTIONS = [
+  "Pre-season",
+  "In-season",
+  "Off-season",
+  "Tournament week",
+];
+
+export const SESSION_TYPE_OPTIONS: { value: SessionType; label: string }[] = [
+  { value: "match", label: "Match" },
+  { value: "pitch", label: "Pitch / field" },
+  { value: "gym", label: "Gym / strength" },
+  { value: "pool", label: "Pool" },
+  { value: "track", label: "Track / speed" },
+  { value: "conditioning", label: "Conditioning" },
+  { value: "rest", label: "Rest" },
+];
+
+const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+/**
+ * The constraints state a live board starts from: sport/season from the
+ * coach's own teams row, NO invented weekly pattern or fixtures. This is
+ * session-local until the teams.schedule persistence lands
+ * (docs/product/TEAM-NEXT-STEPS.md §3).
+ */
+export function constraintsForTeam(team: Team): TeamConstraints {
+  return {
+    sport: team.sport ?? "",
+    seasonPhase: team.seasonPhase ?? "",
+    weeklyPattern: WEEKDAYS.map((day) => ({ day, type: "rest" as SessionType })),
+    fixtures: [],
+  };
+}
 
 export const SESSION_TYPE_META: Record<
   SessionType,
@@ -47,7 +93,8 @@ export function deriveTeamDirection(
     taperNote = `Match ${when}: taper now — trim gym volume, keep it sharp, protect the legs.`;
   }
 
-  const scheduleNote = `Gym work is steered around your ${constraints.sport.toLowerCase()} sessions and fixtures, so it never clashes with pitch load or match day.`;
+  const sportWord = constraints.sport ? constraints.sport.toLowerCase() : "sport";
+  const scheduleNote = `Gym work is steered around your ${sportWord} sessions and fixtures, so it never clashes with pitch load or match day.`;
 
   return { emphasis, taperNote, scheduleNote };
 }

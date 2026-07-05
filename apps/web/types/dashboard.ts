@@ -102,7 +102,7 @@ export interface Team {
   id: string;
   name: string;
   sport: string | null;
-  seasonPhase: string; // "In-season" (mapped from teams.season; "—" when unset)
+  seasonPhase: string | null; // "In-season" (mapped from teams.season; null when unset)
   /** The share code players use to join (visible to the coach only). */
   joinCode?: string | null;
   /**

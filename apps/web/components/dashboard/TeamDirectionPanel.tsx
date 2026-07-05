@@ -27,7 +27,10 @@ export function TeamDirectionPanel({
     <Card>
       <SectionHeader
         title="This block's direction"
-        hint={`${constraints.sport} · ${constraints.seasonPhase}`}
+        hint={
+          [constraints.sport, constraints.seasonPhase].filter(Boolean).join(" · ") ||
+          "Set your sport and season in Constraints"
+        }
       />
 
       <p className="text-lg font-medium leading-snug text-strong">

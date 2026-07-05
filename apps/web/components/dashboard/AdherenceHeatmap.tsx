@@ -3,7 +3,7 @@
 import type { AdherenceState, CoachVisiblePlayer } from "@/types/dashboard";
 import { SECTION } from "@/content/dashboardCopy";
 import { cn } from "@/lib/cn";
-import { Card, SectionHeader } from "@/components/ui/Card";
+import { Card, CardEmptyState, SectionHeader } from "@/components/ui/Card";
 
 const CELL: Record<AdherenceState, { className: string; label: string }> = {
   completed: { className: "bg-ready", label: "Completed" },
@@ -27,12 +27,10 @@ export function AdherenceHeatmap({
 
   if (!hasWeek) {
     return (
-      <Card className="flex h-full flex-col">
-        <SectionHeader title={SECTION.adherence} />
-        <p className="rounded-card bg-surface-2 p-4 text-sm text-body">
-          Appears as players log sessions.
-        </p>
-      </Card>
+      <CardEmptyState
+        title={SECTION.adherence}
+        message="Appears as players log sessions."
+      />
     );
   }
 

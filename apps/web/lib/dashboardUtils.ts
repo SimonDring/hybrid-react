@@ -61,9 +61,13 @@ export function squadReadinessInterpretation(split: SquadSplit): string {
 /* Attention list                                                      */
 /* ------------------------------------------------------------------ */
 
+/** Unknown adherence (no logged sessions yet) is NOT "behind" — it's no data. */
+export function isLowAdherenceValue(pct: number | null): boolean {
+  return pct !== null && pct < LOW_ADHERENCE_THRESHOLD;
+}
+
 export function isLowAdherence(p: CoachVisiblePlayer): boolean {
-  // Unknown adherence (no logged sessions yet) is NOT "behind" — it's no data.
-  return p.adherencePercent !== null && p.adherencePercent < LOW_ADHERENCE_THRESHOLD;
+  return isLowAdherenceValue(p.adherencePercent);
 }
 
 /** Should this player surface in "Needs your attention"? */

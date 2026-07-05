@@ -11,6 +11,7 @@ import { CoachActionsPanel } from "../CoachActionsPanel";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card, SectionHeader } from "@/components/ui/Card";
+import { AwaitingSyncNote } from "../AwaitingSyncNote";
 import { attentionPlayers } from "@/lib/dashboardUtils";
 import { formatDaysUntil } from "@/lib/formatting";
 
@@ -20,22 +21,21 @@ export function HomeView() {
     useDashboard();
   const router = useRouter();
   const flaggedCount = attentionPlayers(players).length;
-  const awaitingFirstSync = roster.joined - roster.reporting;
   const goFocus = () => router.push("/dashboard/focus");
 
   return (
     <div className="space-y-5 p-4 sm:p-6">
-      {/* No players yet → the join code IS the next action; lead with it. */}
-      {players.length === 0 && <JoinCodeCard code={team.joinCode ?? null} />}
+      {/* Nobody has JOINED yet → the join code IS the next action; lead with
+          it. Keyed on the roster, not reporting rows — players who joined but
+          haven't synced get the awaiting-sync note, not this card. */}
+      {roster.joined === 0 && <JoinCodeCard code={team.joinCode ?? null} />}
 
       <div className="flex flex-col gap-3 border-b border-hairline pb-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           {/* Only facts we actually know — sport/season from the teams row;
               week + fixture arrive with the team-schedule feature. */}
           {team.sport && <Fact label="Sport" value={team.sport} />}
-          {team.seasonPhase !== "—" && (
-            <Fact label="Season" value={team.seasonPhase} />
-          )}
+          {team.seasonPhase && <Fact label="Season" value={team.seasonPhase} />}
           {team.currentWeek !== undefined && team.totalWeeks !== undefined && (
             <Fact label="Week" value={`${team.currentWeek} of ${team.totalWeeks}`} />
           )}
@@ -58,13 +58,9 @@ export function HomeView() {
         </Button>
       </div>
 
-      {awaitingFirstSync > 0 && (
-        <p className="text-xs text-muted">
-          {awaitingFirstSync} joined, awaiting their first sync
-        </p>
-      )}
+      <AwaitingSyncNote roster={roster} />
 
-      <TeamOverviewCards players={players} loadTrend={loadTrend} now={now} />
+      <TeamOverviewCards players={players} roster={roster} loadTrend={loadTrend} now={now} />
 
       <div className="grid gap-5 lg:grid-cols-3">
         <div className="lg:col-span-2">

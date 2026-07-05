@@ -10,11 +10,10 @@ import { Badge } from "@/components/ui/Badge";
 import { CloseIcon, PlusIcon } from "@/components/ui/icons";
 import {
   SEASON_OPTIONS,
+  SESSION_TYPE_META,
   SESSION_TYPE_OPTIONS,
   SPORT_OPTIONS,
-} from "@/data/mockConstraints";
-import { SESSION_TYPE_META } from "@/lib/constraints";
-import { WEEK_START_ISO, isoDateOffset } from "@/data/mockClock";
+} from "@/lib/constraints";
 import { cn } from "@/lib/cn";
 import { formatDate } from "@/lib/formatting";
 
@@ -35,7 +34,7 @@ const toOptions = (values: string[]) =>
  * Edits are committed on Save and flow to the Focus view's direction panel.
  */
 export function ConstraintsView() {
-  const { constraints, setConstraints, notify } = useDashboard();
+  const { constraints, setConstraints, notify, now } = useDashboard();
   const [draft, setDraft] = useState<TeamConstraints>(constraints);
 
   const dirty = JSON.stringify(draft) !== JSON.stringify(constraints);
@@ -68,7 +67,8 @@ export function ConstraintsView() {
           id: `fix-${Date.now()}`,
           type: "match",
           label: "New fixture",
-          date: isoDateOffset(WEEK_START_ISO, 28),
+          // default the new fixture ~4 weeks out from today
+          date: new Date(now.getTime() + 28 * 86_400_000).toISOString().slice(0, 10),
         },
       ],
     }));

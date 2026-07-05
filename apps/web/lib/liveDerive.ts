@@ -18,7 +18,7 @@ import type {
 } from "@/types/dashboard";
 import { INJURY_SAFE } from "@/content/dashboardCopy";
 import { getStatusMeta } from "./statusLogic";
-import { LOW_ADHERENCE_THRESHOLD } from "./dashboardUtils";
+import { isLowAdherenceValue } from "./dashboardUtils";
 
 /** The raw row as selected from `player_status` (RLS-scoped to the coach's team). */
 export interface PlayerStatusRow {
@@ -96,8 +96,14 @@ function deriveReasons(
   lowAdherence: boolean,
 ): string[] {
   if (status === "grey") {
-    const reasons = ["No readiness data yet — waiting on a check-in or sync"];
-    if (injuryStatus === "modified") reasons.unshift("Carrying a niggle");
+    // No readiness leads, but the row's OTHER signals are real — a coach must
+    // still see an overreaching load or missed sessions on a grey player.
+    const reasons: string[] = [];
+    if (injuryStatus === "modified") reasons.push("Carrying a niggle");
+    reasons.push("No readiness data yet — waiting on a check-in or sync");
+    if (loadState === "overreaching") reasons.push("Load climbed faster than normal");
+    else if (loadState === "high") reasons.push("Load building quickly");
+    if (lowAdherence) reasons.push("Behind on sessions");
     return reasons;
   }
 
@@ -185,8 +191,7 @@ export function deriveLivePlayer(
   const injuryStatus = asInjuryStatus(row.injury_status);
   const adherencePercent =
     row.adherence_pct === null ? null : Math.round(Number(row.adherence_pct));
-  const lowAdherence =
-    adherencePercent !== null && adherencePercent < LOW_ADHERENCE_THRESHOLD;
+  const lowAdherence = isLowAdherenceValue(adherencePercent);
 
   const status = deriveLiveStatus(row.readiness, loadState, injuryStatus, lowAdherence);
   const meta = getStatusMeta(status);

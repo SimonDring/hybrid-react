@@ -35,33 +35,44 @@ const SEASON_LABELS: Record<string, string> = {
   pre: "Pre-season",
 };
 
-function seasonPhaseOf(season: string | null): string {
-  if (!season) return "—";
+function seasonPhaseOf(season: string | null): string | null {
+  if (!season) return null;
   return SEASON_LABELS[season] ?? season;
 }
 
 /**
- * The live read. Returns null when there is no session or no coached team —
- * the proxy normally prevents both, so callers just redirect as a fallback.
+ * The live read. Returns null ONLY for the states the proxy normally prevents
+ * (no session / genuinely no coached team) — callers redirect to /get-started.
+ * A FAILED query, by contrast, THROWS: rendering a query error as an empty
+ * board would tell a coach their squad left when the read simply broke (the
+ * Next error boundary is the honest surface for that).
  */
 export async function getLiveDashboardData(): Promise<LiveDashboardData | null> {
   const supabase = await supabaseRSC();
   if (!supabase) return null;
 
+  // Local cookie decode only — the proxy already validated this request's JWT
+  // with the auth server, and RLS is the real enforcement on every query below.
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
+  const user = session?.user;
   if (!user) return null;
 
-  // The coach's first team (oldest active coach membership).
-  const { data: memberships } = await supabase
+  // The coach's first team (oldest active coach membership, live teams only —
+  // !inner so a soft-deleted team's membership can't win the limit(1)).
+  const { data: memberships, error: membershipError } = await supabase
     .from("team_members")
-    .select("team_id, created_at, teams(id, name, sport, season, join_code)")
+    .select("team_id, created_at, teams!inner(id, name, sport, season, join_code, deleted_at)")
     .eq("user_id", user.id)
     .eq("role", "coach")
     .eq("status", "active")
+    .is("teams.deleted_at", null)
     .order("created_at", { ascending: true })
     .limit(1);
+  if (membershipError) {
+    throw new Error(`Could not load your team: ${membershipError.message}`);
+  }
 
   const membership = memberships?.[0];
   // many-to-one embed: PostgREST returns an object, but tolerate an array shape.
@@ -81,15 +92,26 @@ export async function getLiveDashboardData(): Promise<LiveDashboardData | null> 
       .eq("team_id", teamRow.id),
     supabase
       .from("team_members")
-      .select("user_id", { count: "exact", head: true })
+      .select("user_id")
       .eq("team_id", teamRow.id)
       .eq("role", "player")
       .eq("status", "active"),
   ]);
+  if (statusRes.error) {
+    throw new Error(`Could not load the squad board: ${statusRes.error.message}`);
+  }
+  if (rosterRes.error) {
+    throw new Error(`Could not load the roster: ${rosterRes.error.message}`);
+  }
 
+  // Reconcile the board against the ACTIVE roster: a status row can outlive a
+  // membership (a player who left) or belong to the coach themselves — neither
+  // is a current player, so neither may render as one. This also guarantees
+  // joined >= reporting, keeping the awaiting-first-sync count non-negative.
+  const activePlayerIds = new Set((rosterRes.data ?? []).map((r) => r.user_id as string));
   const now = new Date();
-  const rows = (statusRes.data ?? []) as PlayerStatusRow[];
-  const players = rows
+  const players = ((statusRes.data ?? []) as PlayerStatusRow[])
+    .filter((row) => activePlayerIds.has(row.user_id))
     .map((row) => deriveLivePlayer(row, now))
     .sort((a, b) => a.name.localeCompare(b.name));
 
@@ -104,7 +126,7 @@ export async function getLiveDashboardData(): Promise<LiveDashboardData | null> 
   return {
     team,
     players,
-    roster: { joined: rosterRes.count ?? players.length, reporting: players.length },
+    roster: { joined: activePlayerIds.size, reporting: players.length },
     loadTrend: [],
     now: now.toISOString(),
   };

@@ -16,7 +16,7 @@ import type {
   Team,
   TeamConstraints,
 } from "@/types/dashboard";
-import { DEFAULT_CONSTRAINTS } from "@/data/mockConstraints";
+import { constraintsForTeam } from "@/lib/constraints";
 import { cn } from "@/lib/cn";
 import { PlayerDetailDrawer } from "./PlayerDetailDrawer";
 
@@ -61,13 +61,16 @@ export function DashboardProvider({
 }: {
   team: Team;
   players: CoachVisiblePlayer[];
-  roster?: RosterSummary;
+  roster: RosterSummary;
   loadTrend: LoadTrendPoint[];
   now: string;
   children: ReactNode;
 }) {
   const now = useMemo(() => new Date(nowIso), [nowIso]);
-  const [constraints, setConstraints] = useState<TeamConstraints>(DEFAULT_CONSTRAINTS);
+  // Seeded from the coach's own teams row — never invented sport/fixtures.
+  const [constraints, setConstraints] = useState<TeamConstraints>(() =>
+    constraintsForTeam(team),
+  );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -86,16 +89,11 @@ export function DashboardProvider({
     return () => clearTimeout(t);
   }, [toast]);
 
-  const rosterSummary = useMemo<RosterSummary>(
-    () => roster ?? { joined: players.length, reporting: players.length },
-    [roster, players.length],
-  );
-
   const value = useMemo<DashboardContextValue>(
     () => ({
       team,
       players,
-      roster: rosterSummary,
+      roster,
       loadTrend,
       now,
       constraints,
@@ -105,7 +103,7 @@ export function DashboardProvider({
       closePlayer,
       notify,
     }),
-    [team, players, rosterSummary, loadTrend, now, constraints, selectedPlayer, openPlayer, closePlayer, notify],
+    [team, players, roster, loadTrend, now, constraints, selectedPlayer, openPlayer, closePlayer, notify],
   );
 
   return (

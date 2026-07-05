@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import type { LoadTrendPoint } from "@/types/dashboard";
 import { SECTION } from "@/content/dashboardCopy";
-import { Card, SectionHeader } from "@/components/ui/Card";
+import { Card, CardEmptyState, SectionHeader } from "@/components/ui/Card";
 
 // Theme hex values — Recharts needs literal colours, not Tailwind classes.
 const ACCENT = "#6fd3c4";
@@ -43,12 +43,10 @@ export function LoadTrendChart({ data }: { data: LoadTrendPoint[] }) {
   // No aggregated history on the live board yet — say so, no fake axes.
   if (data.length === 0) {
     return (
-      <Card className="flex h-full flex-col">
-        <SectionHeader title={SECTION.loadTrend} />
-        <p className="rounded-card bg-surface-2 p-4 text-sm text-body">
-          Team load history builds up as players train.
-        </p>
-      </Card>
+      <CardEmptyState
+        title={SECTION.loadTrend}
+        message="Team load history builds up as players train."
+      />
     );
   }
 

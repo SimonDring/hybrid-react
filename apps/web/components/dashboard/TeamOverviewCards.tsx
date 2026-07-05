@@ -1,4 +1,4 @@
-import type { CoachVisiblePlayer, LoadTrendPoint } from "@/types/dashboard";
+import type { CoachVisiblePlayer, LoadTrendPoint, RosterSummary } from "@/types/dashboard";
 import type { Tone } from "@/lib/statusLogic";
 import { Card } from "@/components/ui/Card";
 import { Stat } from "@/components/ui/Stat";
@@ -35,10 +35,12 @@ function loadStatus(loadTrend: LoadTrendPoint[]): { value: string; sub: string; 
 
 export function TeamOverviewCards({
   players,
+  roster,
   loadTrend,
   now,
 }: {
   players: CoachVisiblePlayer[];
+  roster: RosterSummary;
   loadTrend: LoadTrendPoint[];
   now: Date;
 }) {
@@ -100,10 +102,12 @@ export function TeamOverviewCards({
       accessory: recovery.accessory,
     },
     {
+      // Denominator is the ROSTER, not just reporting rows — 2/2 would read
+      // "all current" when eight joined players have never synced at all.
       label: "Updated today",
-      value: `${updated}/${split.total}`,
-      sub: `${split.grey} waiting on data`,
-      tone: updated / Math.max(1, split.total) >= 0.8 ? "ready" : "monitor",
+      value: `${updated}/${roster.joined}`,
+      sub: `${split.grey} without a readiness score`,
+      tone: updated / Math.max(1, roster.joined) >= 0.8 ? "ready" : "monitor",
     },
   ];
 

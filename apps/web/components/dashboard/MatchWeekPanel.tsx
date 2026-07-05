@@ -1,5 +1,5 @@
 import type { CoachVisiblePlayer, Team } from "@/types/dashboard";
-import { Card, SectionHeader } from "@/components/ui/Card";
+import { Card, CardEmptyState, SectionHeader } from "@/components/ui/Card";
 import { StatusDot } from "@/components/ui/StatusDot";
 import { formatDate, formatDaysUntil } from "@/lib/formatting";
 import { compareAttention } from "@/lib/dashboardUtils";
@@ -26,13 +26,10 @@ export function MatchWeekPanel({
   const fixture = team.nextFixture;
   if (!fixture) {
     return (
-      <Card className="flex h-full flex-col">
-        <SectionHeader title="Match week" />
-        <p className="rounded-card bg-surface-2 p-4 text-sm text-body">
-          No fixtures yet — the match-week view opens up once your team
-          schedule is added.
-        </p>
-      </Card>
+      <CardEmptyState
+        title="Match week"
+        message="No fixtures yet — the match-week view opens up once your team schedule is added."
+      />
     );
   }
 
