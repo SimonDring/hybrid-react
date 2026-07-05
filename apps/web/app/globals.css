@@ -112,6 +112,30 @@
   the user prefers reduced motion or JS hasn't run yet (no flash of empty page).
 */
 @layer utilities {
+  /*
+    Skeleton shimmer — used by components/ui/Skeleton.tsx, composed into
+    app/dashboard/loading.tsx while the dashboard layout's server fetch
+    resolves. A soft surface-3 highlight sweeps across each surface-2 block;
+    it degrades to a static block under reduced motion.
+  */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+  }
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-surface-3),
+      transparent
+    );
+    animation: skeleton-sweep 1.8s ease-in-out infinite;
+  }
+
   .reveal {
     opacity: 0;
     transform: translateY(16px);
@@ -132,5 +156,14 @@
       transform: none;
       transition: none;
     }
+    .skeleton::after {
+      animation: none;
+    }
+  }
+}
+
+@keyframes skeleton-sweep {
+  100% {
+    transform: translateX(100%);
   }
 }

@@ -1,5 +1,6 @@
 import type { Confidence as ConfidenceLevel } from "@/types/dashboard";
-import { CONFIDENCE_COPY } from "@/content/dashboardCopy";
+import { CONFIDENCE_COPY, JARGON } from "@/content/dashboardCopy";
+import { InfoTip } from "@/components/ui/InfoTip";
 import { cn } from "@/lib/cn";
 
 const FILLED: Record<ConfidenceLevel, number> = { high: 3, medium: 2, low: 1 };
@@ -13,11 +14,14 @@ export function Confidence({
   level,
   showLabel = true,
   showNote = false,
+  showTip = false,
   className,
 }: {
   level: ConfidenceLevel;
   showLabel?: boolean;
   showNote?: boolean;
+  /** Renders an ⓘ explaining confidence levels — only where a label shows. */
+  showTip?: boolean;
   className?: string;
 }) {
   const filled = FILLED[level];
@@ -42,6 +46,7 @@ export function Confidence({
             {copy.label} confidence
           </span>
         )}
+        {showLabel && showTip && <InfoTip {...JARGON.confidence} />}
       </div>
       {showNote && <p className="text-xs text-soft">{copy.note}</p>}
     </div>

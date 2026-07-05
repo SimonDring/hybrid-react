@@ -11,29 +11,32 @@ import {
   sortPlayers,
   squadSplit,
 } from "@/lib/dashboardUtils";
-import { SECTION } from "@/content/dashboardCopy";
+import { JARGON, SECTION, type JargonKey } from "@/content/dashboardCopy";
 import { cn } from "@/lib/cn";
 import { formatRelativeTime, pct } from "@/lib/formatting";
 import { Card, SectionHeader } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Confidence } from "@/components/ui/Confidence";
+import { InfoTip } from "@/components/ui/InfoTip";
 import { Tabs } from "@/components/ui/Tabs";
 
 interface Column {
   key: SortKey | null;
   label: string;
+  /** JARGON entry rendered as an ⓘ beside the header label. */
+  jargonKey?: JargonKey;
   className?: string;
 }
 
 const COLUMNS: Column[] = [
   { key: "name", label: "Player" },
-  { key: "status", label: "Status" },
-  { key: "readiness", label: "Readiness" },
-  { key: "load", label: "Load", className: "hidden md:table-cell" },
-  { key: "adherence", label: "Adherence", className: "hidden sm:table-cell" },
-  { key: null, label: "Updated", className: "hidden xl:table-cell" },
+  { key: "status", label: "Status", jargonKey: "status" },
+  { key: "readiness", label: "Readiness", jargonKey: "readiness" },
+  { key: "load", label: "Load", jargonKey: "loadState", className: "hidden md:table-cell" },
+  { key: "adherence", label: "Adherence", jargonKey: "adherence", className: "hidden sm:table-cell" },
+  { key: null, label: "Updated", jargonKey: "updated", className: "hidden xl:table-cell" },
   { key: null, label: "Recommended action", className: "hidden lg:table-cell" },
-  { key: null, label: "Confidence", className: "hidden md:table-cell" },
+  { key: null, label: "Confidence", jargonKey: "confidence", className: "hidden md:table-cell" },
 ];
 
 export function PlayerStatusTable({
@@ -117,6 +120,7 @@ export function PlayerStatusTable({
                   >
                     <span className="inline-flex items-center gap-1">
                       {c.label}
+                      {c.jargonKey && <InfoTip {...JARGON[c.jargonKey]} />}
                       {active && (
                         <span className="text-accent">
                           {sortDir === "asc" ? "▲" : "▼"}

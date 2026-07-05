@@ -6,6 +6,8 @@
 import { useState } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import { loadVerdict } from '../lib/verdicts.js';
+import InfoTip from '../components/ui/InfoTip.jsx';
+import { GLOSSARY } from '../data/metricGlossary.js';
 
 function EyeIcon() {
   return (
@@ -55,7 +57,7 @@ export default function TrainingLoad() {
           <div className="stat-grid cols-3" style={{ marginTop: 14 }}>
             <div className="stat-card"><div className="l">Acute · 7d</div><div className="v">{load.acute}</div><div className="d">recent</div></div>
             <div className="stat-card"><div className="l">Chronic · 28d</div><div className="v">{load.chronic}</div><div className="d">baseline</div></div>
-            <div className="stat-card"><div className="l">Ratio</div><div className="v" style={{ color: lv.color }}>{load.acwr.toFixed(2)}</div><div className="d">{lv.label}</div></div>
+            <div className="stat-card"><div className="l">Ratio <InfoTip {...GLOSSARY.trainingLoad} /></div><div className="v" style={{ color: lv.color }}>{load.acwr.toFixed(2)}</div><div className="d">{lv.label}</div></div>
           </div>
         </div>
       )}

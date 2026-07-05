@@ -94,7 +94,7 @@ export function PlayerRecommendationCard({
 
         {/* Confidence + next review */}
         <div className="flex flex-wrap items-end justify-between gap-3 border-t border-hairline pt-3">
-          <Confidence level={player.confidence} showNote />
+          <Confidence level={player.confidence} showNote showTip />
           <div className="text-right">
             <p className="text-xs uppercase tracking-wide text-soft">Next review</p>
             <p className="text-sm font-medium text-body">{player.nextReview}</p>

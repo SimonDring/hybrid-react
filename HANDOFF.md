@@ -670,6 +670,20 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   ⇒ NEXT (Team): merge #124 → surface the constraint on the PLAYER side (a "match day"
   marker in the mobile week view — currently invisible to the athlete); then the board
   follow-ups (history feed, team switcher). WP-22/23 build flip stays LAST (pause).
+- **PR #125 — UI: skeleton loaders + jargon tooltips, both apps (2026-07-05, STACKED on
+  #124 — merge #124 first; spec: docs/superpowers/specs/2026-07-05-ui-skeletons-tooltips-
+  design.md; Simon's scope: per-panel web skeletons + mobile's genuine waits; tooltips on
+  every jargon term + metric card).** Skeletons: web Skeleton primitive +
+  app/dashboard/loading.tsx mirroring the Home frames; mobile ONE .skeleton class (real
+  Midnight vars) at its only two real waits (first sign-in sync splash, Teams list fetch)
+  — instant local-cache screens deliberately untouched. Tooltips: one accessible InfoTip
+  per app (hover/focus/tap; popover PORTALLED to body with fixed positioning — immune to
+  the squad table's overflow-x and the drawer's transform); copy in ONE place per app
+  (web dashboardCopy.ts JARGON ×16 reusing STATUS_META/LOAD_META language; mobile
+  metricGlossary.js ×8); sweep = 6 overview cards, 6 table headers, drawer stats +
+  workload ratio, confidence, Next-match, awaiting-sync, block direction; mobile
+  readiness/recovery, ACWR, RPE, taper/deload, dev volume. Verified live (tooltip open,
+  themed); web typecheck+build green; suite 144/144.
 - **PR #118 — coach-board IDENTITY.** migration 20260709: player_status gains a
   server-derived `display_name` (a trigger stamps it from the player's profile, same
   un-spoofable pattern as S11; a coach can't read teammates' `users` rows, so the board
