@@ -601,11 +601,22 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   + clamped. Spec: docs/superpowers/specs/2026-07-05-player-status-integrity.md. Harness
   62/62. Prod apply of 20260708 batched (SECURITY-DEPLOY.md). Full-engine server derivation
   = future Edge-Function option.
-- **SECURITY STATUS:** S1-S12 + S11 DONE (staging-proven). Remaining: S13 (next 14→16 major
-  bump — chip open, before apps/web ships), S14 (prod Auth: Confirm-email + rate-limit —
-  Simon dashboard), S15 (LOW nits). Prod DB/function deploy = the batched step in
-  supabase/SECURITY-DEPLOY.md (migrations 20260706/07/08 + 3 Edge Functions + Vercel env
-  for the dashboard).
+- **PR #117 — S13: next 14→16 bump (advisories cleared).** 14 HIGH/CRITICAL Next
+  advisories gone (next@16 accepts React 18 — no React-19 migration); middleware.ts →
+  proxy.ts (Next 16 convention; the S12 gate unchanged). Merged past the Vercel
+  hobby-tier deploy rate-limit flake (both Vercel checks 24h-limited; the real `build` +
+  engine-suite checks passed).
+- **PR #118 (this) — coach-board IDENTITY.** migration 20260709: player_status gains a
+  server-derived `display_name` (a trigger stamps it from the player's profile, same
+  un-spoofable pattern as S11; a coach can't read teammates' `users` rows, so the board
+  needed this to name its rows). Harness 64/64. Also: docs/product/TEAM-NEXT-STEPS.md —
+  the decisions + recommended order for founding/invite, dashboard live-wiring, schedule→
+  constraints.
+- **SECURITY STATUS — COMPLETE (S1–S13 + S11).** Remaining: S14 (prod Auth dashboard:
+  Confirm-email + rate-limit — SIMON), S15 (LOW accepted nits: CORS `*`, setReassess loose
+  match, 010 NOT VALID, avatars-public-by-design). Prod DB/function deploy = the batched
+  step in supabase/SECURITY-DEPLOY.md (migrations 20260706/07/08/09 + 3 Edge Functions +
+  Vercel NEXT_PUBLIC_SUPABASE_* for the dashboard).
 - **⇒ NEXT:** the Team founding/invite UI (player-side; makes the roll-up fire for real
   teams) → wire the coach dashboard to LIVE player_status behind the S12 gate (the board is
   now trustworthy per S11). **WP-22/23 (build flip)** remains last (HIGH-risk, PAUSE for

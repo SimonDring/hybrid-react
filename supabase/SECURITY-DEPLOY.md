@@ -14,6 +14,7 @@ Everything below was proven on staging: `node supabase/tests/rls-harness.mjs` â†
 | `migrations/20260706_security_hardening.sql` | S2 token-column lockdown, S3 constraints, S6 delete completeness, S9 status guard, S10 search_path | DB migration |
 | `migrations/20260707_oauth_state.sql` | S1 OAuth `state` nonce table + `issue`/`consume` RPCs | DB migration |
 | `migrations/20260708_player_status_integrity.sql` | S11 server-authoritative injury_status/readiness on the coach board | DB migration |
+| `migrations/20260709_player_status_identity.sql` | coach-board display_name (server-derived from the player profile) | DB migration |
 | `functions/fitbit-auth-callback` | resolves `state` via `consume_oauth_state` (S1) | Edge Function |
 | `functions/strava-auth-callback` | resolves `state` via `consume_oauth_state` (S1) | Edge Function |
 | `functions/fitbit-sync` | stops logging raw vitals (S4) + 92-day clamp (S8) | Edge Function |
