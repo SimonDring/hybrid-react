@@ -489,14 +489,38 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   runner's robustness limiter boosts ×1.25, ranked first, with the reason in the emitted
   rationale. tests/injury-history-wiring.js (8 checks through the real localStorage-shim
   app path). Suite **138/138**; goldens untouched.
-- **⇒ NEXT:** **WP-31** (sync outbox — repo-side, simulated airplane-mode test), **WP-28**
-  (portable freezes — check whether pins can ride an existing sessions column before any
-  migration), **WP-37** (typed priors read-path). **Team spine WP-32/33** blocked on
-  WP-07's staging TODO (Simon's Supabase account). WP-22/23 (build flip) last. (Dev
-  notes: /dev remounts periodically — click + assert in ONE preview_eval; a preset click +
-  Generate in the same tick generates from STALE answers. Vercel hobby-tier deploy rate
-  limit can FAIL the web preview check for 24 h — an infra flake; merge on engine-suite
-  green, documented in PR #98's merge.)
+- **PR #102 — WP-31: the sync outbox (V16 CLOSED).** Offline/failed cloud writes were
+  silently lost (local-only fallback; the next sign-in pull clobbered them). The outbox is
+  a persisted, per-namespace DIRTY-TABLES set (lib/syncOutbox.js) — not an operation log:
+  the local Database is the source of truth and draining pushes the dirty tables' CURRENT
+  local rows (the runSessionDMigration repair pattern) — idempotent, self-deduplicating,
+  never-stale, ordering-free. Soft deletes converge via the new read-only
+  Database allWithDeleted() accessor. All 15 SyncService writes instrumented; drain
+  triggers: window 'online', session arrival, and syncFromCloud drains BEFORE
+  pullFromSupabase (the clobber is impossible now). uid() no longer hand-parses the
+  sb-*-auth-token blob — getSession() + onAuthStateChange keep a cached id (ensureUid()
+  covers cold boot). tests/sync-outbox.js: the simulated airplane-mode round trip,
+  19 checks incl. a lockstep guard (every queueable table has a drain source). 139/139.
+- **PR #103 — WP-28: portable freezes (V8 CLOSED).** The freeze-on-start pin store was a
+  RAW un-namespaced localStorage key — invisible to other devices and shared across
+  ACCOUNTS on one device (leak closed with a one-time namespaced migration). Pins now
+  mirror to users.profile.session_overrides (NO schema migration — profile is jsonb,
+  RLS-correct, outbox-protected offline) and syncFromCloud reconciles pull → local with
+  FROZEN-WINS semantics (Art 10: per key the EARLIER createdAt is kept — whichever device
+  froze the session first defined what the athlete trained; a later re-freeze never
+  rewrites history; one-sided keys survive both directions). sessionOverrides.js rewritten
+  transparently (all callers untouched). tests/portable-freezes.js: the two-device
+  simulation, 10 checks incl. THE ACCEPTANCE (device B shows device A's frozen content).
+  One CI flake fixed properly: the test awaits an exposed flushMirror() promise instead of
+  sleeping. Suite **140/140**.
+- **⇒ NEXT:** **WP-37** (typed priors read-path — learnedPriors formally read by D1
+  estimation + D12 dose with per-prior provenance, no writer yet), **C7** (48–72 h plyo
+  spacing at the D13 scheduler). **Team spine WP-32/33** blocked on WP-07's staging TODO
+  (Simon's Supabase account). WP-22/23 (build flip) last. (Dev notes: /dev remounts
+  periodically — click + assert in ONE preview_eval; a preset click + Generate in the same
+  tick generates from STALE answers. Vercel hobby-tier deploy rate limit can FAIL the web
+  preview check for 24 h — an infra flake; merge on engine-suite green, documented in PR
+  #98's merge.)
 - ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
   `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
   and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
