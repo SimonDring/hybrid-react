@@ -595,7 +595,9 @@ export async function setReassessAnswer(qid, value) {
   const userId = uid();
   Database.services.setReassessAnswer(qid, value);
   const all = Database.tables.reassessments.all();
-  const record = all.find(r => r.user_id === userId || r.quarter_number === 1);
+  // Strict match on the owner (Database creates one reassessment per user at
+  // quarter 1); the old '|| quarter_number===1' fallback could grab a wrong row (S15).
+  const record = all.find(r => r.user_id === userId && r.quarter_number === 1) || all.find(r => r.user_id === userId);
   if (!record) return;
   const { error } = await supabase
     .from('reassessments')
