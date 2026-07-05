@@ -977,6 +977,9 @@ function finaliseSlot(slot, style, ctx) {
     lowerBody: lower >= 0.4 * total,
     muscleVol: slot.muscleVol,   // realised per-muscle volume — lets the scheduler space same-muscle days
     axialLoad: Object.values(slot.picks).reduce((a, p) => a + axialOf(p.ex), 0),
+    // Count of plyometric/ballistic picks — lets the scheduler keep plyo days
+    // 48–72 h apart (H9 C7). Scheduling signal only; not emitted on sessions.
+    plyoLoad: Object.values(slot.picks).reduce((a, p) => a + (p.ex.quality === 'power' ? 1 : 0), 0),
     ...(slot._objective ? { _objective: slot._objective } : {})
   };
 }

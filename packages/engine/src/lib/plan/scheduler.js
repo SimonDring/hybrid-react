@@ -21,6 +21,7 @@
 
 import { lightenItems } from './constraints.js';
 import { HIGH_DAY_THRESHOLD } from './axial.js';
+import { REACTIVE_LIMITS } from '../../data/doseSchemes.js';
 
 const DAY_IDX = { Monday: 0, Tuesday: 1, Wednesday: 2, Thursday: 3, Friday: 4, Saturday: 5, Sunday: 6 };
 const IDX_DAY = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -30,6 +31,7 @@ const isHard = (s) => s.intensity === 'hard';
 const legStrength = (s) => s.discipline === 'gym' && s.lowerBody;
 const legTaxingRun = (s) => s.discipline === 'run' && (s.intensity === 'hard' || /^Long/.test(s.focus || ''));
 const isHighAxial = (s) => (s.axialLoad || 0) >= HIGH_DAY_THRESHOLD;
+const isPlyoLoaded = (s) => (s.plyoLoad || 0) > 0;
 const isLongRun = (s) => s.discipline === 'run' && /^Long/.test(s.focus || '');
 const gap = (a, b) => ((b - a) % 7 + 7) % 7;
 
@@ -102,6 +104,9 @@ function score(placed, ctx) {
       if ((legStrength(cur.spec) && legTaxingRun(nxt.spec)) ||
           (legStrength(nxt.spec) && legTaxingRun(cur.spec))) pen += 8;
       if (isHighAxial(cur.spec) && isHighAxial(nxt.spec)) pen += 9; // recover the spine between heavy axial days
+      // Plyometric exposures need 48–72 h (tendon/SSC recovery — de Villarreal 2009,
+      // H9 C7): adjacent plyo-loaded days are inside the 48 h floor.
+      if (isPlyoLoaded(cur.spec) && isPlyoLoaded(nxt.spec)) pen += REACTIVE_LIMITS.spacing.schedulerPenaltyAdjacent;
     } else if (g === 2) {
       pen += 3 * shared;
       if (isHard(cur.spec) && isHard(nxt.spec)) pen += 2;

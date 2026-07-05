@@ -88,7 +88,11 @@ export const DOSE_SCHEMES = {
 // C7 belongs to the scheduler (D13) — recorded there, not here.
 export const REACTIVE_LIMITS = {
   footContacts: { beginner: 80, intermediate: 100, advanced: 120 },
-  evidence: { level: 'reviewed', confidence: 'moderate', source: 'de Villarreal 2009 (meta): moderate volumes suffice; H9 review C7', needsReview: false }
+  // 48–72 h between plyometric exposures (tendon/SSC recovery). The scheduler treats
+  // ADJACENT days (<48 h) as a spacing violation and pays this penalty — same family
+  // as its heavy-axial spine rule; ≥2 calendar days apart satisfies the window.
+  spacing: { minHours: 48, maxHours: 72, schedulerPenaltyAdjacent: 9 },
+  evidence: { level: 'reviewed', confidence: 'moderate', source: 'de Villarreal 2009 (meta): moderate volumes suffice; 48–72 h between sessions; H9 review C7', needsReview: false }
 };
 
 /**
