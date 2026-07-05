@@ -14,6 +14,7 @@ import {
   SESSION_TYPE_OPTIONS,
   SPORT_OPTIONS,
 } from "@/lib/constraints";
+import { saveTeamSchedule } from "@/lib/teams";
 import { cn } from "@/lib/cn";
 import { formatDate } from "@/lib/formatting";
 
@@ -29,17 +30,40 @@ const toOptions = (values: string[]) =>
   values.map((v) => ({ value: v, label: v }));
 
 /**
+ * A native select silently DISPLAYS its first option when the current value
+ * isn't in the list (e.g. sport "gaa" from onboarding vs the curated options,
+ * or an unset season). Represent the truth: include the current value, and an
+ * explicit "Not set" entry while the value is empty.
+ */
+const toOptionsWithCurrent = (values: string[], current: string) => {
+  const opts = current && !values.includes(current) ? [current, ...values] : values;
+  return current
+    ? toOptions(opts)
+    : [{ value: "", label: "Not set" }, ...toOptions(opts)];
+};
+
+/**
  * The coach sets the team's fixed constraints here. They steer every player's
  * plan direction; each player's own onboarding then personalises within them.
  * Edits are committed on Save and flow to the Focus view's direction panel.
  */
 export function ConstraintsView() {
-  const { constraints, setConstraints, notify, now } = useDashboard();
+  const { team, constraints, setConstraints, notify, now } = useDashboard();
   const [draft, setDraft] = useState<TeamConstraints>(constraints);
+  const [saving, setSaving] = useState(false);
 
   const dirty = JSON.stringify(draft) !== JSON.stringify(constraints);
 
-  const save = () => {
+  // Persist to teams.schedule FIRST; only a confirmed write commits the local
+  // state — the toast never claims a save that didn't reach the database.
+  const save = async () => {
+    setSaving(true);
+    const res = await saveTeamSchedule(team.id, draft);
+    setSaving(false);
+    if (!res.ok) {
+      notify(`Could not save: ${res.error}`);
+      return;
+    }
     setConstraints(draft);
     notify("Constraints saved — player plans will update.");
   };
@@ -95,8 +119,8 @@ export function ConstraintsView() {
               Reset
             </Button>
           )}
-          <Button variant="primary" size="sm" onClick={save} disabled={!dirty}>
-            Save constraints
+          <Button variant="primary" size="sm" onClick={save} disabled={!dirty || saving}>
+            {saving ? "Saving…" : "Save constraints"}
           </Button>
         </div>
       </div>
@@ -112,7 +136,7 @@ export function ConstraintsView() {
             <Select
               value={draft.sport}
               onChange={(sport) => setDraft((d) => ({ ...d, sport }))}
-              options={toOptions(SPORT_OPTIONS)}
+              options={toOptionsWithCurrent(SPORT_OPTIONS, draft.sport)}
               ariaLabel="Sport"
               className="w-full"
             />
@@ -121,7 +145,7 @@ export function ConstraintsView() {
             <Select
               value={draft.seasonPhase}
               onChange={(seasonPhase) => setDraft((d) => ({ ...d, seasonPhase }))}
-              options={toOptions(SEASON_OPTIONS)}
+              options={toOptionsWithCurrent(SEASON_OPTIONS, draft.seasonPhase)}
               ariaLabel="Season phase"
               className="w-full"
             />

@@ -4,6 +4,8 @@
  * the UI can show real error/success states.
  */
 import { supabaseBrowser } from "@/lib/supabase/browser";
+import { SEASON_CODE_OF } from "@/lib/constraints";
+import type { TeamConstraints } from "@/types/dashboard";
 
 export interface CoachTeam {
   team_id: string;
@@ -55,6 +57,34 @@ export async function listCoachTeams(): Promise<CoachTeam[]> {
       join_code: team?.join_code ?? null,
     };
   });
+}
+
+/**
+ * Persist the coach's constraints: sport/season to their own columns (season
+ * as the code via SEASON_CODE_OF), weeklyPattern+fixtures to teams.schedule
+ * (the cross-app contract players read — spec 2026-07-05-team-schedule-
+ * constraints-design.md). Coach-update RLS enforces who may write.
+ */
+export async function saveTeamSchedule(
+  teamId: string,
+  constraints: TeamConstraints,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const supabase = supabaseBrowser();
+  if (!supabase) return { ok: false, error: "Saving is not available right now." };
+  const { error } = await supabase
+    .from("teams")
+    .update({
+      sport: constraints.sport || null,
+      season: SEASON_CODE_OF[constraints.seasonPhase] ?? constraints.seasonPhase ?? null,
+      schedule: {
+        weeklyPattern: constraints.weeklyPattern,
+        fixtures: constraints.fixtures,
+      },
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", teamId);
+  if (error) return { ok: false, error: error.message || "Could not save the schedule." };
+  return { ok: true };
 }
 
 export async function rotateCode(

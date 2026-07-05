@@ -25,6 +25,40 @@ export const SEASON_OPTIONS = [
   "Tournament week",
 ];
 
+/**
+ * UI label ↔ the `teams.season` code — the ONE mapping both directions use
+ * (liveBoard reads code→label; saveTeamSchedule writes label→code).
+ */
+export const SEASON_CODE_OF: Record<string, string> = {
+  "Pre-season": "pre",
+  "In-season": "in",
+  "Off-season": "off",
+  "Tournament week": "tournament",
+};
+
+export const SEASON_LABEL_OF: Record<string, string> = Object.fromEntries(
+  Object.entries(SEASON_CODE_OF).map(([label, code]) => [code, label]),
+);
+
+/**
+ * Parse a `teams.schedule` jsonb value into the pattern+fixtures halves of
+ * TeamConstraints. The column DEFAULTS to '[]'::jsonb (an array), so anything
+ * that isn't an object carrying both arrays means "no schedule saved yet" —
+ * return null and let the caller fall back to constraintsForTeam defaults.
+ */
+export function parseTeamSchedule(
+  schedule: unknown,
+): Pick<TeamConstraints, "weeklyPattern" | "fixtures"> | null {
+  if (!schedule || typeof schedule !== "object" || Array.isArray(schedule)) return null;
+  const s = schedule as { weeklyPattern?: unknown; fixtures?: unknown };
+  if (!Array.isArray(s.weeklyPattern) || s.weeklyPattern.length !== 7) return null;
+  if (!Array.isArray(s.fixtures)) return null;
+  return {
+    weeklyPattern: s.weeklyPattern as TeamConstraints["weeklyPattern"],
+    fixtures: s.fixtures as TeamConstraints["fixtures"],
+  };
+}
+
 export const SESSION_TYPE_OPTIONS: { value: SessionType; label: string }[] = [
   { value: "match", label: "Match" },
   { value: "pitch", label: "Pitch / field" },

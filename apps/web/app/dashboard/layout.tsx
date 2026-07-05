@@ -23,13 +23,14 @@ export default async function DashboardLayout({
   const data = await getLiveDashboardData();
   if (!data) redirect("/get-started");
 
-  const { team, players, roster, loadTrend, now } = data;
+  const { team, players, roster, initialConstraints, loadTrend, now } = data;
 
   return (
     <DashboardProvider
       team={team}
       players={players}
       roster={roster}
+      initialConstraints={initialConstraints}
       loadTrend={loadTrend}
       now={now}
     >

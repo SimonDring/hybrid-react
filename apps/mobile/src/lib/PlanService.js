@@ -19,12 +19,23 @@ import {
   generatePlan, SESSION_CEILING_MIN, resolveProgram, countWeeklyVolume, resolveLifts,
   MUSCLE_GROUPS, MUSCLE_LABELS, applyInjuryRules, applyPrevention, deloadRecommendation,
   ruleVolumeAdjustment, deriveConstraints, buildPrimer, performanceModelForProfile,
-  profileToAthleteModel, kb, sportKnowledge as SKB
+  profileToAthleteModel, kb, sportKnowledge as SKB, applyTeamSchedule
 } from '@performance-os/engine';
 import * as reflowLib from '@performance-os/engine/lib/plan/reflow.js';
 import { getOverrides } from './sessionOverrides.js';
+import { getTeamSchedule } from './teamScheduleCache.js';
 
 let _cache = { sig: null, plan: null };
+
+// THE profile seam: every read below sees the athlete's profile WITH their
+// team's coach-set schedule applied as constraints (matches block, sport days
+// soft-avoided, gated fixture taper — engine applyTeamSchedule, pure). With no
+// team schedule the SAME object comes back, so signatures/memos are untouched.
+// asOf = plan_start_date (never the clock — Art 18).
+function activeProfile() {
+  const raw = Database.services.getProfile() || {};
+  return applyTeamSchedule(raw, getTeamSchedule(), raw.plan_start_date || null);
+}
 
 // ---------------------------------------------------------------------------
 // Adaptive reflow runtime. The plan is a pure projection; the CURRENT week
@@ -58,7 +69,7 @@ export function setRuntime(rt = {}) {
 export function currentAdaptation() {
   const cw = currentWeekNumber();
   if (cw == null) return null;
-  const profile = Database.services.getProfile() || {};
+  const profile = activeProfile();
   const reverted = !!(profile.load_overrides && profile.load_overrides[cw] === 'plan');
   const load = runtime().load;
   const action = load && load.inputs ? load.inputs.action : null;
@@ -164,7 +175,7 @@ function adaptedPhases() {
   const cw = currentWeekNumber();
   if (cw == null) return g.phases;
 
-  const profile = Database.services.getProfile() || {};
+  const profile = activeProfile();
   const overrides = getOverrides();
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const weeksTouched = [cw, cw + 1];               // the horizon spans at most two weeks
@@ -270,7 +281,7 @@ function injuryFilteredPhases() {
   const phases = adaptedPhases();
   if (!phases) return null;
 
-  const profile = Database.services.getProfile() || {};
+  const profile = activeProfile();
   const access = profile.access || [];
 
   const allInjuries = Database.services.listInjuries();
@@ -312,7 +323,7 @@ function profileSignature(profile) {
 
 // Returns the generated plan for the current user, or null to use the legacy plan.
 function generated() {
-  const profile = Database.services.getProfile() || {};
+  const profile = activeProfile();
   if (!profile.focus || profile.focus.length === 0) return null;
   const sig = profileSignature(profile);
   if (_cache.sig !== sig) {
@@ -395,7 +406,7 @@ function weekdayOfTitle(title) {
 function todayMondayIndex() { return (new Date().getDay() + 6) % 7; }
 
 export function getStartDate() {
-  const p = Database.services.getProfile() || {};
+  const p = activeProfile();
   return p.plan_start_date ? parseISO(p.plan_start_date) : null;
 }
 
@@ -512,7 +523,7 @@ export function buildCalendar(sessions = {}) {
   }
   // Sport-day markers — non-clickable badges so the week reads correctly (gym-only
   // app: these mark the athlete's own sport sessions, not generated workouts).
-  const profile = Database.services.getProfile() || {};
+  const profile = activeProfile();
   const { busyDays: sportBusy } = deriveConstraints(profile);
   if (sportBusy.length && min) {
     const sportDisc = profile.sport === 'run' ? 'run' : profile.sport === 'cycle' ? 'cycle' : profile.sport === 'swim' ? 'swim' : 'general';
@@ -534,7 +545,7 @@ export function buildCalendar(sessions = {}) {
 // ---------------------------------------------------------------------------
 export function weekVolumeProgressFor(phase, week) {
   if (!phase || !week) return null;
-  const profile = Database.services.getProfile() || {};
+  const profile = activeProfile();
   const gctx = gymCtx(profile);
   const target = weekTarget(phase, week, gctx);
 
