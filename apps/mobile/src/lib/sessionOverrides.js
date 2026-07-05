@@ -50,12 +50,19 @@ function write(obj) {
 // (the WP-31 outbox queues it when offline). Imported lazily so this module stays
 // cheap for PlanService's synchronous reads and free of import-order coupling.
 let _sync = null;
-async function mirrorToProfile(obj) {
-  try {
-    if (!_sync) _sync = await import('./SyncService.js');
-    await _sync.updateProfile({ session_overrides: obj });
-  } catch { /* local cache still holds the truth; the next mirror retries */ }
+let _lastMirror = Promise.resolve();
+function mirrorToProfile(obj) {
+  _lastMirror = (async () => {
+    try {
+      if (!_sync) _sync = await import('./SyncService.js');
+      await _sync.updateProfile({ session_overrides: obj });
+    } catch { /* local cache still holds the truth; the next mirror retries */ }
+  })();
+  return _lastMirror;
 }
+
+/** Await the in-flight profile mirror (deterministic tests; harmless elsewhere). */
+export function flushMirror() { return _lastMirror; }
 
 export function getOverrides() { return read(); }
 export function getOverride(sessionKey) { return read()[sessionKey] || null; }
@@ -95,4 +102,4 @@ export function reconcileFromProfile(cloud) {
   return merged;
 }
 
-export default { getOverrides, getOverride, setOverride, clearOverride, reconcileFromProfile };
+export default { getOverrides, getOverride, setOverride, clearOverride, reconcileFromProfile, flushMirror };
