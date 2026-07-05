@@ -20,6 +20,8 @@
  * server truth, so a client cannot publish a dishonest availability/readiness. The
  * values computed here are the player's honest proposal; they AGREE with the server
  * in the normal case and are the offline fallback. The soft trend metrics pass through.
+ * The board also carries a server-derived display_name (migration 20260709), set by
+ * the DB trigger from the player profile — not by this client — so a coach can name each row.
  *
  * load_state is the coach-facing plain-English band from the SAME ACWR the
  * athlete's own screens use — one number, two audiences, no re-derivation:

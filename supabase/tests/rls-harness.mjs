@@ -193,6 +193,17 @@ async function main() {
   ok(aStatus3 && aStatus3.adherence_pct === 100 && aStatus3.load_state === null,
     `S11: garbage soft metrics are clamped (adherence ${aStatus3?.adherence_pct}, load_state ${aStatus3?.load_state})`);
 
+  // ══ Coach-board identity (20260709) — display_name is server-derived ═════════
+  await A.client.from('users').update({ profile: { name: 'Alice Anderson' } }).eq('id', A.id);
+  // a client attempt to publish a FAKE name is overridden from the profile
+  await A.client.from('player_status').update({ display_name: 'HACKER' }).eq('user_id', A.id);
+  const { data: idRow } = await A.client.from('player_status').select('display_name').eq('user_id', A.id).single();
+  ok(idRow && idRow.display_name === 'Alice Anderson',
+    `identity: display_name is server-derived from the profile, not the client (got '${idRow?.display_name}')`);
+  const { data: coachSeesName } = await C.client.from('player_status').select('user_id, display_name').eq('team_id', team.id);
+  ok((coachSeesName || []).some((r) => r.user_id === A.id && r.display_name === 'Alice Anderson'),
+    'identity: the coach reads the player names on their team board');
+
   // The coach reads the WHOLE team's derived board…
   const { data: board } = await C.client.from('player_status').select('user_id, readiness, load_state, injury_status').eq('team_id', team.id);
   ok((board || []).length === 2, `coach reads the team's derived board (${(board || []).length}/2 players)`);
