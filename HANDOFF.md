@@ -551,10 +551,20 @@ PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/1
   .env.local.prod-backup was found to contain STAGING values — the prod anon pair is no
   longer on his disk (harmless: dashboard/API-keys retrievable; GitHub Actions secrets
   unaffected).
-- **⇒ NEXT (Team package, on the live spine):** the player-side STATUS ROLL-UP in
-  SyncService (derived readiness/load_state/acwr/adherence/injury_status →
-  player_status; raw vitals never leave owner-only tables), then team
-  founding/invite UI, then the coach dashboard in apps/web reading player_status.
+- **PR #108 — the player-side STATUS ROLL-UP (first feature on the live spine).**
+  lib/teamStatus.js deriveStatus(view) is PURE + built against a five-column allowlist
+  (readiness/load_state/acwr/adherence_pct/injury_status) — the SECOND, in-code
+  enforcement of the isolation rule (RLS is the first): the vitals that feed readiness
+  never leave owner-only tables. SyncService listMyActiveTeams()+pushPlayerStatus()
+  (upsert onConflict team_id,user_id, real auth uid); store refreshTeamStatus() fires
+  after every signal-changing write + sign-in, no outbox (self-heals from local truth).
+  tests/team-status-rollup.js (10 checks, privacy guard led). Suite 143/143.
+- **⇒ IN PROGRESS — MULTI-USER SECURITY AUDIT + HARDENING (Simon's ask 2026-07-05,
+  while out).** Four parallel reviewers auditing: DB/RLS/auth, client XSS/secrets,
+  sync/isolation/edge-functions, deps/CI/config/validation. Synthesis →
+  docs/SECURITY-AUDIT.md (prioritized), then implement top-down PR by PR (auto-merge
+  green low/med; PAUSE on anything that needs prod DDL beyond the reviewed pattern or
+  changes coaching philosophy). THEN Team founding/invite UI + coach dashboard (apps/web).
   **WP-22/23 (build flip)** remains last (HIGH-risk, PAUSE for Simon). (Dev notes: /dev remounts
   periodically — click + assert in ONE preview_eval; a preset click + Generate in the same
   tick generates from STALE answers. Vercel hobby-tier deploy rate limit can FAIL the web
