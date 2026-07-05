@@ -11,6 +11,8 @@ import { CoachActionsPanel } from "../CoachActionsPanel";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card, SectionHeader } from "@/components/ui/Card";
+import { InfoTip } from "@/components/ui/InfoTip";
+import { JARGON } from "@/content/dashboardCopy";
 import { AwaitingSyncNote } from "../AwaitingSyncNote";
 import { attentionPlayers } from "@/lib/dashboardUtils";
 import { formatDaysUntil } from "@/lib/formatting";
@@ -41,6 +43,7 @@ export function HomeView() {
           )}
           <Fact
             label="Next match"
+            tip={<InfoTip {...JARGON.matchWeek} />}
             value={
               team.nextFixture
                 ? formatDaysUntil(team.nextFixture.date, now)
@@ -131,10 +134,21 @@ function JoinCodeCard({ code }: { code: string | null }) {
   );
 }
 
-function Fact({ label, value }: { label: string; value: string }) {
+function Fact({
+  label,
+  value,
+  tip,
+}: {
+  label: string;
+  value: string;
+  tip?: React.ReactNode;
+}) {
   return (
     <div className="flex items-baseline gap-1.5">
-      <span className="text-xs uppercase tracking-wide text-soft">{label}</span>
+      <span className="inline-flex items-center gap-1 text-xs uppercase tracking-wide text-soft">
+        {label}
+        {tip}
+      </span>
       <span className="text-sm font-medium text-body">{value}</span>
     </div>
   );

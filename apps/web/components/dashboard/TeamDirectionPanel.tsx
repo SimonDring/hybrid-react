@@ -1,5 +1,7 @@
 import type { Team, TeamConstraints } from "@/types/dashboard";
 import { Card, SectionHeader } from "@/components/ui/Card";
+import { InfoTip } from "@/components/ui/InfoTip";
+import { JARGON } from "@/content/dashboardCopy";
 import { SESSION_TYPE_META, deriveTeamDirection } from "@/lib/constraints";
 import { cn } from "@/lib/cn";
 import { daysUntil, formatDate, formatDaysUntil } from "@/lib/formatting";
@@ -27,6 +29,7 @@ export function TeamDirectionPanel({
     <Card>
       <SectionHeader
         title="This block's direction"
+        titleTip={<InfoTip {...JARGON.blockDirection} />}
         hint={
           [constraints.sport, constraints.seasonPhase].filter(Boolean).join(" · ") ||
           "Set your sport and season in Constraints"

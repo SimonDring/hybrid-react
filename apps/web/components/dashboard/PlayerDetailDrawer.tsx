@@ -3,13 +3,14 @@
 import { useState } from "react";
 import type { CoachVisiblePlayer } from "@/types/dashboard";
 import { getLoadMeta, getStatusMeta, toneClasses } from "@/lib/statusLogic";
-import { ACTIONS } from "@/content/dashboardCopy";
+import { ACTIONS, JARGON } from "@/content/dashboardCopy";
 import { cn } from "@/lib/cn";
 import { formatDate, formatRelativeTime, pct } from "@/lib/formatting";
 import { Drawer } from "@/components/ui/Drawer";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Sparkline } from "@/components/ui/Sparkline";
+import { InfoTip } from "@/components/ui/InfoTip";
 import { PlayerRecommendationCard } from "./PlayerRecommendationCard";
 
 const WEEK_CELL: Record<string, string> = {
@@ -86,12 +87,14 @@ function DrawerContent({
         <div className="grid grid-cols-3 gap-2">
           <MiniStat
             label="Readiness"
+            tip={<InfoTip {...JARGON.readiness} />}
             value={player.readinessScore === null ? "—" : `${player.readinessScore}`}
             tone={meta.tone}
           />
-          <MiniStat label="Load" value={load.label} />
+          <MiniStat label="Load" tip={<InfoTip {...JARGON.loadState} />} value={load.label} />
           <MiniStat
             label="Adherence"
+            tip={<InfoTip {...JARGON.adherence} />}
             value={player.adherencePercent === null ? "—" : pct(player.adherencePercent)}
           />
         </div>
@@ -160,7 +163,11 @@ function DrawerContent({
           {/* Raw weekly/planned load numbers are deliberately NOT shown — the
               coach-safe surface carries only the derived ratio. */}
           <dl className="mt-2 grid grid-cols-3 gap-2 text-xs">
-            <Detail label="Workload ratio" value={player.acwr === null ? "—" : player.acwr.toFixed(2)} />
+            <Detail
+              label="Workload ratio"
+              tip={<InfoTip {...JARGON.workloadRatio} />}
+              value={player.acwr === null ? "—" : player.acwr.toFixed(2)}
+            />
           </dl>
         </details>
 
@@ -202,14 +209,19 @@ function MiniStat({
   label,
   value,
   tone,
+  tip,
 }: {
   label: string;
   value: string;
   tone?: ReturnType<typeof getStatusMeta>["tone"];
+  tip?: React.ReactNode;
 }) {
   return (
     <div className="rounded-card border border-hairline bg-surface-2 p-3">
-      <p className="text-[10px] uppercase tracking-wide text-soft">{label}</p>
+      <p className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wide text-soft">
+        {label}
+        {tip}
+      </p>
       <p className={cn("tnum mt-1 text-xl font-semibold", tone ? toneClasses(tone).text : "text-strong")}>
         {value}
       </p>
@@ -226,10 +238,21 @@ function TrendCard({ title, children }: { title: string; children: React.ReactNo
   );
 }
 
-function Detail({ label, value }: { label: string; value: string }) {
+function Detail({
+  label,
+  value,
+  tip,
+}: {
+  label: string;
+  value: string;
+  tip?: React.ReactNode;
+}) {
   return (
     <div>
-      <dt className="text-soft">{label}</dt>
+      <dt className="inline-flex items-center gap-1 text-soft">
+        {label}
+        {tip}
+      </dt>
       <dd className="tnum mt-0.5 font-medium text-body">{value}</dd>
     </div>
   );

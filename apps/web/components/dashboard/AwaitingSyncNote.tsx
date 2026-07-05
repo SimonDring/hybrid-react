@@ -1,4 +1,6 @@
 import type { RosterSummary } from "@/types/dashboard";
+import { InfoTip } from "@/components/ui/InfoTip";
+import { JARGON } from "@/content/dashboardCopy";
 
 /**
  * "N joined, awaiting their first sync" — the one honest line about players
@@ -11,8 +13,9 @@ export function AwaitingSyncNote({ roster }: { roster: RosterSummary }) {
   const awaiting = Math.max(0, roster.joined - roster.reporting);
   if (awaiting === 0) return null;
   return (
-    <p className="text-xs text-muted">
+    <p className="inline-flex items-center gap-1 text-xs text-muted">
       {awaiting} joined, awaiting their first sync
+      <InfoTip {...JARGON.awaitingSync} />
     </p>
   );
 }
