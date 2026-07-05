@@ -101,6 +101,13 @@ export function AccountMenu() {
             <p className="truncate text-sm font-medium text-strong">{session.email}</p>
           </div>
           <Link
+            href="/get-started"
+            role="menuitem"
+            className="block px-4 py-2.5 text-sm text-body transition-colors hover:bg-surface-2 hover:text-strong"
+          >
+            Manage teams &amp; codes
+          </Link>
+          <Link
             href="/"
             role="menuitem"
             className="block px-4 py-2.5 text-sm text-body transition-colors hover:bg-surface-2 hover:text-strong"
