@@ -128,6 +128,96 @@ async function main() {
     ok((data || []).length === 0, `anon (signed out) reads nothing from ${table}`);
   }
 
+  // ══ WP-33: the Team spine — coach reads DERIVED only, team-scoped, never raw ══
+  console.log('\nCreating a coach + an outsider coach…');
+  const C = await signUpUser('coach');
+  const O = await signUpUser('outsider-coach');
+
+  // C founds a team and bootstraps their own coach membership.
+  const { data: team, error: teamErr } = await C.client.from('teams')
+    .insert({ name: `Harness FC ${stamp}`, sport: 'field_hockey', created_by: C.id }).select('id').single();
+  ok(!teamErr && team?.id, `coach founds a team${teamErr ? ` — ${teamErr.message}` : ''}`);
+  const { error: bootErr } = await C.client.from('team_members')
+    .insert({ team_id: team.id, user_id: C.id, role: 'coach', status: 'active' });
+  ok(!bootErr, `founder bootstraps their own coach membership${bootErr ? ` — ${bootErr.message}` : ''}`);
+
+  // O founds a DIFFERENT team (they are a real coach — just not of A's team).
+  const { data: oTeam } = await O.client.from('teams')
+    .insert({ name: `Rivals ${stamp}`, created_by: O.id }).select('id').single();
+  await O.client.from('team_members').insert({ team_id: oTeam.id, user_id: O.id, role: 'coach', status: 'active' });
+
+  // C invites A and B; each player ACCEPTS by updating their own row's status.
+  const { error: invErr } = await C.client.from('team_members').insert([
+    { team_id: team.id, user_id: A.id, role: 'player', status: 'invited' },
+    { team_id: team.id, user_id: B.id, role: 'player', status: 'invited' },
+  ]);
+  ok(!invErr, `coach invites two players${invErr ? ` — ${invErr.message}` : ''}`);
+  const { data: accA } = await A.client.from('team_members')
+    .update({ status: 'active' }).eq('team_id', team.id).eq('user_id', A.id).select('id');
+  ok((accA || []).length === 1, 'player A accepts their own invite (own-row status update)');
+  await B.client.from('team_members').update({ status: 'active' }).eq('team_id', team.id).eq('user_id', B.id);
+
+  // THE ESCALATION ATTACK: A tries to promote themselves to coach.
+  const { error: promoErr } = await A.client.from('team_members')
+    .update({ role: 'coach' }).eq('team_id', team.id).eq('user_id', A.id);
+  ok(!!promoErr, `a player CANNOT self-promote to coach (trigger: ${promoErr ? promoErr.message.slice(0, 40) : 'NOT BLOCKED!'})`);
+
+  // Players publish their own DERIVED status.
+  const { error: stErr } = await A.client.from('player_status')
+    .insert({ user_id: A.id, team_id: team.id, readiness: 71, load_state: 'balanced', acwr: 1.05, adherence_pct: 88, injury_status: 'available' });
+  ok(!stErr, `player A publishes their derived status${stErr ? ` — ${stErr.message}` : ''}`);
+  await B.client.from('player_status')
+    .insert({ user_id: B.id, team_id: team.id, readiness: 44, load_state: 'ramping', injury_status: 'modified' });
+
+  // The coach reads the WHOLE team's derived board…
+  const { data: board } = await C.client.from('player_status').select('user_id, readiness, load_state, injury_status').eq('team_id', team.id);
+  ok((board || []).length === 2, `coach reads the team's derived board (${(board || []).length}/2 players)`);
+
+  // …but teammates NEVER see each other,
+  const { data: peek } = await A.client.from('player_status').select('readiness').eq('user_id', B.id);
+  ok((peek || []).length === 0, "a player cannot read a TEAMMATE's status (players never see each other)");
+
+  // …an outsider coach sees nothing of this team,
+  const { data: oBoard } = await O.client.from('player_status').select('readiness').eq('team_id', team.id);
+  ok((oBoard || []).length === 0, "another team's coach reads NOTHING of this team");
+
+  // …the coach cannot WRITE a player's status,
+  const { data: cWrite } = await C.client.from('player_status')
+    .update({ readiness: 99 }).eq('user_id', A.id).select('id');
+  ok((cWrite || []).length === 0, "the coach cannot WRITE a player's status (0 rows)");
+
+  // …and — THE BINDING RULE — the coach still reads ZERO raw vitals.
+  const { data: coachVitals } = await C.client.from('daily_metrics')
+    .select(RAW_VITAL_COLS).eq('user_id', A.id);
+  ok((coachVitals || []).length === 0, "THE RULE: the coach reads ZERO raw vitals (hrv/rhr/sleep) of their own player");
+  const { data: coachInjury } = await C.client.from('injuries').select('description, rehab_plan').eq('user_id', A.id);
+  ok((coachInjury || []).length === 0, 'the coach reads ZERO private injury detail (status comes via player_status only)');
+
+  // THE RE-POINT ATTACK: A tries to move their status onto O's team board.
+  const { data: repoint, error: repointErr } = await A.client.from('player_status')
+    .update({ team_id: oTeam.id }).eq('user_id', A.id).select('id');
+  ok(!!repointErr || (repoint || []).length === 0, "a player cannot re-point their status at a team they're not in");
+
+  // Roster visibility: the coach sees all 3 memberships; a player only their own.
+  const { data: rosterC } = await C.client.from('team_members').select('id').eq('team_id', team.id);
+  ok((rosterC || []).length === 3, `coach sees the full roster (${(rosterC || []).length}/3)`);
+  const { data: rosterA } = await A.client.from('team_members').select('id').eq('team_id', team.id);
+  ok((rosterA || []).length === 1, 'a player sees only their OWN membership row (no roster browsing)');
+
+  // Signed-out: the team surfaces leak nothing.
+  for (const table of ['teams', 'team_members', 'player_status']) {
+    const { data } = await anon.from(table).select('id').limit(5);
+    ok((data || []).length === 0, `anon reads nothing from ${table}`);
+  }
+
+  // Team-spine cleanup: statuses (own delete), roster (coach delete), team (soft-delete).
+  await A.client.from('player_status').delete().eq('user_id', A.id);
+  await B.client.from('player_status').delete().eq('user_id', B.id);
+  await C.client.from('team_members').delete().eq('team_id', team.id);
+  await C.client.from('teams').update({ deleted_at: new Date().toISOString() }).eq('id', team.id);
+  await O.client.from('team_members').delete().eq('team_id', oTeam.id);
+  await O.client.from('teams').update({ deleted_at: new Date().toISOString() }).eq('id', oTeam.id);
+
   // ── cleanup the seeded data rows ────────────────────────────────────────────
   for (const r of inserted) await r.client.from(r.table).delete().eq('id', r.id);
   console.log(`\nCleanup: ${inserted.length} seeded rows removed (throwaway auth users remain — sandbox).`);
