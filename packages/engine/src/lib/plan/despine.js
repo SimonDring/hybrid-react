@@ -13,6 +13,8 @@ import { HIGH_DAY_THRESHOLD, axialOf } from './axial.js';
 
 const BY_ID = new Map(EXERCISES.map(e => [e.id, e]));
 const BY_NAME = new Map(EXERCISES.map(e => [e.name.toLowerCase(), e]));
+// WP-46 s2: resolve a plan item by its stable exId first (rename-proof), name fallback.
+const exForItem = (it) => (it.exId != null && BY_ID.get(it.exId)) || BY_NAME.get(String(it.name || '').toLowerCase());
 const dist = (a, b) => { const g = ((a - b) % 7 + 7) % 7; return Math.min(g, 7 - g); };
 
 // Ordering class for a rendered item — mirrors the allocator's pickClass so a
@@ -20,7 +22,7 @@ const dist = (a, b) => { const g = ((a - b) % 7 + 7) % 7; return Math.min(g, 7 -
 // < isoCore(3) < health/mobility(4).
 const LETTERS = 'ABCDEFGH';
 function itemClass(it) {
-  const ex = BY_NAME.get(String(it.name || '').toLowerCase());
+  const ex = exForItem(it);
   if (it.tag === 'mobility' || (ex && ex.loadClass === 'health')) return 4;
   if (!ex) return 2;
   if (ex.quality === 'power') return 0;
@@ -70,7 +72,7 @@ export function despineWeek(sessions = [], { priorityByIntent = new Map(), lifts
     if (dist(cur.dayIdx ?? 0, prev.dayIdx ?? 0) > 1) continue;       // not adjacent → spacing handled it
     let swapped = false;
     for (const it of cur.items || []) {
-      const ex = BY_NAME.get(String(it.name || '').toLowerCase());
+      const ex = exForItem(it);
       if (!ex || axialOf(ex) < 2 || !it.intent) continue;           // only de-spine high-axial intent lifts
       const cands = priorityByIntent.get(it.intent) || [];
       // lowest-axial available candidate of this intent

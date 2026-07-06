@@ -32,10 +32,29 @@ function muscleIndex() {
   return _index;
 }
 
+let _indexById = null;
+function muscleIndexById() {
+  if (_indexById) return _indexById;
+  _indexById = new Map();
+  for (const ex of EXERCISES) _indexById.set(ex.id, muscleContribution(ex));
+  return _indexById;
+}
+
 // Muscle contributions for one item name, or null if it isn't a known lift.
 export function exerciseMuscles(name) {
   if (!name) return null;
   return muscleIndex().get(String(name).toLowerCase()) || null;
+}
+
+// WP-46 s2: muscle contributions for a plan ITEM, keyed by its stable exId first
+// (a rename can't break the tally) and falling back to name for un-stamped items.
+export function exerciseMusclesForItem(item) {
+  if (!item) return null;
+  if (item.exId != null) {
+    const byId = muscleIndexById().get(item.exId);
+    if (byId) return byId;
+  }
+  return exerciseMuscles(item.name);
 }
 
 // Number of working sets from a "sets" string: the count before the × ("4 × 5",
@@ -66,7 +85,7 @@ export function countWeeklyVolume(sessions = []) {
       if (!sets) continue; // warm-ups / time-based rows aren't counted as volume
       const vf = it.volumeFactor == null ? 1 : it.volumeFactor; // stimulus credit (0.5 isoCore, 1 loaded)
       if (vf === 0) continue;
-      const contrib = exerciseMuscles(it.name);
+      const contrib = exerciseMusclesForItem(it);
       if (!contrib) { skipped.push(it.name); continue; }
       matched++;
       for (const muscle in contrib) counts[muscle] += sets * contrib[muscle] * vf;
