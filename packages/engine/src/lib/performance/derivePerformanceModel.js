@@ -10,10 +10,11 @@ import { prioritiseQualities } from './prioritise.js';
 
 export function derivePerformanceModel(model, asOf) {
   const m = model || {}; // never throw on a null/partial model
-  const capabilities = qualityIds().map((q) => estimateCapability(q, m, asOf));
   const sc = m.sportingContext || {};
+  // Demand first: capability estimation reads it for the sport-experience prior (WP-38c).
   const dp = sc.primarySport ? buildDemandProfile(sc.primarySport, sc.position || null) : [];
   const demandProfile = dp.length ? dp : null;
+  const capabilities = qualityIds().map((q) => estimateCapability(q, m, asOf, demandProfile));
   const limitingFactors = diagnoseLimitingFactors(capabilities, demandProfile, {
     trainingAgeBand: bandForModel(m),
     injuryHistory: (m.constraints && m.constraints.injuryHistory) || [],
