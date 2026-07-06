@@ -30,7 +30,7 @@ import { resolvePeriodization } from './plan/periodization.js';
 import { getGymLevel } from './Utils.js';
 import { deriveConstraints, suggestGymDays } from './plan/constraints.js';
 import { SESSION_CEILING_MIN, diagnosisSteers } from './plan/allocator.js';
-import { deriveBlockObjective } from './plan/blockObjective.js';
+import { deriveBlockObjective, blockDeloadSteers, deloadsFromRecoverability } from './plan/blockObjective.js';
 import { performanceModelForProfile } from './performance/forProfile.js';
 import { profileToAthleteModel } from './adapters/profileToAthleteModel.js';
 import * as SKB from './sportKnowledge/index.js';
@@ -166,7 +166,14 @@ export function generatePlan(profile = {}, opts = {}) {
   const totalSessions = totalDays;
 
   const { totalWeeks: total, split, deloads } = resolvePeriodization(profile);
-  const deloadSet = new Set(deloads || []);
+  // WP-47 (D7 steer, gated): a diagnosed SPORT cohort WITH a recoverability prior gets its
+  // deload RHYTHM from the diagnosis (recoverability cadence), not the style template — the
+  // A9 step. Gated + reversible; no-prior profiles keep the template deloads (byte-identical).
+  const steerRecoveryRate = (profile.athlete_model && profile.athlete_model.learnedPriors && profile.athlete_model.learnedPriors.recoveryRate && profile.athlete_model.learnedPriors.recoveryRate.value) ?? null;
+  const deloadWeeks = blockDeloadSteers({ sport: program.sport, priorityQualities: diag.priorityQualities, recoveryRate: steerRecoveryRate })
+    ? deloadsFromRecoverability(total, steerRecoveryRate)
+    : (deloads || []);
+  const deloadSet = new Set(deloadWeeks);
 
   // Race taper: a dated event that lands within this block cuts volume in the final
   // 1–2 weeks (keeping some sharpness) so the athlete arrives fresh. An event months

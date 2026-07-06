@@ -99,4 +99,25 @@ export function deriveBlockObjective({ priorityQualities = [], limitingFactors =
   return { blocks, sequencingNotes, source: 'diagnosis' };
 }
 
-export default { deriveBlockObjective };
+/**
+ * WP-47 (D7 steer, gated): the block plan's recoverability-driven DELOAD rhythm may steer
+ * periodisation — the first place D7 actually drives the plan, and the concrete A9 step
+ * (deload cadence from the diagnosis's recoverability, not the style enum). Deliberately
+ * narrow + reversible: it fires ONLY for a diagnosed SPORT cohort that ALSO carries a
+ * recoverability prior. No-prior profiles (every golden archetype) are untouched, so the
+ * baseline plans don't move; block-LENGTH/structure steering is a larger follow-on.
+ */
+export function blockDeloadSteers({ sport, priorityQualities, recoveryRate } = {}) {
+  return !!sport && Array.isArray(priorityQualities) && priorityQualities.length > 0 && recoveryRate != null;
+}
+
+/** Deload week numbers across a block of `totalWeeks`, spaced by the recoverability cadence
+ *  (low recoverability → tighter). Never the final week (kept for the peak/realisation). */
+export function deloadsFromRecoverability(totalWeeks, recoveryRate) {
+  const cadence = DELOAD_CADENCE_WEEKS[recoverabilityBand(recoveryRate)] || 4;
+  const out = [];
+  for (let w = cadence; w < totalWeeks; w += cadence) out.push(w);
+  return out;
+}
+
+export default { deriveBlockObjective, blockDeloadSteers, deloadsFromRecoverability };
