@@ -142,9 +142,10 @@ function buildGymWeek(count, ctx, profile, program, diag) {
 
 export function generatePlan(profile = {}, opts = {}) {
   const program = resolveProgram(profile);
-  // The diagnosis (D4/D5) that steers SPORT selection (D11). Derived from the profile unless the
-  // caller supplies one (PlanService passes the stored athlete model). Empty for build → legacy path.
-  // asOf comes from the profile's start date (never the clock) so generatePlan stays deterministic.
+  // The diagnosis (D4/D5) that steers SPORT selection (D11). Derived from the profile (the
+  // dual-written stored model rides profile.athlete_model and the adapter reads its richer
+  // fields — WP-38); opts.performanceModel remains a caller override seam. Empty for build →
+  // legacy path. asOf comes from the profile's start date (never the clock) — deterministic.
   const asOf = profile.plan_start_date || null;
   const perf = opts.performanceModel || performanceModelForProfile(profile, asOf);
   const skbSportId = program.sport ? (profileToAthleteModel(profile, asOf)?.sportingContext?.primarySport || null) : null;
