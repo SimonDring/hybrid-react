@@ -12,7 +12,7 @@
  * test corpus prove it).
  *
  * 24b moves the adaptedPhases POLICY (deload force/defer application, multipliers,
- * lightening, forgiveness) behind a pure reflowWeek(); 24c strips PlanService to an
+ * lightening, forgiveness) behind pure reflowPhases(); 24c strips PlanService to an
  * L3 orchestrator. Pure, no IO, no clock — every date is an argument.
  */
 import { weeklyMuscleTargets } from '../strength/targets.js';
