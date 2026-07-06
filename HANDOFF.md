@@ -41,8 +41,75 @@ stored Athlete Model never reached the live diagnosis; build cohort has no diagn
 cohorts are shown one their plan ignores; D6/D7/D8 missing; D14 covered 5/16 validators on the
 baseline path only; injured legacy-path athletes got silent-debt handling).
 
-**Shipped 2026-07-06 (PRs open for Simon — merges are his; engine-suite green on all; Vercel
-checks = the documented 24 h rate-limit flake):**
+**THE OPEN QUEUE (15 PRs, 2026-07-06) + suggested merge order — merges are Simon's;
+engine-suite green on all (152/152 at the tip); Vercel checks = the documented 24 h
+rate-limit flake:**
+THE STACK (land in order; after each base squash-merges, re-land the next rebased if
+GitHub auto-closes it — the #126 dance):
+`#127 → #131 → #132 → #136 → #139 (WP-44 governance ratchets, KSV→1.5.0) → #140
+(WP-52 match-day marker) → #141 (WP-45 one muscle model) → #142 (WP-59 first learning
+loop, STAGED)`.
+INDEPENDENTS (any order, off main): `#128 → #129 → #130 → #133 → #134 (then staging
+apply + harness run per SECURITY-DEPLOY.md) → #135 → #137 (WP-60 AIGAS build, all OFF)
+→ #138 (WP-57 one governed ACWR classifier)`.
+Known trivial conflicts: #127 and #131 both bumped KNOWLEDGE_SET_VERSION and re-baseline
+the same snapshot provenance lines — whichever lands second needs a one-line note
+reconcile + `UPDATE=1` re-run (the KSV chain runs 1.2.0→1.5.0 across #127/#131/#136/#139);
+#129 and #132 touch different regions of reflow.js.
+
+**SECOND WAVE (Simon's 2026-07-06 morning directive — cohort table closed, all sports
+steered, AIGAS review + build):**
+- **PR #136 — WP-48 the team-sport flip** (stacked on #132): hurling / gaelic_football /
+  field_hockey / **soccer** are category-led D11 — the diagnosis steers, meta.diagnosis +
+  D9 objectives ship. WP-23 id normalisation (mb_rotational_throw→cable_woodchop etc.;
+  hurling's empty plyo/upper-body categories gain seated_box_jump + pullup, seed-tagged
+  ⚠ for Simon). **SOCCER SKB AUTHORED TO FLAGSHIP** (agent-built, salvaged after a
+  session-limit cutoff, validated: completeness 1.00, 14/14 catalogue-joined — ⚠ the
+  whole profile is Simon's to review). tests/d11-team-quality.js (40 checks). KSV →
+  1.3.0; golden movement audited BY KEY = exactly the 3 team archetypes. **RUGBY LANDED + FLIPPED**
+  (agent-authored flagship: 18 qualities incl. neckStrength, 5 positions, 12 structured
+  rules, 17/18 joined, ⚠ science for Simon): ALL TEN SPORTS ARE DIAGNOSIS-STEERED, ZERO
+  STUBS REMAIN. d11-team-quality gates five sports (50 checks); suite 148/148.
+- **AIGAS review (item 3):** docs/architecture/AIGAS-REVIEW-2026-07-06.md — ALIGNED,
+  recommend ratification, 6 reconciliation notes (on main).
+- **PR #142 — WP-59 the first honest learning loop** (stacked on #141, the deepest tip):
+  the diagnosis is now a FALSIFIABLE HYPOTHESIS. Two pure modules — `learning/blockOutcome`
+  (per-D5-priority verdicts responded/flat/declined/insufficient from e1RM slope +
+  recovery trend, plus ONE conservative DOWNWARD candidate `volumeTolerance 0.9` only when
+  BOTH signals corroborate — Art 13/16) and `indices/readinessValidation` (does readiness
+  predict the athlete's own session experience? — the readout WP-44 named as owed).
+  **STAGED, NOT LIVE:** `AthleteModelService.syncStagedPriors` (wired at BlockCheckin,
+  change-driven, fire-and-forget) writes `athlete_model.stagedPriors` which NOTHING in the
+  engine reads; the live lever `learnedPriors.volumeTolerance` stays population/1 (test-
+  pinned). Promotion staged→learned is Simon's call (same twice-gated pattern as the AI
+  seam). tests: first-learning-loop.js (9) + staged-priors-wiring.js (10). Suite 152/152.
+  ⚠ FOR SIMON: (1) when/if to promote the first learned prior; (2) whether the detection
+  thresholds should become knowledge-base entries rather than module constants.
+- **PR #137 — WP-60 the AIGAS build (item 4, from main, everything OFF):** Seam-1
+  decision contracts as code (D11) + validateProposal → D14 disposal, engine purity
+  test-pinned; ai-render edge function (server-side key, §19 leak gate, §7 grounding
+  prompt, §20 stamps, AI_ENABLED kill switch) + AiService (ai_features profile flag,
+  artefact builder strips RAW_VITAL_KEYS, §9 degradation). Go-live is Simon's, twice-
+  gated; a per-capability eval harness is REQUIRED before any go-live (recorded).
+
+Also shipped this session (earlier additions):
+- **PR #132 — WP-43 explainability floor** (stacked on #131). Every legacy-path session now
+  carries an honest STYLE-derived `_objective` (source 'style' — never a diagnosis claim);
+  the reflow stamps `_ruleTrim {ruleIds, mult}` + `_catchUp {sets}`; WeekDetail renders the
+  three missing banners (deload deferred / sport-week trim / catch-up included). Golden
+  re-baseline audited additive-only (0 deletions). Provenance-persistence-to-rows recorded
+  for the platform band (needs schema tolerance).
+- **PR #131 also carries WP-42b**: team-sport golden archetypes (hurling/gaelic_football/
+  field_hockey — additive-only re-baseline) + `tests/d11-build-quality.js`, the Art-3 build
+  style-identity gate the WP-49 flip must keep green.
+- **PR #133 — WP-51** (agent-built, reviewed): schema.sql + migrations ledger reconciled
+  through 20260710 (the file was missing the ENTIRE team spine).
+- **PR #134 — WP-50** (agent-built, reviewed): team-scoped `player_status` SELECT
+  (`is_coach_of_team(team_id)`; drops the over-broad `is_coach_of`), `teams.join_code`
+  column revoke + coach-only `get_team_join_code` RPC, web repointed, 10 new harness cases.
+  **NOT staging-proven yet** — apply migration 20260711 to staging and run the harness.
+
+**Earlier in the session:**
 - **PR #127 — WP-38, the assessment chain repaired.** Stored model (position, resistance/sport
   years) reaches the live diagnosis via the adapter (#94/#101 pattern); D3 position boost live;
   measuredAt stamped → recency confidence real; per-lift strength standards (bench no longer
@@ -58,13 +125,14 @@ checks = the documented 24 h rate-limit flake):**
   an RDL after clean selection — the hole affected D11 too). Injured build athletes ship full
   legal sessions; pure baseline byte-identical by construction.
 
-**⇒ NEXT (backlog order):** WP-41 (contraindications → pattern/id level, dual-run equivalence)
-→ WP-42 (goal demand profiles, parallel/verified-unused + team-sport golden archetypes +
-d11-build-quality calibration; demand vectors flagged for Simon) → WP-43 (explainability floor)
-→ WP-44 (governance ratchets). Platform band interleaves as small PRs (WP-50 team-scope the
-player_status SELECT + join_code grant; WP-51 schema.sql/ledger reconciliation through 20260710;
-WP-52 match-day marker). **PAUSES:** WP-47 D7 design, WP-48 team-sport flip commit, WP-49 build
-flip (six product decisions listed in the reassessment).
+**⇒ NEXT (backlog order — WP-44/45/52/57/59/60 now all opened as PRs above; remaining):**
+WP-47 D7 block-objective **design spec DOC** (build pauses for Simon, but the doc is fair
+game) → WP-46 structured items / exercise ids → WP-53 engine `rollUp()` + apps/web consumes
+it → WP-58 unify the two strength-standards models → WP-55 reflow baseline-identity.
+**PAUSES for Simon:** WP-47 D7 design, WP-48 team-sport flip commit, WP-49 build flip (six
+product decisions listed in the reassessment §Priority 11) — plus review of the seed science
+flagged in #127 (per-lift standards, sport-experience priors) and #131 (goal demand vectors),
+and WP-41 stage 2 (the id-level contraindication vocabulary needs your science review).
 
 ## ▶ (superseded 2026-07-06) engine-rebuild status & the next step (2026-07-03)
 

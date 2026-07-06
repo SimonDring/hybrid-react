@@ -8,11 +8,24 @@ export function profileToAthleteModel(profile = {}, asOf) {
   const p = profile || {};
   const outcome = legacyToOutcome(p.goal_type, p.strength_style, p.sport);
 
+  // The dual-written stored model rides the profile (users.profile.athlete_model — the
+  // #94/#101 pattern). Fields the legacy profile can't carry are read from it below so every
+  // read path (plan, reflow, Atlas) sees them. Absent model → identical output to before.
+  const am = p.athlete_model || {};
+  const amSc = am.sportingContext || {};
+  const amTh = am.trainingHistory || {};
+  const storedMetrics = Array.isArray(am.performanceMetrics) ? am.performanceMetrics : [];
+
   const performanceMetrics = [];
   const L = p.lifts || {};
   for (const [k, metric] of [['squat', '1rm_squat'], ['bench', '1rm_bench'], ['deadlift', '1rm_deadlift'],
                              ['ohp', '1rm_ohp'], ['pull', '1rm_pull']]) {
-    if (L[k] != null) performanceMetrics.push({ id: metric, metric, value: L[k], unit: 'kg', source: 'self', confidence: 'moderate', measuredAt: null });
+    if (L[k] == null) continue;
+    // A stored metric's measuredAt is trusted only while the profile value still matches it —
+    // a changed 1RM means re-measured at an unknown date (honestly null).
+    const stored = storedMetrics.find((m) => m && m.metric === metric && m.value === L[k]);
+    performanceMetrics.push({ id: metric, metric, value: L[k], unit: 'kg', source: 'self', confidence: 'moderate',
+                              measuredAt: (stored && stored.measuredAt) || null });
   }
 
   const sportDays = Array.isArray(p.sport_days) ? p.sport_days : [];
@@ -32,11 +45,16 @@ export function profileToAthleteModel(profile = {}, asOf) {
     goals: [{ id: 'primary', outcome, priority: 1, sportRef: p.sport || null }],
     sportingContext: {
       primarySport: skbSportIdOf(p),
+      position: amSc.position || null,
       seasonPhase: p.sport_season || null,
       competitionCalendar: p.event_date ? [{ label: 'event', date: p.event_date }] : [],
       weeklySportSchedule,
     },
-    trainingHistory: { selfRatedLevel: (p.experience && p.experience.gym) || null },
+    trainingHistory: {
+      selfRatedLevel: (p.experience && p.experience.gym) || null,
+      resistanceTrainingYears: amTh.resistanceTrainingYears ?? null,
+      sportYears: amTh.sportYears ?? null,
+    },
     constraints: {
       equipment: p.access || [],
       availableDays: (p.availability && p.availability.days) || [],

@@ -13,7 +13,7 @@
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, drainOutbox, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
-import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex } from '@performance-os/engine';
+import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, dailyLoads, acuteChronic, acwr, acwrSeries, acwrBand, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex } from '@performance-os/engine';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch, adaptedSessionByKey } from '../lib/PlanService.js';
 import * as Plan from '../lib/PlanService.js';
 import { consistencyGoal } from '../lib/goals.js';
@@ -135,7 +135,9 @@ function buildView() {
   setRuntime({ sessions, recovery: recoveryOut, load: loadOut });
 
   // Load view-model: acute/chronic/acwr + recent session loads (newest first).
-  const band = acwrVal == null ? null : acwrVal < 0.8 ? 'under' : acwrVal > 1.5 ? 'over' : acwrVal > 1.3 ? 'high' : 'sweet';
+  // WP-57: the band derives from the engine's ONE governed classifier — these
+  // cut-points lived here as hand-copied literals (the documented drift class).
+  const band = acwrBand(acwrVal);
   const loadSessions = sessionLogsAll
     .filter(l => l.completed_at)
     .sort((a, b) => (b.completed_at || '').localeCompare(a.completed_at || ''))
@@ -387,10 +389,15 @@ export const useTrainingStore = create((set) => ({
   },
   // Ranked same-muscle alternatives for an exercise (equipment unavailable in the gym).
   // Pure read of the current profile — used by the runner's Substitute sheet.
+  // WP-39: active injuries constrain the candidates — a swap must never OFFER a
+  // contraindicated movement (same regexes as the injury filter + D14 validator).
   substituteOptionsFor(item) {
     const profile = Database.services.getProfile() || {};
+    const injuries = (Database.services.listInjuries() || []).filter(i =>
+      (i.status === 'active' || i.status === 'rehabbing') && i.body_part_key
+    );
     return substituteOptions(item, {
-      access: profile.access || [], lifts: resolveLifts(profile), level: getGymLevel(profile)
+      access: profile.access || [], lifts: resolveLifts(profile), level: getGymLevel(profile), injuries
     });
   },
   // Swap one exercise in the CURRENT session for a same-muscle alternative — session

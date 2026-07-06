@@ -58,7 +58,11 @@ function reorderSession(items) {
   return [...lead, ...out];
 }
 
-export function despineWeek(sessions = [], { priorityByIntent = new Map(), lifts = {}, level = 'intermediate', bodyweight = null } = {}) {
+export function despineWeek(sessions = [], { priorityByIntent = new Map(), lifts = {}, level = 'intermediate', bodyweight = null, blockedNameRegexes = [] } = {}) {
+  // WP-40: a de-spine swap is a SELECTION and must honour runtime contraindications —
+  // without this, despine could re-introduce an injury-blocked lift AFTER the allocator
+  // (legacy or D11) deliberately avoided it. The pure generator passes none.
+  const isBlocked = (ex) => blockedNameRegexes.length > 0 && blockedNameRegexes.some((r) => r.test(ex.name));
   const ordered = [...sessions].sort((a, b) => (a.dayIdx ?? 0) - (b.dayIdx ?? 0));
   for (let i = 1; i < ordered.length; i++) {
     const prev = ordered[i - 1], cur = ordered[i];
@@ -71,7 +75,7 @@ export function despineWeek(sessions = [], { priorityByIntent = new Map(), lifts
       const cands = priorityByIntent.get(it.intent) || [];
       // lowest-axial available candidate of this intent
       let best = null, bestAx = Infinity;
-      for (const id of cands) { const c = BY_ID.get(id); if (c && axialOf(c) < bestAx) { best = c; bestAx = axialOf(c); } }
+      for (const id of cands) { const c = BY_ID.get(id); if (c && !isBlocked(c) && axialOf(c) < bestAx) { best = c; bestAx = axialOf(c); } }
       if (best && best.id !== ex.id && bestAx < axialOf(ex)) {
         it.name = best.name; it.weight = undefined; swapped = true;
       }

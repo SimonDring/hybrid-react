@@ -174,9 +174,13 @@ edited; every WP is a small revertible PR. **Merges: leave green PRs for Simon**
   be robust to catalogue evolution.
 - **What:** 40 — legacy allocator consumes `ctx.contraindicatedPatterns`/`blockedNameRegexes`
   (anchor + fill pools filtered, volume redistributed to legal muscles); post-filter stays as
-  backstop. 41 — contraindications gain `blockedPatterns`/`blockedIds` per phase; dual-run
-  old-vs-new matcher over the 118-exercise catalogue proves equivalence before cut-over; CI
-  test that every catalogue exercise is classifiable.
+  backstop. 41 — **re-scoped 2026-07-06:** first land the *classification golden*
+  (`tests/injury-classification-pin.js` snapshots which catalogue exercises each region×phase
+  blocks; any rename/new exercise/regex edit that shifts safety classification fails CI with a
+  reviewable diff) — this closes the operative silent-break risk without re-authoring clinical
+  rules solo. The full id/pattern-level vocabulary migration (regexes → attribute rules per
+  region×phase, dual-run equivalence) is the follow-up and needs Simon's science review of the
+  re-authored rules.
 - **Files:** `plan/allocator.js`, `injury/profiles.js`, `injuryRules.js`, `injuryFilter.js`,
   `session/movementRequirements.js` (retire the majority-vote regex→pattern shim).
 - **Dependencies:** none (40 before 41 optional). **Complexity:** M + M. **Risk:** medium —
@@ -248,6 +252,12 @@ edited; every WP is a small revertible PR. **Merges: leave green PRs for Simon**
   season + recoverability; block length/deload rhythm from governed priors; sport cohorts
   first (goldens constrain build). **Complexity:** L. **Risk:** medium-high — design vs the
   EDS D7 contract; spec + Simon review of the coaching model before build.
+  - **SPEC WRITTEN (2026-07-06):** `docs/architecture/D7-BLOCK-OBJECTIVE-SPEC.md` — the
+    BlockObjective object, the diagnosis-driven coaching model, cross-block sequencing of
+    deferred limiters, the D11-style gated/parallel/golden-master rollout, and §9 OPEN
+    QUESTIONS that require Simon's sign-off (D6-first vs provisional strategy; sequencing
+    aggressiveness; block-length + deload seed science; taper trigger; cohort order).
+    **BUILD PAUSED until Simon answers §9.**
 
 ### Priority 10 — WP-48 · F1: team-sport flip (gaa/hurling/field hockey → category-led D11)
 - Proven swim pattern: library↔catalogue join audit per sport, `d11-gaa-quality.js`
