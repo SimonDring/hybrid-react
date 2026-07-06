@@ -8,6 +8,14 @@
  * the server (S11 trigger, 20260708/20260709). Everything this module derives —
  * RAG status, reasons, confidence — is computed from those seven fields only.
  * Spec: docs/superpowers/specs/2026-07-05-live-coach-board-design.md.
+ *
+ * WP-53 / TAS Appendix A: the DERIVATION core (RAG severity model + confidence +
+ * load/injury normalisation) is now owned by the engine as the canonical, snapshot-locked
+ * `rollUp` (@performance-os/engine, packages/engine/src/lib/team/rollUp.js; parity pinned by
+ * apps/mobile/tests/wp53-rollup.js). deriveLiveStatus/deriveConfidence below are kept
+ * VERBATIM in lockstep with it. STAGE 2 (separate change, where the Next build is verified):
+ * make this module CONSUME engine `rollUp` for the signal, keep only the English reasons/
+ * actions here, and delete the duplicate.
  */
 import type {
   CoachVisiblePlayer,
