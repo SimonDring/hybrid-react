@@ -19,7 +19,7 @@
  * SKB…). Bump on any science change; stamped into every plan/reflow output as
  * meta.provenance.knowledgeSetVersion (WP-27).
  */
-export const KNOWLEDGE_SET_VERSION = '1.2.0'; // 1.2.0 (2026-07-06): WP-38 sport-experience priors + per-lift standards; WP-42a goal demand profiles (data/goalDemand.js). One release window — reconcile notes if PRs #127/#131 merge separately. 1.1.0 (2026-07-04): +field_hockey SKB.
+export const KNOWLEDGE_SET_VERSION = '1.2.0'; // 1.2.0 (2026-07-06): WP-38 — sport-experience capability priors (capabilityPriors.SPORT_EXPERIENCE) + per-lift strength standards in D1 estimation; WP-42a — goal demand profiles (data/goalDemand.js) so build goals get a real diagnosis. 1.1.0 (2026-07-04): +field_hockey SKB profile; endurance decisionRules structured
 
 /** @type {import('./schema.js').KnowledgeEntry[]} */
 export const ENTRIES = [

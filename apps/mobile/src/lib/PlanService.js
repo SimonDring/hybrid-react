@@ -19,7 +19,7 @@ import {
   generatePlan, SESSION_CEILING_MIN, resolveProgram, countWeeklyVolume, resolveLifts,
   MUSCLE_GROUPS, MUSCLE_LABELS, applyInjuryRules, applyPrevention, deloadRecommendation,
   ruleVolumeAdjustment, deriveConstraints, buildPrimer, performanceModelForProfile,
-  profileToAthleteModel, kb, sportKnowledge as SKB, applyTeamSchedule
+  profileToAthleteModel, kb, sportKnowledge as SKB, applyTeamSchedule, validateWeek
 } from '@performance-os/engine';
 import * as reflowLib from '@performance-os/engine/lib/plan/reflow.js';
 import { getOverrides } from './sessionOverrides.js';
@@ -277,6 +277,22 @@ function decoratePhases(phases, access) {
   }));
 }
 
+// WP-39: D14 runs on the SHIPPED artefact, not just the pure baseline. Every week the
+// athlete can read carries a ValidationReport computed over the reflowed + injury-filtered
+// content with their ACTIVE injuries in context — report-only (nothing is reshaped here;
+// construction proposes, validation proves). Memoised per adapted-week identity: the
+// adaptedPhases memo returns stable week objects until runtime state changes, so a
+// WeakMap keyed on them re-validates only when the reflow (or the injury set) moved.
+const _weekValidation = new WeakMap();
+function shippedValidation(adaptedWeek, shippedWeek, access, active) {
+  const sig = JSON.stringify([access, active.map(i => [i.body_part_key, i.severity, i.rehab_phase, i.status])]);
+  const hit = _weekValidation.get(adaptedWeek);
+  if (hit && hit.sig === sig) return hit.report;
+  const report = validateWeek(shippedWeek, { access, injuries: active });
+  _weekValidation.set(adaptedWeek, { sig, report });
+  return report;
+}
+
 function injuryFilteredPhases() {
   const phases = adaptedPhases();
   if (!phases) return null;
@@ -290,15 +306,15 @@ function injuryFilteredPhases() {
   );
   const history = allInjuries.filter(i => i.body_part_key);
 
-  const injured = active.length || history.length;
-  const filtered = injured ? phases.map(phase => ({
+  const filtered = phases.map(phase => ({
     ...phase,
     weeks: (phase.weeks || []).map(week => {
       let w = active.length ? applyInjuryRules(week, active) : week;
       w = history.length ? applyPrevention(w, history) : w;
-      return w;
+      const _validation = shippedValidation(week, w, access, active);
+      return w === week ? { ...week, _validation } : { ...w, _validation };
     })
-  })) : phases;
+  }));
 
   // Decorate every gym session with its primer + section tags — done LAST (after
   // injury filtering) so the primer reflects the actual, injury-adjusted main lifts.

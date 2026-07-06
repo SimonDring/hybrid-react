@@ -29,7 +29,7 @@ export { assessLoad, assessLoad as deriveLoad } from './src/lib/load/load.js';
 export { readinessIndex, readinessIndex as deriveReadiness } from './src/lib/indices/index.js';
 export { computeReadiness, readinessFor, sleepScoreFor } from './src/lib/Readiness.js';
 export {
-  dailyLoads, acuteChronic, acwr, acwrSeries, loadDecision,
+  dailyLoads, acuteChronic, acwr, acwrSeries, loadDecision, acwrBand,
   combinedMultiplier, deloadRecommendation, sessionLoad, workoutLoad
 } from './src/lib/plan/trainingLoad.js';
 export { getContraindications } from './src/lib/injury/injuryRules.js';
@@ -39,6 +39,9 @@ export { applyInjuryRules, applyPrevention } from './src/lib/injury/injuryFilter
 export { default as kb } from './src/lib/knowledge/kb.js';
 export { authorityOf, mayForceAlone, mayScaleAlone } from './src/lib/knowledge/authority.js';
 export { validateWeek, validateWeek as validate, VALIDATORS, CONFLICT_ORDER } from './src/lib/validation/contract.js';
+// The AIGAS Seam 1 gate (WP-60): decision contracts + proposal disposal. The engine's
+// decision modules never import ai/ (one-way, test-pinned); proposers live platform-side.
+export { DECISION_CONTRACTS, contractFor, validateProposal } from './src/lib/ai/contracts.js';
 export { default as sportKnowledge } from './src/lib/sportKnowledge/index.js';
 export { exerciseQualities, FORCE_VELOCITY } from './src/data/exerciseQualities.js';
 export { deriveSessionSpecs, regionOf } from './src/lib/session/sessionSpecs.js';
