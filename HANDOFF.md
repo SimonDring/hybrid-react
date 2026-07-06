@@ -41,15 +41,21 @@ stored Athlete Model never reached the live diagnosis; build cohort has no diagn
 cohorts are shown one their plan ignores; D6/D7/D8 missing; D14 covered 5/16 validators on the
 baseline path only; injured legacy-path athletes got silent-debt handling).
 
-**THE OPEN QUEUE (10 PRs, 2026-07-06) + suggested merge order — merges are Simon's;
-engine-suite green on all; Vercel checks = the documented 24 h rate-limit flake:**
-`#127 → #131 → #132 → #136 (the STACK: #132 on #131, #136 on #132 — after each base
-squash-merges, re-land the next rebased if GitHub auto-closes it, the #126 dance) →
-#128 → #129 → #130 → #133 → #134 (then staging apply + harness run per
-SECURITY-DEPLOY.md) → #135 → #137 → #138 (WP-57 one governed ACWR classifier)`. Known trivial conflicts: #127 and #131 both bump
-KNOWLEDGE_SET_VERSION to 1.2.0 and re-baseline the same snapshot provenance lines —
-whichever lands second needs a one-line note reconcile + `UPDATE=1` re-run; #129 and #132
-touch different regions of reflow.js.
+**THE OPEN QUEUE (15 PRs, 2026-07-06) + suggested merge order — merges are Simon's;
+engine-suite green on all (152/152 at the tip); Vercel checks = the documented 24 h
+rate-limit flake:**
+THE STACK (land in order; after each base squash-merges, re-land the next rebased if
+GitHub auto-closes it — the #126 dance):
+`#127 → #131 → #132 → #136 → #139 (WP-44 governance ratchets, KSV→1.5.0) → #140
+(WP-52 match-day marker) → #141 (WP-45 one muscle model) → #142 (WP-59 first learning
+loop, STAGED)`.
+INDEPENDENTS (any order, off main): `#128 → #129 → #130 → #133 → #134 (then staging
+apply + harness run per SECURITY-DEPLOY.md) → #135 → #137 (WP-60 AIGAS build, all OFF)
+→ #138 (WP-57 one governed ACWR classifier)`.
+Known trivial conflicts: #127 and #131 both bumped KNOWLEDGE_SET_VERSION and re-baseline
+the same snapshot provenance lines — whichever lands second needs a one-line note
+reconcile + `UPDATE=1` re-run (the KSV chain runs 1.2.0→1.5.0 across #127/#131/#136/#139);
+#129 and #132 touch different regions of reflow.js.
 
 **SECOND WAVE (Simon's 2026-07-06 morning directive — cohort table closed, all sports
 steered, AIGAS review + build):**
@@ -66,6 +72,19 @@ steered, AIGAS review + build):**
   STUBS REMAIN. d11-team-quality gates five sports (50 checks); suite 148/148.
 - **AIGAS review (item 3):** docs/architecture/AIGAS-REVIEW-2026-07-06.md — ALIGNED,
   recommend ratification, 6 reconciliation notes (on main).
+- **PR #142 — WP-59 the first honest learning loop** (stacked on #141, the deepest tip):
+  the diagnosis is now a FALSIFIABLE HYPOTHESIS. Two pure modules — `learning/blockOutcome`
+  (per-D5-priority verdicts responded/flat/declined/insufficient from e1RM slope +
+  recovery trend, plus ONE conservative DOWNWARD candidate `volumeTolerance 0.9` only when
+  BOTH signals corroborate — Art 13/16) and `indices/readinessValidation` (does readiness
+  predict the athlete's own session experience? — the readout WP-44 named as owed).
+  **STAGED, NOT LIVE:** `AthleteModelService.syncStagedPriors` (wired at BlockCheckin,
+  change-driven, fire-and-forget) writes `athlete_model.stagedPriors` which NOTHING in the
+  engine reads; the live lever `learnedPriors.volumeTolerance` stays population/1 (test-
+  pinned). Promotion staged→learned is Simon's call (same twice-gated pattern as the AI
+  seam). tests: first-learning-loop.js (9) + staged-priors-wiring.js (10). Suite 152/152.
+  ⚠ FOR SIMON: (1) when/if to promote the first learned prior; (2) whether the detection
+  thresholds should become knowledge-base entries rather than module constants.
 - **PR #137 — WP-60 the AIGAS build (item 4, from main, everything OFF):** Seam-1
   decision contracts as code (D11) + validateProposal → D14 disposal, engine purity
   test-pinned; ai-render edge function (server-side key, §19 leak gate, §7 grounding
@@ -106,11 +125,10 @@ Also shipped this session (earlier additions):
   an RDL after clean selection — the hole affected D11 too). Injured build athletes ship full
   legal sessions; pure baseline byte-identical by construction.
 
-**⇒ NEXT (backlog order, once the queue merges):** WP-44 governance ratchets (the KSV
-hash-manifest test + authority wiring in recovery/selection — deliberately DEFERRED while the
-queue is open: it conflicts with every unmerged data change) → WP-45 one muscle model →
-WP-46 structured items → WP-52 match-day marker (touches WeekDetail — do after #132 lands) →
-WP-56 dead-code sweep (scheduler doubles/long-run machinery) → WP-57 single-source ACWR bands.
+**⇒ NEXT (backlog order — WP-44/45/52/57/59/60 now all opened as PRs above; remaining):**
+WP-47 D7 block-objective **design spec DOC** (build pauses for Simon, but the doc is fair
+game) → WP-46 structured items / exercise ids → WP-53 engine `rollUp()` + apps/web consumes
+it → WP-58 unify the two strength-standards models → WP-55 reflow baseline-identity.
 **PAUSES for Simon:** WP-47 D7 design, WP-48 team-sport flip commit, WP-49 build flip (six
 product decisions listed in the reassessment §Priority 11) — plus review of the seed science
 flagged in #127 (per-lift standards, sport-experience priors) and #131 (goal demand vectors),
