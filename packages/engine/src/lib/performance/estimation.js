@@ -8,9 +8,14 @@ import { sportExperiencePriorLevel, SPORT_EXPERIENCE } from '../../data/capabili
 import { bandForYears, bandForLegacyLevel } from '../../data/trainingAgeBands.js';
 
 // Per-lift "strong" 1RM/bodyweight multiples mapping to level 1.0 (WP-38b). Seed values from
-// strengthlevel.com population percentiles (~advanced band), consistent with the app's
-// per-lift display standards. 1rm_pull is REPS, not a load — never scored here.
-const STRONG_BW_MULTIPLE = {
+// strengthlevel.com population percentiles. WP-58: these align with the GOVERNED
+// strengthStandards table (data/strengthStandards.js) `advanced` band for squat/bench/
+// deadlift (both sexes); they DIVERGE for ohp (anchored at `elite` = 1.0) and for female
+// deadlift/ohp (independently seeded 1.9 / 0.7). Reconciling those values is a scientific
+// call left to a reviewed change; tests/wp58-strength-standards.js pins the alignment and
+// the known exceptions so the two tables can no longer drift silently.
+// 1rm_pull is REPS, not a load — never scored here.
+export const STRONG_BW_MULTIPLE = {
   '1rm_squat':    { male: 2.0, female: 1.5, other: 1.8 },
   '1rm_deadlift': { male: 2.5, female: 1.9, other: 2.2 },
   '1rm_bench':    { male: 1.5, female: 1.0, other: 1.25 },
