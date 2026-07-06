@@ -5,7 +5,8 @@
  * diagnosis speaks in qualities, but the allocator picks by muscle — this is the
  * missing bridge.
  *
- * READ BY NOTHING IN generatePlan. Kept separate from strengthExercises.js (which
+ * Live since Sprint 8: the D11 branch inside generatePlan selects by these tags.
+ * Kept separate from strengthExercises.js (which
  * drives the live plan + both golden masters) exactly like exerciseSimilarity.js, so
  * the generated plan is unaffected. Tags resolve via CLASS rules (reading the flags
  * an exercise already carries) → PATTERN defaults → per-exercise OVERRIDES.
