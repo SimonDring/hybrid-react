@@ -404,12 +404,13 @@ const OVERSHOOT_PENALTY = 0.1;
 // Pick the single best exercise to add to a slot right now, or null when nothing
 // left pays down a deficit (within the slot's remaining time). `targets` is the
 // full per-muscle target (for urgency), `deficit` the running remainder.
-function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null, levelName = 'intermediate', power = false, goalPrimary = null, demotePress = false, weeklyExCount = {}, priorityFor = () => false) {
+function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null, levelName = 'intermediate', power = false, goalPrimary = null, demotePress = false, weeklyExCount = {}, priorityFor = () => false, blockedRx = []) {
   let best = null, bestScore = 0.25; // threshold: ignore near-useless picks
   for (const ex of EXERCISES) {
     if (!slot.equip.has(ex.equip)) continue;
     if (ex.level > slot.level) continue;
     if (slot.exUsed.has(ex.id)) continue;
+    if (blockedRx.length && blockedRx.some(r => r.test(ex.name))) continue;  // injury-contraindicated (WP-40)
     if (!powerAllowed(ex, power, prioritySet, style)) continue;   // power gate
     if (fillersOnly && !isFiller(ex)) continue;   // filler pass: only light rest-gap work
     // Endurance sports: at most one horizontal-press slot per session (low transfer).
@@ -517,10 +518,12 @@ function finisherPool(slot, ctx, levelName) {
   const sport = ctx.sport || null;
   const goal = ctx.style;                        // strength | bodybuilding | functional | sport
   const prio = new Set(ctx.exercisePriority || []);
+  const blockedRx = ctx.blockedNameRegexes || [];
   const cands = EXERCISES.filter(ex => {
     if (!slot.equip.has(ex.equip)) return false;
     if (ex.level > slot.level) return false;
     if (slot.exUsed.has(ex.id)) return false;
+    if (blockedRx.length && blockedRx.some(r => r.test(ex.name))) return false;  // injury-contraindicated (WP-40)
     return stimulusFactor(ex, levelName) === 0 || ex.pattern === 'mobility';  // health (0) or mobility
   });
   const relevance = (ex) => {
@@ -612,6 +615,14 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   // No barbell (dumbbell / bodyweight only) → a max-strength scheme can't be loaded.
   const noBarbell = !availableEquip(ctx.access || []).has('barbell');
   const s = scheme(style, intent, deload, taper, noBarbell);
+  // WP-40: runtime contraindications gate SELECTION on EVERY path (EDS §36 — constraints
+  // pre-shape, the post-filter is a backstop). The reflow passes ctx.blockedNameRegexes
+  // from the athlete's active injuries; the pure baseline generator passes none, so
+  // baseline output is byte-identical. Previously only the D11 sport branch honoured
+  // these — the legacy fill selected blocked movements the injury filter then struck
+  // and hid: silent volume loss for injured build athletes (Art 8 / Art 15).
+  const blockedRx = ctx.blockedNameRegexes || [];
+  const isBlockedEx = (ex) => blockedRx.length > 0 && blockedRx.some((r) => r.test(ex.name));
   // Sport-only: count fatiguing (working, factor>0) picks in a slot, and whether it's
   // at the lean cap. The factor-0 supportive finisher is added later and stays exempt.
   const workCount = (slot) => slot.picks.filter(p => (p.item?.volumeFactor ?? 1) > 0).length;
@@ -703,7 +714,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   // split's day patterns, or the rotating FUNDAMENTAL fallback).
   const patternAnchor = (slot, patterns) => {
     for (const pat of patterns) {
-      let cands = EXERCISES.filter(e => e.pattern === pat && slot.equip.has(e.equip) && e.level <= slot.level && powerAllowed(e, power, prioritySet, style));
+      let cands = EXERCISES.filter(e => e.pattern === pat && slot.equip.has(e.equip) && e.level <= slot.level && powerAllowed(e, power, prioritySet, style) && !isBlockedEx(e));
       if (!cands.length) continue;
       const prim = cands.filter(e => e.role === 'primary');
       if (prim.length) cands = prim;
@@ -846,7 +857,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   for (const slot of work) {
     let ex = null;
     if (sportAnchors.length) {
-      const fit = sportAnchors.filter(e => slot.equip.has(e.equip) && e.level <= slot.level);
+      const fit = sportAnchors.filter(e => slot.equip.has(e.equip) && e.level <= slot.level && !isBlockedEx(e));
       const focused = slot.focus
         ? fit.filter(e => { const c = muscleContribution(e); return Object.keys(c).some(m => (slot.focus[m] || 0) > 0); })
         : fit;
@@ -866,7 +877,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     progressed = false;
     for (const slot of work) {
       if (slot.timeUsed >= slot.budget || overSportCap(slot)) continue;
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor);
+      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor, blockedRx);
       if (!pick) continue;
       place(slot, pick);
       progressed = true;
@@ -880,7 +891,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const maint = { ...targets };
     let go = true;
     while (go && slot.timeUsed < slot.budget) {
-      const pick = bestExercise(slot, targets, maint, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor);
+      const pick = bestExercise(slot, targets, maint, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor, blockedRx);
       if (!pick) { go = false; break; }
       place(slot, pick);
       for (const m in pick.contrib) maint[m] -= pick.sets * pick.contrib[m];
@@ -895,7 +906,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const FILLER_MIN_GAP = 0.33;   // a muscle must still be ≥ a third of its target short
   for (const slot of work) {
     if (slot.timeUsed >= slot.budget || overSportCap(slot)) continue;
-    const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor);
+    const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor, blockedRx);
     if (!pick) continue;
     const realGap = Object.keys(pick.contrib).some(m => (targets[m] || 0) > 0 && (deficit[m] || 0) >= FILLER_MIN_GAP * targets[m]);
     if (!realGap) continue;

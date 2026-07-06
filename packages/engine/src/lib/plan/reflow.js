@@ -299,7 +299,7 @@ export function reflowPhases({
             reshapedIdx.has(i) ? s : { ...s, items: (s.items || []).map((it) => ({ ...it })) });
           despineWeek(forDespine, {
             priorityByIntent: gctx.priorityByIntent, lifts: gctx.lifts,
-            level: gctx.level, bodyweight: gctx.bodyweight
+            level: gctx.level, bodyweight: gctx.bodyweight, blockedNameRegexes
           });
         }
         const forceDl = week.num === cw && rec.action === 'force';
