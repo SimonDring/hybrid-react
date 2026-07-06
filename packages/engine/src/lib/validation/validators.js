@@ -14,6 +14,10 @@ import { parseSetCount, exerciseMuscles } from '../plan/volume.js';
 import { blockedNameRegexesForInjuries } from '../session/movementRequirements.js';
 
 const EX_BY_NAME = new Map(EXERCISES.map((e) => [e.name.toLowerCase(), e]));
+const EX_BY_ID = new Map(EXERCISES.map((e) => [e.id, e]));
+// WP-46 s2: resolve a plan item to its catalogue entry by stable exId first (a
+// rename can't defeat the safety gate), falling back to name for un-stamped items.
+const exForItem = (it) => (it.exId != null && EX_BY_ID.get(it.exId)) || EX_BY_NAME.get((it.name || '').toLowerCase());
 const UPPER = new Set(['chest', 'back', 'shoulders', 'biceps', 'triceps']);
 const LOWER = new Set(['quads', 'hamstrings', 'glutes', 'calves']);
 
@@ -94,7 +98,7 @@ export const equipmentValidator = {
     const findings = [];
     for (const s of gymSessions(week)) {
       for (const it of mainItems(s)) {
-        const ex = EX_BY_NAME.get((it.name || '').toLowerCase());
+        const ex = exForItem(it);
         if (ex && ex.equip && !have.has(ex.equip)) {
           findings.push({
             verdict: 'veto',
