@@ -387,10 +387,15 @@ export const useTrainingStore = create((set) => ({
   },
   // Ranked same-muscle alternatives for an exercise (equipment unavailable in the gym).
   // Pure read of the current profile — used by the runner's Substitute sheet.
+  // WP-39: active injuries constrain the candidates — a swap must never OFFER a
+  // contraindicated movement (same regexes as the injury filter + D14 validator).
   substituteOptionsFor(item) {
     const profile = Database.services.getProfile() || {};
+    const injuries = (Database.services.listInjuries() || []).filter(i =>
+      (i.status === 'active' || i.status === 'rehabbing') && i.body_part_key
+    );
     return substituteOptions(item, {
-      access: profile.access || [], lifts: resolveLifts(profile), level: getGymLevel(profile)
+      access: profile.access || [], lifts: resolveLifts(profile), level: getGymLevel(profile), injuries
     });
   },
   // Swap one exercise in the CURRENT session for a same-muscle alternative — session

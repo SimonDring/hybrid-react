@@ -40,6 +40,10 @@ export const injuryContraindicationValidator = {
     for (const s of gymSessions(week)) {
       for (const it of mainItems(s)) {
         if (it.tag === 'rehab' || /pain-free/i.test(it.name || '')) continue;
+        // An item the injury system itself struck (marked `substituted` — hidden at
+        // render, never performed) is not shipped; judging it would re-litigate the
+        // filter's own verdict. WP-40 replaces mark-and-hide with real redistribution.
+        if (it.substituted) continue;
         if (blocked.some((r) => r.test(it.name || ''))) {
           findings.push({
             verdict: 'veto',
