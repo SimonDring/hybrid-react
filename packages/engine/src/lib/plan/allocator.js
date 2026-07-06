@@ -33,6 +33,7 @@
 
 import { EXERCISES, LEVELS, availableEquip, CORE_HOLDS } from '../../data/strengthExercises.js';
 import { VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
+import { SELECTION_SCORING as SS } from '../../data/selectionScoring.js';
 import { muscleContribution } from './contributions.js';
 import { parseSetCount } from './volume.js';
 import { applyWeights } from '../liftProgression.js';
@@ -475,10 +476,10 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     if (useful <= 0) continue;
 
     let score = useful;
-    if (slot.patternsUsed.has(ex.pattern)) score *= 0.6;          // variety within a session
-    if (slot.timeUsed < 5) score *= effectiveRole === 'primary' ? 1.2 : 0.85; // open on a compound
-    if (ex.pattern === 'hpull' || ex.pattern === 'vpull') score *= 1.05; // posture pull-lean
-    if (priorityFor(ex.id, slot.axialLoad)) score *= 1.35;     // intent's axial-preferred member
+    if (slot.patternsUsed.has(ex.pattern)) score *= SS.repeatPatternMult;   // variety within a session
+    if (slot.timeUsed < 5) score *= effectiveRole === 'primary' ? SS.openCompound.primary : SS.openCompound.other; // open on a compound
+    if (ex.pattern === 'hpull' || ex.pattern === 'vpull') score *= SS.posturePullLean; // posture pull-lean
+    if (priorityFor(ex.id, slot.axialLoad)) score *= SS.axialPreferredMult;     // intent's axial-preferred member
     score *= qualityMult(ex, goalPrimary);                        // goal-quality steer
     score *= stretchMult(ex, goalPrimary);                        // lengthened-position bias (hypertrophy)
     // Cross-session variety: an accessory/iso already used in earlier sessions this
@@ -487,7 +488,7 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
     // lifts / plyos session-on-session IS the progressive-overload signal.
     if (effectiveRole !== 'primary' && ex.quality !== 'power') {
       const used = weeklyExCount[ex.id] || 0;
-      if (used) score *= Math.pow(0.82, used);
+      if (used) score *= Math.pow(SS.crossSessionRepeatBase, used);
     }
     // Split FOCUS bias: steer this day toward the muscles its split assigns (an Upper
     // day prefers chest/back/shoulders, a Lower day quads/hams/glutes), so the week
@@ -506,10 +507,10 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
       // SPORT is exempt: sport splits deliberately thread the sport's priority work
       // through every session (a swimmer leads even a lower day with pull work).
       if (style !== 'sport' && c > 0 && inFocus === 0) continue;
-      score *= 0.4 + 0.6 * (c > 0 ? inFocus / c : 1);
+      score *= SS.focusFloor + SS.focusSpan * (c > 0 ? inFocus / c : 1);
     }
     score -= OVERSHOOT_PENALTY * waste;                            // prefer picks that fit the remaining target
-    score += (hash(ex.id) + weekNum + slot.idx) % 7 * 0.01;        // rotation tie-break (rotates near-equal picks)
+    score += (hash(ex.id) + weekNum + slot.idx) % 7 * SS.rotationJitter;   // rotation tie-break (rotates near-equal picks)
 
     if (score > bestScore) { bestScore = score; best = { ex, sets, contrib, effectiveRole }; }
   }

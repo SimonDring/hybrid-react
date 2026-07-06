@@ -21,6 +21,7 @@
 import { lightenItems } from './constraints.js';
 import { HIGH_DAY_THRESHOLD } from './axial.js';
 import { REACTIVE_LIMITS } from '../../data/doseSchemes.js';
+import { SCHEDULING_PENALTIES as SP } from '../../data/schedulingPolicy.js';
 
 const DAY_IDX = { Monday: 0, Tuesday: 1, Wednesday: 2, Thursday: 3, Friday: 4, Saturday: 5, Sunday: 6 };
 const IDX_DAY = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -76,7 +77,7 @@ function score(placed, ctx) {
     if (ctx.busyDays && ctx.busyDays.length) {
       let nearest = 99;
       for (const b of ctx.busyDays) nearest = Math.min(nearest, dayDistance(cur.idx, b));
-      const proximity = nearest === 0 ? 3 : nearest === 1 ? 2 : 0;
+      const proximity = nearest === 0 ? SP.sportProximity.onDay : nearest === 1 ? SP.sportProximity.adjacent : 0;
       if (proximity) {
         pen += proximity * sportMuscleLoad(cur.spec, ctx.sportMuscles);
         if (isHard(cur.spec)) pen += proximity; // small nudge for any hard day
@@ -92,15 +93,15 @@ function score(placed, ctx) {
     // dominates the (constant, all-gym-is-hard) generic spacing term.
     const shared = sharedHeavyCount(cur.spec, nxt.spec);
     if (g <= 1) {
-      pen += 14 * shared;
-      if (isHard(cur.spec) && isHard(nxt.spec)) pen += 10;
-      if (isHighAxial(cur.spec) && isHighAxial(nxt.spec)) pen += 9; // recover the spine between heavy axial days
+      pen += SP.adjacent.sameMusclePerGroup * shared;
+      if (isHard(cur.spec) && isHard(nxt.spec)) pen += SP.adjacent.hardHard;
+      if (isHighAxial(cur.spec) && isHighAxial(nxt.spec)) pen += SP.adjacent.highAxialHighAxial; // recover the spine between heavy axial days
       // Plyometric exposures need 48–72 h (tendon/SSC recovery — de Villarreal 2009,
       // H9 C7): adjacent plyo-loaded days are inside the 48 h floor.
       if (isPlyoLoaded(cur.spec) && isPlyoLoaded(nxt.spec)) pen += REACTIVE_LIMITS.spacing.schedulerPenaltyAdjacent;
     } else if (g === 2) {
-      pen += 3 * shared;
-      if (isHard(cur.spec) && isHard(nxt.spec)) pen += 2;
+      pen += SP.twoApart.sameMusclePerGroup * shared;
+      if (isHard(cur.spec) && isHard(nxt.spec)) pen += SP.twoApart.hardHard;
     }
   }
   return pen;
