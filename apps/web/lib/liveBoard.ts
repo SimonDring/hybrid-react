@@ -69,9 +69,11 @@ export async function getLiveDashboardData(): Promise<LiveDashboardData | null> 
 
   // The coach's first team (oldest active coach membership, live teams only —
   // !inner so a soft-deleted team's membership can't win the limit(1)).
+  // NOTE: join_code is COLUMN-REVOKED on teams (WP-50, 20260711) — selecting
+  // it here would error; it is fetched via the get_team_join_code RPC below.
   const { data: memberships, error: membershipError } = await supabase
     .from("team_members")
-    .select("team_id, created_at, teams!inner(id, name, sport, season, join_code, schedule, deleted_at)")
+    .select("team_id, created_at, teams!inner(id, name, sport, season, schedule, deleted_at)")
     .eq("user_id", user.id)
     .eq("role", "coach")
     .eq("status", "active")
@@ -86,12 +88,12 @@ export async function getLiveDashboardData(): Promise<LiveDashboardData | null> 
   // many-to-one embed: PostgREST returns an object, but tolerate an array shape.
   const embedded = membership?.teams;
   const teamRow = (Array.isArray(embedded) ? embedded[0] : embedded) as
-    | { id: string; name: string; sport: string | null; season: string | null; join_code: string | null; schedule: unknown }
+    | { id: string; name: string; sport: string | null; season: string | null; schedule: unknown }
     | null
     | undefined;
   if (!membership || !teamRow) return null;
 
-  const [statusRes, rosterRes] = await Promise.all([
+  const [statusRes, rosterRes, codeRes] = await Promise.all([
     supabase
       .from("player_status")
       .select(
@@ -104,6 +106,8 @@ export async function getLiveDashboardData(): Promise<LiveDashboardData | null> 
       .eq("team_id", teamRow.id)
       .eq("role", "player")
       .eq("status", "active"),
+    // Coach-only RPC (WP-50): the join code is no longer a selectable column.
+    supabase.rpc("get_team_join_code", { p_team: teamRow.id }),
   ]);
   if (statusRes.error) {
     throw new Error(`Could not load the squad board: ${statusRes.error.message}`);
@@ -128,7 +132,9 @@ export async function getLiveDashboardData(): Promise<LiveDashboardData | null> 
     name: teamRow.name,
     sport: teamRow.sport,
     seasonPhase: seasonPhaseOf(teamRow.season),
-    joinCode: teamRow.join_code,
+    // A failed code read must not take the whole board down — the join-code
+    // card simply shows nothing (the setup page is the recovery path).
+    joinCode: codeRes.error ? null : ((codeRes.data as string | null) ?? null),
   };
 
   // A saved schedule seeds the constraints AND lights up the match-week
