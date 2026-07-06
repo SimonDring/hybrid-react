@@ -31,10 +31,44 @@ ratification into the frozen set** via the Constitution's Amendment & Stewardshi
 review pass, like PANEL-REVIEW.md did for the foundation set, is the natural next step). Every
 Stage 6+ AI capability is validated against it before being built.
 
-## ▶ RESUME HERE — engine-rebuild status & the next step (2026-07-03)
+## ▶ RESUME HERE — the 2026-07-06 reassessment programme (supersedes the 2026-07-03 pointer below)
 
-_This section is the authoritative "where we are / what's next". Older "▶ START/NEXT" pointers in
-the entries below are historical and superseded by this._
+**Simon's standing directive (2026-07-05):** full reassessment against the frozen set → prioritised
+backlog → execute by priority autonomously; pause only for coaching-philosophy / architecture /
+public-interface calls. **The backlog is `docs/architecture/REASSESSMENT-2026-07-05.md`** (six
+code-verified parallel audits; WP-38…WP-59 continue the Phase-3 ledger — headline findings: the
+stored Athlete Model never reached the live diagnosis; build cohort has no diagnosis while GAA
+cohorts are shown one their plan ignores; D6/D7/D8 missing; D14 covered 5/16 validators on the
+baseline path only; injured legacy-path athletes got silent-debt handling).
+
+**Shipped 2026-07-06 (PRs open for Simon — merges are his; engine-suite green on all; Vercel
+checks = the documented 24 h rate-limit flake):**
+- **PR #127 — WP-38, the assessment chain repaired.** Stored model (position, resistance/sport
+  years) reaches the live diagnosis via the adapter (#94/#101 pattern); D3 position boost live;
+  measuredAt stamped → recency confidence real; per-lift strength standards (bench no longer
+  scored on the squat multiple; mean-of-lifts); sport-experience priors — a 15-year runner is no
+  longer "aerobically novice". KNOWLEDGE_SET_VERSION → **1.2.0** (audited provenance-only
+  re-baseline). Seed science flagged in the PR for Simon's review.
+- **PR #128 — WP-39, D14 validates what SHIPS.** Every rendered week carries `week._validation`
+  (report-only, active injuries in ctx, WeakMap-memoised); substitutions injury-aware; validator
+  treats filter-struck items as not-shipped. Proof: the unfiltered baseline VETOES under a
+  hamstring strain; the shipped week is clean.
+- **PR #129 — WP-40, injury equality on the legacy path.** The legacy fill honours
+  ctx.blockedNameRegexes at every selection site + `despineWeek` (a de-spine swap re-introduced
+  an RDL after clean selection — the hole affected D11 too). Injured build athletes ship full
+  legal sessions; pure baseline byte-identical by construction.
+
+**⇒ NEXT (backlog order):** WP-41 (contraindications → pattern/id level, dual-run equivalence)
+→ WP-42 (goal demand profiles, parallel/verified-unused + team-sport golden archetypes +
+d11-build-quality calibration; demand vectors flagged for Simon) → WP-43 (explainability floor)
+→ WP-44 (governance ratchets). Platform band interleaves as small PRs (WP-50 team-scope the
+player_status SELECT + join_code grant; WP-51 schema.sql/ledger reconciliation through 20260710;
+WP-52 match-day marker). **PAUSES:** WP-47 D7 design, WP-48 team-sport flip commit, WP-49 build
+flip (six product decisions listed in the reassessment).
+
+## ▶ (superseded 2026-07-06) engine-rebuild status & the next step (2026-07-03)
+
+_Older "▶ START/NEXT" pointers in the entries below are historical and superseded._
 
 **Where we are (2026-07-03).** The **diagnosis-first engine rebuild has reached the plan.** The
 diagnosis now **actually steers live gym plans for run + cycle athletes** — this is no longer a
