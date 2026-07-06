@@ -45,7 +45,7 @@ baseline path only; injured legacy-path athletes got silent-debt handling).
 engine-suite green on all; Vercel checks = the documented 24 h rate-limit flake:**
 `#127 → #131 → #132 (stacked on #131 — after #131 squash-merges, re-land rebased if GitHub
 auto-closes it, the #126 dance) → #128 → #129 → #130 → #133 → #134 (then staging apply +
-harness run per SECURITY-DEPLOY.md)`. Known trivial conflicts: #127 and #131 both bump
+harness run per SECURITY-DEPLOY.md) → #135 (WP-56 dead-code sweep, conflict-free)`. Known trivial conflicts: #127 and #131 both bump
 KNOWLEDGE_SET_VERSION to 1.2.0 and re-baseline the same snapshot provenance lines —
 whichever lands second needs a one-line note reconcile + `UPDATE=1` re-run; #129 and #132
 touch different regions of reflow.js.
