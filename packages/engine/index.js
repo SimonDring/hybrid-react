@@ -21,6 +21,7 @@ export {
   recentSessionRecovery, sessionKey, intentOfTitle, localISO, sessionDiscipline
 } from './src/lib/plan/reflow.js';
 export { resolveProgram } from './src/lib/strength/program.js';
+export { deriveBlockObjective } from './src/lib/plan/blockObjective.js';
 export { resolvePeriodization, deriveSeason, continueBlock } from './src/lib/plan/periodization.js';
 export { weeklyMuscleTargets } from './src/lib/strength/targets.js';
 export { allocateGym, SESSION_CEILING_MIN } from './src/lib/plan/allocator.js';
