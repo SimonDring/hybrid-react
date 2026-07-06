@@ -125,7 +125,7 @@ Also shipped this session (earlier additions):
   an RDL after clean selection — the hole affected D11 too). Injured build athletes ship full
   legal sessions; pure baseline byte-identical by construction.
 
-**✅ 25 PRs MERGED (2026-07-06). `main` KSV = 1.8.0. Suites 165/165.**
+**✅ 29 PRs MERGED (2026-07-06). `main` KSV = 1.9.0. Suites 167/167.**
 - **Batch 1 — #127–#142** (WP-38/39/40/41/42/43/44/45/48/50/51/52/56/57/59/60): the post-#126
   audit backlog; 9 independents + a 7-PR stack, each reconciled + golden-audited.
 - **Batch 2 — #144–#149** (Simon-directed): WP-46 s1 (exId identity, #144) → s2 (engine joins key on
@@ -138,6 +138,12 @@ Also shipped this session (earlier additions):
   (the D7 block plan drives the deload rhythm for diagnosed sport cohorts w/ a recoverability prior;
   gated + reversible, golden byte-identical, #151) → WP-53 **stage 2** (the coach board consumes
   engine `rollUp`; duplicate deleted; `next build` verified, #152).
+- **Batch 4 — #154–#155** (WP-47 + WP-46 to completion): WP-47 **block-structure steer** —
+  blockPlanToSplit drives the diagnosis's phase split (base|build|peak fit to totalWeeks) behind the
+  same gate; golden byte-identical bar an additive `steered` field (#154). WP-46 **fuzzy joins done**
+  — matchLift → PROGRESSION_LIFTS + the core hold regex → CORE_HOLDS (governed exId maps reproducing
+  the matchers exactly; plans byte-identical; rename-proof). The app form-guide is deliberately left
+  pattern/alias-based (many-to-one display, not an id join). (#155)
 
 **⚠️ PENDING PROD APPLIES (yours, per supabase/SECURITY-DEPLOY.md).** As of 2026-07-06 the DB
 migrations through `20260711` are applied to prod (Simon, ahead of staging — no active users). Still
@@ -145,17 +151,22 @@ to confirm: the paired **Edge Functions** deploy separately from `db push` — t
 callbacks + `fitbit-sync` (S1/S4/S8) and `ai-render` (WP-60, optional; AI go-live only). None break
 the running app.
 
+**NOTE on D7 steering (WP-47).** Both the deload rhythm AND the block structure are now diagnosis-
+driven — but GATED on the athlete carrying a learned recoverability prior, which nothing promotes
+yet (staged priors are not read; that's the D16 promotion decision, Simon's call). So it is DORMANT
+for every current athlete (golden byte-identical) until priors are promoted; activating it broadly
+(steering all diagnosed sport cohorts, prior or not) is the live-plan flip and stays Simon's.
+
 **⇒ NEXT (remaining, in backlog order):**
-- **WP-47 block-LENGTH / phase-structure steering** — the block plan's lengthWeeks driving
-  totalWeeks/split (needs the block-plan↔periodisation week reconciliation; the deload-rhythm steer
-  shipped in #151, this is the larger follow-on).
-- **WP-46 remaining joins** — the FUZZY name matchers (liftProgression matchLift, the core
-  plank|hold regex) + the app form-guide join; behavioural, not 1:1 with exId, each its own PR.
 - **WP-49 build flip** — **PAUSE FOR SIMON** (the six product decisions in reassessment §Priority 11).
 - **AI go-live** — WP-60 seam is merged behind flags; needs the eval harness + your `AI_ENABLED` deploy.
-**PAUSES for Simon:** WP-49 build flip; letting D7 steer BLOCK LENGTH (not just deloads); review of
-the seed science flagged in #127 (per-lift standards, priors) and #131 (goal demand vectors); WP-41
-stage 2 (id-level contraindication vocabulary). Everything else above is a code/scope call I can make.
+- **D16 prior promotion** — promote staged recoverability priors to `learnedPriors` so the D7 steer +
+  volumeTolerance actually fire (the twice-gated pattern; Simon's call, needs the falsifiability read).
+- Block-plan model refinement — one block per D5 priority today, so single-priority athletes get a
+  single-phase steered plan; richer intra-quality intensity progression is a further enhancement.
+**PAUSES for Simon:** WP-49 build flip; activating D7 steering broadly (beyond the recoverability-
+prior gate); D16 prior promotion; review of the seed science flagged in #127 (per-lift standards,
+priors) and #131 (goal demand vectors); WP-41 stage 2 (id-level contraindication vocabulary).
 
 ## ▶ (superseded 2026-07-06) engine-rebuild status & the next step (2026-07-03)
 
