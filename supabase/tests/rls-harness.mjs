@@ -320,6 +320,45 @@ async function main() {
   const { error: rejErr } = await A.client.rpc('join_team_with_code', { p_code: newCode });
   ok(!!rejErr, 'join: a coach-removed player cannot rejoin via the code');
 
+  // ══ WP-50 (20260711) — team-scoped coach reads + join_code column lockdown ═══
+  // (a) A TWO-TEAM PLAYER: put A on O's team too (A is already active on C's
+  // team with a status row). Each coach must read ONLY their own team's row.
+  await O.client.from('team_members').insert({ team_id: oTeam.id, user_id: A.id, role: 'player', status: 'invited' });
+  await A.client.from('team_members').update({ status: 'active' }).eq('team_id', oTeam.id).eq('user_id', A.id);
+  const { error: twoErr } = await A.client.from('player_status')
+    .insert({ user_id: A.id, team_id: oTeam.id, readiness: 55, load_state: 'ramping' });
+  ok(!twoErr, `WP-50: the two-team player publishes a status row on EACH team${twoErr ? ` — ${twoErr.message}` : ''}`);
+  const { data: xView } = await C.client.from('player_status').select('team_id').eq('user_id', A.id);
+  ok((xView || []).length === 1 && xView[0].team_id === team.id,
+    `WP-50: coach X reads ONLY their own team's row for a two-team player (${(xView || []).length}/1)`);
+  const { data: yView } = await O.client.from('player_status').select('team_id').eq('user_id', A.id);
+  ok((yView || []).length === 1 && yView[0].team_id === oTeam.id,
+    "WP-50: coach Y CANNOT read the player's team-X row (coach reads are TEAM-scoped, not player-scoped)");
+  const { data: selfView } = await A.client.from('player_status').select('team_id').eq('user_id', A.id);
+  ok((selfView || []).length === 2, 'WP-50: the player still reads BOTH of their own rows');
+
+  // (b) join_code is column-revoked: a MEMBER's select of it errors; the other
+  // columns still read fine (app path unbroken). The revoke is role-wide, so
+  // even the coach's DIRECT select errors — coaches go through the RPC.
+  const { error: codePeek } = await A.client.from('teams').select('join_code').eq('id', oTeam.id);
+  ok(!!codePeek, `WP-50: a team MEMBER cannot select teams.join_code (${codePeek ? codePeek.code || 'denied' : 'NOT DENIED!'})`);
+  const { data: teamMeta, error: metaErr } = await A.client.from('teams').select('id, name, sport').eq('id', oTeam.id);
+  ok(!metaErr && (teamMeta || []).length === 1, 'WP-50: the member still reads the team name/sport (non-code columns granted)');
+  const { error: coachPeek } = await C.client.from('teams').select('join_code').eq('id', joinTeam.id);
+  ok(!!coachPeek, 'WP-50: even a coach cannot select join_code directly (column revoked role-wide — the RPC is the path)');
+
+  // (c) get_team_join_code: the coach gets the code; an outsider and a mere
+  // member are refused.
+  const { data: gotCode, error: gotErr } = await C.client.rpc('get_team_join_code', { p_team: joinTeam.id });
+  ok(!gotErr && gotCode === newCode, `WP-50: the coach reads the code via the RPC (${gotCode})`);
+  const { error: oGetErr } = await O.client.rpc('get_team_join_code', { p_team: joinTeam.id });
+  ok(!!oGetErr, "WP-50: another team's coach cannot read the code via the RPC");
+  const { error: aGetErr } = await A.client.rpc('get_team_join_code', { p_team: team.id });
+  ok(!!aGetErr, 'WP-50: a player (non-coach member) cannot read their own team code via the RPC');
+
+  // WP-50 cleanup: A's extra membership + status row on O's team go with the
+  // existing oTeam/player_status cleanup below.
+
   // join-code cleanup
   await A.client.from('player_status').delete().eq('user_id', A.id);
   await C.client.from('team_members').delete().eq('team_id', joinTeam.id);

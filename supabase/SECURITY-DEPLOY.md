@@ -16,6 +16,7 @@ Everything below was proven on staging: `node supabase/tests/rls-harness.mjs` â†
 | `migrations/20260708_player_status_integrity.sql` | S11 server-authoritative injury_status/readiness on the coach board | DB migration |
 | `migrations/20260709_player_status_identity.sql` | coach-board display_name (server-derived from the player profile) | DB migration |
 | `migrations/20260710_team_join_codes.sql` | Team founding + join-code invites (create_team/join_team_with_code/rotate RPCs) | DB migration |
+| `migrations/20260711_team_scoping.sql` | WP-50: `player_status` coach reads become TEAM-scoped (`is_coach_of_team`, drops `is_coach_of`); `teams.join_code` column-revoked + coach-only `get_team_join_code` RPC. **Apply to STAGING first and re-run the harness (new WP-50 cases) â€” not yet staging-proven.** | DB migration |
 | `functions/fitbit-auth-callback` | resolves `state` via `consume_oauth_state` (S1) | Edge Function |
 | `functions/strava-auth-callback` | resolves `state` via `consume_oauth_state` (S1) | Edge Function |
 | `functions/fitbit-sync` | stops logging raw vitals (S4) + 92-day clamp (S8) | Edge Function |
