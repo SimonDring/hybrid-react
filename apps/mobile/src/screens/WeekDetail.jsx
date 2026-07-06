@@ -112,6 +112,22 @@ export default function WeekDetail() {
           <strong>Missed work forgiven</strong> — {forgivenList.join(', ')} from earlier weeks {forgivenList.length === 1 ? 'was' : 'were'} past the safe catch-up window, so the plan moves on instead of cramming.
         </div>
       )}
+      {/* WP-43: the remaining invisible adjustments become visible (Art 14/15). */}
+      {week.deloadDeferred && (
+        <div className="callout slate" style={{ marginBottom: 14 }}>
+          <strong>Deload deferred</strong> — you're recovering well, so this week's planned easy week is pushed back and normal training continues.
+        </div>
+      )}
+      {week._ruleTrim && (
+        <div className="callout amber" style={{ marginBottom: 14 }}>
+          <strong>Adjusted for your sport week</strong> — session volume is trimmed to about {Math.round((week._ruleTrim.mult || 1) * 100)}% around your fixtures and training load.
+        </div>
+      )}
+      {isCurrent && week._catchUp && (
+        <div className="callout slate" style={{ marginBottom: 14 }}>
+          <strong>Catch-up included</strong> — about {week._catchUp.sets} {week._catchUp.sets === 1 ? 'set' : 'sets'} from recently missed sessions {week._catchUp.sets === 1 ? 'is' : 'are'} folded into this week's work.
+        </div>
+      )}
 
       {/* Day strip */}
       <div className="week-strip" style={{ marginBottom: 20 }}>

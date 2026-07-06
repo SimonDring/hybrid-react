@@ -972,11 +972,49 @@ function addSupportiveFinishers(work, ctx, levelName, s, style, deload, taper, r
   }
 }
 
+// WP-43: the legacy fill finally explains itself (Art 14 applies to every athlete, not
+// just the D11 cohort). An honest STYLE-derived objective — what this day is for and how
+// its content was chosen — never a diagnosis claim (no diagnosis steers this path; the
+// shared `source: 'style'` marker keeps that distinction machine-checkable).
+function styleObjective(slot, style, ctx) {
+  const focus = focusLabel(slot.muscleVol) || 'Full body';
+  const f = focus.toLowerCase();
+  const phase = ctx.taper ? 'taper — stay sharp' : ctx.deload ? 'deload — recover and absorb'
+    : ctx.intent === 'peak' ? 'peak — sharpen' : ctx.intent === 'build' ? 'progress the intensity' : 'build the base';
+  const BY_STYLE = {
+    strength: {
+      quality: 'maxStrength',
+      purpose: `develop ${f} strength`,
+      rationale: `Your strength goal leads with heavy main lifts; accessories keep each supporting muscle at its evidence-based weekly volume target. This ${focus} day: ${phase}.`,
+    },
+    bodybuilding: {
+      quality: 'hypertrophy',
+      purpose: `grow ${f} musculature`,
+      rationale: `Your muscle-building goal programs every muscle toward its weekly volume target (MEV→MAV ramp across the block), favouring stretch-loaded work. This ${focus} day: ${phase}.`,
+    },
+    functional: {
+      quality: 'strengthEndurance',
+      purpose: `balanced ${f} conditioning`,
+      rationale: `Your general-fitness goal spreads strength, work capacity and movement quality across the week. This ${focus} day: ${phase}.`,
+    },
+    sport: {
+      quality: 'sportSupport',
+      purpose: `sport-support ${f} strength`,
+      rationale: `Gym work that supports your sport: the sport's emphasis template biases this ${focus} day's muscles, and selection fills each toward its weekly target. This day: ${phase}.`,
+    },
+  };
+  const o = BY_STYLE[style] || BY_STYLE.functional;
+  return { ...o, source: 'style' };
+}
+
 // Finalise a single slot: structure into supersets/fillers, then a session spec.
 // Shared verbatim by the legacy fill path and the D11 sport path so BUILD output
 // stays byte-identical no matter which path populated slot.picks.
 function finaliseSlot(slot, style, ctx) {
   const deload = !!ctx.deload;
+  // D11/category sessions carry their own D9 objective; every other session gets the
+  // honest style-derived one (WP-43) so no athlete is left without a "why".
+  if (!slot._objective) slot._objective = styleObjective(slot, style, ctx);
   const items = structureItems(slot.picks);
   shiftRpe(items, ctx.rpeOffset || 0, ctx.rpeFloor != null ? ctx.rpeFloor : 5);
   applyWeights(items, ctx.lifts || {}, ctx.level, ctx.bodyweight);

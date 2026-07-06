@@ -34,10 +34,13 @@ ok(withObj.length === gym.length && gym.length > 0, `every D11 session carries _
 ok(withObj.every((s) => s._objective.quality && s._objective.purpose && /targeting .+; .+; fatigue budget/.test(s._objective.rationale)),
   '_objective = { quality, purpose, rationale } with the D9 rationale shape');
 
-// ── a build plan (legacy path — no diagnosis, no invented reasons) ───────────
+// ── a build plan (legacy path — style-honest reasons, never a diagnosis claim) ──
+// WP-43: every session explains itself; the legacy path's objective is STYLE-derived
+// (source 'style') and its meta still carries no diagnosis (nothing steered by one).
 const build = generatePlan(answersToProfile({ ...BLANK_ANSWERS, goalType: 'stronger', daysPerWeek: 3, equipment: FULL }));
-ok(!('diagnosis' in build.meta), 'build plan meta has NO diagnosis key (legacy path — nothing invented)');
+ok(!('diagnosis' in build.meta), 'build plan meta has NO diagnosis key (the plan is not diagnosis-steered)');
 const buildSessions = build.phases.flatMap((p) => p.weeks.flatMap((w) => w.sessions));
-ok(buildSessions.every((s) => !s._objective), 'build sessions carry NO _objective (deferred to the build flip, WP-22)');
+ok(buildSessions.every((s) => s._objective && s._objective.source === 'style' && s._objective.rationale),
+  'build sessions carry an honest STYLE-derived _objective (WP-43 explainability floor)');
 
 console.log(`\n${pass} explainability-emission checks passed.`);

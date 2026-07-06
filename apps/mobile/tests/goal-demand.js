@@ -56,8 +56,11 @@ const buildProfile = (style, extra = {}) => ({
 {
   const plan = generatePlan(buildProfile('bodybuilding'));
   assert(plan.meta.diagnosis === undefined, 'T4a build plan emits NO meta.diagnosis (the plan does not follow it — display honesty)');
-  const anyObjective = plan.phases.some((p) => p.weeks.some((w) => w.sessions.some((s) => s._objective)));
-  assert(!anyObjective, 'T4b build sessions carry no _objective (legacy path unchanged — the flip is WP-49)');
+  // WP-43: legacy sessions DO carry an objective now — but a STYLE-derived one, never a
+  // diagnosis-derived one (that distinction is the verified-unused proof post-WP-43).
+  const objs = plan.phases.flatMap((p) => p.weeks.flatMap((w) => w.sessions.map((s) => s._objective))).filter(Boolean);
+  assert(objs.length > 0 && objs.every((o) => o.source === 'style'),
+    'T4b build objectives are style-derived only (no diagnosis steering — the flip is WP-49)');
 }
 
 // ── T5 · emission honesty for SPORT cohorts ───────────────────────────────────
