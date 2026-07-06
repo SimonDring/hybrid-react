@@ -3,9 +3,19 @@
 The multi-user hardening (audit addendum in `docs/SECURITY-AUDIT.md`, PRs #109–#113)
 is **applied to staging and merged to `main`**, but — per the staging-first discipline —
 **production DB migrations and Edge Function deploys are a deliberate step you run and
-review**. Nothing here has touched production yet. This is the exact, ordered checklist.
+review**. This is the exact, ordered checklist.
 
 Everything below was proven on staging: `node supabase/tests/rls-harness.mjs` → **57/57**.
+
+> **STATUS (2026-07-06).** Simon applied `20260711_team_scoping.sql` (WP-50) directly to
+> **production**, ahead of staging — safe because there are no active users yet, so the
+> staging-first / harness gate is waived for this one migration. Since 20260711 depends on
+> the team spine (20260705) + join-codes (20260710), the whole DB migration chain beneath it
+> is necessarily live on prod too. **What migrations alone do NOT cover:** the **Edge Functions
+> deploy separately** from `supabase db push` (step 3) — the OAuth-nonce callbacks (S1) and the
+> `fitbit-sync` raw-vitals fix (S4/S8) are only active once *deployed*, so **confirm those**.
+> Definitive prod check: relink to prod and `supabase migration list` (as of this date, staging
+> shows 001–20260710 applied, 20260711 pending-on-staging; prod has 20260711 per the above).
 
 ## What's pending for production
 
@@ -35,15 +45,21 @@ cd ~/Code/hybrid-react
 # 1. Point the CLI at PRODUCTION (prompts for the June-1st DB password)
 supabase link --project-ref ggldomlmycvpwtzzjzcd
 
-# 2. Apply the two new migrations (lists 20260706 + 20260707; confirm)
+# 2. Apply every migration prod is missing — db push is CUMULATIVE and ordered:
+#    it lists what's absent (the pending table above, through 20260711) and asks you
+#    to confirm. (2026-07-06: 20260711 already applied to prod — expect it to be a no-op
+#    or absent from the list; the harness/staging-first gate on it is waived, no users.)
 supabase db push
 
-# 3. Deploy the four Edge Functions (S1 callbacks must go WITH the migration;
-#    the two sync functions carry S4/S8)
+# 3. Deploy the Edge Functions (these do NOT go via db push — a separate step, and the
+#    piece still to confirm on prod). S1 callbacks must be live WITH the OAuth migration;
+#    the two sync functions carry S4/S8.
 supabase functions deploy fitbit-auth-callback
 supabase functions deploy strava-auth-callback
 supabase functions deploy fitbit-sync
 #    (strava-sync unchanged this round — no redeploy needed)
+#    OPTIONAL — only at AI go-live: supabase functions deploy ai-render
+#      (needs secrets ANTHROPIC_API_KEY + AI_ENABLED=true; see the pending table above)
 
 # 4. Re-point the CLI back at STAGING (the safe default)
 supabase link --project-ref nqlzashaqyqbwdlnaadw
