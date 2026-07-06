@@ -13,7 +13,7 @@
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, drainOutbox, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
-import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, dailyLoads, acuteChronic, acwr, acwrSeries, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex } from '@performance-os/engine';
+import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, dailyLoads, acuteChronic, acwr, acwrSeries, acwrBand, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex } from '@performance-os/engine';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch, adaptedSessionByKey } from '../lib/PlanService.js';
 import * as Plan from '../lib/PlanService.js';
 import { consistencyGoal } from '../lib/goals.js';
@@ -135,7 +135,9 @@ function buildView() {
   setRuntime({ sessions, recovery: recoveryOut, load: loadOut });
 
   // Load view-model: acute/chronic/acwr + recent session loads (newest first).
-  const band = acwrVal == null ? null : acwrVal < 0.8 ? 'under' : acwrVal > 1.5 ? 'over' : acwrVal > 1.3 ? 'high' : 'sweet';
+  // WP-57: the band derives from the engine's ONE governed classifier — these
+  // cut-points lived here as hand-copied literals (the documented drift class).
+  const band = acwrBand(acwrVal);
   const loadSessions = sessionLogsAll
     .filter(l => l.completed_at)
     .sort((a, b) => (b.completed_at || '').localeCompare(a.completed_at || ''))

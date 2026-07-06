@@ -32,17 +32,16 @@
  * else 'available'. The private detail (notes, rehab plan) never leaves.
  */
 import * as Sync from './SyncService.js';
+import { acwrBand } from '@performance-os/engine';
 
 // The ONLY fields a coach-readable row may carry. Anything else is dropped —
 // adding a column here is a deliberate privacy decision, not a spread.
 const ALLOWED = ['readiness', 'load_state', 'acwr', 'adherence_pct', 'injury_status'];
 
-const LOAD_STATE = (acwr) =>
-  acwr == null ? 'no-data'
-  : acwr < 0.8 ? 'ramping'
-  : acwr <= 1.3 ? 'balanced'
-  : acwr <= 1.5 ? 'high'
-  : 'overreaching';
+// WP-57: the cut-points come from the engine's ONE governed classifier
+// (kb load.acwr.thresholds); only the coach-facing VOCABULARY lives here.
+const BAND_TO_STATE = { under: 'ramping', sweet: 'balanced', high: 'high', over: 'overreaching' };
+const LOAD_STATE = (acwr) => (acwr == null ? 'no-data' : BAND_TO_STATE[acwrBand(acwr)]);
 
 function injuryStatusOf(injuries = []) {
   const active = injuries.filter((i) => i.status === 'active' || i.status === 'rehabbing' || i.status === 'monitoring');
