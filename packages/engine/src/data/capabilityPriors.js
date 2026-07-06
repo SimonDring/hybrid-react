@@ -14,3 +14,17 @@ export function priorLevel(qualityId, bandId) {
   if (!block || block[bandId] == null) return 0.35;
   return block[bandId];
 }
+
+// Sport-experience prior (WP-38c): years of sport participation is a strong prior on the
+// sport's DOMINANT qualities (specificity of adaptation — training-response specificity is
+// L1 exercise-science consensus; the band values are seed estimates, confidence 'low' by
+// construction, never a gate). Applies only to qualities whose demand importance meets
+// dominantImportanceMin — participation trains what the sport demands most, nothing else.
+export const SPORT_EXPERIENCE = {
+  dominantImportanceMin: 0.7,
+  base: { novice: 0.35, intermediate: 0.55, advanced: 0.75, highlyAdvanced: 0.88 },
+};
+
+export function sportExperiencePriorLevel(bandId) {
+  return bandId != null ? (SPORT_EXPERIENCE.base[bandId] ?? null) : null;
+}

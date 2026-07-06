@@ -29,7 +29,8 @@ function zoneOf(pct: number): number {
   return 5
 }
 
-// Minutes per HRR zone for samples [{hr,t(ms)}] (mirrors src/lib/hrZones.js).
+// Minutes per HRR zone for samples [{hr,t(ms)}]. Zones are computed ONLY here,
+// server-side; JS consumes the stored hr_zones (the old client mirror was removed).
 function hrZonesHRR(samples: any[], hrRest: number | null, hrMax: number | null) {
   if (hrRest == null || hrMax == null || hrMax <= hrRest) return null
   const reserve = hrMax - hrRest

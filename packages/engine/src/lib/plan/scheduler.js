@@ -1,22 +1,21 @@
 /**
- * Scheduler — places each session onto a weekday, applying concurrent-training
- * ("interference effect") rules, and handles supplemental strength + doubles.
+ * Scheduler (D13) — places each gym session onto a weekday by brute-force search
+ * for the lowest interference/recovery penalty. Pure function → reproducible
+ * order → stable completion keys.
  *
- * The science (see research notes in the rebuild plan):
- *  • Combining strength + endurance can blunt strength gains (Hickson, 1980).
- *    The practical fixes are spacing, not avoidance: don't stack two hard
- *    sessions; keep heavy legs / long runs apart; let easy days buffer the hard.
- *  • Supplemental strength for endurance athletes pairs well with an EASY day —
- *    so when the athlete is open to doubles we stack a short strength session on
- *    an easy run/swim day rather than spending a whole extra day on it.
+ * The science: spacing, not avoidance (Hickson 1980 interference) — don't stack
+ * two hard days; keep same-muscle heavy days apart (48 h); recover the spine
+ * between heavy-axial days; keep plyo exposures 48–72 h apart (de Villarreal
+ * 2009, H9 C7); keep sport-muscle-heavy gym work away from the athlete's sport
+ * days, scaled by how much the session loads those muscles.
  *
- * scheduleWeek({ sportSpecs, supSpecs, dayNames, allowDoubles, longRunDay })
- *   → [{ title, duration, items }] in weekday order (doubles share a weekday).
+ * scheduleWeek({ sportSpecs, dayNames, busyDays, sportMuscles })
+ *   → [{ title, duration, items, axialLoad, dayIdx }] in weekday order.
  *
- * The sport sessions (one per training day) are laid out by a brute-force search
- * for the lowest interference penalty; supplemental sessions are then placed onto
- * easy days (doubles) or rest days. It's a pure function → reproducible order →
- * stable completion keys.
+ * (The endurance-era supplemental-strength/doubles/long-run machinery was
+ * removed in WP-56 — the gym-only engine made it unreachable: every spec is
+ * discipline 'gym', intensity is only ever hard/moderate, and the single
+ * caller passes none of those options.)
  */
 
 import { lightenItems } from './constraints.js';
@@ -25,14 +24,10 @@ import { REACTIVE_LIMITS } from '../../data/doseSchemes.js';
 
 const DAY_IDX = { Monday: 0, Tuesday: 1, Wednesday: 2, Thursday: 3, Friday: 4, Saturday: 5, Sunday: 6 };
 const IDX_DAY = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-const KEY_IDX = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
 
 const isHard = (s) => s.intensity === 'hard';
-const legStrength = (s) => s.discipline === 'gym' && s.lowerBody;
-const legTaxingRun = (s) => s.discipline === 'run' && (s.intensity === 'hard' || /^Long/.test(s.focus || ''));
 const isHighAxial = (s) => (s.axialLoad || 0) >= HIGH_DAY_THRESHOLD;
 const isPlyoLoaded = (s) => (s.plyoLoad || 0) > 0;
-const isLongRun = (s) => s.discipline === 'run' && /^Long/.test(s.focus || '');
 const gap = (a, b) => ((b - a) % 7 + 7) % 7;
 
 // The muscle groups a session works HARD (within half of its biggest) — its
@@ -67,15 +62,13 @@ function sportMuscleLoad(spec, sportMuscles) {
   return v;
 }
 
-// Penalty for one full sport assignment (lower is better). `placed` is
-// [{idx, spec}] sorted by weekday; ctx.lrIdx is the preferred long-run weekday.
+// Penalty for one full assignment (lower is better). `placed` is
+// [{idx, spec}] sorted by weekday.
 function score(placed, ctx) {
   let pen = 0;
   const n = placed.length;
   for (let i = 0; i < n; i++) {
     const cur = placed[i];
-    // Preferred long-run day.
-    if (ctx.lrIdx != null && isLongRun(cur.spec) && cur.idx !== ctx.lrIdx) pen += 12;
     // Keep gym work that taxes the sport's muscles AWAY from sport days. Each gym
     // session on a day next to (or on) a sport day pays a penalty scaled by how much
     // it loads those muscles — so the permutation pushes the heaviest sport-muscle
@@ -101,8 +94,6 @@ function score(placed, ctx) {
     if (g <= 1) {
       pen += 14 * shared;
       if (isHard(cur.spec) && isHard(nxt.spec)) pen += 10;
-      if ((legStrength(cur.spec) && legTaxingRun(nxt.spec)) ||
-          (legStrength(nxt.spec) && legTaxingRun(cur.spec))) pen += 8;
       if (isHighAxial(cur.spec) && isHighAxial(nxt.spec)) pen += 9; // recover the spine between heavy axial days
       // Plyometric exposures need 48–72 h (tendon/SSC recovery — de Villarreal 2009,
       // H9 C7): adjacent plyo-loaded days are inside the 48 h floor.
@@ -130,8 +121,8 @@ function permutations(n) {
   return out;
 }
 
-// Best sport→day assignment as [{ idx, spec }] (weekday index + session spec).
-function placeSport(sportSpecs, dayNames, lrIdx, busyDays = [], sportMuscles = []) {
+// Best session→day assignment as [{ idx, spec }] (weekday index + session spec).
+function placeSport(sportSpecs, dayNames, busyDays = [], sportMuscles = []) {
   const days = dayNames.slice(0, sportSpecs.length);
   const order = days.map((d, i) => ({ idx: DAY_IDX[d] ?? i, i })).sort((a, b) => a.idx - b.idx);
   if (!sportSpecs.length) return [];
@@ -139,7 +130,7 @@ function placeSport(sportSpecs, dayNames, lrIdx, busyDays = [], sportMuscles = [
   let best = perms[0], bestPen = Infinity;
   for (const perm of perms) {
     const placed = order.map((slot, k) => ({ idx: slot.idx, spec: sportSpecs[perm[k]] }));
-    const pen = score(placed, { lrIdx, busyDays, sportMuscles });
+    const pen = score(placed, { busyDays, sportMuscles });
     if (pen < bestPen) { bestPen = pen; best = perm; if (pen === 0) break; }
   }
   return order.map((slot, k) => ({ idx: slot.idx, spec: sportSpecs[best[k]] }));
@@ -147,40 +138,17 @@ function placeSport(sportSpecs, dayNames, lrIdx, busyDays = [], sportMuscles = [
 
 /**
  * @param {object} opts
- *   sportSpecs   one-per-day sport sessions
- *   supSpecs     supplemental strength sessions (0–2) to fit in as doubles/rest
- *   dayNames     weekday names for the sport sessions
- *   allowDoubles whether supplemental work may double up on an easy day
- *   longRunDay   preferred weekday key for the long run ('sat' etc.) or null
- * @returns {Array} sessions { title, duration, items } in weekday order
+ *   sportSpecs   one-per-day gym sessions
+ *   dayNames     weekday names for the sessions
+ *   busyDays     the athlete's sport-day weekday indices (kept away from / lightened)
+ *   sportMuscles the sport's key muscles (drives the proximity penalty)
+ * @returns {Array} sessions { title, duration, items, axialLoad, dayIdx } in weekday order
  */
-export function scheduleWeek({ sportSpecs = [], supSpecs = [], dayNames = [], allowDoubles = true, longRunDay = null, busyDays = [], sportMuscles = [] }) {
-  const lrIdx = longRunDay != null ? KEY_IDX[longRunDay] : null;
-  const placedSport = placeSport(sportSpecs, dayNames, lrIdx, busyDays, sportMuscles);
-
-  // Supplemental placement. NEVER share the long-run day (legs need to be fresh)
-  // — it's only used as an absolute last resort. Doubles → prefer easy sport
-  // days; else prefer rest days; fall back to the other pool.
-  const usedIdx = new Set(placedSport.map(p => p.idx));
-  const longRunIdx = (placedSport.find(p => isLongRun(p.spec)) || {}).idx;
-  const restIdx = IDX_DAY.map((_, i) => i).filter(i => !usedIdx.has(i));
-  const easyIdx = placedSport.filter(p => p.spec.intensity === 'easy' && p.idx !== longRunIdx).map(p => p.idx);
-  const primary = allowDoubles ? easyIdx.slice() : restIdx.slice();
-  const fallback = allowDoubles ? restIdx.slice() : easyIdx.slice();
-  const lastResort = longRunIdx != null ? [longRunIdx] : []; // unavoidable case only
-
-  const placedSup = [];
-  for (const spec of supSpecs) {
-    const idx = primary.shift() ?? fallback.shift() ?? lastResort.shift();
-    if (idx == null) continue; // no room at all this week — drop the extra
-    placedSup.push({ idx, spec });
-  }
-
-  // Combine; sort by weekday, sport/easy session before its strength double.
-  const all = [
-    ...placedSport.map(p => ({ idx: p.idx, spec: p.spec, ord: 0 })),
-    ...placedSup.map(p => ({ idx: p.idx, spec: p.spec, ord: 1 }))
-  ].sort((a, b) => a.idx - b.idx || a.ord - b.ord);
+export function scheduleWeek({ sportSpecs = [], dayNames = [], busyDays = [], sportMuscles = [] }) {
+  const placedSport = placeSport(sportSpecs, dayNames, busyDays, sportMuscles);
+  const all = placedSport
+    .map(p => ({ idx: p.idx, spec: p.spec }))
+    .sort((a, b) => a.idx - b.idx);
 
   const busy = new Set(busyDays);
   return all.map(x => {
