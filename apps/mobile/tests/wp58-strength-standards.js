@@ -25,24 +25,26 @@ const b = strengthBandFor('male', 'squat', 1.6); // ≥1.5 (intermediate), <2.0 
 assert(b && b.band === 'intermediate' && b.next === 'advanced' && b.nextRatio === 2.0,
   `strengthBandFor(male,squat,1.6) = intermediate→advanced@2.0 (got ${b && b.band}→${b && b.next})`);
 
-// ── (3) engine↔governed alignment pinned; known exceptions documented ────────
-// STRONG_BW_MULTIPLE anchors "level 1.0". For squat/bench/deadlift it must equal the
-// governed `advanced` band (both sexes, deadlift male). Drift in either now fails here.
+// ── (3) engine↔governed alignment: NOW single-sourced (WP-58 reconcile) ──────
+// STRONG_BW_MULTIPLE anchors "level 1.0" and is DERIVED from the governed `advanced` band
+// for EVERY lift × sex — one source, no more divergence. Any drift fails here.
 const aligned = [
-  ['1rm_squat', 'squat', 'male'], ['1rm_squat', 'squat', 'female'],
-  ['1rm_bench', 'bench', 'male'], ['1rm_bench', 'bench', 'female'],
-  ['1rm_deadlift', 'deadlift', 'male'],
+  ['1rm_squat', 'squat'], ['1rm_bench', 'bench'], ['1rm_deadlift', 'deadlift'], ['1rm_ohp', 'ohp'],
 ];
-for (const [metric, lift, sex] of aligned) {
-  const strong = STRONG_BW_MULTIPLE[metric][sex];
-  const adv = STRENGTH_STANDARDS[sex][lift].advanced;
-  assert(strong === adv, `STRONG_BW_MULTIPLE[${metric}][${sex}] (${strong}) === governed ${lift}.advanced (${adv})`);
+for (const [metric, lift] of aligned) {
+  for (const sex of ['male', 'female']) {
+    const strong = STRONG_BW_MULTIPLE[metric][sex];
+    const adv = STRENGTH_STANDARDS[sex][lift].advanced;
+    assert(strong === adv, `STRONG_BW_MULTIPLE[${metric}][${sex}] (${strong}) === governed ${lift}.advanced (${adv})`);
+  }
 }
-// Documented EXCEPTIONS (WP-58, flagged for review — parallel-model values to reconcile):
-assert(STRONG_BW_MULTIPLE['1rm_ohp'].male === STRENGTH_STANDARDS.male.ohp.elite,
-  'KNOWN EXCEPTION: ohp male anchors at the governed ELITE band (1.0), not advanced (0.8)');
-assert(STRONG_BW_MULTIPLE['1rm_deadlift'].female === 1.9 && STRONG_BW_MULTIPLE['1rm_ohp'].female === 0.7,
-  'KNOWN EXCEPTION: female deadlift/ohp anchors (1.9 / 0.7) are independently seeded — match no band');
+// The reconcile MOVED these (previously ohp-at-elite / independently-seeded female): confirm.
+assert(STRONG_BW_MULTIPLE['1rm_ohp'].male === 0.8, 'ohp male reconciled to advanced (0.8, was 1.0)');
+assert(STRONG_BW_MULTIPLE['1rm_deadlift'].female === 1.75 && STRONG_BW_MULTIPLE['1rm_ohp'].female === 0.55,
+  'female deadlift/ohp reconciled to advanced (1.75 / 0.55, were 1.9 / 0.7)');
+// 'other' = mean of male/female advanced (the governed table has no 'other' band).
+assert(STRONG_BW_MULTIPLE['1rm_squat'].other === 1.75 && STRONG_BW_MULTIPLE['1rm_ohp'].other === 0.68,
+  "'other' anchor = mean(male,female) advanced");
 
 // ── (4) fitnessAge constant-extraction is byte-identical (guards the refactor) ─
 // A 40-yr-old with strong markers (high HRV, low RHR) should read YOUNGER, by the

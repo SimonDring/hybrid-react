@@ -6,20 +6,24 @@ import { getQuality } from '../../data/qualities.js';
 import { capabilityPrior } from '../priors.js';
 import { sportExperiencePriorLevel, SPORT_EXPERIENCE } from '../../data/capabilityPriors.js';
 import { bandForYears, bandForLegacyLevel } from '../../data/trainingAgeBands.js';
+import { STRENGTH_STANDARDS } from '../../data/strengthStandards.js';
 
-// Per-lift "strong" 1RM/bodyweight multiples mapping to level 1.0 (WP-38b). Seed values from
-// strengthlevel.com population percentiles. WP-58: these align with the GOVERNED
-// strengthStandards table (data/strengthStandards.js) `advanced` band for squat/bench/
-// deadlift (both sexes); they DIVERGE for ohp (anchored at `elite` = 1.0) and for female
-// deadlift/ohp (independently seeded 1.9 / 0.7). Reconciling those values is a scientific
-// call left to a reviewed change; tests/wp58-strength-standards.js pins the alignment and
-// the known exceptions so the two tables can no longer drift silently.
-// 1rm_pull is REPS, not a load — never scored here.
+// Per-lift "strong" 1RM/bodyweight anchor mapping to level 1.0. WP-58 (reconcile): DERIVED
+// from the GOVERNED strengthStandards `advanced` band — so "level 1.0" now means the SAME
+// percentile (advanced) across EVERY lift, single-sourced (no more parallel table, no more
+// ohp-anchored-at-elite / independently-seeded-female divergence). 'other' = the mean of
+// male/female advanced (the governed table carries no 'other' band). 1rm_pull is REPS, not a
+// load — never scored here.
+const advancedAnchor = (lift) => {
+  const m = STRENGTH_STANDARDS.male[lift].advanced;
+  const f = STRENGTH_STANDARDS.female[lift].advanced;
+  return { male: m, female: f, other: Math.round(((m + f) / 2) * 100) / 100 };
+};
 export const STRONG_BW_MULTIPLE = {
-  '1rm_squat':    { male: 2.0, female: 1.5, other: 1.8 },
-  '1rm_deadlift': { male: 2.5, female: 1.9, other: 2.2 },
-  '1rm_bench':    { male: 1.5, female: 1.0, other: 1.25 },
-  '1rm_ohp':      { male: 1.0, female: 0.7, other: 0.85 },
+  '1rm_squat':    advancedAnchor('squat'),
+  '1rm_deadlift': advancedAnchor('deadlift'),
+  '1rm_bench':    advancedAnchor('bench'),
+  '1rm_ohp':      advancedAnchor('ohp'),
 };
 
 export function bandForModel(model) {
