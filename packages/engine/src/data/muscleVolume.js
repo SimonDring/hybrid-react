@@ -78,4 +78,46 @@ export const ISO_MUSCLE_GROUP = {
   ham: 'hamstrings', quad: 'quads', chest: 'chest'
 };
 
-export default { MUSCLE_GROUPS, MUSCLE_LABELS, VOLUME_LANDMARKS, PATTERN_CONTRIB, ISO_MUSCLE_GROUP };
+// ── WP-45: THE one per-exercise muscle table ──────────────────────────────────────
+// Exercises whose movement-pattern default misattributes their work. This is the SINGLE
+// canonical source: volume accounting derives weighted contributions from it (primary
+// 1.0 / secondary 0.5 — the synergist convention above) and the substitution likeness
+// model derives its primary/secondary lists from it (data/exerciseSimilarity.js). The
+// two models previously disagreed — the ledger credited a hip thrust as a hamstring
+// movement while substitution knew it was glute-primary, so a hip-thrust-heavy plan
+// could 'hit' hamstring volume while glutes went undercounted, invisible to the MRV
+// validator. Evidence: glute-dominant bridging kinematics (Contreras 2015 EMG),
+// rear-delt/scapular isolation vs lat rowing (Schoenfeld 2014 shoulder EMG),
+// triceps-biased pressing (Barnett 1995 grip-width EMG), long-lever lat isolation
+// with no elbow-flexion torque. Sources — and now feeds — the corrections previously
+// documented in data/exerciseSimilarity.js OVERRIDES.
+export const EXERCISE_MUSCLES = {
+  // Rear-delt / scapular isolations tagged hpull: rear delts, not lats/biceps.
+  reverse_pec_deck: { primary: ['shoulders'], secondary: ['back'] },
+  prone_y_raise:    { primary: ['shoulders'], secondary: ['back'] },
+  prone_t_raise:    { primary: ['shoulders'], secondary: ['back'] },
+  prone_w_raise:    { primary: ['shoulders'], secondary: ['back'] },
+  band_pull_apart:  { primary: ['shoulders'], secondary: ['back'] },
+  // Glute-dominant bridging hinges (no from-the-floor spinal-erector loading).
+  hip_thrust:               { primary: ['glutes'], secondary: ['hamstrings'] },
+  glute_bridge:             { primary: ['glutes'], secondary: ['hamstrings'] },
+  glute_bridge_single_leg:  { primary: ['glutes'], secondary: ['hamstrings'] },
+  prone_hip_extension:      { primary: ['glutes'], secondary: ['hamstrings'] },
+  // Triceps-biased presses.
+  close_grip_bench: { primary: ['triceps'], secondary: ['chest', 'shoulders'] },
+  jm_press:         { primary: ['triceps'], secondary: ['chest', 'shoulders'] },
+  dip:              { primary: ['chest'], secondary: ['triceps'] },
+  // Long-lever lat isolation — no elbow-flexion (biceps) torque.
+  db_pullover:    { primary: ['back'], secondary: ['chest'] },
+  straight_arm_pd:{ primary: ['back'], secondary: [] },
+};
+
+// Weighted contribution view of EXERCISE_MUSCLES (primary 1.0, secondary 0.5).
+export const EXERCISE_CONTRIB = Object.fromEntries(
+  Object.entries(EXERCISE_MUSCLES).map(([id, m]) => [id, {
+    ...Object.fromEntries(m.primary.map((g) => [g, 1.0])),
+    ...Object.fromEntries(m.secondary.map((g) => [g, 0.5])),
+  }])
+);
+
+export default { MUSCLE_GROUPS, MUSCLE_LABELS, VOLUME_LANDMARKS, PATTERN_CONTRIB, ISO_MUSCLE_GROUP, EXERCISE_MUSCLES, EXERCISE_CONTRIB };
