@@ -246,8 +246,24 @@ export function reflowPhases({
   let rpeOffset = recovery ? (recovery.rpeOffset || 0) : 0;
   if (!reverted && override === 'easy') rpeOffset = Math.min(rpeOffset, travelPolicy.rpeOffset);
 
+  // WP-55 — baseline identity. On a NEUTRAL day the reflow must not re-derive the
+  // session: re-allocating from scratch produces a different (and de-periodised — it can
+  // drop the baseline's power/plyo anchors) session than the plan the rest of the horizon
+  // shows, for no coaching reason. So a slot whose inputs are all no-ops KEEPS its baseline
+  // session (we simply don't set specByKey[s.key], and the pass below leaves it untouched).
+  // Only slots whose inputs ACTUALLY changed are re-allocated. Baseline sessions already
+  // carry axialLoad/dayIdx (generatePlan stamps them), so identity is exact.
+  const deficitTotal = Object.values(deficit).reduce((a, b) => a + b, 0);
+  const neutralGlobals = Math.abs(mult - 1) < 1e-9 && rpeOffset === 0 && deficitTotal === 0
+    && !(contraindicatedPatterns && contraindicatedPatterns.length) && !(blockedNameRegexes && blockedNameRegexes.length);
+
   const specByKey = {};
   slots.forEach((s, idx) => {
+    const wd0 = s.date ? (s.date.getDay() === 0 ? 6 : s.date.getDay() - 1) : null;
+    const sportBusyDay = wd0 != null && sportBusy.includes(wd0);   // reflow lightens these — not neutral
+    const deloadUnchanged = effDeload(s.week) === !!s.week.deload; // no forced/deferred deload change
+    if (neutralGlobals && deloadUnchanged && !sportBusyDay) return; // nothing changed → keep baseline session
+
     const spec = allocateGym({
       targets: perSlot[idx],
       slots: [{ minutes: Math.round(functionalSlotMinutes(gctx.style, gctx.minutes) * mult), equip: gctx.access,
