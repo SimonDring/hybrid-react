@@ -130,9 +130,13 @@ named failure mode).
 > cohorts w/ a recoverability prior, golden byte-identical (#151); **WP-55** reflow baseline-identity
 > — the neutral-day churn that dropped power work is FIXED (#148); **WP-53** engine `rollUp` pure
 > port (#149) then **stage 2** — the coach board consumes it, duplicate deleted, `next build`
-> verified (#152). REMAINING: WP-47 block-LENGTH steering (needs the block↔periodisation
-> reconciliation); WP-46 fuzzy joins (matchLift, core regex, form-guide); WP-49 build flip (PAUSE);
-> AI go-live. The per-item entries below are the original analysis — read them with this status.
+> verified (#152). Then completions (#154/#155): **WP-47** block-STRUCTURE steer (blockPlanToSplit
+> drives the phase split, same gate, golden byte-identical bar an additive `steered` field) and
+> **WP-46 done** (matchLift → PROGRESSION_LIFTS, core regex → CORE_HOLDS; governed exId maps, plans
+> byte-identical; the form-guide is deliberately left pattern/alias-based). **Now 29 PRs, KSV 1.9.0.**
+> D7 steering (deloads + structure) is DORMANT until recoverability priors are promoted (D16, Simon's
+> call). REMAINING: WP-49 build flip (PAUSE); AI go-live; D16 prior promotion. The per-item entries
+> below are the original analysis — read them with this status.
 
 Numbering continues the Phase-3 ledger (WP-38+). Ordering per the programme's criteria:
 architectural correctness > coaching reasoning > scientific validity > knowledge separation >
