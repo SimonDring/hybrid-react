@@ -1,6 +1,7 @@
 /**
  * sessionSpecs — assembles the per-session D9 objective + D10 requirements for a week's sessions.
- * PARALLEL — read only by tests + the /dev readout; nothing in generatePlan consumes it.
+ * regionOf() IS consumed by the live allocator (D11 branch); deriveSessionSpecs itself
+ * remains a test/dev readout of the D9/D10 derivation.
  */
 import { assignTargetQualities, deriveSessionObjective } from './sessionObjective.js';
 import { deriveMovementRequirements } from './movementRequirements.js';

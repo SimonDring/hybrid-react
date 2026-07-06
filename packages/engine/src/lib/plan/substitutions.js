@@ -18,6 +18,7 @@ import { EXERCISES, LEVELS, availableEquip } from '../../data/strengthExercises.
 import { applyWeights, matchLift } from '../liftProgression.js';
 import { anchorForName } from '../strength/exerciseLoad.js';
 import { DEFAULT_MUSCLES, ISO_GROUP, OVERRIDES, modalitySim } from '../../data/exerciseSimilarity.js';
+import { blockedNameRegexesForInjuries } from '../session/movementRequirements.js';
 
 const BY_NAME = (() => { const m = {}; for (const e of EXERCISES) m[e.name.toLowerCase()] = e; return m; })();
 
@@ -66,14 +67,18 @@ const coverage = (need, have) => {
 
 /**
  * @param {object} item   the session item being replaced (keeps its sets/reps/rpe)
- * @param {object} opts    { access, lifts, level, max }
+ * @param {object} opts    { access, lifts, level, max, injuries }
  * @returns {Array<{ id, name, equip, pattern, sets, rpe, weight, sameLift, score }>}
  */
-export function substituteOptions(item, { access = [], lifts = {}, level = 'intermediate', max = 8 } = {}) {
+export function substituteOptions(item, { access = [], lifts = {}, level = 'intermediate', max = 8, injuries = [] } = {}) {
   const orig = exerciseByName(item && item.name);
   if (!orig) return [];
   const om = resolveMuscles(orig);
   if (!om.primary.length) return [];                     // no trainable primary → no subs (e.g. mobility)
+
+  // WP-39: an on-the-fly swap is a construction path like any other — it must never
+  // OFFER a movement the athlete's active injuries contraindicate (EDS §36, Art 8).
+  const blocked = injuries.length ? blockedNameRegexesForInjuries(injuries) : [];
 
   const origLift = matchLift(orig.name);
   const origTier = tierOf(orig);
@@ -91,6 +96,7 @@ export function substituteOptions(item, { access = [], lifts = {}, level = 'inte
     if (tierOf(cand) !== origTier) continue;              // compound→compound, iso→iso
     if (cand.level > lvl) continue;
     if (!have.has(cand.equip)) continue;
+    if (blocked.length && blocked.some((r) => r.test(cand.name))) continue;  // injury-contraindicated
 
     const cm = resolveMuscles(cand);
     const candAll = [...cm.primary, ...cm.secondary];
