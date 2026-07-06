@@ -122,6 +122,18 @@ named failure mode).
 
 ## 3. Prioritised backlog (Phase 4)
 
+> **STATUS (2026-07-06) — 25 PRs merged, `main` KSV 1.8.0.** WP-38→WP-60 shipped (#127–#142),
+> then a Simon-directed second wave: **WP-46** exId identity + engine id-joins (#144/#145);
+> **WP-58** governed strength-standards table + `fitnessAge` constants (#146) and the **reconcile**
+> — capability anchors derived from the governed `advanced` band, one source (#150); **WP-47** D7
+> block objective ADVISORY (#147) then the **deload-rhythm steer** — gated to diagnosed sport
+> cohorts w/ a recoverability prior, golden byte-identical (#151); **WP-55** reflow baseline-identity
+> — the neutral-day churn that dropped power work is FIXED (#148); **WP-53** engine `rollUp` pure
+> port (#149) then **stage 2** — the coach board consumes it, duplicate deleted, `next build`
+> verified (#152). REMAINING: WP-47 block-LENGTH steering (needs the block↔periodisation
+> reconciliation); WP-46 fuzzy joins (matchLift, core regex, form-guide); WP-49 build flip (PAUSE);
+> AI go-live. The per-item entries below are the original analysis — read them with this status.
+
 Numbering continues the Phase-3 ledger (WP-38+). Ordering per the programme's criteria:
 architectural correctness > coaching reasoning > scientific validity > knowledge separation >
 explainability > modularity > testing > performance > UI. Conventions unchanged: every WP ends
