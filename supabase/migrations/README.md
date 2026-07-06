@@ -15,11 +15,15 @@ contract going forward.
 ## The ledger
 
 Every migration, oldest-first by the date it was **written** (git history).
-"Applied to prod" is inferred, not proven: there is no CLI migration history
-on the production project yet (everything was hand-run in the SQL editor), so
-status is inferred from the migration headers ("Run in the SQL editor"), the
-features being live in the app, and the commit history. Verify against prod
-when you link the CLI (see "Adopting the CLI" below).
+For the pre-CLI chain (001 → 20260701), "Applied to prod" is inferred, not
+proven: those were hand-run in the SQL editor, so status is inferred from the
+migration headers, the features being live in the app, and the commit history.
+Since 2026-07-05 the CLI workflow is live: prod history was baselined
+(repair-marked 001 → 20260701) and `20260705_team_spine.sql` was pushed to
+prod with `supabase db push` (see HANDOFF.md). The 20260706 → 20260710
+migrations are **applied to STAGING only** (proven by
+`supabase/tests/rls-harness.mjs`); their prod apply is the deliberate, batched
+step documented in `supabase/SECURITY-DEPLOY.md`.
 
 | File | Written | What it does | Applied to prod? |
 |---|---|---|---|
@@ -39,13 +43,20 @@ when you link the CLI (see "Adopting the CLI" below).
 | `20260623_daily_metrics_subjective.sql` | 2026-06-23 | stress / illness / travel columns on `daily_metrics` (subjective wellness) | Yes (inferred — daily check-in is live) |
 | `013_set_logs.sql` | 2026-06-28 | `set_logs` table — per-set training history from the session runner | Yes (inferred — per-set logging is live) |
 | `20260701_athlete_model.sql` | 2026-07-02 | **No-op** (`select 1`) — audit-trail record of the Athlete Model shape stored in `users.profile.athlete_model` JSONB; no DDL | N/A (nothing to apply) |
+| `20260705_team_spine.sql` | 2026-07-05 | Team data spine (WP-33): `teams` / `team_members` / `player_status` tables, SECURITY DEFINER membership helpers (`is_member_of_team`, `is_coach_of_team`, `is_coach_of`), team RLS (coach reads only the derived player_status of their own team), `team_members_guard` anti-self-promotion trigger | **Yes** — staging-proven (rls-harness), then pushed to prod via `supabase db push` with Simon's approval 2026-07-05 (HANDOFF, PR #107) |
+| `20260706_security_hardening.sql` | 2026-07-05 | Security hardening: S2 token-column lockdown (column-level grants on `wearable_connections`, tokens browser-invisible), S3 NOT VALID bounds (injuries free-text, `users.profile` size cap, team free-text), S6 explicit `delete_user()` completeness (+ team surfaces), S9 no-rejoin-after-removal guard, S10 `handle_new_user()` search_path pin | **No — staging only.** Prod apply is the batched, human-gated step in `supabase/SECURITY-DEPLOY.md` |
+| `20260707_oauth_state.sql` | 2026-07-05 | S1 (CRITICAL): signed OAuth `state` — `oauth_states` nonce table (RLS on, no client policies) + `issue_oauth_state()` (authenticated) / `consume_oauth_state()` (service_role-only) RPCs | **No — staging only.** Pending prod (see `supabase/SECURITY-DEPLOY.md`; must deploy WITH the fitbit/strava callback Edge Functions) |
+| `20260708_player_status_integrity.sql` | 2026-07-05 | S11: server-authoritative coach board — `derive_injury_status()` / `latest_readiness()` + `player_status_server_truth()` BEFORE trigger overrides injury_status/readiness with server truth and clamps the soft trend metrics | **No — staging only.** Pending prod (see `supabase/SECURITY-DEPLOY.md`) |
+| `20260709_player_status_identity.sql` | 2026-07-05 | Coach-board identity: `display_name` column on `player_status` (+ length check) + `player_display_name()`; extends the server-truth trigger to stamp the name server-side | **No — staging only.** Pending prod (see `supabase/SECURITY-DEPLOY.md`) |
+| `20260710_team_join_codes.sql` | 2026-07-05 | Team founding + invites via join codes: `join_code` column + partial unique index on `teams`, `gen_join_code()` / `create_team()` / `join_team_with_code()` / `rotate_team_code()` SECURITY DEFINER RPCs | **No — staging only.** Pending prod (see `supabase/SECURITY-DEPLOY.md`) |
 
 ### Ordering note (read before replaying the chain)
 
-Filename sort order (`001` … `013`, then `20260612` … `20260701`) is **not**
+Filename sort order (`001` … `013`, then `20260612` … `20260710`) is **not**
 the historical application order — `20260612` was actually applied between
 `003` and `004`. This is harmless: no numbered migration depends on anything a
-dated migration creates (and vice versa), so replaying the chain in filename
+dated migration creates (and vice versa), and the dated `202607xx` files were
+written and applied in filename order, so replaying the chain in filename
 order produces the same end state. This was verified by reading every file
 when this ledger was written. Keep it true: never write a new migration that
 depends on running *before* an existing one.
@@ -152,9 +163,9 @@ From then on, every new migration is a file here + `supabase db push`.
 
 1. Run `supabase/schema.sql` once (SQL editor, or
    `psql "$DB_URL" -f supabase/schema.sql`). It is the reconciled baseline —
-   the full state after the whole chain.
+   the full state after the whole chain (through `20260710_team_join_codes`).
 2. Link the project and baseline the history exactly as in "Adopting the CLI"
-   above (repair-mark 001 → 20260701 as applied).
+   above (repair-mark every file in this folder as applied — 001 → 20260710).
 3. New migrations then flow with `supabase db push`.
 
 (Equivalent alternative: after step 1, `supabase db push` instead of
@@ -173,7 +184,7 @@ tested on production. Exact steps, ~15 minutes:
    name `hybrid-training-staging`, same region as prod (West EU), Free plan.
    Save the database password in your password manager.
 2. **Bootstrap the schema**: SQL Editor → New query → paste ALL of
-   `supabase/schema.sql` → Run. Verify 15 tables in the Table Editor.
+   `supabase/schema.sql` → Run. Verify 19 tables in the Table Editor.
 3. **Link + baseline the migration history** from this repo:
    `supabase link --project-ref <STAGING_REF>` then the
    `supabase migration repair --status applied …` list above.
