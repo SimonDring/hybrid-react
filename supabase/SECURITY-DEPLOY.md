@@ -20,6 +20,7 @@ Everything below was proven on staging: `node supabase/tests/rls-harness.mjs` �
 | `functions/fitbit-auth-callback` | resolves `state` via `consume_oauth_state` (S1) | Edge Function |
 | `functions/strava-auth-callback` | resolves `state` via `consume_oauth_state` (S1) | Edge Function |
 | `functions/fitbit-sync` | stops logging raw vitals (S4) + 92-day clamp (S8) | Edge Function |
+| `functions/ai-render` | WP-60 AIGAS C2 capability (OPTIONAL — deploy only when you decide to evaluate/go-live). Needs secrets: `ANTHROPIC_API_KEY` + `AI_ENABLED=true` (the kill switch; unset/false = every request 503s). Client-side it stays inert until a profile sets `ai_features: true`. | Edge Function |
 
 The app (GitHub Pages) is already deployed with the client half of S1 — and it **falls
 back to the legacy `state=userId`** whenever `issue_oauth_state` is absent, so wearable
