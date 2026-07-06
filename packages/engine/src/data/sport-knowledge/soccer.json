@@ -1,54 +1,2629 @@
 {
   "id": "soccer",
   "schemaVersion": "1.0.0",
-  "label": "Soccer (Association Football)",
-  "stub": true,
-  "lastReviewed": "2026-06-28",
-  "_note": "SCAFFOLD — structurally valid but not yet authored to flagship depth. Fill the empty sections to promote to a full profile (see gaelic_football.json as the reference).",
-
+  "lastReviewed": "2026-07-06",
   "meta": {
-    "sport": "Soccer",
+    "sport": "Soccer (Association Football)",
+    "label": "Soccer (Football)",
     "category": "Invasion / field team sport",
     "teamOrIndividual": "team",
-    "indoorOutdoor": "outdoor",
-    "contactLevel": "moderate",
+    "indoorOutdoor": "outdoor (grass or artificial turf); futsal/indoor variants exist",
+    "contactLevel": "moderate (tackling, shielding, aerial duels; contact managed by rules, not armoured)",
     "playersPerSide": 11,
     "seasonLengthWeeks": 40,
     "offseasonLengthWeeks": 5,
-    "competitionFrequencyPerWeek": "1-2 matches/week",
-    "trainingFrequencyPerWeek": "4-6 (professional)",
-    "sessionDurationMin": { "match": 90, "pitch": 75, "gym": 60 }
+    "competitionFrequencyPerWeek": "1 match/week typical (amateur/club); 2 matches/week in congested professional periods (league + cup/continental)",
+    "trainingFrequencyPerWeek": "2-3 pitch + 1-2 gym (amateur/club); 4-6 pitch + 2-3 gym (professional)",
+    "sessionDurationMin": {
+      "match": 90,
+      "pitch": 75,
+      "gym": 60
+    },
+    "notes": "Two 45-minute halves of near-continuous intermittent running: ~10-13 km per match with an activity change every 4-6 seconds and a sprint roughly every 90 seconds. The gym's job is availability and explosiveness — hamstring, groin and knee protection plus acceleration force — never to add conditioning the pitch already supplies. Hamstring strain is THE soccer injury; the Nordic + Copenhagen pillars are the best-evidenced prevention in any sport."
   },
-
   "physicalProfile": {
     "qualities": {
-      "aerobicEndurance": { "importance": 9, "why": "90 min intermittent running.", "confidence": "high", "evidenceLevel": "L2", "source": "soccer physiology literature" },
-      "repeatSprintAbility": { "importance": 9, "why": "Repeated sprints decide key moments.", "confidence": "high", "evidenceLevel": "L2", "source": "soccer physiology literature" },
-      "acceleration": { "importance": 8, "why": "Beating an opponent over short distance.", "confidence": "high", "evidenceLevel": "L3", "source": "expert consensus" },
-      "changeOfDirection": { "importance": 8, "why": "Constant reactive COD.", "confidence": "high", "evidenceLevel": "L3", "source": "expert consensus" }
+      "aerobicEndurance": {
+        "importance": 9,
+        "why": "~10-13 km per match at a mean intensity near 85% HRmax (~70% VO2max); the aerobic engine drives repeat-effort recovery and protects late-match technical quality.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Stølen 2005 (physiology of soccer review); Mohr 2003"
+      },
+      "repeatSprintAbility": {
+        "importance": 9,
+        "why": "150-250 brief intense actions per match with incomplete recovery; the decisive moments cluster — pressing sequences, transitions, defending counters.",
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "Mohr 2003 (match activities of top-class players); Stølen 2005"
+      },
+      "acceleration": {
+        "importance": 9,
+        "why": "Most match sprints are <20 m from varied starts; straight sprinting is the single most frequent action preceding goals — for scorer and assister alike.",
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "Faude 2012 (straight sprinting most frequent action in goal situations); Haugen 2014"
+      },
+      "sprintSpeed": {
+        "importance": 8,
+        "why": "Breakaways, recovery runs and tracking wingers expose players to near-maximal velocity — the same exposure that injures unprepared hamstrings, so it must be trained, not avoided.",
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "Haugen 2014 (sprint profiles of elite footballers); Malone 2017 (sprint exposure as protection)"
+      },
+      "deceleration": {
+        "importance": 8,
+        "why": "Pressing, closing down and re-cutting demand repeated maximal braking; eccentric capacity is the tissue armour for knee and hamstring.",
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "Harper 2019 (deceleration demands in team sport)"
+      },
+      "changeOfDirection": {
+        "importance": 8,
+        "why": "~700 turns and swerves per match; 1v1 elimination and defensive re-orientation pivot on sharp COD — also the dominant non-contact ACL mechanism.",
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "Bloomfield 2007 (movement demands, ~700 turns/match); expert consensus"
+      },
+      "explosivePower": {
+        "importance": 8,
+        "why": "Shooting, jumping for headers, 1v1 first steps and GK dives all express rapid force; squat strength and jump height correlate strongly with sprint performance in elite players.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Wisløff 2004 (strong correlation of maximal squat strength with sprint and jump in elite soccer)"
+      },
+      "anaerobicEndurance": {
+        "importance": 7,
+        "why": "Blood lactate of 2-10 mM in match play; glycolytic tolerance shapes the quality of repeated pressing bursts and late-half surges.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Stølen 2005; Bangsbo 2008"
+      },
+      "relativeStrength": {
+        "importance": 7,
+        "why": "Strength-to-bodyweight drives acceleration, braking and duel stability without carrying non-functional mass around 10+ km of running.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Wisløff 2004; Suchomel 2016 (strength as a foundation)"
+      },
+      "maxStrength": {
+        "importance": 6,
+        "why": "The foundation under power, braking and tissue robustness; soccer is not strength-limited, but stronger players sprint faster and jump higher at every level studied.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Wisløff 2004; Suchomel 2016"
+      },
+      "reactiveStrength": {
+        "importance": 6,
+        "why": "Stiffness for cutting and re-acceleration, jump-land quality in aerial duels; a targeted dose also underpins ACL-protective landing mechanics.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "expert consensus (S&C panel); ACL neuromuscular-training literature"
+      },
+      "stability": {
+        "importance": 7,
+        "why": "Every kick is struck from single-leg stance; knee-over-toe control in plant-and-cut is the core of neuromuscular ACL prevention.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "FIFA 11+ component evidence (Bizzini & Dvorak 2015); Webster & Hewett 2018"
+      },
+      "balance": {
+        "importance": 7,
+        "why": "Soccer is a one-legged sport in disguise — striking, shielding under contact and landing all live on a single-leg base; balance training reduces recurrent ankle sprain.",
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "Doherty 2017 (ankle sprain prevention); expert consensus"
+      },
+      "mobility": {
+        "importance": 6,
+        "why": "Hip flexion/extension range for kicking amplitude and full sprint mechanics; hip-flexor and hamstring extensibility keep the striking action out of the lumbar spine and proximal tendons.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "expert consensus; kicking biomechanics (Lees 2010)"
+      },
+      "rotationalPower": {
+        "importance": 6,
+        "why": "The kick is a proximal-to-distal whip — pelvis and trunk rotation over a braced stance leg deliver ball speed; crossing and long passing scale with it.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "Lees 2010 (biomechanics of kicking); expert consensus"
+      },
+      "coordination": {
+        "importance": 8,
+        "why": "Ball manipulation at speed under fatigue is the sport; gym work must arrive fresh enough never to blunt touch and striking quality.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "expert consensus"
+      },
+      "neckStrength": {
+        "importance": 4,
+        "why": "Repeated heading and aerial-duel exposure; neck strength plausibly attenuates head accelerations, but protective evidence is emerging rather than established.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "heading/concussion mitigation literature (emerging); expert consensus"
+      },
+      "gripStrength": {
+        "importance": 2,
+        "why": "Minimal for outfield play (shirt-grappling aside); goalkeepers need catching/parrying hand strength, trained through GK-specific work.",
+        "confidence": "low",
+        "evidenceLevel": "L5",
+        "source": "expert consensus"
+      }
     }
   },
-
-  "energySystems": { "aerobicPct": 70, "glycolyticPct": 20, "atpPcPct": 10, "workToRestRatio": "intermittent ~1:5", "matchDemands": "~10-12 km, repeated sprints", "heartRateProfile": "mean ~85% HRmax", "fatigueProfile": "high-speed running declines late", "confidence": "moderate", "evidenceLevel": "L3", "source": "estimate — to be authored" },
-
-  "movementProfile": { "primaryPatterns": ["sprint", "change of direction", "kicking", "jump-land"], "planes": ["sagittal", "frontal", "transverse"], "dominantMuscleGroups": ["hamstrings", "glutes", "quads", "adductors", "calves"], "commonDeficiencies": ["eccentric hamstring strength", "adductor strength"], "asymmetricLoading": "kicking-leg dominance" },
-
-  "injuryProfile": { "common": [], "summary": "To be authored (hamstring, ankle, groin, knee high-priority — strong FIFA 11+ evidence base)." },
-
-  "positions": [],
-  "assessments": [],
-  "developmentPriorities": {},
-  "seasonalModel": {},
-  "microcycles": {},
-  "gymPhilosophy": {},
-  "exerciseLibrary": { "categories": [], "exercises": [] },
-  "injuryPreventionLibrary": [],
-  "decisionRules": [],
-  "loadManagement": {},
-  "readinessModel": { "factors": [] },
-  "coachDashboard": {},
-  "athleteDashboard": {},
-  "validation": {},
-  "references": [],
-  "kpiFramework": { "kpis": [], "athleteDashboardKpis": [], "coachDashboardKpis": [], "performanceScore": {}, "gamification": [] }
+  "energySystems": {
+    "aerobicPct": 70,
+    "glycolyticPct": 20,
+    "atpPcPct": 10,
+    "workToRestRatio": "intermittent ~1:5 to 1:8 for high-intensity efforts embedded in near-continuous sub-maximal activity; an activity change every 4-6 s",
+    "matchDemands": "~10-13 km total (position-dependent); high-speed running ~600-1200 m; sprint distance ~200-400 m with a sprint roughly every 90 s; 150-250 brief intense actions; ~700 turns; 30-50 kicks/duels",
+    "heartRateProfile": "Mean ~85% HRmax (range 80-90%); repeated periods >95% HRmax during pressing sequences and transitions; blood lactate 2-10 mM",
+    "fatigueProfile": "High-intensity running falls ~25-45% in the final 15 minutes of elite matches, with temporary dips after the most intense 5-minute periods; sprint quality, deceleration mechanics and technical actions degrade with it — the injury window opens late",
+    "confidence": "high",
+    "evidenceLevel": "L2",
+    "source": "Stølen 2005 (review); Mohr 2003 (top-class match analysis); Bangsbo 2008",
+    "notes": "Elite figures; amateur volumes are lower but the intermittent pattern is identical. The pitch supplies almost all conditioning — the gym's contribution is force, robustness and the qualities the pitch cannot safely dose (eccentric hamstring strength, adductor strength, maximal force)."
+  },
+  "movementProfile": {
+    "primaryPatterns": [
+      "acceleration/deceleration (5-20 m bursts)",
+      "maximal-velocity sprinting (breakaways, recovery runs)",
+      "change of direction / cutting (plant-and-push)",
+      "kicking (single-leg stance + hip-trunk rotation whip)",
+      "jump-land (headers, aerial duels)",
+      "shielding/duelling under contact"
+    ],
+    "planes": [
+      "sagittal (dominant)",
+      "frontal (cutting, shielding, Copenhagen-plane adduction)",
+      "transverse (kicking rotation, turning)"
+    ],
+    "jointLoading": "High eccentric hamstring load at terminal swing in sprinting; high knee valgus/rotation exposure in plant-and-cut; adductor load in kicking follow-through and lateral pushing; repetitive ankle inversion exposure in tackles and landings",
+    "groundContacts": "Very many sub-maximal contacts across ~10-13 km; regular maximal-velocity exposure (unlike smaller-pitch codes) — hamstrings must be prepared for it",
+    "landingDemands": "Moderate — aerial duels and headers land on one leg in traffic; GK landing demand is high (dives, parries, crosses)",
+    "throwing": "Throw-ins only (long-throw specialists aside); not a programming priority",
+    "jumping": "Moderate-high — contested headers for all outfield roles, dominant for centre-backs and strikers; maximal and reactive for goalkeepers",
+    "cutting": "Constant — 1v1 elimination, pressing angles, defensive re-orientation; the dominant non-contact ACL mechanism",
+    "rotating": "Every strike of the ball rotates pelvis-to-trunk over a planted stance leg; shooting and crossing are rotational power expressions",
+    "overheadActions": "Rare (GK excepted); overhead gym volume is postural balance, not sport transfer",
+    "collisions": "Moderate — tackles, shoulder-to-shoulder duels, GK collisions in the box; managed by rules, not equipment",
+    "repeatedImpacts": "Repetitive footstrike across long match distances; cumulative calf/Achilles and bone load, higher on artificial turf",
+    "asymmetricLoading": "Kicking-leg dominance is near-universal: the striking leg accumulates hip-flexor/quadriceps load while the STANCE leg absorbs braking, rotation and adductor load — both sides carry sport-specific risk and both need auditing",
+    "dominantMuscleGroups": [
+      "hamstrings",
+      "quads",
+      "glutes",
+      "adductors",
+      "calves",
+      "hip flexors",
+      "trunk/core (anti-rotation + lateral chain)"
+    ],
+    "commonDeficiencies": [
+      "eccentric hamstring strength vs sprint exposure (the headline modifiable risk)",
+      "adductor strength vs kicking + cutting volume",
+      "single-leg knee control in plant-and-cut (valgus collapse)",
+      "hip-flexor/rectus femoris capacity vs kicking volume",
+      "calf capacity vs match running load"
+    ]
+  },
+  "injuryProfile": {
+    "common": [
+      {
+        "name": "Hamstring strain",
+        "incidence": "very high — THE soccer injury: ~12% of ALL time-loss injuries and ~37% of muscle injuries at professional level, and it has been RISING year-on-year",
+        "severity": "moderate (typically 2-6 weeks), high recurrence (~12-16%)",
+        "mechanism": "high-speed running — eccentric overload of the terminal-swing phase; secondarily long kicking actions under stretch",
+        "highRiskTissues": [
+          "biceps femoris long head",
+          "proximal musculotendinous junction"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "low eccentric hamstring strength",
+            "inadequate/spiked high-speed running exposure",
+            "fatigue (late-half clustering of injuries)",
+            "congested fixture load"
+          ],
+          "nonModifiable": [
+            "prior hamstring injury (dominant factor)",
+            "age"
+          ]
+        },
+        "rtpConsiderations": "Criteria-based: restore eccentric strength symmetry, then progressive sprint reloading to >95% max velocity BEFORE match return; unreloaded returns drive the recurrence statistics.",
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Ekstrand 2011 (UEFA muscle-injury surveillance); Ekstrand 2016 (annual rise); Petersen 2011 + van der Horst 2015 (Nordic RCTs)"
+      },
+      {
+        "name": "Adductor/groin strain",
+        "incidence": "high — ~23% of muscle injuries at professional level",
+        "severity": "moderate, recurrence-prone; can chronify into long-standing groin pain",
+        "mechanism": "kicking follow-through under stretch, lateral pushing/cutting, and contested reach tackles",
+        "highRiskTissues": [
+          "adductor longus (proximal insertion)"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "low adductor (squeeze) strength",
+            "kicking/COD volume spikes",
+            "restricted hip range"
+          ],
+          "nonModifiable": [
+            "prior groin injury"
+          ]
+        },
+        "rtpConsiderations": "Copenhagen-based strength restoration with squeeze-test tracking; rebuild kicking volume gradually — long/place kicking last.",
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Ekstrand 2011 (surveillance); Harøy 2019 (Copenhagen cluster-RCT, 41% reduction)"
+      },
+      {
+        "name": "ACL rupture",
+        "incidence": "lower frequency but the highest-burden injury; ~2-3x relative risk in the women's game",
+        "severity": "severe — season-ending (6-12 months), career-threatening recurrence risk",
+        "mechanism": "~70% non-contact: plant-and-cut or single-leg landing with knee valgus collapse and internal rotation, often when perturbed or fatigued",
+        "highRiskTissues": [
+          "ACL",
+          "medial meniscus (concurrent)"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "landing/cutting mechanics (valgus control)",
+            "hamstring:quadriceps strength balance",
+            "fatigue exposure without neuromuscular preparation"
+          ],
+          "nonModifiable": [
+            "female sex",
+            "prior ACL injury",
+            "anatomy (notch/slope)"
+          ]
+        },
+        "rtpConsiderations": "Criteria-based, time-respecting (≥9 months materially lowers re-injury): strength symmetry, hop battery, on-pitch COD progression, psychological readiness.",
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Webster & Hewett 2018 (prevention meta-analysis); FIFA 11+ evidence (Bizzini & Dvorak 2015; Thorborg 2017)"
+      },
+      {
+        "name": "Ankle sprain (lateral)",
+        "incidence": "high — the most common joint injury",
+        "severity": "low-moderate, strongly recurrence-prone (chronic instability if under-rehabbed)",
+        "mechanism": "inversion under contact (tackles, landing on an opponent's foot) and unanticipated cuts",
+        "highRiskTissues": [
+          "ATFL/CFL"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "incomplete rehab of a prior sprain",
+            "balance/proprioception deficits",
+            "calf/peroneal strength deficits"
+          ],
+          "nonModifiable": [
+            "previous sprain (dominant factor)"
+          ]
+        },
+        "rtpConsiderations": "Graded COD re-exposure + balance retraining; bracing/taping on return is evidence-supported and cheap insurance.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Doherty 2017 (systematic review); Ekstrand 2011 (surveillance)"
+      },
+      {
+        "name": "Quadriceps/rectus femoris strain",
+        "incidence": "moderate-high — ~19% of muscle injuries; biased to the kicking leg",
+        "severity": "moderate; proximal rectus femoris injuries can be slow (4-8 weeks)",
+        "mechanism": "explosive kicking — the hip-extended, knee-flexed backswing loads rectus femoris under stretch; sprinting accelerations contribute",
+        "highRiskTissues": [
+          "rectus femoris (proximal, kicking leg)"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "kicking-volume spikes (shooting practice, dead-ball reps)",
+            "hip-flexor/quad capacity deficit",
+            "fatigue"
+          ],
+          "nonModifiable": [
+            "prior quad injury"
+          ]
+        },
+        "rtpConsiderations": "Rebuild kicking volume like sprint volume — graded, counted, with long/place kicks reintroduced last.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Ekstrand 2011 (muscle-injury surveillance); expert consensus on kicking-load management"
+      },
+      {
+        "name": "Calf/soleus strain and Achilles overload",
+        "incidence": "moderate (~13% of muscle injuries), rising sharply with age and fixture congestion",
+        "severity": "low-moderate, nagging and recurrence-prone",
+        "mechanism": "accumulated match running load, repeated push-offs; congested schedules without calf capacity",
+        "highRiskTissues": [
+          "soleus",
+          "Achilles tendon"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "calf strength-endurance deficit",
+            "running-volume spikes",
+            "surface/footwear change"
+          ],
+          "nonModifiable": [
+            "age (the classic veteran injury)",
+            "prior calf injury/tendinopathy"
+          ]
+        },
+        "rtpConsiderations": "Isometric → heavy-slow-resistance calf progression; graded return to full match distance.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Ekstrand 2011; tendinopathy management literature (Malliaras 2013)"
+      }
+    ],
+    "summary": "Muscle strains dominate: hamstring (37%), adductor (23%), quadriceps (19%) and calf (13%) account for ~92% of all muscle injuries in the UEFA surveillance. The gym owns the two best-evidenced preventions in sport — Nordic (~50% hamstring reduction) and Copenhagen (~41% groin reduction) — plus neuromuscular ACL prevention. Availability is the transfer: the strongest predictor of team success in surveillance data is low injury burden."
+  },
+  "positions": [
+    {
+      "name": "Goalkeeper",
+      "role": "Shot-stopping, commanding the box on crosses, 1v1 denial, distribution (now a passing position too).",
+      "movementDemands": "Explosive lateral dives, maximal vertical jumps, rapid get-ups, short bursts off the line; hundreds of low-intensity positioning adjustments.",
+      "runningDemands": "Lowest of any position (~4-6 km, almost all walking/jogging).",
+      "collisionDemands": "Highest single-event contact risk: crowded-box collisions, striker challenges, ground impacts from diving.",
+      "speedReq": "low (short bursts only)",
+      "powerReq": "very high (dive push-off, vertical jump, get-up speed)",
+      "strengthReq": "moderate-high (impact tolerance, aerial duels under contact)",
+      "bodyComposition": "Tall and powerful; lean enough for repeated floor work and quick get-ups.",
+      "primaryQualities": [
+        "explosivePower",
+        "reactiveStrength",
+        "mobility"
+      ],
+      "secondaryQualities": [
+        "stability",
+        "balance"
+      ],
+      "commonInjuries": [
+        "hip/adductor overload (dive splits)",
+        "shoulder/hand impact injuries",
+        "knee contusions"
+      ],
+      "gymPriorities": [
+        "single-leg lateral power (dive push-off)",
+        "adductor strength (Copenhagen)",
+        "landing/impact tolerance + hip mobility"
+      ],
+      "recoveryConsiderations": "Low running load — tolerates more gym volume than outfield players; manage hip/groin soreness from repeated diving."
+    },
+    {
+      "name": "Centre-back",
+      "role": "Aerial dominance in both boxes, front-foot defending, duel winning, build-up passing.",
+      "movementDemands": "Repeated maximal jumps under contact, hard short accelerations to step in, emergency recovery sprints, physical duels.",
+      "runningDemands": "Lowest outfield total distance (~9-10 km) but high-consequence maximal sprints when exposed.",
+      "collisionDemands": "Highest outfield duel/contact volume — aerial challenges, shoulder duels, blocks.",
+      "speedReq": "moderate-high (rare but decisive recovery sprints at full velocity)",
+      "powerReq": "very high (aerial power decides both boxes)",
+      "strengthReq": "high (duel stability, shielding, holding off forwards)",
+      "bodyComposition": "Tallest, most powerful outfield build; mass must not cost recovery-sprint speed.",
+      "primaryQualities": [
+        "maxStrength",
+        "explosivePower"
+      ],
+      "secondaryQualities": [
+        "sprintSpeed",
+        "neckStrength",
+        "stability"
+      ],
+      "commonInjuries": [
+        "hamstring (unprepared maximal recovery sprints)",
+        "ankle sprain (aerial landings in traffic)",
+        "head impacts (aerial duels)"
+      ],
+      "gymPriorities": [
+        "maximal lower-body strength + jump power",
+        "eccentric hamstring (their sprints are rare, maximal, and unprepared — the classic CB injury)",
+        "neck strengthening micro-dose (heading volume)"
+      ],
+      "recoveryConsiderations": "Duel bruising and jump-landing load; their sparse sprint exposure means DELIBERATE weekly high-speed running top-ups are protective, not optional."
+    },
+    {
+      "name": "Full-back / Wing-back",
+      "role": "The corridor engine: overlap and underlap runs in attack, recovery sprints in defence, crossing supply.",
+      "movementDemands": "The highest repeat-sprint load in the team — continuous up-and-back corridor running, high-speed overlaps, maximal recovery sprints, crossing under fatigue.",
+      "runningDemands": "Highest high-speed-running and sprint distance of any position (~10-12 km total, sprint volume peaks here).",
+      "collisionDemands": "Moderate — touchline duels, crossing blocks.",
+      "speedReq": "very high (top-end velocity is the job description)",
+      "powerReq": "high (repeated accelerations)",
+      "strengthReq": "moderate (relative strength over mass)",
+      "bodyComposition": "Fast-lean endurance-speed hybrid.",
+      "primaryQualities": [
+        "repeatSprintAbility",
+        "sprintSpeed"
+      ],
+      "secondaryQualities": [
+        "aerobicEndurance",
+        "acceleration",
+        "deceleration"
+      ],
+      "commonInjuries": [
+        "hamstring (the highest sprint exposure in the squad)",
+        "calf/Achilles overload",
+        "ankle sprain"
+      ],
+      "gymPriorities": [
+        "eccentric hamstring capacity (Nordic) — non-negotiable at this sprint volume",
+        "calf capacity",
+        "minimal-dose strength that never blunts running quality"
+      ],
+      "recoveryConsiderations": "Highest weekly sprint load in the squad — heavy posterior-chain gym work needs 48 h separation from sprint-dense sessions and matches."
+    },
+    {
+      "name": "Central midfielder",
+      "role": "The link: circulation, pressing triggers, box-to-box support, second balls, tempo control.",
+      "movementDemands": "Near-continuous shuttling with constant turns (~700/match concentrate here), tight-space COD, press-and-recover cycles.",
+      "runningDemands": "Highest total distance (~11-13 km elite); moderate sprint distance but the most direction changes.",
+      "collisionDemands": "Moderate-high — midfield 50/50s, shielding under pressure.",
+      "speedReq": "moderate-high",
+      "powerReq": "moderate",
+      "strengthReq": "moderate (duel stability in traffic)",
+      "bodyComposition": "Endurance-lean with repeat-effort capacity.",
+      "primaryQualities": [
+        "aerobicEndurance",
+        "changeOfDirection"
+      ],
+      "secondaryQualities": [
+        "repeatSprintAbility",
+        "stability",
+        "deceleration"
+      ],
+      "commonInjuries": [
+        "hamstring",
+        "adductor/groin (turn volume)",
+        "ankle sprain (traffic)"
+      ],
+      "gymPriorities": [
+        "eccentric hamstring + adductor pillars",
+        "single-leg strength for turn deceleration",
+        "trunk anti-rotation for shielding + striking"
+      ],
+      "recoveryConsiderations": "Highest total running load — the gym must flex around pitch volume; prioritise quality micro-doses over added volume in-season."
+    },
+    {
+      "name": "Striker / Forward",
+      "role": "Penetrating runs in behind, first-step separation, finishing, aerial threat, first line of the press.",
+      "movementDemands": "Explosive short accelerations from standing/curved starts, sharp COD to create shooting angles, maximal sprints in behind, repeated jumps in the box, high kicking (shooting) volume.",
+      "runningDemands": "Moderate total (~10-11 km) but the highest density of maximal accelerations and penalty-box explosive actions.",
+      "collisionDemands": "High — back-to-goal shielding against centre-backs, aerial duels.",
+      "speedReq": "very high (separation wins chances)",
+      "powerReq": "very high (first step, shot power, aerial)",
+      "strengthReq": "moderate-high (hold-up play under contact)",
+      "bodyComposition": "Fast-powerful; profile varies from target (mass) to runner (pace) archetypes.",
+      "primaryQualities": [
+        "acceleration",
+        "explosivePower"
+      ],
+      "secondaryQualities": [
+        "changeOfDirection",
+        "reactiveStrength",
+        "rotationalPower"
+      ],
+      "commonInjuries": [
+        "hamstring (sprints in behind)",
+        "quadriceps/rectus femoris (shooting volume, kicking leg)",
+        "adductor/groin"
+      ],
+      "gymPriorities": [
+        "acceleration strength (hip thrust, sled, split squat)",
+        "eccentric hamstring",
+        "kicking-volume management + hip-flexor/quad capacity"
+      ],
+      "recoveryConsiderations": "Shooting practice is quadriceps/adductor load — count it like sprint volume; separate heavy lifting from finishing-session days."
+    }
+  ],
+  "assessments": [
+    {
+      "name": "Countermovement jump (CMJ)",
+      "category": "power",
+      "essential": true,
+      "purpose": "Lower-body power benchmark + weekly neuromuscular-fatigue monitor (drop vs rolling baseline) — doubly useful in congested fixture periods.",
+      "frequency": "weekly (monitoring) + block testing",
+      "targets": {
+        "elite": "≥38-42 cm (male professional); ≥30 cm (female)",
+        "beginner": "~24-30 cm",
+        "youth": "developmental — track trend"
+      },
+      "equipment": [
+        "jump mat / phone app"
+      ],
+      "wearableEstimable": false,
+      "confidence": "high",
+      "evidenceLevel": "L2",
+      "source": "Claudino 2017 (CMJ for fatigue monitoring); Stølen 2005 (elite values)"
+    },
+    {
+      "name": "10 m / 30 m sprint",
+      "category": "speed",
+      "essential": true,
+      "purpose": "Acceleration (10 m) is the game's decisive action; 30 m captures near-maximal velocity, the hamstring-relevant exposure.",
+      "frequency": "each training block",
+      "targets": {
+        "elite": "10 m ≤1.80 s, 30 m ≤4.10 s (male professional); ~+8% (female)",
+        "beginner": "10 m ~2.0-2.2 s",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "timing gates (or validated app)"
+      ],
+      "wearableEstimable": false,
+      "confidence": "high",
+      "evidenceLevel": "L3",
+      "source": "Haugen 2014 (elite footballer sprint profiles)"
+    },
+    {
+      "name": "Yo-Yo Intermittent Recovery Test Level 1",
+      "category": "endurance",
+      "essential": true,
+      "purpose": "THE soccer-specific fitness test: intermittent high-intensity capacity with active recovery, validated against match high-intensity running.",
+      "frequency": "pre-season + mid-season check",
+      "targets": {
+        "elite": "≥2200-2600 m (male professional); ≥1600 m (female elite)",
+        "beginner": "~1200-1600 m",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "20 m track + audio"
+      ],
+      "wearableEstimable": false,
+      "confidence": "high",
+      "evidenceLevel": "L2",
+      "source": "Krustrup 2003 (validation); Bangsbo 2008 (review)"
+    },
+    {
+      "name": "Repeated-sprint ability (6×35 m, 10 s turnaround)",
+      "category": "endurance",
+      "essential": false,
+      "purpose": "Sprint decrement under incomplete recovery — the pressing/transition quality.",
+      "frequency": "pre-season",
+      "targets": {
+        "elite": "decrement <4%",
+        "beginner": "decrement 7-10%",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "timing gates"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Rampinini 2007 (RSA validity in soccer)"
+    },
+    {
+      "name": "Nordic hamstring strength",
+      "category": "strength",
+      "essential": true,
+      "purpose": "Eccentric hamstring strength — the headline modifiable factor for soccer's number-one injury.",
+      "frequency": "each block + after any hamstring flag",
+      "targets": {
+        "elite": "≥400 N or full-control Nordic (male); symmetrical (<10% imbalance)",
+        "beginner": "partial-range control",
+        "youth": "technique first"
+      },
+      "equipment": [
+        "NordBord or partner Nordic"
+      ],
+      "wearableEstimable": false,
+      "confidence": "high",
+      "evidenceLevel": "L1",
+      "source": "Opar 2015; van Dyk 2019 (meta-analysis)"
+    },
+    {
+      "name": "Adductor squeeze (45°)",
+      "category": "strength",
+      "essential": true,
+      "purpose": "Groin capacity benchmark + weekly early-warning monitor for the kicking/cutting load.",
+      "frequency": "weekly in-season",
+      "targets": {
+        "elite": "≥350 mmHg / symmetrical, stable vs baseline",
+        "beginner": "establish baseline",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "sphygmomanometer or dynamometer"
+      ],
+      "wearableEstimable": false,
+      "confidence": "high",
+      "evidenceLevel": "L2",
+      "source": "Esteve 2015; Delahunt (squeeze monitoring)"
+    },
+    {
+      "name": "505 change-of-direction test",
+      "category": "speed",
+      "essential": false,
+      "purpose": "Deceleration + turn quality — the COD half of soccer speed, and a useful post-ACL benchmark.",
+      "frequency": "each block (off/pre-season)",
+      "targets": {
+        "elite": "≤2.30 s (male); ≤2.50 s (female)",
+        "beginner": "~2.6-2.8 s",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "timing gates + marked turn line"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "COD testing consensus (Nimphius 2018)"
+    },
+    {
+      "name": "Back squat / trap-bar deadlift (3-5RM est.)",
+      "category": "strength",
+      "essential": false,
+      "purpose": "Global strength anchor — maximal squat strength correlates strongly with sprint and jump performance in elite players.",
+      "frequency": "each strength block",
+      "targets": {
+        "elite": "squat ~1.8-2.0×BW (male professional); ~1.5×BW (female)",
+        "beginner": "~1.2×BW",
+        "youth": "technique loads only"
+      },
+      "equipment": [
+        "barbell or trap bar"
+      ],
+      "wearableEstimable": false,
+      "confidence": "high",
+      "evidenceLevel": "L2",
+      "source": "Wisløff 2004"
+    },
+    {
+      "name": "Single-leg calf raise capacity",
+      "category": "strength",
+      "essential": false,
+      "purpose": "Calf strength-endurance vs match running load; the veteran-injury (soleus/Achilles) screen.",
+      "frequency": "each block + after calf flags",
+      "targets": {
+        "elite": "≥25 quality reps/side",
+        "beginner": "~12-15",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "step"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Hébert-Losier 2017 (calf-raise norms)"
+    }
+  ],
+  "developmentPriorities": {
+    "youth": {
+      "highest": [
+        "movement literacy + sprint mechanics",
+        "bodyweight strength (lunge, hinge, push, pull, land)",
+        "landing/cutting quality (the ACL window is adolescence — especially girls)",
+        "multi-sport exposure"
+      ],
+      "lowest": [
+        "heavy barbell loading",
+        "adult conditioning volumes",
+        "position specialisation"
+      ],
+      "trainingEmphasis": "Athletic literacy first; FIFA 11+ Kids-style neuromuscular warm-ups are proven, free and habit-forming. Growth-spurt years need patience with COD load.",
+      "commonMistakes": [
+        "conditioning children instead of building strength foundations",
+        "unmanaged kicking-volume spikes in shooting-heavy sessions",
+        "skipping landing mechanics with adolescent girls — the highest-return ACL window"
+      ]
+    },
+    "development": {
+      "highest": [
+        "posterior-chain + adductor strength base",
+        "eccentric hamstring habit (Nordic) BEFORE senior sprint volumes arrive",
+        "single-leg strength and knee control",
+        "acceleration mechanics under load"
+      ],
+      "lowest": [
+        "hypertrophy beyond positional need",
+        "maximal-velocity chasing without tissue preparation"
+      ],
+      "trainingEmphasis": "Build the tissue the senior game will tax: hamstrings, adductors, calves, single-leg control. The prevention pillars become permanent habits here.",
+      "commonMistakes": [
+        "skills-only development with no strength base",
+        "introducing senior sprint loads without eccentric hamstring preparation",
+        "no kicking-volume awareness"
+      ]
+    },
+    "senior": {
+      "highest": [
+        "availability (the best ability): Nordic + Copenhagen + calf pillars every week",
+        "repeat-sprint + acceleration quality",
+        "strength maintenance at minimal effective dose",
+        "readiness-led load management around fixtures"
+      ],
+      "lowest": [
+        "hypertrophy beyond positional need",
+        "novel exercise variety in-season"
+      ],
+      "trainingEmphasis": "Protect the match: gym work flexes around pitch load and fixture congestion, never compounds it.",
+      "commonMistakes": [
+        "stacking gym volume in congested weeks",
+        "dropping prevention pillars when fixtures compress (exactly when risk peaks)",
+        "no deliberate high-speed-running top-ups for low-exposure players (centre-backs, GKs)"
+      ]
+    },
+    "elite": {
+      "highest": [
+        "individualised limiter work (data-led, position-specific)",
+        "power/speed maintenance through congestion",
+        "squad-level rotation + load planning across competitions",
+        "criteria-based rehab pathways"
+      ],
+      "lowest": [
+        "generic volume",
+        "non-specific conditioning"
+      ],
+      "trainingEmphasis": "Individualised, monitored, minimal-dose development around a 50+ match calendar; the physical programme is availability management.",
+      "commonMistakes": [
+        "copying another player's programme",
+        "letting cup congestion erase prevention pillars",
+        "returning hamstrings to matches without maximal-velocity reloading"
+      ]
+    },
+    "masters": {
+      "highest": [
+        "strength/power retention",
+        "calf/Achilles + tendon care (the veteran injury profile)",
+        "mobility upkeep",
+        "longer recovery cycles between matches"
+      ],
+      "lowest": [
+        "high-volume sprint conditioning",
+        "novel maximal testing"
+      ],
+      "trainingEmphasis": "Retain power and tissue capacity; respect the slower recovery curve; keep playing.",
+      "commonMistakes": [
+        "sprinting cold in the first minutes of veterans' matches",
+        "abandoning strength work entirely",
+        "ignoring calf capacity — the age-defining tissue"
+      ]
+    }
+  },
+  "seasonalModel": {
+    "offSeason": {
+      "primaryObjective": "Rebuild max strength, hamstring/adductor/calf capacity and aerobic base; fix the season's asymmetries and niggles.",
+      "trainingEmphasis": "Max strength + targeted hypertrophy; eccentric robustness work at full dose (the soreness window nobody minds); aerobic base cross-training.",
+      "gymFrequencyPerWeek": "3-4",
+      "volume": "high",
+      "intensity": "moderate-high (progressing)",
+      "fatigueTolerance": "high (no matches to protect)",
+      "recoveryEmphasis": "moderate",
+      "testingRecommendations": [
+        "full battery at start + end",
+        "strength anchors (squat/trap-bar, Nordic, squeeze)"
+      ]
+    },
+    "preSeason": {
+      "primaryObjective": "Convert strength to acceleration/power; rebuild high-speed-running tolerance progressively (the hamstring-protective exposure); reach match fitness without the classic pre-season injury spike.",
+      "trainingEmphasis": "Power + speed conversion; progressive sprint exposure to >95% max velocity; Nordic/Copenhagen doses established before friendly congestion.",
+      "gymFrequencyPerWeek": "2-3",
+      "volume": "moderate",
+      "intensity": "high",
+      "fatigueTolerance": "moderate-high",
+      "recoveryEmphasis": "moderate-high (pitch load rising fast — the riskiest ACWR window of the year)",
+      "testingRecommendations": [
+        "Yo-Yo IR1",
+        "10/30 m",
+        "CMJ baseline for the season"
+      ]
+    },
+    "competition": {
+      "primaryObjective": "Maintain qualities at minimal effective volume; maximise match availability across ~40 weeks.",
+      "trainingEmphasis": "1-2 short heavy-but-low-volume sessions anchored to match day (MD-4/MD-3); prevention pillars EVERY week; power micro-doses MD-2.",
+      "gymFrequencyPerWeek": "1-2",
+      "volume": "low (maintenance dose)",
+      "intensity": "high (low volume preserves quality without fatigue)",
+      "fatigueTolerance": "low (protect the match)",
+      "recoveryEmphasis": "high",
+      "testingRecommendations": [
+        "weekly CMJ + squeeze monitoring only"
+      ]
+    },
+    "playoffs": {
+      "primaryObjective": "Peak freshness + availability for finals/promotion deciders.",
+      "trainingEmphasis": "Minimal-volume high-intensity maintenance; match-day priming; ruthless prioritisation of the pillars.",
+      "gymFrequencyPerWeek": "1 (sometimes 0 in a final week)",
+      "volume": "very low",
+      "intensity": "high (very low volume)",
+      "fatigueTolerance": "very low",
+      "recoveryEmphasis": "very high",
+      "testingRecommendations": [
+        "monitoring only — never test"
+      ]
+    },
+    "recovery": {
+      "primaryObjective": "Physical and mental recovery after a 40+ week season; restore tissue; treat carried niggles.",
+      "trainingEmphasis": "2 weeks genuinely off, then unstructured activity, mobility, light cross-training; rehab the season's flags before off-season loading starts.",
+      "gymFrequencyPerWeek": "0-2 (optional)",
+      "volume": "very low",
+      "intensity": "low",
+      "fatigueTolerance": "n/a",
+      "recoveryEmphasis": "very high",
+      "testingRecommendations": [
+        "none — reset"
+      ]
+    }
+  },
+  "microcycles": {
+    "oneMatchPerWeek": {
+      "pattern": "MD-anchored week: recover, load far from the match, sharpen close to it.",
+      "heavyDay": "MD-4 or MD-3 (lower-body strength + trunk; furthest from both matches)",
+      "powerDay": "MD-2 (low-volume, high-quality power/acceleration)",
+      "recoveryDay": "MD+1 (active recovery + mobility; MD+2 for starters after heavy matches)",
+      "mobilityDay": "MD+1 and MD-1 (hips + hamstring extensibility)",
+      "injuryPreventionDay": "primary dose MD-4/MD-3 (Nordic, Copenhagen, calf); never a first Nordic exposure inside MD-2",
+      "typicalLoadingPattern": "MD+1 recovery → MD-4 high (gym heavy) → MD-3 moderate → MD-2 power/speed → MD-1 light priming → MD",
+      "avoidHeavyLiftingDays": [
+        "MD-1",
+        "MD",
+        "MD+1"
+      ],
+      "preferExplosiveWorkDays": [
+        "MD-2",
+        "MD-3"
+      ]
+    },
+    "twoMatchesPerWeek": {
+      "pattern": "Congested (Sat-Wed-Sat): recovery-first, maintenance micro-doses only between matches — the injury-rate data are unambiguous.",
+      "heavyDay": "none (insufficient recovery between fixtures)",
+      "powerDay": "optional micro-dose only if >72 h between matches",
+      "recoveryDay": "the day after each match",
+      "mobilityDay": "daily",
+      "injuryPreventionDay": "low-dose maintenance only (short-lever Copenhagen, low-volume Nordic or isometric substitutes, calf isometrics)",
+      "typicalLoadingPattern": "Match → recovery → activation/priming → Match → recovery; cut gym volume ~50%; rotate squad where possible.",
+      "avoidHeavyLiftingDays": [
+        "every day between matches"
+      ],
+      "preferExplosiveWorkDays": [
+        "micro-dose priming only"
+      ]
+    },
+    "tournamentOrCongested": {
+      "pattern": "Tournament football (cup weeks, summer tournaments, 3 matches in 8 days) = pure availability management.",
+      "heavyDay": "none",
+      "powerDay": "match-day priming only (short, low-volume jumps/activation)",
+      "recoveryDay": "every non-match day",
+      "mobilityDay": "daily — hips, hamstrings, calves",
+      "injuryPreventionDay": "minimal-dose isometrics (squeeze holds, calf holds, trunk holds)",
+      "typicalLoadingPattern": "Protect recovery between fixtures; gym is priming, never development; muscle-injury risk concentrates in the second and third fixtures.",
+      "avoidHeavyLiftingDays": [
+        "all"
+      ],
+      "preferExplosiveWorkDays": [
+        "match-day primer only"
+      ]
+    }
+  },
+  "gymPhilosophy": {
+    "transfersWell": [
+      "eccentric hamstring work (Nordic) — the single best-evidenced gym intervention in sport",
+      "Copenhagen adduction progressions (kicking + cutting groin armour)",
+      "single-leg strength (split squat family — every kick and cut is single-leg)",
+      "heavy lower-body strength at low volume (squat/trap-bar — correlates with sprint and jump)",
+      "hip thrust + sled work (horizontal/acceleration force)",
+      "low-dose reactive jumps with landing quality (COD stiffness + ACL-protective mechanics)",
+      "anti-rotation trunk work (striking force transfer + shielding)",
+      "calf/ankle capacity (match running volume + the veteran soleus profile)"
+    ],
+    "limitedValue": [
+      "bodybuilding-volume upper-body work (mass without match currency)",
+      "long steady-state gym cardio (the pitch already supplies conditioning)",
+      "sit-up style trunk flexion (adds nothing a braced trunk doesn't do better)",
+      "heavy bilateral-only programmes that never load one leg",
+      "unstable-surface gimmicks replacing progressive strength"
+    ],
+    "essentialMovementPatterns": [
+      "hinge",
+      "single-leg squat/lunge (all angles)",
+      "hip thrust",
+      "eccentric knee flexion (Nordic)",
+      "adduction (Copenhagen)",
+      "horizontal pull",
+      "anti-rotation press",
+      "jump-land (quality over quantity)",
+      "calf raise"
+    ],
+    "accessoryPriorities": [
+      "Nordic curl",
+      "Copenhagen plank",
+      "single-leg RDL",
+      "lateral hip (glute med) work for knee control",
+      "hip mobility drills",
+      "neck micro-dose for regular headers"
+    ],
+    "singleLegEmphasis": "Very high — every strike of the ball is a single-leg stance event and every cut a single-leg push; single-leg strength and control outrank bilateral numbers once a base exists.",
+    "olympicLiftingSuitability": "Optional — a useful RFD tool if already technical; trap-bar jumps, hip thrusts and sled work deliver most of the benefit at far lower technical cost and are easier to keep in-season.",
+    "plyometricEmphasis": "Moderate and targeted: the game supplies huge reactive volume, so the gym adds QUALITY — landing mechanics, low-dose stiffness work, aerial-power for CBs/strikers — not quantity.",
+    "coreTrainingPhilosophy": "The trunk transmits and resists: anti-rotation strength to transfer kicking force from a braced stance leg, lateral-chain strength (side plank/Copenhagen family) for cutting and shielding. No loaded flexion volume.",
+    "neckTraining": "Low-moderate priority, rising with heading exposure: isometric micro-doses for centre-backs, strikers and set-piece targets; evidence is emerging rather than proven.",
+    "gripTraining": "Not a priority for outfield players; GK hand/wrist care lives in GK-specific work.",
+    "rotationalTraining": "Moderate value — anti-rotation first, then low-dose rotational power (cable/med-ball patterns) for strikers and crossers; the kick itself supplies high-velocity rotation daily.",
+    "isometricTraining": "Valuable in-season: adductor squeeze holds, calf isometrics and trunk holds maintain capacity at minimal soreness cost during congestion.",
+    "tempoRecommendations": "Controlled eccentrics in robustness phases (hamstring, calf, adductor); explosive intent on all power work.",
+    "velocityRecommendations": "Heavy-fast intent for strength-speed; light-load maximal-intent jumps and sled work for the acceleration profile; sprinting itself stays on the pitch, programmed and counted."
+  },
+  "exerciseLibrary": {
+    "categories": [
+      "hamstring prevention",
+      "adductor prevention",
+      "max strength",
+      "explosive power",
+      "posterior chain",
+      "single-leg strength",
+      "calf/achilles",
+      "trunk (anti-rotation)",
+      "speed/sprint support",
+      "knee control (ACL prehab)"
+    ],
+    "exercises": [
+      {
+        "id": "nordic_curl",
+        "name": "Nordic hamstring curl",
+        "category": "hamstring prevention",
+        "movementPattern": "knee-dominant eccentric",
+        "primaryAdaptation": "eccentric hamstring strength",
+        "secondaryAdaptation": "sprint-injury protection (~50% risk reduction with adherence)",
+        "fatigueCost": "low-moderate",
+        "sorenessCost": "high initially (introduce off-season, never first inside MD-2)",
+        "recoveryTimeH": 48,
+        "jointLoading": "low",
+        "equipment": [
+          "partner or anchor"
+        ],
+        "difficulty": "moderate (progressible)",
+        "regressions": [
+          "band-assisted Nordic",
+          "hamstring bridge"
+        ],
+        "progressions": [
+          "full-range Nordics",
+          "loaded Nordics"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 9,
+        "injuryPreventionRating": 10
+      },
+      {
+        "id": "copenhagen",
+        "name": "Copenhagen adduction",
+        "category": "adductor prevention",
+        "movementPattern": "adduction (side plank)",
+        "primaryAdaptation": "adductor strength",
+        "secondaryAdaptation": "groin-injury protection (41% reduction in the football RCT)",
+        "fatigueCost": "low",
+        "sorenessCost": "moderate initially",
+        "recoveryTimeH": 24,
+        "jointLoading": "low",
+        "equipment": [
+          "bench"
+        ],
+        "difficulty": "progressible from short-lever",
+        "regressions": [
+          "short-lever Copenhagen",
+          "ball squeezes"
+        ],
+        "progressions": [
+          "long-lever",
+          "loaded"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 9,
+        "injuryPreventionRating": 10
+      },
+      {
+        "id": "rdl",
+        "name": "Romanian deadlift",
+        "category": "posterior chain",
+        "movementPattern": "hinge",
+        "primaryAdaptation": "hamstring/glute strength through range",
+        "secondaryAdaptation": "sprint posterior-chain capacity",
+        "fatigueCost": "moderate-high",
+        "sorenessCost": "moderate-high",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate",
+        "equipment": [
+          "barbell"
+        ],
+        "difficulty": "moderate",
+        "regressions": [
+          "dumbbell RDL",
+          "hip hinge drill"
+        ],
+        "progressions": [
+          "single-leg RDL",
+          "tempo eccentrics"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 8,
+        "injuryPreventionRating": 8
+      },
+      {
+        "id": "back_squat",
+        "name": "Back squat",
+        "category": "max strength",
+        "movementPattern": "squat",
+        "primaryAdaptation": "maximal lower-body strength",
+        "secondaryAdaptation": "sprint/jump transfer (the Wisløff correlation)",
+        "fatigueCost": "high",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate-high",
+        "equipment": [
+          "barbell",
+          "rack"
+        ],
+        "difficulty": "moderate",
+        "regressions": [
+          "goblet squat",
+          "box squat"
+        ],
+        "progressions": [
+          "heavier 3-5s",
+          "pause squats"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": false,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 8,
+        "injuryPreventionRating": 6
+      },
+      {
+        "id": "trap_bar_dl",
+        "name": "Trap-bar deadlift",
+        "category": "max strength",
+        "movementPattern": "hinge/squat hybrid",
+        "primaryAdaptation": "max lower-body strength",
+        "secondaryAdaptation": "acceleration force base",
+        "fatigueCost": "high",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate (beginner-friendlier than straight bar)",
+        "equipment": [
+          "trap bar"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "kettlebell deadlift",
+          "elevated-handle pulls"
+        ],
+        "progressions": [
+          "heavier 3-5s",
+          "speed pulls"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 8,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "split_squat",
+        "name": "Rear-foot-elevated split squat",
+        "category": "single-leg strength",
+        "movementPattern": "lunge",
+        "primaryAdaptation": "single-leg strength in the plant/strike base",
+        "secondaryAdaptation": "hip mobility under load; knee control",
+        "fatigueCost": "moderate",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 36,
+        "jointLoading": "moderate",
+        "equipment": [
+          "dumbbells",
+          "bench"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "split squat (floor)",
+          "reverse lunge"
+        ],
+        "progressions": [
+          "front-foot-elevated + load",
+          "tempo"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 9,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "sl_hinge",
+        "name": "Single-leg Romanian deadlift",
+        "category": "single-leg strength",
+        "movementPattern": "single-leg hinge",
+        "primaryAdaptation": "unilateral posterior-chain strength + stance-leg balance",
+        "secondaryAdaptation": "hamstring robustness with kick-stance specificity",
+        "fatigueCost": "low-moderate",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 36,
+        "jointLoading": "low-moderate",
+        "equipment": [
+          "dumbbell or kettlebell"
+        ],
+        "difficulty": "moderate (balance-limited at first)",
+        "regressions": [
+          "supported single-leg RDL",
+          "bilateral RDL"
+        ],
+        "progressions": [
+          "heavier load",
+          "deficit range"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 8,
+        "injuryPreventionRating": 8
+      },
+      {
+        "id": "hip_thrust",
+        "name": "Barbell hip thrust",
+        "category": "explosive power",
+        "movementPattern": "hip extension",
+        "primaryAdaptation": "glute strength for acceleration",
+        "secondaryAdaptation": "horizontal force production",
+        "fatigueCost": "moderate",
+        "sorenessCost": "low-moderate",
+        "recoveryTimeH": 36,
+        "jointLoading": "low",
+        "equipment": [
+          "barbell",
+          "bench"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "glute bridge"
+        ],
+        "progressions": [
+          "single-leg hip thrust",
+          "speed intent"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 8,
+        "injuryPreventionRating": 6
+      },
+      {
+        "id": "sled_push",
+        "name": "Sled push",
+        "category": "speed/sprint support",
+        "movementPattern": "resisted acceleration",
+        "primaryAdaptation": "horizontal force at acceleration angles",
+        "secondaryAdaptation": "first-step separation; low-soreness leg strength",
+        "fatigueCost": "moderate",
+        "sorenessCost": "low (concentric-dominant)",
+        "recoveryTimeH": 24,
+        "jointLoading": "moderate",
+        "equipment": [
+          "sled"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "lighter loads",
+          "wall drills"
+        ],
+        "progressions": [
+          "load-velocity profiled pushes"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 9,
+        "injuryPreventionRating": 6
+      },
+      {
+        "id": "broad_jump",
+        "name": "Standing broad jump",
+        "category": "explosive power",
+        "movementPattern": "horizontal jump",
+        "primaryAdaptation": "horizontal power (acceleration vector)",
+        "secondaryAdaptation": "landing mechanics",
+        "fatigueCost": "low-moderate",
+        "sorenessCost": "low",
+        "recoveryTimeH": 24,
+        "jointLoading": "moderate (landing)",
+        "equipment": [
+          "none"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "box-assisted landing"
+        ],
+        "progressions": [
+          "repeated broad jumps",
+          "lateral bounds"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": false,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 5
+      },
+      {
+        "id": "depth_jump",
+        "name": "Depth jump",
+        "category": "explosive power",
+        "movementPattern": "reactive jump-land",
+        "primaryAdaptation": "reactive strength / stiffness",
+        "secondaryAdaptation": "landing quality under drop load (aerial duels, ACL-relevant mechanics)",
+        "fatigueCost": "moderate (CNS + tendon)",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "high (dose strictly)",
+        "equipment": [
+          "box"
+        ],
+        "difficulty": "advanced (landing quality is the entry ticket)",
+        "regressions": [
+          "drop landing (stick only)",
+          "low box"
+        ],
+        "progressions": [
+          "higher box",
+          "depth jump to target"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": false,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 6
+      },
+      {
+        "id": "calf_raise",
+        "name": "Calf raise (straight + bent knee)",
+        "category": "calf/achilles",
+        "movementPattern": "plantar flexion",
+        "primaryAdaptation": "calf strength-endurance (soleus emphasis bent-knee)",
+        "secondaryAdaptation": "Achilles load tolerance for 10+ km match running",
+        "fatigueCost": "low",
+        "sorenessCost": "moderate initially",
+        "recoveryTimeH": 24,
+        "jointLoading": "low",
+        "equipment": [
+          "step",
+          "dumbbell"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "double-leg"
+        ],
+        "progressions": [
+          "single-leg loaded",
+          "isometric holds"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 8
+      },
+      {
+        "id": "pallof",
+        "name": "Pallof press",
+        "category": "trunk (anti-rotation)",
+        "movementPattern": "anti-rotation",
+        "primaryAdaptation": "trunk strength against rotation",
+        "secondaryAdaptation": "kicking force transfer from a braced stance; shielding stability",
+        "fatigueCost": "low",
+        "sorenessCost": "low",
+        "recoveryTimeH": 12,
+        "jointLoading": "low",
+        "equipment": [
+          "band or cable"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "tall-kneeling"
+        ],
+        "progressions": [
+          "split-stance",
+          "dynamic steps"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "lateral_band_walk",
+        "name": "Lateral band walk",
+        "category": "knee control (ACL prehab)",
+        "movementPattern": "frontal-plane hip abduction",
+        "primaryAdaptation": "glute med strength for knee-over-toe control",
+        "secondaryAdaptation": "valgus-collapse resistance in cutting and landing",
+        "fatigueCost": "low",
+        "sorenessCost": "low",
+        "recoveryTimeH": 12,
+        "jointLoading": "low",
+        "equipment": [
+          "mini band"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "standing band abduction"
+        ],
+        "progressions": [
+          "heavier band",
+          "monster walks"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 8
+      }
+    ]
+  },
+  "injuryPreventionLibrary": [
+    {
+      "injury": "Hamstring strain",
+      "riskFactors": [
+        "low eccentric hamstring strength",
+        "high-speed-running spikes (or ABSENCE — unexposed hamstrings fail on the rare maximal sprint)",
+        "fatigue and fixture congestion",
+        "prior hamstring injury"
+      ],
+      "warningSigns": [
+        "posterior-thigh tightness outlasting warm-up",
+        "reduced sprint confidence / not reaching top speed",
+        "Nordic strength drop vs baseline"
+      ],
+      "preventativeExercises": [
+        "nordic_curl",
+        "rdl",
+        "sl_hinge",
+        "hip_thrust"
+      ],
+      "recommendedFrequency": "Nordic 2x/week building doses (off/pre-season); 1x/week maintenance in-season; PLUS regular counted exposure to >95% max velocity on pitch",
+      "suitableSeason": "all",
+      "evidenceLevel": "L1",
+      "exercisesToAvoid": [
+        "maximal sprinting when flagged",
+        "heavy RDL/Nordic novelty the day before matches"
+      ],
+      "monitoringRecommendations": [
+        "weekly Nordic force or bridge-hold check",
+        "high-speed-running exposure counting (GPS or session RPE proxy)"
+      ],
+      "source": "Petersen 2011 (RCT, ~60-70% reduction); van der Horst 2015 (amateur RCT); van Dyk 2019 (meta, ~50%); Malone 2017 (sprint exposure)",
+      "confidence": "high"
+    },
+    {
+      "injury": "Adductor/groin strain",
+      "riskFactors": [
+        "low adductor squeeze strength",
+        "kicking-volume spikes (shooting/dead-ball sessions)",
+        "COD volume spikes",
+        "prior groin injury"
+      ],
+      "warningSigns": [
+        "squeeze-test drop >10-15% vs baseline",
+        "post-session adductor tightness",
+        "pain on long passing"
+      ],
+      "preventativeExercises": [
+        "copenhagen",
+        "split_squat"
+      ],
+      "recommendedFrequency": "Copenhagen 2-3x/week (short-lever maintenance in-season) — the Harøy protocol is 3 levels, ~5 min",
+      "suitableSeason": "all",
+      "evidenceLevel": "L1",
+      "exercisesToAvoid": [
+        "sudden maximal kicking volume when flagged",
+        "loaded hip adduction novelty in congested weeks"
+      ],
+      "monitoringRecommendations": [
+        "weekly adductor squeeze",
+        "kicking-volume awareness (count shooting sessions like sprint sessions)"
+      ],
+      "source": "Harøy 2019 (cluster-RCT, 41% groin-problem reduction); Esteve 2015",
+      "confidence": "high"
+    },
+    {
+      "injury": "ACL rupture",
+      "riskFactors": [
+        "poor landing/cutting mechanics (valgus collapse)",
+        "female sex (2-3x relative risk)",
+        "fatigue without neuromuscular preparation",
+        "prior ACL injury"
+      ],
+      "warningSigns": [
+        "visible valgus on cutting/landing under fatigue",
+        "single-leg control asymmetry"
+      ],
+      "preventativeExercises": [
+        "lateral_band_walk",
+        "split_squat",
+        "depth_jump",
+        "sl_hinge"
+      ],
+      "recommendedFrequency": "Neuromuscular warm-up (FIFA 11+ pattern) 2-3x/week all season; landing-quality work embedded in gym sessions",
+      "suitableSeason": "all",
+      "evidenceLevel": "L1",
+      "exercisesToAvoid": [
+        "high-volume reactive cutting when fatigued and unprepared",
+        "depth jumps without demonstrated landing quality"
+      ],
+      "monitoringRecommendations": [
+        "periodic single-leg landing screen (video)",
+        "hop-test symmetry each block for post-injury players"
+      ],
+      "source": "Webster & Hewett 2018 (meta: neuromuscular programmes halve ACL risk); Bizzini & Dvorak 2015; Thorborg 2017 (FIFA 11+)",
+      "confidence": "high"
+    },
+    {
+      "injury": "Ankle sprain",
+      "riskFactors": [
+        "previous sprain (dominant factor)",
+        "balance/proprioception deficit",
+        "calf/peroneal weakness",
+        "unanticipated contact in tackles"
+      ],
+      "warningSigns": [
+        "instability sensation on cuts",
+        "single-leg balance asymmetry"
+      ],
+      "preventativeExercises": [
+        "calf_raise",
+        "lateral_band_walk",
+        "split_squat"
+      ],
+      "recommendedFrequency": "balance/proprioception 3x/week for 6+ months post-sprain; calf capacity year-round",
+      "suitableSeason": "all",
+      "evidenceLevel": "L2",
+      "exercisesToAvoid": [
+        "reactive cutting volume immediately after a sprain"
+      ],
+      "monitoringRecommendations": [
+        "single-leg balance checks after any sprain",
+        "brace/tape on return to play (evidence-supported)"
+      ],
+      "source": "Doherty 2017 (systematic review); Verhagen 2004 (balance training)",
+      "confidence": "high"
+    },
+    {
+      "injury": "Calf/soleus strain and Achilles overload",
+      "riskFactors": [
+        "calf strength-endurance deficit",
+        "match-running volume spikes and congestion",
+        "age (the veteran profile)",
+        "prior calf injury"
+      ],
+      "warningSigns": [
+        "calf tightness that recurs each match",
+        "morning Achilles stiffness",
+        "single-leg calf-raise capacity drop"
+      ],
+      "preventativeExercises": [
+        "calf_raise",
+        "sled_push"
+      ],
+      "recommendedFrequency": "calf loading 2-3x/week year-round; isometric holds in congested weeks",
+      "suitableSeason": "all",
+      "evidenceLevel": "L3",
+      "exercisesToAvoid": [
+        "plyometric volume on flagged calves",
+        "sudden surface changes at high volume"
+      ],
+      "monitoringRecommendations": [
+        "single-leg calf-raise capacity each block (watch it from age 28+)",
+        "morning stiffness flag"
+      ],
+      "source": "Ekstrand 2011 (calf ~13% of muscle injuries, age-linked); Malliaras 2013 (tendinopathy management)",
+      "confidence": "moderate"
+    }
+  ],
+  "decisionRules": [
+    {
+      "id": "match_within_24h_priming_only",
+      "if": "match day or within 24 hours",
+      "then": "gym is CNS priming only (a few jumps/activation drills) or rest; no strength development",
+      "priority": 1,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "priming-session literature; expert consensus",
+      "trigger": {
+        "signal": "competition_within_h",
+        "op": "<=",
+        "value": 24
+      },
+      "effect": {
+        "type": "priming_only",
+        "params": {}
+      }
+    },
+    {
+      "id": "match_within_48h_no_high_soreness",
+      "if": "match within 48 hours",
+      "then": "remove high-soreness gym work (Nordic novelty or building doses, heavy eccentrics, new exercises); keep only familiar low-fatigue maintenance",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L3",
+      "source": "DOMS/recovery time-course literature; taper consensus (Bosquet 2007)",
+      "trigger": {
+        "signal": "competition_within_h",
+        "op": "<=",
+        "value": 48
+      },
+      "effect": {
+        "type": "exclude_soreness_above",
+        "params": {
+          "level": "moderate"
+        }
+      }
+    },
+    {
+      "id": "congested_week_cut_gym_volume",
+      "if": "2+ matches this week (league + cup congestion)",
+      "then": "cut gym volume ~50%; maintenance micro-doses only; recovery leads — injury rate is ~6x higher with two matches a week when load is not managed",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L2",
+      "source": "Dupont 2010 (injury rate 25.6 vs 4.1/1000 h with 2 vs 1 matches/week)",
+      "trigger": {
+        "signal": "matches_this_week",
+        "op": ">=",
+        "value": 2
+      },
+      "effect": {
+        "type": "reduce_volume_pct",
+        "params": {
+          "pct": 50
+        }
+      }
+    },
+    {
+      "id": "acwr_spike_force_deload",
+      "if": "ACWR > 1.5 on weekly load",
+      "then": "force a deload week: cap volume, protect availability, flag for review",
+      "priority": 1,
+      "confidence": "low",
+      "evidenceLevel": "L3",
+      "source": "Gabbett 2016 — methodology contested; used conservatively",
+      "trigger": {
+        "signal": "acwr",
+        "op": ">",
+        "value": 1.5
+      },
+      "effect": {
+        "type": "force_deload",
+        "params": {}
+      }
+    },
+    {
+      "id": "acwr_low_rebuild_gradually",
+      "if": "ACWR < 0.8 (detrained/returning — post-injury, post-break)",
+      "then": "rebuild gradually — one step down from planned load; no spikes; the pre-season return window is soccer's riskiest",
+      "priority": 2,
+      "confidence": "low",
+      "evidenceLevel": "L3",
+      "source": "Gabbett 2016 (underloading also elevates risk)",
+      "trigger": {
+        "signal": "acwr",
+        "op": "<",
+        "value": 0.8
+      },
+      "effect": {
+        "type": "reduce_one_step",
+        "params": {}
+      }
+    },
+    {
+      "id": "low_readiness_autoregulate",
+      "if": "readiness score low (poor sleep + soreness + low wellness)",
+      "then": "autoregulate down one step; quality over volume; do not test",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L1",
+      "source": "Saw 2016 (subjective wellness sensitivity)",
+      "trigger": {
+        "signal": "readiness",
+        "op": "<",
+        "value": 40
+      },
+      "effect": {
+        "type": "reduce_one_step",
+        "params": {}
+      }
+    },
+    {
+      "id": "cmj_drop_flag_fatigue",
+      "if": "CMJ ≥12% below rolling baseline",
+      "then": "treat as neuromuscular fatigue: reduce CNS-demanding work; recheck in 48 h — especially during fixture congestion",
+      "priority": 2,
+      "confidence": "moderate",
+      "evidenceLevel": "L2",
+      "source": "Claudino 2017 (CMJ monitoring)",
+      "trigger": {
+        "signal": "cmj_drop_pct",
+        "op": ">=",
+        "value": 12
+      },
+      "effect": {
+        "type": "reduce_one_step",
+        "params": {}
+      }
+    },
+    {
+      "id": "illness_no_training",
+      "if": "systemic illness (fever, below-neck symptoms)",
+      "then": "withhold training until symptom-free; resume gradually",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L2",
+      "source": "return-to-training after illness consensus",
+      "trigger": {
+        "signal": "illness",
+        "op": "==",
+        "value": true
+      },
+      "effect": {
+        "type": "withhold",
+        "params": {}
+      }
+    },
+    {
+      "id": "inseason_minimal_effective_keep_pillars",
+      "if": "in competition phase",
+      "then": "hold strength at minimal effective volume (1-2 short heavy sessions/week) — but the Nordic + Copenhagen + calf pillars are NON-NEGOTIABLE weekly items; dropping them in-season is when the injuries they prevent occur",
+      "priority": 2,
+      "confidence": "high",
+      "evidenceLevel": "L1",
+      "source": "Rønnestad & Mujika 2014 (maintenance); van Dyk 2019 + Harøy 2019 (prevention compliance dose-response)",
+      "trigger": {
+        "signal": "season",
+        "op": "==",
+        "value": "in"
+      },
+      "effect": {
+        "type": "minimal_effective_volume",
+        "params": {}
+      }
+    },
+    {
+      "id": "hamstring_soreness_cut_eccentric_and_sprint",
+      "if": "high hamstring soreness or Nordic strength drop",
+      "then": "remove maximal sprint work + heavy eccentric hamstring loading; isometric substitutes; flag — never sprint through a hamstring warning in this sport",
+      "priority": 1,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Timmins 2016 (eccentric strength monitoring); expert consensus",
+      "appliesTo": [
+        "hamstring"
+      ],
+      "trigger": {
+        "signal": "soreness_region",
+        "op": "high",
+        "value": "hamstring"
+      },
+      "effect": {
+        "type": "reduce_region_eccentric",
+        "params": {
+          "region": "hamstring"
+        }
+      }
+    },
+    {
+      "id": "adductor_soreness_reduce_groin_load",
+      "if": "high adductor/groin soreness or squeeze-test drop >15%",
+      "then": "cut kicking volume and adductor-loaded gym work to short-lever isometrics; flag — groin problems chronify when trained through",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L2",
+      "source": "Esteve 2015; Harøy 2019 protocol logic; expert consensus",
+      "appliesTo": [
+        "adductor"
+      ],
+      "trigger": {
+        "signal": "soreness_region",
+        "op": "high",
+        "value": "adductor"
+      },
+      "effect": {
+        "type": "reduce_region_eccentric",
+        "params": {
+          "region": "adductor"
+        }
+      }
+    },
+    {
+      "id": "long_travel_reduce_intensity",
+      "if": "long travel / away-trip fatigue",
+      "then": "reduce intensity one step on arrival days; mobility + easy work",
+      "priority": 2,
+      "confidence": "moderate",
+      "evidenceLevel": "L4",
+      "source": "travel-fatigue consensus",
+      "trigger": {
+        "signal": "travel",
+        "op": "==",
+        "value": true
+      },
+      "effect": {
+        "type": "reduce_one_step",
+        "params": {}
+      }
+    }
+  ],
+  "loadManagement": {
+    "acwr": {
+      "model": "acute (7-day) : chronic (28-day) workload ratio; rolling/EWMA preferred; track high-speed running as its own stream where possible",
+      "sweetSpotLow": 0.8,
+      "sweetSpotHigh": 1.3,
+      "highRiskAbove": 1.5,
+      "confidence": "low",
+      "evidenceLevel": "L3",
+      "source": "Gabbett 2016 — methodology contested; used as a conservative guardrail; Malone 2017 for the HSR stream"
+    },
+    "weeklyProgressionGuideline": "Avoid >~10-15% week-to-week spikes, ESPECIALLY in high-speed running and kicking volume; progress ONE stressor at a time (pitch volume, gym load, or sprint/kicking exposure — never all at once). Maintain regular controlled exposure to >95% max velocity — under-exposure is itself a hamstring risk.",
+    "gymVolumeRanges": {
+      "offSeason": "high (3-4 sessions; 12-20 hard lower-body sets/wk)",
+      "preSeason": "moderate (2-3 sessions)",
+      "inSeason": "low maintenance (1-2 sessions; ~6-10 hard sets/wk per region) + non-negotiable prevention pillars",
+      "playoffs": "very low (0-1 session)"
+    },
+    "minimumEffectiveVolume": "~1 heavy low-volume session/week sustains strength in-season; the Nordic + Copenhagen pillars survive even zero-gym weeks (they need a bench and a partner)",
+    "maximumAdaptiveVolume": "Off-season is the development window — push volume there, not into a 40-week season.",
+    "maximumRecoverableVolume": "Constrained by match + pitch load and (usually) amateur life load; gym never compromises the next match or the next pitch session.",
+    "deloadRecommendations": "Planned deload every 3-5 weeks in development phases; automatic deload on ACWR/readiness triggers; congested fixture weeks ARE deload weeks for the gym.",
+    "progressionRules": "Progress load when reps/quality are met at target RPE and readiness is green.",
+    "regressionRules": "On red readiness or congested fixtures, drop one step (volume first, intensity second).",
+    "missedSessionRules": "Never stack missed sessions; resume the planned wave. A missed prevention pillar is rescheduled within the week, not skipped.",
+    "confidence": "moderate",
+    "evidenceLevel": "L3",
+    "source": "Gabbett 2016; Dupont 2010; Rønnestad & Mujika 2014; expert consensus"
+  },
+  "readinessModel": {
+    "factors": [
+      {
+        "name": "Subjective wellness (soreness/energy/mood)",
+        "metric": "subjective_wellness",
+        "importance": 9,
+        "thresholds": [
+          {
+            "when": "≥1 SD below individual baseline",
+            "modifier": "reduce session load one step"
+          },
+          {
+            "when": "≥2 SD below baseline",
+            "modifier": "recovery session only"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Saw 2016 (subjective measures often outperform objective)"
+      },
+      {
+        "name": "Sleep quantity/quality",
+        "metric": "sleep",
+        "importance": 9,
+        "thresholds": [
+          {
+            "when": "<7 h or poor quality",
+            "modifier": "cap intensity; no testing"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "sleep-and-injury literature (Milewski 2014)"
+      },
+      {
+        "name": "Hours since last match",
+        "metric": "prior_load",
+        "importance": 9,
+        "thresholds": [
+          {
+            "when": "<48 h since a full match",
+            "modifier": "no heavy lower-body gym; recovery or activation only — match damage peaks at 24-48 h"
+          },
+          {
+            "when": "48-72 h since a full match",
+            "modifier": "moderate loads acceptable if wellness is green"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Nédélec 2012 (post-match recovery kinetics: 48-72 h for full restoration)"
+      },
+      {
+        "name": "Muscle soreness (region-specific)",
+        "metric": "soreness_region",
+        "importance": 8,
+        "thresholds": [
+          {
+            "when": "hamstring/adductor/calf high",
+            "modifier": "trigger the matching decision rule"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "region-flag monitoring practice"
+      },
+      {
+        "name": "Adductor squeeze vs baseline",
+        "metric": "adductor_squeeze",
+        "importance": 7,
+        "thresholds": [
+          {
+            "when": ">10-15% below baseline",
+            "modifier": "reduce kicking/COD volume; groin care"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Esteve 2015; Delahunt"
+      },
+      {
+        "name": "CMJ vs rolling baseline",
+        "metric": "cmj",
+        "importance": 6,
+        "thresholds": [
+          {
+            "when": "≥12% drop on consecutive days",
+            "modifier": "reduce CNS work"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "Claudino 2017"
+      },
+      {
+        "name": "HRV trend (optional)",
+        "metric": "hrv",
+        "importance": 5,
+        "thresholds": [
+          {
+            "when": "suppressed vs baseline trend",
+            "modifier": "corroborating signal only — never sole driver"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "HRV monitoring literature (Plews 2013)"
+      },
+      {
+        "name": "Resting HR (optional)",
+        "metric": "resting_hr",
+        "importance": 4,
+        "thresholds": [
+          {
+            "when": "elevated >7 bpm vs baseline",
+            "modifier": "check illness; ease intensity"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "monitoring consensus"
+      }
+    ],
+    "notes": "Subjective wellness + sleep + time-since-match lead; objective signals corroborate. Raw vitals stay private to the athlete — the coach sees only the derived readiness state."
+  },
+  "coachDashboard": {
+    "principle": "Coach sees DERIVED and availability signals only — never an individual's raw vitals (HRV, sleep, resting HR).",
+    "mostUsefulKpis": [
+      "team readiness (traffic light)",
+      "availability count",
+      "training-load state vs plan",
+      "hamstring/groin flag count",
+      "high-speed-running exposure distribution (who is under-exposed)",
+      "prevention-pillar completion (Nordic/Copenhagen/calf)",
+      "adductor-squeeze compliance",
+      "congestion response (did volume actually drop in 2-match weeks)"
+    ],
+    "mostUsefulAlerts": [
+      "player entering high-risk load state",
+      "squeeze drop >15% vs baseline",
+      "readiness red on match week",
+      "prevention pillars skipped 2+ weeks",
+      "congested-week volume not reduced",
+      "low-sprint-exposure player (CB/GK) with no HSR top-up this week"
+    ],
+    "weeklyReports": [
+      "squad readiness trend",
+      "load vs plan adherence",
+      "flag list with derived causes",
+      "availability forecast for the weekend"
+    ],
+    "trafficLightIndicators": "Per-player green/amber/red from derived readiness + load state (never raw vitals).",
+    "teamReadinessMetrics": [
+      "% squad green",
+      "average derived readiness",
+      "load-state distribution"
+    ],
+    "complianceMetrics": [
+      "gym-session completion",
+      "prevention-pillar completion",
+      "check-in completion"
+    ],
+    "privacyNote": "All per-athlete entries are DERIVED (readiness score, load state, availability). Raw HRV/sleep/RHR never appear on a coach surface — see TEAM-ARCHITECTURE data-isolation rules."
+  },
+  "athleteDashboard": {
+    "mostUsefulMetrics": [
+      "today's readiness + what it means",
+      "this week's plan vs done",
+      "Nordic strength trend",
+      "adductor squeeze vs baseline",
+      "sprint/high-speed-running exposure this week",
+      "kicking volume this week (shooting sessions count)",
+      "strength anchors trend",
+      "streaks (prevention pillars)"
+    ],
+    "progressIndicators": [
+      "squat/trap-bar strength trend",
+      "CMJ trend",
+      "Yo-Yo IR1 level"
+    ],
+    "recoveryIndicators": [
+      "readiness trend",
+      "soreness map",
+      "sleep consistency"
+    ],
+    "performanceIndicators": [
+      "10 m / 30 m sprint",
+      "505 COD",
+      "squeeze symmetry",
+      "Nordic force"
+    ],
+    "motivationalMetrics": [
+      "prevention-pillar streak",
+      "session consistency",
+      "PB board",
+      "availability streak"
+    ],
+    "educationTips": [
+      "why the Nordic is the closest thing sport science has to a hamstring vaccine",
+      "why sprinting regularly PROTECTS your hamstrings (and avoiding it doesn't)",
+      "why shooting practice counts as training load for your quads and groin",
+      "why two-match weeks are gym deload weeks — the fixture list already loaded you",
+      "why the best ability is availability"
+    ]
+  },
+  "validation": {
+    "strongEvidence": [
+      "Nordic hamstring programmes reduce hamstring injury (~50% incidence, more with adherence; L1 — Petersen 2011, van der Horst 2015, van Dyk 2019)",
+      "Copenhagen adduction programme reduces groin problems (41%; L1 — Harøy 2019)",
+      "FIFA 11+ style neuromuscular warm-ups reduce overall and ACL injury (L1 — Thorborg 2017, Bizzini & Dvorak 2015)",
+      "two matches per week multiplies injury rate when load is unmanaged (L2 — Dupont 2010)",
+      "maximal squat strength correlates with sprint and jump performance in elite players (L2 — Wisløff 2004)",
+      "subjective wellness is a sensitive readiness input (L1 — Saw 2016)",
+      "in-season low-volume strength maintenance works (L2 — Rønnestad & Mujika 2014)"
+    ],
+    "weakEvidence": [
+      "exact ACWR thresholds (methodology contested)",
+      "soccer-specific gym-transfer ratings (expert consensus)",
+      "neck strength as heading/concussion protection (emerging)",
+      "the precise 50% congested-week gym-volume cut (direction certain, magnitude consensus)",
+      "position-specific demand splits below professional level"
+    ],
+    "areasRequiringExpertJudgement": [
+      "balancing pitch vs gym load in congested fixture periods",
+      "kicking-volume caps for shooting-heavy roles and dead-ball specialists",
+      "managing sprint exposure for low-exposure positions (CB, GK)",
+      "female-specific ACL prevention dosing within mixed-resource clubs",
+      "GK-specific programming inside squad sessions"
+    ],
+    "areasRequiringFutureResearch": [
+      "hamstring injury RISE despite Nordic evidence (implementation-compliance gap vs changing match demands — Ekstrand 2016)",
+      "artificial turf vs grass injury interaction at amateur level",
+      "congestion thresholds for youth and amateur players",
+      "heading-load quantification and neck-training dose"
+    ],
+    "potentialRisksIfMisimplemented": [
+      "introducing Nordic curls at full dose in-season (the soreness injures the week, not the muscle)",
+      "heavy posterior-chain work the day before sprint-dense sessions or matches (hamstring risk)",
+      "treating the gym as conditioning — the pitch already supplies it; added volume is pure overload",
+      "removing all sprint exposure after a hamstring scare (under-exposure raises re-injury risk on return)",
+      "chasing squat numbers at the cost of match-week freshness",
+      "ignoring the kicking leg / stance leg asymmetry until it presents as injury"
+    ]
+  },
+  "references": [
+    {
+      "key": "Stolen2005",
+      "citation": "Stølen T, Chamari K, Castagna C, Wisløff U (2005). Physiology of soccer: an update. Sports Med 35(6):501-36.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "Mohr2003",
+      "citation": "Mohr M, Krustrup P, Bangsbo J (2003). Match performance of high-standard soccer players with special reference to development of fatigue. J Sports Sci 21(7):519-28.",
+      "governingBody": null,
+      "type": "original research"
+    },
+    {
+      "key": "Krustrup2003",
+      "citation": "Krustrup P, et al. (2003). The Yo-Yo intermittent recovery test: physiological response, reliability, and validity. Med Sci Sports Exerc 35(4):697-705.",
+      "governingBody": null,
+      "type": "original research"
+    },
+    {
+      "key": "Bangsbo2008",
+      "citation": "Bangsbo J, Iaia FM, Krustrup P (2008). The Yo-Yo intermittent recovery test: a useful tool for evaluation of physical performance in intermittent sports. Sports Med 38(1):37-51.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "Ekstrand2011",
+      "citation": "Ekstrand J, Hägglund M, Waldén M (2011). Epidemiology of muscle injuries in professional football (soccer). Am J Sports Med 39(6):1226-32. (Companion: Injury incidence and injury patterns in professional football — the UEFA injury study. Br J Sports Med 45:553-8.)",
+      "governingBody": null,
+      "type": "surveillance (UEFA injury study)"
+    },
+    {
+      "key": "Ekstrand2016",
+      "citation": "Ekstrand J, Waldén M, Hägglund M (2016). Hamstring injuries have increased by 4% annually in men's professional football since 2001: the UEFA Elite Club injury study. Br J Sports Med 50(12):731-7.",
+      "governingBody": null,
+      "type": "surveillance"
+    },
+    {
+      "key": "Petersen2011",
+      "citation": "Petersen J, Thorborg K, Nielsen MB, Budtz-Jørgensen E, Hölmich P (2011). Preventive effect of eccentric training on acute hamstring injuries in men's soccer: a cluster-randomized controlled trial. Am J Sports Med 39(11):2296-303.",
+      "governingBody": null,
+      "type": "RCT"
+    },
+    {
+      "key": "vanDerHorst2015",
+      "citation": "van der Horst N, Smits DW, Petersen J, Goedhart EA, Backx FJ (2015). The preventive effect of the Nordic hamstring exercise on hamstring injuries in amateur soccer players: a randomized controlled trial. Am J Sports Med 43(6):1316-23.",
+      "governingBody": null,
+      "type": "RCT"
+    },
+    {
+      "key": "vanDyk2019",
+      "citation": "van Dyk N, Behan FP, Whiteley R (2019). Including the Nordic hamstring exercise in injury prevention programmes halves the rate of hamstring injuries: meta-analysis of 8459 athletes. Br J Sports Med 53(21):1362-70.",
+      "governingBody": null,
+      "type": "meta-analysis"
+    },
+    {
+      "key": "Haroy2019",
+      "citation": "Harøy J, et al. (2019). The Adductor Strengthening Programme prevents groin problems among male football players: a cluster-RCT. Br J Sports Med 53(3):150-7.",
+      "governingBody": null,
+      "type": "RCT"
+    },
+    {
+      "key": "BizziniDvorak2015",
+      "citation": "Bizzini M, Dvorak J (2015). FIFA 11+: an effective programme to prevent football injuries in various player groups worldwide — a narrative review. Br J Sports Med 49(9):577-9.",
+      "governingBody": "FIFA",
+      "type": "review"
+    },
+    {
+      "key": "Thorborg2017",
+      "citation": "Thorborg K, Krommes KK, Esteve E, Clausen MB, Bartels EM, Rathleff MS (2017). Effect of specific exercise-based football injury prevention programmes on the overall injury rate in football: systematic review and meta-analysis of the FIFA 11 and 11+ programmes. Br J Sports Med 51(7):562-71.",
+      "governingBody": null,
+      "type": "meta-analysis"
+    },
+    {
+      "key": "Dupont2010",
+      "citation": "Dupont G, Nedelec M, McCall A, McCormack D, Berthoin S, Wisløff U (2010). Effect of 2 soccer matches in a week on physical performance and injury rate. Am J Sports Med 38(9):1752-8.",
+      "governingBody": null,
+      "type": "original research"
+    },
+    {
+      "key": "WebsterHewett2018",
+      "citation": "Webster KE, Hewett TE (2018). Meta-analysis of meta-analyses of anterior cruciate ligament injury reduction training programs. J Orthop Res 36(10):2696-708.",
+      "governingBody": null,
+      "type": "meta-analysis"
+    },
+    {
+      "key": "Wisloff2004",
+      "citation": "Wisløff U, Castagna C, Helgerud J, Jones R, Hoff J (2004). Strong correlation of maximal squat strength with sprint performance and vertical jump height in elite soccer players. Br J Sports Med 38(3):285-8.",
+      "governingBody": null,
+      "type": "original research"
+    },
+    {
+      "key": "Faude2012",
+      "citation": "Faude O, Koch T, Meyer T (2012). Straight sprinting is the most frequent action in goal situations in professional football. J Sports Sci 30(7):625-31.",
+      "governingBody": null,
+      "type": "original research"
+    },
+    {
+      "key": "Nedelec2012",
+      "citation": "Nédélec M, McCall A, Carling C, Legall F, Berthoin S, Dupont G (2012). Recovery in soccer: part I — post-match fatigue and time course of recovery. Sports Med 42(12):997-1015.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "Gabbett2016",
+      "citation": "Gabbett TJ (2016). The training-injury prevention paradox. Br J Sports Med 50(5):273-80.",
+      "governingBody": null,
+      "type": "review (contested methodology)"
+    },
+    {
+      "key": "Saw2016",
+      "citation": "Saw AE, Main LC, Gastin PB (2016). Monitoring the athlete training response: subjective self-reported measures trump commonly used objective measures. Br J Sports Med 50(5):281-91.",
+      "governingBody": null,
+      "type": "systematic review"
+    },
+    {
+      "key": "Claudino2017",
+      "citation": "Claudino JG, et al. (2017). The countermovement jump to monitor neuromuscular status: a meta-analysis. J Sci Med Sport 20(4):397-402.",
+      "governingBody": null,
+      "type": "meta-analysis"
+    },
+    {
+      "key": "FIFA",
+      "citation": "Fédération Internationale de Football Association (FIFA) — Laws of the Game (IFAB), competition structures, FIFA 11+ programme materials.",
+      "governingBody": "FIFA",
+      "type": "governing body"
+    }
+  ],
+  "kpiFramework": {
+    "kpis": [
+      {
+        "name": "Readiness",
+        "metric": "readiness",
+        "category": "Recovery",
+        "leadingOrLagging": "leading",
+        "importance": 9,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "Composite of subjective wellness + sleep + time-since-match (+ optional HRV corroboration); derived score only",
+        "testingFrequency": "daily",
+        "targetRange": "green vs personal baseline",
+        "eliteBenchmark": "consistently green pre-match",
+        "beginnerBenchmark": "establish baseline",
+        "youthBenchmark": "track trend",
+        "equipmentRequired": [
+          "none"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Saw 2016; derived score (raw vitals stay private)"
+      },
+      {
+        "name": "Session consistency",
+        "metric": "consistency",
+        "category": "Adherence",
+        "leadingOrLagging": "leading",
+        "importance": 9,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "Planned vs completed sessions",
+        "testingFrequency": "weekly",
+        "targetRange": "≥85%",
+        "eliteBenchmark": "≥90%",
+        "beginnerBenchmark": "≥70%",
+        "youthBenchmark": "habit-forming",
+        "equipmentRequired": [
+          "none"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "adherence-outcome literature"
+      },
+      {
+        "name": "Prevention-pillar completion",
+        "metric": "prevention_completion",
+        "category": "Prevention",
+        "leadingOrLagging": "leading",
+        "importance": 10,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "Nordic + Copenhagen + calf pillar sessions done / planned",
+        "testingFrequency": "weekly",
+        "targetRange": "100% of planned pillars",
+        "eliteBenchmark": "unbroken streaks",
+        "beginnerBenchmark": "build the habit",
+        "youthBenchmark": "technique quality",
+        "equipmentRequired": [
+          "none"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "van Dyk 2019; Harøy 2019 (dose-response with compliance)"
+      },
+      {
+        "name": "Nordic strength",
+        "metric": "nordic_strength",
+        "category": "Prevention",
+        "leadingOrLagging": "leading",
+        "importance": 9,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "NordBord force or controlled-rep quality",
+        "testingFrequency": "each block",
+        "targetRange": "rising or stable; <10% asymmetry",
+        "eliteBenchmark": "≥400 N (male)",
+        "beginnerBenchmark": "partial-range control",
+        "youthBenchmark": "technique",
+        "equipmentRequired": [
+          "NordBord or partner"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Opar 2015; van Dyk 2019"
+      },
+      {
+        "name": "Adductor squeeze",
+        "metric": "adductor_squeeze",
+        "category": "Prevention",
+        "leadingOrLagging": "leading",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "45° squeeze vs individual baseline",
+        "testingFrequency": "weekly in-season",
+        "targetRange": "within 10% of baseline, symmetrical",
+        "eliteBenchmark": "stable + symmetrical all season",
+        "beginnerBenchmark": "establish baseline",
+        "youthBenchmark": "track trend",
+        "equipmentRequired": [
+          "sphygmomanometer"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Esteve 2015; Delahunt"
+      },
+      {
+        "name": "High-speed-running exposure",
+        "metric": "hsr_exposure",
+        "category": "Load",
+        "leadingOrLagging": "leading",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "Weekly count/distance of near-maximal-velocity running (GPS where available; session-type proxy otherwise)",
+        "testingFrequency": "weekly",
+        "targetRange": "regular controlled exposure, no >15% spikes AND no zero-weeks",
+        "eliteBenchmark": "planned, periodised, position-adjusted",
+        "beginnerBenchmark": "awareness",
+        "youthBenchmark": "built gradually",
+        "equipmentRequired": [
+          "none (GPS optional)"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Malone 2017 (sprint exposure protects); Ekstrand 2016 (context)"
+      },
+      {
+        "name": "CMJ",
+        "metric": "cmj",
+        "category": "Performance",
+        "leadingOrLagging": "both",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Jump height vs rolling baseline",
+        "testingFrequency": "weekly",
+        "targetRange": "within 8% of baseline",
+        "eliteBenchmark": "≥38-42 cm (male) / ≥30 cm (female)",
+        "beginnerBenchmark": "track trend",
+        "youthBenchmark": "track trend",
+        "equipmentRequired": [
+          "jump mat/app"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Claudino 2017"
+      },
+      {
+        "name": "10 m sprint",
+        "metric": "sprint_10m",
+        "category": "Performance",
+        "leadingOrLagging": "lagging",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Timing gates",
+        "testingFrequency": "each block",
+        "targetRange": "improving/stable",
+        "eliteBenchmark": "≤1.80 s (male professional)",
+        "beginnerBenchmark": "~2.0-2.2 s",
+        "youthBenchmark": "trend",
+        "equipmentRequired": [
+          "gates"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "Haugen 2014"
+      },
+      {
+        "name": "Yo-Yo IR1",
+        "metric": "yoyo_ir1",
+        "category": "Performance",
+        "leadingOrLagging": "lagging",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Distance covered (m)",
+        "testingFrequency": "pre-season + mid-season",
+        "targetRange": "meets positional demand",
+        "eliteBenchmark": "≥2200-2600 m (male professional)",
+        "beginnerBenchmark": "~1200-1600 m",
+        "youthBenchmark": "trend",
+        "equipmentRequired": [
+          "20 m track + audio"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Krustrup 2003; Bangsbo 2008"
+      },
+      {
+        "name": "Strength anchor (squat/trap-bar)",
+        "metric": "squat_e1rm",
+        "category": "Performance",
+        "leadingOrLagging": "lagging",
+        "importance": 6,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Estimated 1RM from working sets",
+        "testingFrequency": "each block",
+        "targetRange": "phase-appropriate progression",
+        "eliteBenchmark": "~1.8-2.0×BW squat (male professional)",
+        "beginnerBenchmark": "~1.2×BW",
+        "youthBenchmark": "technique loads",
+        "equipmentRequired": [
+          "barbell or trap bar"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Wisløff 2004"
+      },
+      {
+        "name": "Availability",
+        "metric": "availability",
+        "category": "Availability",
+        "leadingOrLagging": "lagging",
+        "importance": 10,
+        "athleteDashboard": false,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "Match/training availability status",
+        "testingFrequency": "continuous",
+        "targetRange": "available",
+        "eliteBenchmark": ">90% season availability",
+        "beginnerBenchmark": "track",
+        "youthBenchmark": "track",
+        "equipmentRequired": [
+          "none"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "availability-performance literature (Hägglund 2013: injury burden predicts league position)"
+      },
+      {
+        "name": "Training-load state",
+        "metric": "load_state",
+        "category": "Load",
+        "leadingOrLagging": "leading",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "Derived ACWR band (derived signal only)",
+        "testingFrequency": "daily",
+        "targetRange": "0.8-1.3",
+        "eliteBenchmark": "stays in band through congestion",
+        "beginnerBenchmark": "learn the bands",
+        "youthBenchmark": "n/a",
+        "equipmentRequired": [
+          "none"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "low",
+        "evidenceLevel": "L3",
+        "source": "Gabbett 2016 (contested; conservative guardrail)"
+      }
+    ],
+    "athleteDashboardKpis": [
+      {
+        "name": "Readiness",
+        "why": "One daily number that says push or protect."
+      },
+      {
+        "name": "Session consistency",
+        "why": "The habit that compounds — the plan only works if it happens."
+      },
+      {
+        "name": "Prevention-pillar completion",
+        "why": "Nordic + Copenhagen + calf are the availability insurance in the sport with the best prevention evidence anywhere."
+      },
+      {
+        "name": "Nordic strength",
+        "why": "Hamstring armour for soccer's number-one injury."
+      },
+      {
+        "name": "Adductor squeeze",
+        "why": "The groin early-warning light for a kicking sport."
+      },
+      {
+        "name": "High-speed-running exposure",
+        "why": "Sprinting regularly is hamstring protection — zero-sprint weeks are a risk, not a rest."
+      },
+      {
+        "name": "CMJ",
+        "why": "Freshness check — power that's missing signals fatigue, doubly so in congested weeks."
+      },
+      {
+        "name": "Strength anchor (squat/trap-bar)",
+        "why": "The engine-room number behind sprinting, jumping and shielding."
+      }
+    ],
+    "coachDashboardKpis": [
+      {
+        "name": "Team readiness",
+        "why": "At-a-glance squad freshness (derived traffic light) to shape the session."
+      },
+      {
+        "name": "Availability",
+        "why": "Who can play — injury burden predicts league position."
+      },
+      {
+        "name": "Load state distribution",
+        "why": "Who is under/over the safe band before it becomes injury."
+      },
+      {
+        "name": "Prevention compliance",
+        "why": "The Nordic/Copenhagen pillars only protect the players who do them."
+      },
+      {
+        "name": "Session adherence",
+        "why": "Plan-vs-done across the squad."
+      },
+      {
+        "name": "Flag list",
+        "why": "Derived hamstring/groin/calf flags with what triggered them."
+      },
+      {
+        "name": "Congestion response",
+        "why": "Whether gym volume actually dropped in 2-match weeks — the 6x injury-rate scenario."
+      },
+      {
+        "name": "HSR exposure distribution",
+        "why": "Which players (especially CBs and GKs) are missing the sprint exposure that protects them."
+      }
+    ],
+    "performanceScore": {
+      "range": "0-100",
+      "philosophy": "Reflects progress toward soccer's demands — the intermittent engine, acceleration, and the robustness pillars — weighted to reward the behaviours that keep a player available across a 40-week season.",
+      "components": [
+        {
+          "kpi": "consistency",
+          "weight": 0.2,
+          "rationale": "Consistency drives long-term development."
+        },
+        {
+          "kpi": "prevention_completion",
+          "weight": 0.2,
+          "rationale": "The best-evidenced injury prevention in sport deserves double weight."
+        },
+        {
+          "kpi": "readiness",
+          "weight": 0.15,
+          "rationale": "Sustainable loading beats heroic spikes."
+        },
+        {
+          "kpi": "yoyo_ir1",
+          "weight": 0.15,
+          "rationale": "The intermittent engine — soccer's own fitness test."
+        },
+        {
+          "kpi": "sprint_10m",
+          "weight": 0.1,
+          "rationale": "The game's decisive action."
+        },
+        {
+          "kpi": "squat_e1rm",
+          "weight": 0.1,
+          "rationale": "Strength anchor behind sprint and jump (Wisløff correlation)."
+        },
+        {
+          "kpi": "cmj",
+          "weight": 0.1,
+          "rationale": "Power expression + freshness."
+        }
+      ],
+      "guardrails": [
+        "never rises while injured/unavailable",
+        "prevention non-compliance caps the score",
+        "no component rewards load spikes"
+      ],
+      "explainability": "Each component shows its contribution so the athlete sees exactly why the score moved."
+    },
+    "gamification": [
+      {
+        "name": "Injury-free weeks",
+        "type": "streak",
+        "rewards": "Recognition for consecutive available weeks + prevention completion"
+      },
+      {
+        "name": "Pillar streak",
+        "type": "streak",
+        "rewards": "Nordic/Copenhagen/calf pillars completed on plan"
+      },
+      {
+        "name": "Consistency badge",
+        "type": "badge",
+        "rewards": "≥85% sessions for a block"
+      },
+      {
+        "name": "Squeeze steady",
+        "type": "badge",
+        "rewards": "Adductor squeeze within 10% of baseline all season"
+      },
+      {
+        "name": "Engine builder",
+        "type": "milestone",
+        "rewards": "Yo-Yo IR1 level up"
+      },
+      {
+        "name": "First-step club",
+        "type": "milestone",
+        "rewards": "10 m sprint PB"
+      },
+      {
+        "name": "Anchor PBs",
+        "type": "milestone",
+        "rewards": "Squat/trap-bar strength anchor progression"
+      }
+    ]
+  }
 }

@@ -71,14 +71,15 @@ const buildProfile = (style, extra = {}) => ({
   });
   assert(run.meta.diagnosis && run.meta.diagnosis.sport === 'run', 'T5a runner (D11-steered) still ships meta.diagnosis');
 
-  // GAA/hurling: a rich diagnosis EXISTS but the plan is legacy fill — shipping it above a
-  // week that ignores it is the integrity gap the reassessment named. It must be absent
-  // until WP-48 flips team sports onto the category-led path.
+  // WP-48 (Simon's 2026-07-06 direction): the team sports are category-led — their
+  // diagnosis STEERS the plan, so displaying it is honest again. The emission gate stays
+  // load-bearing: it flips per cohort exactly when the plan follows the diagnosis.
   const hurler = generatePlan({
     ...answersToProfile(A({ goalType: 'sport', sport: 'gaa', experienceLevel: 'intermediate', daysPerWeek: 3, days: ['mon', 'wed', 'fri'], equipment: FULL })),
     sport_code: 'hurling', plan_start_date: ASOF,
   });
   const pmHurler = performanceModelForProfile({ ...answersToProfile(A({ goalType: 'sport', sport: 'gaa', experienceLevel: 'intermediate', daysPerWeek: 3, equipment: FULL })), sport_code: 'hurling' }, ASOF);
   assert(pmHurler.priorityAdaptations.length > 0, 'T5b the hurler HAS a real diagnosis (model output)');
-  assert(hurler.meta.diagnosis === undefined, 'T5c …but the legacy-filled plan no longer DISPLAYS a diagnosis it ignores');
+  assert(hurler.meta.diagnosis && hurler.meta.diagnosis.priorityQualities.length > 0,
+    'T5c …and the category-led plan now DISPLAYS the diagnosis it follows (WP-48)');
 }

@@ -1165,8 +1165,8 @@
         "injuryPreventionRating": 5
       },
       {
-        "id": "mb_rotational_throw",
-        "name": "Med-ball rotational throw",
+        "id": "cable_woodchop",
+        "name": "Cable Woodchop (high-to-low)",
         "category": "rotational power",
         "movementPattern": "rotation",
         "primaryAdaptation": "hip-trunk rotational power",
@@ -1192,7 +1192,8 @@
         "suitableBeginners": true,
         "suitableElite": true,
         "transferToSportRating": 9,
-        "injuryPreventionRating": 6
+        "injuryPreventionRating": 6,
+        "notes": "Normalised from med-ball rotational throw (WP-23)."
       },
       {
         "id": "cable_rotational_press",
