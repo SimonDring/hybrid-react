@@ -38351,7 +38351,8 @@
             "maxStrength (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
             "stability (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
           ],
-          "source": "diagnosis"
+          "source": "diagnosis",
+          "steered": false
         },
         "limitingFactors": [
           {
@@ -39120,7 +39121,8 @@
             "maxStrength (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
             "stability (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
           ],
-          "source": "diagnosis"
+          "source": "diagnosis",
+          "steered": false
         },
         "limitingFactors": [
           {
@@ -42497,7 +42499,8 @@
             "maxStrength (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
             "stability (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
           ],
-          "source": "diagnosis"
+          "source": "diagnosis",
+          "steered": false
         },
         "limitingFactors": [
           {
@@ -43658,7 +43661,8 @@
             "mobility (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
             "stability (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
           ],
-          "source": "diagnosis"
+          "source": "diagnosis",
+          "steered": false
         },
         "limitingFactors": [
           {
@@ -48391,7 +48395,8 @@
             "stability (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
             "mobility (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
           ],
-          "source": "diagnosis"
+          "source": "diagnosis",
+          "steered": false
         },
         "limitingFactors": [
           {
@@ -49554,7 +49559,8 @@
             "maxStrength (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
             "stability (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
           ],
-          "source": "diagnosis"
+          "source": "diagnosis",
+          "steered": false
         },
         "limitingFactors": [
           {
@@ -52962,7 +52968,8 @@
             "stability (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
             "mobility (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
           ],
-          "source": "diagnosis"
+          "source": "diagnosis",
+          "steered": false
         },
         "limitingFactors": [
           {
@@ -57986,7 +57993,8 @@
             "stability (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
             "mobility (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
           ],
-          "source": "diagnosis"
+          "source": "diagnosis",
+          "steered": false
         },
         "limitingFactors": [
           {
@@ -59942,7 +59950,8 @@
             "mobility (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
             "robustness (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
           ],
-          "source": "diagnosis"
+          "source": "diagnosis",
+          "steered": false
         },
         "limitingFactors": [
           {
@@ -64217,7 +64226,8 @@
           "sequencingNotes": [
             "reactiveStrength (limiter magnitude 0.15) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
           ],
-          "source": "diagnosis"
+          "source": "diagnosis",
+          "steered": false
         },
         "limitingFactors": [
           {
@@ -65901,7 +65911,8 @@
             "anaerobicCapacity (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
             "stability (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
           ],
-          "source": "diagnosis"
+          "source": "diagnosis",
+          "steered": false
         },
         "limitingFactors": [
           {
@@ -68631,7 +68642,8 @@
             "aerobicCapacity (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
             "stability (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
           ],
-          "source": "diagnosis"
+          "source": "diagnosis",
+          "steered": false
         },
         "limitingFactors": [
           {
@@ -69715,7 +69727,8 @@
             "anaerobicCapacity (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
             "maxStrength (limiter magnitude 0.05) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
           ],
-          "source": "diagnosis"
+          "source": "diagnosis",
+          "steered": false
         },
         "limitingFactors": [
           {

@@ -120,4 +120,41 @@ export function deloadsFromRecoverability(totalWeeks, recoveryRate) {
   return out;
 }
 
-export default { deriveBlockObjective, blockDeloadSteers, deloadsFromRecoverability };
+// Block trajectory → the periodisation phase intent the allocator consumes (base|build|peak).
+const TRAJECTORY_INTENT = {
+  accumulation: 'base',      // develop the base (off-season)
+  transmutation: 'build',    // convert toward expression (pre-season)
+  realisation: 'peak',       // express / peak
+  maintenance: 'build',      // hold with real work (in-season)
+};
+
+/**
+ * WP-47 (completion): the block plan's STRUCTURE drives periodisation — the diagnosis-driven
+ * phase split, not the style template. Each block becomes a { intent, weeks } segment (intent
+ * from its trajectory / taper), scaled to fit the plan's totalWeeks exactly (every segment ≥ 1
+ * week; rounding drift absorbed by the longest segment). Returns null if it can't (no blocks) —
+ * the caller then keeps the template. Pure.
+ */
+export function blockPlanToSplit(blocks, totalWeeks) {
+  if (!Array.isArray(blocks) || !blocks.length || !(totalWeeks > 0)) return null;
+  // At most one segment per week; if more blocks than weeks, keep the highest-priority ones.
+  const src = blocks.slice(0, totalWeeks);
+  const raw = src.map((b) => ({ intent: b.isTaper ? 'peak' : (TRAJECTORY_INTENT[b.trajectory] || 'build'), weeks: Math.max(1, b.lengthWeeks || 1) }));
+  const rawTotal = raw.reduce((a, s) => a + s.weeks, 0);
+  const split = raw.map((s) => ({ intent: s.intent, weeks: Math.max(1, Math.round(s.weeks * totalWeeks / rawTotal)) }));
+  // Reconcile to EXACTLY totalWeeks: grow the last segment / shrink the longest until it fits.
+  let diff = totalWeeks - split.reduce((a, s) => a + s.weeks, 0);
+  let guard = 0;
+  while (diff !== 0 && guard++ < 1000) {
+    if (diff > 0) { split[split.length - 1].weeks += 1; diff -= 1; }
+    else {
+      let i = -1, max = 1;
+      for (let k = 0; k < split.length; k++) if (split[k].weeks > max) { max = split[k].weeks; i = k; }
+      if (i < 0) break;
+      split[i].weeks -= 1; diff += 1;
+    }
+  }
+  return split;
+}
+
+export default { deriveBlockObjective, blockDeloadSteers, deloadsFromRecoverability, blockPlanToSplit };
