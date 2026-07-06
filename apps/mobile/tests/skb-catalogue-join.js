@@ -25,6 +25,9 @@ const ALLOWLIST = {
   cycling: {
     neck_isometrics: 'no neck muscle in the engine vocabulary; aero-position prehab — revisit at the next catalogue authoring pass',
   },
+  rugby: {
+    neck_isometrics: 'no neck muscle in the engine vocabulary; cervical strengthening is a rugby-specific modifiable concussion/neck-injury risk factor — reuses cycling\'s allowlisted id (revisit at the next catalogue authoring pass)',
+  },
   gaelic_football: {
     trap_bar_jump: 'loaded jump — distinct movement, no catalogue entry; the power category is covered by hip_thrust + cable_woodchop (WP-48 flip audit)',
     resisted_sprint: 'a sprint, not a gym movement — belongs to future endurance programming',
@@ -45,7 +48,7 @@ const ALLOWLIST = {
 // the D11/SKB-primary path).
 const FLIP_SPORTS = ['running_long', 'running_middle', 'running_sprint', 'cycling', 'swimming', 'triathlon'];
 
-const profiles = ['gaelic_football', 'hurling', 'field_hockey', 'soccer', 'swimming', 'cycling', 'triathlon', 'running_long', 'running_middle', 'running_sprint'];
+const profiles = ['rugby', 'soccer', 'gaelic_football', 'hurling', 'field_hockey', 'swimming', 'cycling', 'triathlon', 'running_long', 'running_middle', 'running_sprint'];
 let checked = 0;
 for (const sid of profiles) {
   const lib = SKB.section(sid, 'exerciseLibrary');

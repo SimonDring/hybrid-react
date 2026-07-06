@@ -42,7 +42,7 @@ assert(inSeason && inSeason.sessions.length === 3, 'in-season plan builds (suita
 
 // ── Determinism + graceful degradation ────────────────────────────────────────
 assert(JSON.stringify(weekCategoryPlan('swimming', 4, { levelName: 'intermediate' })) === JSON.stringify(swim), 'deterministic');
-assert(weekCategoryPlan('rugby', 3) === null, 'a sport without a library → null (caller keeps its planning)');
+assert(weekCategoryPlan('soccer', 3) === null, 'a sport without a library → null (caller keeps its planning)');
 assert(weekCategoryPlan(null, 3) === null, 'no sport → null');
 
 // ── Run: categories agree with the diagnosed qualities (the 19a scope decision) ──
