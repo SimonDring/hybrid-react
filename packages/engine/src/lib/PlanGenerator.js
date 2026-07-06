@@ -30,6 +30,7 @@ import { resolvePeriodization } from './plan/periodization.js';
 import { getGymLevel } from './Utils.js';
 import { deriveConstraints, suggestGymDays } from './plan/constraints.js';
 import { SESSION_CEILING_MIN, diagnosisSteers } from './plan/allocator.js';
+import { deriveBlockObjective } from './plan/blockObjective.js';
 import { performanceModelForProfile } from './performance/forProfile.js';
 import { profileToAthleteModel } from './adapters/profileToAthleteModel.js';
 import * as SKB from './sportKnowledge/index.js';
@@ -249,6 +250,16 @@ export function generatePlan(profile = {}, opts = {}) {
     sport: program.sport || null,
     limitingFactors: (perf.limitingFactors || []).map((f) => ({ qualityId: f.qualityId, magnitude: f.magnitude, confidence: f.confidence, rationale: f.rationale })),
     priorityQualities: diag.priorityQualities.map((p) => ({ qualityId: p.qualityId, order: p.order, rationale: p.rationale })),
+    // D7 (WP-47) — ADVISORY block plan: emitted for inspection, steers NOTHING (the blocks
+    // are still resolvePeriodization's). recoveryRate prior read if the stored model carries
+    // one, else null → 'moderate' band. Pure (asOf/eventCalendar are already clock-free here).
+    blockPlan: deriveBlockObjective({
+      priorityQualities: diag.priorityQualities,
+      limitingFactors: perf.limitingFactors || [],
+      season: program.season,
+      eventCalendar: { isRace, taperWeeks },
+      recoveryRate: (profile.athlete_model && profile.athlete_model.learnedPriors && profile.athlete_model.learnedPriors.recoveryRate && profile.athlete_model.learnedPriors.recoveryRate.value) ?? null,
+    }),
   } : null;
   return { phases, totalWeeks: total, meta: { validation: { pass: allPass, checked, weeks: problemWeeks }, provenance: provenance(), ...(diagnosis ? { diagnosis } : {}) } };
 }

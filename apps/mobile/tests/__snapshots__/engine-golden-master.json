@@ -3,7 +3,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 6,
@@ -4287,7 +4287,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 6,
@@ -7647,7 +7647,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 8,
@@ -14417,7 +14417,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 8,
@@ -17656,7 +17656,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 8,
@@ -21160,7 +21160,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 12,
@@ -26887,7 +26887,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 12,
@@ -31210,7 +31210,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 12,
@@ -33722,7 +33722,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 12,
@@ -38322,6 +38322,37 @@
   "sport·cycle·intermediate·in·2d": {
     "meta": {
       "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [],
+              "developsQuality": "aerobicCapacity",
+              "index": 0,
+              "intensityShape": "peak",
+              "isTaper": true,
+              "lengthWeeks": 3,
+              "maintainsQualities": [],
+              "objective": "maintain:aerobicCapacity",
+              "rationale": "maintain aerobicCapacity — top D5 limiter (magnitude 0.48); in-season maintenance, 3wk (recoverability moderate); taper block (volume down, intensity held).",
+              "season": "in",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "aerobicCapacity",
+                "order": 1
+              },
+              "trajectory": "maintenance",
+              "volumeShape": "taper"
+            }
+          ],
+          "sequencingNotes": [
+            "explosiveStrength (limiter magnitude 0.14) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "anaerobicCapacity (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "maxStrength (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "stability (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis"
+        },
         "limitingFactors": [
           {
             "confidence": "low",
@@ -38377,7 +38408,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 4,
@@ -39058,6 +39089,39 @@
   "sport·cycle·intermediate·off·3d": {
     "meta": {
       "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [
+                4
+              ],
+              "developsQuality": "aerobicCapacity",
+              "index": 0,
+              "intensityShape": "build",
+              "isTaper": false,
+              "lengthWeeks": 4,
+              "maintainsQualities": [],
+              "objective": "develop:aerobicCapacity",
+              "rationale": "develop aerobicCapacity — top D5 limiter (magnitude 0.48); off-season accumulation, 4wk (recoverability moderate).",
+              "season": "off",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "aerobicCapacity",
+                "order": 1
+              },
+              "trajectory": "accumulation",
+              "volumeShape": "ramp"
+            }
+          ],
+          "sequencingNotes": [
+            "explosiveStrength (limiter magnitude 0.14) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "anaerobicCapacity (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "maxStrength (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "stability (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis"
+        },
         "limitingFactors": [
           {
             "confidence": "low",
@@ -39113,7 +39177,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 12,
@@ -42404,6 +42468,37 @@
   "sport·cycle·intermediate·transition·3d": {
     "meta": {
       "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [],
+              "developsQuality": "aerobicCapacity",
+              "index": 0,
+              "intensityShape": "low",
+              "isTaper": false,
+              "lengthWeeks": 3,
+              "maintainsQualities": [],
+              "objective": "restore:aerobicCapacity",
+              "rationale": "restore aerobicCapacity — top D5 limiter (magnitude 0.48); transition-season maintenance, 3wk (recoverability moderate).",
+              "season": "transition",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "aerobicCapacity",
+                "order": 1
+              },
+              "trajectory": "maintenance",
+              "volumeShape": "taper"
+            }
+          ],
+          "sequencingNotes": [
+            "explosiveStrength (limiter magnitude 0.14) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "anaerobicCapacity (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "maxStrength (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "stability (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis"
+        },
         "limitingFactors": [
           {
             "confidence": "low",
@@ -42459,7 +42554,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 4,
@@ -43532,6 +43627,39 @@
   "sport·field_hockey·advanced·off·4d": {
     "meta": {
       "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [
+                4
+              ],
+              "developsQuality": "anaerobicCapacity",
+              "index": 0,
+              "intensityShape": "build",
+              "isTaper": false,
+              "lengthWeeks": 4,
+              "maintainsQualities": [],
+              "objective": "develop:anaerobicCapacity",
+              "rationale": "develop anaerobicCapacity — top D5 limiter (magnitude 0.15); off-season accumulation, 4wk (recoverability moderate).",
+              "season": "off",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "anaerobicCapacity",
+                "order": 1
+              },
+              "trajectory": "accumulation",
+              "volumeShape": "ramp"
+            }
+          ],
+          "sequencingNotes": [
+            "aerobicCapacity (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "explosiveStrength (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "mobility (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "stability (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis"
+        },
         "limitingFactors": [
           {
             "confidence": "low",
@@ -43587,7 +43715,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 12,
@@ -48232,6 +48360,39 @@
   "sport·gaelic_football·intermediate·in·3d": {
     "meta": {
       "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [],
+              "developsQuality": "aerobicCapacity",
+              "index": 0,
+              "intensityShape": "hold",
+              "isTaper": false,
+              "lengthWeeks": 3,
+              "maintainsQualities": [],
+              "objective": "maintain:aerobicCapacity",
+              "rationale": "maintain aerobicCapacity — top D5 limiter (magnitude 0.34); in-season maintenance, 3wk (recoverability moderate).",
+              "season": "in",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "aerobicCapacity",
+                "order": 1
+              },
+              "trajectory": "maintenance",
+              "volumeShape": "hold"
+            }
+          ],
+          "sequencingNotes": [
+            "anaerobicCapacity (limiter magnitude 0.34) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "explosiveStrength (limiter magnitude 0.24) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "reactiveStrength (limiter magnitude 0.14) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "maxStrength (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "stability (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "mobility (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis"
+        },
         "limitingFactors": [
           {
             "confidence": "low",
@@ -48287,7 +48448,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 4,
@@ -49360,6 +49521,41 @@
   "sport·hurling·intermediate·off·3d": {
     "meta": {
       "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [
+                4
+              ],
+              "developsQuality": "explosiveStrength",
+              "index": 0,
+              "intensityShape": "build",
+              "isTaper": false,
+              "lengthWeeks": 4,
+              "maintainsQualities": [],
+              "objective": "develop:explosiveStrength",
+              "rationale": "develop explosiveStrength — top D5 limiter (magnitude 0.24); off-season accumulation, 4wk (recoverability moderate).",
+              "season": "off",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "explosiveStrength",
+                "order": 1
+              },
+              "trajectory": "accumulation",
+              "volumeShape": "ramp"
+            }
+          ],
+          "sequencingNotes": [
+            "aerobicCapacity (limiter magnitude 0.23) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "anaerobicCapacity (limiter magnitude 0.23) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "mobility (limiter magnitude 0.14) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "reactiveStrength (limiter magnitude 0.14) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "maxStrength (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "stability (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis"
+        },
         "limitingFactors": [
           {
             "confidence": "low",
@@ -49415,7 +49611,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 12,
@@ -52734,6 +52930,40 @@
   "sport·run-long·intermediate·off·4d": {
     "meta": {
       "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [
+                4
+              ],
+              "developsQuality": "aerobicCapacity",
+              "index": 0,
+              "intensityShape": "build",
+              "isTaper": false,
+              "lengthWeeks": 4,
+              "maintainsQualities": [],
+              "objective": "develop:aerobicCapacity",
+              "rationale": "develop aerobicCapacity — top D5 limiter (magnitude 0.48); off-season accumulation, 4wk (recoverability moderate).",
+              "season": "off",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "aerobicCapacity",
+                "order": 1
+              },
+              "trajectory": "accumulation",
+              "volumeShape": "ramp"
+            }
+          ],
+          "sequencingNotes": [
+            "robustness (limiter magnitude 0.36) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "maxStrength (limiter magnitude 0.22) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "reactiveStrength (limiter magnitude 0.14) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "stability (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "mobility (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis"
+        },
         "limitingFactors": [
           {
             "confidence": "low",
@@ -52795,7 +53025,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 12,
@@ -57726,6 +57956,38 @@
   "sport·run-long·intermediate·pre·3d": {
     "meta": {
       "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [],
+              "developsQuality": "aerobicCapacity",
+              "index": 0,
+              "intensityShape": "build",
+              "isTaper": false,
+              "lengthWeeks": 3,
+              "maintainsQualities": [],
+              "objective": "convert:aerobicCapacity",
+              "rationale": "convert aerobicCapacity — top D5 limiter (magnitude 0.48); pre-season transmutation, 3wk (recoverability moderate).",
+              "season": "pre",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "aerobicCapacity",
+                "order": 1
+              },
+              "trajectory": "transmutation",
+              "volumeShape": "hold"
+            }
+          ],
+          "sequencingNotes": [
+            "robustness (limiter magnitude 0.36) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "maxStrength (limiter magnitude 0.22) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "reactiveStrength (limiter magnitude 0.14) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "stability (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "mobility (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis"
+        },
         "limitingFactors": [
           {
             "confidence": "low",
@@ -57787,7 +58049,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 6,
@@ -59646,6 +59908,42 @@
   "sport·run-middle·intermediate·off·4d": {
     "meta": {
       "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [
+                4
+              ],
+              "developsQuality": "aerobicCapacity",
+              "index": 0,
+              "intensityShape": "build",
+              "isTaper": false,
+              "lengthWeeks": 4,
+              "maintainsQualities": [],
+              "objective": "develop:aerobicCapacity",
+              "rationale": "develop aerobicCapacity — top D5 limiter (magnitude 0.34); off-season accumulation, 4wk (recoverability moderate).",
+              "season": "off",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "aerobicCapacity",
+                "order": 1
+              },
+              "trajectory": "accumulation",
+              "volumeShape": "ramp"
+            }
+          ],
+          "sequencingNotes": [
+            "anaerobicCapacity (limiter magnitude 0.34) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "reactiveStrength (limiter magnitude 0.24) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "maxStrength (limiter magnitude 0.22) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "stability (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "explosiveStrength (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "mobility (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "robustness (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis"
+        },
         "limitingFactors": [
           {
             "confidence": "low",
@@ -59707,7 +60005,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 10,
@@ -63893,6 +64191,34 @@
   "sport·run-sprint·advanced·in·4d(taper)": {
     "meta": {
       "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [],
+              "developsQuality": "explosiveStrength",
+              "index": 0,
+              "intensityShape": "peak",
+              "isTaper": true,
+              "lengthWeeks": 3,
+              "maintainsQualities": [],
+              "objective": "maintain:explosiveStrength",
+              "rationale": "maintain explosiveStrength — top D5 limiter (magnitude 0.25); in-season maintenance, 3wk (recoverability moderate); taper block (volume down, intensity held).",
+              "season": "in",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "explosiveStrength",
+                "order": 1
+              },
+              "trajectory": "maintenance",
+              "volumeShape": "taper"
+            }
+          ],
+          "sequencingNotes": [
+            "reactiveStrength (limiter magnitude 0.15) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis"
+        },
         "limitingFactors": [
           {
             "confidence": "low",
@@ -63954,7 +64280,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 4,
@@ -65543,6 +65869,40 @@
   "sport·run-sprint·intermediate·off·4d": {
     "meta": {
       "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [
+                4
+              ],
+              "developsQuality": "explosiveStrength",
+              "index": 0,
+              "intensityShape": "build",
+              "isTaper": false,
+              "lengthWeeks": 4,
+              "maintainsQualities": [],
+              "objective": "develop:explosiveStrength",
+              "rationale": "develop explosiveStrength — top D5 limiter (magnitude 0.5); off-season accumulation, 4wk (recoverability moderate).",
+              "season": "off",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "explosiveStrength",
+                "order": 1
+              },
+              "trajectory": "accumulation",
+              "volumeShape": "ramp"
+            }
+          ],
+          "sequencingNotes": [
+            "reactiveStrength (limiter magnitude 0.36) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "maxStrength (limiter magnitude 0.22) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "mobility (limiter magnitude 0.14) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "anaerobicCapacity (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "stability (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis"
+        },
         "limitingFactors": [
           {
             "confidence": "low",
@@ -65604,7 +65964,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 6,
@@ -68244,6 +68604,35 @@
   "sport·swim·advanced·in·3d": {
     "meta": {
       "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [],
+              "developsQuality": "mobility",
+              "index": 0,
+              "intensityShape": "peak",
+              "isTaper": true,
+              "lengthWeeks": 3,
+              "maintainsQualities": [],
+              "objective": "maintain:mobility",
+              "rationale": "maintain mobility — top D5 limiter (magnitude 0.15); in-season maintenance, 3wk (recoverability moderate); taper block (volume down, intensity held).",
+              "season": "in",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "mobility",
+                "order": 1
+              },
+              "trajectory": "maintenance",
+              "volumeShape": "taper"
+            }
+          ],
+          "sequencingNotes": [
+            "aerobicCapacity (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "stability (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis"
+        },
         "limitingFactors": [
           {
             "confidence": "low",
@@ -68299,7 +68688,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 4,
@@ -69294,6 +69683,40 @@
   "sport·swim·intermediate·off·3d": {
     "meta": {
       "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [
+                4
+              ],
+              "developsQuality": "mobility",
+              "index": 0,
+              "intensityShape": "build",
+              "isTaper": false,
+              "lengthWeeks": 4,
+              "maintainsQualities": [],
+              "objective": "develop:mobility",
+              "rationale": "develop mobility — top D5 limiter (magnitude 0.36); off-season accumulation, 4wk (recoverability moderate).",
+              "season": "off",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "mobility",
+                "order": 1
+              },
+              "trajectory": "accumulation",
+              "volumeShape": "ramp"
+            }
+          ],
+          "sequencingNotes": [
+            "aerobicCapacity (limiter magnitude 0.23) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "stability (limiter magnitude 0.23) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "explosiveStrength (limiter magnitude 0.14) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "anaerobicCapacity (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "maxStrength (limiter magnitude 0.05) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis"
+        },
         "limitingFactors": [
           {
             "confidence": "low",
@@ -69349,7 +69772,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.6.0"
+        "knowledgeSetVersion": "1.7.0"
       },
       "validation": {
         "checked": 12,
