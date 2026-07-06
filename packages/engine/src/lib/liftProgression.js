@@ -17,6 +17,7 @@
 
 import { getGymLevel } from './Utils.js';
 import { anchorForName, effectiveCoefficient, formatLoad } from './strength/exerciseLoad.js';
+import { PROGRESSION_LIFTS } from '../data/strengthExercises.js';
 
 // Bodyweight multipliers for an approx e1RM (male reference); female scaled below.
 // ohp = barbell overhead press 1RM ÷ BW; pull = vertical-pull e1RM ÷ BW (a pull-up
@@ -90,6 +91,13 @@ export function matchLift(name) {
   return null;
 }
 
+// WP-46 (completion): match a plan ITEM to its progression lift by stable exId first (a
+// rename can't break top-set tracking), falling back to the name matcher for un-stamped items.
+export function matchLiftForItem(item) {
+  if (item && item.exId != null && PROGRESSION_LIFTS[item.exId]) return PROGRESSION_LIFTS[item.exId];
+  return matchLift(item && item.name);
+}
+
 export function parseReps(sets) { const m = /×\s*(\d+)/.exec(sets || ''); return m ? Number(m[1]) : null; }
 export function parseRpe(rpe) { const m = /(\d+)/.exec(rpe || ''); return m ? Number(m[1]) : 8; }
 
@@ -146,7 +154,7 @@ export function trackedLiftsInSession(session) {
   const out = [];
   const seen = new Set();
   (session.items || []).forEach(it => {
-    const m = matchLift(it.name);
+    const m = matchLiftForItem(it);
     const reps = parseReps(it.sets);
     if (!m || !reps || seen.has(m.key)) return;
     seen.add(m.key);
@@ -155,4 +163,4 @@ export function trackedLiftsInSession(session) {
   return out;
 }
 
-export default { estimateE1RM, resolveLifts, matchLift, applyWeights, nextE1RM, trackedLiftsInSession, parseReps, parseRpe, epley1RM, pullupE1RM };
+export default { estimateE1RM, resolveLifts, matchLift, matchLiftForItem, applyWeights, nextE1RM, trackedLiftsInSession, parseReps, parseRpe, epley1RM, pullupE1RM };

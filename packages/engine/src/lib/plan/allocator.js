@@ -31,7 +31,7 @@
  * liftProgression + volume helpers, never strength.js.
  */
 
-import { EXERCISES, LEVELS, availableEquip } from '../../data/strengthExercises.js';
+import { EXERCISES, LEVELS, availableEquip, CORE_HOLDS } from '../../data/strengthExercises.js';
 import { VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
 import { muscleContribution } from './contributions.js';
 import { parseSetCount } from './volume.js';
@@ -263,7 +263,7 @@ function makeItem(ex, idx, s, style, deload, repBump, effectiveRole, taper) {
     return { num, exId: ex.id, name: ex.name, sets: cap(s.main) + per, rpe: s.mainRpe, note: s.mainNote || mainNote(deload, taper), restSec };
   }
   if (ex.pattern === 'core') {
-    const hold = /plank|hold|dead bug|copenhagen|hollow|bird dog/i.test(ex.name);
+    const hold = CORE_HOLDS.has(ex.id) || /plank|hold|dead bug|copenhagen|hollow|bird dog/i.test(ex.name);
     return { num, exId: ex.id, name: ex.name, sets: hold ? coreStr(deload || taper) : '3 × 12' + per, rpe: 'RPE 6', note: '', restSec };
   }
   if (ex.pattern === 'calf' || role === 'iso') {
