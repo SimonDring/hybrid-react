@@ -33,7 +33,11 @@ export async function createTeam(
   };
 }
 
-/** The signed-in coach's teams (name + share code) for the setup page. */
+/**
+ * The signed-in coach's teams (name + share code) for the setup page.
+ * join_code is COLUMN-REVOKED on teams (WP-50, 20260711) — never select it;
+ * coaches read it via the get_team_join_code RPC (coach-of-that-team only).
+ */
 export async function listCoachTeams(): Promise<CoachTeam[]> {
   const supabase = supabaseBrowser();
   if (!supabase) return [];
@@ -42,21 +46,25 @@ export async function listCoachTeams(): Promise<CoachTeam[]> {
   if (!uid) return [];
   const { data, error } = await supabase
     .from("team_members")
-    .select("team_id, role, teams(name, sport, join_code)")
+    .select("team_id, role, teams(name, sport)")
     .eq("user_id", uid)
     .eq("role", "coach")
     .eq("status", "active");
   if (error || !data) return [];
-  return data.map((r: Record<string, unknown>) => {
-    const team = r.teams as { name?: string; sport?: string | null; join_code?: string | null } | null;
-    return {
-      team_id: r.team_id as string,
-      role: r.role as string,
-      name: team?.name || "Team",
-      sport: team?.sport ?? null,
-      join_code: team?.join_code ?? null,
-    };
-  });
+  return Promise.all(
+    data.map(async (r: Record<string, unknown>) => {
+      const team = r.teams as { name?: string; sport?: string | null } | null;
+      const teamId = r.team_id as string;
+      const { data: code } = await supabase.rpc("get_team_join_code", { p_team: teamId });
+      return {
+        team_id: teamId,
+        role: r.role as string,
+        name: team?.name || "Team",
+        sport: team?.sport ?? null,
+        join_code: (code as string | null) ?? null,
+      };
+    }),
+  );
 }
 
 /**

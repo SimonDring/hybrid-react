@@ -225,6 +225,10 @@ export function answersToAthleteModelInputs(a, asOf) {
   const model = profileToAthleteModel(profile, asOf);
   model.meta = { ...model.meta, source: 'onboarding' };
 
+  // Reported 1RMs are current as of onboarding — stamp measuredAt so recency-based
+  // confidence (WP-38a) is live. The adapter carries it forward while the value matches.
+  for (const m of model.performanceMetrics || []) if (!m.measuredAt) m.measuredAt = asOf;
+
   // Overlay the richer question set (fields the legacy profile doesn't carry).
   if (a.skbSport) model.sportingContext.primarySport = a.skbSport;
   if (a.position) model.sportingContext.position = a.position;

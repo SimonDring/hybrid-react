@@ -86,6 +86,21 @@ export function acwrSeries(dl, asOf, n = 4) {
   return out;
 }
 
+// WP-57: THE one ACWR band classifier — every display/roll-up band derives from the
+// governed thresholds (kb load.acwr.thresholds), never a hand-copied cut-point. The
+// app's load view and the coach roll-up previously mirrored these literals by
+// convention (the exact drift class that has bitten this repo three times); they now
+// consume this. Canonical band ids: null | 'under' | 'sweet' | 'high' | 'over' —
+// label vocabulary (ramping/balanced/… vs under/sweet/…) is presentation, mapped at
+// the consumer.
+export function acwrBand(acwrVal) {
+  if (acwrVal == null) return null;
+  if (acwrVal < _T.sweetLow) return 'under';
+  if (acwrVal <= _T.easeFrom) return 'sweet';
+  if (acwrVal <= _T.high) return 'high';
+  return 'over';
+}
+
 // Decide the week-level adaptation from today's ACWR + a short recent series.
 export function loadDecision(acwrVal, recentAcwr = []) {
   if (acwrVal == null) return { action: 'none', multiplier: 1, reason: null };
