@@ -104,7 +104,7 @@ export function weekCategoryPlan(skbSportId, sessionCount, { levelName = 'interm
 // prevention work; flipped per sport: swim WP-20, the team sports WP-48 on Simon's
 // 2026-07-06 direction). Run/cycle stay rating-based (their categories agree with their
 // diagnosed qualities — recorded 19b scope decision).
-const CATEGORY_LED = new Set(['swimming', 'hurling', 'gaelic_football', 'field_hockey', 'soccer']);
+const CATEGORY_LED = new Set(['swimming', 'hurling', 'gaelic_football', 'field_hockey', 'soccer', 'rugby']);
 
 /** The category plan for a sport IF it is category-led; null otherwise. */
 export function categoryPlanFor(skbSportId, sessionCount, opts = {}) {

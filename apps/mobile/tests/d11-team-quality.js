@@ -14,9 +14,11 @@ function assert(cond, msg) {
 const A = (o) => ({ ...BLANK_ANSWERS, ...o });
 const FULL = ['barbell', 'dumbbell', 'machine', 'cable', 'band', 'kettlebell', 'bodyweight'];
 
+// skbSport drives the binding (engine sport + sport_code) — the real onboarding shape,
+// generalising across engine sports (gaa family, soccer, rugby).
 const planFor = (code) => generatePlan({
-  ...answersToProfile(A({ goalType: 'sport', sport: 'gaa', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'intermediate', daysPerWeek: 3, days: ['mon', 'wed', 'fri'], equipment: FULL, sportDays: ['tue', 'sat'] })),
-  sport_code: code, plan_start_date: '2026-07-06',
+  ...answersToProfile(A({ goalType: 'sport', skbSport: code, sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'intermediate', daysPerWeek: 3, days: ['mon', 'wed', 'fri'], equipment: FULL, sportDays: ['tue', 'sat'] })),
+  plan_start_date: '2026-07-06',
 });
 
 // Non-gym library entries each sport legitimately cannot cover in the gym (documented
@@ -26,9 +28,10 @@ const NON_GYM_CATEGORIES = {
   gaelic_football: new Set(['speed/sprint']),
   field_hockey: new Set(['conditioning support']),
   soccer: new Set([]),
+  rugby: new Set(['neck & cervical']),   // neck_isometrics — no neck muscle in the engine vocabulary (allowlisted)
 };
 
-for (const code of ['hurling', 'gaelic_football', 'field_hockey', 'soccer']) {
+for (const code of ['hurling', 'gaelic_football', 'field_hockey', 'soccer', 'rugby']) {
   const plan = planFor(code);
   const week = plan.phases[0].weeks[1] || plan.phases[0].weeks[0];
   const sessions = week.sessions.filter((s) => !s.discipline || s.discipline === 'gym');
