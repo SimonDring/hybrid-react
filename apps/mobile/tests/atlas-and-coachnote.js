@@ -57,11 +57,16 @@ const sprintIds = computeAtlas(sportProfile('run', 'sprint'), ASOF).pillars.map(
 const swimIds = computeAtlas(sportProfile('swim'), ASOF).pillars.map(p => `${p.id}:${p.demand}`);
 assert(JSON.stringify(sprintIds) !== JSON.stringify(swimIds), 'T10 different sports show different demand shapes');
 
-// ---- build athletes: capabilities only, no invented diagnosis ------------
+// ---- build athletes: the GOAL demand ring + an engine-emitted focus (WP-42a) ----
+// Build goals now resolve a goal-as-sport demand profile (EDS D2), so the Atlas renders
+// capability inside the GOAL's demand ring and the focus is the engine's top limiter —
+// nothing invented: the rationale is the diagnosis's own emitted string, same as sport.
 const b = computeAtlas(buildProfile, ASOF);
-assert(!b.hasDemand && b.pillars.length === 6 && b.pillars.every(p => p.demand === null),
-  'T11 build: capability view only — no demand ring');
-assert(b.focus === null, 'T12 build: NO focus — the engine has no diagnosis for build, so none is invented');
+assert(b.hasDemand && b.pillars.length >= 4 && b.pillars.every(p => Number.isFinite(p.demand)),
+  'T11 build: goal demand ring rendered (WP-42a)');
+const bModel = performanceModelForProfile(buildProfile, ASOF);
+assert(b.focus && b.focus.id === bModel.limitingFactors[0].qualityId && b.focus.why === bModel.limitingFactors[0].rationale,
+  'T12 build: focus IS the engine\'s top limiter with its own emitted rationale');
 
 // ---- measured lifts sharpen the model ------------------------------------
 const noLifts = computeAtlas({ ...buildProfile, lifts: null }, ASOF);

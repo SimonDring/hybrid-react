@@ -76,6 +76,16 @@ function cnsTier(ex) {
 
 const EX_BY_ID = new Map(EXERCISES.map(e => [e.id, e]));
 
+// Which cohorts the diagnosis actually STEERS (the D11/category-led gate) — the ONE
+// predicate shared by the allocator's branch and PlanGenerator's meta.diagnosis emission
+// (WP-42a display honesty: a plan never ships a diagnosis it ignored). Extend the sets
+// here when a cohort flips (WP-48 team sports, WP-49 build) and both stay in lockstep.
+const D11_SPORTS = new Set(['run', 'cycle']);
+export function diagnosisSteers({ style, sport, priorityQualities = [], categoryPlan = null } = {}) {
+  return style === 'sport' && ((priorityQualities.length > 0 && D11_SPORTS.has(sport))
+    || (sport === 'swim' && !!categoryPlan));
+}
+
 // Supportive finisher: round a short session out toward FINISHER_TARGET_MIN with
 // sport/goal-appropriate factor-0 work (prehab/mobility/core-activation), but never
 // add more than FINISHER_CAP_MIN — a session is never mostly prehab.
@@ -720,15 +730,13 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   //    diagnosis-driven target well. Swim is deferred — a swimmer isn't strength-limited, so its
   //    diagnosis points to mobility (→ robustness), which crowds out the upper-pull/shoulder work a
   //    swimmer actually needs; swim keeps the legacy fill until the model surfaces that need.
-  const D11_SPORTS = new Set(['run', 'cycle']);
   const priorityQualities = ctx.priorityQualities || [];
   // Swim is CATEGORY-LED (WP-20): it joins the D11 path only when its SKB category
   // plan is present (ctx.categoryPlan, built by the caller from the swimming
   // library) — the plan's per-session assignments replace the quality rotation
   // that mis-served it in Sprint 8.
   const categoryPlan = ctx.categoryPlan || null;
-  const useD11 = style === 'sport' && ((priorityQualities.length > 0 && D11_SPORTS.has(ctx.sport))
-    || (ctx.sport === 'swim' && !!categoryPlan));
+  const useD11 = diagnosisSteers({ style, sport: ctx.sport, priorityQualities, categoryPlan });
   if (useD11) {
     const goalPrimaryD11 = null;
     // The D9 target-quality rotation is a property of the WEEK, not of this call. The

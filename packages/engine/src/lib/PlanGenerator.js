@@ -29,7 +29,7 @@ import { resolveProgram } from './strength/program.js';
 import { resolvePeriodization } from './plan/periodization.js';
 import { getGymLevel } from './Utils.js';
 import { deriveConstraints, suggestGymDays } from './plan/constraints.js';
-import { SESSION_CEILING_MIN } from './plan/allocator.js';
+import { SESSION_CEILING_MIN, diagnosisSteers } from './plan/allocator.js';
 import { performanceModelForProfile } from './performance/forProfile.js';
 import { profileToAthleteModel } from './adapters/profileToAthleteModel.js';
 import * as SKB from './sportKnowledge/index.js';
@@ -238,9 +238,13 @@ export function generatePlan(profile = {}, opts = {}) {
   }
 
   // WP-30a: the D4→D5 chain summary every screen (and the future `explain` read-model)
-  // can cite — emitted reasons only, never re-derived. Absent when there is no diagnosis
-  // (build goals stay on the legacy path until WP-22).
-  const diagnosis = (diag.priorityQualities || []).length ? {
+  // can cite — emitted reasons only, never re-derived. WP-42a display honesty: emitted
+  // ONLY when the diagnosis actually STEERED this plan (the shared diagnosisSteers gate).
+  // Build + team-sport cohorts now HAVE a diagnosis (goal demand / SKB), but their weeks
+  // are legacy fill until WP-48/WP-49 flip them — a plan must never display reasoning it
+  // ignored. The model output stays available via performanceModelForProfile (Atlas).
+  const steers = diagnosisSteers({ style: program.style, sport: program.sport, priorityQualities: diag.priorityQualities, categoryPlan: diag.categoryPlan });
+  const diagnosis = (steers && (diag.priorityQualities || []).length) ? {
     sport: program.sport || null,
     limitingFactors: (perf.limitingFactors || []).map((f) => ({ qualityId: f.qualityId, magnitude: f.magnitude, confidence: f.confidence, rationale: f.rationale })),
     priorityQualities: diag.priorityQualities.map((p) => ({ qualityId: p.qualityId, order: p.order, rationale: p.rationale })),
