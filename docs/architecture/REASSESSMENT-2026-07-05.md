@@ -248,6 +248,12 @@ edited; every WP is a small revertible PR. **Merges: leave green PRs for Simon**
   season + recoverability; block length/deload rhythm from governed priors; sport cohorts
   first (goldens constrain build). **Complexity:** L. **Risk:** medium-high — design vs the
   EDS D7 contract; spec + Simon review of the coaching model before build.
+  - **SPEC WRITTEN (2026-07-06):** `docs/architecture/D7-BLOCK-OBJECTIVE-SPEC.md` — the
+    BlockObjective object, the diagnosis-driven coaching model, cross-block sequencing of
+    deferred limiters, the D11-style gated/parallel/golden-master rollout, and §9 OPEN
+    QUESTIONS that require Simon's sign-off (D6-first vs provisional strategy; sequencing
+    aggressiveness; block-length + deload seed science; taper trigger; cohort order).
+    **BUILD PAUSED until Simon answers §9.**
 
 ### Priority 10 — WP-48 · F1: team-sport flip (gaa/hurling/field hockey → category-led D11)
 - Proven swim pattern: library↔catalogue join audit per sport, `d11-gaa-quality.js`
