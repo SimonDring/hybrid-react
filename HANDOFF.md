@@ -41,8 +41,33 @@ stored Athlete Model never reached the live diagnosis; build cohort has no diagn
 cohorts are shown one their plan ignores; D6/D7/D8 missing; D14 covered 5/16 validators on the
 baseline path only; injured legacy-path athletes got silent-debt handling).
 
-**Shipped 2026-07-06 (PRs open for Simon — merges are his; engine-suite green on all; Vercel
-checks = the documented 24 h rate-limit flake):**
+**THE OPEN QUEUE (8 PRs, 2026-07-06) + suggested merge order — merges are Simon's;
+engine-suite green on all; Vercel checks = the documented 24 h rate-limit flake:**
+`#127 → #131 → #132 (stacked on #131 — after #131 squash-merges, re-land rebased if GitHub
+auto-closes it, the #126 dance) → #128 → #129 → #130 → #133 → #134 (then staging apply +
+harness run per SECURITY-DEPLOY.md)`. Known trivial conflicts: #127 and #131 both bump
+KNOWLEDGE_SET_VERSION to 1.2.0 and re-baseline the same snapshot provenance lines —
+whichever lands second needs a one-line note reconcile + `UPDATE=1` re-run; #129 and #132
+touch different regions of reflow.js.
+
+Also shipped this session (later additions):
+- **PR #132 — WP-43 explainability floor** (stacked on #131). Every legacy-path session now
+  carries an honest STYLE-derived `_objective` (source 'style' — never a diagnosis claim);
+  the reflow stamps `_ruleTrim {ruleIds, mult}` + `_catchUp {sets}`; WeekDetail renders the
+  three missing banners (deload deferred / sport-week trim / catch-up included). Golden
+  re-baseline audited additive-only (0 deletions). Provenance-persistence-to-rows recorded
+  for the platform band (needs schema tolerance).
+- **PR #131 also carries WP-42b**: team-sport golden archetypes (hurling/gaelic_football/
+  field_hockey — additive-only re-baseline) + `tests/d11-build-quality.js`, the Art-3 build
+  style-identity gate the WP-49 flip must keep green.
+- **PR #133 — WP-51** (agent-built, reviewed): schema.sql + migrations ledger reconciled
+  through 20260710 (the file was missing the ENTIRE team spine).
+- **PR #134 — WP-50** (agent-built, reviewed): team-scoped `player_status` SELECT
+  (`is_coach_of_team(team_id)`; drops the over-broad `is_coach_of`), `teams.join_code`
+  column revoke + coach-only `get_team_join_code` RPC, web repointed, 10 new harness cases.
+  **NOT staging-proven yet** — apply migration 20260711 to staging and run the harness.
+
+**Earlier in the session:**
 - **PR #127 — WP-38, the assessment chain repaired.** Stored model (position, resistance/sport
   years) reaches the live diagnosis via the adapter (#94/#101 pattern); D3 position boost live;
   measuredAt stamped → recency confidence real; per-lift strength standards (bench no longer
@@ -58,13 +83,15 @@ checks = the documented 24 h rate-limit flake):**
   an RDL after clean selection — the hole affected D11 too). Injured build athletes ship full
   legal sessions; pure baseline byte-identical by construction.
 
-**⇒ NEXT (backlog order):** WP-41 (contraindications → pattern/id level, dual-run equivalence)
-→ WP-42 (goal demand profiles, parallel/verified-unused + team-sport golden archetypes +
-d11-build-quality calibration; demand vectors flagged for Simon) → WP-43 (explainability floor)
-→ WP-44 (governance ratchets). Platform band interleaves as small PRs (WP-50 team-scope the
-player_status SELECT + join_code grant; WP-51 schema.sql/ledger reconciliation through 20260710;
-WP-52 match-day marker). **PAUSES:** WP-47 D7 design, WP-48 team-sport flip commit, WP-49 build
-flip (six product decisions listed in the reassessment).
+**⇒ NEXT (backlog order, once the queue merges):** WP-44 governance ratchets (the KSV
+hash-manifest test + authority wiring in recovery/selection — deliberately DEFERRED while the
+queue is open: it conflicts with every unmerged data change) → WP-45 one muscle model →
+WP-46 structured items → WP-52 match-day marker (touches WeekDetail — do after #132 lands) →
+WP-56 dead-code sweep (scheduler doubles/long-run machinery) → WP-57 single-source ACWR bands.
+**PAUSES for Simon:** WP-47 D7 design, WP-48 team-sport flip commit, WP-49 build flip (six
+product decisions listed in the reassessment §Priority 11) — plus review of the seed science
+flagged in #127 (per-lift standards, sport-experience priors) and #131 (goal demand vectors),
+and WP-41 stage 2 (the id-level contraindication vocabulary needs your science review).
 
 ## ▶ (superseded 2026-07-06) engine-rebuild status & the next step (2026-07-03)
 
