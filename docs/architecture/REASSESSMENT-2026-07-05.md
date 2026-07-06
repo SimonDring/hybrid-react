@@ -286,6 +286,28 @@ edited; every WP is a small revertible PR. **Merges: leave green PRs for Simon**
   + team era make this non-optional).
 - **WP-55** reflow baseline-identity (neutral day = no-op; only re-allocate slots whose inputs
   changed). (M-L; behavioural, deliberate re-baseline)
+  - **EVIDENCE MEASURED (2026-07-06)** — a fully-neutral-day divergence probe (nothing done,
+    full readiness, on-track load, no injury, no team schedule; scratchpad/wp55-divergence-probe.js,
+    run from apps/mobile) found **6/6 horizon current-week gym sessions diverge from the pure
+    baseline in their CORE WORK** (primers/warm-ups excluded). This is NOT cosmetic churn — two
+    classes of divergence are material coaching changes:
+      • **Programmed power/plyometric work is silently dropped.** Baseline "Tue · *Lower Power*"
+        carries `A-Skip / Bounding 4×4` (intent bounding_a_skip); the neutral reflow removes it and
+        retitles the session "Lower". Same for soccer "Thu · *Lower Power*" → `Broad Jump 4×4`
+        dropped, retitled "Full body". The reflow does not preserve the baseline session's power
+        anchors OR its session *intent*.
+      • **Intensity scheme changes**: soccer Bench `3×8 @RPE6` → `3×5 @RPE7 rest180` (a different
+        physical quality); Box squat → Front squat.
+    ROOT (observed, not yet fully traced): the reflow re-derives each horizon slot through its OWN
+    per-slot `allocateGym` path (targets from `distributeAcrossSlots`, intent from
+    `intentOfTitle(phase.title)`, anchors from `resolveSplit`) — which does not reproduce the
+    baseline PlanGenerator's session composition even when every runtime input is neutral. So the
+    current week the athlete trains ≠ the plan the rest of the horizon shows, with nothing changed.
+    **DESIGN QUESTION FOR SIMON (gates the build):** on a neutral day, should the reflow *clone the
+    baseline session verbatim* and only apply the volume/RPE multipliers (guaranteeing identity when
+    mult=1, rpeOffset=0, deficit=0), rather than re-allocate from scratch? That is the cleanest fix
+    and preserves power/plyo anchors — but it's a core-path change with a deliberate golden
+    re-baseline, and it changes live current-week output for every athlete. **PAUSE for Simon.**
 - **WP-56** dead-code + stale-comment sweep: scheduler doubles/long-run machinery,
   `intensityModifier` shape-compat, always-null `recentRecovery`, `planned: 0` consistency
   input, stale headers (sessionSpecs/exerciseQualities/reflow/enrich-sessions), `Readiness.logs`

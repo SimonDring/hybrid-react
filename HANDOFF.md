@@ -126,13 +126,20 @@ Also shipped this session (earlier additions):
   legal sessions; pure baseline byte-identical by construction.
 
 **⇒ NEXT (backlog order — WP-44/45/52/57/59/60 now all opened as PRs above; remaining):**
-WP-47 D7 block-objective **design spec DOC** (build pauses for Simon, but the doc is fair
-game) → WP-46 structured items / exercise ids → WP-53 engine `rollUp()` + apps/web consumes
-it → WP-58 unify the two strength-standards models → WP-55 reflow baseline-identity.
-**PAUSES for Simon:** WP-47 D7 design, WP-48 team-sport flip commit, WP-49 build flip (six
-product decisions listed in the reassessment §Priority 11) — plus review of the seed science
-flagged in #127 (per-lift standards, sport-experience priors) and #131 (goal demand vectors),
-and WP-41 stage 2 (the id-level contraindication vocabulary needs your science review).
+Every remaining item has now hit a genuine decision boundary (not a coding blocker — a *you*
+blocker). WP-47 D7 block-objective **spec DOC** is written (build pauses for §9 sign-off) ·
+WP-46 structured items needs a golden-churn/join-migration call · WP-53 engine `rollUp()`
+entangles with the unmerged team PR (#138) + live-on-prod team code · WP-58 unify the two
+strength-standards models needs a canonical-band *scientific* call · **WP-55 reflow
+baseline-identity — EVIDENCE NOW MEASURED (2026-07-06):** a neutral-day probe found 6/6 horizon
+gym sessions diverge from baseline in their core work, incl. **programmed power/plyometric work
+silently dropped** + intensity-scheme changes — see reassessment §WP-55 for the measured detail
+and the design question (clone-baseline-then-scale vs re-allocate). **PAUSE for Simon.**
+**PAUSES for Simon:** WP-47 D7 design (§9), WP-48 team-sport flip commit, WP-49 build flip (six
+product decisions listed in the reassessment §Priority 11), WP-55 reflow design question — plus
+review of the seed science flagged in #127 (per-lift standards, sport-experience priors) and
+#131 (goal demand vectors), and WP-41 stage 2 (the id-level contraindication vocabulary needs
+your science review).
 
 ## ▶ (superseded 2026-07-06) engine-rebuild status & the next step (2026-07-03)
 
