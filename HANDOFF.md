@@ -41,16 +41,38 @@ stored Athlete Model never reached the live diagnosis; build cohort has no diagn
 cohorts are shown one their plan ignores; D6/D7/D8 missing; D14 covered 5/16 validators on the
 baseline path only; injured legacy-path athletes got silent-debt handling).
 
-**THE OPEN QUEUE (8 PRs, 2026-07-06) + suggested merge order — merges are Simon's;
+**THE OPEN QUEUE (10 PRs, 2026-07-06) + suggested merge order — merges are Simon's;
 engine-suite green on all; Vercel checks = the documented 24 h rate-limit flake:**
-`#127 → #131 → #132 (stacked on #131 — after #131 squash-merges, re-land rebased if GitHub
-auto-closes it, the #126 dance) → #128 → #129 → #130 → #133 → #134 (then staging apply +
-harness run per SECURITY-DEPLOY.md) → #135 (WP-56 dead-code sweep, conflict-free)`. Known trivial conflicts: #127 and #131 both bump
+`#127 → #131 → #132 → #136 (the STACK: #132 on #131, #136 on #132 — after each base
+squash-merges, re-land the next rebased if GitHub auto-closes it, the #126 dance) →
+#128 → #129 → #130 → #133 → #134 (then staging apply + harness run per
+SECURITY-DEPLOY.md) → #135 → #137`. Known trivial conflicts: #127 and #131 both bump
 KNOWLEDGE_SET_VERSION to 1.2.0 and re-baseline the same snapshot provenance lines —
 whichever lands second needs a one-line note reconcile + `UPDATE=1` re-run; #129 and #132
 touch different regions of reflow.js.
 
-Also shipped this session (later additions):
+**SECOND WAVE (Simon's 2026-07-06 morning directive — cohort table closed, all sports
+steered, AIGAS review + build):**
+- **PR #136 — WP-48 the team-sport flip** (stacked on #132): hurling / gaelic_football /
+  field_hockey / **soccer** are category-led D11 — the diagnosis steers, meta.diagnosis +
+  D9 objectives ship. WP-23 id normalisation (mb_rotational_throw→cable_woodchop etc.;
+  hurling's empty plyo/upper-body categories gain seated_box_jump + pullup, seed-tagged
+  ⚠ for Simon). **SOCCER SKB AUTHORED TO FLAGSHIP** (agent-built, salvaged after a
+  session-limit cutoff, validated: completeness 1.00, 14/14 catalogue-joined — ⚠ the
+  whole profile is Simon's to review). tests/d11-team-quality.js (40 checks). KSV →
+  1.3.0; golden movement audited BY KEY = exactly the 3 team archetypes. **RUGBY
+  authoring in flight** (agent re-running) — integrate onto this branch when it lands:
+  binding + CATEGORY_LED + gate coverage + KSV note.
+- **AIGAS review (item 3):** docs/architecture/AIGAS-REVIEW-2026-07-06.md — ALIGNED,
+  recommend ratification, 6 reconciliation notes (on main).
+- **PR #137 — WP-60 the AIGAS build (item 4, from main, everything OFF):** Seam-1
+  decision contracts as code (D11) + validateProposal → D14 disposal, engine purity
+  test-pinned; ai-render edge function (server-side key, §19 leak gate, §7 grounding
+  prompt, §20 stamps, AI_ENABLED kill switch) + AiService (ai_features profile flag,
+  artefact builder strips RAW_VITAL_KEYS, §9 degradation). Go-live is Simon's, twice-
+  gated; a per-capability eval harness is REQUIRED before any go-live (recorded).
+
+Also shipped this session (earlier additions):
 - **PR #132 — WP-43 explainability floor** (stacked on #131). Every legacy-path session now
   carries an honest STYLE-derived `_objective` (source 'style' — never a diagnosis claim);
   the reflow stamps `_ruleTrim {ruleIds, mult}` + `_catchUp {sets}`; WeekDetail renders the
