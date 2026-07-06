@@ -125,14 +125,25 @@ Also shipped this session (earlier additions):
   an RDL after clean selection — the hole affected D11 too). Injured build athletes ship full
   legal sessions; pure baseline byte-identical by construction.
 
-**⇒ NEXT (backlog order — WP-44/45/52/57/59/60 now all opened as PRs above; remaining):**
-WP-47 D7 block-objective **design spec DOC** (build pauses for Simon, but the doc is fair
-game) → WP-46 structured items / exercise ids → WP-53 engine `rollUp()` + apps/web consumes
-it → WP-58 unify the two strength-standards models → WP-55 reflow baseline-identity.
-**PAUSES for Simon:** WP-47 D7 design, WP-48 team-sport flip commit, WP-49 build flip (six
-product decisions listed in the reassessment §Priority 11) — plus review of the seed science
-flagged in #127 (per-lift standards, sport-experience priors) and #131 (goal demand vectors),
-and WP-41 stage 2 (the id-level contraindication vocabulary needs your science review).
+**✅ ALL 16 PRs MERGED (2026-07-06).** #127–#142 (WP-38/39/40/41/42/43/44/45/48/50/51/52/56/57/59/60)
+are in `main` — 9 independents merged clean; the 7-PR stack (WP-42→43→48→44→52→45→59) merged in
+dependency order, each reconciled (KSV changelog + ratchet manifest re-baselined per bump; goldens
+regenerated from merged code and audited — no unintended plan drift) with the full suite **158/158
+green** at every step. Final `main` KSV = **1.5.0**. GitHub Pages redeploys the PWA on these merges.
+**⚠️ PENDING PROD APPLIES (yours, per supabase/SECURITY-DEPLOY.md — merged as code, NOT yet applied):**
+(1) `supabase/migrations/20260711_team_scoping.sql` (WP-50 — team-scope player_status RLS + lock
+teams.join_code); (2) `supabase/functions/enrich-sessions/index.ts` redeploy (WP-56); (3)
+`supabase/functions/ai-render/index.ts` deploy (WP-60, AI seam — stays flag-off until go-live). None
+break the running app if un-applied; the RLS one is a live security tightening, so apply it soon.
+
+**⇒ NEXT (every remaining item is now a decision boundary — see reassessment §3):**
+WP-47 D7 block-objective spec DOC is written (build pauses on §9) · WP-55 reflow baseline-identity —
+**evidence measured**, neutral-day reflow drops programmed power work (reassessment §WP-55, design
+question) · WP-46 structured items (golden-churn/join-migration call) · WP-53 engine `rollUp()`
+(entangled with live team code) · WP-58 unify strength-standards models (canonical-band scientific
+call). **PAUSES for Simon:** WP-47 §9, WP-49 build flip, WP-55 design question — plus review of the
+seed science flagged in #127 (per-lift standards, sport-experience priors) and #131 (goal demand
+vectors), and WP-41 stage 2 (the id-level contraindication vocabulary needs your science review).
 
 ## ▶ (superseded 2026-07-06) engine-rebuild status & the next step (2026-07-03)
 
