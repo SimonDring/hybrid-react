@@ -29,7 +29,7 @@ export { assessLoad, assessLoad as deriveLoad } from './src/lib/load/load.js';
 export { readinessIndex, readinessIndex as deriveReadiness } from './src/lib/indices/index.js';
 export { computeReadiness, readinessFor, sleepScoreFor } from './src/lib/Readiness.js';
 export {
-  dailyLoads, acuteChronic, acwr, acwrSeries, loadDecision,
+  dailyLoads, acuteChronic, acwr, acwrSeries, loadDecision, acwrBand,
   combinedMultiplier, deloadRecommendation, sessionLoad, workoutLoad
 } from './src/lib/plan/trainingLoad.js';
 export { getContraindications } from './src/lib/injury/injuryRules.js';
