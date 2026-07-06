@@ -125,25 +125,37 @@ Also shipped this session (earlier additions):
   an RDL after clean selection — the hole affected D11 too). Injured build athletes ship full
   legal sessions; pure baseline byte-identical by construction.
 
-**✅ ALL 16 PRs MERGED (2026-07-06).** #127–#142 (WP-38/39/40/41/42/43/44/45/48/50/51/52/56/57/59/60)
-are in `main` — 9 independents merged clean; the 7-PR stack (WP-42→43→48→44→52→45→59) merged in
-dependency order, each reconciled (KSV changelog + ratchet manifest re-baselined per bump; goldens
-regenerated from merged code and audited — no unintended plan drift) with the full suite **158/158
-green** at every step. Final `main` KSV = **1.5.0**. GitHub Pages redeploys the PWA on these merges.
-**⚠️ PENDING PROD APPLIES (yours, per supabase/SECURITY-DEPLOY.md — merged as code, NOT yet applied):**
-(1) `supabase/migrations/20260711_team_scoping.sql` (WP-50 — team-scope player_status RLS + lock
-teams.join_code); (2) `supabase/functions/enrich-sessions/index.ts` redeploy (WP-56); (3)
-`supabase/functions/ai-render/index.ts` deploy (WP-60, AI seam — stays flag-off until go-live). None
-break the running app if un-applied; the RLS one is a live security tightening, so apply it soon.
+**✅ 25 PRs MERGED (2026-07-06). `main` KSV = 1.8.0. Suites 165/165.**
+- **Batch 1 — #127–#142** (WP-38/39/40/41/42/43/44/45/48/50/51/52/56/57/59/60): the post-#126
+  audit backlog; 9 independents + a 7-PR stack, each reconciled + golden-audited.
+- **Batch 2 — #144–#149** (Simon-directed): WP-46 s1 (exId identity, #144) → s2 (engine joins key on
+  exId, #145) → WP-58 (governed strength-standards table + fitnessAge constants, #146) → WP-47 D7
+  block objective **ADVISORY** (#147) → WP-55 **reflow baseline-identity** — the neutral-day churn
+  that dropped programmed power work is fixed (#148) → WP-53 engine `rollUp` **stage 1** (pure port,
+  snapshot-locked, #149).
+- **Batch 3 — #150–#152** (Simon reviewed + approved the three flagged calls): WP-58 **reconcile**
+  (capability anchors derived from the governed advanced band — one source, #150) → WP-47 **steer**
+  (the D7 block plan drives the deload rhythm for diagnosed sport cohorts w/ a recoverability prior;
+  gated + reversible, golden byte-identical, #151) → WP-53 **stage 2** (the coach board consumes
+  engine `rollUp`; duplicate deleted; `next build` verified, #152).
 
-**⇒ NEXT (every remaining item is now a decision boundary — see reassessment §3):**
-WP-47 D7 block-objective spec DOC is written (build pauses on §9) · WP-55 reflow baseline-identity —
-**evidence measured**, neutral-day reflow drops programmed power work (reassessment §WP-55, design
-question) · WP-46 structured items (golden-churn/join-migration call) · WP-53 engine `rollUp()`
-(entangled with live team code) · WP-58 unify strength-standards models (canonical-band scientific
-call). **PAUSES for Simon:** WP-47 §9, WP-49 build flip, WP-55 design question — plus review of the
-seed science flagged in #127 (per-lift standards, sport-experience priors) and #131 (goal demand
-vectors), and WP-41 stage 2 (the id-level contraindication vocabulary needs your science review).
+**⚠️ PENDING PROD APPLIES (yours, per supabase/SECURITY-DEPLOY.md).** As of 2026-07-06 the DB
+migrations through `20260711` are applied to prod (Simon, ahead of staging — no active users). Still
+to confirm: the paired **Edge Functions** deploy separately from `db push` — the OAuth-nonce
+callbacks + `fitbit-sync` (S1/S4/S8) and `ai-render` (WP-60, optional; AI go-live only). None break
+the running app.
+
+**⇒ NEXT (remaining, in backlog order):**
+- **WP-47 block-LENGTH / phase-structure steering** — the block plan's lengthWeeks driving
+  totalWeeks/split (needs the block-plan↔periodisation week reconciliation; the deload-rhythm steer
+  shipped in #151, this is the larger follow-on).
+- **WP-46 remaining joins** — the FUZZY name matchers (liftProgression matchLift, the core
+  plank|hold regex) + the app form-guide join; behavioural, not 1:1 with exId, each its own PR.
+- **WP-49 build flip** — **PAUSE FOR SIMON** (the six product decisions in reassessment §Priority 11).
+- **AI go-live** — WP-60 seam is merged behind flags; needs the eval harness + your `AI_ENABLED` deploy.
+**PAUSES for Simon:** WP-49 build flip; letting D7 steer BLOCK LENGTH (not just deloads); review of
+the seed science flagged in #127 (per-lift standards, priors) and #131 (goal demand vectors); WP-41
+stage 2 (id-level contraindication vocabulary). Everything else above is a code/scope call I can make.
 
 ## ▶ (superseded 2026-07-06) engine-rebuild status & the next step (2026-07-03)
 
