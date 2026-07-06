@@ -6,9 +6,11 @@
 //   deriveReadiness(inputs)     → the readiness signal (alias: readinessIndex)
 //   deriveLoad(inputs)          → the training-load signal (alias: assessLoad)
 //   validate(week, ctx?)        → the D14 ValidationReport (alias: validateWeek)
-//   explain / rollUp            → RESERVED: explain lands with WP-30 (the decision
-//                                 read-model); rollUp with the Team package (WP-34,
-//                                 TAS Appendix A). Not stubbed — no speculative seams.
+//   rollUp(row, {nowMs})        → the team roll-up: a coach-safe player_status row → the
+//                                 derived coaching signal (RAG status/confidence/load).
+//                                 The engine owns this derivation (WP-53, TAS Appendix A);
+//                                 the web dashboard + a future edge function consume it.
+//   explain                     → RESERVED: lands with WP-30 (the decision read-model).
 // Every consumer surface (the PWA's PlanService/store, apps/web, future Edge
 // Functions) should import from THIS barrel. Deep "./lib/*" subpaths remain for
 // tests and for the documented residue in tests/engine-api-boundary.js — that
@@ -40,6 +42,7 @@ export { applyInjuryRules, applyPrevention } from './src/lib/injury/injuryFilter
 export { default as kb } from './src/lib/knowledge/kb.js';
 export { authorityOf, mayForceAlone, mayScaleAlone } from './src/lib/knowledge/authority.js';
 export { validateWeek, validateWeek as validate, VALIDATORS, CONFLICT_ORDER } from './src/lib/validation/contract.js';
+export { rollUp, deriveStatus as rollUpStatus, deriveConfidence as rollUpConfidence, LOW_ADHERENCE_THRESHOLD } from './src/lib/team/rollUp.js';
 // The AIGAS Seam 1 gate (WP-60): decision contracts + proposal disposal. The engine's
 // decision modules never import ai/ (one-way, test-pinned); proposers live platform-side.
 export { DECISION_CONTRACTS, contractFor, validateProposal } from './src/lib/ai/contracts.js';
