@@ -195,4 +195,31 @@ export function availableEquip(access = []) {
   return new Set(['bodyweight', 'band']);
 }
 
-export default { EXERCISES, LEVELS, availableEquip };
+// WP-46 (completion): governed id-keyed maps that REPLACE the name-fuzzy joins in the plan
+// path — keyed by exId so a display-name change can't break progression tracking or the core
+// hold/reps scheme (the fragility WP-41 fixed for injuries). Values reproduce the previous
+// name-regex matchers exactly (name matching stays as the fallback for un-stamped items).
+
+// exId → the barbell lift its top-set logs progress + the strength factor vs that lift
+// (front/box squat etc. track the same e1RM). Barbell lifts only; DB/goblet excluded.
+// Reproduces liftProgression.matchLift().
+export const PROGRESSION_LIFTS = {
+  back_squat:       { key: 'squat',    factor: 1 },
+  front_squat:      { key: 'squat',    factor: 0.85 },
+  box_squat:        { key: 'squat',    factor: 0.9 },
+  deadlift:         { key: 'deadlift', factor: 1 },
+  trap_bar_dl:      { key: 'deadlift', factor: 1 },
+  rdl:              { key: 'deadlift', factor: 0.8 },
+  bench:            { key: 'bench',    factor: 1 },
+  incline_bench:    { key: 'bench',    factor: 1 },
+  close_grip_bench: { key: 'bench',    factor: 1 },
+  ohp:              { key: 'ohp',      factor: 1 },
+  lat_pulldown:     { key: 'pull',     factor: 1 },
+  deficit_deadlift: { key: 'deadlift', factor: 1 },
+};
+
+// Core exercises dosed as an isometric HOLD (time), not reps. Reproduces the allocator's
+// /plank|hold|dead bug|copenhagen|hollow|bird dog/ regex over the current core catalogue.
+export const CORE_HOLDS = new Set(['plank', 'dead_bug', 'side_plank', 'copenhagen', 'bird_dog']);
+
+export default { EXERCISES, LEVELS, availableEquip, PROGRESSION_LIFTS, CORE_HOLDS };

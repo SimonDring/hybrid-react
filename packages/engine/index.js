@@ -63,7 +63,7 @@ export { selectableSports, positionsFor } from './src/lib/sportKnowledge/selecta
 export { bindingFor } from './src/data/sportEngineBinding.js';
 
 // ── Prescription + progression contracts screens/stores legitimately consume ──
-export { nextE1RM, resolveLifts, matchLift, applyWeights, estimateE1RM, parseReps, parseRpe, trackedLiftsInSession, epley1RM, pullupE1RM } from './src/lib/liftProgression.js';
+export { nextE1RM, resolveLifts, matchLift, matchLiftForItem, applyWeights, estimateE1RM, parseReps, parseRpe, trackedLiftsInSession, epley1RM, pullupE1RM } from './src/lib/liftProgression.js';
 export { suggestOptimalFrequency } from './src/lib/plan/frequency.js';
 export { createAthleteModel, ATHLETE_SCHEMA_VERSION } from './src/lib/athlete/index.js';
 export { derivePerformanceModel } from './src/lib/performance/index.js';
