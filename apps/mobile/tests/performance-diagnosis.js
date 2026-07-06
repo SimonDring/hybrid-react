@@ -13,9 +13,11 @@ if (pm.priorityAdaptations.length) {
   assert(Array.isArray(pm.priorityAdaptations[0].adaptations) && pm.priorityAdaptations[0].tracesToLimiter, 'T5 priority carries adaptations + trace');
 }
 
+// WP-42a: build goals resolve a GOAL demand profile (EDS D2), so the diagnosis is never empty.
 const build = createAthleteModel({ goals: [{ id: 'g', outcome: 'build_muscle', priority: 1 }] });
 const pmb = derivePerformanceModel(build, ASOF);
-assert(pmb.limitingFactors.length === 0 && pmb.priorityAdaptations.length === 0, 'T6 build (no demand) → empty diagnosis');
-assert(pmb.demandProfile === null, 'T7 build demandProfile still null (Plan 2 behaviour unchanged)');
+assert(pmb.limitingFactors.length > 0 && pmb.priorityAdaptations.length > 0, 'T6 build → goal-led diagnosis (never empty, WP-42a)');
+assert(Array.isArray(pmb.demandProfile) && pmb.demandProfile.find((d) => d.qualityId === 'hypertrophy')?.importance === 1.0,
+  'T7 build_muscle demand is hypertrophy-led at 1.0');
 
 assert(JSON.stringify(pm) === JSON.stringify(derivePerformanceModel(sport, ASOF)), 'T8 deterministic');
