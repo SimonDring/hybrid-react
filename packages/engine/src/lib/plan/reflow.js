@@ -309,6 +309,18 @@ export function reflowPhases({
         if (changed && rpeOffset < 0 && reshapedIdx.size) {
           out._intensityEased = override === 'easy' ? 'travel — eased' : 'low readiness — eased';
         }
+        // WP-43: runtime reshaping must be VISIBLE (Art 14/15). Sport-rule trims carry the
+        // fired rule ids; a non-trivial catch-up spread names the sets it recovered. Both
+        // stamp only reshaped weeks — the annotations describe what the reflow DID here.
+        if (changed && reshapedIdx.size && ruleAdj.volumeMult !== 1) {
+          out._ruleTrim = { ruleIds: ruleAdj.ruleIds || [], mult: ruleAdj.volumeMult };
+        }
+        if (changed && reshapedIdx.size && week.num === cw) {
+          const owed = Object.values(deficit).reduce((a, b) => a + b, 0);
+          const waived = Object.values(forgiven || {}).reduce((a, b) => a + b, 0);
+          const recovered = Math.max(0, owed - waived);
+          if (recovered >= 1) out._catchUp = { sets: Math.round(recovered) };
+        }
         if (forceDl) { out.deload = true; out.autoDeload = true; out.deloadReason = rec.reason; }
         if (deferDl) { out.deload = false; out.deloadDeferred = true; }
         return out;
