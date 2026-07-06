@@ -46,7 +46,7 @@ engine-suite green on all; Vercel checks = the documented 24 h rate-limit flake:
 `#127 → #131 → #132 → #136 (the STACK: #132 on #131, #136 on #132 — after each base
 squash-merges, re-land the next rebased if GitHub auto-closes it, the #126 dance) →
 #128 → #129 → #130 → #133 → #134 (then staging apply + harness run per
-SECURITY-DEPLOY.md) → #135 → #137`. Known trivial conflicts: #127 and #131 both bump
+SECURITY-DEPLOY.md) → #135 → #137 → #138 (WP-57 one governed ACWR classifier)`. Known trivial conflicts: #127 and #131 both bump
 KNOWLEDGE_SET_VERSION to 1.2.0 and re-baseline the same snapshot provenance lines —
 whichever lands second needs a one-line note reconcile + `UPDATE=1` re-run; #129 and #132
 touch different regions of reflow.js.
@@ -60,9 +60,10 @@ steered, AIGAS review + build):**
   ⚠ for Simon). **SOCCER SKB AUTHORED TO FLAGSHIP** (agent-built, salvaged after a
   session-limit cutoff, validated: completeness 1.00, 14/14 catalogue-joined — ⚠ the
   whole profile is Simon's to review). tests/d11-team-quality.js (40 checks). KSV →
-  1.3.0; golden movement audited BY KEY = exactly the 3 team archetypes. **RUGBY
-  authoring in flight** (agent re-running) — integrate onto this branch when it lands:
-  binding + CATEGORY_LED + gate coverage + KSV note.
+  1.3.0; golden movement audited BY KEY = exactly the 3 team archetypes. **RUGBY LANDED + FLIPPED**
+  (agent-authored flagship: 18 qualities incl. neckStrength, 5 positions, 12 structured
+  rules, 17/18 joined, ⚠ science for Simon): ALL TEN SPORTS ARE DIAGNOSIS-STEERED, ZERO
+  STUBS REMAIN. d11-team-quality gates five sports (50 checks); suite 148/148.
 - **AIGAS review (item 3):** docs/architecture/AIGAS-REVIEW-2026-07-06.md — ALIGNED,
   recommend ratification, 6 reconciliation notes (on main).
 - **PR #137 — WP-60 the AIGAS build (item 4, from main, everything OFF):** Seam-1
