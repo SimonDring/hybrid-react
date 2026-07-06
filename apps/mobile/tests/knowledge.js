@@ -38,8 +38,11 @@ assert(kb.get('readiness.subjective_priority').confidence === 'high' && kb.get('
   'subjective-wellness priority tagged L1/high (Saw 2016)');
 
 // ── staleness: report (don't fail) entries due for re-review ───────────────────
+// WP-44: staleness FAILS the build (it only warned before — an unenforced review cadence
+// is decorative). 18 months is the hard ceiling; re-reviewing an entry = updating
+// lastReviewed with whatever the review concluded, even "unchanged".
 const stale = kb.staleEntries(18);
-if (stale.length) console.warn(`WARN: ${stale.length} KB entr(y/ies) older than 18 months — due for review:`, stale.map(e => e.id).join(', '));
+if (stale.length) { console.error(`FAIL: ${stale.length} KB entr(y/ies) older than 18 months — review them (update lastReviewed):`, stale.map(e => e.id).join(', ')); process.exitCode = 1; }
 else console.log('PASS: no KB entries are stale (all reviewed within 18 months)');
 
 console.log('knowledge tests done');
