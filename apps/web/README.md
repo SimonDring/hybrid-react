@@ -181,7 +181,7 @@ components changes**.
 // data/mockApi.ts
 export async function getPlayers(): Promise<CoachVisiblePlayer[]> {
   const { data } = await supabase.from("player_status").select("*");
-  // RLS (is_coach_of) returns only this coach's team; raw vitals are not selectable.
+  // RLS (is_coach_of_team) returns only this coach's team; raw vitals are not selectable.
   return data.map(rowToCoachVisiblePlayer);
 }
 ```
