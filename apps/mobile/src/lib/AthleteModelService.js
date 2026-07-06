@@ -9,7 +9,7 @@
 import * as Sync from './SyncService.js';
 import Database from './Database.js';
 import { localISODate, answersToAthleteModelInputs } from './onboardingModel.js';
-import { createAthleteModel, ATHLETE_SCHEMA_VERSION, profileToAthleteModel, derivePerformanceModel } from '@performance-os/engine';
+import { createAthleteModel, ATHLETE_SCHEMA_VERSION, profileToAthleteModel, derivePerformanceModel, blockOutcome, epley1RM } from '@performance-os/engine';
 
 // Build an Athlete Model from onboarding answers and persist it to users.profile.athlete_model.
 // Returns the saved model.
@@ -83,4 +83,46 @@ export async function syncInjuryHistory() {
 export function getPerformanceModel() {
   const model = getAthleteModel();
   return model ? derivePerformanceModel(model, localISODate()) : null;
+}
+
+// WP-59 — stage a candidate learned prior from the just-completed block (the first
+// honest learning loop). Gathers the athlete's own already-logged data — session
+// recovery ratings + logged-set e1RMs — over the block window, runs the pure
+// blockOutcome() verdict, and persists the result at model.stagedPriors.
+//
+// STAGED, NEVER LIVE: nothing in the engine reads stagedPriors. Promotion
+// (staged → model.learnedPriors, which the engine DOES read) is a deliberate,
+// reviewed step — the same twice-gated pattern as the AI seam. This writer only
+// ever proposes; Simon decides when the first prior goes live. Change-driven +
+// fire-and-forget, exactly like syncInjuryHistory. Caller (the block check-in)
+// supplies the block window + the block's D5 priority qualities.
+export async function syncStagedPriors({ startISO, endISO, priorityQualities } = {}) {
+  const model = getAthleteModel();
+  if (!model || !startISO || !endISO || !Array.isArray(priorityQualities) || !priorityQualities.length) {
+    return model || null;
+  }
+  const dateOf = (iso) => (iso ? String(iso).slice(0, 10) : null);
+
+  // The athlete's own 1–5 recovery rating, one per completed session in the window.
+  const sessionRecoveries = Database.tables.sessionLogs.all()
+    .filter((l) => l && l.recovery != null && dateOf(l.completed_at))
+    .map((l) => ({ date: dateOf(l.completed_at), recovery: Number(l.recovery) }));
+
+  // e1RM history: every logged top set → an Epley estimate, dated by the set.
+  const liftLog = Database.tables.setLogs.all()
+    .filter((r) => r && Number(r.actual_weight) > 0 && Number(r.actual_reps) > 0 && dateOf(r.completed_at))
+    .map((r) => ({ date: dateOf(r.completed_at), e1rm: epley1RM(Number(r.actual_weight), Number(r.actual_reps)) }))
+    .filter((r) => r.e1rm > 0);
+
+  const { verdicts, candidatePriors } = blockOutcome({ priorityQualities, liftLog, sessionRecoveries, startISO, endISO });
+  const staged = { block: { startISO, endISO }, verdicts, candidatePriors, stagedAt: new Date().toISOString() };
+
+  // Change-driven on the decision content (ignore the timestamp) so we don't churn writes.
+  const sig = (s) => (s ? JSON.stringify({ block: s.block, verdicts: s.verdicts, candidatePriors: s.candidatePriors }) : null);
+  if (sig(model.stagedPriors) === sig(staged)) return model;
+
+  model.stagedPriors = staged;
+  model.updatedAt = new Date().toISOString();
+  await Sync.updateProfile({ athlete_model: model });
+  return model;
 }
