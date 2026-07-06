@@ -76,11 +76,13 @@ assert(sprintMetrics.includes('nordic_hamstring') && !longMetrics.includes('nord
 assert(longMetrics.includes('energy_availability') && !sprintMetrics.includes('energy_availability'),
   'long carries an energy-availability (RED-S/bone) KPI that sprint does not');
 
-// ── stubs are valid scaffolds (structurally fine, low completeness) ─────────────
-for (const id of ['rugby', 'soccer']) {
+// ── the remaining stub is a valid scaffold; soccer graduated to flagship (WP-48) ──
+for (const id of ['rugby']) {
   assert(validateSportProfile(skb.get(id)).length === 0, `${id} stub is structurally valid`);
   assert(!skb.completeness(id).complete, `${id} stub reports as a scaffold (not yet complete)`);
 }
+assert(validateSportProfile(skb.get('soccer')).length === 0, 'soccer flagship is structurally valid');
+assert(skb.completeness('soccer').complete, 'soccer reports complete (flagship-authored 2026-07-06)');
 
 // ── §3 energy systems sum to ~100 across every profile ──────────────────────────
 for (const p of skb.all()) {

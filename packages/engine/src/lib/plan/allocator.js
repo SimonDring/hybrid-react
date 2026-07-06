@@ -82,8 +82,11 @@ const EX_BY_ID = new Map(EXERCISES.map(e => [e.id, e]));
 // here when a cohort flips (WP-48 team sports, WP-49 build) and both stay in lockstep.
 const D11_SPORTS = new Set(['run', 'cycle']);
 export function diagnosisSteers({ style, sport, priorityQualities = [], categoryPlan = null } = {}) {
+  // Rating-based (run/cycle) needs a non-empty diagnosis; category-led needs a plan —
+  // categoryPlanFor() is itself gated by CATEGORY_LED (swim + the team sports + soccer,
+  // WP-48), so a present categoryPlan IS the flip decision for that sport.
   return style === 'sport' && ((priorityQualities.length > 0 && D11_SPORTS.has(sport))
-    || (sport === 'swim' && !!categoryPlan));
+    || !!categoryPlan);
 }
 
 // Supportive finisher: round a short session out toward FINISHER_TARGET_MIN with

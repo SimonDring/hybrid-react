@@ -47,11 +47,12 @@ const gymSessions = (plan) => plan.phases.flatMap((p) => p.weeks.flatMap((w) => 
   assert(objs.length > 0 && objs.every((o) => o.source !== 'style'), 'E2 runner sessions keep the D9 diagnosis-derived objective');
 }
 
-// ── E3 · legacy SPORT (gaa) gets the honest sport-support objective ───────────
+// ── E3 · team sports are category-led (WP-48): D9 objectives, not the style fallback ──
 {
   const plan = generatePlan({ ...answersToProfile(A({ goalType: 'sport', sport: 'gaa', experienceLevel: 'intermediate', daysPerWeek: 3, days: ['mon', 'wed', 'fri'], equipment: FULL })), sport_code: 'hurling', plan_start_date: '2026-07-06' });
   const objs = gymSessions(plan).map((s) => s._objective);
-  assert(objs.every((o) => o && o.source === 'style' && /sport/i.test(o.purpose)), 'E3 hurler sessions explain the sport-support template honestly');
+  assert(objs.every((o) => o && o.source !== 'style' && o.rationale),
+    'E3 hurler sessions carry category/D9 objectives (the flip replaced the style fallback)');
 }
 
 // ── E4 · a real catch-up spread stamps the week ───────────────────────────────

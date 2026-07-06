@@ -11,6 +11,7 @@ export const SKB_ENGINE_BINDING = {
   field_hockey:   { engineSport: 'gaa', discipline: null }, // invasion field sport — the gaa gym-support module is the closest legacy biasing; the SKB carries the hockey-specific knowledge
   hurling:        { engineSport: 'gaa', discipline: null },
   triathlon:      { engineSport: 'run', discipline: null }, // run is triathlon's binding constraint (SKB)
+  soccer:         { engineSport: 'soccer', discipline: null }, // WP-48: flagship-authored 2026-07-06
 };
 
 export function bindingFor(skbId) {
