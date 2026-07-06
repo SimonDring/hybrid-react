@@ -13,6 +13,7 @@ integration — is validated against before implementation.
 | Document | Role |
 |---|---|
 | **[TAS.md](TAS.md)** | The Technical Architecture Specification — the six-layer architecture, the pure-engine boundary and public API, the Decision Engine in depth, knowledge/data flow, configuration separation, the two learning systems, explainability, extensibility, testing, observability, the future-AI seam, security/privacy, the four-lens critical review, and a Current Realization appendix mapping the abstractions to today's stack. |
+| **[AIGAS.md](AIGAS.md)** | The AI Governance & Architecture Specification — the constitutional role of AI: the augmentation-layer principle (the deterministic engine decides; AI interprets, communicates, analyses and augments), the AI/engine boundary and the two entry seams, the capability taxonomy (permitted vs prohibited AI work), explainability/transparency/confidence rules, human oversight, provider independence, cost governance, privacy, observability, and graceful degradation. Every AI capability is validated against it before being built. *(v1.0 draft — pending ratification into the frozen set.)* |
 
 ## Where this sits
 
@@ -32,6 +33,9 @@ integration — is validated against before implementation.
 
 - **Designing or reviewing a feature, service, schema, or API?** Validate it against
   the **TAS** — and against the governing docs it traces to (TAS Appendix B).
+- **Designing or reviewing an AI capability?** Validate it against the **AIGAS** —
+  category, seam, and prohibitions first (AIGAS §11–§13), then its traceability
+  (AIGAS Appendix A).
 - **In a hurry?** TAS **§3 (the layered architecture)** and **§5 (the Decision
   Engine)** carry the core; everything else serves those two.
 - **Mapping the blueprint to the real codebase?** TAS **Appendix A — Current

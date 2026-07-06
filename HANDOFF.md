@@ -1,6 +1,6 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-05. Keep this current at the end of each work session so the
+_Last updated: 2026-07-06. Keep this current at the end of each work session so the
 next session (or a fresh agent) can resume without re-deriving context._
 
 ## Governance FROZEN — the five documents are locked at v1.0 (2026-07-01)
@@ -20,6 +20,16 @@ The frozen set:
 
 `CLAUDE.md` carries this as a hard rule. The supporting docs (engine 01–05, foundation
 `PANEL-REVIEW.md`, the READMEs) remain **living references** — only the five above are frozen.
+
+**NEW (2026-07-06): AIGAS authored — `docs/architecture/AIGAS.md`.** The **AI Governance &
+Architecture Specification**: the constitutional role of AI ("the deterministic engine makes
+coaching decisions; AI interprets, communicates, analyses and augments them"). Defines the AI/engine
+boundary, the two entry seams (decision substitution behind D14 validation; knowledge/priors), the
+capability taxonomy C1–C9 with explicit prohibitions, confidence/oversight/privacy/cost/observability
+rules, and full traceability to the frozen set (its Appendix A). Status: **v1.0 draft, pending
+ratification into the frozen set** via the Constitution's Amendment & Stewardship process (a panel
+review pass, like PANEL-REVIEW.md did for the foundation set, is the natural next step). Every
+Stage 6+ AI capability is validated against it before being built.
 
 ## ▶ RESUME HERE — engine-rebuild status & the next step (2026-07-03)
 
