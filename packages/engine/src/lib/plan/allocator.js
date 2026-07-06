@@ -257,20 +257,20 @@ function makeItem(ex, idx, s, style, deload, repBump, effectiveRole, taper) {
   // the role scheme and never the female rep bump. Deload/taper still thins it
   // via the allocator's slot budget; the prescription itself stays explosive.
   if (ex.quality === 'power') {
-    return { num, name: ex.name, sets: POWER_SETS + per, rpe: POWER_RPE, note: POWER_NOTE, restSec };
+    return { num, exId: ex.id, name: ex.name, sets: POWER_SETS + per, rpe: POWER_RPE, note: POWER_NOTE, restSec };
   }
   if (role === 'primary') {
-    return { num, name: ex.name, sets: cap(s.main) + per, rpe: s.mainRpe, note: s.mainNote || mainNote(deload, taper), restSec };
+    return { num, exId: ex.id, name: ex.name, sets: cap(s.main) + per, rpe: s.mainRpe, note: s.mainNote || mainNote(deload, taper), restSec };
   }
   if (ex.pattern === 'core') {
     const hold = /plank|hold|dead bug|copenhagen|hollow|bird dog/i.test(ex.name);
-    return { num, name: ex.name, sets: hold ? coreStr(deload || taper) : '3 × 12' + per, rpe: 'RPE 6', note: '', restSec };
+    return { num, exId: ex.id, name: ex.name, sets: hold ? coreStr(deload || taper) : '3 × 12' + per, rpe: 'RPE 6', note: '', restSec };
   }
   if (ex.pattern === 'calf' || role === 'iso') {
     const str = ex.pattern === 'calf' ? '3 × 12' : isoStr(style);
-    return { num, name: ex.name, sets: cap(bumpReps(str + per, repBump)), rpe: s.accRpe, note: '', restSec };
+    return { num, exId: ex.id, name: ex.name, sets: cap(bumpReps(str + per, repBump)), rpe: s.accRpe, note: '', restSec };
   }
-  return { num, name: ex.name, sets: cap(bumpReps(s.acc + per, repBump)), rpe: s.accRpe, note: '', restSec };
+  return { num, exId: ex.id, name: ex.name, sets: cap(bumpReps(s.acc + per, repBump)), rpe: s.accRpe, note: '', restSec };
 }
 
 // Deterministic small jitter so equally-good choices rotate week to week / slot

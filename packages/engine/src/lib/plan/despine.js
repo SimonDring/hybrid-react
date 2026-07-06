@@ -77,7 +77,7 @@ export function despineWeek(sessions = [], { priorityByIntent = new Map(), lifts
       let best = null, bestAx = Infinity;
       for (const id of cands) { const c = BY_ID.get(id); if (c && !isBlocked(c) && axialOf(c) < bestAx) { best = c; bestAx = axialOf(c); } }
       if (best && best.id !== ex.id && bestAx < axialOf(ex)) {
-        it.name = best.name; it.weight = undefined; swapped = true;
+        it.name = best.name; it.exId = best.id; it.weight = undefined; swapped = true;
       }
     }
     if (swapped) {
