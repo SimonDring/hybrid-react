@@ -72,3 +72,6 @@ export { EXERCISES, LEVELS, availableEquip } from './src/data/strengthExercises.
 export { DOSE_SCHEMES, doseForQuality, REACTIVE_LIMITS } from './src/data/doseSchemes.js';
 export { ENGINE_VERSION, provenance } from './src/version.js';
 export { KNOWLEDGE_SET_VERSION } from './src/lib/knowledge/entries.js';
+// WP-59 — the first honest learning loop (pure; STAGED, never engine-consumed).
+export { blockOutcome } from './src/lib/learning/blockOutcome.js';
+export { readinessValidation } from './src/lib/indices/readinessValidation.js';
