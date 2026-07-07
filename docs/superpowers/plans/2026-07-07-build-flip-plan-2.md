@@ -173,6 +173,53 @@ In `PlanGenerator.js`, the `diagnosisSteers({...})` call (search it) must pass `
 
 ---
 
+### Task 3b: Complete the discipline SELECTION wiring (Task 3 was incomplete — audit-driven)
+
+**Why:** Task 3 opened the PlanGenerator gate (`meta.diagnosis` shows) but the allocator's OWN
+`useD11 = diagnosisSteers({ style, sport, priorityQualities, categoryPlan })` (allocator.js ~line
+760) never received `discipline`, so discipline SELECTION still ran the legacy path. Auditing also
+surfaced: (a) the region-focus split must be applied for **hypertrophy only** (powerlifting/Olympic
+are lift-focused, NOT region-split; and only when enough days make a split sensible), (b) Olympic
+lifts are unreachable because `pattern:'olympic'` isn't mapped to any quality in `qualityMovementMap.js`.
+**HARD CONSTRAINT (Simon, 2026-07-07): sports must stay BYTE-IDENTICAL** — every fix here is gated to
+the build-discipline cohort; the sport/D11 path is untouched.
+
+**Files:** `packages/engine/src/lib/plan/allocator.js` (thread + gate `ctx.discipline`; hypertrophy-only
+focusLabel), `packages/engine/src/lib/PlanGenerator.js` (thread `ctx.discipline` into `allocateGym`),
+`packages/engine/src/data/qualityMovementMap.js` (map `olympic` pattern), Test:
+`apps/mobile/tests/wp49-discipline-selection.js`.
+
+- [ ] **Step 1 — thread `ctx.discipline` + gate the allocator's useD11.** In `PlanGenerator.js`, pass
+  `discipline: program.discipline || null` into the `allocateGym(... ctx: { … })` ctx. In
+  `allocator.js` line ~760, add `discipline: ctx.discipline` to the `useD11 = diagnosisSteers({…})`
+  call. Test: a hypertrophy/powerlifting profile's plan now has its main lifts drawn from the
+  discipline priority lifts (diagnosis-steered selection), not legacy fill.
+- [ ] **Step 2 — hypertrophy-only region split.** The focusLabel drop (region defaults to 'full') is
+  CORRECT for sports and for powerlifting/Olympic (full-body / lift-focused), and only WRONG for
+  hypertrophy. So apply the region only for the hypertrophy discipline: at the region line (~778),
+  `const region = (ctx.discipline === 'hypertrophy') ? regionOf(slot.focusLabel) : regionOf(slot.focusLabel && ctx.discipline ? slot.focusLabel : undefined);` — simplest: `const region = ctx.discipline === 'hypertrophy' ? regionOf(slot.focusLabel) : 'full';` AND thread `focusLabel: slot.focusLabel || null` into the `work.map` slot object so it's available. Sports/PL/Oly keep `region='full'` → byte-identical. Add a `needsSplit` flag to the hypertrophy discipline module later if we add more split disciplines (YAGNI now). Test: a hypertrophy 5-day plan produces DIFFERENTIATED sessions (upper/lower/push/pull vary — not 5 identical days); a powerlifting/Olympic plan does NOT force a split; a SPORT plan is byte-identical (regression assertion vs origin/main).
+- [ ] **Step 3 — Olympic lifts selectable.** Map `pattern:'olympic'` to the qualities the classic
+  lifts develop, in `qualityMovementMap.js`: add `'olympic'` to `explosiveStrength` (primary) and
+  `maxStrength` (secondary) movementPatterns. Because Olympic lifts are `discipline:'olympic'`-gated,
+  this is byte-identical for every non-Olympic profile (they can't select olympic-pattern lifts).
+  Test: an Olympic discipline plan now FEATURES snatch/clean_and_jerk in its sessions.
+- [ ] **Step 4 — bench selection (fatigue-cost).** Investigate the hpull/vpull fatigue-cost that makes
+  pulls outrank bench for maxStrength (report in task-3-report.md); if it prevents a powerlifter's
+  bench from being selected, fix the mistag (data/exerciseQualities.js) — but ONLY if it's build-safe
+  (check it doesn't move sport goldens; if it does, defer + flag). This step is best-effort; if the
+  fix touches sports, STOP and report rather than change sports.
+- [ ] **Step 5 — audit + verify.** Regenerate goldens: **assert 0 sport/legacy-build (origin/main) keys
+  moved** (the by-key check); the 3 discipline archetypes update (audit each: hypertrophy differentiated
+  + region-split; powerlifting S/B/D-led; Olympic features the classic lifts). Full suite green. KSV
+  bump only if `data/` changed (qualityMovementMap.js IS data → bump + ratchet). **PAUSE and show Simon
+  the 3 audited discipline plans before continuing to Task 4.** Commit.
+
+**Note (future, not this plan):** better sport periodisation around fixtures (heavy work early in the
+week, taper toward a weekend match) is a separate refinement Simon flagged — the D13 scheduler already
+spaces load; richer fixture-aware sequencing is a future item.
+
+---
+
 ### Task 4: Discipline periodisation + dose
 
 **Files:**
