@@ -10,6 +10,21 @@
  * Each marker maps a deviation to a year offset; HRV weighted 0.6, RHR 0.4; the
  * total offset is clamped to ±15 yrs. Coefficients are ballpark and tunable.
  */
+// Governed model constants (WP-58): the fitness-age model's coefficients gathered in
+// one inspectable, documented place instead of scattered magic numbers. Kept app-side
+// (this is a display/motivational metric, not an engine coaching decision). Ballpark +
+// tunable — evidence level L5. Changing a value here changes the displayed fitness age.
+const FITNESS_AGE_MODEL = {
+  window: 14,                    // days of trailing daily-metrics averaged (noise smoothing)
+  expectedHRV: { base: 68, perYearDecline: 0.45, fromAge: 20, clampMs: [30, 75] }, // typical HRV(age)
+  expectedRHR: 62,               // bpm, healthy-adult reference
+  weights: { hrv: 0.6, rhr: 0.4 },
+  msPerYear: 3.5,                // ~ HRV ms deviation ≈ 1 yr
+  bpmPerYear: 2.5,               // ~ resting-HR bpm deviation ≈ 1 yr
+  offsetClampYears: 15,          // total offset clamped to ±15 yr
+  floorAge: 18,                  // never report a fitness age below this
+};
+
 const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 const avg = (arr) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null);
 
@@ -17,21 +32,23 @@ export function fitnessAge(profile = {}, dailyMetrics = []) {
   const age = Number(profile.age);
   if (!age) return null;
 
-  // Recent averages (last 14 days) smooth day-to-day noise.
-  const recent = [...(dailyMetrics || [])].sort((a, b) => (a.date || '').localeCompare(b.date || '')).slice(-14);
+  const M = FITNESS_AGE_MODEL;
+  // Recent averages (trailing window) smooth day-to-day noise.
+  const recent = [...(dailyMetrics || [])].sort((a, b) => (a.date || '').localeCompare(b.date || '')).slice(-M.window);
   const hrv = avg(recent.map(m => Number(m.hrv_ms)).filter(v => !isNaN(v)));
   const rhr = avg(recent.map(m => Number(m.resting_hr)).filter(v => !isNaN(v)));
   if (hrv == null && rhr == null) return null;
 
-  const expectedHRV = clamp(68 - 0.45 * (age - 20), 30, 75); // ms, declines with age
-  const expectedRHR = 62; // bpm, healthy-adult reference
+  const [hrvLo, hrvHi] = M.expectedHRV.clampMs;
+  const expectedHRV = clamp(M.expectedHRV.base - M.expectedHRV.perYearDecline * (age - M.expectedHRV.fromAge), hrvLo, hrvHi);
+  const expectedRHR = M.expectedRHR;
 
   let sum = 0, weight = 0;
-  if (hrv != null) { sum += 0.6 * (-(hrv - expectedHRV) / 3.5); weight += 0.6; } // ~3.5 ms ≈ 1 yr
-  if (rhr != null) { sum += 0.4 * ((rhr - expectedRHR) / 2.5); weight += 0.4; }  // ~2.5 bpm ≈ 1 yr
-  const offset = clamp(sum / weight, -15, 15);
+  if (hrv != null) { sum += M.weights.hrv * (-(hrv - expectedHRV) / M.msPerYear); weight += M.weights.hrv; }
+  if (rhr != null) { sum += M.weights.rhr * ((rhr - expectedRHR) / M.bpmPerYear); weight += M.weights.rhr; }
+  const offset = clamp(sum / weight, -M.offsetClampYears, M.offsetClampYears);
 
-  const fAge = Math.max(18, Math.round(age + offset));
+  const fAge = Math.max(M.floorAge, Math.round(age + offset));
   const delta = age - fAge; // + = younger than chronological
   const status = delta > 1 ? 'younger' : delta < -1 ? 'older' : 'on_par';
   const color = status === 'younger' ? 'var(--status-positive)' : status === 'older' ? 'var(--status-strain)' : 'var(--txt-muted)';

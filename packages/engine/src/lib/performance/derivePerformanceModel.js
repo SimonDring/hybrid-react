@@ -5,6 +5,8 @@
 import { qualityIds } from '../../data/qualities.js';
 import { estimateCapability, bandForModel } from './estimation.js';
 import { buildDemandProfile } from './demandProfile.js';
+import { goalDemandProfile } from '../../data/goalDemand.js';
+import { disciplineDemandFor, demandVectorToProfile, disciplineIdFor } from './disciplineDemand.js';
 import { diagnoseLimitingFactors } from './diagnose.js';
 import { prioritiseQualities } from './prioritise.js';
 
@@ -12,7 +14,15 @@ export function derivePerformanceModel(model, asOf) {
   const m = model || {}; // never throw on a null/partial model
   const sc = m.sportingContext || {};
   // Demand first: capability estimation reads it for the sport-experience prior (WP-38c).
-  const dp = sc.primarySport ? buildDemandProfile(sc.primarySport, sc.position || null) : [];
+  // The sport's SKB profile, or — for build goals (WP-42a, EDS D2's goal-as-sport) — the
+  // discipline's demand vector when the athlete model carries one (WP-49 Plan 2 T1), else the
+  // goal's own quality-importance profile — so D4 NEVER returns an empty diagnosis.
+  const goalOutcome = (Array.isArray(m.goals) && m.goals[0] && m.goals[0].outcome) || null;
+  const discDemand = disciplineDemandFor(m);
+  const buildDemand = discDemand ? demandVectorToProfile(discDemand, disciplineIdFor(m)) : goalDemandProfile(goalOutcome);
+  const dp = sc.primarySport
+    ? buildDemandProfile(sc.primarySport, sc.position || null)
+    : buildDemand;
   const demandProfile = dp.length ? dp : null;
   const capabilities = qualityIds().map((q) => estimateCapability(q, m, asOf, demandProfile));
   const limitingFactors = diagnoseLimitingFactors(capabilities, demandProfile, {

@@ -28,6 +28,9 @@ const maxPrimaries = (p) => Math.max(...p.phases.flatMap(ph => ph.weeks).flatMap
 const st2 = plan({ goalType: 'build', strengthStyle: 'strength', experienceLevel: 'advanced', daysPerWeek: 2 });
 const bb2 = plan({ goalType: 'build', strengthStyle: 'bodybuilding', experienceLevel: 'advanced', daysPerWeek: 2 });
 assert(maxPrimaries(st2) === 3, `strength session reaches 3 primaries (got ${maxPrimaries(st2)})`);
-assert(maxPrimaries(bb2) === 2, `bodybuilding session stays at 2 primaries (got ${maxPrimaries(bb2)})`);
+// WP-49 flip (build→discipline): 'bodybuilding' now routes to the compound-led hypertrophy discipline.
+// At a low day count it packs its compound spine (squat/front-squat/deadlift) into full sessions, so
+// it reaches 3 primaries too — the old per-style 2-primary cap was a legacy BUILD_INTENTS artefact.
+assert(maxPrimaries(bb2) === 3, `hypertrophy session reaches 3 primaries at low day count (got ${maxPrimaries(bb2)})`);
 
 console.log('quality-steer done');

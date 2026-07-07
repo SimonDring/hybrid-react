@@ -13,7 +13,7 @@ import * as Plan from '../lib/PlanService.js';
 import Avatar from '../components/ui/Avatar.jsx';
 import { processAvatar } from '../lib/avatarUpload.js';
 
-const STYLE_LABELS = { strength: 'Get stronger', bodybuilding: 'Build muscle', functional: 'Functional fitness' };
+const STYLE_LABELS = { strength: 'Get stronger', bodybuilding: 'Build muscle', functional: 'Functional fitness', olympic: 'Olympic weightlifting' };
 const SPORT_LABELS = { run: 'Running', cycle: 'Cycling', swim: 'Swimming' };
 const LEVEL_LABELS = { beginner: 'Beginner', returning: 'Returning', intermediate: 'Intermediate', advanced: 'Advanced' };
 const ACCESS_LABELS = { full_gym: 'Full gym', home_weights: 'Home / free weights', none: 'Bodyweight only' };

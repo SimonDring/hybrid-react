@@ -84,15 +84,24 @@ const swimProg = resolveProgram({ goal_type: 'sport', sport: 'swim', sport_seaso
 assert(Array.isArray(swimProg.exercisePriority) && swimProg.exercisePriority.includes('face_pull'),
   'T6c swim priority includes face_pull');
 
+// WP-49 flip (build→discipline): 'bodybuilding' routes to the hypertrophy discipline, whose
+// exercisePriority is the discipline's priorityLifts (compound-led + per-muscle isolation), NOT the
+// retired BUILD_INTENTS list. Assert membership of the discipline priorityLifts.
 const hypProg = resolveProgram({ goal_type: 'build', strength_style: 'bodybuilding',
   experience: { gym: 'returning' }, access: ['full_gym'] });
-assert(Array.isArray(hypProg.exercisePriority) && hypProg.exercisePriority.includes('incline_db_curl'),
-  'T6d hypertrophy priority includes incline_db_curl');
+assert(Array.isArray(hypProg.exercisePriority) &&
+  hypProg.exercisePriority.includes('bench') && hypProg.exercisePriority.includes('back_squat') &&
+  hypProg.exercisePriority.includes('barbell_row') && hypProg.exercisePriority.includes('lat_pulldown'),
+  'T6d hypertrophy priority is the discipline priorityLifts (bench/back_squat/barbell_row/lat_pulldown)');
 
+// WP-49 flip: there is no separate 'functional' list any more — functional maps to the hypertrophy
+// discipline, so its priority is the same discipline priorityLifts (with barbell here → powerlifting?
+// no: functional always maps to hypertrophy regardless of barbell). Assert the hypertrophy membership.
 const funcProg = resolveProgram({ goal_type: 'build', strength_style: 'functional',
-  experience: { gym: 'beginner' } });
-assert(Array.isArray(funcProg.exercisePriority) && funcProg.exercisePriority.includes('bird_dog'),
-  'T6e functional priority includes bird_dog');
+  experience: { gym: 'beginner' }, access: ['full_gym'] });
+assert(funcProg.style === 'hypertrophy' && Array.isArray(funcProg.exercisePriority) &&
+  funcProg.exercisePriority.includes('back_squat') && funcProg.exercisePriority.includes('deadlift'),
+  'T6e functional → hypertrophy discipline priority (back_squat/deadlift)');
 
 // ── T7: beginner does not receive back_squat as a primary ─────────────────
 const begTargets = weeklyMuscleTargets({

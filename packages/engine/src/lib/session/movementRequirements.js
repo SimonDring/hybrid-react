@@ -12,6 +12,12 @@ import { getContraindications } from '../injury/injuryRules.js';
 const REGION_PATTERNS = {
   lower: ['squat', 'hinge', 'lunge', 'calf'],
   upper: ['hpush', 'vpush', 'hpull', 'vpull'],
+  // WP-49 Plan 2 T4b: push/pull are the split-out halves of `upper`, used ONLY by the
+  // hypertrophy discipline's Push/Pull/Legs split (the allocator maps a hypertrophy Push/Pull
+  // day to these). Additive + inert for every other caller — regionOf() never returns them,
+  // so sports + powerlifting + olympic (which pass 'full'/'upper'/'lower') are unaffected.
+  push: ['hpush', 'vpush'],
+  pull: ['hpull', 'vpull'],
   core: ['core', 'carry', 'iso'],
   full: null, // no filter
 };
@@ -25,7 +31,11 @@ export function contraindicatedPatternsFrom(blockedRegexes = [], exercises = EXE
   const rx = Array.isArray(blockedRegexes) ? blockedRegexes : [];
   if (!rx.length) return out;
   for (const p of ALL_PATTERNS) {
-    const exs = exercises.filter((e) => e.pattern === p);
+    // WP-49 Plan 1 (final-review fix): exclude discipline-tagged lifts (olympic/powerlifting)
+    // from the vote's denominator. They're gated out of selection anyway (see allocator.js),
+    // so they must not be allowed to silently shift which patterns count as contraindicated —
+    // that would change injury-reflow behaviour the discipline branch must leave untouched.
+    const exs = exercises.filter((e) => e.pattern === p && !e.discipline);
     if (!exs.length) continue;
     const blocked = exs.filter((e) => rx.some((r) => r.test(e.name))).length;
     if (blocked > exs.length / 2) out.add(p);

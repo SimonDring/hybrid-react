@@ -19,7 +19,7 @@
  * SKB…). Bump on any science change; stamped into every plan/reflow output as
  * meta.provenance.knowledgeSetVersion (WP-27).
  */
-export const KNOWLEDGE_SET_VERSION = '1.2.0'; // 1.2.0 (2026-07-06): WP-38 — sport-experience capability priors (capabilityPriors.SPORT_EXPERIENCE); per-lift strength standards in D1 estimation. 1.1.0 (2026-07-04): +field_hockey SKB profile; endurance decisionRules structured
+export const KNOWLEDGE_SET_VERSION = '1.17.0'; // 1.17.0 (2026-07-07, WP-49 Plan 2 T6 — THE FLIP): build goals route to disciplines (resolveBuildDisciplineId in data/disciplines/index.js: strength→powerlifting, bodybuilding/functional→hypertrophy, olympic→olympic, barbell-gated); the legacy volume-first build path is retired. 1.16.0 (2026-07-07, WP-49 Plan 2 T4b-2): olympic day-emphasis knowledge (LIFT_FAMILIES + day-sequence-by-competed-lift + priority resolver) added to the olympic discipline module. 1.15.0 (2026-07-07, WP-49 Plan 2 T3b): map the `olympic` movement pattern into maxStrength + explosiveStrength (qualityMovementMap) so the discipline-gated classic lifts become selectable — byte-identical for every non-olympic profile. 1.14.0 (2026-07-07, WP-49 Plan 1): secondary-goals menu module. 1.13.0 (2026-07-07, WP-49 Plan 1): hypertrophy/powerlifting/olympic discipline modules. 1.12.0 (2026-07-07, WP-49 Plan 1): Olympic + powerlifting catalogue lifts (discipline-gated). 1.11.0 (2026-07-07, WP-49 Plan 1): discipline knowledge foundation (schema). 1.10.0 (2026-07-07, WP-61): scheduler interference penalties + allocator selection-scoring multipliers extracted to governed data (data/schedulingPolicy.js, data/selectionScoring.js) — scheduling + selection policy is knowledge now, not code literals; values byte-identical. 1.9.0 (2026-07-06, WP-46 completion): governed id-keyed maps PROGRESSION_LIFTS + CORE_HOLDS replace the name-fuzzy plan-path joins (matchLift, core hold regex) — values reproduce the matchers exactly, keyed by exId. 1.8.0 (2026-07-06, WP-58 reconcile): engine capability anchors (STRONG_BW_MULTIPLE) DERIVED from the governed advanced band for every lift×sex — ohp + female deadlift/ohp moved to advanced (one source; parallel-model only, does not steer the live plan). 1.7.0 (2026-07-06, WP-47): governed block-objective priors (data/blockPriors.js) for the D7 ADVISORY block plan — season→objective template, block-length/deload by trajectory×recoverability. 1.6.0 (2026-07-06, WP-58): strength-standards band table brought into the governed set (data/strengthStandards.js) — the app now re-exports it (one source); values unchanged. 1.5.0 (2026-07-06, WP-45): ONE per-exercise muscle table (EXERCISE_MUSCLES) — volume accounting adopts the 14 documented corrections the substitution model already knew (hip-thrust family glute-primary, rear-delt isolations off the lat ledger, triceps-biased presses, long-lever lat pulls). 1.4.0 (2026-07-06, WP-44): governance reconciliation — recovery.bands + volume_modifiers confidence re-reviewed low→moderate (autoregulation evidence; mechanism and rating now agree), authority-mapping scope clarified (decision-level actions vs intra-decision parameters), readiness-v2 entry reconciled with its shipped default-ON reality (validation = WP-59). 1.3.0 (2026-07-06, WP-48): soccer + rugby SKB flagship-authored (NO stubs remain); team-sport library id normalisation (mb_rotational_throw→cable_woodchop etc.) + hurling plyo/upper-body entries; hurling/gaelic_football/field_hockey/soccer/rugby flip to category-led. 1.2.0 (2026-07-06): WP-38 — sport-experience capability priors (capabilityPriors.SPORT_EXPERIENCE) + per-lift strength standards in D1 estimation; WP-42a — goal demand profiles (data/goalDemand.js) so build goals get a real diagnosis. 1.1.0 (2026-07-04): +field_hockey SKB profile; endurance decisionRules structured
 
 /** @type {import('./schema.js').KnowledgeEntry[]} */
 export const ENTRIES = [
@@ -59,7 +59,7 @@ export const ENTRIES = [
   // ── Knowledge governance ──────────────────────────────────────────────────────
   {
     id: 'knowledge.authority.mapping',
-    rule: 'Evidence confidence caps the authority a knowledge entry may exert on any decision: high → gate (may force/veto alone), moderate → soft (may scale alone within its rule), low → reported (rationale + conservative-floored adjustment + corroboration only; never acts alone). Consumed via knowledge/authority.js.',
+    rule: 'Evidence confidence caps the authority a knowledge entry may exert on any decision: high → gate (may force/veto alone), moderate → soft (may scale alone within its rule), low → reported (rationale + conservative-floored adjustment + corroboration only; never acts alone). Consumed via knowledge/authority.js. SCOPE (WP-44 reconciliation): authority tiers govern DECISION-LEVEL ACTIONS — forcing, vetoing, or scaling a shipped signal/plan. Intra-decision calibration parameters (e.g. the selection.* weights inside D11) do not act alone by construction: their output is disposed of by D14 validation and the per-cohort quality gates, which are the governing mechanism for parameters. A low-confidence entry that IS a decision-level action must corroborate; a low-confidence parameter must carry provenance and stay behind those gates.',
     value: { high: 'gate', moderate: 'soft', low: 'reported' },
     evidenceLevel: 'L5',
     source: 'Constitution Art 13 (confidence must be operative); EDS §28.3; the Impellizzeri/Lolli ACWR demotion as the working precedent',
@@ -201,20 +201,20 @@ export const ENTRIES = [
     id: 'recovery.bands',
     rule: 'Readiness-score bands: ≥ greenCut = high (train as planned), ≥ moderateCut = moderate, below = low. greenCut default 70 (the v2 readiness weighting passes 67 explicitly).',
     value: { greenCut: 70, moderateCut: 50 },
-    evidenceLevel: 'L5',
-    source: 'Internal heuristic cut-points layered on the validated readiness signal (Saw 2016 for the signal itself — readiness.subjective_priority)',
-    confidence: 'low',
-    lastReviewed: '2026-07-04',
+    evidenceLevel: 'L4',
+    source: 'Cut-points layered on the validated readiness signal (Saw 2016 — readiness.subjective_priority); readiness-banded autoregulation direction per flexible-programming evidence (Helms 2018 autoregulated prescription; Greig 2020 flexible templates). WP-44 confidence re-review: upgraded low→moderate — the graded, conservative action these bands gate (≤22% trim) is standard autoregulation practice, and the STRONG action (deload) still requires corroboration under the separate low-confidence deload_thresholds entry. Exact cut-point values remain heuristic; the WP-59 outcome readout validates them.',
+    confidence: 'moderate',
+    lastReviewed: '2026-07-06',
     appliesTo: ['recovery']
   },
   {
     id: 'recovery.volume_modifiers',
     rule: 'Session volume scaling per readiness band: high = full plan, moderate = -10%, low = -22%. Conservative, graded — the strong cut (deload) requires corroboration.',
     value: { high: 1, moderate: 0.9, low: 0.78 },
-    evidenceLevel: 'L5',
-    source: 'Internal heuristic; magnitudes chosen conservative (≤22% trim) pending outcome data',
-    confidence: 'low',
-    lastReviewed: '2026-07-04',
+    evidenceLevel: 'L4',
+    source: 'Readiness-driven volume autoregulation — direction well-supported (Helms 2018; flexible/autoregulated programming meta-evidence); magnitudes internal-conservative (≤22% trim). WP-44 confidence re-review: upgraded low→moderate so the Art-13 mechanism and the rating agree — a soft entry may scale alone WITHIN its rule, which is exactly what this graded trim does; anything stronger stays behind deload corroboration. Magnitudes validated by the WP-59 outcome readout.',
+    confidence: 'moderate',
+    lastReviewed: '2026-07-06',
     appliesTo: ['recovery']
   },
   {
@@ -377,7 +377,7 @@ export const ENTRIES = [
   },
   {
     id: 'index.readiness.weights',
-    rule: 'The v2 Readiness Index composes its value from sub-indices: wellness (subjective) is the largest single weight (Saw 2016), HRV-driven cardiovascular recovery the primary objective marker, sleep heavy, fatigue a corroborator; Recovery Capacity nudges the ceiling. A ≥67 green cut. Behind a default-off flag until validated against logged performance.',
+    rule: 'The v2 Readiness Index composes its value from sub-indices: wellness (subjective) is the largest single weight (Saw 2016), HRV-driven cardiovascular recovery the primary objective marker, sleep heavy, fatigue a corroborator; Recovery Capacity nudges the ceiling. A ≥67 green cut. STATUS (WP-44 reconciliation): shipped DEFAULT-ON (profile readiness_v2 !== false — the earlier default-off-until-validated condition was flipped without updating this entry); the validation-against-logged-performance loop is the WP-59 outcome readout, still owed. Opt-out remains readiness_v2: false.',
     value: { weights: { wellness: 0.40, sleep: 0.25, cardio: 0.25, fatigue: 0.10 }, greenCut: 67, capacityModulation: 0.1, subjectiveAtLeastObjective: true, primaryObjective: 'hrv' },
     evidenceLevel: 'L4',
     source: 'Weighting heuristic anchored on Saw, Main & Gastin 2016, Br J Sports Med (subjective ≥ objective); HRV primary per Plews 2013; sleep per Walsh 2021. See readiness.subjective_priority',

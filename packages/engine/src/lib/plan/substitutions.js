@@ -92,6 +92,7 @@ export function substituteOptions(item, { access = [], lifts = {}, level = 'inte
   const out = [];
   for (const cand of EXERCISES) {
     if (cand.id === orig.id) continue;
+    if (cand.discipline) continue;                        // WP-49 Plan 1: discipline-gated lifts are never an on-the-fly swap
     if (cand.quality === 'power') continue;               // Olympic/plyo/power lifts aren't equipment-swap subs
     if (tierOf(cand) !== origTier) continue;              // compound→compound, iso→iso
     if (cand.level > lvl) continue;

@@ -29,7 +29,8 @@ import { resolveProgram } from './strength/program.js';
 import { resolvePeriodization } from './plan/periodization.js';
 import { getGymLevel } from './Utils.js';
 import { deriveConstraints, suggestGymDays } from './plan/constraints.js';
-import { SESSION_CEILING_MIN } from './plan/allocator.js';
+import { SESSION_CEILING_MIN, diagnosisSteers } from './plan/allocator.js';
+import { deriveBlockObjective, blockDeloadSteers, deloadsFromRecoverability, blockPlanToSplit } from './plan/blockObjective.js';
 import { performanceModelForProfile } from './performance/forProfile.js';
 import { profileToAthleteModel } from './adapters/profileToAthleteModel.js';
 import * as SKB from './sportKnowledge/index.js';
@@ -136,7 +137,10 @@ function buildGymWeek(count, ctx, profile, program, diag) {
     power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || [],
     priorityByIntent: program.priorityByIntent || new Map(),
     priorityQualities: diag.priorityQualities, season: program.season, skbIds: diag.skbIds,
-    categoryPlan: diag.categoryPlan
+    categoryPlan: diag.categoryPlan, discipline: program.discipline || null,
+    // WP-49 T4b-2: which classic lift(s) the olympic athlete competes in (snatch|cj|both) — drives
+    // the day emphasis. Default 'both' until the onboarding field lands (Task 6). Ignored off-olympic.
+    competedLift: profile.olympic_lift || 'both'
   });
 }
 
@@ -164,8 +168,7 @@ export function generatePlan(profile = {}, opts = {}) {
   const minutes = SESSION_CEILING_MIN;   // session length is volume-driven; this is only the ceiling
   const totalSessions = totalDays;
 
-  const { totalWeeks: total, split, deloads } = resolvePeriodization(profile);
-  const deloadSet = new Set(deloads || []);
+  const { totalWeeks: total, split: templateSplit, deloads } = resolvePeriodization(profile);
 
   // Race taper: a dated event that lands within this block cuts volume in the final
   // 1–2 weeks (keeping some sharpness) so the athlete arrives fresh. An event months
@@ -179,6 +182,24 @@ export function generatePlan(profile = {}, opts = {}) {
   const isRace = !!(start && eventDate && !isNaN(eventDate.getTime()) && eventDate > start && eventDate <= new Date(planEnd.getTime() + 7 * 86400000));
   const taperWeeks = isRace ? (total >= 12 ? 2 : 1) : 0;
   const lastBuildWeek = total - taperWeeks;
+
+  // WP-47 (D7 steer, gated): a diagnosed SPORT cohort WITH a recoverability prior gets its
+  // block STRUCTURE (the phase split) AND deload RHYTHM from the diagnosis — the A9 step
+  // (block shape from the diagnosis × recoverability, not the style enum). Gated + reversible;
+  // no-prior profiles keep the template (BYTE-IDENTICAL). One blockPlan feeds both the steer
+  // and meta.diagnosis. blockPlanToSplit returns null if it can't fit → template fallback.
+  const steerRecoveryRate = (profile.athlete_model && profile.athlete_model.learnedPriors && profile.athlete_model.learnedPriors.recoveryRate && profile.athlete_model.learnedPriors.recoveryRate.value) ?? null;
+  const blockPlan = deriveBlockObjective({
+    priorityQualities: diag.priorityQualities,
+    limitingFactors: perf.limitingFactors || [],
+    season: program.season,
+    eventCalendar: { isRace, taperWeeks },
+    recoveryRate: steerRecoveryRate,
+  });
+  const d7Steers = blockDeloadSteers({ sport: program.sport, priorityQualities: diag.priorityQualities, recoveryRate: steerRecoveryRate });
+  const split = (d7Steers && blockPlanToSplit(blockPlan.blocks, total)) || templateSplit;
+  const deloadWeeks = d7Steers ? deloadsFromRecoverability(total, steerRecoveryRate) : (deloads || []);
+  const deloadSet = new Set(deloadWeeks);
 
   const phases = [];
   let weekNum = 0;
@@ -239,12 +260,20 @@ export function generatePlan(profile = {}, opts = {}) {
   }
 
   // WP-30a: the D4→D5 chain summary every screen (and the future `explain` read-model)
-  // can cite — emitted reasons only, never re-derived. Absent when there is no diagnosis
-  // (build goals stay on the legacy path until WP-22).
-  const diagnosis = (diag.priorityQualities || []).length ? {
+  // can cite — emitted reasons only, never re-derived. WP-42a display honesty: emitted
+  // ONLY when the diagnosis actually STEERED this plan (the shared diagnosisSteers gate).
+  // Build + team-sport cohorts now HAVE a diagnosis (goal demand / SKB), but their weeks
+  // are legacy fill until WP-48/WP-49 flip them — a plan must never display reasoning it
+  // ignored. The model output stays available via performanceModelForProfile (Atlas).
+  const steers = diagnosisSteers({ style: program.style, sport: program.sport, priorityQualities: diag.priorityQualities, categoryPlan: diag.categoryPlan, discipline: program.discipline || null });
+  const diagnosis = (steers && (diag.priorityQualities || []).length) ? {
     sport: program.sport || null,
     limitingFactors: (perf.limitingFactors || []).map((f) => ({ qualityId: f.qualityId, magnitude: f.magnitude, confidence: f.confidence, rationale: f.rationale })),
     priorityQualities: diag.priorityQualities.map((p) => ({ qualityId: p.qualityId, order: p.order, rationale: p.rationale })),
+    // D7 (WP-47) — the block plan (same object that steered the split/deloads above when
+    // gated; ADVISORY otherwise). `steered` flags whether it actually drove this plan's
+    // structure or is inspection-only. One computation, reused here.
+    blockPlan: { ...blockPlan, steered: d7Steers },
   } : null;
   return { phases, totalWeeks: total, meta: { validation: { pass: allPass, checked, weeks: problemWeeks }, provenance: provenance(), ...(diagnosis ? { diagnosis } : {}) } };
 }

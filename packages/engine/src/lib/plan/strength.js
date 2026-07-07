@@ -21,6 +21,7 @@
 import { weeklyMuscleTargets } from '../strength/targets.js';
 import { allocateGym } from './allocator.js';
 import { resolveSplit } from './split.js';
+import { olympicPriorityIds } from '../../data/disciplines/olympic.js';
 
 // Functional sessions reserve a few minutes for an activation primer; deduct that from
 // the slot budget so the allocator doesn't overfill. The primer ITEMS are no longer
@@ -78,10 +79,14 @@ export function buildWeek(ctx = {}) {
   // week reads as curated, varied days — sport days are now non-uniform, so the focus
   // bias steers them without the old even-split overshoot. Shared deficit still owns
   // total volume (ramp + MRV untouched).
-  const split = resolveSplit({ gymDays, style, emphasis: ctx.emphasis });
+  const split = resolveSplit({ gymDays, style, emphasis: ctx.emphasis, competedLift: ctx.competedLift || 'both' });
   const slotMin = functionalSlotMinutes(style, minutes);
   const slots = split.map(day => ({
-    minutes: slotMin, equip: ctx.access || [], anchors: day.anchors, focus: day.weights, focusLabel: day.focus
+    minutes: slotMin, equip: ctx.access || [], anchors: day.anchors, focus: day.weights, focusLabel: day.focus,
+    // WP-49 Plan 2 T4b-2: olympic days carry a per-day priority subset (the day's lift family) +
+    // a target-quality override (snatch/C&J days are explosive; the squat day is max strength).
+    // Absent for every other split → the allocator falls back to the discipline-wide priority list.
+    ...(day.emphasis ? { priorityIds: olympicPriorityIds(day.emphasis, ctx.exercisePriority || []), targetQualityOverride: day.targetQuality } : {})
   }));
 
   const sessions = allocateGym({
@@ -93,7 +98,7 @@ export function buildWeek(ctx = {}) {
       exercisePriority: ctx.exercisePriority || [], sport: ctx.sport || null, power: !!ctx.power,
       priorityByIntent: ctx.priorityByIntent || new Map(),
       priorityQualities: ctx.priorityQualities || [], season: ctx.season || null, skbIds: ctx.skbIds || new Set(),
-      categoryPlan: ctx.categoryPlan || null,
+      categoryPlan: ctx.categoryPlan || null, discipline: ctx.discipline || null,
     }
   });
 

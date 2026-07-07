@@ -176,7 +176,26 @@ export const EXERCISES = [
   { id: 'cable_ext_rotation_90', name: 'Cable ER at 90° Abduction',      pattern: 'iso', muscle: 'shoulders', equip: 'cable',    level: 1, role: 'iso',       minLevelForPrimary: 'returning',    sportTags: ['swim'] },
   { id: 'cable_woodchop',        name: 'Cable Woodchop (high-to-low)',   pattern: 'core',                     equip: 'cable',    level: 2, role: 'core',                                          goalTags: ['functional'], sportTags: ['swim'] },
   { id: 'ankle_plantarflex_band', loadClass: 'health',name: 'Banded Ankle Plantarflexion',    pattern: 'calf',                     equip: 'band',     level: 0, role: 'iso',       minLevelForPrimary: 'beginner',     sportTags: ['swim'] },
-  { id: 'glute_ham_raise', stretchBias: true, repCap: 8,       name: 'Glute-Ham Raise',                pattern: 'hinge',                    equip: 'machine',  level: 3, role: 'primary',   minLevelForPrimary: 'advanced',     sportTags: ['swim'] }
+  { id: 'glute_ham_raise', stretchBias: true, repCap: 8,       name: 'Glute-Ham Raise',                pattern: 'hinge',                    equip: 'machine',  level: 3, role: 'primary',   minLevelForPrimary: 'advanced',     sportTags: ['swim'] },
+
+  // ---------------- OLYMPIC + POWERLIFTING CATALOGUE LIFTS (WP-49 Plan 1) ----------------
+  // discipline-gated: `discipline` marks these as ONLY selectable when ctx.discipline
+  // matches (see allocator.js's discipline gate) — every current caller leaves
+  // ctx.discipline undefined, so these never enter a build/sport plan (byte-identical).
+  // Technical lifts, not volume drivers — muscle contribution comes from `pattern`
+  // (PATTERN_CONTRIB) like every other compound; no inline muscle maps here.
+  { id: 'snatch', axialLoad: 3, quality: 'power', name: 'Snatch', pattern: 'olympic', equip: 'barbell', level: 3, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'advanced' },
+  { id: 'clean_and_jerk', axialLoad: 3, quality: 'power', name: 'Clean and Jerk', pattern: 'olympic', equip: 'barbell', level: 3, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'advanced' },
+  { id: 'power_snatch', axialLoad: 3, quality: 'power', name: 'Power Snatch', pattern: 'olympic', equip: 'barbell', level: 3, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'advanced' },
+  { id: 'hang_snatch', axialLoad: 3, quality: 'power', name: 'Hang Snatch', pattern: 'olympic', equip: 'barbell', level: 3, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'advanced' },
+  { id: 'split_jerk', axialLoad: 3, quality: 'power', name: 'Split Jerk', pattern: 'olympic', equip: 'barbell', level: 3, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'advanced' },
+  { id: 'overhead_squat', axialLoad: 3, quality: 'power', name: 'Overhead Squat', pattern: 'squat', equip: 'barbell', level: 3, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'advanced' },
+  { id: 'push_press', axialLoad: 2, quality: 'power', name: 'Push Press', pattern: 'vpush', equip: 'barbell', level: 2, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'intermediate' },
+  { id: 'snatch_pull', axialLoad: 3, quality: 'power', name: 'Snatch Pull', pattern: 'olympic', equip: 'barbell', level: 2, role: 'accessory', discipline: 'olympic', minLevelForPrimary: 'intermediate' },
+  { id: 'clean_pull', axialLoad: 3, quality: 'power', name: 'Clean Pull', pattern: 'olympic', equip: 'barbell', level: 2, role: 'accessory', discipline: 'olympic', minLevelForPrimary: 'intermediate' },
+  { id: 'muscle_snatch', axialLoad: 2, quality: 'power', name: 'Muscle Snatch', pattern: 'olympic', equip: 'barbell', level: 2, role: 'accessory', discipline: 'olympic', minLevelForPrimary: 'intermediate' },
+  { id: 'board_press', axialLoad: 1, quality: 'strength', name: 'Board Press', pattern: 'hpush', equip: 'barbell', level: 2, role: 'accessory', discipline: 'powerlifting', liftKey: 'bench', minLevelForPrimary: 'intermediate' },
+  { id: 'pin_squat', axialLoad: 2, quality: 'strength', name: 'Pin Squat', pattern: 'squat', equip: 'barbell', level: 2, role: 'accessory', discipline: 'powerlifting', liftKey: 'squat', minLevelForPrimary: 'intermediate' }
 ];
 
 // Equipment keys an exercise can require.
@@ -195,4 +214,31 @@ export function availableEquip(access = []) {
   return new Set(['bodyweight', 'band']);
 }
 
-export default { EXERCISES, LEVELS, availableEquip };
+// WP-46 (completion): governed id-keyed maps that REPLACE the name-fuzzy joins in the plan
+// path — keyed by exId so a display-name change can't break progression tracking or the core
+// hold/reps scheme (the fragility WP-41 fixed for injuries). Values reproduce the previous
+// name-regex matchers exactly (name matching stays as the fallback for un-stamped items).
+
+// exId → the barbell lift its top-set logs progress + the strength factor vs that lift
+// (front/box squat etc. track the same e1RM). Barbell lifts only; DB/goblet excluded.
+// Reproduces liftProgression.matchLift().
+export const PROGRESSION_LIFTS = {
+  back_squat:       { key: 'squat',    factor: 1 },
+  front_squat:      { key: 'squat',    factor: 0.85 },
+  box_squat:        { key: 'squat',    factor: 0.9 },
+  deadlift:         { key: 'deadlift', factor: 1 },
+  trap_bar_dl:      { key: 'deadlift', factor: 1 },
+  rdl:              { key: 'deadlift', factor: 0.8 },
+  bench:            { key: 'bench',    factor: 1 },
+  incline_bench:    { key: 'bench',    factor: 1 },
+  close_grip_bench: { key: 'bench',    factor: 1 },
+  ohp:              { key: 'ohp',      factor: 1 },
+  lat_pulldown:     { key: 'pull',     factor: 1 },
+  deficit_deadlift: { key: 'deadlift', factor: 1 },
+};
+
+// Core exercises dosed as an isometric HOLD (time), not reps. Reproduces the allocator's
+// /plank|hold|dead bug|copenhagen|hollow|bird dog/ regex over the current core catalogue.
+export const CORE_HOLDS = new Set(['plank', 'dead_bug', 'side_plank', 'copenhagen', 'bird_dog']);
+
+export default { EXERCISES, LEVELS, availableEquip, PROGRESSION_LIFTS, CORE_HOLDS };

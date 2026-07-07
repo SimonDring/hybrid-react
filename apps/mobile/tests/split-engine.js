@@ -21,19 +21,26 @@ const exKey = (s) => s.items.filter(it => !it.substituted && it.tag !== 'mobilit
 const delivered = (wk) => volumeReport(wk.sessions).rows.reduce((a, r) => a + r.sets, 0);
 
 // ── S1: a 4-day build plan is a real upper/lower split, not identical days ────
+// WP-49 flip (build→discipline): 'strength' (+barbell) now routes to the powerlifting DISCIPLINE,
+// which is a genuine Upper/Lower split — so the week is TWO templates repeated (Upper/Lower/Upper/
+// Lower), not four unique days. Differentiation is now measured by distinct FOCUSES (a real split
+// repeats each day-type by design), not distinct exercise signatures.
 const build4 = week1({ goalType: 'build', strengthStyle: 'strength', experienceLevel: 'intermediate',
   daysPerWeek: 4, sessionMinutes: 60, lifts: { squat: 140, bench: 100, deadlift: 180 } });
-assert(new Set(build4.sessions.map(exKey)).size >= 3,
-  `S1a 4-day build days are differentiated (distinct=${new Set(build4.sessions.map(exKey)).size}/4)`);
+assert(new Set(build4.sessions.map(focusOf)).size >= 2,
+  `S1a 4-day build is a differentiated split (distinct focuses=${new Set(build4.sessions.map(focusOf)).size})`);
 const f4 = build4.sessions.map(focusOf);
 assert(f4.some(f => /Lower/.test(f)) && f4.some(f => /Upper|push|pull/i.test(f)),
   `S1b 4-day build shows distinct upper & lower days (got: ${f4.join(' | ')})`);
 
 // ── S2: a 6-day build plan is push/pull/legs, each region twice ──────────────
+// WP-49 flip: 'bodybuilding' routes to the hypertrophy DISCIPLINE, which at 6 days is a Push/Pull/
+// Legs split repeated twice — THREE distinct focuses, each region trained twice a week.
 const build6 = week1({ goalType: 'build', strengthStyle: 'bodybuilding', experienceLevel: 'advanced',
   daysPerWeek: 6, sessionMinutes: 60, lifts: {} });
-assert(new Set(build6.sessions.map(exKey)).size >= 4,
-  `S2 6-day build days are differentiated (distinct=${new Set(build6.sessions.map(exKey)).size}/6)`);
+const b6focuses = new Set(build6.sessions.map(focusOf));
+assert(b6focuses.size >= 3,
+  `S2 6-day build is push/pull/legs, each region twice (distinct focuses=${b6focuses.size}: ${[...b6focuses].join('/')})`);
 
 // ── S3: the engine delivers more of its target with more DAYS ────────────────
 // Session length is volume-driven now (capped at the ceiling), so FREQUENCY is the

@@ -77,17 +77,24 @@ function valueOf(ex, target, skbIds) {
   return Math.max(qualityValue, transferValue);
 }
 
-export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [], categoryIds = null } = {}) {
+export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [], categoryIds = null, discipline = undefined, priorityIds = null } = {}) {
   const target = req?.objective?.targetQuality;
   const reqPatterns = new Set(req?.requirements?.movementPatterns || []);
   const contra = new Set((req?.requirements?.contraindicated || []).map((c) => c.pattern));
   const budget = FATIGUE_BUDGET[req?.objective?.fatigueBudget?.level] ?? 6;
   const weeklyDelivered = { ...(ledger.weeklyDelivered || {}) };
   const weeklyCeiling = ledger.weeklyCeiling || {};
+  // WP-49 Plan 2 T4: discipline priority lifts anchor in their AUTHORED order (the discipline
+  // module lists the competition lifts first, then variant/weak-point accessories) — NOT by
+  // transfer-per-fatigue, which prefers a lower-fatigue partial-ROM variant (box squat, board
+  // press) over the competition lift it assists. rank 0 = highest priority.
+  const priorityRank = new Map((priorityIds || []).map((id, i) => [id, i]));
 
   // Eligible candidates, tiered + valued.
   const cand = [];
   for (const ex of exercises) {
+    // WP-49 Plan 1: discipline-tagged lifts are only selectable when their discipline is active.
+    if (ex.discipline && ex.discipline !== discipline) continue;
     if (equip && !equip.has(ex.equip)) continue;
     if ((ex.level ?? 0) > level) continue;
     if (contra.has(ex.pattern)) continue;
@@ -101,16 +108,30 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
     // Mobility work never takes tier-1 standing (it stays a tier-7 finisher — a
     // foam roller must not anchor a session at a working dose).
     const isCategoryPick = categoryIds ? (categoryIds.has(ex.id) && ex.pattern !== 'mobility') : false;
-    const tier = isCategoryPick ? 1 : tierOf(ex, target, sport, skbIds);
+    let tier = isCategoryPick ? 1 : tierOf(ex, target, sport, skbIds);
     if (tier == null) continue;
     // Quality-driver compounds must match a required movement pattern (D10).
     if (!isCategoryPick && (tier === 1 || tier === 2) && reqPatterns.size && !reqPatterns.has(ex.pattern)) continue;
+    // WP-49 Plan 2 T4: discipline priority-lift ANCHORING. For the build-discipline cohort
+    // (powerlifting/olympic/hypertrophy — where the gym IS the sport, Simon 2026-07-07), the
+    // discipline's own competition/priority lifts must LEAD the session: an already-eligible
+    // priority lift (it passed the tier + region gates above) is elevated to tier 0 so
+    // squat/bench/deadlift, snatch + clean&jerk, and the main hypertrophy compounds anchor the
+    // day (ORDERED by their authored priority rank) before accessories fill — and before their own
+    // lower-fatigue variants. Without this, transfer-per-fatigue ranking surfaces cheap isolation
+    // (a hypertrophy day is iso-primary tier-1, the bench only secondary tier-2) and lower-fatigue
+    // partial-ROM variants over the competition lifts. Gated by priorityIds — the allocator passes
+    // it ONLY when a discipline drives the plan, so sports + legacy stay byte-identical.
+    const isPriority = priorityRank.has(ex.id);
+    if (isPriority) tier = 0;
     // Within a category assignment the authored rating alone orders picks — the
     // transfer-per-fatigue division would let a cheap prehab move outrank the
     // pull-up the assignment exists for; the fatigue BUDGET still bounds totals.
-    const value = isCategoryPick
-      ? (skbRatingOf(skbIds, ex.id) ?? TRANSFER.skbDefaultRating) / TRANSFER.skbRatingDivisor
-      : valueOf(ex, target, skbIds);
+    const value = isPriority
+      ? (1e6 - priorityRank.get(ex.id))   // authored order within tier 0 (rank 0 sorts first)
+      : isCategoryPick
+        ? (skbRatingOf(skbIds, ex.id) ?? TRANSFER.skbDefaultRating) / TRANSFER.skbRatingDivisor
+        : valueOf(ex, target, skbIds);
     cand.push({ ex, tier, value });
   }
   cand.sort((a, b) => a.tier - b.tier || b.value - a.value || (a.ex.id < b.ex.id ? -1 : a.ex.id > b.ex.id ? 1 : 0));

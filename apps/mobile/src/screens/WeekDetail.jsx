@@ -1,11 +1,40 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
-import { sessionKey, MUSCLE_LABELS } from '@performance-os/engine';
+import { sessionKey, MUSCLE_LABELS, parseTeamSchedule } from '@performance-os/engine';
+import { getTeamSchedule } from '../lib/teamScheduleCache.js';
 import InfoTip from '../components/ui/InfoTip.jsx';
 import { GLOSSARY } from '../data/metricGlossary.js';
 
 const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+const DAY_TITLES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const PATTERN_DAY_IDX = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5, Sun: 6 };
+
+// WP-52: the coach's schedule reshapes the plan (match days lose gym slots, sport days
+// are kept clear) — the athlete must SEE why (Art 14; the audit's top team improvement:
+// "a player whose Wednesday gym day vanished has no idea why"). Pure mapping of the
+// cached teams.schedule onto this week's seven days: per-day team-load type + any
+// fixture dated inside the week. Render-only; the constraint itself is applied by
+// the engine's applyTeamSchedule via PlanService.activeProfile.
+function teamWeekInfo(weekNum) {
+  const sched = parseTeamSchedule(getTeamSchedule());
+  if (!sched) return null;
+  const byIdx = {};
+  for (const d of sched.weeklyPattern || []) {
+    const i = PATTERN_DAY_IDX[d && d.day];
+    if (i != null && d.type && d.type !== 'rest') byIdx[i] = d.type;
+  }
+  const fixtures = [];
+  for (let i = 0; i < 7; i++) {
+    const date = Plan.dateForSession(weekNum, DAY_TITLES[i]);
+    if (!date) continue;
+    const iso = Plan.localISO(date);
+    for (const f of sched.fixtures || []) {
+      if (f && f.date === iso) fixtures.push({ dayIdx: i, date: iso, label: f.opponent || f.label || 'Match' });
+    }
+  }
+  return { byIdx, fixtures };
+}
 
 function dayForSession(title) {
   const t = title.toLowerCase();
@@ -37,6 +66,9 @@ export default function WeekDetail() {
   const phase = Plan.getPhase(Number(phaseId));
   const week = phase ? phase.weeks.find(w => w.num === Number(weekNum)) : null;
   if (!phase || !week) return <div style={{ padding: 24 }}>Week not found</div>;
+
+  // WP-52: the coach's team schedule, mapped onto this week (null for team-less athletes).
+  const teamInfo = teamWeekInfo(week.num);
 
   // Build day → session index map for the strip
   const dayMap = {};
@@ -112,6 +144,29 @@ export default function WeekDetail() {
           <strong>Missed work forgiven</strong> — {forgivenList.join(', ')} from earlier weeks {forgivenList.length === 1 ? 'was' : 'were'} past the safe catch-up window, so the plan moves on instead of cramming.
         </div>
       )}
+      {/* WP-43: the remaining invisible adjustments become visible (Art 14/15). */}
+      {week.deloadDeferred && (
+        <div className="callout slate" style={{ marginBottom: 14 }}>
+          <strong>Deload deferred</strong> — you're recovering well, so this week's planned easy week is pushed back and normal training continues.
+        </div>
+      )}
+      {week._ruleTrim && (
+        <div className="callout amber" style={{ marginBottom: 14 }}>
+          <strong>Adjusted for your sport week</strong> — session volume is trimmed to about {Math.round((week._ruleTrim.mult || 1) * 100)}% around your fixtures and training load.
+        </div>
+      )}
+      {isCurrent && week._catchUp && (
+        <div className="callout slate" style={{ marginBottom: 14 }}>
+          <strong>Catch-up included</strong> — about {week._catchUp.sets} {week._catchUp.sets === 1 ? 'set' : 'sets'} from recently missed sessions {week._catchUp.sets === 1 ? 'is' : 'are'} folded into this week's work.
+        </div>
+      )}
+
+      {/* WP-52: match days are visible — the schedule that reshaped this week, shown. */}
+      {teamInfo && teamInfo.fixtures.length > 0 && (
+        <div className="callout amber" style={{ marginBottom: 14 }}>
+          <strong>Match {teamInfo.fixtures.length === 1 ? 'day' : 'days'}</strong> — {teamInfo.fixtures.map((f) => `${DAY_TITLES[f.dayIdx]} vs ${f.label}`).join(' · ')}. Your coach's schedule keeps gym work clear of {teamInfo.fixtures.length === 1 ? 'it' : 'them'}.
+        </div>
+      )}
 
       {/* Day strip */}
       <div className="week-strip" style={{ marginBottom: 20 }}>
@@ -122,6 +177,9 @@ export default function WeekDetail() {
             return sessions[k] && sessions[k].completed;
           });
           const hasSession = idxs.length > 0;
+          const isFixture = teamInfo ? teamInfo.fixtures.some((f) => f.dayIdx === i) : false;
+          const dayType = teamInfo ? teamInfo.byIdx[i] : null;
+          const teamType = isFixture ? 'match' : (dayType && dayType !== 'gym' ? dayType : null);
           return (
             <div
               key={i}
@@ -132,9 +190,15 @@ export default function WeekDetail() {
                 }
               }}
               style={{ cursor: idxs.length === 1 ? 'pointer' : 'default' }}
+              title={teamType ? `Team: ${teamType}` : undefined}
             >
               <div className="wsd-label">{d}</div>
               <div className="wsd-dot">{hasSession ? (allDone ? '✓' : idxs.length) : ''}</div>
+              {teamType && (
+                <div style={{ fontSize: 9, lineHeight: '10px', marginTop: 2, textTransform: 'uppercase', letterSpacing: '0.04em', color: teamType === 'match' ? 'var(--ochre)' : 'var(--txt-muted)' }}>
+                  {teamType === 'match' ? 'match' : 'team'}
+                </div>
+              )}
             </div>
           );
         })}

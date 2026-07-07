@@ -1,18 +1,20 @@
 /**
- * exerciseSimilarity — enrichment data read ONLY by the exercise-substitution scorer
- * (lib/plan/substitutions.js). It gives every exercise an accurate primary/secondary
- * muscle profile so substitutes can be ranked by scientific likeness to the original.
+ * exerciseSimilarity — enrichment data read by the exercise-substitution scorer
+ * (lib/plan/substitutions.js): accurate primary/secondary muscle profiles so
+ * substitutes rank by scientific likeness to the original.
  *
- * IMPORTANT: this is deliberately separate from `muscleContribution` (data/muscleVolume
- * + lib/plan/contributions), which is pattern-based and drives the whole plan allocator
- * and its MEV/MAV/MRV volume accounting. Nothing here touches that — the generated plan
- * is unaffected. Muscles resolve via PATTERN DEFAULTS + per-exercise OVERRIDES so we
- * only hand-author the exceptions; a new exercise with no override falls back to its
- * pattern default.
+ * WP-45: the per-exercise OVERRIDES now come from THE one canonical muscle table
+ * (data/muscleVolume.js EXERCISE_MUSCLES) — the same corrections drive volume
+ * accounting (as weighted contributions) and likeness (as these lists), so the two
+ * models can never disagree again (the old split let a hip thrust count as a
+ * hamstring movement in the ledger while substitution knew it was glute-primary).
+ * The PATTERN-LEVEL defaults below remain likeness-specific (they carry synergists
+ * the accounting convention deliberately doesn't credit).
  *
  * Muscle vocabulary = the engine's MUSCLE_GROUPS:
  *   quads, hamstrings, glutes, calves, chest, back, shoulders, biceps, triceps, core
  */
+import { EXERCISE_MUSCLES } from './muscleVolume.js';
 
 // Default primary/secondary movers per movement pattern.
 export const DEFAULT_MUSCLES = {
@@ -38,30 +40,9 @@ export const ISO_GROUP = {
 };
 
 // Per-exercise overrides where the pattern default (or a mis-tagged pattern) is wrong.
-export const OVERRIDES = {
-  // Rear-delt / scapular isolations mis-tagged with the hpull pattern — they train the
-  // rear delts (shoulders), NOT the lats/biceps the hpull default implies.
-  reverse_pec_deck: { primary: ['shoulders'], secondary: ['back'] },
-  prone_y_raise:    { primary: ['shoulders'], secondary: ['back'] },
-  prone_t_raise:    { primary: ['shoulders'], secondary: ['back'] },
-  prone_w_raise:    { primary: ['shoulders'], secondary: ['back'] },
-  band_pull_apart:  { primary: ['shoulders'], secondary: ['back'] },
-
-  // Glute-dominant hinges (the hinge default leads with hamstrings).
-  hip_thrust:               { primary: ['glutes'], secondary: ['hamstrings'] },
-  glute_bridge:             { primary: ['glutes'], secondary: ['hamstrings'] },
-  glute_bridge_single_leg:  { primary: ['glutes'], secondary: ['hamstrings'] },
-  prone_hip_extension:      { primary: ['glutes'], secondary: ['hamstrings'] },
-
-  // Triceps-biased presses.
-  close_grip_bench: { primary: ['triceps'], secondary: ['chest', 'shoulders'] },
-  jm_press:         { primary: ['triceps'], secondary: ['chest', 'shoulders'] },
-  dip:              { primary: ['chest'], secondary: ['triceps'] },
-
-  // Lat-isolation pulls (no real biceps involvement).
-  db_pullover:    { primary: ['back'], secondary: ['chest'] },
-  straight_arm_pd:{ primary: ['back'], secondary: [] }
-};
+// WP-45: sourced from the canonical table — see the header. (Shape unchanged for
+// every consumer: { primary: [...], secondary: [...] } per exercise id.)
+export const OVERRIDES = EXERCISE_MUSCLES;
 
 // Equipment → resistance modality, and how similar two modalities feel (force vector).
 export const MODALITY = {

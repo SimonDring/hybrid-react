@@ -1195,8 +1195,8 @@
         "injuryPreventionRating": 5
       },
       {
-        "id": "mb_rotational_throw",
-        "name": "Med-ball rotational throw (both sides)",
+        "id": "cable_woodchop",
+        "name": "Cable Woodchop (high-to-low)",
         "category": "rotational power",
         "movementPattern": "rotational power",
         "primaryAdaptation": "trunk-to-arm rotational power",
@@ -1223,7 +1223,8 @@
         "suitableBeginners": true,
         "suitableElite": true,
         "transferToSportRating": 9,
-        "injuryPreventionRating": 4
+        "injuryPreventionRating": 4,
+        "notes": "Normalised from med-ball rotational throw (WP-23): the catalogue rotational-power movement; ballistic med-ball intent noted for future catalogue authoring."
       },
       {
         "id": "split_squat",
@@ -1257,8 +1258,8 @@
         "injuryPreventionRating": 7
       },
       {
-        "id": "trap_bar_jump",
-        "name": "Trap-bar jump",
+        "id": "broad_jump",
+        "name": "Broad Jump",
         "category": "power",
         "movementPattern": "triple-extension jump",
         "primaryAdaptation": "lower-body power/RFD",
@@ -1284,7 +1285,8 @@
         "suitableBeginners": false,
         "suitableElite": true,
         "transferToSportRating": 8,
-        "injuryPreventionRating": 4
+        "injuryPreventionRating": 4,
+        "notes": "Normalised from trap-bar jump (WP-23): nearest ballistic triple-extension in the catalogue; loaded-jump variant is future catalogue authoring."
       },
       {
         "id": "farmer_carry",
@@ -1436,6 +1438,52 @@
         "suitableElite": true,
         "transferToSportRating": 10,
         "injuryPreventionRating": 7
+      },
+      {
+        "id": "seated_box_jump",
+        "name": "Seated Box Jump",
+        "category": "plyometric",
+        "movementPattern": "vertical jump (concentric-dominant)",
+        "primaryAdaptation": "vertical power for high-ball catching",
+        "secondaryAdaptation": "landing mechanics under fatigue",
+        "fatigueCost": "low-moderate",
+        "sorenessCost": "low",
+        "recoveryTimeH": 24,
+        "jointLoading": "moderate",
+        "equipment": [
+          "box"
+        ],
+        "suitableInSeason": true,
+        "suitableReturnToPlay": false,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "difficulty": "intermediate",
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 5,
+        "notes": "Added at the WP-48 flip (seed, needsReview): hurling declared a plyometric category with no entries — aerial contest demands vertical power."
+      },
+      {
+        "id": "pullup",
+        "name": "Pull-up",
+        "category": "upper body",
+        "movementPattern": "vertical pull",
+        "primaryAdaptation": "upper-body pulling strength",
+        "secondaryAdaptation": "grip + contested-possession strength, posture balance vs striking",
+        "fatigueCost": "low-moderate",
+        "sorenessCost": "low",
+        "recoveryTimeH": 24,
+        "jointLoading": "low",
+        "equipment": [
+          "bar"
+        ],
+        "suitableInSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "difficulty": "intermediate",
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 6,
+        "notes": "Added at the WP-48 flip (seed, needsReview): hurling declared an upper-body category with no entries."
       }
     ]
   },

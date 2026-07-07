@@ -1,55 +1,2698 @@
 {
   "id": "rugby",
   "schemaVersion": "1.0.0",
-  "label": "Rugby Union",
-  "stub": true,
-  "lastReviewed": "2026-06-28",
-  "_note": "SCAFFOLD — structurally valid but not yet authored to flagship depth. Fill the empty sections to promote to a full profile (see gaelic_football.json / hurling.json as the reference).",
-
+  "lastReviewed": "2026-07-06",
   "meta": {
     "sport": "Rugby Union",
+    "label": "Rugby Union",
     "category": "Invasion / collision team sport",
     "teamOrIndividual": "team",
-    "indoorOutdoor": "outdoor",
-    "contactLevel": "high (tackles, rucks, mauls, scrums)",
+    "indoorOutdoor": "outdoor (grass or artificial turf)",
+    "contactLevel": "very high (tackles, rucks, mauls, scrums) — the defining physical feature of the sport",
     "playersPerSide": 15,
     "seasonLengthWeeks": 36,
     "offseasonLengthWeeks": 6,
-    "competitionFrequencyPerWeek": "1 match/week typical",
-    "trainingFrequencyPerWeek": "4-6 (professional)",
-    "sessionDurationMin": { "match": 80, "pitch": 90, "gym": 75 }
+    "competitionFrequencyPerWeek": "1 match/week typical; 2 matches/week in congested professional blocks and cup rounds",
+    "trainingFrequencyPerWeek": "2-3 pitch + 1-2 gym (amateur/club); 4-6 pitch + 3-4 gym (professional)",
+    "sessionDurationMin": {
+      "match": 80,
+      "pitch": 90,
+      "gym": 75
+    },
+    "notes": "Two 40-minute halves of intermittent running punctuated by repeated maximal collisions — tackles, rucks, mauls and scrums. Ball-in-play is only ~35 minutes but the collision count (20-40+ contacts for a forward) is the load that defines the sport. The gym's job here is unusually central: it builds the maximal strength and neck/shoulder robustness that let a player survive and dominate contact, then supports acceleration and repeat-effort capacity. Unlike soccer, rugby IS a strength sport — heavy lifting is sport-specific, not a supplement. Collision load and head-impact exposure make neck strengthening and criteria-based concussion management non-negotiable."
   },
-
   "physicalProfile": {
     "qualities": {
-      "maxStrength": { "importance": 9, "why": "Collision dominance, scrum/maul force, contact tolerance.", "confidence": "high", "evidenceLevel": "L3", "source": "expert consensus; rugby S&C literature" },
-      "explosivePower": { "importance": 8, "why": "Acceleration into contact, jumping (lineout), driving.", "confidence": "high", "evidenceLevel": "L3", "source": "expert consensus" },
-      "acceleration": { "importance": 8, "why": "Short bursts to attack/defend the line.", "confidence": "high", "evidenceLevel": "L3", "source": "expert consensus" },
-      "neckStrength": { "importance": 8, "why": "Scrum/contact loading and concussion-risk mitigation.", "confidence": "moderate", "evidenceLevel": "L4", "source": "World Rugby guidance; expert consensus" },
-      "repeatSprintAbility": { "importance": 7, "why": "Repeated efforts across 80 min.", "confidence": "moderate", "evidenceLevel": "L3", "source": "expert consensus" }
+      "maxStrength": {
+        "importance": 9,
+        "why": "Scrum drive, maul push, tackle dominance and contact tolerance are all maximal-force expressions; stronger players win collisions and get injured less. Rugby is genuinely strength-limited in a way most field sports are not.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Duthie 2003 (applied physiology of rugby union review); Argus 2012 (strength/power in professional rugby)"
+      },
+      "explosivePower": {
+        "importance": 8,
+        "why": "The rate of force into contact decides tackles and ball-carries; jumping (lineout/restart), driving off the mark and the first hit all express rapid force. Power correlates with playing level in professional rugby.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Argus 2012; Duthie 2003"
+      },
+      "neckStrength": {
+        "importance": 8,
+        "why": "Scrummaging transmits enormous compressive/shear load through the cervical spine, and neck strength is a modifiable factor plausibly attenuating head accelerations in tackles — relevant to concussion and catastrophic neck-injury risk. World Rugby prioritises cervical conditioning for front-row eligibility.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Hrysomallis 2016 (neck muscular strength, training and concussion risk review); World Rugby scrum/front-row conditioning guidance"
+      },
+      "collisionRobustness": {
+        "importance": 8,
+        "why": "Tolerating 20-40+ maximal contacts per match without tissue failure or performance decay is the sport's signature demand; it is built from maximal strength, lean mass, trunk stiffness and specific contact conditioning.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Gabbett 2016 (collision load and injury); Duthie 2003"
+      },
+      "acceleration": {
+        "importance": 8,
+        "why": "Most rugby sprints are short (<20 m) from a static or moving start — hitting the line, chasing kicks, defensive line-speed; the first three steps create and deny contact.",
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "Duthie 2003 (sprint characteristics); Smart 2013"
+      },
+      "repeatSprintAbility": {
+        "importance": 8,
+        "why": "Repeated high-intensity efforts (sprints AND collisions) with incomplete recovery across 80 minutes; the decisive phases cluster in multi-phase attack and scramble defence.",
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "Duthie 2003; Austin 2011 (repeated high-intensity exercise in professional rugby)"
+      },
+      "strengthEndurance": {
+        "importance": 7,
+        "why": "Back-row and front-row work is repeated near-maximal grappling — rucks, mauls, scrums, tackles — demanding the ability to reproduce force under accumulating fatigue, not just a single peak.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Duthie 2003; expert consensus (rugby S&C)"
+      },
+      "sprintSpeed": {
+        "importance": 7,
+        "why": "Outside backs reach near-maximal velocity on breaks, chases and cover-defence; top-end speed separates line-breakers and exposes the hamstring to the same eccentric load that injures it.",
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "Smart 2013 (position-specific fitness); Duthie 2003"
+      },
+      "aerobicEndurance": {
+        "importance": 7,
+        "why": "Underpins repeated-effort recovery across 80 minutes and protects late-match tackle technique and decision-making; the aerobic base lets the anaerobic system reload between collisions.",
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "Duthie 2003; Austin 2011"
+      },
+      "deceleration": {
+        "importance": 7,
+        "why": "Defensive line-speed then braking to make a square tackle, and change of contact angle, demand high eccentric capacity — the tissue armour for hamstring and knee.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "Harper 2019 (deceleration demands in team sport); expert consensus"
+      },
+      "changeOfDirection": {
+        "importance": 7,
+        "why": "Evasion (step, swerve, fend) in attack and re-alignment in defence; sharp COD creates half-breaks and is a knee-loading mechanism to be trained deliberately.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "expert consensus; Duthie 2003"
+      },
+      "relativeStrength": {
+        "importance": 7,
+        "why": "Strength-to-bodyweight drives acceleration and evasion for backs and mobile forwards; mass must be functional, not carried dead weight over repeated sprints.",
+        "confidence": "high",
+        "evidenceLevel": "L3",
+        "source": "Argus 2012; Suchomel 2016 (strength as a foundation)"
+      },
+      "reactiveStrength": {
+        "importance": 6,
+        "why": "Stiffness for re-acceleration, restart/lineout jump-land and repeated ground contacts; a targeted dose also underpins protective landing mechanics.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "expert consensus (S&C panel)"
+      },
+      "aerialAbility": {
+        "importance": 6,
+        "why": "Lineout jumping and lifting, restart contests and high-ball reclaims; decisive for locks, back-row jumpers and back-three players under the high ball.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "expert consensus (rugby S&C)"
+      },
+      "rotationalPower": {
+        "importance": 5,
+        "why": "Passing (especially the scrum-half pass and long spin), fending and rotating in contact express trunk power; useful but secondary to bracing.",
+        "confidence": "low",
+        "evidenceLevel": "L5",
+        "source": "expert consensus"
+      },
+      "mobility": {
+        "importance": 6,
+        "why": "Hip and thoracic range for scrummaging body position, ruck clear-outs and safe tackle height; restricted range pushes load into the lumbar spine.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "expert consensus; scrum biomechanics"
+      },
+      "coordination": {
+        "importance": 7,
+        "why": "Handling, offloading and decision-making under fatigue and contact define quality; gym work must never arrive fatigued enough to blunt skill execution.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "expert consensus"
+      },
+      "gripStrength": {
+        "importance": 5,
+        "why": "Ball security in contact, tackle completion (holding and dragging) and lineout lifting all draw on grip and forearm strength; higher demand than most field sports.",
+        "confidence": "low",
+        "evidenceLevel": "L4",
+        "source": "expert consensus (rugby S&C)"
+      }
     }
   },
-
-  "energySystems": { "aerobicPct": 55, "glycolyticPct": 30, "atpPcPct": 15, "workToRestRatio": "varies by position", "matchDemands": "high collision load + repeated efforts", "heartRateProfile": "intermittent high", "fatigueProfile": "collision + running fatigue", "confidence": "low", "evidenceLevel": "L4", "source": "estimate — to be authored" },
-
-  "movementProfile": { "primaryPatterns": ["collision/tackle", "scrum/maul push", "repeated sprint", "lineout jump"], "planes": ["sagittal", "frontal", "transverse"], "dominantMuscleGroups": ["glutes", "hamstrings", "quads", "back", "shoulders", "neck"], "commonDeficiencies": [], "asymmetricLoading": "scrum/tackle side preferences" },
-
-  "injuryProfile": { "common": [], "summary": "To be authored (concussion, shoulder, knee, hamstring high-priority in rugby)." },
-
-  "positions": [],
-  "assessments": [],
-  "developmentPriorities": {},
-  "seasonalModel": {},
-  "microcycles": {},
-  "gymPhilosophy": {},
-  "exerciseLibrary": { "categories": [], "exercises": [] },
-  "injuryPreventionLibrary": [],
-  "decisionRules": [],
-  "loadManagement": {},
-  "readinessModel": { "factors": [] },
-  "coachDashboard": {},
-  "athleteDashboard": {},
-  "validation": {},
-  "references": [],
-  "kpiFramework": { "kpis": [], "athleteDashboardKpis": [], "coachDashboardKpis": [], "performanceScore": {}, "gamification": [] }
+  "energySystems": {
+    "aerobicPct": 55,
+    "glycolyticPct": 30,
+    "atpPcPct": 15,
+    "workToRestRatio": "intermittent — brief maximal efforts (sprints, collisions) on ~1:5 to 1:15 work:rest embedded in near-continuous low-intensity activity; forwards higher work density than backs",
+    "matchDemands": "~5-7 km total (forwards lower, backs higher); ~35 min ball-in-play; 20-40+ contacts for a forward, fewer but higher-speed for backs; repeated static exertions (scrums, mauls, rucks) add a large isometric/collision load invisible to distance metrics",
+    "heartRateProfile": "Intermittent high — sustained periods >85% HRmax with collision-driven spikes; blood lactate rises sharply through set-piece and multi-phase play",
+    "fatigueProfile": "Collision fatigue compounds running fatigue — tackle technique, sprint output and cognitive accuracy degrade late; neuromuscular and tissue recovery from a match is slow (48-72+ h) because of the eccentric/impact component",
+    "confidence": "moderate",
+    "evidenceLevel": "L3",
+    "source": "Duthie 2003 (applied physiology review); Austin 2011 (repeated high-intensity exercise); position splits are elite estimates",
+    "notes": "Position-dependent: forwards accumulate collision/static load at lower running distance; backs cover more ground at higher speed. The gym supplies the maximal strength and robustness the pitch cannot safely dose, plus targeted power and repeat-effort support."
+  },
+  "movementProfile": {
+    "primaryPatterns": [
+      "collision/tackle (accelerate then brace and absorb)",
+      "scrum/maul drive (sustained horizontal push from a braced spine)",
+      "ruck clear-out and lift (explosive hip extension + trunk stiffness)",
+      "acceleration/deceleration (5-20 m bursts, defensive line-speed)",
+      "maximal-velocity sprinting (backs — breaks, chases, cover)",
+      "jump-land + lift (lineout, restart, high ball)",
+      "change of direction / evasion (step, swerve, fend)"
+    ],
+    "planes": [
+      "sagittal (dominant — drive, sprint, hinge)",
+      "frontal (tackle absorption, lateral collision, cutting)",
+      "transverse (fend, pass, rotation in contact)"
+    ],
+    "jointLoading": "High axial/compressive load through the spine in scrum and contact; high eccentric hamstring load in top-speed running (backs); shoulder and AC-joint loading in tackling; cervical-spine load in scrummaging and tackle; knee valgus/rotation exposure in evasion and contact",
+    "groundContacts": "Moderate running volume plus a very high count of impact/collision contacts; the collision count, not the running distance, is the defining load",
+    "landingDemands": "High for jumpers/lifters (lineout, restart) and for any player brought to ground in contact; safe fall/land mechanics matter",
+    "throwing": "Lineout throw (hooker) and passing (all — scrum-half most); moderate programming relevance for the throwing shoulder and trunk",
+    "jumping": "High for locks and back-row jumpers (lineout, restart); moderate for back-three contesting the high ball",
+    "cutting": "Frequent in attack (evasion) and defence (re-alignment); a knee-loading mechanism to prepare",
+    "rotating": "Fending, passing and rotating out of contact load the trunk in rotation; bracing capacity comes first",
+    "overheadActions": "Lineout lifting and jumping load the overhead/shoulder position under a partner's bodyweight; shoulder robustness is a real programming target",
+    "collisions": "The defining demand — repeated maximal tackles, rucks, mauls and scrums; the single largest driver of injury and recovery cost",
+    "repeatedImpacts": "High cumulative contact and ground-impact load; head-impact exposure accumulates and is managed as its own risk stream",
+    "asymmetricLoading": "Tackle-shoulder preference, scrum-bind side and kicking-leg dominance create side-specific loading that must be audited",
+    "dominantMuscleGroups": [
+      "glutes",
+      "hamstrings",
+      "quads",
+      "spinal erectors / trunk",
+      "lats / upper back",
+      "shoulders",
+      "neck / cervical",
+      "calves",
+      "grip / forearms"
+    ],
+    "commonDeficiencies": [
+      "cervical (neck) strength vs scrum + tackle + head-impact exposure (the sport-specific under-trained quality)",
+      "eccentric hamstring strength vs top-speed running (backs) and re-acceleration",
+      "shoulder/rotator-cuff robustness vs tackle and lineout-lift load",
+      "trunk anti-extension/anti-rotation stiffness for contact and spine protection",
+      "posterior-chain maximal strength vs scrum/maul drive"
+    ]
+  },
+  "injuryProfile": {
+    "common": [
+      {
+        "name": "Concussion / head injury",
+        "incidence": "very high — the single most commonly reported match injury in professional rugby union and rising in reporting; the sport's headline health priority",
+        "severity": "variable — days to weeks (graduated return-to-play), with serious concern over cumulative exposure and long-term brain health",
+        "mechanism": "tackle events dominate — both the ball-carrier and (more often) the tackler; head contact with an opponent, the ground or a knee/hip",
+        "highRiskTissues": [
+          "brain (rotational/linear acceleration)",
+          "cervical spine (co-injured)"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "tackle technique and height (coachable)",
+            "neck strength (modifiable factor — plausibly attenuates head acceleration)",
+            "fatigue and cumulative match load",
+            "premature return before symptom resolution"
+          ],
+          "nonModifiable": [
+            "prior concussion (dominant factor)",
+            "playing position (tackler-heavy roles)"
+          ]
+        },
+        "rtpConsiderations": "Governed by the World Rugby Graduated Return-To-Play protocol — NOT a criteria-the-coach-decides call. Symptom-free progression through stages; strength/conditioning resumes only within the protocol. The gym's contribution is upstream: cervical strengthening as a modifiable risk factor, never a treatment.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Williams 2013 (systematic review of rugby union injuries); World Rugby GRTP protocol; Hrysomallis 2016 (neck strength as a modifiable factor)"
+      },
+      {
+        "name": "Shoulder instability / dislocation & AC-joint injury",
+        "incidence": "high — shoulder is among the most common and highest-burden injury regions; tackling is the primary event",
+        "severity": "moderate-severe — dislocations and labral/AC injuries are often long lay-offs and can be surgical and recurrence-prone",
+        "mechanism": "tackling (both roles), direct fall onto the point of the shoulder, and forced abduction/external rotation in contact",
+        "highRiskTissues": [
+          "glenohumeral joint / labrum",
+          "rotator cuff",
+          "AC joint"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "rotator-cuff and scapular strength deficit",
+            "tackle technique",
+            "insufficient contact-specific conditioning"
+          ],
+          "nonModifiable": [
+            "prior shoulder dislocation/instability (dominant factor)"
+          ]
+        },
+        "rtpConsiderations": "Criteria-based: restore cuff/scapular strength symmetry and range, then graded contact reintroduction (tackle bag → controlled live). Recurrent instability often needs surgical stabilisation before contact return.",
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Williams 2013; Headey 2007 (shoulder injuries in professional rugby)"
+      },
+      {
+        "name": "Hamstring strain",
+        "incidence": "high — the most common muscle injury, concentrated in backs and mobile forwards",
+        "severity": "moderate (typically 2-6 weeks), recurrence-prone",
+        "mechanism": "high-speed running — eccentric overload at terminal swing; re-acceleration and kick-chase efforts",
+        "highRiskTissues": [
+          "biceps femoris long head",
+          "proximal musculotendinous junction"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "low eccentric hamstring strength",
+            "inadequate or spiked high-speed running exposure",
+            "fatigue and fixture congestion"
+          ],
+          "nonModifiable": [
+            "prior hamstring injury (dominant factor)",
+            "age"
+          ]
+        },
+        "rtpConsiderations": "Criteria-based: restore eccentric strength symmetry (Nordic), then progressive sprint reloading to >95% max velocity BEFORE match return; unreloaded returns drive recurrence.",
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Brooks 2006 (hamstring injuries in English professional rugby); Attwood 2018 (efficacy of a movement-control programme); van Dyk 2019 (Nordic meta-analysis)"
+      },
+      {
+        "name": "Ankle syndesmosis (high ankle) & lateral sprain",
+        "incidence": "high — ankle is a common joint injury; syndesmosis (high) sprains are frequent in rucks/mauls and carry long lay-offs",
+        "severity": "lateral sprain low-moderate; syndesmosis moderate-severe (often 6+ weeks) and recurrence-prone",
+        "mechanism": "external rotation of a loaded, planted foot in rucks/mauls and being fallen on (syndesmosis); inversion under contact and in cutting (lateral)",
+        "highRiskTissues": [
+          "distal tibiofibular syndesmosis (high ankle)",
+          "ATFL/CFL (lateral)"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "incomplete rehab of a prior sprain",
+            "balance/proprioception deficit",
+            "calf/peroneal strength deficit"
+          ],
+          "nonModifiable": [
+            "previous sprain",
+            "ruck/maul exposure (position)"
+          ]
+        },
+        "rtpConsiderations": "Syndesmosis needs conservative, criteria-based loading progression and often longer than a lateral sprain; graded COD and contact re-exposure with balance retraining; bracing/taping on return.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Williams 2013; Fuller 2007 (Rugby World Cup injury surveillance)"
+      },
+      {
+        "name": "Knee ligament injury (MCL / ACL)",
+        "incidence": "moderate frequency but the highest-burden lower-limb injury (longest lay-offs)",
+        "severity": "MCL moderate; ACL severe — season-ending (6-12 months) and recurrence-prone",
+        "mechanism": "contact valgus load in the tackle (MCL) and plant-and-cut or single-leg landing with valgus/rotation, often perturbed in contact (ACL, ~contact and non-contact mix)",
+        "highRiskTissues": [
+          "MCL",
+          "ACL",
+          "menisci (concurrent)"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "landing/cutting mechanics (valgus control)",
+            "hamstring:quadriceps balance",
+            "fatigue without neuromuscular preparation"
+          ],
+          "nonModifiable": [
+            "prior knee injury",
+            "contact exposure (position)"
+          ]
+        },
+        "rtpConsiderations": "Criteria-based and time-respecting for ACL (≥9 months lowers re-injury): strength symmetry, hop battery, on-pitch COD then graded contact, psychological readiness.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Williams 2013; Dallalana 2007 (knee injuries in professional rugby)"
+      },
+      {
+        "name": "Lumbar spine / lower-back injury",
+        "incidence": "moderate — chronic and acute low-back complaints are common in forwards from repeated scrummaging and contact loading",
+        "severity": "variable — nagging and recurrence-prone; can cause missed training more than missed matches",
+        "mechanism": "repeated flexion/compression and shear in scrummaging, mauling and lifting; acute loading in poorly braced contact",
+        "highRiskTissues": [
+          "lumbar discs and facet joints",
+          "spinal erectors"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "trunk anti-extension/anti-rotation stiffness deficit",
+            "hip and thoracic mobility restriction pushing load into the lumbar spine",
+            "poor scrum/lift body position",
+            "excessive spinal loading volume without recovery"
+          ],
+          "nonModifiable": [
+            "prior back injury",
+            "position (front row / second row)"
+          ]
+        },
+        "rtpConsiderations": "Build trunk stiffness and hip/thoracic range; manage axial-loading volume; graded return to scrummaging; avoid heavy loaded flexion.",
+        "confidence": "moderate",
+        "evidenceLevel": "L4",
+        "source": "Williams 2013; expert consensus (rugby S&C on axial load management)"
+      }
+    ],
+    "summary": "Rugby's injury profile is dominated by CONTACT: concussion is the headline health priority (managed by the World Rugby GRTP protocol, not by the coach), shoulder and knee injuries carry the highest burden, and the tackle is the single event behind most of them. Muscle strains (hamstring) and ankle syndesmosis add to the load. The gym owns real, upstream contributions — maximal strength and lean mass for contact tolerance, cervical strengthening as a modifiable concussion-risk factor (Hrysomallis 2016), rotator-cuff/scapular robustness for the shoulder, Nordic eccentric work for the hamstring, and trunk stiffness for the spine. Availability is the transfer: injury burden predicts team success, and the tackle is where most of it is won or lost."
+  },
+  "positions": [
+    {
+      "name": "Front row (props & hooker)",
+      "role": "Scrum engine, close-quarter contact, ruck/maul work, lineout throwing (hooker) and lifting; the heaviest collision and axial-load workload in the team.",
+      "movementDemands": "Sustained maximal scrum drive, repeated rucking and mauling, short hard accelerations into contact; lowest running distance, highest static/collision load.",
+      "runningDemands": "Lowest total distance (~5-6 km), almost all low-speed; very high collision and isometric load.",
+      "collisionDemands": "Highest — scrums, close-in carries and cleanouts every phase.",
+      "speedReq": "low-moderate (short bursts only)",
+      "powerReq": "high (scrum drive off the mark, cleanout)",
+      "strengthReq": "very high (maximal scrum and contact force; the strongest players on the pitch)",
+      "bodyComposition": "Heaviest, most powerful build; high lean mass with enough conditioning for repeated set-piece.",
+      "primaryQualities": [
+        "maxStrength",
+        "neckStrength"
+      ],
+      "secondaryQualities": [
+        "collisionRobustness",
+        "strengthEndurance",
+        "explosivePower"
+      ],
+      "commonInjuries": [
+        "cervical-spine and neck load (scrummaging)",
+        "shoulder (scrum/tackle)",
+        "lumbar spine (repeated scrum flexion/compression)"
+      ],
+      "gymPriorities": [
+        "maximal posterior-chain + squat strength (scrum drive)",
+        "cervical strengthening — non-negotiable for front-row eligibility and safety",
+        "trunk anti-extension/anti-rotation stiffness for spine protection"
+      ],
+      "recoveryConsiderations": "Very high collision + axial load; heavy spinal-loading gym work must be spaced from scrum-heavy pitch sessions and matches; neck work is a permanent weekly fixture."
+    },
+    {
+      "name": "Second row (locks)",
+      "role": "Lineout jumping and lifting, restart contests, scrum drive, high-volume ruck/maul work; the aerial and engine forwards.",
+      "movementDemands": "Repeated maximal jumps and lifts, sustained scrum/maul drive, continuous rucking; large frame moved over ~6-7 km.",
+      "runningDemands": "Low-moderate (~6-7 km); high work density in tight play.",
+      "collisionDemands": "Very high — set-piece, cleanout and carry volume.",
+      "speedReq": "low-moderate",
+      "powerReq": "high (jump, lift, drive)",
+      "strengthReq": "very high (scrum, maul, lift under a partner's load)",
+      "bodyComposition": "Tallest players; long levers with high strength and lean mass.",
+      "primaryQualities": [
+        "maxStrength",
+        "aerialAbility"
+      ],
+      "secondaryQualities": [
+        "explosivePower",
+        "collisionRobustness",
+        "strengthEndurance"
+      ],
+      "commonInjuries": [
+        "shoulder (lineout lift + tackle)",
+        "knee (contact + landing)",
+        "lumbar spine (scrum + lift)"
+      ],
+      "gymPriorities": [
+        "maximal strength + vertical/lift power (lineout)",
+        "shoulder + scapular robustness for lifting overhead under load",
+        "landing mechanics and trunk stiffness"
+      ],
+      "recoveryConsiderations": "Jump-land and lift load plus collision; manage overhead shoulder volume and axial loading; neck micro-dose weekly."
+    },
+    {
+      "name": "Back row (flankers & No. 8)",
+      "role": "The link forwards — tackling, jackaling, carrying, covering; the highest repeat-effort workload in the pack, blending collision with ground coverage.",
+      "movementDemands": "Repeated high-intensity efforts — tackle, get up, sprint to the next ruck, carry, repeat; the densest collision-plus-running load in the team.",
+      "runningDemands": "Highest of the forwards (~7 km) at a high work:rest density.",
+      "collisionDemands": "Very high — the most tackles and cleanouts of any position group.",
+      "speedReq": "moderate-high",
+      "powerReq": "high (carry, cleanout, first hit)",
+      "strengthReq": "high (contact dominance with mobility)",
+      "bodyComposition": "Powerful but mobile — the athletic all-round forward build.",
+      "primaryQualities": [
+        "repeatSprintAbility",
+        "strengthEndurance"
+      ],
+      "secondaryQualities": [
+        "maxStrength",
+        "collisionRobustness",
+        "aerobicEndurance"
+      ],
+      "commonInjuries": [
+        "shoulder (highest tackle volume)",
+        "hamstring (repeated sprint-to-contact)",
+        "concussion (tackle exposure)"
+      ],
+      "gymPriorities": [
+        "strength + repeat-effort power maintenance",
+        "eccentric hamstring (Nordic) for repeated sprint-to-contact",
+        "rotator-cuff/scapular + neck robustness for high tackle volume"
+      ],
+      "recoveryConsiderations": "Highest combined collision + running load; the gym flexes hard around their pitch load in-season; prevention pillars are protective, not optional."
+    },
+    {
+      "name": "Half-backs (scrum-half & fly-half)",
+      "role": "The controllers — service and distribution, tactical kicking, decision-making, defensive organisation; high skill under fatigue and contact.",
+      "movementDemands": "Constant short movement, repeated passing (scrum-half) and kicking (fly-half), sharp acceleration and evasion; high cognitive load with contact exposure at the ruck and in defence.",
+      "runningDemands": "Moderate (~6-7 km) with frequent short accelerations and direction changes.",
+      "collisionDemands": "Moderate — smaller frames but exposed to tackling and the ruck.",
+      "speedReq": "moderate-high (acceleration and evasion)",
+      "powerReq": "moderate-high (pass, kick, first step)",
+      "strengthReq": "moderate (contact survival and stability)",
+      "bodyComposition": "Lean, fast and durable; strength for contact without carrying excess mass.",
+      "primaryQualities": [
+        "acceleration",
+        "coordination"
+      ],
+      "secondaryQualities": [
+        "changeOfDirection",
+        "rotationalPower",
+        "repeatSprintAbility"
+      ],
+      "commonInjuries": [
+        "shoulder (tackling bigger players)",
+        "hamstring / groin (repeated acceleration + kicking)",
+        "concussion"
+      ],
+      "gymPriorities": [
+        "acceleration strength (hip thrust, sled, split squat)",
+        "trunk anti-rotation + rotational power for passing and kicking",
+        "single-leg strength and eccentric hamstring for repeated acceleration"
+      ],
+      "recoveryConsiderations": "Skill quality is the job — gym work must arrive fresh enough never to blunt passing and kicking; count kicking volume (fly-half) as load."
+    },
+    {
+      "name": "Outside backs (wings, fullback, centres)",
+      "role": "Finishing and covering — top-speed line-breaks, kick-chase and counter, high-ball contests and last-line defence; the fastest players with the highest sprint exposure.",
+      "movementDemands": "Maximal-velocity sprints on breaks, chases and cover; repeated high-ball jump-land; hard collisions in the tackle and midfield contact (centres).",
+      "runningDemands": "Highest total and high-speed distance (~7 km, top-end speed exposure peaks here).",
+      "collisionDemands": "High for centres (midfield contact), moderate-high for wings/fullback (finishing and covering).",
+      "speedReq": "very high (top-end velocity wins and saves tries)",
+      "powerReq": "high (acceleration, fend, aerial)",
+      "strengthReq": "moderate-high (contact tolerance without losing speed)",
+      "bodyComposition": "Fast-powerful; centres carry more mass, wings/fullback leaner and faster.",
+      "primaryQualities": [
+        "sprintSpeed",
+        "aerobicEndurance"
+      ],
+      "secondaryQualities": [
+        "acceleration",
+        "explosivePower",
+        "aerialAbility"
+      ],
+      "commonInjuries": [
+        "hamstring (highest top-speed exposure in the team)",
+        "shoulder (finishing and cover tackles)",
+        "ankle (cutting + landing)"
+      ],
+      "gymPriorities": [
+        "eccentric hamstring capacity (Nordic) — non-negotiable at this sprint exposure",
+        "max-velocity support (heavy strength + sprint exposure on pitch)",
+        "landing mechanics + neck robustness for aerial contests"
+      ],
+      "recoveryConsiderations": "Highest weekly max-velocity load — heavy posterior-chain gym work needs 48 h separation from sprint-dense sessions and matches."
+    }
+  ],
+  "assessments": [
+    {
+      "name": "1RM (or 3-5RM est.) back squat / trap-bar deadlift",
+      "category": "strength",
+      "essential": true,
+      "purpose": "Global maximal-strength anchor — the quality that most directly drives scrum drive, contact dominance and acceleration in rugby.",
+      "frequency": "each strength block",
+      "targets": {
+        "elite": "squat ~2.0×BW (forwards); ~1.8×BW (backs) at professional level",
+        "beginner": "~1.2-1.4×BW",
+        "youth": "technique loads only"
+      },
+      "equipment": [
+        "barbell or trap bar",
+        "rack"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Argus 2012 (strength/power in professional rugby); Duthie 2003"
+    },
+    {
+      "name": "Countermovement jump (CMJ)",
+      "category": "power",
+      "essential": true,
+      "purpose": "Lower-body power benchmark + weekly neuromuscular-fatigue monitor (drop vs rolling baseline), especially valuable given rugby's slow post-collision recovery.",
+      "frequency": "weekly (monitoring) + block testing",
+      "targets": {
+        "elite": "≥40 cm (backs); ≥34-38 cm (forwards)",
+        "beginner": "~25-30 cm",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "jump mat / phone app"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L2",
+      "source": "Claudino 2017 (CMJ for fatigue monitoring); Argus 2012"
+    },
+    {
+      "name": "Isometric neck strength (multi-direction)",
+      "category": "strength",
+      "essential": true,
+      "purpose": "Cervical strength benchmark and symmetry check — a modifiable factor for concussion and neck-injury risk, and a front-row safety requirement.",
+      "frequency": "each block + pre-season baseline",
+      "targets": {
+        "elite": "high, symmetrical flexion/extension/lateral force vs position norms (front row highest)",
+        "beginner": "establish baseline",
+        "youth": "technique + light isometrics only"
+      },
+      "equipment": [
+        "handheld dynamometer or fixed frame"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Hrysomallis 2016 (neck strength and concussion review); Naish 2013 (neck strength in rugby players)"
+    },
+    {
+      "name": "10 m / 40 m sprint",
+      "category": "speed",
+      "essential": true,
+      "purpose": "Acceleration (10 m) is the game's decisive short action; 40 m captures near-maximal velocity, the hamstring-relevant exposure for backs.",
+      "frequency": "each training block",
+      "targets": {
+        "elite": "10 m ~1.7-1.8 s; 40 m ~5.0-5.3 s (backs, male professional)",
+        "beginner": "10 m ~2.0-2.2 s",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "timing gates (or validated app)"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Duthie 2003; Smart 2013 (position-specific fitness)"
+    },
+    {
+      "name": "Bronco test (or Yo-Yo IR1)",
+      "category": "endurance",
+      "essential": true,
+      "purpose": "Repeated high-intensity running capacity — the rugby conditioning benchmark (Bronco is the rugby-specific shuttle; Yo-Yo IR1 is the validated intermittent alternative).",
+      "frequency": "pre-season + mid-season check",
+      "targets": {
+        "elite": "Bronco ~4:20-5:00 (backs faster than forwards); Yo-Yo IR1 ≥1800-2200 m",
+        "beginner": "establish baseline",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "20-60 m track + cones"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Duthie 2003; Austin 2011; Bangsbo 2008 (Yo-Yo IR1)"
+    },
+    {
+      "name": "Nordic hamstring strength",
+      "category": "strength",
+      "essential": true,
+      "purpose": "Eccentric hamstring strength — the headline modifiable factor for rugby's most common muscle injury, especially in backs.",
+      "frequency": "each block + after any hamstring flag",
+      "targets": {
+        "elite": "high force + symmetrical (<10% imbalance); full-control Nordic",
+        "beginner": "partial-range control",
+        "youth": "technique first"
+      },
+      "equipment": [
+        "NordBord or partner Nordic"
+      ],
+      "wearableEstimable": false,
+      "confidence": "high",
+      "evidenceLevel": "L1",
+      "source": "van Dyk 2019 (meta-analysis); Attwood 2018 (rugby movement-control RCT)"
+    },
+    {
+      "name": "1RM bench press (or 3-5RM est.)",
+      "category": "strength",
+      "essential": false,
+      "purpose": "Upper-body pressing strength anchor — relevant to fending, contact and lineout lifting; a standard rugby strength benchmark.",
+      "frequency": "each strength block",
+      "targets": {
+        "elite": "~1.3-1.5×BW (forwards); ~1.2×BW (backs)",
+        "beginner": "~0.8-1.0×BW",
+        "youth": "technique loads only"
+      },
+      "equipment": [
+        "barbell",
+        "bench"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Argus 2012; Duthie 2003"
+    },
+    {
+      "name": "Repeated-effort / repeat-sprint battery",
+      "category": "endurance",
+      "essential": false,
+      "purpose": "Sprint (and, ideally, collision) decrement under incomplete recovery — the repeated-high-intensity quality that defines back-row and midfield work.",
+      "frequency": "pre-season",
+      "targets": {
+        "elite": "low decrement across the set (<5%)",
+        "beginner": "decrement 7-10%",
+        "youth": "track trend"
+      },
+      "equipment": [
+        "timing gates + (optional) contact bag"
+      ],
+      "wearableEstimable": false,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Austin 2011 (repeated high-intensity exercise in professional rugby)"
+    }
+  ],
+  "developmentPriorities": {
+    "youth": {
+      "highest": [
+        "movement literacy + sprint and landing mechanics",
+        "bodyweight strength (squat, hinge, push, pull, brace, fall/land)",
+        "SAFE contact and tackle technique BEFORE contact volume",
+        "multi-sport exposure"
+      ],
+      "lowest": [
+        "heavy barbell loading",
+        "high contact volume",
+        "adult conditioning volumes",
+        "position specialisation"
+      ],
+      "trainingEmphasis": "Athletic literacy and safe contact technique first; introduce cervical conditioning early and lightly given the collision future. Growth-spurt years need patience with load. World Rugby Activate-style neuromuscular warm-ups are proven and free.",
+      "commonMistakes": [
+        "adding contact volume before contact SKILL is safe",
+        "heavy loading before movement quality",
+        "neglecting neck and landing preparation in a collision sport"
+      ]
+    },
+    "development": {
+      "highest": [
+        "maximal-strength base (the rugby foundation) with sound technique",
+        "eccentric hamstring habit (Nordic) BEFORE senior sprint + contact volumes",
+        "cervical + shoulder robustness base",
+        "trunk stiffness and hip/thoracic mobility"
+      ],
+      "lowest": [
+        "maximal contact conditioning before a strength base exists",
+        "hypertrophy beyond positional need"
+      ],
+      "trainingEmphasis": "Build the strength and robustness the senior game will tax — a real strength base is the entry ticket to safe senior contact. Prevention pillars (Nordic, neck, shoulder) become permanent habits here.",
+      "commonMistakes": [
+        "skills-and-contact only with no strength base",
+        "senior contact loads without robustness preparation",
+        "no neck/shoulder base before front-row or back-row demands"
+      ]
+    },
+    "senior": {
+      "highest": [
+        "maximal strength + power development and maintenance",
+        "availability: Nordic + neck + shoulder prehab every week",
+        "repeat-effort and acceleration quality",
+        "readiness-led load management around collisions and fixtures"
+      ],
+      "lowest": [
+        "novel exercise variety in-season",
+        "hypertrophy beyond positional need"
+      ],
+      "trainingEmphasis": "Rugby rewards strength — keep developing it, but protect the match: gym work flexes around collision load and fixture congestion, never compounds them. Neck and shoulder prehab are weekly non-negotiables.",
+      "commonMistakes": [
+        "stacking heavy gym volume on top of a high-collision week",
+        "dropping prehab pillars when fixtures compress (when risk peaks)",
+        "treating post-match recovery like a lower-collision sport (rugby recovery is slower)"
+      ]
+    },
+    "elite": {
+      "highest": [
+        "individualised limiter work (data-led, position-specific)",
+        "strength/power maintenance through congestion and heavy collision load",
+        "squad-level rotation + collision-load planning",
+        "criteria-based rehab pathways (and GRTP for head injury)"
+      ],
+      "lowest": [
+        "generic volume",
+        "non-specific conditioning"
+      ],
+      "trainingEmphasis": "Individualised, monitored development around a long collision-heavy calendar; the physical programme is availability + contact-dominance management.",
+      "commonMistakes": [
+        "copying another player's or position's programme",
+        "letting congestion erase neck/shoulder/hamstring prehab",
+        "returning players to contact without robustness and (for head injury) GRTP completion"
+      ]
+    },
+    "masters": {
+      "highest": [
+        "strength/power retention",
+        "neck, shoulder and tendon care (the collision-veteran profile)",
+        "mobility upkeep",
+        "longer recovery cycles between matches"
+      ],
+      "lowest": [
+        "high contact volume",
+        "novel maximal testing"
+      ],
+      "trainingEmphasis": "Retain strength and robustness; respect a slower recovery curve and the accumulated contact history; manage collision exposure deliberately.",
+      "commonMistakes": [
+        "high contact volume without a maintained strength base",
+        "abandoning neck and shoulder work",
+        "ignoring the slower post-collision recovery"
+      ]
+    }
+  },
+  "seasonalModel": {
+    "offSeason": {
+      "primaryObjective": "Rebuild maximal strength, lean mass, and neck/shoulder/hamstring robustness; fix the season's asymmetries and carried niggles; rebuild aerobic base.",
+      "trainingEmphasis": "Max strength + targeted hypertrophy (position-specific mass); eccentric robustness at full dose (the soreness window nobody minds); cervical and shoulder base-building; aerobic base.",
+      "gymFrequencyPerWeek": "3-4",
+      "volume": "high",
+      "intensity": "moderate-high (progressing to heavy)",
+      "fatigueTolerance": "high (no matches or collisions to protect)",
+      "recoveryEmphasis": "moderate",
+      "testingRecommendations": [
+        "full battery at start + end",
+        "strength anchors (squat/trap-bar, bench, Nordic, neck)"
+      ]
+    },
+    "preSeason": {
+      "primaryObjective": "Convert strength to power and acceleration; rebuild collision conditioning and high-speed-running tolerance progressively; reach match fitness without a pre-season injury spike.",
+      "trainingEmphasis": "Power + speed conversion; progressive contact conditioning and sprint exposure to >95% max velocity; Nordic/neck/shoulder doses established before contact volume ramps.",
+      "gymFrequencyPerWeek": "3",
+      "volume": "moderate-high",
+      "intensity": "high",
+      "fatigueTolerance": "moderate-high",
+      "recoveryEmphasis": "moderate-high (contact + running load rising fast — a high-risk ACWR window)",
+      "testingRecommendations": [
+        "Bronco / Yo-Yo IR1",
+        "10/40 m",
+        "CMJ + neck-strength baseline for the season"
+      ]
+    },
+    "competition": {
+      "primaryObjective": "Maintain strength, power and robustness at minimal effective volume; maximise availability across a collision-heavy ~36-week season.",
+      "trainingEmphasis": "1-2 heavy-but-low-volume sessions anchored to match day (MD-4/MD-3); neck + shoulder + hamstring prehab EVERY week; power micro-doses MD-2.",
+      "gymFrequencyPerWeek": "2",
+      "volume": "low-moderate (maintenance dose)",
+      "intensity": "high (low volume preserves quality)",
+      "fatigueTolerance": "low (protect the player from compounding collision load)",
+      "recoveryEmphasis": "high",
+      "testingRecommendations": [
+        "weekly CMJ monitoring; periodic neck-strength check"
+      ]
+    },
+    "playoffs": {
+      "primaryObjective": "Peak freshness + availability for finals; the collision cost of the run-in is already high.",
+      "trainingEmphasis": "Minimal-volume high-intensity maintenance; match-day priming; ruthless prioritisation of prehab pillars.",
+      "gymFrequencyPerWeek": "1 (sometimes 0 in a final week)",
+      "volume": "very low",
+      "intensity": "high (very low volume)",
+      "fatigueTolerance": "very low",
+      "recoveryEmphasis": "very high",
+      "testingRecommendations": [
+        "monitoring only — never test"
+      ]
+    },
+    "recovery": {
+      "primaryObjective": "Physical and mental recovery after a long collision season; restore tissue; treat carried niggles.",
+      "trainingEmphasis": "2+ weeks genuinely off contact, then unstructured activity, mobility, light cross-training; rehab the season's flags before off-season loading starts.",
+      "gymFrequencyPerWeek": "0-2 (optional)",
+      "volume": "very low",
+      "intensity": "low",
+      "fatigueTolerance": "n/a",
+      "recoveryEmphasis": "very high",
+      "testingRecommendations": [
+        "none — reset"
+      ]
+    }
+  },
+  "microcycles": {
+    "oneMatchPerWeek": {
+      "pattern": "MD-anchored week: recover from collision load, load heavy far from the match, sharpen close to it.",
+      "heavyDay": "MD-4 or MD-3 (maximal lower + upper strength; furthest from both matches — collision recovery permitting)",
+      "powerDay": "MD-2 (low-volume, high-quality power/acceleration + priming)",
+      "recoveryDay": "MD+1 and MD+2 (active recovery + mobility; collision recovery is slower than in non-contact sport)",
+      "mobilityDay": "MD+1 and MD-1 (hips, thoracic, hamstrings)",
+      "injuryPreventionDay": "neck + shoulder + hamstring prehab MD-4/MD-3 (and a short neck top-up MD-2); never a first heavy eccentric exposure inside MD-2",
+      "typicalLoadingPattern": "MD+1/+2 recovery → MD-4 high (gym heavy + prehab) → MD-3 moderate → MD-2 power/speed + priming → MD-1 light → MD",
+      "avoidHeavyLiftingDays": [
+        "MD-1",
+        "MD",
+        "MD+1",
+        "MD+2"
+      ],
+      "preferExplosiveWorkDays": [
+        "MD-2",
+        "MD-3"
+      ]
+    },
+    "twoMatchesPerWeek": {
+      "pattern": "Congested block: recovery-first, maintenance micro-doses only between matches — the collision load makes this stricter than for non-contact sports.",
+      "heavyDay": "none (insufficient recovery between collision fixtures)",
+      "powerDay": "optional priming micro-dose only if >72 h between matches",
+      "recoveryDay": "the day(s) after each match (collision recovery dominates)",
+      "mobilityDay": "daily",
+      "injuryPreventionDay": "low-dose maintenance only (neck isometrics, short-lever prehab, hamstring isometrics)",
+      "typicalLoadingPattern": "Match → recovery → recovery/priming → Match → recovery; cut gym volume ~50%; rotate squad where possible.",
+      "avoidHeavyLiftingDays": [
+        "every day between matches"
+      ],
+      "preferExplosiveWorkDays": [
+        "priming micro-dose only"
+      ]
+    },
+    "tournamentOrCongested": {
+      "pattern": "Tournament rugby (cup weeks, 3 matches in ~9-10 days) = pure availability + collision-load management.",
+      "heavyDay": "none",
+      "powerDay": "match-day priming only (short, low-volume jumps/activation)",
+      "recoveryDay": "every non-match day",
+      "mobilityDay": "daily — hips, thoracic, hamstrings, neck",
+      "injuryPreventionDay": "minimal-dose isometrics (neck holds, hamstring holds, trunk holds)",
+      "typicalLoadingPattern": "Protect recovery between fixtures; gym is priming, never development; injury risk concentrates in the later fixtures as collision fatigue accumulates.",
+      "avoidHeavyLiftingDays": [
+        "all"
+      ],
+      "preferExplosiveWorkDays": [
+        "match-day primer only"
+      ]
+    }
+  },
+  "gymPhilosophy": {
+    "transfersWell": [
+      "heavy bilateral + single-leg strength (squat, trap-bar, split squat — the direct scrum/contact/acceleration currency)",
+      "posterior-chain strength (RDL, hip thrust — scrum drive, sprint, contact)",
+      "eccentric hamstring work (Nordic, GHR) — the hamstring armour for backs and mobile forwards",
+      "cervical (neck) strengthening — the sport-specific under-trained modifiable risk factor",
+      "rotator-cuff + scapular robustness (tackle + lineout-lift shoulder protection)",
+      "Olympic-lift derivatives / triple-extension power (rate of force into contact and off the mark)",
+      "anti-extension + anti-rotation trunk work (spine protection in contact and scrum)",
+      "loaded carries + grip work (ball security, tackle completion, lift)"
+    ],
+    "limitedValue": [
+      "bodybuilding-volume isolation work with no contact or performance currency",
+      "long steady-state gym cardio (the pitch + conditioning already supply it)",
+      "loaded spinal flexion volume (sit-ups) — adds lumbar risk a brace does not",
+      "unstable-surface gimmicks replacing progressive strength",
+      "chasing hypertrophy past the point mass costs repeat-effort speed"
+    ],
+    "essentialMovementPatterns": [
+      "squat",
+      "hinge",
+      "single-leg squat/lunge",
+      "horizontal + vertical push",
+      "horizontal + vertical pull",
+      "triple-extension power (jump/clean)",
+      "neck isometrics (multi-direction)",
+      "anti-extension + anti-rotation brace",
+      "loaded carry"
+    ],
+    "accessoryPriorities": [
+      "neck isometrics (all positions, front row highest)",
+      "rotator-cuff + scapular work (face pulls, external rotation)",
+      "Nordic curl / glute-ham raise",
+      "loaded carries + grip",
+      "calf/ankle capacity",
+      "hip + thoracic mobility"
+    ],
+    "singleLegEmphasis": "High — acceleration, evasion and many contact events are single-leg; single-leg strength complements (never replaces) the heavy bilateral base that scrummaging demands.",
+    "olympicLiftingSuitability": "High value where technique allows — cleans and derivatives train the rate of force development that rugby contact rewards; trap-bar jumps, hang high-pulls and mid-thigh pulls deliver most of the benefit at lower technical cost and are easier to keep in-season.",
+    "plyometricEmphasis": "Moderate and targeted: landing mechanics, low-dose reactive stiffness, and jump-land/lift for locks and back-row; the game already supplies large reactive and impact volume.",
+    "coreTrainingPhilosophy": "The trunk is a stiff transmitter and protector: anti-extension and anti-rotation strength for contact, scrum and spine protection first; rotational power (pass/fend) second. No loaded-flexion volume.",
+    "neckTraining": "HIGH priority — unlike most field sports, cervical strengthening is a weekly non-negotiable: multi-direction isometrics for all positions (front row highest), as a modifiable factor for concussion and neck-injury risk and a front-row safety requirement.",
+    "gripTraining": "Moderate priority — ball security in contact, tackle completion and lineout lifting draw on grip; loaded carries cover most of the need.",
+    "rotationalTraining": "Moderate — anti-rotation bracing first, then low-dose rotational power for passing, fending and kicking (half-backs and backs).",
+    "isometricTraining": "Valuable in-season and in congestion: neck isometrics, hamstring isometrics and trunk holds maintain capacity at minimal soreness cost when collision load is high.",
+    "tempoRecommendations": "Controlled eccentrics in robustness phases (hamstring, neck, cuff); explosive intent on all power and strength-speed work.",
+    "velocityRecommendations": "Heavy-fast intent for maximal strength and strength-speed; light-load maximal-intent jumps, cleans and sled work for the power/acceleration profile; sprinting and contact conditioning stay on the pitch, programmed and counted."
+  },
+  "exerciseLibrary": {
+    "categories": [
+      "max strength",
+      "neck & cervical",
+      "shoulder robustness",
+      "posterior chain",
+      "explosive power",
+      "trunk/carry",
+      "hamstring prevention",
+      "upper body",
+      "single-leg strength",
+      "calf/ankle"
+    ],
+    "exercises": [
+      {
+        "id": "back_squat",
+        "name": "Back squat",
+        "category": "max strength",
+        "movementPattern": "squat",
+        "primaryAdaptation": "maximal lower-body strength",
+        "secondaryAdaptation": "scrum-drive + acceleration force base",
+        "fatigueCost": "high",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate-high (axial)",
+        "equipment": [
+          "barbell",
+          "rack"
+        ],
+        "difficulty": "moderate",
+        "regressions": [
+          "goblet squat",
+          "box squat"
+        ],
+        "progressions": [
+          "heavier 3-5s",
+          "pause squats"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": false,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 9,
+        "injuryPreventionRating": 6
+      },
+      {
+        "id": "trap_bar_dl",
+        "name": "Trap-bar deadlift",
+        "category": "max strength",
+        "movementPattern": "hinge/squat hybrid",
+        "primaryAdaptation": "maximal lower-body + posterior-chain strength",
+        "secondaryAdaptation": "acceleration + contact force base with a spine-friendlier bar path",
+        "fatigueCost": "high",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate (beginner-friendlier than straight bar)",
+        "equipment": [
+          "trap bar"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "kettlebell deadlift",
+          "elevated-handle pulls"
+        ],
+        "progressions": [
+          "heavier 3-5s",
+          "speed pulls"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 9,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "neck_isometrics",
+        "name": "Multi-direction neck isometrics",
+        "category": "neck & cervical",
+        "movementPattern": "cervical isometric (flexion/extension/lateral)",
+        "primaryAdaptation": "cervical strength + stiffness",
+        "secondaryAdaptation": "modifiable concussion/neck-injury risk factor; scrum + tackle load tolerance",
+        "fatigueCost": "low",
+        "sorenessCost": "low-moderate initially",
+        "recoveryTimeH": 24,
+        "jointLoading": "low",
+        "equipment": [
+          "partner / band / harness"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "self-resisted holds",
+          "supported partial holds"
+        ],
+        "progressions": [
+          "harness-loaded holds",
+          "longer holds + eccentric control"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 9,
+        "injuryPreventionRating": 9
+      },
+      {
+        "id": "face_pull",
+        "name": "Face pull",
+        "category": "shoulder robustness",
+        "movementPattern": "horizontal pull + external rotation",
+        "primaryAdaptation": "posterior cuff + scapular strength",
+        "secondaryAdaptation": "shoulder-joint robustness for tackle + lineout-lift load",
+        "fatigueCost": "low",
+        "sorenessCost": "low",
+        "recoveryTimeH": 24,
+        "jointLoading": "low",
+        "equipment": [
+          "cable or band"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "band pull-apart"
+        ],
+        "progressions": [
+          "heavier cable",
+          "tempo external rotation"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 8
+      },
+      {
+        "id": "cable_ext_rotation_90",
+        "name": "Cable external rotation (90/90)",
+        "category": "shoulder robustness",
+        "movementPattern": "shoulder external rotation",
+        "primaryAdaptation": "rotator-cuff strength at the tackle/lift position",
+        "secondaryAdaptation": "glenohumeral stability + instability prevention",
+        "fatigueCost": "low",
+        "sorenessCost": "low",
+        "recoveryTimeH": 24,
+        "jointLoading": "low",
+        "equipment": [
+          "cable or band"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "side-lying external rotation"
+        ],
+        "progressions": [
+          "heavier load",
+          "isometric holds at end range"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 8
+      },
+      {
+        "id": "rdl",
+        "name": "Romanian deadlift",
+        "category": "posterior chain",
+        "movementPattern": "hinge",
+        "primaryAdaptation": "hamstring/glute strength through range",
+        "secondaryAdaptation": "scrum-drive + sprint posterior-chain capacity",
+        "fatigueCost": "moderate-high",
+        "sorenessCost": "moderate-high",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate",
+        "equipment": [
+          "barbell"
+        ],
+        "difficulty": "moderate",
+        "regressions": [
+          "dumbbell RDL",
+          "hip hinge drill"
+        ],
+        "progressions": [
+          "single-leg RDL",
+          "tempo eccentrics"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 8,
+        "injuryPreventionRating": 8
+      },
+      {
+        "id": "hip_thrust",
+        "name": "Barbell hip thrust",
+        "category": "posterior chain",
+        "movementPattern": "hip extension",
+        "primaryAdaptation": "glute strength for acceleration + drive",
+        "secondaryAdaptation": "horizontal force production (contact + sprint)",
+        "fatigueCost": "moderate",
+        "sorenessCost": "low-moderate",
+        "recoveryTimeH": 36,
+        "jointLoading": "low",
+        "equipment": [
+          "barbell",
+          "bench"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "glute bridge"
+        ],
+        "progressions": [
+          "single-leg hip thrust",
+          "speed intent"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 8,
+        "injuryPreventionRating": 6
+      },
+      {
+        "id": "power_clean",
+        "name": "Power clean",
+        "category": "explosive power",
+        "movementPattern": "triple-extension pull",
+        "primaryAdaptation": "whole-body rate of force development",
+        "secondaryAdaptation": "explosive contact + off-the-mark drive",
+        "fatigueCost": "high (CNS)",
+        "sorenessCost": "low-moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate",
+        "equipment": [
+          "barbell",
+          "platform"
+        ],
+        "difficulty": "advanced (technical)",
+        "regressions": [
+          "hang power clean",
+          "mid-thigh pull"
+        ],
+        "progressions": [
+          "heavier cleans",
+          "clean complexes"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": false,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 8,
+        "injuryPreventionRating": 5
+      },
+      {
+        "id": "broad_jump",
+        "name": "Standing broad jump",
+        "category": "explosive power",
+        "movementPattern": "horizontal jump",
+        "primaryAdaptation": "horizontal power (acceleration + drive vector)",
+        "secondaryAdaptation": "landing mechanics",
+        "fatigueCost": "low-moderate",
+        "sorenessCost": "low",
+        "recoveryTimeH": 24,
+        "jointLoading": "moderate (landing)",
+        "equipment": [
+          "none"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "box-assisted landing"
+        ],
+        "progressions": [
+          "repeated broad jumps",
+          "bounds"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": false,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 5
+      },
+      {
+        "id": "nordic_curl",
+        "name": "Nordic hamstring curl",
+        "category": "hamstring prevention",
+        "movementPattern": "knee-dominant eccentric",
+        "primaryAdaptation": "eccentric hamstring strength",
+        "secondaryAdaptation": "sprint-injury protection (~50% risk reduction with adherence)",
+        "fatigueCost": "low-moderate",
+        "sorenessCost": "high initially (introduce off-season, never first inside MD-2)",
+        "recoveryTimeH": 48,
+        "jointLoading": "low",
+        "equipment": [
+          "partner or anchor"
+        ],
+        "difficulty": "moderate (progressible)",
+        "regressions": [
+          "band-assisted Nordic",
+          "hamstring bridge"
+        ],
+        "progressions": [
+          "full-range Nordics",
+          "loaded Nordics"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 8,
+        "injuryPreventionRating": 10
+      },
+      {
+        "id": "glute_ham_raise",
+        "name": "Glute-ham raise",
+        "category": "hamstring prevention",
+        "movementPattern": "knee-flexion + hip-extension eccentric",
+        "primaryAdaptation": "hamstring strength through knee + hip function",
+        "secondaryAdaptation": "posterior-chain robustness complementing the Nordic",
+        "fatigueCost": "moderate",
+        "sorenessCost": "moderate-high initially",
+        "recoveryTimeH": 48,
+        "jointLoading": "low-moderate",
+        "equipment": [
+          "GHR bench"
+        ],
+        "difficulty": "moderate",
+        "regressions": [
+          "band-assisted GHR",
+          "Nordic regressions"
+        ],
+        "progressions": [
+          "loaded GHR",
+          "tempo eccentrics"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 9
+      },
+      {
+        "id": "bench",
+        "name": "Barbell bench press",
+        "category": "upper body",
+        "movementPattern": "horizontal push",
+        "primaryAdaptation": "upper-body pressing strength",
+        "secondaryAdaptation": "fend + contact-absorption capacity",
+        "fatigueCost": "moderate-high",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 48,
+        "jointLoading": "moderate",
+        "equipment": [
+          "barbell",
+          "bench"
+        ],
+        "difficulty": "moderate",
+        "regressions": [
+          "dumbbell bench",
+          "push-up"
+        ],
+        "progressions": [
+          "heavier 3-5s",
+          "pause bench"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 5
+      },
+      {
+        "id": "pullup",
+        "name": "Pull-up / chin-up",
+        "category": "upper body",
+        "movementPattern": "vertical pull",
+        "primaryAdaptation": "upper-back + lat strength",
+        "secondaryAdaptation": "grip, tackle-pull + lineout-lift capacity",
+        "fatigueCost": "moderate",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 36,
+        "jointLoading": "low-moderate",
+        "equipment": [
+          "bar"
+        ],
+        "difficulty": "moderate",
+        "regressions": [
+          "assisted pull-up",
+          "lat pulldown"
+        ],
+        "progressions": [
+          "weighted pull-up"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": false,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 6
+      },
+      {
+        "id": "barbell_row",
+        "name": "Barbell row",
+        "category": "upper body",
+        "movementPattern": "horizontal pull",
+        "primaryAdaptation": "upper-back + posterior-shoulder strength",
+        "secondaryAdaptation": "pulling strength for tackle, maul and lift; postural balance to pressing",
+        "fatigueCost": "moderate",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 36,
+        "jointLoading": "moderate",
+        "equipment": [
+          "barbell"
+        ],
+        "difficulty": "moderate",
+        "regressions": [
+          "chest-supported row",
+          "dumbbell row"
+        ],
+        "progressions": [
+          "heavier load",
+          "pendlay row"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 6
+      },
+      {
+        "id": "split_squat",
+        "name": "Rear-foot-elevated split squat",
+        "category": "single-leg strength",
+        "movementPattern": "lunge",
+        "primaryAdaptation": "single-leg strength for acceleration + contact base",
+        "secondaryAdaptation": "hip mobility under load; knee control",
+        "fatigueCost": "moderate",
+        "sorenessCost": "moderate",
+        "recoveryTimeH": 36,
+        "jointLoading": "moderate",
+        "equipment": [
+          "dumbbells",
+          "bench"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "split squat (floor)",
+          "reverse lunge"
+        ],
+        "progressions": [
+          "front-foot-elevated + load",
+          "tempo"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 8,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "farmer_carry",
+        "name": "Farmer's carry",
+        "category": "trunk/carry",
+        "movementPattern": "loaded carry",
+        "primaryAdaptation": "trunk stiffness + grip under load",
+        "secondaryAdaptation": "posture and bracing for contact; ball-security grip",
+        "fatigueCost": "moderate",
+        "sorenessCost": "low-moderate",
+        "recoveryTimeH": 24,
+        "jointLoading": "low",
+        "equipment": [
+          "dumbbells or trap bar"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "suitcase carry (lighter)"
+        ],
+        "progressions": [
+          "heavier load",
+          "longer distance"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 6
+      },
+      {
+        "id": "pallof",
+        "name": "Pallof press",
+        "category": "trunk/carry",
+        "movementPattern": "anti-rotation",
+        "primaryAdaptation": "trunk strength against rotation",
+        "secondaryAdaptation": "force transfer in contact + spine protection in the scrum",
+        "fatigueCost": "low",
+        "sorenessCost": "low",
+        "recoveryTimeH": 12,
+        "jointLoading": "low",
+        "equipment": [
+          "band or cable"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "tall-kneeling pallof"
+        ],
+        "progressions": [
+          "split-stance",
+          "overhead pallof"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 7,
+        "injuryPreventionRating": 7
+      },
+      {
+        "id": "calf_raise",
+        "name": "Calf raise (straight + bent knee)",
+        "category": "calf/ankle",
+        "movementPattern": "plantar flexion",
+        "primaryAdaptation": "calf strength-endurance (soleus emphasis bent-knee)",
+        "secondaryAdaptation": "ankle load tolerance + syndesmosis-region support for running and scrummaging",
+        "fatigueCost": "low",
+        "sorenessCost": "moderate initially",
+        "recoveryTimeH": 24,
+        "jointLoading": "low",
+        "equipment": [
+          "step",
+          "dumbbell"
+        ],
+        "difficulty": "beginner-friendly",
+        "regressions": [
+          "double-leg"
+        ],
+        "progressions": [
+          "single-leg loaded",
+          "isometric holds"
+        ],
+        "suitableInSeason": true,
+        "suitableOffSeason": true,
+        "suitableReturnToPlay": true,
+        "suitableBeginners": true,
+        "suitableElite": true,
+        "transferToSportRating": 6,
+        "injuryPreventionRating": 7
+      }
+    ]
+  },
+  "injuryPreventionLibrary": [
+    {
+      "injury": "Concussion / head injury",
+      "riskFactors": [
+        "prior concussion (dominant factor)",
+        "poor tackle technique and height",
+        "low neck strength (modifiable factor)",
+        "fatigue and cumulative collision load"
+      ],
+      "warningSigns": [
+        "any head-contact event with symptoms — headache, fog, balance change",
+        "reduced tolerance to contact drills",
+        "concussion history clustering"
+      ],
+      "preventativeExercises": [
+        "neck_isometrics"
+      ],
+      "recommendedFrequency": "cervical strengthening 2-3x/week year-round (all positions; front row highest); tackle-technique coaching is the primary prevention",
+      "suitableSeason": "all",
+      "evidenceLevel": "L3",
+      "exercisesToAvoid": [
+        "any contact loading while symptomatic",
+        "return to contact before completing the World Rugby GRTP protocol"
+      ],
+      "monitoringRecommendations": [
+        "periodic neck-strength check vs baseline",
+        "strict adherence to the World Rugby Graduated Return-To-Play protocol (clinician-led, NOT a coaching decision)"
+      ],
+      "source": "Hrysomallis 2016 (neck strength as a modifiable factor); Williams 2013 (epidemiology); World Rugby GRTP protocol",
+      "confidence": "moderate"
+    },
+    {
+      "injury": "Shoulder instability / dislocation & AC-joint injury",
+      "riskFactors": [
+        "prior shoulder dislocation/instability (dominant factor)",
+        "rotator-cuff + scapular strength deficit",
+        "poor tackle technique",
+        "high tackle volume without contact conditioning"
+      ],
+      "warningSigns": [
+        "apprehension or laxity at end range",
+        "cuff/scapular strength asymmetry",
+        "recurrent 'dead-arm' sensations in tackling"
+      ],
+      "preventativeExercises": [
+        "cable_ext_rotation_90",
+        "face_pull",
+        "pullup",
+        "barbell_row"
+      ],
+      "recommendedFrequency": "cuff + scapular robustness 2-3x/week; heavy pulling strength in the strength block; graded contact conditioning before contact volume",
+      "suitableSeason": "all",
+      "evidenceLevel": "L2",
+      "exercisesToAvoid": [
+        "provocative end-range loading on a symptomatic/unstable shoulder",
+        "high contact volume before cuff strength + range are restored"
+      ],
+      "monitoringRecommendations": [
+        "cuff/scapular strength symmetry each block",
+        "range and apprehension check after any shoulder event"
+      ],
+      "source": "Headey 2007 (shoulder injuries in professional rugby); Williams 2013",
+      "confidence": "moderate"
+    },
+    {
+      "injury": "Hamstring strain",
+      "riskFactors": [
+        "low eccentric hamstring strength",
+        "high-speed-running spikes (or ABSENCE — unexposed hamstrings fail on the rare maximal sprint)",
+        "fatigue and fixture congestion",
+        "prior hamstring injury"
+      ],
+      "warningSigns": [
+        "posterior-thigh tightness outlasting warm-up",
+        "reduced sprint confidence / not reaching top speed",
+        "Nordic strength drop vs baseline"
+      ],
+      "preventativeExercises": [
+        "nordic_curl",
+        "glute_ham_raise",
+        "rdl",
+        "hip_thrust"
+      ],
+      "recommendedFrequency": "Nordic 2x/week building doses (off/pre-season); 1x/week maintenance in-season; PLUS regular counted exposure to >95% max velocity for backs and mobile forwards",
+      "suitableSeason": "all",
+      "evidenceLevel": "L1",
+      "exercisesToAvoid": [
+        "maximal sprinting when flagged",
+        "heavy Nordic/GHR novelty the day before matches"
+      ],
+      "monitoringRecommendations": [
+        "weekly Nordic force or bridge-hold check",
+        "high-speed-running exposure counting (GPS or session RPE proxy)"
+      ],
+      "source": "Attwood 2018 (rugby movement-control RCT); Brooks 2006 (rugby hamstring epidemiology); van Dyk 2019 (Nordic meta, ~50%)",
+      "confidence": "high"
+    },
+    {
+      "injury": "Ankle syndesmosis & lateral sprain",
+      "riskFactors": [
+        "previous sprain (dominant factor)",
+        "balance/proprioception deficit",
+        "calf/peroneal weakness",
+        "ruck/maul external-rotation exposure"
+      ],
+      "warningSigns": [
+        "instability or high-ankle pain on push-off and rotation",
+        "single-leg balance asymmetry",
+        "calf-raise capacity drop"
+      ],
+      "preventativeExercises": [
+        "calf_raise",
+        "split_squat"
+      ],
+      "recommendedFrequency": "balance/proprioception 3x/week for 6+ months post-sprain; calf capacity year-round",
+      "suitableSeason": "all",
+      "evidenceLevel": "L3",
+      "exercisesToAvoid": [
+        "reactive cutting + contact volume immediately after a sprain",
+        "loaded rotation on a symptomatic high ankle"
+      ],
+      "monitoringRecommendations": [
+        "single-leg balance checks after any sprain",
+        "brace/tape on return to play (evidence-supported)"
+      ],
+      "source": "Williams 2013; Fuller 2007 (RWC injury surveillance)",
+      "confidence": "moderate"
+    },
+    {
+      "injury": "Lumbar spine / lower-back injury",
+      "riskFactors": [
+        "trunk anti-extension/anti-rotation stiffness deficit",
+        "hip + thoracic mobility restriction",
+        "poor scrum/lift body position",
+        "excessive axial-loading volume without recovery"
+      ],
+      "warningSigns": [
+        "recurring low-back stiffness after scrummaging",
+        "loss of neutral-spine control under load",
+        "pain on loaded flexion/rotation"
+      ],
+      "preventativeExercises": [
+        "pallof",
+        "farmer_carry",
+        "rdl"
+      ],
+      "recommendedFrequency": "trunk-stiffness work 2-3x/week; hip + thoracic mobility daily; manage weekly axial-loading volume",
+      "suitableSeason": "all",
+      "evidenceLevel": "L4",
+      "exercisesToAvoid": [
+        "loaded spinal flexion volume (sit-ups)",
+        "stacking heavy axial loading on scrum-heavy weeks"
+      ],
+      "monitoringRecommendations": [
+        "trunk-endurance and neutral-spine control checks",
+        "axial-load volume tracking across gym + scrummaging"
+      ],
+      "source": "Williams 2013; expert consensus (rugby S&C on axial-load management)",
+      "confidence": "moderate"
+    }
+  ],
+  "decisionRules": [
+    {
+      "id": "match_within_24h_priming_only",
+      "if": "match day or within 24 hours",
+      "then": "gym is CNS priming only (a few jumps/activation drills) or rest; no strength development",
+      "priority": 1,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "priming-session literature; expert consensus",
+      "trigger": {
+        "signal": "competition_within_h",
+        "op": "<=",
+        "value": 24
+      },
+      "effect": {
+        "type": "priming_only",
+        "params": {}
+      }
+    },
+    {
+      "id": "post_match_48h_no_heavy_axial",
+      "if": "match within 48 hours (before or after)",
+      "then": "remove heavy axial-loading and high-soreness work (heavy squat/deadlift, Nordic/GHR building doses, new exercises); keep only familiar low-fatigue maintenance — rugby's collision recovery is slower than non-contact sport",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L3",
+      "source": "post-match recovery kinetics in collision sport (Naughton 2020); DOMS/taper consensus",
+      "trigger": {
+        "signal": "competition_within_h",
+        "op": "<=",
+        "value": 48
+      },
+      "effect": {
+        "type": "exclude_soreness_above",
+        "params": {
+          "level": "moderate"
+        }
+      }
+    },
+    {
+      "id": "congested_week_cut_gym_volume",
+      "if": "2+ matches this week (league + cup congestion)",
+      "then": "cut gym volume ~50%; maintenance micro-doses only; recovery leads — collision load compounds and injury risk rises through congested blocks",
+      "priority": 1,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Cross 2016 (match congestion and injury risk in professional rugby)",
+      "trigger": {
+        "signal": "matches_this_week",
+        "op": ">=",
+        "value": 2
+      },
+      "effect": {
+        "type": "reduce_volume_pct",
+        "params": {
+          "pct": 50
+        }
+      }
+    },
+    {
+      "id": "acwr_spike_force_deload",
+      "if": "ACWR > 1.5 on weekly load",
+      "then": "force a deload week: cap volume, protect availability, flag for review — spikes in collision + running load elevate injury risk",
+      "priority": 1,
+      "confidence": "low",
+      "evidenceLevel": "L3",
+      "source": "Gabbett 2016 (training-injury prevention paradox; collision-load context) — methodology contested, used conservatively",
+      "trigger": {
+        "signal": "acwr",
+        "op": ">",
+        "value": 1.5
+      },
+      "effect": {
+        "type": "force_deload",
+        "params": {}
+      }
+    },
+    {
+      "id": "acwr_low_rebuild_gradually",
+      "if": "ACWR < 0.8 (detrained/returning — post-injury, post-break)",
+      "then": "rebuild gradually — one step down from planned load; no spikes; the return-to-contact window is high-risk",
+      "priority": 2,
+      "confidence": "low",
+      "evidenceLevel": "L3",
+      "source": "Gabbett 2016 (underloading also elevates risk)",
+      "trigger": {
+        "signal": "acwr",
+        "op": "<",
+        "value": 0.8
+      },
+      "effect": {
+        "type": "reduce_one_step",
+        "params": {}
+      }
+    },
+    {
+      "id": "low_readiness_autoregulate",
+      "if": "readiness score low (poor sleep + soreness + low wellness)",
+      "then": "autoregulate down one step; quality over volume; do not test",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L1",
+      "source": "Saw 2016 (subjective wellness sensitivity)",
+      "trigger": {
+        "signal": "readiness",
+        "op": "<",
+        "value": 40
+      },
+      "effect": {
+        "type": "reduce_one_step",
+        "params": {}
+      }
+    },
+    {
+      "id": "cmj_drop_flag_fatigue",
+      "if": "CMJ ≥12% below rolling baseline",
+      "then": "treat as neuromuscular fatigue: reduce CNS-demanding work; recheck in 48 h — especially after heavy collision matches",
+      "priority": 2,
+      "confidence": "moderate",
+      "evidenceLevel": "L2",
+      "source": "Claudino 2017 (CMJ monitoring)",
+      "trigger": {
+        "signal": "cmj_drop_pct",
+        "op": ">=",
+        "value": 12
+      },
+      "effect": {
+        "type": "reduce_one_step",
+        "params": {}
+      }
+    },
+    {
+      "id": "illness_no_training",
+      "if": "systemic illness (fever, below-neck symptoms)",
+      "then": "withhold training until symptom-free; resume gradually",
+      "priority": 1,
+      "confidence": "high",
+      "evidenceLevel": "L2",
+      "source": "return-to-training after illness consensus",
+      "trigger": {
+        "signal": "illness",
+        "op": "==",
+        "value": true
+      },
+      "effect": {
+        "type": "withhold",
+        "params": {}
+      }
+    },
+    {
+      "id": "inseason_neck_shoulder_prehab_nonnegotiable",
+      "if": "in competition phase",
+      "then": "hold strength at minimal effective volume (1-2 short heavy sessions/week) — but neck + shoulder + hamstring prehab are NON-NEGOTIABLE weekly items; dropping them in-season is when the collision injuries they mitigate occur",
+      "priority": 2,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Rønnestad & Mujika 2014 (in-season maintenance); Hrysomallis 2016 + Attwood 2018 (prehab rationale)",
+      "trigger": {
+        "signal": "season",
+        "op": "==",
+        "value": "in"
+      },
+      "effect": {
+        "type": "minimal_effective_volume",
+        "params": {}
+      }
+    },
+    {
+      "id": "hamstring_soreness_cut_eccentric_and_sprint",
+      "if": "high hamstring soreness or Nordic strength drop",
+      "then": "remove maximal sprint work + heavy eccentric hamstring loading; isometric substitutes; flag — never sprint through a hamstring warning",
+      "priority": 1,
+      "confidence": "moderate",
+      "evidenceLevel": "L3",
+      "source": "Attwood 2018; Timmins 2016 (eccentric strength monitoring); expert consensus",
+      "appliesTo": [
+        "hamstring"
+      ],
+      "trigger": {
+        "signal": "soreness_region",
+        "op": "high",
+        "value": "hamstring"
+      },
+      "effect": {
+        "type": "reduce_region_eccentric",
+        "params": {
+          "region": "hamstring"
+        }
+      }
+    },
+    {
+      "id": "neck_shoulder_soreness_reduce_overhead",
+      "if": "high neck or shoulder soreness (post-heavy-scrum or high-tackle match)",
+      "then": "reduce overhead + heavy pressing/lifting load; keep light isometric neck/cuff maintenance; flag for review",
+      "priority": 2,
+      "confidence": "moderate",
+      "evidenceLevel": "L4",
+      "source": "expert consensus (rugby S&C on cervical/shoulder load management)",
+      "appliesTo": [
+        "shoulder",
+        "neck"
+      ],
+      "trigger": {
+        "signal": "soreness_region",
+        "op": "high",
+        "value": "shoulder"
+      },
+      "effect": {
+        "type": "reduce_region_overhead",
+        "params": {
+          "region": "shoulder"
+        }
+      }
+    },
+    {
+      "id": "long_travel_reduce_intensity",
+      "if": "long travel / away-trip fatigue",
+      "then": "reduce intensity one step on arrival days; mobility + easy work",
+      "priority": 2,
+      "confidence": "moderate",
+      "evidenceLevel": "L4",
+      "source": "travel-fatigue consensus",
+      "trigger": {
+        "signal": "travel",
+        "op": "==",
+        "value": true
+      },
+      "effect": {
+        "type": "reduce_one_step",
+        "params": {}
+      }
+    }
+  ],
+  "loadManagement": {
+    "acwr": {
+      "model": "acute (7-day) : chronic (28-day) workload ratio; rolling/EWMA preferred; track collision count and high-speed running as their own streams where possible",
+      "sweetSpotLow": 0.8,
+      "sweetSpotHigh": 1.3,
+      "highRiskAbove": 1.5,
+      "confidence": "low",
+      "evidenceLevel": "L3",
+      "source": "Gabbett 2016 — methodology contested; used as a conservative guardrail; collision-load context in rugby"
+    },
+    "weeklyProgressionGuideline": "Avoid >~10-15% week-to-week spikes, ESPECIALLY in collision volume and high-speed running; progress ONE stressor at a time (pitch/contact volume, gym load, or sprint exposure — never all at once). Maintain regular controlled exposure to >95% max velocity for backs — under-exposure is itself a hamstring risk.",
+    "gymVolumeRanges": {
+      "offSeason": "high (3-4 sessions; heavy strength + robustness volume)",
+      "preSeason": "moderate-high (3 sessions)",
+      "inSeason": "low-moderate maintenance (2 sessions; heavy but low volume) + non-negotiable neck/shoulder/hamstring prehab",
+      "playoffs": "very low (0-1 session)"
+    },
+    "minimumEffectiveVolume": "~1-2 heavy low-volume sessions/week sustain strength in-season; the neck + hamstring prehab pillars survive even zero-equipment weeks (bands and a partner)",
+    "maximumAdaptiveVolume": "Off-season is the strength-development window — push volume there, not into a collision-heavy season.",
+    "maximumRecoverableVolume": "Constrained by collision + pitch load and (for amateurs) life load; the gym never compromises the next match or the player's contact recovery.",
+    "deloadRecommendations": "Planned deload every 3-5 weeks in development phases; automatic deload on ACWR/readiness triggers; congested fixture weeks ARE deload weeks for the gym.",
+    "progressionRules": "Progress load when reps/quality are met at target RPE and readiness is green.",
+    "regressionRules": "On red readiness, high collision load or congested fixtures, drop one step (volume first, intensity second).",
+    "missedSessionRules": "Never stack missed sessions; resume the planned wave. A missed prehab pillar (neck/hamstring/shoulder) is rescheduled within the week, not skipped.",
+    "confidence": "moderate",
+    "evidenceLevel": "L3",
+    "source": "Gabbett 2016; Cross 2016 (congestion); Rønnestad & Mujika 2014; expert consensus"
+  },
+  "readinessModel": {
+    "factors": [
+      {
+        "name": "Subjective wellness (soreness/energy/mood)",
+        "metric": "subjective_wellness",
+        "importance": 9,
+        "thresholds": [
+          {
+            "when": "≥1 SD below individual baseline",
+            "modifier": "reduce session load one step"
+          },
+          {
+            "when": "≥2 SD below baseline",
+            "modifier": "recovery session only"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Saw 2016 (subjective measures often outperform objective)"
+      },
+      {
+        "name": "Hours since last match (collision recovery)",
+        "metric": "prior_load",
+        "importance": 9,
+        "thresholds": [
+          {
+            "when": "<48 h since a full match",
+            "modifier": "no heavy axial-loading gym; recovery or activation only — collision damage peaks and lingers"
+          },
+          {
+            "when": "48-72 h since a full match",
+            "modifier": "moderate loads acceptable if wellness is green"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Naughton 2020 (post-match recovery in rugby: slower kinetics with collision load)"
+      },
+      {
+        "name": "Sleep quantity/quality",
+        "metric": "sleep",
+        "importance": 8,
+        "thresholds": [
+          {
+            "when": "<7 h or poor quality",
+            "modifier": "cap intensity; no testing"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "sleep-and-injury literature (Milewski 2014)"
+      },
+      {
+        "name": "Muscle soreness (region-specific)",
+        "metric": "soreness_region",
+        "importance": 8,
+        "thresholds": [
+          {
+            "when": "hamstring/neck/shoulder/back high",
+            "modifier": "trigger the matching decision rule"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "region-flag monitoring practice"
+      },
+      {
+        "name": "CMJ vs rolling baseline",
+        "metric": "cmj",
+        "importance": 7,
+        "thresholds": [
+          {
+            "when": "≥12% drop on consecutive days",
+            "modifier": "reduce CNS work"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "Claudino 2017"
+      },
+      {
+        "name": "Head-impact / concussion status",
+        "metric": "concussion_status",
+        "importance": 10,
+        "thresholds": [
+          {
+            "when": "any suspected concussion",
+            "modifier": "no contact and no training until cleared; follow the World Rugby GRTP protocol (clinician-led)"
+          }
+        ],
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "World Rugby GRTP protocol; Williams 2013"
+      },
+      {
+        "name": "HRV trend (optional)",
+        "metric": "hrv",
+        "importance": 5,
+        "thresholds": [
+          {
+            "when": "suppressed vs baseline trend",
+            "modifier": "corroborating signal only — never sole driver"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "HRV monitoring literature (Plews 2013)"
+      },
+      {
+        "name": "Resting HR (optional)",
+        "metric": "resting_hr",
+        "importance": 4,
+        "thresholds": [
+          {
+            "when": "elevated >7 bpm vs baseline",
+            "modifier": "check illness; ease intensity"
+          }
+        ],
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "monitoring consensus"
+      }
+    ],
+    "notes": "Subjective wellness + time-since-match (collision recovery) + sleep lead; objective signals corroborate. Suspected concussion overrides everything and is clinician-governed. Raw vitals stay private to the athlete — the coach sees only the derived readiness state and availability."
+  },
+  "coachDashboard": {
+    "principle": "Coach sees DERIVED and availability signals only — never an individual's raw vitals (HRV, sleep, resting HR).",
+    "mostUsefulKpis": [
+      "team readiness (traffic light)",
+      "availability count",
+      "training-load state vs plan",
+      "collision-load distribution vs plan",
+      "concussion / GRTP status count (availability only)",
+      "neck + shoulder + hamstring prehab completion",
+      "hamstring/shoulder flag count",
+      "congestion response (did gym volume actually drop in 2-match weeks)"
+    ],
+    "mostUsefulAlerts": [
+      "player entering high-risk load state",
+      "concussion flagged / in GRTP (availability)",
+      "readiness red on match week",
+      "prehab pillars skipped 2+ weeks",
+      "congested-week volume not reduced",
+      "hamstring flag on a high-sprint-exposure back"
+    ],
+    "weeklyReports": [
+      "squad readiness trend",
+      "load + collision vs plan adherence",
+      "flag list with derived causes",
+      "availability forecast for the weekend"
+    ],
+    "trafficLightIndicators": "Per-player green/amber/red from derived readiness + load state (never raw vitals).",
+    "teamReadinessMetrics": [
+      "% squad green",
+      "average derived readiness",
+      "load-state distribution"
+    ],
+    "complianceMetrics": [
+      "gym-session completion",
+      "prehab-pillar completion (neck/shoulder/hamstring)",
+      "check-in completion"
+    ],
+    "privacyNote": "All per-athlete entries are DERIVED (readiness score, load state, availability, GRTP status). Raw HRV/sleep/RHR never appear on a coach surface — see TEAM-ARCHITECTURE data-isolation rules."
+  },
+  "athleteDashboard": {
+    "mostUsefulMetrics": [
+      "today's readiness + what it means",
+      "this week's plan vs done",
+      "neck-strength trend",
+      "Nordic strength trend",
+      "collision + sprint exposure this week",
+      "strength anchors trend (squat/trap-bar/bench)",
+      "shoulder-robustness compliance",
+      "streaks (prehab pillars)"
+    ],
+    "progressIndicators": [
+      "squat/trap-bar strength trend",
+      "CMJ trend",
+      "Bronco / Yo-Yo IR1 level"
+    ],
+    "recoveryIndicators": [
+      "readiness trend",
+      "soreness map (incl. neck/shoulder/back)",
+      "sleep consistency"
+    ],
+    "performanceIndicators": [
+      "10 m / 40 m sprint",
+      "neck-strength symmetry",
+      "Nordic force",
+      "bench/squat anchors"
+    ],
+    "motivationalMetrics": [
+      "prehab-pillar streak",
+      "session consistency",
+      "PB board",
+      "availability streak"
+    ],
+    "educationTips": [
+      "why neck strength is your own contribution to lowering head-injury risk",
+      "why the Nordic is the closest thing sport science has to a hamstring vaccine",
+      "why rugby needs heavier lifting than most sports — strength IS contact currency",
+      "why collision recovery is slower than running recovery, so gym flexes around matches",
+      "why the best ability is availability"
+    ]
+  },
+  "validation": {
+    "strongEvidence": [
+      "Nordic hamstring programmes reduce hamstring injury (~50% incidence with adherence; L1 — van Dyk 2019)",
+      "a rugby-specific movement-control exercise programme (Activate-style) reduces injury (L1-L2 — Attwood 2018; Hislop 2017)",
+      "maximal strength and power discriminate playing level in professional rugby (L2-L3 — Argus 2012; Duthie 2003)",
+      "subjective wellness is a sensitive readiness input (L1 — Saw 2016)",
+      "in-season low-volume strength maintenance works (L2 — Rønnestad & Mujika 2014)",
+      "concussion is the most common match injury and prior concussion is the dominant risk factor (L2 — Williams 2013)"
+    ],
+    "weakEvidence": [
+      "neck strength as concussion protection (biologically plausible, modifiable, but causal protective evidence is emerging — Hrysomallis 2016)",
+      "exact ACWR thresholds (methodology contested)",
+      "the precise 50% congested-week gym-volume cut (direction certain from Cross 2016, magnitude consensus)",
+      "rugby-specific gym-transfer ratings (expert consensus)",
+      "position-specific demand splits below professional level"
+    ],
+    "areasRequiringExpertJudgement": [
+      "balancing collision load, pitch load and gym load in congested periods",
+      "cervical-conditioning dose across positions (front row vs backs)",
+      "managing return to CONTACT (distinct from return to running) after injury",
+      "collision-load quantification without GPS/accelerometry at amateur level",
+      "female-specific programming and injury-risk dosing"
+    ],
+    "areasRequiringFutureResearch": [
+      "causal effect of neck strengthening on concussion incidence (not just head-acceleration attenuation)",
+      "collision-load thresholds for youth and amateur players",
+      "long-term brain-health implications of cumulative head-impact exposure",
+      "artificial turf vs grass injury interaction in rugby"
+    ],
+    "potentialRisksIfMisimplemented": [
+      "treating neck strengthening as a substitute for tackle-technique coaching or the GRTP protocol (it is an adjunct, never a treatment)",
+      "returning a player to contact before completing the World Rugby GRTP protocol",
+      "introducing Nordic/GHR at full dose in-season (the soreness injures the week, not the muscle)",
+      "stacking heavy axial-loading gym work on top of a high-collision week",
+      "treating rugby recovery like a non-contact sport — collision recovery is slower",
+      "chasing hypertrophy past the point mass costs repeat-effort speed"
+    ]
+  },
+  "references": [
+    {
+      "key": "Duthie2003",
+      "citation": "Duthie G, Pyne D, Hooper S (2003). Applied physiology and game analysis of rugby union. Sports Med 33(13):973-91.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "Argus2012",
+      "citation": "Argus CK, Gill ND, Keogh JW (2012). Characterization of the differences in strength and power between different levels of competition in rugby union athletes. J Strength Cond Res 26(10):2698-704.",
+      "governingBody": null,
+      "type": "original research"
+    },
+    {
+      "key": "Austin2011",
+      "citation": "Austin D, Gabbett T, Jenkins D (2011). Repeated high-intensity exercise in professional rugby union. J Sports Sci 29(10):1105-12.",
+      "governingBody": null,
+      "type": "original research"
+    },
+    {
+      "key": "Smart2013",
+      "citation": "Smart D, Hopkins WG, Quarrie KL, Gill N (2013). The relationship between physical fitness and game behaviours in rugby union players. Eur J Sport Sci 14(sup1):S8-17.",
+      "governingBody": null,
+      "type": "original research"
+    },
+    {
+      "key": "Williams2013",
+      "citation": "Williams S, Trewartha G, Kemp S, Stokes K (2013). A meta-analysis of injuries in senior men's professional rugby union. Sports Med 43(10):1043-55.",
+      "governingBody": null,
+      "type": "meta-analysis (epidemiology)"
+    },
+    {
+      "key": "Brooks2006",
+      "citation": "Brooks JHM, Fuller CW, Kemp SPT, Reddin DB (2006). Incidence, risk, and prevention of hamstring muscle injuries in professional rugby union. Am J Sports Med 34(8):1297-306.",
+      "governingBody": null,
+      "type": "surveillance / original research"
+    },
+    {
+      "key": "Attwood2018",
+      "citation": "Attwood MJ, Roberts SP, Trewartha G, England ME, Stokes KA (2018). Efficacy of a movement control injury prevention programme in adult men's community rugby union: a cluster randomised controlled trial. Br J Sports Med 52(6):368-74.",
+      "governingBody": null,
+      "type": "RCT"
+    },
+    {
+      "key": "Hislop2017",
+      "citation": "Hislop MD, Stokes KA, Williams S, McKay CD, England ME, Kemp SPT, Trewartha G (2017). Reducing musculoskeletal injury and concussion risk in schoolboy rugby players with a pre-activity movement control exercise programme (Activate): a cluster RCT. Br J Sports Med 51(15):1140-6.",
+      "governingBody": null,
+      "type": "RCT"
+    },
+    {
+      "key": "Cross2016",
+      "citation": "Cross MJ, Williams S, Trewartha G, Kemp SPT, Stokes KA (2016). The influence of in-season training loads on injury risk in professional rugby union. Int J Sports Physiol Perform 11(3):350-5. (See also Williams 2017 on match congestion.)",
+      "governingBody": null,
+      "type": "original research (training load / congestion)"
+    },
+    {
+      "key": "Naughton2020",
+      "citation": "Naughton M, Miller J, Slater GJ (2020). Impact-induced muscle damage and contact-sport: aetiology, effects on neuromuscular function and recovery, and the modulating effects of adaptation and recovery strategies. Int J Sports Physiol Perform 15(7):912-917.",
+      "governingBody": null,
+      "type": "review (post-match/collision recovery)"
+    },
+    {
+      "key": "Hrysomallis2016",
+      "citation": "Hrysomallis C (2016). Neck muscular strength, training, performance and sport injury risk: a review. Sports Med 46(8):1111-24.",
+      "governingBody": null,
+      "type": "review"
+    },
+    {
+      "key": "Gabbett2016",
+      "citation": "Gabbett TJ (2016). The training-injury prevention paradox: should athletes be training smarter and harder? Br J Sports Med 50(5):273-80.",
+      "governingBody": null,
+      "type": "review (contested methodology)"
+    },
+    {
+      "key": "vanDyk2019",
+      "citation": "van Dyk N, Behan FP, Whiteley R (2019). Including the Nordic hamstring exercise in injury prevention programmes halves the rate of hamstring injuries: meta-analysis of 8459 athletes. Br J Sports Med 53(21):1362-70.",
+      "governingBody": null,
+      "type": "meta-analysis"
+    },
+    {
+      "key": "Saw2016",
+      "citation": "Saw AE, Main LC, Gastin PB (2016). Monitoring the athlete training response: subjective self-reported measures trump commonly used objective measures. Br J Sports Med 50(5):281-91.",
+      "governingBody": null,
+      "type": "systematic review"
+    },
+    {
+      "key": "Claudino2017",
+      "citation": "Claudino JG, et al. (2017). The countermovement jump to monitor neuromuscular status: a meta-analysis. J Sci Med Sport 20(4):397-402.",
+      "governingBody": null,
+      "type": "meta-analysis"
+    },
+    {
+      "key": "Fuller2007",
+      "citation": "Fuller CW, Laborde F, Leather RJ, Molloy MG (2008). International Rugby Board Rugby World Cup 2007 injury surveillance study. Br J Sports Med 42(6):452-9.",
+      "governingBody": "World Rugby",
+      "type": "surveillance"
+    },
+    {
+      "key": "WorldRugby",
+      "citation": "World Rugby — Laws of the Game, Graduated Return-To-Play (GRTP) concussion management protocol, and player-welfare / front-row conditioning guidance.",
+      "governingBody": "World Rugby",
+      "type": "governing body"
+    }
+  ],
+  "kpiFramework": {
+    "kpis": [
+      {
+        "name": "Readiness",
+        "metric": "readiness",
+        "category": "Recovery",
+        "leadingOrLagging": "leading",
+        "importance": 9,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "Composite of subjective wellness + time-since-match (collision recovery) + sleep (+ optional HRV corroboration); derived score only",
+        "testingFrequency": "daily",
+        "targetRange": "green vs personal baseline",
+        "eliteBenchmark": "consistently green pre-match",
+        "beginnerBenchmark": "establish baseline",
+        "youthBenchmark": "track trend",
+        "equipmentRequired": [
+          "none"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "Saw 2016; derived score (raw vitals stay private)"
+      },
+      {
+        "name": "Availability",
+        "metric": "availability",
+        "category": "Availability",
+        "leadingOrLagging": "lagging",
+        "importance": 10,
+        "athleteDashboard": false,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "Match/training availability status (includes GRTP status for head injury — availability only, no clinical detail)",
+        "testingFrequency": "continuous",
+        "targetRange": "available",
+        "eliteBenchmark": ">85% season availability",
+        "beginnerBenchmark": "track",
+        "youthBenchmark": "track",
+        "equipmentRequired": [
+          "none"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "Williams 2013 (injury burden and availability); availability-performance literature"
+      },
+      {
+        "name": "Prehab-pillar completion",
+        "metric": "prevention_completion",
+        "category": "Prevention",
+        "leadingOrLagging": "leading",
+        "importance": 10,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "Neck + shoulder + hamstring prehab sessions done / planned",
+        "testingFrequency": "weekly",
+        "targetRange": "100% of planned pillars",
+        "eliteBenchmark": "unbroken streaks",
+        "beginnerBenchmark": "build the habit",
+        "youthBenchmark": "technique quality",
+        "equipmentRequired": [
+          "none"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "Attwood 2018; Hislop 2017; van Dyk 2019 (compliance dose-response)"
+      },
+      {
+        "name": "Neck strength",
+        "metric": "neck_strength",
+        "category": "Prevention",
+        "leadingOrLagging": "leading",
+        "importance": 9,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Isometric multi-direction force (handheld dynamometer) vs baseline + symmetry",
+        "testingFrequency": "each block",
+        "targetRange": "rising or stable; symmetrical",
+        "eliteBenchmark": "position-appropriate (front row highest)",
+        "beginnerBenchmark": "establish baseline",
+        "youthBenchmark": "technique + light isometrics",
+        "equipmentRequired": [
+          "handheld dynamometer"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Hrysomallis 2016; Naish 2013"
+      },
+      {
+        "name": "Nordic strength",
+        "metric": "nordic_strength",
+        "category": "Prevention",
+        "leadingOrLagging": "leading",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "NordBord force or controlled-rep quality",
+        "testingFrequency": "each block",
+        "targetRange": "rising or stable; <10% asymmetry",
+        "eliteBenchmark": "high + symmetrical",
+        "beginnerBenchmark": "partial-range control",
+        "youthBenchmark": "technique",
+        "equipmentRequired": [
+          "NordBord or partner"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "high",
+        "evidenceLevel": "L1",
+        "source": "van Dyk 2019; Attwood 2018"
+      },
+      {
+        "name": "Strength anchor (squat/trap-bar)",
+        "metric": "squat_e1rm",
+        "category": "Performance",
+        "leadingOrLagging": "lagging",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Estimated 1RM from working sets",
+        "testingFrequency": "each block",
+        "targetRange": "phase-appropriate progression",
+        "eliteBenchmark": "~2.0×BW squat (forwards) / ~1.8×BW (backs)",
+        "beginnerBenchmark": "~1.2-1.4×BW",
+        "youthBenchmark": "technique loads",
+        "equipmentRequired": [
+          "barbell or trap bar"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Argus 2012; Duthie 2003"
+      },
+      {
+        "name": "CMJ",
+        "metric": "cmj",
+        "category": "Performance",
+        "leadingOrLagging": "both",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Jump height vs rolling baseline",
+        "testingFrequency": "weekly",
+        "targetRange": "within 8% of baseline",
+        "eliteBenchmark": "≥40 cm (backs) / ≥34-38 cm (forwards)",
+        "beginnerBenchmark": "track trend",
+        "youthBenchmark": "track trend",
+        "equipmentRequired": [
+          "jump mat/app"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "Claudino 2017; Argus 2012"
+      },
+      {
+        "name": "10 m sprint",
+        "metric": "sprint_10m",
+        "category": "Performance",
+        "leadingOrLagging": "lagging",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Timing gates",
+        "testingFrequency": "each block",
+        "targetRange": "improving/stable",
+        "eliteBenchmark": "~1.7-1.8 s (backs)",
+        "beginnerBenchmark": "~2.0-2.2 s",
+        "youthBenchmark": "trend",
+        "equipmentRequired": [
+          "gates"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Duthie 2003; Smart 2013"
+      },
+      {
+        "name": "Bronco / Yo-Yo IR1",
+        "metric": "bronco",
+        "category": "Performance",
+        "leadingOrLagging": "lagging",
+        "importance": 7,
+        "athleteDashboard": true,
+        "coachDashboard": false,
+        "teamDashboard": false,
+        "measurementMethod": "Bronco time (or Yo-Yo IR1 distance)",
+        "testingFrequency": "pre-season + mid-season",
+        "targetRange": "meets positional demand",
+        "eliteBenchmark": "Bronco ~4:20-5:00 (position-dependent)",
+        "beginnerBenchmark": "establish baseline",
+        "youthBenchmark": "trend",
+        "equipmentRequired": [
+          "cones + track"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": false,
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "Duthie 2003; Austin 2011"
+      },
+      {
+        "name": "Training-load state",
+        "metric": "load_state",
+        "category": "Load",
+        "leadingOrLagging": "leading",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "Derived ACWR band incl. collision-load stream (derived signal only)",
+        "testingFrequency": "daily",
+        "targetRange": "0.8-1.3",
+        "eliteBenchmark": "stays in band through congestion",
+        "beginnerBenchmark": "learn the bands",
+        "youthBenchmark": "n/a",
+        "equipmentRequired": [
+          "none"
+        ],
+        "wearableEstimable": true,
+        "autoCalculable": true,
+        "confidence": "low",
+        "evidenceLevel": "L3",
+        "source": "Gabbett 2016 (contested; conservative guardrail); Cross 2016"
+      },
+      {
+        "name": "Session consistency",
+        "metric": "consistency",
+        "category": "Adherence",
+        "leadingOrLagging": "leading",
+        "importance": 8,
+        "athleteDashboard": true,
+        "coachDashboard": true,
+        "teamDashboard": true,
+        "measurementMethod": "Planned vs completed sessions",
+        "testingFrequency": "weekly",
+        "targetRange": "≥85%",
+        "eliteBenchmark": "≥90%",
+        "beginnerBenchmark": "≥70%",
+        "youthBenchmark": "habit-forming",
+        "equipmentRequired": [
+          "none"
+        ],
+        "wearableEstimable": false,
+        "autoCalculable": true,
+        "confidence": "high",
+        "evidenceLevel": "L2",
+        "source": "adherence-outcome literature"
+      }
+    ],
+    "athleteDashboardKpis": [
+      {
+        "name": "Readiness",
+        "why": "One daily number that says push or protect — weighted to rugby's slower collision recovery."
+      },
+      {
+        "name": "Prehab-pillar completion",
+        "why": "Neck + shoulder + hamstring prehab is the availability insurance in a collision sport."
+      },
+      {
+        "name": "Neck strength",
+        "why": "Your own contribution to lowering head- and neck-injury risk, and a front-row requirement."
+      },
+      {
+        "name": "Nordic strength",
+        "why": "Hamstring armour for the most common muscle injury."
+      },
+      {
+        "name": "Strength anchor (squat/trap-bar)",
+        "why": "Rugby is a strength sport — this is the contact and acceleration currency."
+      },
+      {
+        "name": "CMJ",
+        "why": "Freshness check — missing power flags collision fatigue."
+      },
+      {
+        "name": "10 m sprint",
+        "why": "The decisive short action into and out of contact."
+      },
+      {
+        "name": "Session consistency",
+        "why": "The habit that compounds — the plan only works if it happens."
+      }
+    ],
+    "coachDashboardKpis": [
+      {
+        "name": "Team readiness",
+        "why": "At-a-glance squad freshness (derived traffic light) to shape the session."
+      },
+      {
+        "name": "Availability",
+        "why": "Who can play — injury burden predicts team success; includes GRTP status (availability only)."
+      },
+      {
+        "name": "Load + collision state distribution",
+        "why": "Who is over/under the safe band before it becomes injury."
+      },
+      {
+        "name": "Prehab compliance",
+        "why": "Neck/shoulder/hamstring pillars only protect the players who do them."
+      },
+      {
+        "name": "Session adherence",
+        "why": "Plan-vs-done across the squad."
+      },
+      {
+        "name": "Flag list",
+        "why": "Derived hamstring/shoulder/neck/back flags with what triggered them."
+      },
+      {
+        "name": "Congestion response",
+        "why": "Whether gym volume actually dropped in 2-match weeks — congestion elevates injury risk."
+      }
+    ],
+    "performanceScore": {
+      "range": "0-100",
+      "philosophy": "Reflects progress toward rugby's demands — maximal strength and power for contact, the repeat-effort engine, and the robustness pillars — weighted to reward the behaviours that keep a player available across a collision-heavy season.",
+      "components": [
+        {
+          "kpi": "prevention_completion",
+          "weight": 0.2,
+          "rationale": "Neck/shoulder/hamstring prehab is the availability spine of a collision sport."
+        },
+        {
+          "kpi": "consistency",
+          "weight": 0.2,
+          "rationale": "Consistency drives long-term development."
+        },
+        {
+          "kpi": "squat_e1rm",
+          "weight": 0.15,
+          "rationale": "Strength is rugby's contact and acceleration currency."
+        },
+        {
+          "kpi": "readiness",
+          "weight": 0.15,
+          "rationale": "Sustainable loading beats heroic spikes, doubly so with collision load."
+        },
+        {
+          "kpi": "bronco",
+          "weight": 0.1,
+          "rationale": "The repeat-effort engine — rugby's conditioning benchmark."
+        },
+        {
+          "kpi": "sprint_10m",
+          "weight": 0.1,
+          "rationale": "The decisive action into and out of contact."
+        },
+        {
+          "kpi": "cmj",
+          "weight": 0.1,
+          "rationale": "Power expression + freshness."
+        }
+      ],
+      "guardrails": [
+        "never rises while injured/unavailable or in GRTP",
+        "prehab non-compliance caps the score",
+        "no component rewards load spikes"
+      ],
+      "explainability": "Each component shows its contribution so the athlete sees exactly why the score moved."
+    },
+    "gamification": [
+      {
+        "name": "Injury-free weeks",
+        "type": "streak",
+        "rewards": "Recognition for consecutive available weeks + prehab completion"
+      },
+      {
+        "name": "Pillar streak",
+        "type": "streak",
+        "rewards": "Neck/shoulder/hamstring pillars completed on plan"
+      },
+      {
+        "name": "Consistency badge",
+        "type": "badge",
+        "rewards": "≥85% sessions for a block"
+      },
+      {
+        "name": "Iron neck",
+        "type": "badge",
+        "rewards": "Neck-strength target met + symmetrical"
+      },
+      {
+        "name": "Engine builder",
+        "type": "milestone",
+        "rewards": "Bronco / Yo-Yo IR1 level up"
+      },
+      {
+        "name": "First-step club",
+        "type": "milestone",
+        "rewards": "10 m sprint PB"
+      },
+      {
+        "name": "Anchor PBs",
+        "type": "milestone",
+        "rewards": "Squat/trap-bar/bench strength anchor progression"
+      }
+    ]
+  }
 }

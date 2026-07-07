@@ -16,7 +16,7 @@ const SPORT_NOUN = { run: 'running', cycle: 'cycling', swim: 'swimming' };
 const SPORT_TITLE = { run: 'Running', cycle: 'Cycling', swim: 'Swimming' };
 const SEASON_TAG = { off: 'off-season', pre: 'pre-season', in: 'in-season', transition: 'transition' };
 
-const STYLE_TAG = { strength: 'Strength', bodybuilding: 'Building muscle', functional: 'Functional' };
+const STYLE_TAG = { strength: 'Strength', bodybuilding: 'Building muscle', functional: 'Functional', olympic: 'Olympic weightlifting' };
 
 // Season → headline + the "what we're doing & why" line (sport goals).
 const SEASON_COPY = {

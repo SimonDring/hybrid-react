@@ -8,6 +8,13 @@
  * the server (S11 trigger, 20260708/20260709). Everything this module derives —
  * RAG status, reasons, confidence — is computed from those seven fields only.
  * Spec: docs/superpowers/specs/2026-07-05-live-coach-board-design.md.
+ *
+ * WP-53 / TAS Appendix A: the DERIVATION core (RAG severity model + confidence +
+ * load/injury normalisation) is owned by the engine as the canonical, snapshot-locked
+ * `rollUp` (@performance-os/engine, packages/engine/src/lib/team/rollUp.js; parity pinned by
+ * apps/mobile/tests/wp53-rollup.js). STAGE 2 (this change): this module now CONSUMES engine
+ * `rollUp` for the signal and keeps only the English reasons/actions — the duplicate
+ * derivation is gone, one source.
  */
 import type {
   CoachVisiblePlayer,
@@ -16,9 +23,9 @@ import type {
   LoadState,
   PlayerStatus,
 } from "@/types/dashboard";
+import { rollUp } from "@performance-os/engine";
 import { INJURY_SAFE } from "@/content/dashboardCopy";
 import { getStatusMeta } from "./statusLogic";
-import { isLowAdherenceValue } from "./dashboardUtils";
 
 /** The raw row as selected from `player_status` (RLS-scoped to the coach's team). */
 export interface PlayerStatusRow {
@@ -30,62 +37,6 @@ export interface PlayerStatusRow {
   adherence_pct: number | null;
   injury_status: string | null;
   updated_at: string | null;
-}
-
-const LOAD_STATES: LoadState[] = [
-  "no-data",
-  "ramping",
-  "balanced",
-  "high",
-  "overreaching",
-];
-
-function asLoadState(value: string | null): LoadState {
-  return LOAD_STATES.includes(value as LoadState) ? (value as LoadState) : "no-data";
-}
-
-function asInjuryStatus(value: string | null): InjuryStatus {
-  return value === "out" || value === "modified" ? value : "available";
-}
-
-const DAY = 86_400_000;
-const FRESH_WINDOW = 2 * DAY; // an update in the last 48h counts as current
-const STALE_WINDOW = 7 * DAY; // older than this and confidence drops to low
-
-function ageMs(iso: string | null, now: Date): number | null {
-  if (!iso) return null;
-  const t = new Date(iso).getTime();
-  return Number.isFinite(t) ? now.getTime() - t : null;
-}
-
-/**
- * RAG status from the safe fields (the mock severity model, re-founded):
- * 'out' is red regardless — the server-authoritative availability signal.
- * No readiness → grey (we can't judge the day without it). Otherwise a
- * transparent severity sum: easy to explain, easy to tune.
- */
-export function deriveLiveStatus(
-  readiness: number | null,
-  loadState: LoadState,
-  injuryStatus: InjuryStatus,
-  lowAdherence: boolean,
-): PlayerStatus {
-  if (injuryStatus === "out") return "red";
-  if (readiness === null) return "grey";
-
-  let severity = 0;
-  if (readiness < 50) severity += 2;
-  else if (readiness < 65) severity += 1;
-
-  if (loadState === "overreaching") severity += 2;
-  else if (loadState === "high") severity += 1;
-
-  if (injuryStatus === "modified") severity += 1;
-  if (lowAdherence) severity += 1;
-
-  if (severity >= 3) return "red";
-  if (severity >= 1) return "amber";
-  return "green";
 }
 
 function deriveReasons(
@@ -134,20 +85,6 @@ function deriveReasons(
   return reasons.length ? reasons : ["A couple of signals worth a look"];
 }
 
-/** Confidence from completeness + freshness of the derived signals. */
-function deriveConfidence(row: PlayerStatusRow, now: Date): Confidence {
-  const age = ageMs(row.updated_at, now);
-  const fresh = age !== null && age <= FRESH_WINDOW;
-  const stale = age === null || age > STALE_WINDOW;
-  if (stale) return "low";
-
-  const hasReadiness = row.readiness !== null;
-  const hasLoad = row.acwr !== null;
-  if (hasReadiness && hasLoad && fresh) return "high";
-  if (hasReadiness || hasLoad) return "medium";
-  return "low";
-}
-
 /** Which derived SOURCES fed this row — never the values behind them. */
 function deriveDataCompleteness(row: PlayerStatusRow): {
   used: string[];
@@ -187,13 +124,13 @@ export function deriveLivePlayer(
   row: PlayerStatusRow,
   now: Date,
 ): CoachVisiblePlayer {
-  const loadState = asLoadState(row.load_state);
-  const injuryStatus = asInjuryStatus(row.injury_status);
-  const adherencePercent =
-    row.adherence_pct === null ? null : Math.round(Number(row.adherence_pct));
-  const lowAdherence = isLowAdherenceValue(adherencePercent);
-
-  const status = deriveLiveStatus(row.readiness, loadState, injuryStatus, lowAdherence);
+  // WP-53 stage 2: the derived signal comes from the engine's canonical rollUp (one source).
+  const signal = rollUp(row, { nowMs: now.getTime() });
+  const loadState = signal.loadState as LoadState;
+  const injuryStatus = signal.injuryStatus as InjuryStatus;
+  const adherencePercent = signal.adherencePercent;
+  const lowAdherence = signal.lowAdherence;
+  const status = signal.status as PlayerStatus;
   const meta = getStatusMeta(status);
   const reasons = deriveReasons(row, status, loadState, injuryStatus, lowAdherence);
 
@@ -214,17 +151,17 @@ export function deriveLivePlayer(
     id: row.user_id,
     name: row.display_name?.trim() || "Player",
     status,
-    readinessScore: row.readiness,
+    readinessScore: signal.readinessScore,
     loadState,
-    acwr: row.acwr === null ? null : Number(Number(row.acwr).toFixed(2)),
+    acwr: signal.acwr,
     adherencePercent,
-    lastUpdated: row.updated_at,
+    lastUpdated: signal.lastUpdated,
     injuryFlag,
     injuryStatus,
     reasons,
     coachAction,
     playerAction,
-    confidence: deriveConfidence(row, now),
+    confidence: signal.confidence as Confidence,
     dataUsed: used,
     dataMissing: missing,
     nextReview: deriveNextReview(status),

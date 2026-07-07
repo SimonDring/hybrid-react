@@ -29,6 +29,7 @@
  */
 
 import { MUSCLE_GROUPS } from '../../data/muscleVolume.js';
+import { olympicDaySequence } from '../../data/disciplines/olympic.js';
 
 const UPPER_PUSH = ['chest', 'shoulders', 'triceps'];
 const UPPER_PULL = ['back', 'biceps'];
@@ -39,7 +40,9 @@ const ALL = [...UPPER, ...LOWER, ...CORE];
 
 // A day = a focus label, the muscle groups it trains, and the fundamental
 // pattern(s) it opens on (the allocator picks the first one equipment allows).
-const day = (focus, groups, anchors) => ({ focus, groups, anchors });
+// `extra` carries discipline-specific per-day metadata (WP-49: olympic emphasis +
+// targetQuality) preserved by withWeights and read by the allocator.
+const day = (focus, groups, anchors, extra = {}) => ({ focus, groups, anchors, ...extra });
 
 function template(days) {
   switch (days) {
@@ -84,6 +87,31 @@ function template(days) {
       day('Full body', ALL, ['lunge', 'hpull'])
     ];
   }
+}
+
+// ---- Hypertrophy: standard bodybuilding splits (Simon 2026-07-07) ----
+// Full-body (1–3d) → Upper/Lower (4d) → Push/Pull/Legs (5–6d). The base `template()` already
+// gives Full-body 1–3, Upper/Lower at 4, and Push/Pull/Legs at 6–7; hypertrophy only needs a
+// PPL-based 5-day (a real "PPL + Upper/Lower" week) instead of the generic UL/UL/Full. The
+// allocator's hypertrophyRegionOf() then trains each Push/Pull day as push-only / pull-only.
+function hypertrophyTemplate(days) {
+  if (days === 5) return [
+    day('Push', UPPER_PUSH, ['hpush']),
+    day('Pull', UPPER_PULL, ['hpull']),
+    day('Legs', [...LOWER, ...CORE], ['squat']),
+    day('Upper', [...UPPER, ...CORE], ['vpush', 'vpull']),
+    day('Lower', [...LOWER, ...CORE], ['hinge']),
+  ];
+  return template(days);
+}
+
+// ---- Olympic: lift-emphasis day allocation (snatch / clean&jerk / squat) ----
+function olympicTemplate(days, competedLift) {
+  return olympicDaySequence(days, competedLift).map((d) => {
+    const groups = d.emphasis === 'squat' ? [...LOWER, ...CORE] : ALL;
+    const anchors = d.emphasis === 'squat' ? ['squat'] : ['olympic'];
+    return day(d.focus, groups, anchors, { emphasis: d.emphasis, targetQuality: d.targetQuality });
+  });
 }
 
 // ---- Sport: emphasis-weighted region-day allocation ----
@@ -142,7 +170,10 @@ function withWeights(tmpl) {
   return tmpl.map(d => {
     const weights = {};
     for (const m of MUSCLE_GROUPS) weights[m] = (d.groups.includes(m) && freq[m]) ? 1 / freq[m] : 0;
-    return { focus: d.focus, anchors: d.anchors, weights };
+    // Carry every day field EXCEPT `groups` (weights supersede it) — so discipline metadata
+    // (olympic emphasis + targetQuality) survives. For non-olympic days this is just {focus,anchors}.
+    const { groups, ...rest } = d;
+    return { ...rest, weights };
   });
 }
 
@@ -150,9 +181,11 @@ function withWeights(tmpl) {
  * @param {object} ctx  { gymDays, style, emphasis }
  * @returns {Array<{ focus, anchors, weights:{ [muscle]:number } }>} one per day
  */
-export function resolveSplit({ gymDays = 3, style = 'functional', emphasis = {} } = {}) {
+export function resolveSplit({ gymDays = 3, style = 'functional', emphasis = {}, competedLift = 'both' } = {}) {
   const days = Math.max(1, Math.min(7, gymDays));
   if (style === 'sport') return withWeights(sportTemplate(days, emphasis));
+  if (style === 'hypertrophy') return withWeights(hypertrophyTemplate(days));
+  if (style === 'olympic') return withWeights(olympicTemplate(days, competedLift));
   return withWeights(template(days));
 }
 

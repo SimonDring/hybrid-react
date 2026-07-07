@@ -125,21 +125,60 @@ Also shipped this session (earlier additions):
   an RDL after clean selection — the hole affected D11 too). Injured build athletes ship full
   legal sessions; pure baseline byte-identical by construction.
 
-**⇒ NEXT (backlog order — WP-44/45/52/57/59/60 now all opened as PRs above; remaining):**
-Every remaining item has now hit a genuine decision boundary (not a coding blocker — a *you*
-blocker). WP-47 D7 block-objective **spec DOC** is written (build pauses for §9 sign-off) ·
-WP-46 structured items needs a golden-churn/join-migration call · WP-53 engine `rollUp()`
-entangles with the unmerged team PR (#138) + live-on-prod team code · WP-58 unify the two
-strength-standards models needs a canonical-band *scientific* call · **WP-55 reflow
-baseline-identity — EVIDENCE NOW MEASURED (2026-07-06):** a neutral-day probe found 6/6 horizon
-gym sessions diverge from baseline in their core work, incl. **programmed power/plyometric work
-silently dropped** + intensity-scheme changes — see reassessment §WP-55 for the measured detail
-and the design question (clone-baseline-then-scale vs re-allocate). **PAUSE for Simon.**
-**PAUSES for Simon:** WP-47 D7 design (§9), WP-48 team-sport flip commit, WP-49 build flip (six
-product decisions listed in the reassessment §Priority 11), WP-55 reflow design question — plus
-review of the seed science flagged in #127 (per-lift standards, sport-experience priors) and
-#131 (goal demand vectors), and WP-41 stage 2 (the id-level contraindication vocabulary needs
-your science review).
+**✅ WP-49 THE BUILD FLIP — MERGED to main (2026-07-07). Suites 177/177. KSV 1.17.0.**
+Build goals now run off the diagnosis-first DISCIPLINE engine (the legacy volume-first path is
+retired): get stronger → powerlifting (Upper/Lower, SBD-led), build muscle → hypertrophy
+(Full-body/UL/Push-Pull-Legs by days), functional → hypertrophy, Olympic → snatch/C&J/squat
+day-emphasis with an onboarding "which lift do you compete in?" question. Barbell-only disciplines
+fall back to hypertrophy without a barbell. Sports byte-identical throughout; injury safety intact;
+final review verdict SHIP. Follow-ups: Olympic day-emphasis not yet threaded through the reflow
+(chip: task_ab57477b); volumeTolerance prior scales the target but not delivered sets in the
+diagnosis-first path (dormant seam); generic hypertrophy carries little direct isolation (Task 4c).
+Plan 2 REMAINING: Task 5 (secondary-goals menu — functional's conditioning secondary) + Task 4c
+(per-discipline periodisation/dose).
+
+**⇒ (earlier context, pre-flip) ✅ 29 PRs MERGED (2026-07-06). `main` KSV = 1.9.0. Suites 167/167.**
+- **Batch 1 — #127–#142** (WP-38/39/40/41/42/43/44/45/48/50/51/52/56/57/59/60): the post-#126
+  audit backlog; 9 independents + a 7-PR stack, each reconciled + golden-audited.
+- **Batch 2 — #144–#149** (Simon-directed): WP-46 s1 (exId identity, #144) → s2 (engine joins key on
+  exId, #145) → WP-58 (governed strength-standards table + fitnessAge constants, #146) → WP-47 D7
+  block objective **ADVISORY** (#147) → WP-55 **reflow baseline-identity** — the neutral-day churn
+  that dropped programmed power work is fixed (#148) → WP-53 engine `rollUp` **stage 1** (pure port,
+  snapshot-locked, #149).
+- **Batch 3 — #150–#152** (Simon reviewed + approved the three flagged calls): WP-58 **reconcile**
+  (capability anchors derived from the governed advanced band — one source, #150) → WP-47 **steer**
+  (the D7 block plan drives the deload rhythm for diagnosed sport cohorts w/ a recoverability prior;
+  gated + reversible, golden byte-identical, #151) → WP-53 **stage 2** (the coach board consumes
+  engine `rollUp`; duplicate deleted; `next build` verified, #152).
+- **Batch 4 — #154–#155** (WP-47 + WP-46 to completion): WP-47 **block-structure steer** —
+  blockPlanToSplit drives the diagnosis's phase split (base|build|peak fit to totalWeeks) behind the
+  same gate; golden byte-identical bar an additive `steered` field (#154). WP-46 **fuzzy joins done**
+  — matchLift → PROGRESSION_LIFTS + the core hold regex → CORE_HOLDS (governed exId maps reproducing
+  the matchers exactly; plans byte-identical; rename-proof). The app form-guide is deliberately left
+  pattern/alias-based (many-to-one display, not an id join). (#155)
+
+**⚠️ PENDING PROD APPLIES (yours, per supabase/SECURITY-DEPLOY.md).** As of 2026-07-06 the DB
+migrations through `20260711` are applied to prod (Simon, ahead of staging — no active users). Still
+to confirm: the paired **Edge Functions** deploy separately from `db push` — the OAuth-nonce
+callbacks + `fitbit-sync` (S1/S4/S8) and `ai-render` (WP-60, optional; AI go-live only). None break
+the running app.
+
+**NOTE on D7 steering (WP-47).** Both the deload rhythm AND the block structure are now diagnosis-
+driven — but GATED on the athlete carrying a learned recoverability prior, which nothing promotes
+yet (staged priors are not read; that's the D16 promotion decision, Simon's call). So it is DORMANT
+for every current athlete (golden byte-identical) until priors are promoted; activating it broadly
+(steering all diagnosed sport cohorts, prior or not) is the live-plan flip and stays Simon's.
+
+**⇒ NEXT (remaining, in backlog order):**
+- **WP-49 build flip** — **PAUSE FOR SIMON** (the six product decisions in reassessment §Priority 11).
+- **AI go-live** — WP-60 seam is merged behind flags; needs the eval harness + your `AI_ENABLED` deploy.
+- **D16 prior promotion** — promote staged recoverability priors to `learnedPriors` so the D7 steer +
+  volumeTolerance actually fire (the twice-gated pattern; Simon's call, needs the falsifiability read).
+- Block-plan model refinement — one block per D5 priority today, so single-priority athletes get a
+  single-phase steered plan; richer intra-quality intensity progression is a further enhancement.
+**PAUSES for Simon:** WP-49 build flip; activating D7 steering broadly (beyond the recoverability-
+prior gate); D16 prior promotion; review of the seed science flagged in #127 (per-lift standards,
+priors) and #131 (goal demand vectors); WP-41 stage 2 (id-level contraindication vocabulary).
 
 ## ▶ (superseded 2026-07-06) engine-rebuild status & the next step (2026-07-03)
 

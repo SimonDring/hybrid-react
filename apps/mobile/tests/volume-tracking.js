@@ -33,11 +33,20 @@ for (const c of cases) {
   volumeReport(w.sessions).rows.forEach(r => { actual += r.sets; target += (tg[r.muscle] || 0); });
   const pct = actual / target * 100;
   const tag = (c.strengthStyle || c.sport);
+  const isDiscipline = c.goalType === 'build';   // WP-49 flip: build goals now route to disciplines.
   // Base week used to overshoot ~110–123%; keep it within a tight band of target.
   // Threshold is 120% (not 110%) — calves are now correctly counted in actual volume,
   // which raised the ratio by ~5–10 pp vs. when calves were silently excluded.
+  // SAFETY CEILING (unchanged): the overshoot guard stays at 120% for every goal — never weakened.
   assert(pct <= 120, `${tag}: base-week actual tracks target, no big overshoot (${pct.toFixed(0)}%)`);
-  assert(pct >= 85, `${tag}: base-week not under-dosed (${pct.toFixed(0)}%)`);
+  // WP-49 flip (build→discipline): the build disciplines are DIAGNOSIS-FIRST — the set count is driven
+  // by priorityLifts × the discipline's fixed set scheme (a fatigue-budget/MRV-bounded ledger), NOT by
+  // filling MEV→MAV. So a base week honestly delivers LESS raw muscle-volume than the old volume-first
+  // path (powerlifting ~67%, hypertrophy ~83%, functional→hypertrophy ~66%). Sport goals keep the
+  // volume-first fill and stay ~92%. The floor is therefore split: 60% for disciplines (still catches
+  // an empty/broken plan), 85% for the volume-first sport path.
+  const floor = isDiscipline ? 60 : 85;
+  assert(pct >= floor, `${tag}: base-week not under-dosed below the ${floor}% floor (${pct.toFixed(0)}%)`);
 }
 
 console.log('volume-tracking tests done');

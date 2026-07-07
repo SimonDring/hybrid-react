@@ -231,7 +231,11 @@ export function reflowPhases({
     const weights = day.weights;
     const normalShare = {};
     for (const m of MUSCLE_GROUPS) normalShare[m] = weights ? (wt[m] || 0) * (weights[m] || 0) : (wt[m] || 0) / n;
-    return { normalShare, anchors: day.anchors || null, focus: gctx.style === 'sport' ? null : (weights || null) };
+    // WP-49 T6: carry the split's REGION LABEL into the reflow so a discipline's split survives
+    // reflow (powerlifting Upper/Lower, hypertrophy PPL) — otherwise the reflowed week collapses to
+    // full-body and, e.g., squats every day, over-dosing quads past MRV. Sports keep region='full'
+    // via the allocator's discipline gate, so this is inert for them (byte-identical).
+    return { normalShare, anchors: day.anchors || null, focus: gctx.style === 'sport' ? null : (weights || null), focusLabel: day.focus || null };
   });
   const { perSlot, forgiven } = distributeAcrossSlots({ slots: slotInputs, deficit, windowDays: WINDOW_DAYS });
 
@@ -246,12 +250,28 @@ export function reflowPhases({
   let rpeOffset = recovery ? (recovery.rpeOffset || 0) : 0;
   if (!reverted && override === 'easy') rpeOffset = Math.min(rpeOffset, travelPolicy.rpeOffset);
 
+  // WP-55 — baseline identity. On a NEUTRAL day the reflow must not re-derive the
+  // session: re-allocating from scratch produces a different (and de-periodised — it can
+  // drop the baseline's power/plyo anchors) session than the plan the rest of the horizon
+  // shows, for no coaching reason. So a slot whose inputs are all no-ops KEEPS its baseline
+  // session (we simply don't set specByKey[s.key], and the pass below leaves it untouched).
+  // Only slots whose inputs ACTUALLY changed are re-allocated. Baseline sessions already
+  // carry axialLoad/dayIdx (generatePlan stamps them), so identity is exact.
+  const deficitTotal = Object.values(deficit).reduce((a, b) => a + b, 0);
+  const neutralGlobals = Math.abs(mult - 1) < 1e-9 && rpeOffset === 0 && deficitTotal === 0
+    && !(contraindicatedPatterns && contraindicatedPatterns.length) && !(blockedNameRegexes && blockedNameRegexes.length);
+
   const specByKey = {};
   slots.forEach((s, idx) => {
+    const wd0 = s.date ? (s.date.getDay() === 0 ? 6 : s.date.getDay() - 1) : null;
+    const sportBusyDay = wd0 != null && sportBusy.includes(wd0);   // reflow lightens these — not neutral
+    const deloadUnchanged = effDeload(s.week) === !!s.week.deload; // no forced/deferred deload change
+    if (neutralGlobals && deloadUnchanged && !sportBusyDay) return; // nothing changed → keep baseline session
+
     const spec = allocateGym({
       targets: perSlot[idx],
       slots: [{ minutes: Math.round(functionalSlotMinutes(gctx.style, gctx.minutes) * mult), equip: gctx.access,
-                anchors: slotInputs[idx].anchors, focus: slotInputs[idx].focus }],
+                anchors: slotInputs[idx].anchors, focus: slotInputs[idx].focus, focusLabel: slotInputs[idx].focusLabel }],
       ctx: {
         style: gctx.style, intent: intentOfTitle(s.phase.title), deload: effDeload(s.week), taper: !!s.week.taper,
         weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,
@@ -260,7 +280,8 @@ export function reflowPhases({
         priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds,
         weekGymCount: gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, weekSlotIdx: s.i,
         rpeOffset, contraindicatedPatterns, blockedNameRegexes,
-        categoryPlan: categoryPlanFor(gctx.skbSportId, gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, { levelName: gctx.level, season: gctx.season })
+        categoryPlan: categoryPlanFor(gctx.skbSportId, gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, { levelName: gctx.level, season: gctx.season }),
+        discipline: gctx.discipline || null
       }
     })[0];
     if (spec) {
@@ -308,6 +329,18 @@ export function reflowPhases({
         const out = { ...week, sessions: newSessions, _adapted: changed };
         if (changed && rpeOffset < 0 && reshapedIdx.size) {
           out._intensityEased = override === 'easy' ? 'travel — eased' : 'low readiness — eased';
+        }
+        // WP-43: runtime reshaping must be VISIBLE (Art 14/15). Sport-rule trims carry the
+        // fired rule ids; a non-trivial catch-up spread names the sets it recovered. Both
+        // stamp only reshaped weeks — the annotations describe what the reflow DID here.
+        if (changed && reshapedIdx.size && ruleAdj.volumeMult !== 1) {
+          out._ruleTrim = { ruleIds: ruleAdj.ruleIds || [], mult: ruleAdj.volumeMult };
+        }
+        if (changed && reshapedIdx.size && week.num === cw) {
+          const owed = Object.values(deficit).reduce((a, b) => a + b, 0);
+          const waived = Object.values(forgiven || {}).reduce((a, b) => a + b, 0);
+          const recovered = Math.max(0, owed - waived);
+          if (recovered >= 1) out._catchUp = { sets: Math.round(recovered) };
         }
         if (forceDl) { out.deload = true; out.autoDeload = true; out.deloadReason = rec.reason; }
         if (deferDl) { out.deload = false; out.deloadDeferred = true; }

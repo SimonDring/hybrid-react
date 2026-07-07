@@ -25,17 +25,22 @@ const ALLOWLIST = {
   cycling: {
     neck_isometrics: 'no neck muscle in the engine vocabulary; aero-position prehab — revisit at the next catalogue authoring pass',
   },
+  rugby: {
+    neck_isometrics: 'no neck muscle in the engine vocabulary; cervical strengthening is a rugby-specific modifiable concussion/neck-injury risk factor — reuses cycling\'s allowlisted id (revisit at the next catalogue authoring pass)',
+  },
   gaelic_football: {
-    trap_bar_jump: 'loaded jump — distinct movement, no catalogue entry (WP-23 authoring)',
-    mb_rotational_throw: 'medicine-ball equipment not in the equip vocabulary (WP-23)',
+    trap_bar_jump: 'loaded jump — distinct movement, no catalogue entry; the power category is covered by hip_thrust + cable_woodchop (WP-48 flip audit)',
     resisted_sprint: 'a sprint, not a gym movement — belongs to future endurance programming',
   },
   hurling: {
-    trap_bar_jump: 'loaded jump — distinct movement, no catalogue entry (WP-23 authoring)',
-    mb_rotational_throw: 'medicine-ball equipment not in the equip vocabulary (WP-23)',
     resisted_sprint: 'a sprint, not a gym movement — belongs to future endurance programming',
-    cable_rotational_press: 'distinct movement, no catalogue entry (WP-23 authoring)',
-    wrist_roller: 'grip/forearm — no muscle-vocabulary home (WP-23)',
+    cable_rotational_press: 'distinct movement, no catalogue entry; rotational power is covered by cable_woodchop (WP-48 flip audit)',
+    wrist_roller: 'grip/forearm — no muscle-vocabulary home; the category is covered by farmer_carry (WP-48 flip audit)',
+  },
+  field_hockey: {
+    trap_bar_jump: 'loaded jump — distinct movement; explosive power is covered by broad_jump (WP-48 flip audit)',
+    cable_rotational_press: 'distinct movement; the trunk category is covered by pallof (WP-48 flip audit)',
+    resisted_sprint: 'a sprint, not a gym movement — belongs to future endurance programming',
   },
 };
 
@@ -43,7 +48,7 @@ const ALLOWLIST = {
 // the D11/SKB-primary path).
 const FLIP_SPORTS = ['running_long', 'running_middle', 'running_sprint', 'cycling', 'swimming', 'triathlon'];
 
-const profiles = ['gaelic_football', 'hurling', 'swimming', 'cycling', 'triathlon', 'running_long', 'running_middle', 'running_sprint'];
+const profiles = ['rugby', 'soccer', 'gaelic_football', 'hurling', 'field_hockey', 'swimming', 'cycling', 'triathlon', 'running_long', 'running_middle', 'running_sprint'];
 let checked = 0;
 for (const sid of profiles) {
   const lib = SKB.section(sid, 'exerciseLibrary');

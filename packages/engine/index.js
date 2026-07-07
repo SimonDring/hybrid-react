@@ -6,9 +6,11 @@
 //   deriveReadiness(inputs)     → the readiness signal (alias: readinessIndex)
 //   deriveLoad(inputs)          → the training-load signal (alias: assessLoad)
 //   validate(week, ctx?)        → the D14 ValidationReport (alias: validateWeek)
-//   explain / rollUp            → RESERVED: explain lands with WP-30 (the decision
-//                                 read-model); rollUp with the Team package (WP-34,
-//                                 TAS Appendix A). Not stubbed — no speculative seams.
+//   rollUp(row, {nowMs})        → the team roll-up: a coach-safe player_status row → the
+//                                 derived coaching signal (RAG status/confidence/load).
+//                                 The engine owns this derivation (WP-53, TAS Appendix A);
+//                                 the web dashboard + a future edge function consume it.
+//   explain                     → RESERVED: lands with WP-30 (the decision read-model).
 // Every consumer surface (the PWA's PlanService/store, apps/web, future Edge
 // Functions) should import from THIS barrel. Deep "./lib/*" subpaths remain for
 // tests and for the documented residue in tests/engine-api-boundary.js — that
@@ -21,6 +23,7 @@ export {
   recentSessionRecovery, sessionKey, intentOfTitle, localISO, sessionDiscipline
 } from './src/lib/plan/reflow.js';
 export { resolveProgram } from './src/lib/strength/program.js';
+export { deriveBlockObjective, blockDeloadSteers, deloadsFromRecoverability, blockPlanToSplit } from './src/lib/plan/blockObjective.js';
 export { resolvePeriodization, deriveSeason, continueBlock } from './src/lib/plan/periodization.js';
 export { weeklyMuscleTargets } from './src/lib/strength/targets.js';
 export { allocateGym, SESSION_CEILING_MIN } from './src/lib/plan/allocator.js';
@@ -39,6 +42,7 @@ export { applyInjuryRules, applyPrevention } from './src/lib/injury/injuryFilter
 export { default as kb } from './src/lib/knowledge/kb.js';
 export { authorityOf, mayForceAlone, mayScaleAlone } from './src/lib/knowledge/authority.js';
 export { validateWeek, validateWeek as validate, VALIDATORS, CONFLICT_ORDER } from './src/lib/validation/contract.js';
+export { rollUp, deriveStatus as rollUpStatus, deriveConfidence as rollUpConfidence, LOW_ADHERENCE_THRESHOLD } from './src/lib/team/rollUp.js';
 // The AIGAS Seam 1 gate (WP-60): decision contracts + proposal disposal. The engine's
 // decision modules never import ai/ (one-way, test-pinned); proposers live platform-side.
 export { DECISION_CONTRACTS, contractFor, validateProposal } from './src/lib/ai/contracts.js';
@@ -59,7 +63,7 @@ export { selectableSports, positionsFor } from './src/lib/sportKnowledge/selecta
 export { bindingFor } from './src/data/sportEngineBinding.js';
 
 // ── Prescription + progression contracts screens/stores legitimately consume ──
-export { nextE1RM, resolveLifts, matchLift, applyWeights, estimateE1RM, parseReps, parseRpe, trackedLiftsInSession, epley1RM, pullupE1RM } from './src/lib/liftProgression.js';
+export { nextE1RM, resolveLifts, matchLift, matchLiftForItem, applyWeights, estimateE1RM, parseReps, parseRpe, trackedLiftsInSession, epley1RM, pullupE1RM } from './src/lib/liftProgression.js';
 export { suggestOptimalFrequency } from './src/lib/plan/frequency.js';
 export { createAthleteModel, ATHLETE_SCHEMA_VERSION } from './src/lib/athlete/index.js';
 export { derivePerformanceModel } from './src/lib/performance/index.js';
@@ -71,7 +75,15 @@ export { deriveConstraints, suggestGymDays, lightenItems } from './src/lib/plan/
 export { parseTeamSchedule, applyTeamSchedule } from './src/lib/plan/teamSchedule.js';
 export { ruleVolumeAdjustment } from './src/lib/sportKnowledge/reflowAdjust.js';
 export { MUSCLE_GROUPS, MUSCLE_LABELS, VOLUME_LANDMARKS } from './src/data/muscleVolume.js';
+export { STRENGTH_STANDARDS, STRENGTH_BANDS, strengthBandFor } from './src/data/strengthStandards.js';
 export { EXERCISES, LEVELS, availableEquip } from './src/data/strengthExercises.js';
 export { DOSE_SCHEMES, doseForQuality, REACTIVE_LIMITS } from './src/data/doseSchemes.js';
 export { ENGINE_VERSION, provenance } from './src/version.js';
 export { KNOWLEDGE_SET_VERSION } from './src/lib/knowledge/entries.js';
+// WP-59 — the first honest learning loop (pure; STAGED, never engine-consumed).
+export { blockOutcome } from './src/lib/learning/blockOutcome.js';
+export { readinessValidation } from './src/lib/indices/readinessValidation.js';
+// WP-49 (Plan 1) — the discipline + secondary-goal knowledge foundation (STAGED,
+// never engine-consumed yet; Plan 2 flips build onto this).
+export { DISCIPLINES, getDiscipline } from './src/data/disciplines/index.js';
+export { SECONDARY_GOALS, getSecondaryGoal, SECONDARY_GOAL_IDS } from './src/data/secondaryGoals.js';

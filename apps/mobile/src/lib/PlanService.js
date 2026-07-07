@@ -107,7 +107,7 @@ function gymCtx(profile) {
     exercisePriority: program.exercisePriority || [], priorityByIntent: program.priorityByIntent || new Map(),
     sport: profile.sport || null, power: !!program.power,
     priorityQualities: (perf && perf.priorityAdaptations) || [], season: program.season, skbIds,
-    skbSportId
+    skbSportId, discipline: program.discipline || null
   };
 }
 

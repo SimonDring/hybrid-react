@@ -13,6 +13,7 @@
 import { useState } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import { continueBlock } from '@performance-os/engine';
+import { getPerformanceModel, syncStagedPriors } from '../lib/AthleteModelService.js';
 
 const STEPS = ['feel', 'changed', 'sameGoal', 'hitSessions'];
 
@@ -37,8 +38,21 @@ export default function BlockCheckin() {
 
   async function finish(finalAnswers) {
     setCompleting(true);
+    const today = new Date().toISOString().slice(0, 10);
+    // WP-59 — stage (never apply) a learned-prior candidate from the block that just
+    // ended: did the athlete respond to what its diagnosis prescribed? Fire-and-forget
+    // BEFORE the plan_start_date moves on (the block window closes at today). Nothing
+    // reads model.stagedPriors; promotion to a live prior is a separate, reviewed step.
+    try {
+      const pm = getPerformanceModel();
+      const priorityQualities = (pm && pm.priorityAdaptations) || [];
+      if (profile.plan_start_date && priorityQualities.length) {
+        syncStagedPriors({ startISO: profile.plan_start_date, endISO: today, priorityQualities })
+          .catch((e) => console.error('stagedPriors sync failed (continuing):', e));
+      }
+    } catch (e) { console.error('stagedPriors skipped:', e); }
     // The engine is pure and never reads the clock — the app layer supplies "today".
-    const result = continueBlock(profile, finalAnswers, new Date().toISOString().slice(0, 10));
+    const result = continueBlock(profile, finalAnswers, today);
     await updateProfile(result.profilePatch);
     // If recalibrate, updateProfile sets onboarded:false → App.jsx shows Onboarding
     // Otherwise the new plan_start_date triggers plan regeneration on next render

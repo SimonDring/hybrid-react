@@ -19,10 +19,15 @@ const has = (id) => !!(EXERCISES.find(e => e.id === id) || {}).stretchBias;
 assert(has('rdl') && has('incline_db_curl') && has('overhead_ext') && has('chest_fly') && has('seated_leg_curl'), 'seed exercises carry stretchBias');
 assert(!has('leg_curl') && !has('spider_curl') && !has('triceps_pushdown'), 'shortened-position work is NOT stretch-biased');
 
-// (2) a bodybuilding plan selects more stretch-biased work than a strength plan.
+// (2) the hypertrophy discipline still SELECTS stretch-biased work (the flag steers selection).
+// WP-49 flip (build→discipline): 'bodybuilding' now routes to the COMPOUND-LED hypertrophy discipline,
+// so for a generic profile the stretch-biased work that survives is the front squat (a compound), not
+// lengthened-position ISOLATION (rdl/chest_fly/seated_leg_curl) — that isolation is now diagnosis-driven
+// for a lagging muscle, not a blanket default (see FLAGGED note). The old bb>st comparison is now
+// INVERTED (powerlifting programmes front squat more often), so assert the discipline selects
+// stretch-biased work at all rather than the stale cross-discipline comparison.
 const bb = plan({ goalType: 'build', strengthStyle: 'bodybuilding', experienceLevel: 'advanced', daysPerWeek: 5 });
-const st = plan({ goalType: 'build', strengthStyle: 'strength', experienceLevel: 'advanced', daysPerWeek: 5 });
-assert(stretchCount(bb) > stretchCount(st), `bodybuilding leans stretch-biased (bb ${stretchCount(bb)} > st ${stretchCount(st)})`);
+assert(stretchCount(bb) > 0, `hypertrophy discipline selects stretch-biased work (bb ${stretchCount(bb)})`);
 
 // (3) frequency unaffected (reads targets, not selection).
 const before = suggestOptimalFrequency(answersToProfile({ ...BLANK_ANSWERS, goalType: 'build', strengthStyle: 'bodybuilding', experienceLevel: 'advanced' })).optimalDays;

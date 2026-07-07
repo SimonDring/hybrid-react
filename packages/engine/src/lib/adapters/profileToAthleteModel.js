@@ -3,6 +3,7 @@
 import { buildAthleteModel } from '../athlete/buildAthleteModel.js';
 import { legacyToOutcome } from './goalMapping.js';
 import { skbSportIdOf } from '../sportKnowledge/index.js';
+import { resolveBuildDisciplineId } from '../../data/disciplines/index.js';
 
 export function profileToAthleteModel(profile = {}, asOf) {
   const p = profile || {};
@@ -42,6 +43,10 @@ export function profileToAthleteModel(profile = {}, asOf) {
 
   const inputs = {
     identity: { age: p.age ?? null, biologicalSex: p.sex ?? null, bodyMassKg: p.bodyweight_kg ?? null, heightCm: p.height_cm ?? null },
+    // THE FLIP (WP-49 Plan 2 T6): resolve the build discipline the SAME way resolveProgram does
+    // (goal → discipline + barbell gate), so the diagnosis demand vector agrees with the program.
+    // null for sport profiles. (Pre-flip this was p.discipline||null — explicit opt-in only.)
+    disciplineId: resolveBuildDisciplineId(p),
     goals: [{ id: 'primary', outcome, priority: 1, sportRef: p.sport || null }],
     sportingContext: {
       primarySport: skbSportIdOf(p),
