@@ -215,12 +215,15 @@ implementation plan (writing-plans) will step through the above with checkpoints
 
 ---
 
-## 9. Open questions / sign-offs required from Simon
-1. **Discipline seed content** (demand vectors, priority lifts, dose ranges, periodisation weeks) —
-   ships `needsReview`; you or an SME confirm the numbers before they are final.
-2. **Olympic scope** — do beginners get the full classic lifts, or a simplified progression (e.g.
-   power variants + positions first)? (Proposed: competency-gate the full lifts; beginners get
-   power/hang variants + OHS/positions.)
-3. **Meet/peak handling** — powerlifting/Olympic can take an event date for a peak/taper (reuse the
-   proven taper). Confirm we want that in v1 or defer.
-4. **Migration default for `functional`** — proposed `hypertrophy + conditioning`; confirm.
+## 9. Resolved decisions (Simon, 2026-07-07)
+1. **Discipline seed content** — I draft the demand vectors, priority lifts, dose ranges, and
+   periodisation weeks from standard S&C. Simon has approved the drafting; values still ship with a
+   `provenance` trail (evidenceLevel + source) but are treated as accepted for v1 (not blocked on a
+   separate SME pass).
+2. **Olympic scope** — RESOLVED: competency-gate the full classic lifts. Beginners get power/hang
+   variants + overhead-squat/positions first; the full snatch / clean & jerk unlock at
+   intermediate+ (mirrors the existing competency gating for other high-skill lifts).
+3. **Meet/peak handling** — RESOLVED: INCLUDE in v1. Powerlifting/Olympic accept an event date and
+   get a peak/taper overlay by REUSING the existing proven event-taper (volume down, intensity held).
+   It only fires when a date is entered, so it adds near-zero risk for the no-event majority.
+4. **Migration default for `functional`** — RESOLVED: `hypertrophy + conditioning` secondary goal.
