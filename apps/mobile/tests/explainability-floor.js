@@ -35,8 +35,11 @@ const gymSessions = (plan) => plan.phases.flatMap((p) => p.weeks.flatMap((w) => 
   const plan = generatePlan({ ...answersToProfile(A({ goalType: 'build', strengthStyle: 'bodybuilding', experienceLevel: 'intermediate', daysPerWeek: 4, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL })), plan_start_date: '2026-07-06' });
   const objs = gymSessions(plan).map((s) => s._objective);
   assert(objs.length > 0 && objs.every((o) => o && o.purpose && o.rationale), 'E1a every build session carries an objective + rationale');
-  assert(objs.every((o) => o.source === 'style'), 'E1b build objectives declare their style derivation (never a diagnosis claim)');
-  assert(objs.every((o) => !/limiter|limiting|diagnos/i.test(o.rationale)), 'E1c no invented diagnosis language on the legacy path');
+  // WP-49 T6 (THE FLIP): build now runs off the diagnosis engine, so its objectives are
+  // diagnosis-derived (a target quality + an honest rationale), NOT the old style label — exactly
+  // like the sport cohorts (E2/E3). Displaying the diagnosis is honest for build now.
+  assert(objs.every((o) => o.source !== 'style'), 'E1b build objectives are diagnosis-derived (not a style label)');
+  assert(objs.every((o) => o.quality && /diagnosis/i.test(o.rationale)), 'E1c build objectives are grounded in the diagnosis (carry a target quality + say so)');
   assert(new Set(objs.map((o) => o.purpose)).size >= 2, 'E1d split days carry different purposes');
 }
 

@@ -61,12 +61,14 @@ const workingNames = (week) => week.sessions.flatMap((s) => (s.items || [])
   assert(hasOlympicLift, `B1 Olympic plan features a classic olympic-pattern lift (snatch/clean&jerk/pull) — got names incl: ${[...new Set(names)].slice(0, 12).join(', ')}`);
 }
 
-// ── C · powerlifting is NOT region-split (lift-focused, full-body days) ────────
+// ── C · powerlifting is an Upper/Lower split (bench-led upper, squat/deadlift-led lower) ──
+// WP-49 T6: powerlifting uses the coarse Upper/Lower region split so a 4-day isn't four identical
+// full-body days (no muscle spacing) — bench anchors upper days, squat+deadlift anchor lower days.
 {
   const plan = planForDisc('powerlifting', 4, ['mon', 'tue', 'thu', 'fri'], { lifts: { squat: 140, bench: 100, deadlift: 180 } });
   const regions = workWeek(plan).sessions.map((s) => regionOfTitle(s.title));
-  assert(!regions.includes('upper') || !regions.includes('lower'),
-    `C1 powerlifting is not forced into an upper/lower split (got [${regions.join(', ')}])`);
+  assert(regions.includes('upper') && regions.includes('lower'),
+    `C1 powerlifting 4-day is an upper/lower split (got [${regions.join(', ')}])`);
 }
 
 // ── D · powerlifting is BUILT AROUND the competition lifts (squat/bench/deadlift) ──

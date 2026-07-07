@@ -1,10 +1,8 @@
-// WP-49 (Plan 2 T2): a profile carrying `discipline` gets a discipline-driven program from
-// resolveProgram — priority lifts led by the discipline's own priorityLifts (not the legacy
-// style-based BUILD_INTENTS list), and `power` derived from the discipline's demand vector
-// (explosiveStrength/power >= 0.6), not the legacy `style === 'functional'` rule.
-//
-// Profiles WITHOUT `discipline` must fall through to the unchanged legacy branch — that's
-// checked at the golden-master level (byte-identical for every existing archetype), not here.
+// WP-49 (Plan 2 T2/T6): a build profile gets a discipline-driven program from resolveProgram —
+// priority lifts led by the discipline's own priorityLifts, and `power` derived from the
+// discipline's demand vector (explosiveStrength/power >= 0.6). An explicit `discipline` wins;
+// otherwise (THE FLIP, T6) it is derived from strength_style (strength→powerlifting,
+// bodybuilding/functional→hypertrophy, barbell-gated). EVERY build profile now carries a discipline.
 import { resolveProgram } from '@performance-os/engine';
 
 let pass = 0;
@@ -37,14 +35,20 @@ const hyp = resolveProgram({ ...base, discipline: 'hypertrophy' });
 assert(hyp.discipline === 'hypertrophy', 'program.discipline carries hypertrophy');
 assert(hyp.power === false, 'hypertrophy power === false');
 
-// --- return shape parity: same keys as the legacy build branch, plus `discipline` ---
-const legacyBuild = resolveProgram({ ...base, strength_style: 'strength' });
-const legacyKeys = Object.keys(legacyBuild).sort();
-const discKeys = Object.keys(pl).filter(k => k !== 'discipline').sort();
-assert(JSON.stringify(legacyKeys) === JSON.stringify(discKeys),
-  `discipline branch keys (minus 'discipline') must match legacy branch keys.\n  legacy: ${JSON.stringify(legacyKeys)}\n  disc:   ${JSON.stringify(discKeys)}`);
+// --- THE FLIP (T6): a build profile with NO explicit discipline still resolves to one, derived
+//     from strength_style. strength → powerlifting (has barbell); same return shape as an explicit
+//     discipline (every build branch returns identical keys, including `discipline`). ---
+const derived = resolveProgram({ ...base, strength_style: 'strength' });
+assert(derived.discipline === 'powerlifting', `strength_style 'strength' (with barbell) derives powerlifting, got: ${derived.discipline}`);
+assert(JSON.stringify(Object.keys(derived).sort()) === JSON.stringify(Object.keys(pl).sort()),
+  `derived-discipline keys match explicit-discipline keys.\n  derived: ${JSON.stringify(Object.keys(derived).sort())}\n  disc:    ${JSON.stringify(Object.keys(pl).sort())}`);
 
-// --- opt-in guard: no discipline field -> untouched legacy branch (no `discipline` key at all) ---
-assert(!('discipline' in legacyBuild), 'a profile without `discipline` must not gain a discipline key (legacy branch untouched)');
+// --- barbell gate (T6): strength (→powerlifting) WITHOUT a barbell falls back to hypertrophy ---
+const noBar = resolveProgram({ goal_type: 'build', access: ['dumbbell', 'bodyweight'], experience: { gym: 'advanced' }, strength_style: 'strength' });
+assert(noBar.discipline === 'hypertrophy', `a barbell-less strength profile falls back to hypertrophy, got: ${noBar.discipline}`);
+
+// --- bodybuilding + functional both map to hypertrophy (functional's conditioning secondary is future) ---
+assert(resolveProgram({ ...base, strength_style: 'bodybuilding' }).discipline === 'hypertrophy', 'bodybuilding → hypertrophy');
+assert(resolveProgram({ ...base, strength_style: 'functional' }).discipline === 'hypertrophy', 'functional → hypertrophy');
 
 console.log(process.exitCode ? 'wp49-discipline-program FAILURES' : `PASS: wp49-discipline-program — ${pass} assertions`);

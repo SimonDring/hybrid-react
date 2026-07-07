@@ -34,13 +34,14 @@ ok(withObj.length === gym.length && gym.length > 0, `every D11 session carries _
 ok(withObj.every((s) => s._objective.quality && s._objective.purpose && /targeting .+; .+; fatigue budget/.test(s._objective.rationale)),
   '_objective = { quality, purpose, rationale } with the D9 rationale shape');
 
-// ── a build plan (legacy path — style-honest reasons, never a diagnosis claim) ──
-// WP-43: every session explains itself; the legacy path's objective is STYLE-derived
-// (source 'style') and its meta still carries no diagnosis (nothing steered by one).
+// ── a build plan (WP-49 T6 — THE FLIP: build runs off the diagnosis engine now) ──
+// Build is diagnosis-STEERED post-flip: meta carries the D4→D5 diagnosis and every session's
+// objective is diagnosis-derived (a target quality + honest rationale), exactly like the runner.
 const build = generatePlan(answersToProfile({ ...BLANK_ANSWERS, goalType: 'stronger', daysPerWeek: 3, equipment: FULL }));
-ok(!('diagnosis' in build.meta), 'build plan meta has NO diagnosis key (the plan is not diagnosis-steered)');
+ok('diagnosis' in build.meta && build.meta.diagnosis.priorityQualities.length > 0,
+  'build plan meta NOW carries a real diagnosis (the flip: build is diagnosis-steered)');
 const buildSessions = build.phases.flatMap((p) => p.weeks.flatMap((w) => w.sessions));
-ok(buildSessions.every((s) => s._objective && s._objective.source === 'style' && s._objective.rationale),
-  'build sessions carry an honest STYLE-derived _objective (WP-43 explainability floor)');
+ok(buildSessions.every((s) => s._objective && s._objective.source !== 'style' && s._objective.quality && s._objective.rationale),
+  'build sessions carry a diagnosis-derived _objective (a target quality + rationale)');
 
 console.log(`\n${pass} explainability-emission checks passed.`);

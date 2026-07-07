@@ -29,13 +29,20 @@ const opt = suggestOptimalFrequency(profile).optimalDays;
 const optWeek = buildWeek(days(opt));
 const optSets = optWeek.sessions.map(workSets);
 const optMins = optWeek.sessions.map(mins);
-assert(optSets.every(v => v >= 12), `advanced hypertrophy sessions substantial at optimum, all >=12 working sets (got ${optSets.join(', ')})`);
+// WP-49 flip (build→discipline): the hypertrophy discipline is DIAGNOSIS-FIRST and compound-led —
+// sessions carry ~9-12 working sets (3-4 exercises) rather than the old volume-first crammed count.
+// They're still substantial (no trivial 8-set sessions), so recalibrate the floor from 12→9.
+assert(optSets.every(v => v >= 9), `advanced hypertrophy sessions substantial at optimum, all >=9 working sets (got ${optSets.join(', ')})`);
 assert(optMins.every(d => d <= SESSION_CEILING_MIN + 5), `no session past the ~75-min ceiling at optimum (got ${optMins.join(', ')})`);
 
-// --- below optimal (2 days): capped, not crammed into monster sessions ---
+// --- below optimal (2 days): still substantial + capped, NOT crammed into monster sessions ---
 const lowWeek = buildWeek(days(2));
 const lowMins = lowWeek.sessions.map(mins);
+const lowSets = lowWeek.sessions.map(workSets);
 assert(lowMins.every(d => d <= SESSION_CEILING_MIN + 5), `below-optimal sessions are capped at the ceiling, not monster sessions (got ${lowMins.join(', ')})`);
-assert(lowMins.some(d => d >= 55), `below-optimal sessions are long (pushing the ceiling) since volume must compress (got ${lowMins.join(', ')})`);
+// WP-49 flip: the diagnosis-first discipline does NOT cram undelivered volume into longer sessions —
+// it accepts an honest under-dose (fewer days = less weekly volume) rather than 55-min+ monster days.
+// The intent (sessions stay substantial below optimum) now asserts working-set substance, not minutes.
+assert(lowSets.every(v => v >= 9), `below-optimal sessions stay substantial, all >=9 working sets (got ${lowSets.join(', ')})`);
 
 console.log('session-density done');

@@ -28,9 +28,14 @@ assert(rl.exercisePriority.includes('nordic_curl'), 'T8 run-long prioritises nor
 const sw = resolveProgram({ goal_type: 'sport', sport: 'swim', sport_intent: 'recreational', access: ['full_gym'] });
 assert(sw.emphasis.back === 1.3 && sw.exercisePriority.includes('face_pull'), 'T9 swim emphasises back + prioritises face pull');
 
-// ---- build goals → correct style, full volume, priority present ----
+// ---- build goals → DISCIPLINE style (WP-49 flip: build→discipline), full volume, priority present ----
+// WP-49 flip: 'bodybuilding' build now routes to the hypertrophy discipline (was legacy style 'bodybuilding').
 const bb = resolveProgram({ goal_type: 'build', strength_style: 'bodybuilding', access: ['full_gym'] });
-assert(bb.style === 'bodybuilding' && bb.volumeScalar === 1.0, 'T10 bodybuilding style, full volume');
-assert(bb.exercisePriority.length > 0, 'T11 bodybuilding has an exercise-priority list');
-assert(resolveProgram({ goal_type: 'build', strength_style: 'strength' }).style === 'strength', 'T12 strength style');
-assert(resolveProgram({ goal_type: 'build', strength_style: 'functional' }).emphasis.core === 1.2, 'T13 functional emphasises core');
+assert(bb.style === 'hypertrophy' && bb.discipline === 'hypertrophy' && bb.volumeScalar === 1.0, 'T10 bodybuilding → hypertrophy discipline, full volume');
+assert(bb.exercisePriority.length > 0, 'T11 hypertrophy has an exercise-priority list (from priorityLifts)');
+// WP-49 flip: 'strength' WITH literal barbell → powerlifting discipline; WITHOUT barbell → hypertrophy fallback.
+assert(resolveProgram({ goal_type: 'build', strength_style: 'strength', access: ['barbell'] }).style === 'powerlifting', 'T12 strength + barbell → powerlifting discipline');
+assert(resolveProgram({ goal_type: 'build', strength_style: 'strength' }).style === 'hypertrophy', 'T12b strength WITHOUT barbell → hypertrophy fallback');
+// WP-49 flip: 'functional' maps to the hypertrophy discipline (interim; conditioning secondary is future).
+// The old per-style core 1.2 emphasis no longer exists — assert the discipline mapping instead.
+assert(resolveProgram({ goal_type: 'build', strength_style: 'functional' }).style === 'hypertrophy', 'T13 functional → hypertrophy discipline (interim)');

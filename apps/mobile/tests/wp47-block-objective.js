@@ -51,7 +51,9 @@ assert(taperBlock.isTaper === true && taperBlock.volumeShape === 'taper' && tape
 const none = deriveBlockObjective({ priorityQualities: [], limitingFactors: [], season: 'off' });
 assert(none.source === 'template' && none.blocks.length === 0, 'no priorities → template source, no blocks emitted');
 
-// ── (5) ADVISORY integration: sport GAINS a blockPlan; build has none ────────
+// ── (5) ADVISORY integration: sport AND build (post-flip) carry a blockPlan ───
+// WP-49 T6 (THE FLIP): build now runs off the diagnosis engine too, so it gains a diagnosis and
+// an advisory blockPlan — the same treatment as the diagnosed sport cohorts.
 const A = (o) => ({ ...BLANK_ANSWERS, ...o });
 const FULL = ['barbell', 'dumbbell', 'machine', 'cable', 'band', 'kettlebell', 'bodyweight'];
 const sportPlan = generatePlan(answersToProfile(A({ goalType: 'sport', sport: 'run', runDiscipline: 'sprint', sportIntent: 'compete', experienceLevel: 'advanced', daysPerWeek: 4, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: { squat: 170, deadlift: 210 } })));
@@ -59,6 +61,7 @@ const buildPlan = generatePlan(answersToProfile(A({ goalType: 'build', strengthS
 
 assert(sportPlan.meta.diagnosis && Array.isArray(sportPlan.meta.diagnosis.blockPlan?.blocks) && sportPlan.meta.diagnosis.blockPlan.blocks.length > 0,
   'a diagnosed (sport) plan carries meta.diagnosis.blockPlan');
-assert(!buildPlan.meta.diagnosis, 'the legacy build plan has no diagnosis (so no blockPlan) — build identity preserved');
+assert(buildPlan.meta.diagnosis && Array.isArray(buildPlan.meta.diagnosis.blockPlan?.blocks) && buildPlan.meta.diagnosis.blockPlan.blocks.length > 0,
+  'the build plan (now discipline-driven) also carries meta.diagnosis.blockPlan');
 
 console.log(process.exitCode ? 'wp47-block-objective FAILURES' : `PASS: wp47-block-objective — ${pass} assertions`);

@@ -17,11 +17,11 @@ assert(prioIds(runner).includes('aerobicCapacity'), 'legacy distance runner → 
 const sprinter = performanceModelForProfile(profFor({ goalType: 'sport', sport: 'run', runDiscipline: 'sprint', sportSeason: 'off', experienceLevel: 'beginner', daysPerWeek: 4, days: ['mon', 'tue', 'thu', 'fri'], strengthAccess: 'full_gym' }), asOf);
 assert(prioIds(sprinter).includes('explosiveStrength'), 'legacy sprinter → explosiveStrength priority');
 
-// WP-42a: a build profile now has a GOAL-led diagnosis (EDS D2 goal-as-sport; D4 "never no
-// diagnosis"). The allocator still keeps its legacy path — the D11 gate requires sport style.
+// WP-42a → WP-49 T6 (THE FLIP): a build profile has a diagnosis, now sourced from its DISCIPLINE
+// (strength → powerlifting), and the allocator FOLLOWS it (D11 steers the discipline cohort too).
 const build = performanceModelForProfile(profFor({ goalType: 'build', strengthStyle: 'strength', experienceLevel: 'intermediate', daysPerWeek: 4, days: ['mon', 'tue', 'thu', 'fri'], strengthAccess: 'full_gym' }), asOf);
-assert((build.priorityAdaptations || []).length > 0, 'build profile → goal-led priorityAdaptations (WP-42a)');
-assert((build.demandProfile || []).every((d) => d.source === 'goal'), 'build demand declares its goal source');
+assert((build.priorityAdaptations || []).length > 0, 'build profile → discipline-led priorityAdaptations');
+assert((build.demandProfile || []).every((d) => d.source === 'discipline'), 'build demand declares its discipline source (the flip)');
 
 // Deterministic + barrel parity + null-safe.
 assert(JSON.stringify(performanceModelForProfile(profFor({ goalType: 'sport', sport: 'swim' }), asOf)) === JSON.stringify(barrel(profFor({ goalType: 'sport', sport: 'swim' }), asOf)), 'barrel export matches + deterministic');

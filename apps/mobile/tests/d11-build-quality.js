@@ -49,10 +49,15 @@ const stWeek = workWeek(st);
     `B2 ≥70% of bodybuilding working sets at 6–15 reps (got ${Math.round((inRange / Math.max(1, reps.length)) * 100)}%)`);
 }
 
-// ── B3 · isolation work survives (the bodybuilding signature) ─────────────────
+// ── B3 · compound-led hypertrophy signature ───────────────────────────────────
+// WP-49 flip (build→discipline): 'bodybuilding' now routes to the hypertrophy DISCIPLINE, which is
+// COMPOUND-LED — for a generic profile the working sets are squat/bench/deadlift/OHP/incline, not
+// isolation. The recognisable signature is now compound-led hypertrophy work, so assert the compound
+// spine is present rather than the old isolation signature. (Isolation now enters as diagnosis-driven
+// accessory for a LAGGING muscle group, not as a blanket default — see FLAGGED note in the report.)
 {
-  const iso = workingItems(bbWeek).filter((it) => /curl|raise|extension|fly|pushdown|pullover|pec deck/i.test(it.name || ''));
-  assert(iso.length >= 2, `B3 isolation work present (${iso.slice(0, 3).map((i) => i.name).join(', ') || 'NONE'})`);
+  const compounds = workingItems(bbWeek).filter((it) => /squat|bench|deadlift|press|row|pulldown|pull-up|pullup/i.test(it.name || ''));
+  assert(compounds.length >= 4, `B3 compound-led hypertrophy spine present (${compounds.slice(0, 4).map((i) => i.name).join(', ') || 'NONE'})`);
 }
 
 // ── B4 · frequency identity: majors hit ≥2 sessions/week at 4 days ────────────
@@ -75,10 +80,17 @@ const stWeek = workWeek(st);
   assert(power.length === 0, `B6 no power/plyo items in a build_muscle plan (${power.map((i) => i.name).join(', ') || 'clean'})`);
 }
 
-// ── S1/S2 · get_stronger identity: heavy mains lead; volume sits below bb ─────
+// ── S1/S2 · powerlifting identity: heavy low-rep mains; hypertrophy stays 6–15 ─
+// WP-49 flip (build→discipline): 'strength' (with barbell) now routes to the powerlifting DISCIPLINE
+// — heavy low-rep (4×5) mains. The old "bodybuilding volume > strength" invariant no longer holds:
+// powerlifting fills more accessory work (close-grip bench, rows, pulls) around the mains, so its
+// weekly volume actually EXCEEDS the compound-led hypertrophy plan (89 vs 65). The recognisable
+// contrast is now the REP CHARACTER: powerlifting lives at ≤6, hypertrophy at 6–15.
 {
-  const reps = workingItems(stWeek).map((it) => repOf(it.sets)).filter((r) => r != null);
-  assert(reps.some((r) => r <= 6), 'S1 strength week contains true low-rep (≤6) main work');
-  const total = (w) => Object.values(countWeeklyVolume(w.sessions).counts).reduce((a, b) => a + b, 0);
-  assert(total(bbWeek) > total(stWeek), `S2 bodybuilding weekly volume exceeds strength (${total(bbWeek).toFixed(0)} vs ${total(stWeek).toFixed(0)})`);
+  const stReps = workingItems(stWeek).map((it) => repOf(it.sets)).filter((r) => r != null);
+  assert(stReps.some((r) => r <= 6), 'S1 powerlifting week contains true low-rep (≤6) main work');
+  const bbReps = workingItems(bbWeek).map((it) => repOf(it.sets)).filter((r) => r != null);
+  const bbLow = bbReps.filter((r) => r <= 6).length;
+  // The discipline contrast: hypertrophy work does NOT live at powerlifting's low reps.
+  assert(bbReps.length > 0 && bbLow / bbReps.length < 0.3, `S2 hypertrophy stays out of the low-rep zone (${bbLow}/${bbReps.length} sets ≤6 reps)`);
 }

@@ -231,7 +231,11 @@ export function reflowPhases({
     const weights = day.weights;
     const normalShare = {};
     for (const m of MUSCLE_GROUPS) normalShare[m] = weights ? (wt[m] || 0) * (weights[m] || 0) : (wt[m] || 0) / n;
-    return { normalShare, anchors: day.anchors || null, focus: gctx.style === 'sport' ? null : (weights || null) };
+    // WP-49 T6: carry the split's REGION LABEL into the reflow so a discipline's split survives
+    // reflow (powerlifting Upper/Lower, hypertrophy PPL) — otherwise the reflowed week collapses to
+    // full-body and, e.g., squats every day, over-dosing quads past MRV. Sports keep region='full'
+    // via the allocator's discipline gate, so this is inert for them (byte-identical).
+    return { normalShare, anchors: day.anchors || null, focus: gctx.style === 'sport' ? null : (weights || null), focusLabel: day.focus || null };
   });
   const { perSlot, forgiven } = distributeAcrossSlots({ slots: slotInputs, deficit, windowDays: WINDOW_DAYS });
 
@@ -267,7 +271,7 @@ export function reflowPhases({
     const spec = allocateGym({
       targets: perSlot[idx],
       slots: [{ minutes: Math.round(functionalSlotMinutes(gctx.style, gctx.minutes) * mult), equip: gctx.access,
-                anchors: slotInputs[idx].anchors, focus: slotInputs[idx].focus }],
+                anchors: slotInputs[idx].anchors, focus: slotInputs[idx].focus, focusLabel: slotInputs[idx].focusLabel }],
       ctx: {
         style: gctx.style, intent: intentOfTitle(s.phase.title), deload: effDeload(s.week), taper: !!s.week.taper,
         weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,

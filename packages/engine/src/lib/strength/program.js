@@ -18,8 +18,8 @@ import { dosePrior } from '../priors.js';
 import sports from '../../data/sportGymSupport/index.js';
 import { sportLoadScalar } from './sportLoad.js';
 import { availableEquip, LEVELS } from '../../data/strengthExercises.js';
-import { BUILD_INTENTS, resolveIntents } from './priorityIntents.js';
-import { getDiscipline } from '../../data/disciplines/index.js';
+import { resolveIntents } from './priorityIntents.js';
+import { getDiscipline, resolveBuildDisciplineId } from '../../data/disciplines/index.js';
 
 // Sport emphasis vectors, priority-exercise lists and season volume scalars now live
 // in the pluggable sport modules (src/data/sportGymSupport/) behind a registry — adding a sport
@@ -84,38 +84,18 @@ export function resolveProgram(profile = {}) {
     };
   }
 
-  // Discipline branch (WP-49 Plan 2 T2): a profile carrying `discipline` gets a program
-  // driven by that discipline's own priority lifts + demand vector, instead of the legacy
-  // strength_style guess. Opt-in only — a profile without `discipline` never reaches here,
-  // so every existing (no-discipline) profile keeps its byte-identical legacy program.
-  const disc = profile.discipline ? getDiscipline(profile.discipline) : null;
-  if (disc) {
-    const equip = availableEquip(profile.access || []);
-    const lvlNum = LEVELS[level] ?? LEVELS.intermediate;
-    const { list, byIntent } = resolveDisciplineLifts(disc, equip, lvlNum);
-    return {
-      goalType: 'build', style: disc.id, discipline: disc.id,
-      emphasis: emphasisFromAccessoryPatterns(disc),
-      volumeScalar: 1.0 * volumeToleranceOf(profile),
-      power: (disc.demand.explosiveStrength || disc.demand.power || 0) >= 0.6,
-      sport: null, season: null, level,
-      exercisePriority: list, priorityByIntent: byIntent
-    };
-  }
-
-  let style = profile.strength_style;
-  if (!style) style = (profile.focus || []).includes('strength_physique') ? 'bodybuilding' : 'functional';
-  if (!['strength', 'bodybuilding', 'functional'].includes(style)) style = 'strength';
-
-  const emphasis = {};
-  if (style === 'bodybuilding') { emphasis.shoulders = 1.1; emphasis.biceps = 1.1; emphasis.triceps = 1.1; }
-  if (style === 'functional') { emphasis.core = 1.2; }
-
+  // THE FLIP (WP-49 Plan 2 T6): every BUILD goal now runs off the DISCIPLINE engine — the legacy
+  // volume-first strength_style path (BUILD_INTENTS) is retired. resolveBuildDisciplineId is the
+  // single source of truth (shared with the diagnosis adapter, so program + diagnosis agree).
+  const disc = getDiscipline(resolveBuildDisciplineId(profile)) || getDiscipline('hypertrophy');
   const equip = availableEquip(profile.access || []);
   const lvlNum = LEVELS[level] ?? LEVELS.intermediate;
-  const { list, byIntent } = resolveIntents(BUILD_INTENTS[style] || [], equip, lvlNum);
+  const { list, byIntent } = resolveDisciplineLifts(disc, equip, lvlNum);
   return {
-    goalType: 'build', style, emphasis, volumeScalar: 1.0 * volumeToleranceOf(profile), power: style === 'functional',
+    goalType: 'build', style: disc.id, discipline: disc.id,
+    emphasis: emphasisFromAccessoryPatterns(disc),
+    volumeScalar: 1.0 * volumeToleranceOf(profile),
+    power: (disc.demand.explosiveStrength || disc.demand.power || 0) >= 0.6,
     sport: null, season: null, level,
     exercisePriority: list, priorityByIntent: byIntent
   };

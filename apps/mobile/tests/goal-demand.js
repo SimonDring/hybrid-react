@@ -27,7 +27,9 @@ const buildProfile = (style, extra = {}) => ({
   const pm = performanceModelForProfile(buildProfile('strength'), ASOF);
   assert(Array.isArray(pm.demandProfile) && pm.demandProfile.length > 0, 'T1a get_stronger → non-null demand profile');
   const ms = pm.demandProfile.find((d) => d.qualityId === 'maxStrength');
-  assert(ms && ms.importance === 1.0 && ms.source === 'goal', 'T1b maxStrength leads at 1.0, source declared as goal');
+  // WP-49 T6 (THE FLIP): a build goal now runs off its DISCIPLINE, so the demand is sourced from
+  // the discipline vector (strength → powerlifting: maxStrength 1.0), not the legacy goal outcome.
+  assert(ms && ms.importance === 1.0 && ms.source === 'discipline', 'T1b maxStrength leads at 1.0, source declared as discipline (powerlifting)');
   assert(pm.limitingFactors.length > 0 && pm.limitingFactors.every((f) => typeof f.rationale === 'string' && f.rationale.length > 0),
     'T1c limiting factors exist and explain themselves (EDS D4: never no diagnosis)');
   assert(pm.priorityAdaptations.length >= 1 && pm.priorityAdaptations.length <= 3, 'T1d 1–3 priority qualities (focus beats breadth)');
@@ -52,15 +54,15 @@ const buildProfile = (style, extra = {}) => ({
   assert(fn.demandProfile.length >= 5, 'T3b general fitness → broad demand (≥5 qualities)');
 }
 
-// ── T4 · VERIFIED-UNUSED: the build plan is untouched and claims nothing ──────
+// ── T4 · THE FLIP (WP-49 T6): the build plan IS diagnosis-driven and says so ──
+// Pre-flip this cohort was verified-UNUSED (build ran the legacy volume-first path and emitted no
+// diagnosis). The flip routes build through the discipline engine, so meta.diagnosis is now emitted
+// AND followed — displaying it is honest for build too, exactly as for the sport cohorts below.
 {
   const plan = generatePlan(buildProfile('bodybuilding'));
-  assert(plan.meta.diagnosis === undefined, 'T4a build plan emits NO meta.diagnosis (the plan does not follow it — display honesty)');
-  // WP-43: legacy sessions DO carry an objective now — but a STYLE-derived one, never a
-  // diagnosis-derived one (that distinction is the verified-unused proof post-WP-43).
-  const objs = plan.phases.flatMap((p) => p.weeks.flatMap((w) => w.sessions.map((s) => s._objective))).filter(Boolean);
-  assert(objs.length > 0 && objs.every((o) => o.source === 'style'),
-    'T4b build objectives are style-derived only (no diagnosis steering — the flip is WP-49)');
+  assert(plan.meta.diagnosis !== undefined, 'T4a build plan NOW emits meta.diagnosis (diagnosis-driven — the flip)');
+  assert(plan.meta.diagnosis.priorityQualities && plan.meta.diagnosis.priorityQualities.length > 0,
+    'T4b the build diagnosis carries real priority qualities that steer selection (not style-derived)');
 }
 
 // ── T5 · emission honesty for SPORT cohorts ───────────────────────────────────

@@ -789,11 +789,15 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       // WP-49 Plan 2 T3b: only HYPERTROPHY consumes the split's region label (upper/lower/push/
       // pull days). Every other diagnosis-steered cohort — sports, powerlifting, olympic — trains
       // full-body / lift-focused sessions and keeps region='full' (byte-identical to pre-T3b).
-      // Simon's decision (2026-07-07): a region split is only warranted where the day count makes
-      // one sensible, and hypertrophy is the one build goal that needs it — with Push/Pull/Legs at
-      // higher day counts, so pressing and pulling get their own days (hypertrophyRegionOf splits
-      // Push/Pull, which regionOf collapses to 'upper').
-      const region = ctx.discipline === 'hypertrophy' ? hypertrophyRegionOf(slot.focusLabel) : 'full';
+      // Region gate by discipline:
+      //  • hypertrophy — the finer Push/Pull-aware split (Push/Pull/Legs at higher day counts).
+      //  • powerlifting — the coarse Upper/Lower split (bench-led upper day, squat/deadlift-led lower
+      //    day) so a 4-day isn't four identical full-body days with no muscle spacing (WP-49 T6).
+      //  • olympic — 'full': it carries its own per-day lift family + target quality (T4b-2), not a region.
+      //  • sports + legacy — 'full' (byte-identical; sports thread priority work through every session).
+      const region = ctx.discipline === 'hypertrophy' ? hypertrophyRegionOf(slot.focusLabel)
+        : ctx.discipline === 'powerlifting' ? regionOf(slot.focusLabel)
+          : 'full';
       // Category-led slot (WP-20): the SKB assignment names the day's coverage, its
       // movements, and its dose quality (led by its highest-rated movement).
       const assignment = categoryPlan ? categoryPlan.sessions[wi % categoryPlan.sessions.length] : null;
