@@ -2,6 +2,7 @@
 // Parallels data/sportKnowledge's registry shape. Validated against _schema.js on every read via
 // disciplineErrors().
 import { validateRegistry } from './_schema.js';
+import { availableEquip } from '../strengthExercises.js';
 import hypertrophy from './hypertrophy.js';
 import powerlifting from './powerlifting.js';
 import olympic from './olympic.js';
@@ -21,7 +22,8 @@ const BARBELL_DISCIPLINES = new Set(['powerlifting', 'olympic']);
 export function resolveBuildDisciplineId(profile = {}) {
   if (profile.goal_type === 'sport' || profile.sport) return null;
   let id = profile.discipline || STYLE_TO_DISCIPLINE[profile.strength_style] || 'hypertrophy';
-  if (BARBELL_DISCIPLINES.has(id) && !(profile.access || []).includes('barbell')) id = 'hypertrophy';
+  // Expand equipment presets ('full_gym' etc.) so a full-gym athlete counts as having a barbell.
+  if (BARBELL_DISCIPLINES.has(id) && !availableEquip(profile.access || []).has('barbell')) id = 'hypertrophy';
   return getDiscipline(id) ? id : 'hypertrophy';
 }
 
