@@ -34,7 +34,8 @@ export const SECONDARY_GOALS = [
     targetAreas: ['rotator_cuff', 'knees', 'hips'],
     correctivePatterns: ['rotator_cuff', 'eccentric_control', 'single_leg_stability'],
     emphasisModifier: {},
-    accessoryPreferences: [],
+    // WP-49 Plan 2 T5: real catalogue ids — rotator-cuff, hip/adductor, spinal stability.
+    accessoryPreferences: ['sl_ext_rotation', 'copenhagen', 'bird_dog'],
   },
   {
     id: 'mobility',
@@ -42,7 +43,8 @@ export const SECONDARY_GOALS = [
     targetAreas: ['hips', 'ankles', 'shoulders', 'thoracic'],
     correctivePatterns: ['full_rom', 'loaded_stretch'],
     emphasisModifier: {},
-    accessoryPreferences: [],
+    // WP-49 Plan 2 T5: hip, thoracic/shoulder, ankle mobility.
+    accessoryPreferences: ['hip_flexor_90_90', 'cat_camel_thoracic', 'ankle_plantarflex_band'],
   },
   {
     id: 'conditioning',
@@ -50,7 +52,8 @@ export const SECONDARY_GOALS = [
     targetAreas: ['work_capacity'],
     correctivePatterns: ['metabolic_finisher', 'carries'],
     emphasisModifier: {},
-    accessoryPreferences: ['farmer_carry'],
+    // WP-49 Plan 2 T5: loaded carries — work-capacity that doesn't tax the main lifts.
+    accessoryPreferences: ['farmer_carry', 'suitcase_carry'],
   },
 ];
 

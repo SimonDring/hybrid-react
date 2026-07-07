@@ -74,7 +74,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 6,
@@ -2987,7 +2987,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 6,
@@ -5004,7 +5004,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 8,
@@ -10731,7 +10731,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 8,
@@ -13446,7 +13446,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 8,
@@ -13490,9 +13490,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 0,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -13575,6 +13575,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Monday · Full body"
@@ -13585,9 +13615,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 2,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -13670,6 +13700,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -13680,9 +13740,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 4,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -13765,6 +13825,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Friday · Full body"
@@ -13784,9 +13874,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 0,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -13869,6 +13959,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Monday · Full body"
@@ -13879,9 +13999,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 2,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -13964,6 +14084,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -13974,9 +14124,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 4,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -14059,6 +14209,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Friday · Full body"
@@ -14078,9 +14258,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 0,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -14163,6 +14343,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Monday · Full body"
@@ -14173,9 +14383,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 2,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -14258,6 +14468,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -14268,9 +14508,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 4,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -14353,6 +14593,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 10 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Friday · Full body"
@@ -14394,9 +14664,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 0,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -14504,6 +14774,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "H",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "secondaryGoal": "conditioning",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "secondaryGoal": "conditioning",
+                    "sets": "2 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Monday · Full body"
@@ -14514,9 +14814,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 2,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -14624,6 +14924,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "H",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "secondaryGoal": "conditioning",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "secondaryGoal": "conditioning",
+                    "sets": "2 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -14634,9 +14964,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 4,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -14744,6 +15074,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "H",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "secondaryGoal": "conditioning",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "secondaryGoal": "conditioning",
+                    "sets": "2 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Friday · Full body"
@@ -14763,9 +15123,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 0,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -14848,6 +15208,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Monday · Full body"
@@ -14858,9 +15248,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 2,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -14943,6 +15333,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -14953,9 +15373,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 4,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -15038,6 +15458,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Friday · Full body"
@@ -15057,9 +15507,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 0,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -15142,6 +15592,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Monday · Full body"
@@ -15152,9 +15632,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 2,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -15237,6 +15717,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -15247,9 +15757,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 4,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -15332,6 +15842,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Friday · Full body"
@@ -15351,9 +15891,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 0,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -15436,6 +15976,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Monday · Full body"
@@ -15446,9 +16016,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 2,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -15531,6 +16101,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -15541,9 +16141,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 4,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -15626,6 +16226,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "G",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "secondaryGoal": "conditioning",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Friday · Full body"
@@ -15667,9 +16297,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 0,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -15777,6 +16407,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "H",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "secondaryGoal": "conditioning",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "secondaryGoal": "conditioning",
+                    "sets": "2 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Monday · Full body"
@@ -15787,9 +16447,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 2,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -15897,6 +16557,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "H",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "secondaryGoal": "conditioning",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "secondaryGoal": "conditioning",
+                    "sets": "2 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Wednesday · Full body"
@@ -15907,9 +16597,9 @@
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
-                "axialLoad": 1,
+                "axialLoad": 3,
                 "dayIdx": 4,
-                "duration": "~30 min",
+                "duration": "~35 min",
                 "items": [
                   {
                     "exId": "split_squat",
@@ -16017,6 +16707,36 @@
                     "superset": false,
                     "tag": "mobility",
                     "volumeFactor": 0
+                  },
+                  {
+                    "exId": "farmer_carry",
+                    "group": "H",
+                    "name": "Farmer carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "secondaryGoal": "conditioning",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "H",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "secondaryGoal": "conditioning",
+                    "sets": "2 × 8 ea.",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "50 kg/hand"
                   }
                 ],
                 "title": "Friday · Full body"
@@ -16107,7 +16827,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 12,
@@ -20872,7 +21592,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 12,
@@ -24228,7 +24948,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 12,
@@ -30660,7 +31380,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 12,
@@ -37730,7 +38450,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 12,
@@ -41831,7 +42551,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 12,
@@ -42893,7 +43613,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 12,
@@ -46845,7 +47565,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 4,
@@ -47615,7 +48335,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 12,
@@ -50993,7 +51713,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 4,
@@ -52155,7 +52875,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 12,
@@ -56889,7 +57609,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 4,
@@ -58053,7 +58773,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 12,
@@ -61468,7 +62188,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 12,
@@ -66493,7 +67213,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 6,
@@ -68450,7 +69170,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 10,
@@ -72726,7 +73446,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 4,
@@ -74411,7 +75131,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 6,
@@ -77136,7 +77856,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 4,
@@ -78221,7 +78941,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.17.0"
+        "knowledgeSetVersion": "1.18.0"
       },
       "validation": {
         "checked": 12,

@@ -30,6 +30,15 @@ export const OLYMPIC_LIFTS = [
   { key: 'snatch', label: 'Snatch',          hint: 'Weight the week toward the snatch' },
   { key: 'cj',     label: 'Clean & jerk',    hint: 'Weight the week toward the clean & jerk' }
 ];
+// WP-49 T5: optional add-on goals, layered onto the accessory tail only (they never change your
+// main lifts). Multi-select. Written to profile.secondary_goals. (Functional already includes
+// conditioning by default.)
+export const SECONDARY_GOALS_MENU = [
+  { key: 'posture',      label: 'Counteract a desk job', hint: 'Upper-back, rear-delt & hip corrective work' },
+  { key: 'prehab',       label: 'Injury prevention',     hint: 'Rotator-cuff, hip & knee prehab' },
+  { key: 'mobility',     label: 'Mobility & flexibility', hint: 'Hip, ankle, shoulder & thoracic range' },
+  { key: 'conditioning', label: 'General conditioning',  hint: 'Loaded carries for work capacity' }
+];
 const SPORT_INTENTS = [
   { key: 'compete',      label: 'I compete',        hint: 'Races, meets or matches — training stays sport-specific.' },
   { key: 'recreational', label: "I don't compete",  hint: 'No events — strength that supports your sport.' }
@@ -253,6 +262,10 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
     // (snatch-focused / clean & jerk-focused days + a heavy squat day).
     (isBuild && a.strengthStyle === 'olympic') && { title: 'Which lift do you compete in?', subtitle: 'We build the week around it, with a squat strength day.', valid: () => !!a.olympicLift,
       render: () => <OptionGrid cols={1}>{OLYMPIC_LIFTS.map(s => <Chip key={s.key} selected={a.olympicLift === s.key} onClick={() => set({ olympicLift: s.key })} label={s.label} hint={s.hint} />)}</OptionGrid> },
+
+    // WP-49 T5: optional add-ons — layered onto the accessory tail, never changing the main lifts.
+    isBuild && { title: 'Any add-on goals?', subtitle: 'Optional — corrective work added to the end of sessions, never at the cost of your main lifts.', valid: () => true,
+      render: () => <OptionGrid cols={1}>{SECONDARY_GOALS_MENU.map(s => <Chip key={s.key} selected={a.secondaryGoals.includes(s.key)} onClick={() => toggle(s.key, 'secondaryGoals')} label={s.label} hint={s.hint} />)}</OptionGrid> },
 
     isSport && { title: 'Which sport?', subtitle: 'Your sport + position set the demands your training serves.', valid: () => !!a.skbSport,
       render: () => (

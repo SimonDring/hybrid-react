@@ -140,8 +140,20 @@ function buildGymWeek(count, ctx, profile, program, diag) {
     categoryPlan: diag.categoryPlan, discipline: program.discipline || null,
     // WP-49 T4b-2: which classic lift(s) the olympic athlete competes in (snatch|cj|both) — drives
     // the day emphasis. Default 'both' until the onboarding field lands (Task 6). Ignored off-olympic.
-    competedLift: profile.olympic_lift || 'both'
+    competedLift: profile.olympic_lift || 'both',
+    // WP-49 T5: the athlete's secondary-goal add-ons (posture/prehab/mobility/conditioning), layered
+    // onto the accessory tail. Functional AUTO-carries conditioning — its distinctive layer, re-added
+    // post-flip (functional otherwise maps to plain hypertrophy).
+    secondaryGoals: resolveSecondaryGoals(profile)
   });
+}
+
+// The active secondary goals for a profile: the athlete's explicit menu selections, plus the
+// conditioning goal that DEFINES the functional style (so functional ≠ plain hypertrophy).
+function resolveSecondaryGoals(profile) {
+  const chosen = Array.isArray(profile.secondary_goals) ? profile.secondary_goals.slice() : [];
+  if (profile.strength_style === 'functional' && !chosen.includes('conditioning')) chosen.push('conditioning');
+  return chosen;
 }
 
 export function generatePlan(profile = {}, opts = {}) {
