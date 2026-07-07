@@ -7,6 +7,9 @@
  *     exercisePriority: string[] }
  *   - exercisePriority  ordered exercise IDs that score ×1.35 in the allocator.
  *     Based on the strongest evidence for each goal (see design spec 2026-06-12).
+ *   - discipline  present (== profile.discipline) ONLY when the profile opted into a build
+ *     discipline (powerlifting/hypertrophy/olympic — WP-49 Plan 2 T2); absent for every legacy
+ *     profile, and read by the allocator's discipline gate + Task 3's plan-level selection.
  */
 
 import { deriveSeason } from '../plan/periodization.js';
@@ -16,6 +19,7 @@ import sports from '../../data/sportGymSupport/index.js';
 import { sportLoadScalar } from './sportLoad.js';
 import { availableEquip, LEVELS } from '../../data/strengthExercises.js';
 import { BUILD_INTENTS, resolveIntents } from './priorityIntents.js';
+import { getDiscipline } from '../../data/disciplines/index.js';
 
 // Sport emphasis vectors, priority-exercise lists and season volume scalars now live
 // in the pluggable sport modules (src/data/sportGymSupport/) behind a registry — adding a sport
@@ -29,6 +33,26 @@ import { BUILD_INTENTS, resolveIntents } from './priorityIntents.js';
 function volumeToleranceOf(profile) {
   const lp = profile && profile.athlete_model && profile.athlete_model.learnedPriors;
   return dosePrior('volumeTolerance', lp).value;
+}
+
+// A discipline's priorityLifts is already an ORDERED, curated list (competition lifts /
+// core compounds first) — unlike BUILD_INTENTS there's no equipment-fallback chain per
+// entry, so each lift becomes a single-candidate intent (mirrors how BUILD_INTENTS.bodybuilding/
+// functional single-candidate intents are built above). resolveIntents then does the one
+// piece of real work: drop lifts the athlete's equipment can't support, in order. `lvlNum` is
+// accepted for interface symmetry with resolveIntents/the legacy call site — like the legacy
+// path, competency (minLevelForPrimary) is enforced by the allocator at fill time, not here.
+function resolveDisciplineLifts(disc, equip, lvlNum) {
+  const intents = disc.priorityLifts.map(id => ({ intent: id, chain: [id] }));
+  return resolveIntents(intents, equip, lvlNum);
+}
+
+// v1: no clean, general accessoryPatterns -> per-muscle emphasis mapping exists yet (the
+// patterns are qualitative labels like 'weak_lift_variant', 'posterior_chain' — not muscle
+// keys). Keep it minimal (YAGNI) until a real mapping is needed; volume.js/targets.js already
+// carry the per-muscle MEV->MAV ledger regardless of emphasis.
+function emphasisFromAccessoryPatterns() {
+  return {};
 }
 
 export function resolveProgram(profile = {}) {
@@ -56,6 +80,25 @@ export function resolveProgram(profile = {}) {
       emphasis: (byD && byD.emphasis) || (mod && mod.emphasis) || {},
       volumeScalar: sportLoadScalar(profile, { season, mod }) * volumeToleranceOf(profile),
       power: mod ? !!mod.power : true, sport, season, level,
+      exercisePriority: list, priorityByIntent: byIntent
+    };
+  }
+
+  // Discipline branch (WP-49 Plan 2 T2): a profile carrying `discipline` gets a program
+  // driven by that discipline's own priority lifts + demand vector, instead of the legacy
+  // strength_style guess. Opt-in only — a profile without `discipline` never reaches here,
+  // so every existing (no-discipline) profile keeps its byte-identical legacy program.
+  const disc = profile.discipline ? getDiscipline(profile.discipline) : null;
+  if (disc) {
+    const equip = availableEquip(profile.access || []);
+    const lvlNum = LEVELS[level] ?? LEVELS.intermediate;
+    const { list, byIntent } = resolveDisciplineLifts(disc, equip, lvlNum);
+    return {
+      goalType: 'build', style: disc.id, discipline: disc.id,
+      emphasis: emphasisFromAccessoryPatterns(disc),
+      volumeScalar: 1.0 * volumeToleranceOf(profile),
+      power: (disc.demand.explosiveStrength || disc.demand.power || 0) >= 0.6,
+      sport: null, season: null, level,
       exercisePriority: list, priorityByIntent: byIntent
     };
   }
