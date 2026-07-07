@@ -15,11 +15,17 @@ const A = (o) => ({ ...BLANK_ANSWERS, ...o });
 const FULL = ['barbell', 'dumbbell', 'machine', 'cable', 'band', 'kettlebell', 'bodyweight'];
 const ASOF = '2026-07-06';
 
-const planForDisc = (discipline, days, dayKeys, extra = {}) => generatePlan({
-  ...answersToProfile(A({ goalType: 'build', experienceLevel: 'advanced', daysPerWeek: days, days: dayKeys, equipment: FULL, sex: 'male', bodyweight_kg: 80, ...extra })),
-  discipline,
-  plan_start_date: ASOF,
-});
+const planForDisc = (discipline, days, dayKeys, extra = {}) => {
+  // olympic_lift is a profile field (set by onboarding, Task 6), NOT an onboarding answer —
+  // answersToProfile would strip it, so spread it onto the profile AFTER, like `discipline`.
+  const { olympic_lift, ...answers } = extra;
+  return generatePlan({
+    ...answersToProfile(A({ goalType: 'build', experienceLevel: 'advanced', daysPerWeek: days, days: dayKeys, equipment: FULL, sex: 'male', bodyweight_kg: 80, ...answers })),
+    discipline,
+    ...(olympic_lift ? { olympic_lift } : {}),
+    plan_start_date: ASOF,
+  });
+};
 const workWeek = (plan) => plan.phases[0].weeks.find((w) => !w.deload && !w.taper && w.num >= 2) || plan.phases[0].weeks[0];
 // The scheduled session title carries the honest focus label: "Monday · Upper …".
 const regionOfTitle = (t) => {
@@ -111,6 +117,30 @@ const pullRx = /barbell row|pull-up|pullup|lat pulldown|cable row|db row|inverte
     return names.some((n) => pressRx.test(n)) && !names.some((n) => pullRx.test(n));
   });
   assert(hasPushDay, 'G2 hypertrophy 6-day has a dedicated push day (pressing, no pulling)');
+}
+
+// ── H · Olympic day-emphasis: snatch day, C&J day, squat day (not 4 identical) ──
+const sessionNames = (s) => (s.items || []).filter((it) => (it.volumeFactor ?? 1) > 0 && it.section !== 'primer').map((it) => it.name.toLowerCase());
+{
+  const week = workWeek(planForDisc('olympic', 3, ['mon', 'wed', 'fri'], { lifts: { squat: 150 } }));
+  // A snatch-emphasis day: has a snatch, no clean&jerk.
+  const snatchDay = week.sessions.some((s) => { const n = sessionNames(s); return n.some((x) => /snatch/.test(x)) && !n.some((x) => /clean and jerk/.test(x)); });
+  // A C&J-emphasis day: has clean&jerk, no snatch.
+  const cjDay = week.sessions.some((s) => { const n = sessionNames(s); return n.some((x) => /clean and jerk/.test(x)) && !n.some((x) => /snatch/.test(x)); });
+  // A squat strength day: has a barbell squat, no classic olympic lift.
+  const squatDay = week.sessions.some((s) => { const n = sessionNames(s); return n.some((x) => /squat/.test(x)) && !n.some((x) => /snatch|clean and jerk|clean & jerk/.test(x)); });
+  assert(snatchDay, `H1 olympic (both) has a snatch-emphasis day — sessions: ${week.sessions.map((s) => sessionNames(s).slice(0, 3).join('/')).join(' | ')}`);
+  assert(cjDay, 'H2 olympic (both) has a clean & jerk-emphasis day');
+  assert(squatDay, 'H3 olympic (both) has a squat strength day');
+}
+
+// ── I · Olympic competed-lift SELECTION: snatch specialist skews to snatch ─────
+{
+  const week = workWeek(planForDisc('olympic', 3, ['mon', 'wed', 'fri'], { lifts: { squat: 150 }, olympic_lift: 'snatch' }));
+  const snatchDays = week.sessions.filter((s) => sessionNames(s).some((x) => /snatch/.test(x))).length;
+  const cjDays = week.sessions.filter((s) => { const n = sessionNames(s); return n.some((x) => /clean and jerk/.test(x)) && !n.some((x) => /snatch/.test(x)); }).length;
+  assert(snatchDays >= 2, `I1 a snatch specialist gets ≥2 snatch days (got ${snatchDays})`);
+  assert(cjDays === 0, `I2 a snatch specialist gets no dedicated clean&jerk day (got ${cjDays})`);
 }
 
 console.log(process.exitCode ? 'wp49-discipline-selection FAILURES' : 'PASS: wp49-discipline-selection — all gates');

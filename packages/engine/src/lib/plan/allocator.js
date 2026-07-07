@@ -690,6 +690,8 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
                                      // Push/Pull) — previously dropped, so the D11 region-filter defaulted
                                      // to 'full'. Only the hypertrophy discipline consumes it (below);
                                      // sports + powerlifting + olympic stay region='full' (byte-identical).
+    priorityIds: slot.priorityIds || null,               // WP-49 T4b-2: olympic per-day lift family
+    targetQualityOverride: slot.targetQualityOverride || null,  // WP-49 T4b-2: olympic per-day quality
     anchors: slot.anchors || null,   // split day's opening pattern(s)
     axialLoad: 0                     // running spinal-load budget for this session
   }));
@@ -796,7 +798,9 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       // movements, and its dose quality (led by its highest-rated movement).
       const assignment = categoryPlan ? categoryPlan.sessions[wi % categoryPlan.sessions.length] : null;
       // Competency gate: a beginner targeting a power quality builds the max-strength base first (EDS §22).
-      let targetQuality = competencyAdjustedTarget(assignment ? assignment.doseQuality : targetsD11[wi], levelName);
+      // WP-49 T4b-2: an olympic day carries its own target quality (snatch/C&J = explosive; squat day =
+      // max strength) so the squat day isn't filtered out of an explosive rotation. Still competency-gated.
+      let targetQuality = competencyAdjustedTarget(slot.targetQualityOverride || (assignment ? assignment.doseQuality : targetsD11[wi]), levelName);
       // Constraint gate (D9): if injuries contraindicate this quality's drivers, re-target
       // the next trainable priority (constraintAdjustedTarget). The oracle asks: does any
       // legal tier-1/2 driver survive equipment × level × pattern × name constraints?
@@ -850,8 +854,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
         categoryIds: assignment ? new Set(assignment.exerciseIds) : null,
         discipline: ctx.discipline,
         // WP-49 Plan 2 T4: anchor the discipline's own priority lifts (tier 0), in authored order.
-        // Gated to the build-discipline cohort so sports + legacy see priorityIds=null (byte-identical).
-        priorityIds: ctx.discipline ? (ctx.exercisePriority || []) : null
+        // T4b-2: an olympic day supplies its own per-day family (slot.priorityIds); every other
+        // discipline day uses the full discipline priority list. Gated to the build-discipline cohort
+        // so sports + legacy see priorityIds=null (byte-identical).
+        priorityIds: slot.priorityIds || (ctx.discipline ? (ctx.exercisePriority || []) : null)
       });
       if (assignment) objective.rationale += ` (${assignment.rationale})`;
       // WP-30a: ship the D9 objective WITH the session — the rationale string now

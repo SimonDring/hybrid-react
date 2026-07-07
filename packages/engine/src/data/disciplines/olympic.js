@@ -16,6 +16,43 @@
 // 'advanced', and push_press/snatch_pull/clean_pull/muscle_snatch at 'intermediate'). Plan 1 only
 // RECORDS this list; the competency gate that enforces it at selection time is wired in Plan 2
 // (the flip, per design spec §4 step 6 and §9.2).
+// WP-49 Plan 2 T4b-2: Olympic day-emphasis. All classic lifts share the 'olympic' movement
+// pattern, so days can't be separated by region (as hypertrophy Push/Pull are) — they're
+// separated by LIFT FAMILY instead. Each training day emphasises the snatch, the clean & jerk,
+// or a heavy squat strength day, and carries the matching target quality (the lifts are
+// explosive; the squat day is max strength, so squats aren't filtered out on an explosive day).
+export const LIFT_FAMILIES = {
+  snatch: ['snatch', 'power_snatch', 'hang_snatch', 'muscle_snatch', 'snatch_pull', 'overhead_squat'],
+  cj: ['clean_and_jerk', 'hang_clean', 'power_clean', 'split_jerk', 'clean_pull', 'push_press'],
+  squat: ['front_squat', 'overhead_squat', 'back_squat'],
+};
+
+// The weekly day cycle by the athlete's COMPETED lift (Simon 2026-07-07: "offer people to select
+// the lift they compete in"). `both` (the default) balances snatch / C&J / squat; a specialist
+// weights their own lift + keeps a heavy squat day. [focus label, family, target quality].
+const DAY_CYCLE = {
+  both:   [['Snatch', 'snatch', 'explosiveStrength'], ['Clean & Jerk', 'cj', 'explosiveStrength'], ['Squat', 'squat', 'maxStrength']],
+  snatch: [['Snatch', 'snatch', 'explosiveStrength'], ['Snatch', 'snatch', 'explosiveStrength'], ['Squat', 'squat', 'maxStrength']],
+  cj:     [['Clean & Jerk', 'cj', 'explosiveStrength'], ['Clean & Jerk', 'cj', 'explosiveStrength'], ['Squat', 'squat', 'maxStrength']],
+};
+
+// The per-day emphasis sequence for a week. Falls back to `both` for an unknown competedLift.
+export function olympicDaySequence(days, competedLift = 'both') {
+  const cyc = DAY_CYCLE[competedLift] || DAY_CYCLE.both;
+  return Array.from({ length: Math.max(1, days) }, (_, i) => {
+    const [focus, emphasis, targetQuality] = cyc[i % cyc.length];
+    return { focus, emphasis, targetQuality };
+  });
+}
+
+// The priority lifts for a day's emphasis: the family, filtered to the discipline's own
+// exercisePriority (so authored order is preserved). Empty intersection → the full list.
+export function olympicPriorityIds(emphasis, exercisePriority = []) {
+  const fam = new Set(LIFT_FAMILIES[emphasis] || []);
+  const sub = exercisePriority.filter((id) => fam.has(id));
+  return sub.length ? sub : exercisePriority;
+}
+
 export default {
   id: 'olympic',
   label: 'Olympic Weightlifting',

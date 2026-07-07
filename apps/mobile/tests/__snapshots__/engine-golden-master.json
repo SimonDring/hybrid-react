@@ -3,7 +3,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 6,
@@ -4287,7 +4287,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 6,
@@ -7647,7 +7647,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 8,
@@ -14417,7 +14417,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 8,
@@ -17656,7 +17656,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 8,
@@ -21233,7 +21233,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 12,
@@ -25998,7 +25998,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 12,
@@ -26042,9 +26042,9 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 0,
-                "duration": "~45 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -26060,10 +26060,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -26073,10 +26073,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
+                    "exId": "overhead_squat",
                     "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
                     "restSec": 150,
@@ -26084,89 +26084,86 @@
                     "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "122.5 kg"
                   },
                   {
-                    "exId": "power_clean",
+                    "exId": "broad_jump",
                     "group": "D",
-                    "intent": "power_clean",
-                    "name": "Power Clean",
+                    "name": "Broad Jump",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "D1",
                     "restSec": 150,
                     "rpe": "RPE 7",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "volumeFactor": 1
                   }
                 ],
                 "title": "Monday · Lower Explosive"
               },
               {
                 "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
                 },
-                "axialLoad": 7,
+                "axialLoad": 4,
                 "dayIdx": 1,
                 "duration": "~30 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "front_squat",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "intent": "front_squat",
+                    "name": "Front squat",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "A1",
-                    "restSec": 150,
+                    "restSec": 120,
                     "rpe": "RPE 7",
-                    "sets": "4 × 4",
+                    "sets": "4 × 5",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "100 kg"
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "barbell_row",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
-                    "restSec": 150,
+                    "restSec": 120,
                     "rpe": "RPE 7",
-                    "sets": "4 × 4",
+                    "sets": "4 × 5",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "100 kg"
                   },
                   {
-                    "exId": "kb_swing",
+                    "exId": "assisted_pullup",
                     "group": "C",
-                    "name": "Kettlebell swing",
+                    "name": "Band-assisted pull-up",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 6",
+                    "sets": "3 × 8",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "37.5 kg"
+                    "volumeFactor": 1
                   },
                   {
-                    "exId": "ankle_plantarflex_band",
+                    "exId": "band_row",
                     "group": "D",
-                    "name": "Banded Ankle Plantarflexion",
+                    "name": "Band row",
                     "note": "",
                     "num": "D1",
-                    "restSec": 60,
+                    "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 12",
+                    "sets": "3 × 8",
                     "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
+                    "volumeFactor": 1
                   }
                 ],
-                "title": "Tuesday · Lower Explosive"
+                "title": "Tuesday · Full body"
               },
               {
                 "_objective": {
@@ -26179,10 +26176,10 @@
                 "duration": "~45 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "clean_and_jerk",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
+                    "intent": "clean_and_jerk",
+                    "name": "Clean and Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "A1",
                     "restSec": 150,
@@ -26192,10 +26189,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "split_jerk",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "split_jerk",
+                    "name": "Split Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -26243,7 +26240,7 @@
                 },
                 "axialLoad": 7,
                 "dayIdx": 4,
-                "duration": "~40 min",
+                "duration": "~30 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -26259,10 +26256,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -26272,31 +26269,30 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
                     "exId": "kb_swing",
-                    "group": "D",
+                    "group": "C",
                     "name": "Kettlebell swing",
                     "note": "",
-                    "num": "D1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "D",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
                 "title": "Friday · Lower Explosive"
@@ -26316,9 +26312,9 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 0,
-                "duration": "~45 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -26334,10 +26330,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -26347,10 +26343,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
+                    "exId": "overhead_squat",
                     "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
                     "restSec": 150,
@@ -26358,89 +26354,86 @@
                     "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "122.5 kg"
                   },
                   {
-                    "exId": "power_clean",
+                    "exId": "broad_jump",
                     "group": "D",
-                    "intent": "power_clean",
-                    "name": "Power Clean",
+                    "name": "Broad Jump",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "D1",
                     "restSec": 150,
                     "rpe": "RPE 7",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "volumeFactor": 1
                   }
                 ],
                 "title": "Monday · Lower Explosive"
               },
               {
                 "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
                 },
-                "axialLoad": 7,
+                "axialLoad": 4,
                 "dayIdx": 1,
                 "duration": "~30 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "front_squat",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "intent": "front_squat",
+                    "name": "Front squat",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "A1",
-                    "restSec": 150,
+                    "restSec": 120,
                     "rpe": "RPE 7",
-                    "sets": "4 × 4",
+                    "sets": "4 × 5",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "100 kg"
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "barbell_row",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
-                    "restSec": 150,
+                    "restSec": 120,
                     "rpe": "RPE 7",
-                    "sets": "4 × 4",
+                    "sets": "4 × 5",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "100 kg"
                   },
                   {
-                    "exId": "kb_swing",
+                    "exId": "assisted_pullup",
                     "group": "C",
-                    "name": "Kettlebell swing",
+                    "name": "Band-assisted pull-up",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 6",
+                    "sets": "3 × 8",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "37.5 kg"
+                    "volumeFactor": 1
                   },
                   {
-                    "exId": "ankle_plantarflex_band",
+                    "exId": "band_row",
                     "group": "D",
-                    "name": "Banded Ankle Plantarflexion",
+                    "name": "Band row",
                     "note": "",
                     "num": "D1",
-                    "restSec": 60,
+                    "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 12",
+                    "sets": "3 × 8",
                     "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
+                    "volumeFactor": 1
                   }
                 ],
-                "title": "Tuesday · Lower Explosive"
+                "title": "Tuesday · Full body"
               },
               {
                 "_objective": {
@@ -26453,10 +26446,10 @@
                 "duration": "~45 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "clean_and_jerk",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
+                    "intent": "clean_and_jerk",
+                    "name": "Clean and Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "A1",
                     "restSec": 150,
@@ -26466,10 +26459,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "split_jerk",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "split_jerk",
+                    "name": "Split Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -26517,7 +26510,7 @@
                 },
                 "axialLoad": 7,
                 "dayIdx": 4,
-                "duration": "~40 min",
+                "duration": "~30 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -26533,10 +26526,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -26546,31 +26539,30 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
                     "exId": "kb_swing",
-                    "group": "D",
+                    "group": "C",
                     "name": "Kettlebell swing",
                     "note": "",
-                    "num": "D1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "D",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
                 "title": "Friday · Lower Explosive"
@@ -26590,9 +26582,9 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 0,
-                "duration": "~45 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -26608,10 +26600,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -26621,10 +26613,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
+                    "exId": "overhead_squat",
                     "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
                     "restSec": 150,
@@ -26632,89 +26624,86 @@
                     "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "122.5 kg"
                   },
                   {
-                    "exId": "power_clean",
+                    "exId": "broad_jump",
                     "group": "D",
-                    "intent": "power_clean",
-                    "name": "Power Clean",
+                    "name": "Broad Jump",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "D1",
                     "restSec": 150,
                     "rpe": "RPE 7",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "volumeFactor": 1
                   }
                 ],
                 "title": "Monday · Lower Explosive"
               },
               {
                 "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
                 },
-                "axialLoad": 7,
+                "axialLoad": 4,
                 "dayIdx": 1,
                 "duration": "~30 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "front_squat",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "intent": "front_squat",
+                    "name": "Front squat",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "A1",
-                    "restSec": 150,
+                    "restSec": 120,
                     "rpe": "RPE 7",
-                    "sets": "4 × 4",
+                    "sets": "4 × 5",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "100 kg"
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "barbell_row",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
-                    "restSec": 150,
+                    "restSec": 120,
                     "rpe": "RPE 7",
-                    "sets": "4 × 4",
+                    "sets": "4 × 5",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "100 kg"
                   },
                   {
-                    "exId": "kb_swing",
+                    "exId": "assisted_pullup",
                     "group": "C",
-                    "name": "Kettlebell swing",
+                    "name": "Band-assisted pull-up",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 6",
+                    "sets": "3 × 8",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "37.5 kg"
+                    "volumeFactor": 1
                   },
                   {
-                    "exId": "ankle_plantarflex_band",
+                    "exId": "band_row",
                     "group": "D",
-                    "name": "Banded Ankle Plantarflexion",
+                    "name": "Band row",
                     "note": "",
                     "num": "D1",
-                    "restSec": 60,
+                    "restSec": 90,
                     "rpe": "RPE 7",
-                    "sets": "3 × 12",
+                    "sets": "3 × 8",
                     "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
+                    "volumeFactor": 1
                   }
                 ],
-                "title": "Tuesday · Lower Explosive"
+                "title": "Tuesday · Full body"
               },
               {
                 "_objective": {
@@ -26727,10 +26716,10 @@
                 "duration": "~45 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "clean_and_jerk",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
+                    "intent": "clean_and_jerk",
+                    "name": "Clean and Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "A1",
                     "restSec": 150,
@@ -26740,10 +26729,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "split_jerk",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "split_jerk",
+                    "name": "Split Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -26791,7 +26780,7 @@
                 },
                 "axialLoad": 7,
                 "dayIdx": 4,
-                "duration": "~40 min",
+                "duration": "~30 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -26807,10 +26796,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -26820,31 +26809,30 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
                     "exId": "kb_swing",
-                    "group": "D",
+                    "group": "C",
                     "name": "Kettlebell swing",
                     "note": "",
-                    "num": "D1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "D",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
                 "title": "Friday · Lower Explosive"
@@ -26864,9 +26852,9 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 0,
-                "duration": "~45 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -26882,10 +26870,139 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "overhead_squat",
+                    "group": "C",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "C1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "122.5 kg"
+                  },
+                  {
+                    "exId": "broad_jump",
+                    "group": "D",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "D1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Monday · Lower Explosive"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
+                "axialLoad": 4,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "front_squat",
+                    "group": "A",
+                    "intent": "front_squat",
+                    "name": "Front squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "100 kg"
+                  },
+                  {
+                    "exId": "barbell_row",
+                    "group": "B",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "100 kg"
+                  },
+                  {
+                    "exId": "assisted_pullup",
+                    "group": "C",
+                    "name": "Band-assisted pull-up",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "band_row",
+                    "group": "D",
+                    "name": "Band row",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Tuesday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
+                "axialLoad": 6,
+                "dayIdx": 3,
+                "duration": "~45 min",
+                "items": [
+                  {
+                    "exId": "clean_and_jerk",
+                    "group": "A",
                     "intent": "clean_and_jerk",
                     "name": "Clean and Jerk",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "split_jerk",
+                    "group": "B",
+                    "intent": "split_jerk",
+                    "name": "Split Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -26923,7 +27040,7 @@
                     "weight": "80 kg"
                   }
                 ],
-                "title": "Monday · Lower Explosive"
+                "title": "Thursday · Lower Explosive"
               },
               {
                 "_objective": {
@@ -26932,7 +27049,7 @@
                   "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
                 },
                 "axialLoad": 7,
-                "dayIdx": 1,
+                "dayIdx": 4,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -26949,10 +27066,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -26988,139 +27105,6 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Tuesday · Lower Explosive"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
-                },
-                "axialLoad": 6,
-                "dayIdx": 3,
-                "duration": "~45 min",
-                "items": [
-                  {
-                    "exId": "snatch",
-                    "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "A1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "exId": "clean_and_jerk",
-                    "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "B1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
-                    "exId": "power_clean",
-                    "group": "D",
-                    "intent": "power_clean",
-                    "name": "Power Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "D1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "80 kg"
-                  }
-                ],
-                "title": "Thursday · Lower Explosive"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
-                },
-                "axialLoad": 7,
-                "dayIdx": 4,
-                "duration": "~40 min",
-                "items": [
-                  {
-                    "exId": "snatch",
-                    "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "A1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "exId": "clean_and_jerk",
-                    "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "B1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
-                    "exId": "kb_swing",
-                    "group": "D",
-                    "name": "Kettlebell swing",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "37.5 kg"
-                  }
-                ],
                 "title": "Friday · Lower Explosive"
               }
             ],
@@ -27138,7 +27122,7 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 0,
                 "duration": "~35 min",
                 "items": [
@@ -27156,10 +27140,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -27169,10 +27153,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
+                    "exId": "overhead_squat",
                     "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
                     "restSec": 150,
@@ -27180,7 +27164,7 @@
                     "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "122.5 kg"
                   }
                 ],
                 "title": "Monday · Lower Explosive"
@@ -27196,10 +27180,10 @@
                 "duration": "~35 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "clean_and_jerk",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
+                    "intent": "clean_and_jerk",
+                    "name": "Clean and Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "A1",
                     "restSec": 150,
@@ -27209,10 +27193,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "split_jerk",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "split_jerk",
+                    "name": "Split Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -27240,56 +27224,120 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
-                "axialLoad": 6,
+                "axialLoad": 2,
                 "dayIdx": 3,
-                "duration": "~35 min",
+                "duration": "~30 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "front_squat",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "intent": "front_squat",
+                    "name": "Front squat",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "A1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "exId": "clean_and_jerk",
-                    "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "B1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
+                    "restSec": 120,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 5",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "exId": "assisted_pullup",
+                    "group": "B",
+                    "name": "Band-assisted pull-up",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "band_row",
+                    "group": "C",
+                    "name": "Band row",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "5 kg/hand"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "H",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Thursday · Lower Explosive"
+                "title": "Thursday · Full body"
               },
               {
                 "_objective": {
@@ -27297,7 +27345,7 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 4,
                 "duration": "~35 min",
                 "items": [
@@ -27315,10 +27363,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -27328,10 +27376,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
+                    "exId": "overhead_squat",
                     "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
                     "restSec": 150,
@@ -27339,7 +27387,7 @@
                     "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "122.5 kg"
                   }
                 ],
                 "title": "Friday · Lower Explosive"
@@ -27381,9 +27429,9 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 0,
-                "duration": "~45 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -27399,10 +27447,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -27412,10 +27460,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
+                    "exId": "overhead_squat",
                     "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
                     "restSec": 150,
@@ -27423,89 +27471,86 @@
                     "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "122.5 kg"
                   },
                   {
-                    "exId": "power_clean",
+                    "exId": "broad_jump",
                     "group": "D",
-                    "intent": "power_clean",
-                    "name": "Power Clean",
+                    "name": "Broad Jump",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "D1",
                     "restSec": 150,
                     "rpe": "RPE 7",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "volumeFactor": 1
                   }
                 ],
                 "title": "Monday · Lower Explosive"
               },
               {
                 "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
                 },
-                "axialLoad": 7,
+                "axialLoad": 4,
                 "dayIdx": 1,
                 "duration": "~30 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "front_squat",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "intent": "front_squat",
+                    "name": "Front squat",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "A1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "107.5 kg"
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "barbell_row",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "107.5 kg"
                   },
                   {
-                    "exId": "kb_swing",
+                    "exId": "assisted_pullup",
                     "group": "C",
-                    "name": "Kettlebell swing",
+                    "name": "Band-assisted pull-up",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 7→8",
                     "sets": "3 × 6",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "37.5 kg"
+                    "volumeFactor": 1
                   },
                   {
-                    "exId": "ankle_plantarflex_band",
+                    "exId": "band_row",
                     "group": "D",
-                    "name": "Banded Ankle Plantarflexion",
+                    "name": "Band row",
                     "note": "",
                     "num": "D1",
-                    "restSec": 60,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
+                    "volumeFactor": 1
                   }
                 ],
-                "title": "Tuesday · Lower Explosive"
+                "title": "Tuesday · Full body"
               },
               {
                 "_objective": {
@@ -27518,10 +27563,10 @@
                 "duration": "~45 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "clean_and_jerk",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
+                    "intent": "clean_and_jerk",
+                    "name": "Clean and Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "A1",
                     "restSec": 150,
@@ -27531,10 +27576,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "split_jerk",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "split_jerk",
+                    "name": "Split Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -27582,7 +27627,7 @@
                 },
                 "axialLoad": 7,
                 "dayIdx": 4,
-                "duration": "~40 min",
+                "duration": "~30 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -27598,10 +27643,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -27611,31 +27656,30 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
                     "exId": "kb_swing",
-                    "group": "D",
+                    "group": "C",
                     "name": "Kettlebell swing",
                     "note": "",
-                    "num": "D1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "D",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
                 "title": "Friday · Lower Explosive"
@@ -27655,9 +27699,9 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 0,
-                "duration": "~45 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -27673,10 +27717,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -27686,10 +27730,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
+                    "exId": "overhead_squat",
                     "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
                     "restSec": 150,
@@ -27697,89 +27741,86 @@
                     "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "122.5 kg"
                   },
                   {
-                    "exId": "power_clean",
+                    "exId": "broad_jump",
                     "group": "D",
-                    "intent": "power_clean",
-                    "name": "Power Clean",
+                    "name": "Broad Jump",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "D1",
                     "restSec": 150,
                     "rpe": "RPE 7",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "volumeFactor": 1
                   }
                 ],
                 "title": "Monday · Lower Explosive"
               },
               {
                 "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
                 },
-                "axialLoad": 7,
+                "axialLoad": 4,
                 "dayIdx": 1,
                 "duration": "~30 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "front_squat",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "intent": "front_squat",
+                    "name": "Front squat",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "A1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "107.5 kg"
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "barbell_row",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "107.5 kg"
                   },
                   {
-                    "exId": "kb_swing",
+                    "exId": "assisted_pullup",
                     "group": "C",
-                    "name": "Kettlebell swing",
+                    "name": "Band-assisted pull-up",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 7→8",
                     "sets": "3 × 6",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "37.5 kg"
+                    "volumeFactor": 1
                   },
                   {
-                    "exId": "ankle_plantarflex_band",
+                    "exId": "band_row",
                     "group": "D",
-                    "name": "Banded Ankle Plantarflexion",
+                    "name": "Band row",
                     "note": "",
                     "num": "D1",
-                    "restSec": 60,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
+                    "volumeFactor": 1
                   }
                 ],
-                "title": "Tuesday · Lower Explosive"
+                "title": "Tuesday · Full body"
               },
               {
                 "_objective": {
@@ -27792,10 +27833,10 @@
                 "duration": "~45 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "clean_and_jerk",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
+                    "intent": "clean_and_jerk",
+                    "name": "Clean and Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "A1",
                     "restSec": 150,
@@ -27805,10 +27846,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "split_jerk",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "split_jerk",
+                    "name": "Split Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -27856,7 +27897,7 @@
                 },
                 "axialLoad": 7,
                 "dayIdx": 4,
-                "duration": "~40 min",
+                "duration": "~30 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -27872,10 +27913,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -27885,31 +27926,30 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
                     "exId": "kb_swing",
-                    "group": "D",
+                    "group": "C",
                     "name": "Kettlebell swing",
                     "note": "",
-                    "num": "D1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "D",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
                 "title": "Friday · Lower Explosive"
@@ -27929,9 +27969,9 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 0,
-                "duration": "~45 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -27947,10 +27987,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -27960,10 +28000,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
+                    "exId": "overhead_squat",
                     "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
                     "restSec": 150,
@@ -27971,89 +28011,86 @@
                     "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "122.5 kg"
                   },
                   {
-                    "exId": "power_clean",
+                    "exId": "broad_jump",
                     "group": "D",
-                    "intent": "power_clean",
-                    "name": "Power Clean",
+                    "name": "Broad Jump",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "D1",
                     "restSec": 150,
                     "rpe": "RPE 7",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "volumeFactor": 1
                   }
                 ],
                 "title": "Monday · Lower Explosive"
               },
               {
                 "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
                 },
-                "axialLoad": 7,
+                "axialLoad": 4,
                 "dayIdx": 1,
                 "duration": "~30 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "front_squat",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "intent": "front_squat",
+                    "name": "Front squat",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "A1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "107.5 kg"
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "barbell_row",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "107.5 kg"
                   },
                   {
-                    "exId": "kb_swing",
+                    "exId": "assisted_pullup",
                     "group": "C",
-                    "name": "Kettlebell swing",
+                    "name": "Band-assisted pull-up",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7",
+                    "rpe": "RPE 7→8",
                     "sets": "3 × 6",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "37.5 kg"
+                    "volumeFactor": 1
                   },
                   {
-                    "exId": "ankle_plantarflex_band",
+                    "exId": "band_row",
                     "group": "D",
-                    "name": "Banded Ankle Plantarflexion",
+                    "name": "Band row",
                     "note": "",
                     "num": "D1",
-                    "restSec": 60,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
                     "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
+                    "volumeFactor": 1
                   }
                 ],
-                "title": "Tuesday · Lower Explosive"
+                "title": "Tuesday · Full body"
               },
               {
                 "_objective": {
@@ -28066,10 +28103,10 @@
                 "duration": "~45 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "clean_and_jerk",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
+                    "intent": "clean_and_jerk",
+                    "name": "Clean and Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "A1",
                     "restSec": 150,
@@ -28079,10 +28116,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "split_jerk",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "split_jerk",
+                    "name": "Split Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -28130,7 +28167,7 @@
                 },
                 "axialLoad": 7,
                 "dayIdx": 4,
-                "duration": "~40 min",
+                "duration": "~30 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -28146,10 +28183,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -28159,31 +28196,30 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
                     "exId": "kb_swing",
-                    "group": "D",
+                    "group": "C",
                     "name": "Kettlebell swing",
                     "note": "",
-                    "num": "D1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7",
                     "sets": "3 × 6",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "D",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
                 "title": "Friday · Lower Explosive"
@@ -28203,9 +28239,9 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 0,
-                "duration": "~45 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -28221,10 +28257,139 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "overhead_squat",
+                    "group": "C",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "C1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "122.5 kg"
+                  },
+                  {
+                    "exId": "broad_jump",
+                    "group": "D",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "D1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Monday · Lower Explosive"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high."
+                },
+                "axialLoad": 4,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "front_squat",
+                    "group": "A",
+                    "intent": "front_squat",
+                    "name": "Front squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "107.5 kg"
+                  },
+                  {
+                    "exId": "barbell_row",
+                    "group": "B",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "107.5 kg"
+                  },
+                  {
+                    "exId": "assisted_pullup",
+                    "group": "C",
+                    "name": "Band-assisted pull-up",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "band_row",
+                    "group": "D",
+                    "name": "Band row",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Tuesday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop explosive strength",
+                  "quality": "explosiveStrength",
+                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
+                },
+                "axialLoad": 6,
+                "dayIdx": 3,
+                "duration": "~45 min",
+                "items": [
+                  {
+                    "exId": "clean_and_jerk",
+                    "group": "A",
                     "intent": "clean_and_jerk",
                     "name": "Clean and Jerk",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "split_jerk",
+                    "group": "B",
+                    "intent": "split_jerk",
+                    "name": "Split Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -28262,7 +28427,7 @@
                     "weight": "80 kg"
                   }
                 ],
-                "title": "Monday · Lower Explosive"
+                "title": "Thursday · Lower Explosive"
               },
               {
                 "_objective": {
@@ -28271,7 +28436,7 @@
                   "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
                 },
                 "axialLoad": 7,
-                "dayIdx": 1,
+                "dayIdx": 4,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -28288,10 +28453,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -28327,139 +28492,6 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Tuesday · Lower Explosive"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
-                },
-                "axialLoad": 6,
-                "dayIdx": 3,
-                "duration": "~45 min",
-                "items": [
-                  {
-                    "exId": "snatch",
-                    "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "A1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "exId": "clean_and_jerk",
-                    "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "B1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
-                    "exId": "power_clean",
-                    "group": "D",
-                    "intent": "power_clean",
-                    "name": "Power Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "D1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "80 kg"
-                  }
-                ],
-                "title": "Thursday · Lower Explosive"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent, RIR stop when bar speed drops; fatigue budget high."
-                },
-                "axialLoad": 7,
-                "dayIdx": 4,
-                "duration": "~40 min",
-                "items": [
-                  {
-                    "exId": "snatch",
-                    "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "A1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "exId": "clean_and_jerk",
-                    "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "B1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
-                    "exId": "kb_swing",
-                    "group": "D",
-                    "name": "Kettlebell swing",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 90,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 6",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "37.5 kg"
-                  }
-                ],
                 "title": "Friday · Lower Explosive"
               }
             ],
@@ -28477,7 +28509,7 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 0,
                 "duration": "~35 min",
                 "items": [
@@ -28495,10 +28527,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -28508,10 +28540,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
+                    "exId": "overhead_squat",
                     "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
                     "restSec": 150,
@@ -28519,7 +28551,7 @@
                     "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "122.5 kg"
                   }
                 ],
                 "title": "Monday · Lower Explosive"
@@ -28535,10 +28567,10 @@
                 "duration": "~35 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "clean_and_jerk",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
+                    "intent": "clean_and_jerk",
+                    "name": "Clean and Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "A1",
                     "restSec": 150,
@@ -28548,10 +28580,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "split_jerk",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "split_jerk",
+                    "name": "Split Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -28579,56 +28611,120 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
-                "axialLoad": 6,
+                "axialLoad": 2,
                 "dayIdx": 3,
-                "duration": "~35 min",
+                "duration": "~30 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "front_squat",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "intent": "front_squat",
+                    "name": "Front squat",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "A1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "exId": "clean_and_jerk",
-                    "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "B1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1
-                  },
-                  {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
+                    "restSec": 120,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 5",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "exId": "assisted_pullup",
+                    "group": "B",
+                    "name": "Band-assisted pull-up",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "band_row",
+                    "group": "C",
+                    "name": "Band row",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "5 kg/hand"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "H",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
-                "title": "Thursday · Lower Explosive"
+                "title": "Thursday · Full body"
               },
               {
                 "_objective": {
@@ -28636,7 +28732,7 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 4,
                 "duration": "~35 min",
                 "items": [
@@ -28654,10 +28750,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -28667,10 +28763,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
+                    "exId": "overhead_squat",
                     "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
                     "restSec": 150,
@@ -28678,7 +28774,7 @@
                     "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "122.5 kg"
                   }
                 ],
                 "title": "Friday · Lower Explosive"
@@ -28720,9 +28816,9 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent (top of range); fatigue budget high."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 0,
-                "duration": "~45 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -28738,10 +28834,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -28751,10 +28847,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
+                    "exId": "overhead_squat",
                     "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
                     "restSec": 150,
@@ -28762,89 +28858,86 @@
                     "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "122.5 kg"
                   },
                   {
-                    "exId": "power_clean",
+                    "exId": "broad_jump",
                     "group": "D",
-                    "intent": "power_clean",
-                    "name": "Power Clean",
+                    "name": "Broad Jump",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "D1",
                     "restSec": 150,
                     "rpe": "RPE 7",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "volumeFactor": 1
                   }
                 ],
                 "title": "Monday · Lower Explosive"
               },
               {
                 "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent (top of range); fatigue budget high."
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM (top of range); fatigue budget high."
                 },
-                "axialLoad": 7,
+                "axialLoad": 4,
                 "dayIdx": 1,
                 "duration": "~30 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "front_squat",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "intent": "front_squat",
+                    "name": "Front squat",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "A1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
+                    "restSec": 120,
+                    "rpe": "RPE 8→9",
+                    "sets": "4 × 3",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "110 kg"
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "barbell_row",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
+                    "restSec": 120,
+                    "rpe": "RPE 8→9",
+                    "sets": "4 × 3",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "110 kg"
                   },
                   {
-                    "exId": "kb_swing",
+                    "exId": "assisted_pullup",
                     "group": "C",
-                    "name": "Kettlebell swing",
+                    "name": "Band-assisted pull-up",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7→8",
+                    "rpe": "RPE 8",
                     "sets": "3 × 5",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "40 kg"
+                    "volumeFactor": 1
                   },
                   {
-                    "exId": "ankle_plantarflex_band",
+                    "exId": "band_row",
                     "group": "D",
-                    "name": "Banded Ankle Plantarflexion",
+                    "name": "Band row",
                     "note": "",
                     "num": "D1",
-                    "restSec": 60,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 12",
+                    "restSec": 90,
+                    "rpe": "RPE 8",
+                    "sets": "3 × 5",
                     "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
+                    "volumeFactor": 1
                   }
                 ],
-                "title": "Tuesday · Lower Explosive"
+                "title": "Tuesday · Full body"
               },
               {
                 "_objective": {
@@ -28857,10 +28950,10 @@
                 "duration": "~45 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "clean_and_jerk",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
+                    "intent": "clean_and_jerk",
+                    "name": "Clean and Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "A1",
                     "restSec": 150,
@@ -28870,10 +28963,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "split_jerk",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "split_jerk",
+                    "name": "Split Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -28921,7 +29014,7 @@
                 },
                 "axialLoad": 7,
                 "dayIdx": 4,
-                "duration": "~40 min",
+                "duration": "~30 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -28937,10 +29030,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -28950,31 +29043,30 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
                     "exId": "kb_swing",
-                    "group": "D",
+                    "group": "C",
                     "name": "Kettlebell swing",
                     "note": "",
-                    "num": "D1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7→8",
                     "sets": "3 × 5",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "40 kg"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "D",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
                 "title": "Friday · Lower Explosive"
@@ -28994,9 +29086,9 @@
                   "quality": "explosiveStrength",
                   "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent (top of range); fatigue budget high."
                 },
-                "axialLoad": 6,
+                "axialLoad": 9,
                 "dayIdx": 0,
-                "duration": "~45 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -29012,10 +29104,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -29025,10 +29117,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
+                    "exId": "overhead_squat",
                     "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
+                    "intent": "overhead_squat",
+                    "name": "Overhead Squat",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
                     "restSec": 150,
@@ -29036,89 +29128,86 @@
                     "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "72.5 kg"
+                    "weight": "122.5 kg"
                   },
                   {
-                    "exId": "power_clean",
+                    "exId": "broad_jump",
                     "group": "D",
-                    "intent": "power_clean",
-                    "name": "Power Clean",
+                    "name": "Broad Jump",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "D1",
                     "restSec": 150,
                     "rpe": "RPE 7",
                     "sets": "4 × 4",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "80 kg"
+                    "volumeFactor": 1
                   }
                 ],
                 "title": "Monday · Lower Explosive"
               },
               {
                 "_objective": {
-                  "purpose": "Develop explosive strength",
-                  "quality": "explosiveStrength",
-                  "rationale": "targeting explosive strength from the diagnosis; 30–60% 1RM, maximal intent (top of range); fatigue budget high."
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM (top of range); fatigue budget high."
                 },
-                "axialLoad": 7,
+                "axialLoad": 4,
                 "dayIdx": 1,
                 "duration": "~30 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "front_squat",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "intent": "front_squat",
+                    "name": "Front squat",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "A1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
+                    "restSec": 120,
+                    "rpe": "RPE 8→9",
+                    "sets": "4 × 3",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "110 kg"
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "barbell_row",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
+                    "restSec": 120,
+                    "rpe": "RPE 8→9",
+                    "sets": "4 × 3",
                     "superset": false,
-                    "volumeFactor": 1
+                    "volumeFactor": 1,
+                    "weight": "110 kg"
                   },
                   {
-                    "exId": "kb_swing",
+                    "exId": "assisted_pullup",
                     "group": "C",
-                    "name": "Kettlebell swing",
+                    "name": "Band-assisted pull-up",
                     "note": "",
                     "num": "C1",
                     "restSec": 90,
-                    "rpe": "RPE 7→8",
+                    "rpe": "RPE 8",
                     "sets": "3 × 5",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "40 kg"
+                    "volumeFactor": 1
                   },
                   {
-                    "exId": "ankle_plantarflex_band",
+                    "exId": "band_row",
                     "group": "D",
-                    "name": "Banded Ankle Plantarflexion",
+                    "name": "Band row",
                     "note": "",
                     "num": "D1",
-                    "restSec": 60,
-                    "rpe": "RPE 7→8",
-                    "sets": "3 × 12",
+                    "restSec": 90,
+                    "rpe": "RPE 8",
+                    "sets": "3 × 5",
                     "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
+                    "volumeFactor": 1
                   }
                 ],
-                "title": "Tuesday · Lower Explosive"
+                "title": "Tuesday · Full body"
               },
               {
                 "_objective": {
@@ -29131,10 +29220,10 @@
                 "duration": "~45 min",
                 "items": [
                   {
-                    "exId": "snatch",
+                    "exId": "clean_and_jerk",
                     "group": "A",
-                    "intent": "snatch",
-                    "name": "Snatch",
+                    "intent": "clean_and_jerk",
+                    "name": "Clean and Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "A1",
                     "restSec": 150,
@@ -29144,10 +29233,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "split_jerk",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "split_jerk",
+                    "name": "Split Jerk",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -29195,7 +29284,7 @@
                 },
                 "axialLoad": 7,
                 "dayIdx": 4,
-                "duration": "~40 min",
+                "duration": "~30 min",
                 "items": [
                   {
                     "exId": "snatch",
@@ -29211,10 +29300,10 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "clean_and_jerk",
+                    "exId": "power_snatch",
                     "group": "B",
-                    "intent": "clean_and_jerk",
-                    "name": "Clean and Jerk",
+                    "intent": "power_snatch",
+                    "name": "Power Snatch",
                     "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "B1",
                     "restSec": 150,
@@ -29224,31 +29313,30 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "hang_clean",
-                    "group": "C",
-                    "intent": "hang_clean",
-                    "name": "Hang Clean",
-                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
-                    "num": "C1",
-                    "restSec": 150,
-                    "rpe": "RPE 7",
-                    "sets": "4 × 4",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
                     "exId": "kb_swing",
-                    "group": "D",
+                    "group": "C",
                     "name": "Kettlebell swing",
                     "note": "",
-                    "num": "D1",
+                    "num": "C1",
                     "restSec": 90,
                     "rpe": "RPE 7→8",
                     "sets": "3 × 5",
                     "superset": false,
                     "volumeFactor": 1,
                     "weight": "40 kg"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "D",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
                   }
                 ],
                 "title": "Friday · Lower Explosive"
@@ -29266,7 +29354,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 12,
@@ -35698,7 +35786,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 12,
@@ -41425,7 +41513,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 12,
@@ -45748,7 +45836,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 12,
@@ -48260,7 +48348,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 12,
@@ -52947,7 +53035,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 4,
@@ -53717,7 +53805,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 12,
@@ -57095,7 +57183,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 4,
@@ -58257,7 +58345,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 12,
@@ -62991,7 +63079,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 4,
@@ -64155,7 +64243,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 12,
@@ -67570,7 +67658,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 12,
@@ -72595,7 +72683,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 6,
@@ -74552,7 +74640,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 10,
@@ -78828,7 +78916,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 4,
@@ -80513,7 +80601,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 6,
@@ -83238,7 +83326,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 4,
@@ -84323,7 +84411,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.15.0"
+        "knowledgeSetVersion": "1.16.0"
       },
       "validation": {
         "checked": 12,

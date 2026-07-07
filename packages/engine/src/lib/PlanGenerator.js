@@ -137,7 +137,10 @@ function buildGymWeek(count, ctx, profile, program, diag) {
     power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || [],
     priorityByIntent: program.priorityByIntent || new Map(),
     priorityQualities: diag.priorityQualities, season: program.season, skbIds: diag.skbIds,
-    categoryPlan: diag.categoryPlan, discipline: program.discipline || null
+    categoryPlan: diag.categoryPlan, discipline: program.discipline || null,
+    // WP-49 T4b-2: which classic lift(s) the olympic athlete competes in (snatch|cj|both) — drives
+    // the day emphasis. Default 'both' until the onboarding field lands (Task 6). Ignored off-olympic.
+    competedLift: profile.olympic_lift || 'both'
   });
 }
 
