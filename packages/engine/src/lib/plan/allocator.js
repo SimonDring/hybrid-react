@@ -846,7 +846,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
         skbIds: ctx.skbIds || new Set(), ledger: { weeklyDelivered, weeklyCeiling }, makePick,
         blockedNameRegexes: ctx.blockedNameRegexes || [],
         categoryIds: assignment ? new Set(assignment.exerciseIds) : null,
-        discipline: ctx.discipline
+        discipline: ctx.discipline,
+        // WP-49 Plan 2 T4: anchor the discipline's own priority lifts (tier 0), in authored order.
+        // Gated to the build-discipline cohort so sports + legacy see priorityIds=null (byte-identical).
+        priorityIds: ctx.discipline ? (ctx.exercisePriority || []) : null
       });
       if (assignment) objective.rationale += ` (${assignment.rationale})`;
       // WP-30a: ship the D9 objective WITH the session — the rationale string now

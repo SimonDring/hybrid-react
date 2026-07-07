@@ -63,4 +63,34 @@ const workingNames = (week) => week.sessions.flatMap((s) => (s.items || [])
     `C1 powerlifting is not forced into an upper/lower split (got [${regions.join(', ')}])`);
 }
 
+// ── D · powerlifting is BUILT AROUND the competition lifts (squat/bench/deadlift) ──
+// The gym IS the sport (Simon 2026-07-07): lead with the three comp lifts, not just
+// their variations, with accessories supporting them.
+{
+  const plan = planForDisc('powerlifting', 4, ['mon', 'tue', 'thu', 'fri'], { lifts: { squat: 140, bench: 100, deadlift: 180 } });
+  const names = new Set(workingNames(plan.phases[0].weeks[0]).concat(workingNames(workWeek(plan))));
+  const has = (n) => [...names].some((x) => x.includes(n));
+  assert(has('back squat') || has('squat'), `D1 powerlifting features a squat (got: ${[...names].slice(0, 14).join(', ')})`);
+  assert(has('bench press'), 'D2 powerlifting features the competition bench press (not only board/floor variants)');
+  assert(has('deadlift'), 'D3 powerlifting features the deadlift');
+}
+
+// ── E · hypertrophy leads with COMPOUNDS, not isolation-only ───────────────────
+{
+  const plan = planForDisc('hypertrophy', 5, ['mon', 'tue', 'wed', 'fri', 'sat']);
+  const names = new Set(workingNames(workWeek(plan)));
+  const hasUpperCompound = [...names].some((n) => /bench press|incline bench|overhead press|barbell row|pull-up|pullup/.test(n));
+  assert(hasUpperCompound, `E1 hypertrophy features an upper-body compound (press/row/pull-up), not isolation-only (got: ${[...names].join(', ')})`);
+}
+
+// ── F · Olympic features BOTH classic lifts (snatch and clean & jerk) ──────────
+{
+  const plan = planForDisc('olympic', 4, ['mon', 'tue', 'thu', 'fri'], { lifts: { squat: 150 } });
+  const names = new Set(workingNames(plan.phases[0].weeks[0]).concat(workingNames(workWeek(plan))));
+  const hasSnatch = [...names].some((n) => /snatch/.test(n));
+  const hasCJ = [...names].some((n) => /clean and jerk|clean & jerk/.test(n));
+  assert(hasSnatch, `F1 Olympic plan features a snatch (got: ${[...names].slice(0, 14).join(', ')})`);
+  assert(hasCJ, 'F2 Olympic plan features the clean and jerk');
+}
+
 console.log(process.exitCode ? 'wp49-discipline-selection FAILURES' : 'PASS: wp49-discipline-selection — all gates');
