@@ -62,7 +62,8 @@ export function resolveStartDate(option, customDate, now = new Date()) {
 export const BLANK_ANSWERS = {
   name: '', age: '', sex: '', bodyweight_kg: '',
   goalType: '',                 // 'build' | 'sport'
-  strengthStyle: 'strength',    // build: 'strength' | 'bodybuilding' | 'functional'
+  strengthStyle: 'strength',    // build: 'strength' | 'bodybuilding' | 'functional' | 'olympic'
+  olympicLift: 'both',          // olympic only: 'both' | 'snatch' | 'cj' (WP-49 T6b)
   sport: '',                    // sport: 'run' | 'cycle' | 'swim'
   sportIntent: '',              // 'compete' | 'recreational'
   sportSeason: '',              // compete only: 'in_season' | 'off_season'
@@ -173,6 +174,9 @@ export function answersToProfilePatch(a) {
     focus: ['gym'],                          // the plan is always a gym plan now
     primary: 'gym',
     strength_style: isBuild ? (a.strengthStyle || 'strength') : 'strength',
+    // WP-49 T6b: the Olympic athlete's competed lift drives the day emphasis (read by the engine
+    // as profile.olympic_lift). Only meaningful for the olympic build style; null otherwise.
+    olympic_lift: (isBuild && a.strengthStyle === 'olympic') ? (a.olympicLift || 'both') : null,
     sport: isSport ? (legacySport || null) : null,
     // The exact SKB profile id the athlete chose (e.g. 'hurling', 'running_middle').
     // The engine sport ('gaa') is AMBIGUOUS for GAA codes — persisting the real answer

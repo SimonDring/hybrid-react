@@ -18,9 +18,17 @@ export const GOAL_TYPES = [
   { key: 'sport', label: 'Support a sport', hint: 'Strength to power your running, cycling or swimming', emoji: '🎯' }
 ];
 export const STYLES = [
-  { key: 'strength',     label: 'Get stronger',       hint: 'Heavy, low reps, the big lifts' },
-  { key: 'bodybuilding', label: 'Build muscle',       hint: 'Moderate–high reps, more volume' },
-  { key: 'functional',   label: 'Functional fitness', hint: 'Compounds, carries, core — athletic & desk-counter' }
+  { key: 'strength',     label: 'Get stronger',        hint: 'Powerlifting — squat, bench, deadlift; heavy, low reps' },
+  { key: 'bodybuilding', label: 'Build muscle',        hint: 'Hypertrophy — a proper split, moderate–high reps, more volume' },
+  { key: 'functional',   label: 'Functional fitness',  hint: 'Compounds, carries, core — athletic & desk-counter' },
+  { key: 'olympic',      label: 'Olympic weightlifting', hint: 'Snatch + clean & jerk (needs a barbell)' }
+];
+// WP-49 T6b: which classic lift the Olympic athlete competes in — drives the day emphasis
+// (snatch-focused / C&J-focused days + a squat strength day). Written to profile.olympic_lift.
+export const OLYMPIC_LIFTS = [
+  { key: 'both',   label: 'Both lifts',      hint: 'Train the snatch and the clean & jerk' },
+  { key: 'snatch', label: 'Snatch',          hint: 'Weight the week toward the snatch' },
+  { key: 'cj',     label: 'Clean & jerk',    hint: 'Weight the week toward the clean & jerk' }
 ];
 const SPORT_INTENTS = [
   { key: 'compete',      label: 'I compete',        hint: 'Races, meets or matches — training stays sport-specific.' },
@@ -240,6 +248,11 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
 
     isBuild && { title: 'What are you building?', subtitle: 'This sets your rep ranges, exercise mix and volume.', valid: () => !!a.strengthStyle,
       render: () => <OptionGrid cols={1}>{STYLES.map(s => <Chip key={s.key} selected={a.strengthStyle === s.key} onClick={() => set({ strengthStyle: s.key })} label={s.label} hint={s.hint} />)}</OptionGrid> },
+
+    // WP-49 T6b: the Olympic lifter picks the lift they compete in — it shapes the week
+    // (snatch-focused / clean & jerk-focused days + a heavy squat day).
+    (isBuild && a.strengthStyle === 'olympic') && { title: 'Which lift do you compete in?', subtitle: 'We build the week around it, with a squat strength day.', valid: () => !!a.olympicLift,
+      render: () => <OptionGrid cols={1}>{OLYMPIC_LIFTS.map(s => <Chip key={s.key} selected={a.olympicLift === s.key} onClick={() => set({ olympicLift: s.key })} label={s.label} hint={s.hint} />)}</OptionGrid> },
 
     isSport && { title: 'Which sport?', subtitle: 'Your sport + position set the demands your training serves.', valid: () => !!a.skbSport,
       render: () => (
