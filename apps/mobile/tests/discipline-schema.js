@@ -9,5 +9,6 @@ const ok = { id:'x', label:'X', demand:{ maxStrength:1.0 }, priorityLifts:['back
 assert(validateDisciplineModule(ok).length === 0, 'a well-formed module validates');
 assert(validateDisciplineModule({ id:'y' }).length > 0, 'a module missing demand/lifts fails');
 assert(validateDisciplineModule({ ...ok, demand:{ notAQuality:1 } }).length > 0, 'an unknown quality id fails');
+assert(validateDisciplineModule({ ...ok, demand:{ maxStrength:1.5 } }).length > 0, 'a demand value >1 fails');
 assert(validateRegistry([ok, ok]).ok === false, 'duplicate ids fail the registry');
 console.log(process.exitCode ? 'discipline-schema FAILURES' : `PASS: discipline-schema — ${pass} assertions`);

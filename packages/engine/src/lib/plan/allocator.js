@@ -421,6 +421,7 @@ const OVERSHOOT_PENALTY = 0.1;
 function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null, levelName = 'intermediate', power = false, goalPrimary = null, demotePress = false, weeklyExCount = {}, priorityFor = () => false, blockedRx = [], discipline = undefined) {
   let best = null, bestScore = 0.25; // threshold: ignore near-useless picks
   for (const ex of EXERCISES) {
+    // NB: ex.discipline is the strength-discipline TAG (olympic/powerlifting), distinct from the session-spec 'discipline' modality field (gym/rehab).
     // WP-49 Plan 1: discipline-tagged lifts are only selectable when their discipline is active.
     if (ex.discipline && ex.discipline !== discipline) continue;
     if (!slot.equip.has(ex.equip)) continue;
