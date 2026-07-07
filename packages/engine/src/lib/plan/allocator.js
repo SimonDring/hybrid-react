@@ -686,6 +686,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     delivered: {},   // muscle → sets delivered IN THIS SLOT (for perSlotCap)
     muscleVol: {},   // muscle → total fractional sets in this slot (for label/flags)
     focus: slot.focus || null,       // split day's muscle weights — biases selection (null = no bias)
+    focusLabel: slot.focusLabel || null,  // WP-49 Plan 2 T3b: the split's region label (Upper/Lower/
+                                     // Push/Pull) — previously dropped, so the D11 region-filter defaulted
+                                     // to 'full'. Only the hypertrophy discipline consumes it (below);
+                                     // sports + powerlifting + olympic stay region='full' (byte-identical).
     anchors: slot.anchors || null,   // split day's opening pattern(s)
     axialLoad: 0                     // running spinal-load budget for this session
   }));
@@ -780,7 +784,12 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     const constrainedD11 = contraPatternsD11.size > 0 || blockedRxD11.length > 0;
     work.forEach((slot, i) => {
       const wi = ctx.weekSlotIdx != null ? (ctx.weekSlotIdx + i) % weekCount : i;
-      const region = regionOf(slot.focusLabel);
+      // WP-49 Plan 2 T3b: only HYPERTROPHY consumes the split's region label (upper/lower/push/
+      // pull days). Every other diagnosis-steered cohort — sports, powerlifting, olympic — trains
+      // full-body / lift-focused sessions and keeps region='full' (byte-identical to pre-T3b).
+      // Simon's decision (2026-07-07): a region split is only warranted where the day count makes
+      // one sensible, and hypertrophy is the one build goal that needs it.
+      const region = ctx.discipline === 'hypertrophy' ? regionOf(slot.focusLabel) : 'full';
       // Category-led slot (WP-20): the SKB assignment names the day's coverage, its
       // movements, and its dose quality (led by its highest-rated movement).
       const assignment = categoryPlan ? categoryPlan.sessions[wi % categoryPlan.sessions.length] : null;

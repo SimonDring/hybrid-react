@@ -27,8 +27,12 @@ const MATRIX = {
 
 function assert(c, m) { if (!c) { console.error('FAIL:', m); process.exitCode = 1; } else console.log('PASS:', m); }
 const stable = (v) => JSON.stringify((function s(x) { return Array.isArray(x) ? x.map(s) : x && typeof x === 'object' ? Object.keys(x).sort().reduce((o, k) => (o[k] = s(x[k]), o), {}) : x; })(v), null, 2);
+// This gate tests plan CONTENT parity, not the knowledge STAMP: the knowledgeSetVersion embedded in
+// every plan's meta.provenance legitimately bumps on any knowledge change (e.g. a discipline-gated
+// data addition that leaves these legacy plans byte-identical), and must not false-fail this gate.
+const normalise = (plan) => { const c = JSON.parse(JSON.stringify(plan)); if (c?.meta?.provenance) c.meta.provenance.knowledgeSetVersion = 'X'; return c; };
 
-const current = {}; for (const [k, a] of Object.entries(MATRIX)) current[k] = generatePlan(answersToProfile(a));
+const current = {}; for (const [k, a] of Object.entries(MATRIX)) current[k] = normalise(generatePlan(answersToProfile(a)));
 if (!existsSync(SNAP) || process.env.UPDATE) {
   if (!existsSync(dirname(SNAP))) mkdirSync(dirname(SNAP), { recursive: true });
   writeFileSync(SNAP, stable(current) + '\n');
