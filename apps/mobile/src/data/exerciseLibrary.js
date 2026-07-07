@@ -227,6 +227,29 @@ const LIB = {
   // ---------------- Accessory / isolation / drills (first-draft demos) ----------------
 
   // ---------------- dedicated splits of earlier stand-ins (first-draft demos) ----------------
+
+  // ---------------- Olympic lifts (WP-49 Plan 1 — discipline-gated, not in any current plan) ----------------
+  snatch: {
+    name: 'Snatch', type: 'strength',
+    summary: 'A single explosive pull that takes the bar from the floor to locked-out overhead — the fastest lift in the gym.',
+    how: ['Bar over mid-foot, hips higher than a deadlift, wide grip.', 'Drive the floor away, keeping the bar close, and extend violently through the hips as it passes the knees.', 'Pull yourself under the bar, catching it locked out overhead in a deep squat.', 'Stand tall to finish, bar stacked over mid-foot and shoulders.'],
+    lookFor: ['Bar stays close to the body the whole pull', 'Full, violent hip extension before pulling under', 'Locked-out arms directly overhead at the catch'],
+    avoid: ['Pulling early with the arms instead of the hips/legs', 'Bar drifting forward away from the body', 'Catching with bent elbows or the bar behind the head'],
+  },
+  clean_and_jerk: {
+    name: 'Clean and Jerk', type: 'strength',
+    summary: 'Two lifts in one — pull the bar to the shoulders (clean), then drive it overhead (jerk).',
+    how: ['Clean: pull the bar from the floor, extend the hips hard, and catch it racked on the front shoulders in a squat.', 'Stand up from the squat to finish the clean.', 'Jerk: dip slightly, then drive the bar overhead while splitting or pushing the feet apart to catch it locked out.', 'Recover the feet back in line to finish standing.'],
+    lookFor: ['Bar stays close through the whole clean pull', 'Full hip extension before catching the clean', 'Vertical bar path on the jerk drive, elbows locked at the catch'],
+    avoid: ['Catching the clean with the elbows dropping', 'Pressing the jerk out with the arms instead of driving with the legs', 'Landing the jerk split with knees caving in'],
+  },
+  overhead_squat: {
+    name: 'Overhead Squat', type: 'strength',
+    summary: 'A squat with the bar locked out overhead — brutal on shoulder stability, core bracing and ankle/hip mobility.',
+    how: ['Take a wide snatch-style grip, bar locked out directly overhead, shoulders packed.', 'Brace hard and squat down keeping the bar stacked over mid-foot.', 'Go as deep as mobility allows while keeping the bar overhead and back flat.', 'Drive through the whole foot to stand, bar staying locked out throughout.'],
+    lookFor: ['Bar stays directly over mid-foot the entire rep', 'Arms locked out, shoulders actively pressing up into the bar', 'Flat back and braced core at full depth'],
+    avoid: ['Bar drifting forward as you descend', 'Elbows bending under load', 'Excessive forward lean to compensate for ankle mobility'],
+  },
 };
 
 // name (lowercased) → library key. First matching pattern wins.
@@ -292,7 +315,11 @@ const ALIASES = [
   [/pec deck|chest fly|cable fly|\bfly\b/, 'fly'],
   [/serratus|wall slide/, 'serratus'],
   [/external rotation|\ber\b|rotator/, 'er'],
-  [/\bclean\b/, 'clean'],
+  // --- Olympic lifts (WP-49 Plan 1): specific matches before the generic \bclean\b fallback ---
+  [/clean and jerk|split jerk/, 'clean_and_jerk'],
+  [/overhead squat/, 'overhead_squat'],
+  [/power snatch|hang snatch|muscle snatch|snatch pull|\bsnatch\b/, 'snatch'],
+  [/clean pull|\bclean\b/, 'clean'],
   [/\bsled\b/, 'sled'],
   [/band walk|lateral walk|crab walk|monster walk/, 'band_walk'],
   [/abduction|side-?lying hip/, 'abduction'],
