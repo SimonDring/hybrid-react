@@ -21273,81 +21273,12 @@
             "sessions": [
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy — lower body",
-                  "quality": "hypertrophy",
-                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
-                },
-                "axialLoad": 6,
-                "dayIdx": 0,
-                "duration": "~30 min",
-                "items": [
-                  {
-                    "exId": "back_squat",
-                    "group": "A",
-                    "intent": "back_squat",
-                    "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "A1",
-                    "restSec": 120,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "77.5 kg"
-                  },
-                  {
-                    "exId": "front_squat",
-                    "group": "B",
-                    "intent": "front_squat",
-                    "name": "Front squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "B1",
-                    "restSec": 120,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "67.5 kg"
-                  },
-                  {
-                    "exId": "deadlift",
-                    "group": "C",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "C1",
-                    "restSec": 120,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "92.5 kg"
-                  },
-                  {
-                    "exId": "prone_w_raise",
-                    "group": "D",
-                    "name": "Prone W Raise",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 60,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0,
-                    "weight": "4 kg/hand"
-                  }
-                ],
-                "title": "Monday · Lower"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop hypertrophy — upper body",
+                  "purpose": "Develop hypertrophy",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
                 "axialLoad": 2,
-                "dayIdx": 1,
+                "dayIdx": 0,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -21420,7 +21351,75 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Tuesday · Push"
+                "title": "Monday · Push"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop hypertrophy",
+                  "quality": "hypertrophy",
+                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
+                },
+                "axialLoad": 2,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "barbell_row",
+                    "group": "A",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "72.5 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "lat_pulldown",
+                    "group": "C",
+                    "intent": "lat_pulldown",
+                    "name": "Lat pulldown",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "72.5 kg"
+                  },
+                  {
+                    "exId": "lateral_raise",
+                    "group": "D",
+                    "intent": "lateral_raise",
+                    "name": "Lateral raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 8",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "7 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Pull"
               },
               {
                 "_objective": {
@@ -21575,7 +21574,7 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy",
+                  "purpose": "Develop hypertrophy — lower body",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
@@ -21653,81 +21652,12 @@
             "sessions": [
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy — lower body",
-                  "quality": "hypertrophy",
-                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
-                },
-                "axialLoad": 6,
-                "dayIdx": 0,
-                "duration": "~30 min",
-                "items": [
-                  {
-                    "exId": "back_squat",
-                    "group": "A",
-                    "intent": "back_squat",
-                    "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "A1",
-                    "restSec": 120,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "77.5 kg"
-                  },
-                  {
-                    "exId": "front_squat",
-                    "group": "B",
-                    "intent": "front_squat",
-                    "name": "Front squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "B1",
-                    "restSec": 120,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "67.5 kg"
-                  },
-                  {
-                    "exId": "deadlift",
-                    "group": "C",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "C1",
-                    "restSec": 120,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "92.5 kg"
-                  },
-                  {
-                    "exId": "prone_w_raise",
-                    "group": "D",
-                    "name": "Prone W Raise",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 60,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0,
-                    "weight": "4 kg/hand"
-                  }
-                ],
-                "title": "Monday · Lower"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop hypertrophy — upper body",
+                  "purpose": "Develop hypertrophy",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
                 "axialLoad": 2,
-                "dayIdx": 1,
+                "dayIdx": 0,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -21800,7 +21730,75 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Tuesday · Push"
+                "title": "Monday · Push"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop hypertrophy",
+                  "quality": "hypertrophy",
+                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
+                },
+                "axialLoad": 2,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "barbell_row",
+                    "group": "A",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "72.5 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "lat_pulldown",
+                    "group": "C",
+                    "intent": "lat_pulldown",
+                    "name": "Lat pulldown",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "72.5 kg"
+                  },
+                  {
+                    "exId": "lateral_raise",
+                    "group": "D",
+                    "intent": "lateral_raise",
+                    "name": "Lateral raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 8",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "7 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Pull"
               },
               {
                 "_objective": {
@@ -21955,7 +21953,7 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy",
+                  "purpose": "Develop hypertrophy — lower body",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
@@ -22033,81 +22031,12 @@
             "sessions": [
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy — lower body",
-                  "quality": "hypertrophy",
-                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
-                },
-                "axialLoad": 6,
-                "dayIdx": 0,
-                "duration": "~30 min",
-                "items": [
-                  {
-                    "exId": "back_squat",
-                    "group": "A",
-                    "intent": "back_squat",
-                    "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "A1",
-                    "restSec": 120,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "77.5 kg"
-                  },
-                  {
-                    "exId": "front_squat",
-                    "group": "B",
-                    "intent": "front_squat",
-                    "name": "Front squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "B1",
-                    "restSec": 120,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "67.5 kg"
-                  },
-                  {
-                    "exId": "deadlift",
-                    "group": "C",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "C1",
-                    "restSec": 120,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "92.5 kg"
-                  },
-                  {
-                    "exId": "prone_w_raise",
-                    "group": "D",
-                    "name": "Prone W Raise",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 60,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0,
-                    "weight": "4 kg/hand"
-                  }
-                ],
-                "title": "Monday · Lower"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop hypertrophy — upper body",
+                  "purpose": "Develop hypertrophy",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
                 "axialLoad": 2,
-                "dayIdx": 1,
+                "dayIdx": 0,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -22180,7 +22109,75 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Tuesday · Push"
+                "title": "Monday · Push"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop hypertrophy",
+                  "quality": "hypertrophy",
+                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
+                },
+                "axialLoad": 2,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "barbell_row",
+                    "group": "A",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "72.5 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "lat_pulldown",
+                    "group": "C",
+                    "intent": "lat_pulldown",
+                    "name": "Lat pulldown",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "72.5 kg"
+                  },
+                  {
+                    "exId": "lateral_raise",
+                    "group": "D",
+                    "intent": "lateral_raise",
+                    "name": "Lateral raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 8",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "7 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Pull"
               },
               {
                 "_objective": {
@@ -22335,7 +22332,7 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy",
+                  "purpose": "Develop hypertrophy — lower body",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
@@ -22413,81 +22410,12 @@
             "sessions": [
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy — lower body",
-                  "quality": "hypertrophy",
-                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
-                },
-                "axialLoad": 6,
-                "dayIdx": 0,
-                "duration": "~30 min",
-                "items": [
-                  {
-                    "exId": "back_squat",
-                    "group": "A",
-                    "intent": "back_squat",
-                    "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "A1",
-                    "restSec": 120,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "77.5 kg"
-                  },
-                  {
-                    "exId": "front_squat",
-                    "group": "B",
-                    "intent": "front_squat",
-                    "name": "Front squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "B1",
-                    "restSec": 120,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "67.5 kg"
-                  },
-                  {
-                    "exId": "deadlift",
-                    "group": "C",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "C1",
-                    "restSec": 120,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "92.5 kg"
-                  },
-                  {
-                    "exId": "prone_w_raise",
-                    "group": "D",
-                    "name": "Prone W Raise",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 60,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0,
-                    "weight": "4 kg/hand"
-                  }
-                ],
-                "title": "Monday · Lower"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop hypertrophy — upper body",
+                  "purpose": "Develop hypertrophy",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
                 "axialLoad": 2,
-                "dayIdx": 1,
+                "dayIdx": 0,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -22560,7 +22488,75 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Tuesday · Push"
+                "title": "Monday · Push"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop hypertrophy",
+                  "quality": "hypertrophy",
+                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
+                },
+                "axialLoad": 2,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "barbell_row",
+                    "group": "A",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "72.5 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "lat_pulldown",
+                    "group": "C",
+                    "intent": "lat_pulldown",
+                    "name": "Lat pulldown",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 120,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "72.5 kg"
+                  },
+                  {
+                    "exId": "lateral_raise",
+                    "group": "D",
+                    "intent": "lateral_raise",
+                    "name": "Lateral raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 8",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "7 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Pull"
               },
               {
                 "_objective": {
@@ -22715,7 +22711,7 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy",
+                  "purpose": "Develop hypertrophy — lower body",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
@@ -22793,120 +22789,12 @@
             "sessions": [
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy — lower body",
-                  "quality": "hypertrophy",
-                  "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
-                },
-                "axialLoad": 6,
-                "dayIdx": 0,
-                "duration": "~30 min",
-                "items": [
-                  {
-                    "exId": "back_squat",
-                    "group": "A",
-                    "intent": "back_squat",
-                    "name": "Back squat",
-                    "note": "deload — ~65% load, leave 3+ reps in the tank",
-                    "num": "A1",
-                    "restSec": 120,
-                    "rpe": "RPE 6",
-                    "sets": "2 × 5",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "90 kg"
-                  },
-                  {
-                    "exId": "front_squat",
-                    "group": "B",
-                    "intent": "front_squat",
-                    "name": "Front squat",
-                    "note": "deload — ~65% load, leave 3+ reps in the tank",
-                    "num": "B1",
-                    "restSec": 120,
-                    "rpe": "RPE 6",
-                    "sets": "2 × 5",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "77.5 kg"
-                  },
-                  {
-                    "exId": "deadlift",
-                    "group": "C",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
-                    "note": "deload — ~65% load, leave 3+ reps in the tank",
-                    "num": "C1",
-                    "restSec": 120,
-                    "rpe": "RPE 6",
-                    "sets": "2 × 5",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "107.5 kg"
-                  },
-                  {
-                    "exId": "prone_w_raise",
-                    "group": "D",
-                    "name": "Prone W Raise",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 60,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0,
-                    "weight": "4 kg/hand"
-                  },
-                  {
-                    "exId": "serratus_punch_cable",
-                    "group": "E",
-                    "name": "Serratus Punch (cable)",
-                    "note": "",
-                    "num": "E1",
-                    "restSec": 60,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "hip_flexor_90_90",
-                    "group": "F",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "note": "",
-                    "num": "F1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "2 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "thoracic_foam_roller",
-                    "group": "G",
-                    "name": "Thoracic Foam Roller Extension",
-                    "note": "",
-                    "num": "G1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "2 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  }
-                ],
-                "title": "Monday · Lower"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop hypertrophy — upper body",
+                  "purpose": "Develop hypertrophy",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
                 "axialLoad": 2,
-                "dayIdx": 1,
+                "dayIdx": 0,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -23018,7 +22906,114 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Tuesday · Push"
+                "title": "Monday · Push"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop hypertrophy",
+                  "quality": "hypertrophy",
+                  "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
+                "axialLoad": 2,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "barbell_row",
+                    "group": "A",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "85 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 5",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "lat_pulldown",
+                    "group": "C",
+                    "intent": "lat_pulldown",
+                    "name": "Lat pulldown",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "C1",
+                    "restSec": 120,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "82.5 kg"
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "D",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  },
+                  {
+                    "exId": "serratus_punch_cable",
+                    "group": "E",
+                    "name": "Serratus Punch (cable)",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "F",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "G",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Tuesday · Pull"
               },
               {
                 "_objective": {
@@ -23251,7 +23246,7 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy",
+                  "purpose": "Develop hypertrophy — lower body",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
@@ -23390,67 +23385,12 @@
             "sessions": [
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy — lower body",
-                  "quality": "hypertrophy",
-                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
-                },
-                "axialLoad": 6,
-                "dayIdx": 0,
-                "duration": "~35 min",
-                "items": [
-                  {
-                    "exId": "back_squat",
-                    "group": "A",
-                    "intent": "back_squat",
-                    "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "A1",
-                    "restSec": 120,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 10",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "85 kg"
-                  },
-                  {
-                    "exId": "front_squat",
-                    "group": "B",
-                    "intent": "front_squat",
-                    "name": "Front squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "B1",
-                    "restSec": 120,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 10",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
-                    "exId": "deadlift",
-                    "group": "C",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "C1",
-                    "restSec": 120,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 10",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "100 kg"
-                  }
-                ],
-                "title": "Monday · Lower"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop hypertrophy — upper body",
+                  "purpose": "Develop hypertrophy",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
                 "axialLoad": 2,
-                "dayIdx": 1,
+                "dayIdx": 0,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -23510,7 +23450,75 @@
                     "weight": "4 kg/hand"
                   }
                 ],
-                "title": "Tuesday · Push"
+                "title": "Monday · Push"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop hypertrophy",
+                  "quality": "hypertrophy",
+                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
+                },
+                "axialLoad": 2,
+                "dayIdx": 1,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "exId": "barbell_row",
+                    "group": "A",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "77.5 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 10",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "lat_pulldown",
+                    "group": "C",
+                    "intent": "lat_pulldown",
+                    "name": "Lat pulldown",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "77.5 kg"
+                  },
+                  {
+                    "exId": "lateral_raise",
+                    "group": "D",
+                    "intent": "lateral_raise",
+                    "name": "Lateral raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 8→9",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "7 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Pull"
               },
               {
                 "_objective": {
@@ -23638,11 +23646,11 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy",
+                  "purpose": "Develop hypertrophy — lower body",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 4,
+                "axialLoad": 6,
                 "dayIdx": 5,
                 "duration": "~35 min",
                 "items": [
@@ -23661,10 +23669,10 @@
                     "weight": "85 kg"
                   },
                   {
-                    "exId": "deadlift",
+                    "exId": "front_squat",
                     "group": "B",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
+                    "intent": "front_squat",
+                    "name": "Front squat",
                     "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
                     "restSec": 120,
@@ -23672,13 +23680,13 @@
                     "sets": "4 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "72.5 kg"
                   },
                   {
-                    "exId": "bench",
+                    "exId": "deadlift",
                     "group": "C",
-                    "intent": "bench",
-                    "name": "Bench press",
+                    "intent": "deadlift",
+                    "name": "Deadlift",
                     "note": "+small load when the last set is ≤ target RPE",
                     "num": "C1",
                     "restSec": 120,
@@ -23686,10 +23694,10 @@
                     "sets": "4 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "60 kg"
+                    "weight": "100 kg"
                   }
                 ],
-                "title": "Saturday · Full body"
+                "title": "Saturday · Lower"
               }
             ],
             "taper": false,
@@ -23702,67 +23710,12 @@
             "sessions": [
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy — lower body",
-                  "quality": "hypertrophy",
-                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
-                },
-                "axialLoad": 6,
-                "dayIdx": 0,
-                "duration": "~35 min",
-                "items": [
-                  {
-                    "exId": "back_squat",
-                    "group": "A",
-                    "intent": "back_squat",
-                    "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "A1",
-                    "restSec": 120,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 10",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "85 kg"
-                  },
-                  {
-                    "exId": "front_squat",
-                    "group": "B",
-                    "intent": "front_squat",
-                    "name": "Front squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "B1",
-                    "restSec": 120,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 10",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
-                    "exId": "deadlift",
-                    "group": "C",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "C1",
-                    "restSec": 120,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 10",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "100 kg"
-                  }
-                ],
-                "title": "Monday · Lower"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop hypertrophy — upper body",
+                  "purpose": "Develop hypertrophy",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
                 "axialLoad": 2,
-                "dayIdx": 1,
+                "dayIdx": 0,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -23822,7 +23775,75 @@
                     "weight": "4 kg/hand"
                   }
                 ],
-                "title": "Tuesday · Push"
+                "title": "Monday · Push"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop hypertrophy",
+                  "quality": "hypertrophy",
+                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
+                },
+                "axialLoad": 2,
+                "dayIdx": 1,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "exId": "barbell_row",
+                    "group": "A",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "77.5 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 10",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "lat_pulldown",
+                    "group": "C",
+                    "intent": "lat_pulldown",
+                    "name": "Lat pulldown",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "77.5 kg"
+                  },
+                  {
+                    "exId": "lateral_raise",
+                    "group": "D",
+                    "intent": "lateral_raise",
+                    "name": "Lateral raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 8→9",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "7 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Pull"
               },
               {
                 "_objective": {
@@ -23950,11 +23971,11 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy",
+                  "purpose": "Develop hypertrophy — lower body",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 4,
+                "axialLoad": 6,
                 "dayIdx": 5,
                 "duration": "~35 min",
                 "items": [
@@ -23973,10 +23994,10 @@
                     "weight": "85 kg"
                   },
                   {
-                    "exId": "deadlift",
+                    "exId": "front_squat",
                     "group": "B",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
+                    "intent": "front_squat",
+                    "name": "Front squat",
                     "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
                     "restSec": 120,
@@ -23984,13 +24005,13 @@
                     "sets": "4 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "72.5 kg"
                   },
                   {
-                    "exId": "bench",
+                    "exId": "deadlift",
                     "group": "C",
-                    "intent": "bench",
-                    "name": "Bench press",
+                    "intent": "deadlift",
+                    "name": "Deadlift",
                     "note": "+small load when the last set is ≤ target RPE",
                     "num": "C1",
                     "restSec": 120,
@@ -23998,10 +24019,10 @@
                     "sets": "4 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "60 kg"
+                    "weight": "100 kg"
                   }
                 ],
-                "title": "Saturday · Full body"
+                "title": "Saturday · Lower"
               }
             ],
             "taper": false,
@@ -24014,67 +24035,12 @@
             "sessions": [
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy — lower body",
-                  "quality": "hypertrophy",
-                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
-                },
-                "axialLoad": 6,
-                "dayIdx": 0,
-                "duration": "~35 min",
-                "items": [
-                  {
-                    "exId": "back_squat",
-                    "group": "A",
-                    "intent": "back_squat",
-                    "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "A1",
-                    "restSec": 120,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 10",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "85 kg"
-                  },
-                  {
-                    "exId": "front_squat",
-                    "group": "B",
-                    "intent": "front_squat",
-                    "name": "Front squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "B1",
-                    "restSec": 120,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 10",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
-                    "exId": "deadlift",
-                    "group": "C",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "C1",
-                    "restSec": 120,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 10",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "100 kg"
-                  }
-                ],
-                "title": "Monday · Lower"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop hypertrophy — upper body",
+                  "purpose": "Develop hypertrophy",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
                 "axialLoad": 2,
-                "dayIdx": 1,
+                "dayIdx": 0,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -24134,7 +24100,75 @@
                     "weight": "4 kg/hand"
                   }
                 ],
-                "title": "Tuesday · Push"
+                "title": "Monday · Push"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop hypertrophy",
+                  "quality": "hypertrophy",
+                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
+                },
+                "axialLoad": 2,
+                "dayIdx": 1,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "exId": "barbell_row",
+                    "group": "A",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "77.5 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 10",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "lat_pulldown",
+                    "group": "C",
+                    "intent": "lat_pulldown",
+                    "name": "Lat pulldown",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "77.5 kg"
+                  },
+                  {
+                    "exId": "lateral_raise",
+                    "group": "D",
+                    "intent": "lateral_raise",
+                    "name": "Lateral raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 8→9",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "7 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Pull"
               },
               {
                 "_objective": {
@@ -24262,11 +24296,11 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy",
+                  "purpose": "Develop hypertrophy — lower body",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 4,
+                "axialLoad": 6,
                 "dayIdx": 5,
                 "duration": "~35 min",
                 "items": [
@@ -24285,10 +24319,10 @@
                     "weight": "85 kg"
                   },
                   {
-                    "exId": "deadlift",
+                    "exId": "front_squat",
                     "group": "B",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
+                    "intent": "front_squat",
+                    "name": "Front squat",
                     "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
                     "restSec": 120,
@@ -24296,13 +24330,13 @@
                     "sets": "4 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "72.5 kg"
                   },
                   {
-                    "exId": "bench",
+                    "exId": "deadlift",
                     "group": "C",
-                    "intent": "bench",
-                    "name": "Bench press",
+                    "intent": "deadlift",
+                    "name": "Deadlift",
                     "note": "+small load when the last set is ≤ target RPE",
                     "num": "C1",
                     "restSec": 120,
@@ -24310,10 +24344,10 @@
                     "sets": "4 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "60 kg"
+                    "weight": "100 kg"
                   }
                 ],
-                "title": "Saturday · Full body"
+                "title": "Saturday · Lower"
               }
             ],
             "taper": false,
@@ -24326,67 +24360,12 @@
             "sessions": [
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy — lower body",
-                  "quality": "hypertrophy",
-                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
-                },
-                "axialLoad": 6,
-                "dayIdx": 0,
-                "duration": "~35 min",
-                "items": [
-                  {
-                    "exId": "back_squat",
-                    "group": "A",
-                    "intent": "back_squat",
-                    "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "A1",
-                    "restSec": 120,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 10",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "85 kg"
-                  },
-                  {
-                    "exId": "front_squat",
-                    "group": "B",
-                    "intent": "front_squat",
-                    "name": "Front squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "B1",
-                    "restSec": 120,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 10",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "72.5 kg"
-                  },
-                  {
-                    "exId": "deadlift",
-                    "group": "C",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "C1",
-                    "restSec": 120,
-                    "rpe": "RPE 8",
-                    "sets": "4 × 10",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "100 kg"
-                  }
-                ],
-                "title": "Monday · Lower"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop hypertrophy — upper body",
+                  "purpose": "Develop hypertrophy",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
                 "axialLoad": 2,
-                "dayIdx": 1,
+                "dayIdx": 0,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -24446,7 +24425,75 @@
                     "weight": "4 kg/hand"
                   }
                 ],
-                "title": "Tuesday · Push"
+                "title": "Monday · Push"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop hypertrophy",
+                  "quality": "hypertrophy",
+                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
+                },
+                "axialLoad": 2,
+                "dayIdx": 1,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "exId": "barbell_row",
+                    "group": "A",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "77.5 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 10",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "lat_pulldown",
+                    "group": "C",
+                    "intent": "lat_pulldown",
+                    "name": "Lat pulldown",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 120,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "77.5 kg"
+                  },
+                  {
+                    "exId": "lateral_raise",
+                    "group": "D",
+                    "intent": "lateral_raise",
+                    "name": "Lateral raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 8→9",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "7 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Pull"
               },
               {
                 "_objective": {
@@ -24574,11 +24621,11 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy",
+                  "purpose": "Develop hypertrophy — lower body",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical), RIR 0–3; fatigue budget high."
                 },
-                "axialLoad": 4,
+                "axialLoad": 6,
                 "dayIdx": 5,
                 "duration": "~35 min",
                 "items": [
@@ -24597,10 +24644,10 @@
                     "weight": "85 kg"
                   },
                   {
-                    "exId": "deadlift",
+                    "exId": "front_squat",
                     "group": "B",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
+                    "intent": "front_squat",
+                    "name": "Front squat",
                     "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
                     "restSec": 120,
@@ -24608,13 +24655,13 @@
                     "sets": "4 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "100 kg"
+                    "weight": "72.5 kg"
                   },
                   {
-                    "exId": "bench",
+                    "exId": "deadlift",
                     "group": "C",
-                    "intent": "bench",
-                    "name": "Bench press",
+                    "intent": "deadlift",
+                    "name": "Deadlift",
                     "note": "+small load when the last set is ≤ target RPE",
                     "num": "C1",
                     "restSec": 120,
@@ -24622,10 +24669,10 @@
                     "sets": "4 × 10",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "60 kg"
+                    "weight": "100 kg"
                   }
                 ],
-                "title": "Saturday · Full body"
+                "title": "Saturday · Lower"
               }
             ],
             "taper": false,
@@ -24638,120 +24685,12 @@
             "sessions": [
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy — lower body",
-                  "quality": "hypertrophy",
-                  "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
-                },
-                "axialLoad": 6,
-                "dayIdx": 0,
-                "duration": "~30 min",
-                "items": [
-                  {
-                    "exId": "back_squat",
-                    "group": "A",
-                    "intent": "back_squat",
-                    "name": "Back squat",
-                    "note": "deload — ~65% load, leave 3+ reps in the tank",
-                    "num": "A1",
-                    "restSec": 120,
-                    "rpe": "RPE 6",
-                    "sets": "2 × 5",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "90 kg"
-                  },
-                  {
-                    "exId": "front_squat",
-                    "group": "B",
-                    "intent": "front_squat",
-                    "name": "Front squat",
-                    "note": "deload — ~65% load, leave 3+ reps in the tank",
-                    "num": "B1",
-                    "restSec": 120,
-                    "rpe": "RPE 6",
-                    "sets": "2 × 5",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "77.5 kg"
-                  },
-                  {
-                    "exId": "deadlift",
-                    "group": "C",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
-                    "note": "deload — ~65% load, leave 3+ reps in the tank",
-                    "num": "C1",
-                    "restSec": 120,
-                    "rpe": "RPE 6",
-                    "sets": "2 × 5",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "107.5 kg"
-                  },
-                  {
-                    "exId": "prone_w_raise",
-                    "group": "D",
-                    "name": "Prone W Raise",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 60,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0,
-                    "weight": "4 kg/hand"
-                  },
-                  {
-                    "exId": "serratus_punch_cable",
-                    "group": "E",
-                    "name": "Serratus Punch (cable)",
-                    "note": "",
-                    "num": "E1",
-                    "restSec": 60,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "hip_flexor_90_90",
-                    "group": "F",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "note": "",
-                    "num": "F1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "2 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "thoracic_foam_roller",
-                    "group": "G",
-                    "name": "Thoracic Foam Roller Extension",
-                    "note": "",
-                    "num": "G1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "2 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  }
-                ],
-                "title": "Monday · Lower"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop hypertrophy — upper body",
+                  "purpose": "Develop hypertrophy",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
                 "axialLoad": 2,
-                "dayIdx": 1,
+                "dayIdx": 0,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -24863,7 +24802,114 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Tuesday · Push"
+                "title": "Monday · Push"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop hypertrophy",
+                  "quality": "hypertrophy",
+                  "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
+                },
+                "axialLoad": 2,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "barbell_row",
+                    "group": "A",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "85 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 5",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "lat_pulldown",
+                    "group": "C",
+                    "intent": "lat_pulldown",
+                    "name": "Lat pulldown",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "C1",
+                    "restSec": 120,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "82.5 kg"
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "D",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  },
+                  {
+                    "exId": "serratus_punch_cable",
+                    "group": "E",
+                    "name": "Serratus Punch (cable)",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "F",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "G",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Tuesday · Pull"
               },
               {
                 "_objective": {
@@ -25096,7 +25142,7 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy",
+                  "purpose": "Develop hypertrophy — lower body",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate."
                 },
@@ -25235,67 +25281,12 @@
             "sessions": [
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy — lower body",
-                  "quality": "hypertrophy",
-                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical) (top of range); fatigue budget high."
-                },
-                "axialLoad": 6,
-                "dayIdx": 0,
-                "duration": "~35 min",
-                "items": [
-                  {
-                    "exId": "back_squat",
-                    "group": "A",
-                    "intent": "back_squat",
-                    "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "A1",
-                    "restSec": 120,
-                    "rpe": "RPE 8→9",
-                    "sets": "4 × 8",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "87.5 kg"
-                  },
-                  {
-                    "exId": "front_squat",
-                    "group": "B",
-                    "intent": "front_squat",
-                    "name": "Front squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "B1",
-                    "restSec": 120,
-                    "rpe": "RPE 8→9",
-                    "sets": "4 × 8",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "75 kg"
-                  },
-                  {
-                    "exId": "deadlift",
-                    "group": "C",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "C1",
-                    "restSec": 120,
-                    "rpe": "RPE 8→9",
-                    "sets": "4 × 8",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "105 kg"
-                  }
-                ],
-                "title": "Monday · Lower"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop hypertrophy — upper body",
+                  "purpose": "Develop hypertrophy",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical) (top of range); fatigue budget high."
                 },
                 "axialLoad": 2,
-                "dayIdx": 1,
+                "dayIdx": 0,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -25355,7 +25346,75 @@
                     "weight": "4 kg/hand"
                   }
                 ],
-                "title": "Tuesday · Push"
+                "title": "Monday · Push"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop hypertrophy",
+                  "quality": "hypertrophy",
+                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical) (top of range); fatigue budget high."
+                },
+                "axialLoad": 2,
+                "dayIdx": 1,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "exId": "barbell_row",
+                    "group": "A",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 8→9",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "82.5 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 8→9",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "lat_pulldown",
+                    "group": "C",
+                    "intent": "lat_pulldown",
+                    "name": "Lat pulldown",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 120,
+                    "rpe": "RPE 8→9",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "82.5 kg"
+                  },
+                  {
+                    "exId": "lateral_raise",
+                    "group": "D",
+                    "intent": "lateral_raise",
+                    "name": "Lateral raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 9",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "8 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Pull"
               },
               {
                 "_objective": {
@@ -25483,11 +25542,11 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy",
+                  "purpose": "Develop hypertrophy — lower body",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical) (top of range); fatigue budget high."
                 },
-                "axialLoad": 4,
+                "axialLoad": 6,
                 "dayIdx": 5,
                 "duration": "~35 min",
                 "items": [
@@ -25506,10 +25565,10 @@
                     "weight": "87.5 kg"
                   },
                   {
-                    "exId": "deadlift",
+                    "exId": "front_squat",
                     "group": "B",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
+                    "intent": "front_squat",
+                    "name": "Front squat",
                     "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
                     "restSec": 120,
@@ -25517,13 +25576,13 @@
                     "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "105 kg"
+                    "weight": "75 kg"
                   },
                   {
-                    "exId": "bench",
+                    "exId": "deadlift",
                     "group": "C",
-                    "intent": "bench",
-                    "name": "Bench press",
+                    "intent": "deadlift",
+                    "name": "Deadlift",
                     "note": "+small load when the last set is ≤ target RPE",
                     "num": "C1",
                     "restSec": 120,
@@ -25531,10 +25590,10 @@
                     "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "65 kg"
+                    "weight": "105 kg"
                   }
                 ],
-                "title": "Saturday · Full body"
+                "title": "Saturday · Lower"
               }
             ],
             "taper": false,
@@ -25547,67 +25606,12 @@
             "sessions": [
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy — lower body",
-                  "quality": "hypertrophy",
-                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical) (top of range); fatigue budget high."
-                },
-                "axialLoad": 6,
-                "dayIdx": 0,
-                "duration": "~35 min",
-                "items": [
-                  {
-                    "exId": "back_squat",
-                    "group": "A",
-                    "intent": "back_squat",
-                    "name": "Back squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "A1",
-                    "restSec": 120,
-                    "rpe": "RPE 8→9",
-                    "sets": "4 × 8",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "87.5 kg"
-                  },
-                  {
-                    "exId": "front_squat",
-                    "group": "B",
-                    "intent": "front_squat",
-                    "name": "Front squat",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "B1",
-                    "restSec": 120,
-                    "rpe": "RPE 8→9",
-                    "sets": "4 × 8",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "75 kg"
-                  },
-                  {
-                    "exId": "deadlift",
-                    "group": "C",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
-                    "note": "+small load when the last set is ≤ target RPE",
-                    "num": "C1",
-                    "restSec": 120,
-                    "rpe": "RPE 8→9",
-                    "sets": "4 × 8",
-                    "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "105 kg"
-                  }
-                ],
-                "title": "Monday · Lower"
-              },
-              {
-                "_objective": {
-                  "purpose": "Develop hypertrophy — upper body",
+                  "purpose": "Develop hypertrophy",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical) (top of range); fatigue budget high."
                 },
                 "axialLoad": 2,
-                "dayIdx": 1,
+                "dayIdx": 0,
                 "duration": "~30 min",
                 "items": [
                   {
@@ -25667,7 +25671,75 @@
                     "weight": "4 kg/hand"
                   }
                 ],
-                "title": "Tuesday · Push"
+                "title": "Monday · Push"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop hypertrophy",
+                  "quality": "hypertrophy",
+                  "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical) (top of range); fatigue budget high."
+                },
+                "axialLoad": 2,
+                "dayIdx": 1,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "exId": "barbell_row",
+                    "group": "A",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 120,
+                    "rpe": "RPE 8→9",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "82.5 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 120,
+                    "rpe": "RPE 8→9",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "lat_pulldown",
+                    "group": "C",
+                    "intent": "lat_pulldown",
+                    "name": "Lat pulldown",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 120,
+                    "rpe": "RPE 8→9",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "82.5 kg"
+                  },
+                  {
+                    "exId": "lateral_raise",
+                    "group": "D",
+                    "intent": "lateral_raise",
+                    "name": "Lateral raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 9",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "8 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Pull"
               },
               {
                 "_objective": {
@@ -25795,11 +25867,11 @@
               },
               {
                 "_objective": {
-                  "purpose": "Develop hypertrophy",
+                  "purpose": "Develop hypertrophy — lower body",
                   "quality": "hypertrophy",
                   "rationale": "targeting hypertrophy from the diagnosis; ~30–85% 1RM taken near failure (60–80% typical) (top of range); fatigue budget high."
                 },
-                "axialLoad": 4,
+                "axialLoad": 6,
                 "dayIdx": 5,
                 "duration": "~35 min",
                 "items": [
@@ -25818,10 +25890,10 @@
                     "weight": "87.5 kg"
                   },
                   {
-                    "exId": "deadlift",
+                    "exId": "front_squat",
                     "group": "B",
-                    "intent": "deadlift",
-                    "name": "Deadlift",
+                    "intent": "front_squat",
+                    "name": "Front squat",
                     "note": "+small load when the last set is ≤ target RPE",
                     "num": "B1",
                     "restSec": 120,
@@ -25829,13 +25901,13 @@
                     "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "105 kg"
+                    "weight": "75 kg"
                   },
                   {
-                    "exId": "bench",
+                    "exId": "deadlift",
                     "group": "C",
-                    "intent": "bench",
-                    "name": "Bench press",
+                    "intent": "deadlift",
+                    "name": "Deadlift",
                     "note": "+small load when the last set is ≤ target RPE",
                     "num": "C1",
                     "restSec": 120,
@@ -25843,10 +25915,10 @@
                     "sets": "4 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "65 kg"
+                    "weight": "105 kg"
                   }
                 ],
-                "title": "Saturday · Full body"
+                "title": "Saturday · Lower"
               }
             ],
             "taper": false,

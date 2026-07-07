@@ -43,7 +43,7 @@ import { selectInterventions, tierOf } from './selectInterventions.js';
 import { deriveSessionObjective, assignTargetQualities, competencyAdjustedTarget, constraintAdjustedTarget } from '../session/sessionObjective.js';
 import { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS, REACTIVE_LIMITS, doseForQuality } from '../../data/doseSchemes.js';
 import { deriveMovementRequirements } from '../session/movementRequirements.js';
-import { regionOf } from '../session/sessionSpecs.js';
+import { regionOf, hypertrophyRegionOf } from '../session/sessionSpecs.js';
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
@@ -788,8 +788,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       // pull days). Every other diagnosis-steered cohort — sports, powerlifting, olympic — trains
       // full-body / lift-focused sessions and keeps region='full' (byte-identical to pre-T3b).
       // Simon's decision (2026-07-07): a region split is only warranted where the day count makes
-      // one sensible, and hypertrophy is the one build goal that needs it.
-      const region = ctx.discipline === 'hypertrophy' ? regionOf(slot.focusLabel) : 'full';
+      // one sensible, and hypertrophy is the one build goal that needs it — with Push/Pull/Legs at
+      // higher day counts, so pressing and pulling get their own days (hypertrophyRegionOf splits
+      // Push/Pull, which regionOf collapses to 'upper').
+      const region = ctx.discipline === 'hypertrophy' ? hypertrophyRegionOf(slot.focusLabel) : 'full';
       // Category-led slot (WP-20): the SKB assignment names the day's coverage, its
       // movements, and its dose quality (led by its highest-rated movement).
       const assignment = categoryPlan ? categoryPlan.sessions[wi % categoryPlan.sessions.length] : null;

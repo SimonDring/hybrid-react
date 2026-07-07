@@ -12,6 +12,12 @@ import { getContraindications } from '../injury/injuryRules.js';
 const REGION_PATTERNS = {
   lower: ['squat', 'hinge', 'lunge', 'calf'],
   upper: ['hpush', 'vpush', 'hpull', 'vpull'],
+  // WP-49 Plan 2 T4b: push/pull are the split-out halves of `upper`, used ONLY by the
+  // hypertrophy discipline's Push/Pull/Legs split (the allocator maps a hypertrophy Push/Pull
+  // day to these). Additive + inert for every other caller — regionOf() never returns them,
+  // so sports + powerlifting + olympic (which pass 'full'/'upper'/'lower') are unaffected.
+  push: ['hpush', 'vpush'],
+  pull: ['hpull', 'vpull'],
   core: ['core', 'carry', 'iso'],
   full: null, // no filter
 };

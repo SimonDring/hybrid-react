@@ -93,4 +93,24 @@ const workingNames = (week) => week.sessions.flatMap((s) => (s.items || [])
   assert(hasCJ, 'F2 Olympic plan features the clean and jerk');
 }
 
+// ── G · hypertrophy Push/Pull/Legs — pull work gets its own day (not crowded out) ──
+// Simon 2026-07-07: hypertrophy uses Push/Pull/Legs at 5-6 days so back/biceps get real volume.
+const pressRx = /bench press|incline bench|overhead press|dip|db shoulder press/;
+const pullRx = /barbell row|pull-up|pullup|lat pulldown|cable row|db row|inverted row/;
+{
+  const week = workWeek(planForDisc('hypertrophy', 6, ['mon', 'tue', 'wed', 'thu', 'fri', 'sat']));
+  // Some session must be pull-dominant: it has pulling compounds and NO pressing compounds.
+  const hasPullDay = week.sessions.some((s) => {
+    const names = (s.items || []).filter((it) => (it.volumeFactor ?? 1) > 0 && it.section !== 'primer').map((it) => it.name.toLowerCase());
+    return names.some((n) => pullRx.test(n)) && !names.some((n) => pressRx.test(n));
+  });
+  assert(hasPullDay, `G1 hypertrophy 6-day has a dedicated pull day (pulling work, no pressing) — sessions: ${week.sessions.map((s) => s.title.split('·')[1]?.trim()).join(', ')}`);
+  // And a push-dominant day (pressing, no pulling).
+  const hasPushDay = week.sessions.some((s) => {
+    const names = (s.items || []).filter((it) => (it.volumeFactor ?? 1) > 0 && it.section !== 'primer').map((it) => it.name.toLowerCase());
+    return names.some((n) => pressRx.test(n)) && !names.some((n) => pullRx.test(n));
+  });
+  assert(hasPushDay, 'G2 hypertrophy 6-day has a dedicated push day (pressing, no pulling)');
+}
+
 console.log(process.exitCode ? 'wp49-discipline-selection FAILURES' : 'PASS: wp49-discipline-selection — all gates');

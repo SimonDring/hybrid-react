@@ -86,6 +86,22 @@ function template(days) {
   }
 }
 
+// ---- Hypertrophy: standard bodybuilding splits (Simon 2026-07-07) ----
+// Full-body (1–3d) → Upper/Lower (4d) → Push/Pull/Legs (5–6d). The base `template()` already
+// gives Full-body 1–3, Upper/Lower at 4, and Push/Pull/Legs at 6–7; hypertrophy only needs a
+// PPL-based 5-day (a real "PPL + Upper/Lower" week) instead of the generic UL/UL/Full. The
+// allocator's hypertrophyRegionOf() then trains each Push/Pull day as push-only / pull-only.
+function hypertrophyTemplate(days) {
+  if (days === 5) return [
+    day('Push', UPPER_PUSH, ['hpush']),
+    day('Pull', UPPER_PULL, ['hpull']),
+    day('Legs', [...LOWER, ...CORE], ['squat']),
+    day('Upper', [...UPPER, ...CORE], ['vpush', 'vpull']),
+    day('Lower', [...LOWER, ...CORE], ['hinge']),
+  ];
+  return template(days);
+}
+
 // ---- Sport: emphasis-weighted region-day allocation ----
 const REGION_DAY = {
   push:  ()  => day('Push',  [...UPPER_PUSH, ...CORE], ['hpush', 'vpush']),
@@ -153,6 +169,7 @@ function withWeights(tmpl) {
 export function resolveSplit({ gymDays = 3, style = 'functional', emphasis = {} } = {}) {
   const days = Math.max(1, Math.min(7, gymDays));
   if (style === 'sport') return withWeights(sportTemplate(days, emphasis));
+  if (style === 'hypertrophy') return withWeights(hypertrophyTemplate(days));
   return withWeights(template(days));
 }
 
