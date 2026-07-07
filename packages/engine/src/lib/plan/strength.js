@@ -93,7 +93,7 @@ export function buildWeek(ctx = {}) {
       exercisePriority: ctx.exercisePriority || [], sport: ctx.sport || null, power: !!ctx.power,
       priorityByIntent: ctx.priorityByIntent || new Map(),
       priorityQualities: ctx.priorityQualities || [], season: ctx.season || null, skbIds: ctx.skbIds || new Set(),
-      categoryPlan: ctx.categoryPlan || null,
+      categoryPlan: ctx.categoryPlan || null, discipline: ctx.discipline || null,
     }
   });
 

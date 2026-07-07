@@ -276,7 +276,8 @@ export function reflowPhases({
         priorityQualities: gctx.priorityQualities, season: gctx.season, skbIds: gctx.skbIds,
         weekGymCount: gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, weekSlotIdx: s.i,
         rpeOffset, contraindicatedPatterns, blockedNameRegexes,
-        categoryPlan: categoryPlanFor(gctx.skbSportId, gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, { levelName: gctx.level, season: gctx.season })
+        categoryPlan: categoryPlanFor(gctx.skbSportId, gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, { levelName: gctx.level, season: gctx.season }),
+        discipline: gctx.discipline || null
       }
     })[0];
     if (spec) {

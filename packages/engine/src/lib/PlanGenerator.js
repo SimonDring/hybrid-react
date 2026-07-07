@@ -137,7 +137,7 @@ function buildGymWeek(count, ctx, profile, program, diag) {
     power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || [],
     priorityByIntent: program.priorityByIntent || new Map(),
     priorityQualities: diag.priorityQualities, season: program.season, skbIds: diag.skbIds,
-    categoryPlan: diag.categoryPlan
+    categoryPlan: diag.categoryPlan, discipline: program.discipline || null
   });
 }
 
@@ -262,7 +262,7 @@ export function generatePlan(profile = {}, opts = {}) {
   // Build + team-sport cohorts now HAVE a diagnosis (goal demand / SKB), but their weeks
   // are legacy fill until WP-48/WP-49 flip them — a plan must never display reasoning it
   // ignored. The model output stays available via performanceModelForProfile (Atlas).
-  const steers = diagnosisSteers({ style: program.style, sport: program.sport, priorityQualities: diag.priorityQualities, categoryPlan: diag.categoryPlan });
+  const steers = diagnosisSteers({ style: program.style, sport: program.sport, priorityQualities: diag.priorityQualities, categoryPlan: diag.categoryPlan, discipline: program.discipline || null });
   const diagnosis = (steers && (diag.priorityQualities || []).length) ? {
     sport: program.sport || null,
     limitingFactors: (perf.limitingFactors || []).map((f) => ({ qualityId: f.qualityId, magnitude: f.magnitude, confidence: f.confidence, rationale: f.rationale })),
