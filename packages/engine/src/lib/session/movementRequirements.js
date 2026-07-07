@@ -25,7 +25,11 @@ export function contraindicatedPatternsFrom(blockedRegexes = [], exercises = EXE
   const rx = Array.isArray(blockedRegexes) ? blockedRegexes : [];
   if (!rx.length) return out;
   for (const p of ALL_PATTERNS) {
-    const exs = exercises.filter((e) => e.pattern === p);
+    // WP-49 Plan 1 (final-review fix): exclude discipline-tagged lifts (olympic/powerlifting)
+    // from the vote's denominator. They're gated out of selection anyway (see allocator.js),
+    // so they must not be allowed to silently shift which patterns count as contraindicated —
+    // that would change injury-reflow behaviour the discipline branch must leave untouched.
+    const exs = exercises.filter((e) => e.pattern === p && !e.discipline);
     if (!exs.length) continue;
     const blocked = exs.filter((e) => rx.some((r) => r.test(e.name))).length;
     if (blocked > exs.length / 2) out.add(p);

@@ -77,7 +77,7 @@ function valueOf(ex, target, skbIds) {
   return Math.max(qualityValue, transferValue);
 }
 
-export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [], categoryIds = null } = {}) {
+export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [], categoryIds = null, discipline = undefined } = {}) {
   const target = req?.objective?.targetQuality;
   const reqPatterns = new Set(req?.requirements?.movementPatterns || []);
   const contra = new Set((req?.requirements?.contraindicated || []).map((c) => c.pattern));
@@ -88,6 +88,8 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
   // Eligible candidates, tiered + valued.
   const cand = [];
   for (const ex of exercises) {
+    // WP-49 Plan 1: discipline-tagged lifts are only selectable when their discipline is active.
+    if (ex.discipline && ex.discipline !== discipline) continue;
     if (equip && !equip.has(ex.equip)) continue;
     if ((ex.level ?? 0) > level) continue;
     if (contra.has(ex.pattern)) continue;

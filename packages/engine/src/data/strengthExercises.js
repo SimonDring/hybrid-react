@@ -176,7 +176,26 @@ export const EXERCISES = [
   { id: 'cable_ext_rotation_90', name: 'Cable ER at 90° Abduction',      pattern: 'iso', muscle: 'shoulders', equip: 'cable',    level: 1, role: 'iso',       minLevelForPrimary: 'returning',    sportTags: ['swim'] },
   { id: 'cable_woodchop',        name: 'Cable Woodchop (high-to-low)',   pattern: 'core',                     equip: 'cable',    level: 2, role: 'core',                                          goalTags: ['functional'], sportTags: ['swim'] },
   { id: 'ankle_plantarflex_band', loadClass: 'health',name: 'Banded Ankle Plantarflexion',    pattern: 'calf',                     equip: 'band',     level: 0, role: 'iso',       minLevelForPrimary: 'beginner',     sportTags: ['swim'] },
-  { id: 'glute_ham_raise', stretchBias: true, repCap: 8,       name: 'Glute-Ham Raise',                pattern: 'hinge',                    equip: 'machine',  level: 3, role: 'primary',   minLevelForPrimary: 'advanced',     sportTags: ['swim'] }
+  { id: 'glute_ham_raise', stretchBias: true, repCap: 8,       name: 'Glute-Ham Raise',                pattern: 'hinge',                    equip: 'machine',  level: 3, role: 'primary',   minLevelForPrimary: 'advanced',     sportTags: ['swim'] },
+
+  // ---------------- OLYMPIC + POWERLIFTING CATALOGUE LIFTS (WP-49 Plan 1) ----------------
+  // discipline-gated: `discipline` marks these as ONLY selectable when ctx.discipline
+  // matches (see allocator.js's discipline gate) — every current caller leaves
+  // ctx.discipline undefined, so these never enter a build/sport plan (byte-identical).
+  // Technical lifts, not volume drivers — muscle contribution comes from `pattern`
+  // (PATTERN_CONTRIB) like every other compound; no inline muscle maps here.
+  { id: 'snatch', axialLoad: 3, quality: 'power', name: 'Snatch', pattern: 'olympic', equip: 'barbell', level: 3, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'advanced' },
+  { id: 'clean_and_jerk', axialLoad: 3, quality: 'power', name: 'Clean and Jerk', pattern: 'olympic', equip: 'barbell', level: 3, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'advanced' },
+  { id: 'power_snatch', axialLoad: 3, quality: 'power', name: 'Power Snatch', pattern: 'olympic', equip: 'barbell', level: 3, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'advanced' },
+  { id: 'hang_snatch', axialLoad: 3, quality: 'power', name: 'Hang Snatch', pattern: 'olympic', equip: 'barbell', level: 3, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'advanced' },
+  { id: 'split_jerk', axialLoad: 3, quality: 'power', name: 'Split Jerk', pattern: 'olympic', equip: 'barbell', level: 3, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'advanced' },
+  { id: 'overhead_squat', axialLoad: 3, quality: 'power', name: 'Overhead Squat', pattern: 'squat', equip: 'barbell', level: 3, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'advanced' },
+  { id: 'push_press', axialLoad: 2, quality: 'power', name: 'Push Press', pattern: 'vpush', equip: 'barbell', level: 2, role: 'primary', discipline: 'olympic', minLevelForPrimary: 'intermediate' },
+  { id: 'snatch_pull', axialLoad: 3, quality: 'power', name: 'Snatch Pull', pattern: 'olympic', equip: 'barbell', level: 2, role: 'accessory', discipline: 'olympic', minLevelForPrimary: 'intermediate' },
+  { id: 'clean_pull', axialLoad: 3, quality: 'power', name: 'Clean Pull', pattern: 'olympic', equip: 'barbell', level: 2, role: 'accessory', discipline: 'olympic', minLevelForPrimary: 'intermediate' },
+  { id: 'muscle_snatch', axialLoad: 2, quality: 'power', name: 'Muscle Snatch', pattern: 'olympic', equip: 'barbell', level: 2, role: 'accessory', discipline: 'olympic', minLevelForPrimary: 'intermediate' },
+  { id: 'board_press', axialLoad: 1, quality: 'strength', name: 'Board Press', pattern: 'hpush', equip: 'barbell', level: 2, role: 'accessory', discipline: 'powerlifting', liftKey: 'bench', minLevelForPrimary: 'intermediate' },
+  { id: 'pin_squat', axialLoad: 2, quality: 'strength', name: 'Pin Squat', pattern: 'squat', equip: 'barbell', level: 2, role: 'accessory', discipline: 'powerlifting', liftKey: 'squat', minLevelForPrimary: 'intermediate' }
 ];
 
 // Equipment keys an exercise can require.

@@ -83,3 +83,7 @@ export { KNOWLEDGE_SET_VERSION } from './src/lib/knowledge/entries.js';
 // WP-59 — the first honest learning loop (pure; STAGED, never engine-consumed).
 export { blockOutcome } from './src/lib/learning/blockOutcome.js';
 export { readinessValidation } from './src/lib/indices/readinessValidation.js';
+// WP-49 (Plan 1) — the discipline + secondary-goal knowledge foundation (STAGED,
+// never engine-consumed yet; Plan 2 flips build onto this).
+export { DISCIPLINES, getDiscipline } from './src/data/disciplines/index.js';
+export { SECONDARY_GOALS, getSecondaryGoal, SECONDARY_GOAL_IDS } from './src/data/secondaryGoals.js';
