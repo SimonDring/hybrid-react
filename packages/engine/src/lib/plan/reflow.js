@@ -19,6 +19,7 @@ import { weeklyMuscleTargets } from '../strength/targets.js';
 import { countWeeklyVolume } from './volume.js';
 import { WINDOW_DAYS, distributeAcrossSlots } from './rollingVolume.js';
 import { resolveSplit } from './split.js';
+import { olympicPriorityIds } from '../../data/disciplines/olympic.js';
 import { MUSCLE_GROUPS } from '../../data/muscleVolume.js';
 import { allocateGym } from './allocator.js';
 import { functionalSlotMinutes } from './strength.js';
@@ -227,7 +228,9 @@ export function reflowPhases({
   const slotInputs = slots.map((s) => {
     const wt = weekTarget({ phase: s.phase, week: s.week, gctx, deloadOverride: effDeload(s.week) || !!s.week.taper, totalWeeks });
     const n = gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1;
-    const day = resolveSplit({ gymDays: n, style: gctx.style })[s.i] || {};
+    // WP-49 follow-up: pass competedLift so an Olympic athlete's reflowed split keeps the SAME
+    // snatch/C&J/squat day sequence as the baseline (a specialist doesn't revert to 'both').
+    const day = resolveSplit({ gymDays: n, style: gctx.style, competedLift: gctx.competedLift || 'both' })[s.i] || {};
     const weights = day.weights;
     const normalShare = {};
     for (const m of MUSCLE_GROUPS) normalShare[m] = weights ? (wt[m] || 0) * (weights[m] || 0) : (wt[m] || 0) / n;
@@ -235,7 +238,14 @@ export function reflowPhases({
     // reflow (powerlifting Upper/Lower, hypertrophy PPL) — otherwise the reflowed week collapses to
     // full-body and, e.g., squats every day, over-dosing quads past MRV. Sports keep region='full'
     // via the allocator's discipline gate, so this is inert for them (byte-identical).
-    return { normalShare, anchors: day.anchors || null, focus: gctx.style === 'sport' ? null : (weights || null), focusLabel: day.focus || null };
+    // WP-49 follow-up: also carry the olympic per-day lift family + target-quality override (as the
+    // baseline strength.js does), so the squat day keeps its maxStrength dose and each lift day its
+    // family narrowing under reflow. Absent for every non-olympic day.
+    return {
+      normalShare, anchors: day.anchors || null,
+      focus: gctx.style === 'sport' ? null : (weights || null), focusLabel: day.focus || null,
+      ...(day.emphasis ? { priorityIds: olympicPriorityIds(day.emphasis, gctx.exercisePriority || []), targetQualityOverride: day.targetQuality } : {})
+    };
   });
   const { perSlot, forgiven } = distributeAcrossSlots({ slots: slotInputs, deficit, windowDays: WINDOW_DAYS });
 
@@ -271,7 +281,8 @@ export function reflowPhases({
     const spec = allocateGym({
       targets: perSlot[idx],
       slots: [{ minutes: Math.round(functionalSlotMinutes(gctx.style, gctx.minutes) * mult), equip: gctx.access,
-                anchors: slotInputs[idx].anchors, focus: slotInputs[idx].focus, focusLabel: slotInputs[idx].focusLabel }],
+                anchors: slotInputs[idx].anchors, focus: slotInputs[idx].focus, focusLabel: slotInputs[idx].focusLabel,
+                priorityIds: slotInputs[idx].priorityIds || null, targetQualityOverride: slotInputs[idx].targetQualityOverride || null }],
       ctx: {
         style: gctx.style, intent: intentOfTitle(s.phase.title), deload: effDeload(s.week), taper: !!s.week.taper,
         weekNum: s.week.num, level: gctx.level, sex: gctx.sex, lifts: gctx.lifts, access: gctx.access,
