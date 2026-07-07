@@ -910,6 +910,9 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
         }
       }
     });
+    // WP-49 T4c-3: a hypertrophy session gets DIRECT isolation for its region's smaller muscles
+    // (arms/delts/calves) as working volume — BEFORE the factor-0 finisher, since it's real work.
+    addHypertrophyIsolation(work, ctx, weeklyDelivered, weeklyCeiling, targets, s, style, deload, taper, repBump, levelName);
     // Short D11 sessions get the same supportive finisher as the legacy path (factor-0
     // prehab — §34 tiers 6–7; the fatigue budget governs WORKING sets, not support work).
     addSupportiveFinishers(work, ctx, levelName, s, style, deload, taper, repBump);
@@ -1007,6 +1010,57 @@ function shiftRpe(items, rpeOffset, rpeFloor) {
     it.rpe = `RPE ${Math.max(rpeFloor, n + rpeOffset)}`;
   }
   return items;
+}
+
+// WP-49 T4c-3: HYPERTROPHY direct-isolation pass. A "build muscle" plan should carry direct arm /
+// delt / calf / leg-isolation, but the compounds fill the fatigue budget and the push/pull region
+// filter excludes 'iso', so the smaller muscles got no direct work. This appends region-appropriate
+// isolation as WORKING volume — MRV-gated (never over a muscle's weekly ceiling) + time-capped, in
+// leftover session budget, AFTER the main compounds (so the mains are untouched). Gated to the
+// hypertrophy discipline via its own region path → every other cohort is byte-identical.
+const ISO_FOR_REGION = {
+  push:  ['triceps_pushdown', 'chest_fly', 'lateral_raise'],
+  pull:  ['biceps_curl', 'rear_fly'],
+  lower: ['leg_curl', 'leg_ext', 'calf_raise'],
+  upper: ['triceps_pushdown', 'biceps_curl', 'lateral_raise'],
+  full:  ['biceps_curl', 'triceps_pushdown', 'calf_raise'],
+};
+const HYP_ISO_CAP_MIN = 12;
+function addHypertrophyIsolation(work, ctx, weeklyDelivered, weeklyCeiling, targets, s, style, deload, taper, repBump, levelName) {
+  if (ctx.discipline !== 'hypertrophy') return;
+  const contra = ctx.contraindicatedPatterns instanceof Set ? ctx.contraindicatedPatterns : new Set(ctx.contraindicatedPatterns || []);
+  const blockedRx = ctx.blockedNameRegexes || [];
+  for (const slot of work) {
+    const list = ISO_FOR_REGION[hypertrophyRegionOf(slot.focusLabel)] || ISO_FOR_REGION.full;
+    const have = slot.equip instanceof Set ? slot.equip : availableEquip(slot.equip || ctx.access || []);
+    let budget = Math.min(HYP_ISO_CAP_MIN, (slot.minutes || 60) - slot.timeUsed);
+    for (const id of list) {
+      if (budget <= 2) break;
+      const ex = EX_BY_ID_ALL.get(id);
+      if (!ex || !have.has(ex.equip) || slot.exUsed.has(ex.id)) continue;
+      if (contra.has(ex.pattern) || blockedRx.some((r) => r.test(ex.name))) continue;
+      const contrib = muscleContribution(ex);
+      const vf = stimulusFactor(ex, levelName);
+      // The isolation's DOMINANT muscle (what it exists to hit).
+      const dom = Object.keys(contrib).sort((a, b) => contrib[b] - contrib[a])[0];
+      // TARGET gate: only add while the dominant muscle is still below the WEEK'S target (the MEV→MAV
+      // ramp / deload floor) — so isolation ramps WITH the block instead of blowing past a light base
+      // week. This also respects MRV (target ≤ MAV ≤ MRV). Skip if it's already met its target.
+      if (dom && (weeklyDelivered[dom] || 0) >= (targets[dom] ?? Infinity) - 0.01) continue;
+      const item = makeItem(ex, slot.picks.length, slot.scheme || s, style, deload, repBump, ex.role, taper);
+      const setN = parseSetCount(item.sets) || 3;
+      // MRV backstop: never push ANY muscle it touches over its recoverable ceiling.
+      let exceeds = false;
+      for (const m in contrib) { if ((weeklyDelivered[m] || 0) + setN * contrib[m] * vf > (weeklyCeiling[m] ?? Infinity) + 0.01) { exceeds = true; break; } }
+      if (exceeds) continue;
+      item.volumeFactor = vf;
+      slot.picks.push({ ex, effectiveRole: ex.role, item });
+      slot.exUsed.add(ex.id);
+      const cost = setN * perSetMin(ex, ex.role);
+      slot.timeUsed += cost; budget -= cost;
+      for (const m in contrib) weeklyDelivered[m] = (weeklyDelivered[m] || 0) + setN * contrib[m] * vf;
+    }
+  }
 }
 
 // Supportive finisher: round out a short session with sport/goal-appropriate
