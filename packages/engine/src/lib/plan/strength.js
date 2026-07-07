@@ -99,6 +99,7 @@ export function buildWeek(ctx = {}) {
       priorityByIntent: ctx.priorityByIntent || new Map(),
       priorityQualities: ctx.priorityQualities || [], season: ctx.season || null, skbIds: ctx.skbIds || new Set(),
       categoryPlan: ctx.categoryPlan || null, discipline: ctx.discipline || null,
+      secondaryGoals: ctx.secondaryGoals || [],   // WP-49 T5 — accessory-tail corrective add-ons
     }
   });
 

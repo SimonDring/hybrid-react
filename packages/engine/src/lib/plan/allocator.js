@@ -41,6 +41,7 @@ import { stimulusFactor } from '../strength/stimulus.js';
 import { AXIAL_SESSION_CAP, axialOf } from './axial.js';
 import { selectInterventions, tierOf } from './selectInterventions.js';
 import { deriveSessionObjective, assignTargetQualities, competencyAdjustedTarget, constraintAdjustedTarget } from '../session/sessionObjective.js';
+import { getSecondaryGoal } from '../../data/secondaryGoals.js';
 import { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS, REACTIVE_LIMITS, doseForQuality } from '../../data/doseSchemes.js';
 import { deriveMovementRequirements } from '../session/movementRequirements.js';
 import { regionOf, hypertrophyRegionOf } from '../session/sessionSpecs.js';
@@ -890,6 +891,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     // Short D11 sessions get the same supportive finisher as the legacy path (factor-0
     // prehab — §34 tiers 6–7; the fatigue budget governs WORKING sets, not support work).
     addSupportiveFinishers(work, ctx, levelName, s, style, deload, taper, repBump);
+    injectSecondaryGoals(work, ctx, s, style, deload, taper, repBump);   // WP-49 T5 — accessory tail only
     // Finalise sport slots through the SAME structuring/weights/duration machinery, then return.
     return work.map(slot => finaliseSlot(slot, style, ctx));
   }
@@ -962,6 +964,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   }
 
   addSupportiveFinishers(work, ctx, levelName, s, style, deload, taper, repBump);
+  injectSecondaryGoals(work, ctx, s, style, deload, taper, repBump);   // WP-49 T5 — accessory tail only
 
   // Finalise each slot: structure into supersets/fillers, then a session spec.
   return work.map(slot => finaliseSlot(slot, style, ctx));
@@ -1008,6 +1011,50 @@ function addSupportiveFinishers(work, ctx, levelName, s, style, deload, taper, r
       slot.exUsed.add(ex.id);
       const cost = (parseSetCount(item.sets) * perSetMin(ex, effectiveRole)) || 2;
       slot.timeUsed += cost; gap -= cost; added += cost;
+    }
+  }
+}
+
+// WP-49 Plan 2 T5: layer the athlete's SECONDARY-GOAL corrective work (posture / prehab /
+// mobility / conditioning) onto each slot's ACCESSORY TAIL, in leftover time budget, AFTER main
+// selection AND the supportive finisher. Runs LAST and only APPENDS factor-0 corrective items, so
+// the main work (priority lifts + their dose) is untouched and the MRV ledger is unchanged
+// (authority order, design §5: safety > discipline main work > diagnosis priorities > secondary
+// corrective). Gated: no-op when ctx.secondaryGoals is empty, so every sport + no-goal build plan
+// is byte-identical. Equipment / injury (blocked name + contraindicated pattern) / duplicate aware.
+const EX_BY_ID_ALL = new Map(EXERCISES.map((e) => [e.id, e]));
+const SECONDARY_CAP_MIN = 10;   // at most ~10 min of secondary corrective per session
+function injectSecondaryGoals(work, ctx, s, style, deload, taper, repBump) {
+  const goals = (ctx.secondaryGoals || []).map(getSecondaryGoal).filter(Boolean);
+  if (!goals.length) return;
+  const blockedRx = ctx.blockedNameRegexes || [];
+  const contra = ctx.contraindicatedPatterns instanceof Set ? ctx.contraindicatedPatterns : new Set(ctx.contraindicatedPatterns || []);
+  for (const slot of work) {
+    const have = slot.equip instanceof Set ? slot.equip : availableEquip(slot.equip || ctx.access || []);
+    // One legal corrective queue per goal; round-robin so a multi-select SPREADS, not stacks.
+    const queues = goals.map((g) => (g.accessoryPreferences || [])
+      .map((id) => EX_BY_ID_ALL.get(id)).filter(Boolean)
+      .filter((ex) => have.has(ex.equip) && !slot.exUsed.has(ex.id) && !contra.has(ex.pattern) && !blockedRx.some((r) => r.test(ex.name)))
+      .map((ex) => ({ ex, goalId: g.id })));
+    let budget = Math.min(SECONDARY_CAP_MIN, (slot.minutes || 60) - slot.timeUsed);
+    let progress = true;
+    while (budget > 2 && progress) {
+      progress = false;
+      for (const q of queues) {
+        if (budget <= 2) break;
+        const next = q.shift();
+        if (!next || slot.exUsed.has(next.ex.id)) continue;
+        const { ex, goalId } = next;
+        const item = makeItem(ex, slot.picks.length, s, style, deload, repBump, ex.role, taper);
+        item.volumeFactor = 0;        // corrective — never touches the muscle-volume ledger
+        item.tag = 'mobility';        // renders through existing support-work handling
+        item.secondaryGoal = goalId;  // provenance: which secondary goal added it
+        slot.picks.push({ ex, effectiveRole: ex.role, item });
+        slot.exUsed.add(ex.id);
+        const cost = (parseSetCount(item.sets) * perSetMin(ex, ex.role)) || 2;
+        slot.timeUsed += cost; budget -= cost;
+        progress = true;
+      }
     }
   }
 }

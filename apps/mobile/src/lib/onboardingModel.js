@@ -64,6 +64,7 @@ export const BLANK_ANSWERS = {
   goalType: '',                 // 'build' | 'sport'
   strengthStyle: 'strength',    // build: 'strength' | 'bodybuilding' | 'functional' | 'olympic'
   olympicLift: 'both',          // olympic only: 'both' | 'snatch' | 'cj' (WP-49 T6b)
+  secondaryGoals: [],           // build add-ons: 'posture'|'prehab'|'mobility'|'conditioning' (WP-49 T5)
   sport: '',                    // sport: 'run' | 'cycle' | 'swim'
   sportIntent: '',              // 'compete' | 'recreational'
   sportSeason: '',              // compete only: 'in_season' | 'off_season'
@@ -177,6 +178,8 @@ export function answersToProfilePatch(a) {
     // WP-49 T6b: the Olympic athlete's competed lift drives the day emphasis (read by the engine
     // as profile.olympic_lift). Only meaningful for the olympic build style; null otherwise.
     olympic_lift: (isBuild && a.strengthStyle === 'olympic') ? (a.olympicLift || 'both') : null,
+    // WP-49 T5: optional secondary-goal add-ons, layered onto the accessory tail. Build only.
+    secondary_goals: isBuild ? (a.secondaryGoals || []) : [],
     sport: isSport ? (legacySport || null) : null,
     // The exact SKB profile id the athlete chose (e.g. 'hurling', 'running_middle').
     // The engine sport ('gaa') is AMBIGUOUS for GAA codes — persisting the real answer
