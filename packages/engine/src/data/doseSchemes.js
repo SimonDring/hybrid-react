@@ -118,6 +118,18 @@ export const STYLE_SCHEME_BRIDGE = {
 };
 export const DEFAULT_SCHEME_KEY = 'strengthEndurance';
 
+// WP-49 T4c: a build DISCIPLINE doses its lifts in its own character, regardless of the per-day
+// diagnosis quality — a powerlifter's bench is always heavy low-rep, not whatever quality the
+// diagnosis targets that session. Each discipline pins to the canonical, phase-progressing quality
+// scheme above whose rep/RPE ramp implements its doseCharacter range (powerlifting 1-5 ← maxStrength
+// 5→4→3; hypertrophy 6-12 ← hypertrophy 12→10→8; olympic 1-3 ← explosiveStrength 3→3→2). The exact
+// rest comes from the discipline module's doseCharacter (looked up in the allocator).
+export const DISCIPLINE_DOSE_QUALITY = {
+  powerlifting: 'maxStrength',
+  hypertrophy: 'hypertrophy',
+  olympic: 'explosiveStrength',
+};
+
 // Max-strength mains need a barbell: with only dumbbells/bodyweight a 4×4 @ RPE 8
 // cannot be loaded heavily enough to mean anything — shift mains to a strength-
 // hypertrophy range the equipment can actually train (RPE strings unchanged).
@@ -155,4 +167,4 @@ export const REST_SECONDS = {
 export const ISO_SETS = { bodybuilding: '3 × 12–15', default: '3 × 12' };
 export const CORE_SETS = { light: '2 × 30s', default: '3 × 30s' };
 
-export default { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS, REACTIVE_LIMITS, doseForQuality };
+export default { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, DISCIPLINE_DOSE_QUALITY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS, REACTIVE_LIMITS, doseForQuality };

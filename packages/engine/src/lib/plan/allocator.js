@@ -42,7 +42,8 @@ import { AXIAL_SESSION_CAP, axialOf } from './axial.js';
 import { selectInterventions, tierOf } from './selectInterventions.js';
 import { deriveSessionObjective, assignTargetQualities, competencyAdjustedTarget, constraintAdjustedTarget } from '../session/sessionObjective.js';
 import { getSecondaryGoal } from '../../data/secondaryGoals.js';
-import { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS, REACTIVE_LIMITS, doseForQuality } from '../../data/doseSchemes.js';
+import { getDiscipline } from '../../data/disciplines/index.js';
+import { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, DISCIPLINE_DOSE_QUALITY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS, REACTIVE_LIMITS, doseForQuality } from '../../data/doseSchemes.js';
 import { deriveMovementRequirements } from '../session/movementRequirements.js';
 import { regionOf, hypertrophyRegionOf } from '../session/sessionSpecs.js';
 
@@ -84,11 +85,12 @@ const EX_BY_ID = new Map(EXERCISES.map(e => [e.id, e]));
 // here when a cohort flips (WP-48 team sports, WP-49 build) and both stay in lockstep.
 const D11_SPORTS = new Set(['run', 'cycle']);
 export function diagnosisSteers({ style, sport, priorityQualities = [], categoryPlan = null, discipline = null } = {}) {
-  // WP-49 (Plan 2 T3): a build-discipline profile (powerlifting/hypertrophy/olympic) with a
-  // non-empty diagnosis steers like the D11 sports — same treatment, different cohort key
-  // (discipline instead of sport). Checked BEFORE the style==='sport' branch since a
-  // discipline profile's style is the discipline id itself (program.js), not 'sport'.
-  if (discipline && priorityQualities.length > 0) return true;
+  // WP-49 (Plan 2 T3/T4c): a build-discipline profile (powerlifting/hypertrophy/olympic) ALWAYS
+  // steers — the discipline IS the athlete's chosen path, so it uses the diagnosis-first engine
+  // (its own priority lifts + in-character dose) whether or not the diagnosis found a capability
+  // gap. Without this, an already-strong athlete (empty diagnosis) fell to the legacy fill and got
+  // the default scheme. The empty-diagnosis case seeds the discipline's canonical quality below.
+  if (discipline) return true;
   // Rating-based (run/cycle) needs a non-empty diagnosis; category-led needs a plan —
   // categoryPlanFor() is itself gated by CATEGORY_LED (swim + the team sports + soccer,
   // WP-48), so a present categoryPlan IS the flip decision for that sport.
@@ -255,7 +257,11 @@ function makeItem(ex, idx, s, style, deload, repBump, effectiveRole, taper) {
   const role = effectiveRole != null ? effectiveRole : ex.role;
   const per = ex.unilateral ? ' ea.' : '';
   const num = LETTERS[Math.min(idx, LETTERS.length - 1)] + '1';
-  const restSec = restForRole(ex, style, role);
+  // WP-49 T4c: a discipline scheme carries its own rest (doseCharacter.restSec) — a powerlifter's
+  // mains rest 180 s even though the post-flip style id isn't the legacy 'strength'. Power work and
+  // schemes without an explicit rest fall back to the role-based prescription (byte-identical).
+  const schemeRest = ex.quality !== 'power' && s && (role === 'primary' ? s.mainRestSec : s.accRestSec);
+  const restSec = schemeRest || restForRole(ex, style, role);
   const cap = (str) => {
     const floored = ex.repFloor ? floorReps(str, ex.repFloor) : str;
     return ex.repCap ? capReps(floored, ex.repCap) : floored;
@@ -763,7 +769,12 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   //    diagnosis-driven target well. Swim is deferred — a swimmer isn't strength-limited, so its
   //    diagnosis points to mobility (→ robustness), which crowds out the upper-pull/shoulder work a
   //    swimmer actually needs; swim keeps the legacy fill until the model surfaces that need.
-  const priorityQualities = ctx.priorityQualities || [];
+  // WP-49 T4c: a build discipline with NO diagnosed priority (an already-strong athlete, no
+  // capability gap) still steers — seed its canonical quality so selection + dose have a target
+  // instead of falling to the legacy default scheme. Sports/legacy: unchanged (empty stays empty).
+  const rawPriorityQualities = ctx.priorityQualities || [];
+  const priorityQualities = (rawPriorityQualities.length === 0 && ctx.discipline && DISCIPLINE_DOSE_QUALITY[ctx.discipline])
+    ? [DISCIPLINE_DOSE_QUALITY[ctx.discipline]] : rawPriorityQualities;
   // Swim is CATEGORY-LED (WP-20): it joins the D11 path only when its SKB category
   // plan is present (ctx.categoryPlan, built by the caller from the swimming
   // library) — the plan's per-session assignments replace the quality rotation
@@ -847,7 +858,18 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
       // scheme block (data/doseSchemes.js) — a robustness day runs HSR tempo work, an
       // explosive day runs strength-speed triples — falling back to the style-bridged
       // sportSupport composite otherwise. Build/swim/legacy never set slot.scheme.
-      slot.scheme = doseForQuality(targetQuality, intent, { deload, taper }) || s;
+      // WP-49 T4c: a build DISCIPLINE doses in its OWN character (a powerlifter's lifts are always
+      // heavy low-rep), so it pins to its canonical phase-progressing quality scheme instead of the
+      // per-day diagnosis quality, and applies its doseCharacter's exact rest. Selection still uses
+      // targetQuality above — only the DOSE is discipline-pinned. Sports/legacy: unchanged.
+      const disciplineDoseQ = ctx.discipline && DISCIPLINE_DOSE_QUALITY[ctx.discipline];
+      if (disciplineDoseQ) {
+        const dc = getDiscipline(ctx.discipline)?.doseCharacter;
+        const base = doseForQuality(disciplineDoseQ, intent, { deload, taper }) || s;
+        slot.scheme = dc ? { ...base, mainRestSec: dc.main?.restSec, accRestSec: dc.accessory?.restSec } : base;
+      } else {
+        slot.scheme = doseForQuality(targetQuality, intent, { deload, taper }) || s;
+      }
       const makePick = (ex) => {
         const effectiveRole = effectiveRoleOf(ex, slot.level, demotePress);
         return { ex, sets: roleSetCount(ex, slot.scheme, style, effectiveRole), contrib: muscleContribution(ex), effectiveRole };
