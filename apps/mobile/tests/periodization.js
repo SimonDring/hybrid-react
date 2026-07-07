@@ -43,12 +43,14 @@ assert(deriveSeason({ sport: null }) === null,
 // Each profile type returns the evidence-based block length.
 function totalWeeks(p) { return resolvePeriodization(p).totalWeeks; }
 
-assert(totalWeeks({ strength_style: 'bodybuilding' }) === 6,
-  'T9 bodybuilding → 6-week mesocycle');
-assert(totalWeeks({ strength_style: 'strength' }) === 12,
-  'T10 strength → 12-week block');
-assert(totalWeeks({ strength_style: 'functional' }) === 8,
-  'T11 functional → 8-week block');
+// WP-49 T4c: build periodisation now comes from the DISCIPLINE module (bodybuilding+functional →
+// hypertrophy 10wk; strength → powerlifting 12wk), not the retired legacy strength_style PROFILES.
+assert(totalWeeks({ strength_style: 'bodybuilding', access: ['barbell'] }) === 10,
+  'T9 bodybuilding → hypertrophy 10-week mesocycle');
+assert(totalWeeks({ strength_style: 'strength', access: ['barbell'] }) === 12,
+  'T10 strength → powerlifting 12-week block');
+assert(totalWeeks({ strength_style: 'functional', access: ['barbell'] }) === 10,
+  'T11 functional → hypertrophy 10-week block');
 assert(totalWeeks({ goal_type: 'sport', sport: 'run', sport_intent: 'build_base' }) === 10,
   'T12 sport off-season, no discipline → the middle prior (10-week block; deliberate default 2026-07-04)');
 assert(totalWeeks({ goal_type: 'sport', sport: 'run', sport_intent: 'compete' }) === 4,
@@ -116,4 +118,4 @@ assert(allWeeks.length === 12, `T25 strength plan has 12 weeks (got ${allWeeks.l
 const bbProfile = { ...strengthProfile, strength_style: 'bodybuilding' };
 const bbPlan = generatePlan(bbProfile);
 const bbWeeks = bbPlan.phases.flatMap(ph => ph.weeks);
-assert(bbWeeks.length === 6, `T26 bodybuilding plan has 6 weeks (got ${bbWeeks.length})`);
+assert(bbWeeks.length === 10, `T26 bodybuilding (→ hypertrophy) plan has 10 weeks (got ${bbWeeks.length})`);

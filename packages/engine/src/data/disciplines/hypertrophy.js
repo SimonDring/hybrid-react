@@ -34,7 +34,7 @@ export default {
       totalWeeks: 10,
       split: [
         { intent: 'base', weeks: 3 },
-        { intent: 'build', weeks: 6 },
+        { intent: 'build', weeks: 7 },   // WP-49 T4c: was 6 — split now sums to totalWeeks (10); deload@10 in range
       ],
       deloads: [5, 10],
     },

@@ -19,6 +19,7 @@
  */
 import sports from '../../data/sportGymSupport/index.js';
 import { SPORT_BLOCKS } from '../../data/sportGymSupport/_schema.js';
+import { getDiscipline, resolveBuildDisciplineId } from '../../data/disciplines/index.js';
 
 /**
  * Derive the current training season from the athlete's profile.
@@ -110,6 +111,16 @@ export function resolvePeriodization(profile = {}) {
       || SPORT_BLOCKS[season] || SPORT_BLOCKS.off;
   }
 
+  // THE FLIP (WP-49 T4c): a build plan's periodisation comes from its DISCIPLINE module
+  // (powerlifting/hypertrophy/olympic) — the legacy strength_style PROFILES are retired.
+  // resolveBuildDisciplineId is the same goal→discipline mapping the plan + diagnosis use, so the
+  // block length, phase split, and deloads agree with the rest of the plan. Build has no sport
+  // season → the discipline's 'off' macrocycle (a build meet date would map to 'pre' — future).
+  const discId = resolveBuildDisciplineId(profile);
+  const disc = discId && getDiscipline(discId);
+  if (disc && disc.periodization && disc.periodization.off) return disc.periodization.off;
+
+  // Legacy fallback (unreachable post-flip — resolveBuildDisciplineId always resolves a discipline).
   const style = profile.strength_style;
   if (style === 'bodybuilding') return PROFILES.hypertrophy;
   if (style === 'strength')     return PROFILES.strength;
