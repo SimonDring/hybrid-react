@@ -107,7 +107,10 @@ function gymCtx(profile) {
     exercisePriority: program.exercisePriority || [], priorityByIntent: program.priorityByIntent || new Map(),
     sport: profile.sport || null, power: !!program.power,
     priorityQualities: (perf && perf.priorityAdaptations) || [], season: program.season, skbIds,
-    skbSportId, discipline: program.discipline || null
+    skbSportId, discipline: program.discipline || null,
+    // WP-49 follow-up: the Olympic athlete's competed lift, so the reflow keeps the SAME day
+    // emphasis (snatch/C&J/squat sequence) the baseline built. Ignored off-olympic.
+    competedLift: profile.olympic_lift || 'both'
   };
 }
 
@@ -325,7 +328,7 @@ function profileSignature(profile) {
   return JSON.stringify({
     f: profile.focus, e: profile.experience, g: profile.goals,
     a: profile.availability, ac: profile.access, p: profile.pool_length_m,
-    ss: profile.strength_style, rg: profile.run_goal, sg: profile.swim_goal,
+    ss: profile.strength_style, ol: profile.olympic_lift, rg: profile.run_goal, sg: profile.swim_goal,
     pr: profile.primary, db: profile.doubles, lrd: profile.long_run_day,
     sup: profile.supplemental_strength, lf: profile.lifts, ll: profile.lift_log,
     bw: profile.bodyweight_kg, sx: profile.sex,
