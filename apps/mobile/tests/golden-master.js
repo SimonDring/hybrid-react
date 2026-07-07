@@ -33,6 +33,14 @@ const BW = ['bodyweight'];
 // run that straddles midnight can't flip a band — see periodization.deriveSeason).
 const inDays = (o) => { const d = new Date(); d.setDate(d.getDate() + o); return d.toISOString().slice(0, 10); };
 const A = (o) => ({ ...BLANK_ANSWERS, ...o });
+// answersToProfile only recognises known onboarding-answer fields, so an ad-hoc `discipline`
+// (WP-49 Plan 2 T1's new build-discipline archetypes) is silently dropped by it — spread it back
+// onto the profile afterwards, exactly as the app's own adapter call site would (the profile is
+// the thing that ultimately carries `discipline` into generatePlan/profileToAthleteModel).
+const toProfile = (answers) => {
+  const profile = answersToProfile(answers);
+  return answers.discipline ? { ...profile, discipline: answers.discipline } : profile;
+};
 
 // ── archetype matrix — decision-bearing branches, not exhaustive ───────────────
 // Covers: 3 build styles × levels × frequency (incl. 1d/7d edges) × session length
@@ -68,7 +76,16 @@ const MATRIX = {
   // today (gaa engine sport); their keys moving is the DELIBERATE signal of the flip.
   'sport·hurling·intermediate·off·3d': A({ goalType: 'sport', skbSport: 'hurling', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['tue', 'sat'] }),
   'sport·gaelic_football·intermediate·in·3d': A({ goalType: 'sport', skbSport: 'gaelic_football', sportIntent: 'compete', sportSeason: 'in_season', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['tue', 'sat'] }),
-  'sport·field_hockey·advanced·off·4d': A({ goalType: 'sport', skbSport: 'field_hockey', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'advanced', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'female', lifts: {}, sportDays: ['wed', 'sat'] })
+  'sport·field_hockey·advanced·off·4d': A({ goalType: 'sport', skbSport: 'field_hockey', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'advanced', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'female', lifts: {}, sportDays: ['wed', 'sat'] }),
+
+  // Build-discipline cohort (WP-49 Plan 2 T1, additive): `discipline` feeds the athlete-model
+  // diagnosis (disciplineDemandFor) but does NOT yet steer the plan (the D11 style==='sport'
+  // gate that would apply the diagnosis opens in Task 3) — so these plans today are identical to
+  // an equivalent-shape archetype without `discipline`. They exist here to pin that byte-identity
+  // as the build flip proceeds task by task; NEW keys, additive to the matrix.
+  'build·powerlifting·advanced·4d': { ...A({ goalType: 'build', experienceLevel: 'advanced', daysPerWeek: 4, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: { squat: 180, bench: 130, deadlift: 230 } }), discipline: 'powerlifting' },
+  'build·hypertrophy·intermediate·5d': { ...A({ goalType: 'build', experienceLevel: 'intermediate', daysPerWeek: 5, days: ['mon', 'tue', 'wed', 'fri', 'sat'], equipment: FULL, sex: 'male', lifts: {} }), discipline: 'hypertrophy' },
+  'build·olympic·advanced·4d': { ...A({ goalType: 'build', experienceLevel: 'advanced', daysPerWeek: 4, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: { squat: 150 } }), discipline: 'olympic' },
 };
 
 function assert(cond, msg) {
@@ -83,7 +100,7 @@ function buildCurrent() {
   let threw = 0;
   for (const [key, answers] of Object.entries(MATRIX)) {
     try {
-      out[key] = generatePlan(answersToProfile(answers));
+      out[key] = generatePlan(toProfile(answers));
     } catch (e) {
       threw++;
       console.error('FAIL: archetype threw —', key, '—', e && e.message);
@@ -130,7 +147,7 @@ const current = buildCurrent();
 // — independent of whether the committed snapshot is up to date.
 for (const [key, answers] of Object.entries(MATRIX)) {
   if (!(key in current)) continue;
-  const again = JSON.stringify(generatePlan(answersToProfile(answers)));
+  const again = JSON.stringify(generatePlan(toProfile(answers)));
   assert(again === JSON.stringify(current[key]), `deterministic: ${key}`);
 }
 

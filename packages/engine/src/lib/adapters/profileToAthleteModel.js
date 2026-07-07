@@ -42,6 +42,10 @@ export function profileToAthleteModel(profile = {}, asOf) {
 
   const inputs = {
     identity: { age: p.age ?? null, biologicalSex: p.sex ?? null, bodyMassKg: p.bodyweight_kg ?? null, heightCm: p.height_cm ?? null },
+    // WP-49 (Plan 2 T1): the build-discipline choice (Plan 1 knowledge), carried through so
+    // disciplineDemand.js can feed it into the diagnosis. null for profiles that don't set it —
+    // no behaviour change (disciplineIdFor only resolves an explicit disciplineId; it is opt-in).
+    disciplineId: p.discipline || null,
     goals: [{ id: 'primary', outcome, priority: 1, sportRef: p.sport || null }],
     sportingContext: {
       primarySport: skbSportIdOf(p),
