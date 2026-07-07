@@ -1,9 +1,9 @@
-// The build-discipline demand seam (WP-49 Plan 2 T1). Reads the athlete model's discipline
-// (either set directly via model.disciplineId, or inferred from the legacy goal outcome for
-// back-compat until Plan 2 T6 makes discipline the primary field) and returns that discipline's
-// raw demand vector from the Plan-1 knowledge (data/disciplines). derivePerformanceModel.js
-// consumes this to feed the diagnosis; it is additive — a model with no discipline and no
-// mapped goal outcome returns null, so existing behaviour is unchanged.
+// The build-discipline demand seam (WP-49 Plan 2 T1). Reads the athlete model's discipline —
+// resolved ONLY from an explicit, registry-valid model.disciplineId (opt-in; NO legacy-outcome
+// inference — see the NOTE below) — and returns that discipline's raw demand vector from the
+// Plan-1 knowledge (data/disciplines). derivePerformanceModel.js consumes this to feed the
+// diagnosis; it is additive — a model with no discipline returns null, so existing behaviour is
+// unchanged. Task 6 (making discipline primary) decides how legacy build profiles map in.
 import { getDiscipline } from '../../data/disciplines/index.js';
 
 // NOTE: an outcome->discipline back-compat map (e.g. get_stronger -> powerlifting) was drafted
