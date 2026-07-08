@@ -1,6 +1,6 @@
 {
   "id": "field_hockey",
-  "schemaVersion": "1.0",
+  "schemaVersion": "1.0.0",
   "meta": {
     "sport": "Field Hockey",
     "label": "Field Hockey",
@@ -352,6 +352,55 @@
         "confidence": "moderate",
         "evidenceLevel": "L3",
         "source": "tendinopathy management literature (Malliaras 2013); expert consensus"
+      },
+      {
+        "name": "Hand / finger fracture & contusion",
+        "incidence": "high in hockey relative to other field sports — the lead/top hand and fingers are directly exposed to stick and ball",
+        "severity": "low-moderate (variable time-loss; metacarpal fractures ~3-6 weeks)",
+        "mechanism": "Direct impact from the ball (drag-flick/hit velocities exceed 100 km/h) or an opponent's stick to an unprotected hand — most often the top hand on the stick — plus finger jams in tackles and stick clashes.",
+        "highRiskTissues": [
+          "metacarpals",
+          "phalanges",
+          "thumb"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "protective glove use",
+            "tackling / stick-tackle technique"
+          ],
+          "nonModifiable": [
+            "outfield ball-contesting role"
+          ]
+        },
+        "rtpConsiderations": "Equipment- and rules-managed rather than gym-preventable; RTP governed by bony union and restored grip capacity. Recorded for epidemiological completeness and coach availability tracking, not as a strength-programming target.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "field-hockey injury surveillance (Theilen 2016; Rees 2020) — hand injuries a recognised hockey-specific burden"
+      },
+      {
+        "name": "Facial & dental injury",
+        "incidence": "moderate — hockey-specific; ball or stick to the face, concentrated at short corners and in the circle",
+        "severity": "moderate (lacerations, dental trauma, occasional facial fracture)",
+        "mechanism": "High-velocity ball (drag-flick / deflection) or stick contact to an unprotected face; the penalty-corner set-play concentrates exposure for the defending runners and goalkeeper.",
+        "highRiskTissues": [
+          "facial bones",
+          "teeth",
+          "facial soft tissue"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "mouthguard use",
+            "protective face mask at short corners",
+            "positioning"
+          ],
+          "nonModifiable": [
+            "short-corner role (first runner / goalkeeper highest exposure)"
+          ]
+        },
+        "rtpConsiderations": "Prevented by protective equipment and rules, not by the gym; recorded for surveillance and availability rather than as a training target.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "field-hockey injury surveillance (Theilen 2016; Rees 2020); short-corner facial-injury exposure well documented"
       }
     ],
     "summary": "Hamstring, groin and ankle mirror other field sports; the differentiators are LOW-BACK overload from the crouched playing posture and pronounced LEFT-RIGHT asymmetry from the one-sided stick — both are directly addressable in the gym."

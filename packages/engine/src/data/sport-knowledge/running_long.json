@@ -358,6 +358,30 @@
         "confidence": "moderate",
         "evidenceLevel": "L3",
         "source": "plantar-fasciopathy heavy-load / Rathleff loading literature; running-injury reviews"
+      },
+      {
+        "name": "Proximal hamstring tendinopathy (chronic)",
+        "incidence": "moderate in high-mileage and hill/long runners — a chronic overuse variant distinct from the acute hamstring strain",
+        "severity": "moderate-high if unmanaged (often chronic; deep buttock / ischial pain that is slow to resolve)",
+        "mechanism": "Cumulative compressive + tensile load on the proximal hamstring tendon at the ischial tuberosity, aggravated by uphill running, long runs, deep hip flexion (over-striding) and prolonged sitting — a load-capacity mismatch rather than an acute failure.",
+        "highRiskTissues": [
+          "proximal hamstring tendon (ischial insertion)"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "training-load / hill-volume spikes",
+            "insufficient posterior-chain tendon-loading capacity",
+            "over-striding mechanics"
+          ],
+          "nonModifiable": [
+            "prior proximal hamstring injury",
+            "age"
+          ]
+        },
+        "rtpConsiderations": "Progressive isometric then heavy-slow-resistance hamstring loading (limiting provocative deep-hip-flexion compression early); criteria-based return on load tolerance. Distinct from acute-strain RTP.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "proximal hamstring tendinopathy rehabilitation (Goom 2016); distance-running overuse literature"
       }
     ],
     "summary": "OVERUSE-dominant injury profile (the consequence of very high repetitive loading). Achilles tendinopathy is the signature injury; tibial/metatarsal bone stress — strongly linked to low energy availability (RED-S) — is the most serious; patellofemoral pain, ITB syndrome and plantar fasciopathy round out the lateral/anterior-knee and foot overuse picture. Bone stress and RED-S require specific screening in female and weight-conscious athletes. Single-leg calf/Achilles loading, tibialis and hip-abductor strengthening, plus prudent mileage progression, are the primary prevention levers."

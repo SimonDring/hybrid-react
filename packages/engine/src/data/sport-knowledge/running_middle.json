@@ -332,6 +332,32 @@
         "confidence": "high",
         "evidenceLevel": "L2",
         "source": "Bennell KL et al. — bone stress fracture epidemiology and risk factors; Mountjoy et al. IOC RED-S consensus 2018/2023"
+      },
+      {
+        "name": "Iliotibial band syndrome (ITBS)",
+        "incidence": "moderate — a common overuse knee complaint at 1500 m-5 km training mileage (high weekly volume plus track interval work)",
+        "severity": "moderate (irritable; usually 2-6 weeks of modified loading, rarely acute time-loss)",
+        "mechanism": "Repetitive loaded knee flexion-extension compressing the distal ITB against the lateral femoral condyle; associated with hip-abductor weakness, increased hip adduction / contralateral pelvic drop, rapid mileage increase and single-direction track running.",
+        "highRiskTissues": [
+          "distal iliotibial band",
+          "lateral femoral condyle region"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "hip-abductor / glute-medius weakness",
+            "training-load spikes",
+            "running mechanics / cadence",
+            "always running the same track direction"
+          ],
+          "nonModifiable": [
+            "prior ITBS",
+            "individual lower-limb alignment"
+          ]
+        },
+        "rtpConsiderations": "Load management + hip-abductor strengthening and mechanics work; graded return once single-leg loading is pain-free. A load + mechanics problem more than a pure strength deficit.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "distance-running overuse epidemiology (van der Worp ITBS systematic review 2012)"
       }
     ],
     "summary": "Mixed ACUTE + OVERUSE injury profile. Hamstring strains are acute and velocity-driven (more prevalent at 800/1500 m training paces). Achilles tendinopathy, patellofemoral pain, and tibial bone stress are overuse injuries driven by high training volume and load mismanagement. Tibial bone stress and RED-S (low energy availability) require specific screening in female and weight-conscious athletes. Nordic curls, calf/Achilles loading, and hip abductor strengthening are the primary gym-based prevention levers."

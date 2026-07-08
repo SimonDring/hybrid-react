@@ -320,6 +320,32 @@
         "confidence": "moderate",
         "evidenceLevel": "L3",
         "source": "tendinopathy load-management literature; expert consensus"
+      },
+      {
+        "name": "Adductor / groin strain",
+        "incidence": "common in sprinting — a leading track sprint muscle injury after the hamstring; block clearance and high-speed hip mechanics load the adductors",
+        "severity": "moderate (grade I-II typical; grade II ~2-6 weeks; high recurrence if under-rehabbed)",
+        "mechanism": "Eccentric overload of the adductor longus in the swing-to-stance transition and explosive block/acceleration steps; risk rises with adductor:abductor imbalance, fatigue and rapid high-speed exposure.",
+        "highRiskTissues": [
+          "adductor longus",
+          "proximal adductor tendon"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "low eccentric adductor strength",
+            "adductor:abductor imbalance",
+            "acute high-speed load spikes",
+            "restricted hip mobility"
+          ],
+          "nonModifiable": [
+            "prior groin injury",
+            "age"
+          ]
+        },
+        "rtpConsiderations": "Copenhagen-based adductor strengthening + progressive high-speed reloading; criteria-based RTP on pain-free maximal acceleration and restored adductor-squeeze strength.",
+        "confidence": "moderate",
+        "evidenceLevel": "L2",
+        "source": "athletics injury surveillance (Edouard, IAAF); Copenhagen adduction prevention (Harøy 2019)"
       }
     ],
     "summary": "ACUTE high-force injuries dominate — hamstring strain (biceps femoris) is the defining sprint injury, driven by eccentric loading deficit and speed-work demands. Hip-flexor and quad strains are secondary. Overuse is less common than in distance but plyometric volume can drive patellar tendinopathy. Hamstring eccentric strength (Nordic curls, NordBord testing) and load management are the primary modifiable levers."
