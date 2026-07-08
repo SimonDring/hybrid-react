@@ -1,8 +1,49 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-07 (WP-49 Plan 2 — the build flip — COMPLETE + deployed; main `1bbefb9`,
-182/182, KSV 1.20.0). Keep this current at the end of each work session so the next session (or a
-fresh agent) can resume without re-deriving context._
+_Last updated: 2026-07-08 (SKB audit + triathlon fix — on branch `skb-audit-fixes-2026-07-08`,
+NOT merged / NOT pushed, awaiting Simon's review; 183/183, KSV 1.22.0). Keep this current at the
+end of each work session so the next session (or a fresh agent) can resume without re-deriving context._
+
+## ⏰ MORNING REVIEW — SKB audit & triathlon fix (2026-07-08, autonomous overnight)
+
+**Branch `skb-audit-fixes-2026-07-08` — 4 commits, NOT pushed, NOT merged. All green (183/183), app builds.**
+Trigger: Simon's request for a full Sports Knowledge Base audit, prompted by a triathlon plan that came
+out spine-heavy and upper-body-blind. Full findings: **`docs/engine/08-SKB-CONSUMPTION-AND-SEASON-AUDIT.md`**.
+
+**Headline finding.** There are TWO sport models. The rich 21-section SKB (`data/sport-knowledge/*.json`)
+is **~95% dormant** for plan generation; plans are actually driven by a 32-line-per-sport legacy layer
+(`data/sportGymSupport/*.js`). The SKB content is strong (audit graded 9/11 A/A−); the problems are
+(a) it's disconnected from generation, (b) triathlon had no module and collapsed to `run`, (c) "season"
+can only scale volume, not reshape the plan.
+
+**What shipped (review these):**
+- **T1 — triathlon fix (`202e562`).** New `data/sportGymSupport/triathlon.js` (swim+bike+run emphasis
+  blend + pull/shoulder-prehab-led priority); `sportEngineBinding` triathlon→`triathlon` (was `run`).
+  *Proof:* the triathlon plan went from all-lower-body (trap-bar deadlift most days, 0 pulls / 0 presses)
+  to a Push/Full-body/Lower split with DB bench, barbell row, face pulls, single-leg calf, single-leg
+  leg press — **49 pulls / 52 presses**, one trap-bar deadlift. Additive to the golden-master (new fixture
+  + property test `skb-triathlon-blend.js`).
+- **T1b — SKB content fixes (`49510ad`).** Literature-grounded injury/reference additions (field_hockey
+  hand+facial, sprint adductor/groin, middle ITBS, long proximal-hamstring tendinopathy, swimming Batalha)
+  + field_hockey schemaVersion. **DORMANT** — proven: the only golden-master change is the version stamp.
+
+**What did NOT ship (needs YOUR call):**
+- **T2 — off-season generalisation** (`c7502c3`, doc-only). Your ask ("off-season = hit full-body, generalise")
+  is real, but I proved the obvious fix (emphasis floor + un-demote press + seed upper-body) is a **no-op for
+  runners/cyclists** — their off-season plans came out byte-identical. The blocker is the session **split**
+  (leg-dominated → never opens a push slot), so this is a `resolveSplit` change (core/shared, risky to do
+  blind) **plus an S&C judgement:** how much upper-body does an *endurance* athlete want off-season? Clear
+  yes for swim/tri (done via T1); a real trade-off for pure run/cycle. See audit §8 Tier 2.
+- **T3 — the real re-seat** (designed in the audit, not built): give the SKB machine-consumable per-muscle
+  emphasis / pattern-balance / discipline-blend data, then wire the SKB into generation (finish WP-23) and
+  make season drive selection. Staged, behind the golden-master, one sport at a time.
+
+**To merge if you're happy:** `git checkout main && git merge skb-audit-fixes-2026-07-08` (then push). To
+undo any single piece, each commit is self-contained and revertable. The triathlon fix (T1) is the one with
+real user-facing impact; T1b is safe polish; the audit doc + T2/T3 are the design record.
+
+---
+
 
 ## Governance FROZEN — the five documents are locked at v1.0 (2026-07-01)
 
