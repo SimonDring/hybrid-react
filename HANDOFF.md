@@ -1,7 +1,8 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-06. Keep this current at the end of each work session so the
-next session (or a fresh agent) can resume without re-deriving context._
+_Last updated: 2026-07-07 (WP-49 Plan 2 — the build flip — COMPLETE + deployed; main `1bbefb9`,
+182/182, KSV 1.20.0). Keep this current at the end of each work session so the next session (or a
+fresh agent) can resume without re-deriving context._
 
 ## Governance FROZEN — the five documents are locked at v1.0 (2026-07-01)
 
@@ -125,17 +126,42 @@ Also shipped this session (earlier additions):
   an RDL after clean selection — the hole affected D11 too). Injured build athletes ship full
   legal sessions; pure baseline byte-identical by construction.
 
-**✅ WP-49 THE BUILD FLIP — MERGED to main (2026-07-07). Suites 177/177. KSV 1.17.0.**
-Build goals now run off the diagnosis-first DISCIPLINE engine (the legacy volume-first path is
-retired): get stronger → powerlifting (Upper/Lower, SBD-led), build muscle → hypertrophy
-(Full-body/UL/Push-Pull-Legs by days), functional → hypertrophy, Olympic → snatch/C&J/squat
-day-emphasis with an onboarding "which lift do you compete in?" question. Barbell-only disciplines
-fall back to hypertrophy without a barbell. Sports byte-identical throughout; injury safety intact;
-final review verdict SHIP. Follow-ups: Olympic day-emphasis not yet threaded through the reflow
-(chip: task_ab57477b); volumeTolerance prior scales the target but not delivered sets in the
-diagnosis-first path (dormant seam); generic hypertrophy carries little direct isolation (Task 4c).
-Plan 2 REMAINING: Task 5 (secondary-goals menu — functional's conditioning secondary) + Task 4c
-(per-discipline periodisation/dose).
+**✅ WP-49 PLAN 2 — THE BUILD FLIP — COMPLETE + DEPLOYED (2026-07-07). main tip `1bbefb9`.
+Suites 182/182. KSV 1.20.0.** Build goals now run off the diagnosis-first DISCIPLINE engine end to
+end (the legacy volume-first path is retired). All sports byte-identical throughout; injury safety
+intact; final whole-branch review verdict SHIP. What a user gets:
+- **Get stronger → powerlifting** — Upper/Lower split, squat/bench/deadlift-led, heavy low-rep
+  (4×5→4×4, 180 s rest), 12-week block (deloads 4,9).
+- **Build muscle → hypertrophy** — Full-body / Upper-Lower / Push-Pull-Legs by day count, compounds
+  PLUS direct arm/delt/calf/leg isolation, higher-rep short-rest (3×12, 90 s), 10-week block (5,10).
+- **Functional → hypertrophy** + an auto conditioning secondary (its distinctive layer).
+- **Olympic weightlifting** — snatch/C&J/squat day-emphasis around an onboarding "which lift do you
+  compete in?" question; classic lifts dosed as explosive power work.
+- Barbell-only disciplines fall back to hypertrophy without a barbell (equipment-preset aware).
+
+The pieces (all merged to main, each its own commit; every step all-sports-byte-identical):
+- **The flip** (`468986e`/merge `4736b29`): resolveBuildDisciplineId as the single source of truth
+  (program + diagnosis agree); legacy BUILD_INTENTS retired; onboarding olympic option + competed-lift.
+- **Olympic reflow** (`fc59e8b`): day-emphasis threaded through the reflow; +olympic_lift in the plan
+  cache signature (was missing → switching competed lift didn't regenerate).
+- **Secondary goals** (`eb44991`): posture/prehab/mobility/conditioning menu, factor-0 corrective on
+  the accessory tail (main work provably untouched); functional auto-conditioning.
+- **4c-1 periodisation** (`946be81`): per-discipline blocks/deloads; fixed olympic→functional-8wk bug,
+  hypertrophy off-block split (9 vs declared 10), and the barbell gate (full_gym preset).
+- **4c-2 dose** (`9b2456b`): discipline-character phase-progressing dose (DISCIPLINE_DOSE_QUALITY +
+  doseCharacter rest); a discipline now ALWAYS steers (an already-strong athlete no longer falls to
+  the legacy default scheme — flip-audit item #4).
+- **4c-3 isolation** (`1bbefb9`): hypertrophy direct-isolation pass (target-gated to ramp with the
+  block, MRV backstop, hypertrophy-gated).
+
+Tests: wp49-discipline-{selection,program,diagnosis,steers,periodization,dose},
+wp49-{olympic-reflow,secondary-goals,hypertrophy-isolation}.js.
+
+**Remaining follow-up (NOT part of Plan 2):** the `volumeTolerance` learned-prior scales the volume
+target but not delivered sets in the diagnosis-first path (a dormant seam — sports byte-identical, so
+not a regression); it only matters once the recoverability prior is promoted at D16. See also the
+ACWR cold-start calibration gate Simon flagged (don't let acute:chronic load steer a fresh plan until
+enough per-user data exists).
 
 **⇒ (earlier context, pre-flip) ✅ 29 PRs MERGED (2026-07-06). `main` KSV = 1.9.0. Suites 167/167.**
 - **Batch 1 — #127–#142** (WP-38/39/40/41/42/43/44/45/48/50/51/52/56/57/59/60): the post-#126
