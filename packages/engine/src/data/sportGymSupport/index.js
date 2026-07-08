@@ -28,10 +28,11 @@ import { swimming } from './swimming.js';
 import { rugby } from './rugby.js';
 import { soccer } from './soccer.js';
 import { gaa } from './gaa.js';
+import { triathlon } from './triathlon.js';
 import { validateRegistry } from './_schema.js';
 
 // Order is irrelevant to behaviour; alphabetical-ish by introduction.
-const MODULES = [running, cycling, swimming, rugby, soccer, gaa];
+const MODULES = [running, cycling, swimming, rugby, soccer, gaa, triathlon];
 
 const BY_ID = new Map(MODULES.map(m => [m.id, m]));
 

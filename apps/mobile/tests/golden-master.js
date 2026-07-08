@@ -71,6 +71,10 @@ const MATRIX = {
   'sport·cycle·intermediate·transition·3d': A({ goalType: 'sport', sport: 'cycle', sportIntent: 'compete', eventDate: inDays(-10), experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {} }),
   'sport·swim·intermediate·off·3d': A({ goalType: 'sport', sport: 'swim', sportIntent: 'recreational', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {} }),
   'sport·swim·advanced·in·3d': A({ goalType: 'sport', sport: 'swim', sportIntent: 'compete', eventDate: inDays(30), experienceLevel: 'advanced', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'female', lifts: {} }),
+  // Triathlon (SKB audit 08 T1): its own swim+bike+run gym-support module, no longer collapsed to
+  // 'run'. NEW key, additive — pins the blended (pull + shoulder-prehab + single-leg/calf) plan so
+  // it can't silently regress to a runner's leg-day.
+  'sport·triathlon·intermediate·off·3d': A({ goalType: 'sport', skbSport: 'triathlon', sportIntent: 'recreational', sportGoal: 'build_base', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['tue', 'sat'] }),
   // Team-sport cohort (WP-42b): the flip audit found ZERO team archetypes — the very
   // cohort WP-48 will flip had no snapshot protection. All three ride the legacy fill
   // today (gaa engine sport); their keys moving is the DELIBERATE signal of the flip.

@@ -6,5 +6,5 @@ assert(bindingFor('running_long').discipline === 'long', 'T2 running_long → lo
 assert(bindingFor('cycling').engineSport === 'cycle' && bindingFor('cycling').discipline === null, 'T3 cycling → cycle');
 assert(bindingFor('swimming').engineSport === 'swim', 'T4 swimming → swim');
 assert(bindingFor('gaelic_football').engineSport === 'gaa' && bindingFor('hurling').engineSport === 'gaa', 'T5 GAA/hurling → gaa');
-assert(bindingFor('triathlon').engineSport === 'run', 'T6 triathlon → run (its binding constraint)');
+assert(bindingFor('triathlon').engineSport === 'triathlon' && bindingFor('triathlon').discipline === null, 'T6 triathlon → triathlon (own swim+bike+run gym-support module, audit 08; was collapsed to run)');
 assert(bindingFor('unknown_sport') === null, 'T7 unknown → null');

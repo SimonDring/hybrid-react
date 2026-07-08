@@ -74,7 +74,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 10,
@@ -5556,7 +5556,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 10,
@@ -9247,7 +9247,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 10,
@@ -16252,7 +16252,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 10,
@@ -19588,7 +19588,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 10,
@@ -23791,7 +23791,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 10,
@@ -28249,7 +28249,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 12,
@@ -31600,7 +31600,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 12,
@@ -35362,7 +35362,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 12,
@@ -39966,7 +39966,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 12,
@@ -44067,7 +44067,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 12,
@@ -45129,7 +45129,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 12,
@@ -48977,7 +48977,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 4,
@@ -49747,7 +49747,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 12,
@@ -53125,7 +53125,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 4,
@@ -54287,7 +54287,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 12,
@@ -59021,7 +59021,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 4,
@@ -60185,7 +60185,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 12,
@@ -63600,7 +63600,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 12,
@@ -68625,7 +68625,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 6,
@@ -70582,7 +70582,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 10,
@@ -74858,7 +74858,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 4,
@@ -76543,7 +76543,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 6,
@@ -79268,7 +79268,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 4,
@@ -80353,7 +80353,7 @@
       },
       "provenance": {
         "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.20.0"
+        "knowledgeSetVersion": "1.21.0"
       },
       "validation": {
         "checked": 12,
@@ -83324,6 +83324,3758 @@
                     "sets": "3 × 12",
                     "superset": false,
                     "volumeFactor": 0.3
+                  }
+                ],
+                "title": "Friday · Full body"
+              }
+            ],
+            "taper": false,
+            "theme": "Progress the intensity. Keep form honest."
+          }
+        ]
+      }
+    ],
+    "totalWeeks": 12
+  },
+  "sport·triathlon·intermediate·off·3d": {
+    "meta": {
+      "provenance": {
+        "engineVersion": "1.0.0",
+        "knowledgeSetVersion": "1.21.0"
+      },
+      "validation": {
+        "checked": 12,
+        "pass": true,
+        "weeks": []
+      }
+    },
+    "phases": [
+      {
+        "gates": [
+          {
+            "label": "Hit 3 sessions most weeks",
+            "required": true
+          },
+          {
+            "label": "Movements feel smooth and pain-free",
+            "required": false
+          }
+        ],
+        "id": 1,
+        "range": "Wks 1–5",
+        "status": "current",
+        "summary": "Lay the foundation — consistent volume, solid technique, no chasing intensity yet.",
+        "tagline": "Build the foundation — volume, technique and work capacity.",
+        "tags": [
+          "Base",
+          "Foundation"
+        ],
+        "title": "Base",
+        "weekEnd": 5,
+        "weekStart": 1,
+        "weeks": [
+          {
+            "deload": false,
+            "num": 1,
+            "provisional": false,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "sport-support push strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Push day's muscles, and selection fills each toward its weekly target. This day: build the base.",
+                  "source": "style"
+                },
+                "axialLoad": 2,
+                "dayIdx": 0,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "db_bench",
+                    "group": "A",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "db_ohp",
+                    "group": "B",
+                    "name": "DB shoulder press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "15 kg/hand"
+                  },
+                  {
+                    "exId": "spider_curl",
+                    "group": "B",
+                    "name": "Spider Curl",
+                    "note": "",
+                    "num": "B2",
+                    "restSec": 20,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "9 kg/hand"
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "C",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "cable_woodchop",
+                    "group": "D",
+                    "name": "Cable Woodchop (high-to-low)",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Monday · Push"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: build the base.",
+                  "source": "style"
+                },
+                "axialLoad": 4,
+                "dayIdx": 2,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "exId": "straight_arm_pd",
+                    "group": "A",
+                    "intent": "straight_arm_pd",
+                    "name": "Straight-arm pulldown",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "35 kg"
+                  },
+                  {
+                    "exId": "barbell_row",
+                    "group": "B",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "87.5 kg"
+                  },
+                  {
+                    "exId": "db_bench",
+                    "group": "C",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "rack_pull",
+                    "group": "D",
+                    "name": "Rack Pull",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 150,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "110 kg"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "E",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12 ea.",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "pallof",
+                    "group": "F",
+                    "intent": "pallof",
+                    "name": "Pallof press",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 0.3
+                  }
+                ],
+                "title": "Wednesday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support lower strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Lower day's muscles, and selection fills each toward its weekly target. This day: build the base.",
+                  "source": "style"
+                },
+                "axialLoad": 2,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "trap_bar_dl",
+                    "group": "B",
+                    "name": "Trap-bar deadlift",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "115 kg"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "C",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "face_pull",
+                    "group": "C",
+                    "intent": "face_pull",
+                    "name": "Face pull",
+                    "note": "",
+                    "num": "C2",
+                    "restSec": 20,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "10 kg"
+                  },
+                  {
+                    "exId": "sl_leg_press",
+                    "group": "D",
+                    "intent": "sl_leg_press",
+                    "name": "Single-Leg Leg Press",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "50 kg"
+                  },
+                  {
+                    "exId": "sl_hinge",
+                    "group": "E",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  }
+                ],
+                "title": "Friday · Lower"
+              }
+            ],
+            "taper": false,
+            "theme": "Build base volume and movement quality."
+          },
+          {
+            "deload": false,
+            "num": 2,
+            "provisional": false,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: build the base.",
+                  "source": "style"
+                },
+                "axialLoad": 3,
+                "dayIdx": 0,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "100 kg"
+                  },
+                  {
+                    "exId": "back_squat",
+                    "group": "B",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "92.5 kg"
+                  },
+                  {
+                    "exId": "db_bench",
+                    "group": "C",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "seated_leg_curl",
+                    "group": "D",
+                    "name": "Seated Leg Curl",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "db_ohp",
+                    "group": "E",
+                    "name": "DB shoulder press",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "17.5 kg/hand"
+                  }
+                ],
+                "title": "Monday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: build the base.",
+                  "source": "style"
+                },
+                "axialLoad": 1,
+                "dayIdx": 2,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "sl_hinge",
+                    "group": "A",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "chest_supported_row",
+                    "group": "C",
+                    "intent": "chest_supported_row",
+                    "name": "Chest-supported row",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "32.5 kg/hand"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "C",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "C2",
+                    "restSec": 20,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "D",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "dead_bug",
+                    "group": "E",
+                    "intent": "dead_bug",
+                    "name": "Dead bug",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 30s",
+                    "superset": false,
+                    "volumeFactor": 0.3
+                  }
+                ],
+                "title": "Wednesday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: build the base.",
+                  "source": "style"
+                },
+                "axialLoad": 2,
+                "dayIdx": 4,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "exId": "db_bench",
+                    "group": "A",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "ohp",
+                    "group": "B",
+                    "name": "Overhead press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "42.5 kg"
+                  },
+                  {
+                    "exId": "chest_supported_row",
+                    "group": "C",
+                    "intent": "chest_supported_row",
+                    "name": "Chest-supported row",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "35 kg/hand"
+                  },
+                  {
+                    "exId": "sl_leg_press",
+                    "group": "D",
+                    "intent": "sl_leg_press",
+                    "name": "Single-Leg Leg Press",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "50 kg"
+                  },
+                  {
+                    "exId": "sl_hinge",
+                    "group": "E",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "ab_wheel",
+                    "group": "F",
+                    "name": "Ab Wheel Rollout",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Friday · Full body"
+              }
+            ],
+            "taper": false,
+            "theme": "Build base volume and movement quality."
+          },
+          {
+            "deload": false,
+            "num": 3,
+            "provisional": false,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: build the base.",
+                  "source": "style"
+                },
+                "axialLoad": 2,
+                "dayIdx": 0,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "exId": "sl_leg_press",
+                    "group": "A",
+                    "intent": "sl_leg_press",
+                    "name": "Single-Leg Leg Press",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "50 kg"
+                  },
+                  {
+                    "exId": "trap_bar_dl",
+                    "group": "B",
+                    "name": "Trap-bar deadlift",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "115 kg"
+                  },
+                  {
+                    "exId": "db_bench",
+                    "group": "C",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "D",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8 ea.",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "chest_supported_row",
+                    "group": "E",
+                    "intent": "chest_supported_row",
+                    "name": "Chest-supported row",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "35 kg/hand"
+                  }
+                ],
+                "title": "Monday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: build the base.",
+                  "source": "style"
+                },
+                "axialLoad": 1,
+                "dayIdx": 2,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "pullup",
+                    "group": "A",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "chest_supported_row",
+                    "group": "B",
+                    "intent": "chest_supported_row",
+                    "name": "Chest-supported row",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "32.5 kg/hand"
+                  },
+                  {
+                    "exId": "face_pull",
+                    "group": "B",
+                    "intent": "face_pull",
+                    "name": "Face pull",
+                    "note": "",
+                    "num": "B2",
+                    "restSec": 20,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "10 kg"
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "C",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "sl_hinge",
+                    "group": "D",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "ab_wheel",
+                    "group": "E",
+                    "name": "Ab Wheel Rollout",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Wednesday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: build the base.",
+                  "source": "style"
+                },
+                "axialLoad": 3,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "db_bench",
+                    "group": "A",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "rdl",
+                    "group": "B",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 150,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "landmine_press",
+                    "group": "C",
+                    "name": "Landmine press",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "17.5 kg"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "C",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "C2",
+                    "restSec": 20,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "D",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Full body"
+              }
+            ],
+            "taper": false,
+            "theme": "Build base volume and movement quality."
+          },
+          {
+            "deload": false,
+            "num": 4,
+            "provisional": false,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "sport-support lower strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Lower day's muscles, and selection fills each toward its weekly target. This day: build the base.",
+                  "source": "style"
+                },
+                "axialLoad": 3,
+                "dayIdx": 0,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "sl_hinge",
+                    "group": "A",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "back_squat",
+                    "group": "B",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "92.5 kg"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "C",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "leg_curl",
+                    "group": "C",
+                    "name": "Leg curl",
+                    "note": "",
+                    "num": "C2",
+                    "restSec": 20,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "D",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "ab_wheel",
+                    "group": "E",
+                    "name": "Ab Wheel Rollout",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Monday · Lower"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support upper strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Upper day's muscles, and selection fills each toward its weekly target. This day: build the base.",
+                  "source": "style"
+                },
+                "axialLoad": 0,
+                "dayIdx": 2,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "chest_supported_row",
+                    "group": "A",
+                    "intent": "chest_supported_row",
+                    "name": "Chest-supported row",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "35 kg/hand"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "db_bench",
+                    "group": "C",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "face_pull",
+                    "group": "D",
+                    "intent": "face_pull",
+                    "name": "Face pull",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "10 kg"
+                  },
+                  {
+                    "exId": "hanging_knee",
+                    "group": "E",
+                    "name": "Hanging knee raise",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Wednesday · Upper"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: build the base.",
+                  "source": "style"
+                },
+                "axialLoad": 2,
+                "dayIdx": 4,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "exId": "db_bench",
+                    "group": "A",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 5",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "rdl",
+                    "group": "C",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 150,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "landmine_press",
+                    "group": "D",
+                    "name": "Landmine press",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "17.5 kg"
+                  },
+                  {
+                    "exId": "seated_calf",
+                    "group": "D",
+                    "name": "Seated calf raise",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "sl_leg_press",
+                    "group": "E",
+                    "intent": "sl_leg_press",
+                    "name": "Single-Leg Leg Press",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "50 kg"
+                  }
+                ],
+                "title": "Friday · Full body"
+              }
+            ],
+            "taper": false,
+            "theme": "Build base volume and movement quality."
+          },
+          {
+            "deload": true,
+            "num": 5,
+            "provisional": false,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: deload — recover and absorb.",
+                  "source": "style"
+                },
+                "axialLoad": 2,
+                "dayIdx": 0,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "db_bench",
+                    "group": "A",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "rdl",
+                    "group": "B",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 150,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "landmine_press",
+                    "group": "C",
+                    "name": "Landmine press",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "20 kg"
+                  },
+                  {
+                    "exId": "tibialis_raise",
+                    "group": "C",
+                    "name": "Tibialis Raise",
+                    "note": "",
+                    "num": "C2",
+                    "restSec": 20,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "chest_supported_row",
+                    "group": "D",
+                    "intent": "chest_supported_row",
+                    "name": "Chest-supported row",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "35 kg/hand"
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "G",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "H",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 60,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  }
+                ],
+                "title": "Monday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support upper strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Upper day's muscles, and selection fills each toward its weekly target. This day: deload — recover and absorb.",
+                  "source": "style"
+                },
+                "axialLoad": 2,
+                "dayIdx": 2,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "straight_arm_pd",
+                    "group": "A",
+                    "intent": "straight_arm_pd",
+                    "name": "Straight-arm pulldown",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "35 kg"
+                  },
+                  {
+                    "exId": "barbell_row",
+                    "group": "B",
+                    "name": "Barbell row",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "85 kg"
+                  },
+                  {
+                    "exId": "db_bench",
+                    "group": "C",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "biceps_curl",
+                    "group": "D",
+                    "name": "Biceps curl",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "12.5 kg/hand"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "G",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Wednesday · Upper"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: deload — recover and absorb.",
+                  "source": "style"
+                },
+                "axialLoad": 2,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "exId": "trap_bar_dl",
+                    "group": "B",
+                    "name": "Trap-bar deadlift",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "112.5 kg"
+                  },
+                  {
+                    "exId": "db_bench",
+                    "group": "C",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "sl_leg_press",
+                    "group": "D",
+                    "intent": "sl_leg_press",
+                    "name": "Single-Leg Leg Press",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "50 kg"
+                  },
+                  {
+                    "exId": "pike_pushup",
+                    "group": "E",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "F",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "G",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Full body"
+              }
+            ],
+            "taper": false,
+            "theme": "Deload — volume cut. Recover and absorb the work."
+          }
+        ]
+      },
+      {
+        "gates": [
+          {
+            "label": "Absorb the added intensity without lingering soreness",
+            "required": true
+          }
+        ],
+        "id": 2,
+        "range": "Wks 6–12",
+        "status": "provisional",
+        "summary": "Progressively harder sessions appear. Hold form and let recovery keep pace.",
+        "tagline": "Add intensity and goal-specific work.",
+        "tags": [
+          "Build",
+          "Intensity"
+        ],
+        "title": "Build",
+        "weekEnd": 12,
+        "weekStart": 6,
+        "weeks": [
+          {
+            "deload": false,
+            "num": 6,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 3,
+                "dayIdx": 0,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "102.5 kg"
+                  },
+                  {
+                    "exId": "back_squat",
+                    "group": "B",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "exId": "db_bench",
+                    "group": "C",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "30 kg/hand"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "leg_curl",
+                    "group": "D",
+                    "name": "Leg curl",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "landmine_press",
+                    "group": "E",
+                    "name": "Landmine press",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "20 kg"
+                  }
+                ],
+                "title": "Monday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 2,
+                "dayIdx": 2,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "sl_hinge",
+                    "group": "A",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "back_squat",
+                    "group": "C",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "exId": "chest_supported_row",
+                    "group": "D",
+                    "intent": "chest_supported_row",
+                    "name": "Chest-supported row",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "35 kg/hand"
+                  },
+                  {
+                    "exId": "seated_leg_curl",
+                    "group": "D",
+                    "name": "Seated Leg Curl",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "cable_woodchop",
+                    "group": "E",
+                    "name": "Cable Woodchop (high-to-low)",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Wednesday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 1,
+                "dayIdx": 4,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "db_bench",
+                    "group": "A",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "30 kg/hand"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "face_pull",
+                    "group": "C",
+                    "intent": "face_pull",
+                    "name": "Face pull",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "10 kg"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "C",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "C2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "D",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "exId": "ab_wheel",
+                    "group": "E",
+                    "name": "Ab Wheel Rollout",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Friday · Full body"
+              }
+            ],
+            "taper": false,
+            "theme": "Progress the intensity. Keep form honest."
+          },
+          {
+            "deload": false,
+            "num": 7,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 3,
+                "dayIdx": 0,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "pullup",
+                    "group": "A",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "trap_bar_dl",
+                    "group": "B",
+                    "name": "Trap-bar deadlift",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "122.5 kg"
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "C",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8 ea.",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "seated_calf",
+                    "group": "C",
+                    "name": "Seated calf raise",
+                    "note": "",
+                    "num": "C2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "tall_kneeling_landmine",
+                    "group": "D",
+                    "name": "Tall-Kneeling Landmine Press",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "15 kg"
+                  },
+                  {
+                    "exId": "cable_woodchop",
+                    "group": "E",
+                    "name": "Cable Woodchop (high-to-low)",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Monday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 2,
+                "dayIdx": 2,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "sl_leg_press",
+                    "group": "A",
+                    "intent": "sl_leg_press",
+                    "name": "Single-Leg Leg Press",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "52.5 kg"
+                  },
+                  {
+                    "exId": "trap_bar_dl",
+                    "group": "B",
+                    "name": "Trap-bar deadlift",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "122.5 kg"
+                  },
+                  {
+                    "exId": "db_bench",
+                    "group": "C",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "30 kg/hand"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "biceps_curl",
+                    "group": "D",
+                    "name": "Biceps curl",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "12.5 kg/hand"
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "E",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  }
+                ],
+                "title": "Wednesday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support upper strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Upper day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 0,
+                "dayIdx": 4,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "db_bench",
+                    "group": "A",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "30 kg/hand"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "face_pull",
+                    "group": "C",
+                    "intent": "face_pull",
+                    "name": "Face pull",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "10 kg"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "C",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "C2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "bw_carry",
+                    "group": "D",
+                    "name": "Backpack carry",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "ab_wheel",
+                    "group": "E",
+                    "name": "Ab Wheel Rollout",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Friday · Upper"
+              }
+            ],
+            "taper": false,
+            "theme": "Progress the intensity. Keep form honest."
+          },
+          {
+            "deload": false,
+            "num": 8,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 3,
+                "dayIdx": 0,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "sl_hinge",
+                    "group": "A",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "back_squat",
+                    "group": "B",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "exId": "db_bench",
+                    "group": "C",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "30 kg/hand"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "leg_curl",
+                    "group": "D",
+                    "name": "Leg curl",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "E",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  }
+                ],
+                "title": "Monday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 1,
+                "dayIdx": 2,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "chest_supported_row",
+                    "group": "A",
+                    "intent": "chest_supported_row",
+                    "name": "Chest-supported row",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "35 kg/hand"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "trap_bar_dl",
+                    "group": "C",
+                    "name": "Trap-bar deadlift",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "122.5 kg"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "face_pull",
+                    "group": "D",
+                    "intent": "face_pull",
+                    "name": "Face pull",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "10 kg"
+                  },
+                  {
+                    "exId": "ab_wheel",
+                    "group": "E",
+                    "name": "Ab Wheel Rollout",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Wednesday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support push strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Push day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 3,
+                "dayIdx": 4,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "db_bench",
+                    "group": "A",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "30 kg/hand"
+                  },
+                  {
+                    "exId": "ohp",
+                    "group": "B",
+                    "name": "Overhead press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "45 kg"
+                  },
+                  {
+                    "exId": "sl_leg_press",
+                    "group": "C",
+                    "intent": "sl_leg_press",
+                    "name": "Single-Leg Leg Press",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "52.5 kg"
+                  },
+                  {
+                    "exId": "chest_supported_row",
+                    "group": "D",
+                    "intent": "chest_supported_row",
+                    "name": "Chest-supported row",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "35 kg/hand"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "E",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "50 kg/hand"
+                  },
+                  {
+                    "exId": "cable_woodchop",
+                    "group": "F",
+                    "name": "Cable Woodchop (high-to-low)",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Friday · Push"
+              }
+            ],
+            "taper": false,
+            "theme": "Progress the intensity. Keep form honest."
+          },
+          {
+            "deload": false,
+            "num": 9,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "sport-support upper strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Upper day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 3,
+                "dayIdx": 0,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "straight_arm_pd",
+                    "group": "A",
+                    "intent": "straight_arm_pd",
+                    "name": "Straight-arm pulldown",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "35 kg"
+                  },
+                  {
+                    "exId": "barbell_row",
+                    "group": "B",
+                    "name": "Barbell row",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "92.5 kg"
+                  },
+                  {
+                    "exId": "db_bench",
+                    "group": "C",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "30 kg/hand"
+                  },
+                  {
+                    "exId": "spider_curl",
+                    "group": "D",
+                    "name": "Spider Curl",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "10 kg/hand"
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "D",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8 ea.",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "cable_woodchop",
+                    "group": "E",
+                    "name": "Cable Woodchop (high-to-low)",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Monday · Upper"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 4,
+                "dayIdx": 2,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "db_bench",
+                    "group": "A",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "30 kg/hand"
+                  },
+                  {
+                    "exId": "ohp",
+                    "group": "B",
+                    "name": "Overhead press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "45 kg"
+                  },
+                  {
+                    "exId": "rack_pull",
+                    "group": "C",
+                    "name": "Rack Pull",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "112.5 kg"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12 ea.",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "seated_calf",
+                    "group": "E",
+                    "name": "Seated calf raise",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "40 kg"
+                  },
+                  {
+                    "exId": "ab_wheel",
+                    "group": "F",
+                    "name": "Ab Wheel Rollout",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Wednesday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 3,
+                "dayIdx": 4,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "exId": "trap_bar_dl",
+                    "group": "B",
+                    "name": "Trap-bar deadlift",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "122.5 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "C",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "sl_leg_press",
+                    "group": "D",
+                    "intent": "sl_leg_press",
+                    "name": "Single-Leg Leg Press",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "50 kg"
+                  },
+                  {
+                    "exId": "suitcase_carry",
+                    "group": "E",
+                    "name": "Suitcase carry",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "50 kg/hand"
+                  }
+                ],
+                "title": "Friday · Full body"
+              }
+            ],
+            "taper": false,
+            "theme": "Progress the intensity. Keep form honest."
+          },
+          {
+            "deload": true,
+            "num": 10,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: deload — recover and absorb.",
+                  "source": "style"
+                },
+                "axialLoad": 2,
+                "dayIdx": 0,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "102.5 kg"
+                  },
+                  {
+                    "exId": "db_bench",
+                    "group": "B",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "C",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "C",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "C2",
+                    "restSec": 20,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6 ea.",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "db_ohp",
+                    "group": "D",
+                    "name": "DB shoulder press",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "17.5 kg/hand"
+                  },
+                  {
+                    "exId": "db_pullover",
+                    "group": "E",
+                    "name": "DB Pullover",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "F",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "G",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "H",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Monday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: deload — recover and absorb.",
+                  "source": "style"
+                },
+                "axialLoad": 0,
+                "dayIdx": 2,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "sl_hinge",
+                    "group": "A",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "chest_supported_row",
+                    "group": "C",
+                    "intent": "chest_supported_row",
+                    "name": "Chest-supported row",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "35 kg/hand"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "C",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "C2",
+                    "restSec": 20,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "sl_leg_press",
+                    "group": "D",
+                    "intent": "sl_leg_press",
+                    "name": "Single-Leg Leg Press",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "50 kg"
+                  },
+                  {
+                    "exId": "spider_curl",
+                    "group": "D",
+                    "name": "Spider Curl",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "9 kg/hand"
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "G",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Wednesday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: deload — recover and absorb.",
+                  "source": "style"
+                },
+                "axialLoad": 2,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "db_bench",
+                    "group": "A",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "landmine_press",
+                    "group": "B",
+                    "name": "Landmine press",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "20 kg"
+                  },
+                  {
+                    "exId": "leg_curl",
+                    "group": "B",
+                    "name": "Leg curl",
+                    "note": "",
+                    "num": "B2",
+                    "restSec": 20,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "35 kg"
+                  },
+                  {
+                    "exId": "db_pullover",
+                    "group": "C",
+                    "name": "DB Pullover",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "27.5 kg/hand"
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "D",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "G",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "H",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 60,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  }
+                ],
+                "title": "Friday · Full body"
+              }
+            ],
+            "taper": false,
+            "theme": "Deload — volume cut. Recover and absorb the work."
+          },
+          {
+            "deload": false,
+            "num": 11,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 4,
+                "dayIdx": 0,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "db_bench",
+                    "group": "A",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "30 kg/hand"
+                  },
+                  {
+                    "exId": "ohp",
+                    "group": "B",
+                    "name": "Overhead press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "45 kg"
+                  },
+                  {
+                    "exId": "rdl",
+                    "group": "C",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "D",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8 ea.",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "seated_calf",
+                    "group": "D",
+                    "name": "Seated calf raise",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "cable_woodchop",
+                    "group": "E",
+                    "name": "Cable Woodchop (high-to-low)",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Monday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support upper strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Upper day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 0,
+                "dayIdx": 2,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "pullup",
+                    "group": "A",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "db_bench",
+                    "group": "B",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "30 kg/hand"
+                  },
+                  {
+                    "exId": "chest_supported_row",
+                    "group": "C",
+                    "intent": "chest_supported_row",
+                    "name": "Chest-supported row",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "35 kg/hand"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "C",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "C2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "face_pull",
+                    "group": "D",
+                    "intent": "face_pull",
+                    "name": "Face pull",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "10 kg"
+                  },
+                  {
+                    "exId": "hanging_knee",
+                    "group": "E",
+                    "name": "Hanging knee raise",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Wednesday · Upper"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 3,
+                "dayIdx": 4,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "sl_leg_press",
+                    "group": "A",
+                    "intent": "sl_leg_press",
+                    "name": "Single-Leg Leg Press",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "52.5 kg"
+                  },
+                  {
+                    "exId": "deadlift",
+                    "group": "B",
+                    "name": "Deadlift",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "117.5 kg"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "C",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "D",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8 ea.",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "ab_wheel",
+                    "group": "E",
+                    "name": "Ab Wheel Rollout",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Friday · Full body"
+              }
+            ],
+            "taper": false,
+            "theme": "Progress the intensity. Keep form honest."
+          },
+          {
+            "deload": false,
+            "num": 12,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 3,
+                "dayIdx": 0,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "sl_hinge",
+                    "group": "A",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "back_squat",
+                    "group": "B",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "exId": "db_bench",
+                    "group": "C",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "30 kg/hand"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "split_squat",
+                    "group": "D",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8 ea.",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "ab_wheel",
+                    "group": "E",
+                    "name": "Ab Wheel Rollout",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Monday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 1,
+                "dayIdx": 2,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "chest_supported_row",
+                    "group": "A",
+                    "intent": "chest_supported_row",
+                    "name": "Chest-supported row",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "35 kg/hand"
+                  },
+                  {
+                    "exId": "pullup",
+                    "group": "B",
+                    "intent": "pullup",
+                    "name": "Pull-up",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "trap_bar_dl",
+                    "group": "C",
+                    "name": "Trap-bar deadlift",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "C1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "122.5 kg"
+                  },
+                  {
+                    "exId": "sl_calf",
+                    "group": "D",
+                    "intent": "sl_calf",
+                    "name": "Single-leg calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12 ea.",
+                    "superset": true,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "face_pull",
+                    "group": "D",
+                    "intent": "face_pull",
+                    "name": "Face pull",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "10 kg"
+                  },
+                  {
+                    "exId": "hanging_knee",
+                    "group": "E",
+                    "name": "Hanging knee raise",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  }
+                ],
+                "title": "Wednesday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "sport-support full body strength",
+                  "quality": "sportSupport",
+                  "rationale": "Gym work that supports your sport: the sport's emphasis template biases this Full body day's muscles, and selection fills each toward its weekly target. This day: progress the intensity.",
+                  "source": "style"
+                },
+                "axialLoad": 3,
+                "dayIdx": 4,
+                "duration": "~40 min",
+                "items": [
+                  {
+                    "exId": "db_bench",
+                    "group": "A",
+                    "intent": "db_bench",
+                    "name": "DB bench press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "A1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "30 kg/hand"
+                  },
+                  {
+                    "exId": "ohp",
+                    "group": "B",
+                    "name": "Overhead press",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "45 kg"
+                  },
+                  {
+                    "exId": "rdl",
+                    "group": "C",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "sl_leg_press",
+                    "group": "D",
+                    "intent": "sl_leg_press",
+                    "name": "Single-Leg Leg Press",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "50 kg"
+                  },
+                  {
+                    "exId": "biceps_curl",
+                    "group": "D",
+                    "name": "Biceps curl",
+                    "note": "",
+                    "num": "D2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": true,
+                    "volumeFactor": 1,
+                    "weight": "12.5 kg/hand"
+                  },
+                  {
+                    "exId": "cable_woodchop",
+                    "group": "E",
+                    "name": "Cable Woodchop (high-to-low)",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
                   }
                 ],
                 "title": "Friday · Full body"
