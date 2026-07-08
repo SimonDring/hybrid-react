@@ -179,7 +179,9 @@ per phase, and the audit found the **off-season objectives are appropriately gen
 all sports** ("fix the season's asymmetries," "round out"). The intent is authored and engine-shaped;
 the *machinery* to act on it (season → emphasis + selection, not just volume) does not exist.
 
-**This is the single highest-leverage change for what Simon described.** Detail in §8.
+**This is the single highest-leverage change for what Simon described.** Detail in §8 — and note the
+Tier-2 investigation there found it is a **session-split** change, not an emphasis change (proven: the
+emphasis/priority levers leave a runner's off-season plan byte-identical), plus an S&C judgement call.
 
 ---
 
@@ -265,13 +267,40 @@ Ordered by value-per-risk. Tiers 1–2 + the content fixes are being implemented
 
 - **T1b. The per-sport content fixes** in §5.3 (data-only; dormant; no plan-output change).
 
-### Tier 2 — Simon's season ask (implementing now, medium-risk, test-guarded)
+### Tier 2 — Simon's season ask (INVESTIGATED tonight; needs a deeper change + your call — NOT shipped)
 
-- **T2. Off-season generalisation.** When `season === 'off'`, transform the sport emphasis toward a
-  rounded base: floor the de-emphasised muscles (chest/shoulders/back/arms) up toward a general
-  baseline so the off-season plan develops the whole body, while keeping the sport's priorities on
-  top. Guarded by a test (off-season sport plan must contain a press **and** a pull) and a documented,
-  reviewable golden-master regen (only `·off·` fixtures change, all gaining upper-body balance).
+- **T2. Off-season generalisation.** I built and tested the obvious version — when `season === 'off'`,
+  (a) floor the de-emphasised muscles up toward a general baseline, (b) stop the allocator demoting
+  the press for run/cycle, and (c) seed general upper-body movements into the off-season priority
+  list. **Result: it does not work, and the reason is important.** Regenerating the plans showed
+  **every run/cycle off-season plan came out byte-identical** — the emphasis floor, the un-demotion,
+  and the seeded press changed *nothing* for the target cohort. Only the (already-fixed) triathlon
+  plan moved.
+
+  **Why:** a runner/cyclist's gym week is *rating-based* (not category-led — see
+  `session/categoryCoverage.js`, where run/cycle/triathlon are deliberately excluded from
+  `CATEGORY_LED`). Their **session split is built from the emphasis vector**, and with the legs at
+  1.15–1.30 the split stays leg-dominated, so **no horizontal-push slot is ever opened**. Raising the
+  chest *target* (emphasis) or boosting a press in the *priority* list can't place a press into a slot
+  that doesn't exist. The only upper-body the off-season plan gets today is a fixed posture/prehab
+  injection (band rows, pull-aparts) — pulls, never presses.
+
+  **So off-season generalisation is a SPLIT-STRUCTURE change, not an emphasis change** — it must make
+  the split open genuine upper-body / push days for an endurance athlete in the off-season (or route
+  the off-season athlete through a more general split entirely). That touches `resolveSplit` /
+  the slot allocator — core, shared code that affects every sport plan — which is too risky to change
+  blind overnight. It also carries a genuine **S&C judgement call that is yours to make:**
+
+  > How much pressing/upper-body does an *endurance* athlete want even in the off-season? Your instinct
+  > ("hit full-body muscle groups") points one way; the SKB's own `gymPhilosophy` for runners points
+  > the other (upper-body mass costs running economy — it lists heavy pressing as *limited value*). For
+  > a **triathlete/swimmer** the answer is clearly "yes, round out the upper body" (now handled by T1).
+  > For a **pure runner/cyclist** it's a deliberate trade-off, not an obvious win.
+
+  **Recommendation:** treat off-season generalisation as its own small design task (a season-aware
+  split that guarantees N upper-body/push slots in the off-season), scoped per-sport (aggressive for
+  swim/tri, light for run/cycle), landed behind the golden-master one sport at a time. I've left the
+  code reverted so tonight's branch ships only what actually works.
 
 ### Tier 3 — the real re-seat (designed here, NOT built tonight — needs Simon's review)
 
