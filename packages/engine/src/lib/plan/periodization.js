@@ -17,9 +17,8 @@
  *  sport modules (src/data/sportGymSupport/); this file owns the BUILD profiles + season
  *  derivation and looks sports up via the registry. Adding a sport needs no edit here.
  */
-import sports from '../../data/sportGymSupport/index.js';
 import { gymSupportFor } from '../sportKnowledge/gymSupport.js';
-import { SPORT_BLOCKS } from '../../data/sportGymSupport/_schema.js';
+import { SPORT_BLOCKS } from '../../data/periodizationDefaults.js';
 import { getDiscipline, resolveBuildDisciplineId } from '../../data/disciplines/index.js';
 
 /**
@@ -99,22 +98,12 @@ export function resolvePeriodization(profile = {}) {
   const goalType = profile.goal_type || (profile.sport ? 'sport' : 'build');
 
   if (goalType === 'sport' && profile.sport) {
-    const mod = sports.get(profile.sport);   // undefined for an unknown sport → generic blocks
     const season = deriveSeason(profile) || 'off';
-    // Run sub-disciplines (sprint/middle) override the season block; a season the
-    // discipline doesn't override (and 'long') falls back to the module's generic
-    // SPORT_BLOCKS. An unstated discipline defaults to 'middle' — the same prior as
-    // the SKB lookup (skbSportIdFor): one athlete, one assumed discipline.
-    const disc = profile.sport === 'run' ? (profile.run_discipline || 'middle') : null;
-    const byD = disc && mod && mod.byDiscipline ? mod.byDiscipline[disc] : null;
-    // P1 (2026-07-09): the per-season block templates come from the SKB gymSupport (relocated
-    // verbatim, incl. run-discipline overrides → byte-identical); the legacy `byD`/`mod` chain is
-    // the fallback until the legacy layer is deleted. SPORT_BLOCKS is the ultimate default.
+    // The per-season block templates come from the SKB gymSupport (each profile carries its own,
+    // incl. the run-discipline variants — the SKB id already encodes the discipline). SPORT_BLOCKS
+    // is the ultimate default for an unknown/unauthored sport (2026-07-09, legacy layer removed).
     const gs = gymSupportFor(profile);
-    return (gs && gs.periodization && gs.periodization[season])
-      || (byD && byD.periodization && byD.periodization[season])
-      || (mod && mod.periodization && mod.periodization[season])
-      || SPORT_BLOCKS[season] || SPORT_BLOCKS.off;
+    return (gs && gs.periodization && gs.periodization[season]) || SPORT_BLOCKS[season] || SPORT_BLOCKS.off;
   }
 
   // THE FLIP (WP-49 T4c): a build plan's periodisation comes from its DISCIPLINE module

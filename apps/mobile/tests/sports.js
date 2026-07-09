@@ -1,9 +1,8 @@
 // tests/sports.js
-// PHASE 2 — the pluggable sport layer: every module obeys the SportModule contract,
-// the resolvers read sports from the registry (parity with the old hardcoded maps),
-// and a brand-new scaffold sport produces a valid plan with ZERO core-engine edits.
-// See docs/engine/02-REFACTOR-ROADMAP.md (Phase 2).
-import sports from '@performance-os/engine/data/sportGymSupport/index.js';
+// The sport layer: the resolvers read each sport's gym-support (emphasis, priority, load,
+// periodisation) from the SKB gymSupport section (2026-07-09 — the legacy data/sportGymSupport
+// layer was deleted; values relocated verbatim → these parity assertions are unchanged), and a
+// sport with no SKB profile still produces a valid generic plan with ZERO core-engine edits.
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 import { resolvePeriodization } from '@performance-os/engine/lib/plan/periodization.js';
 import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
@@ -16,15 +15,7 @@ function assert(cond, msg) {
 const soon = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
 const FULL = ['barbell', 'dumbbell', 'machine', 'cable', 'band', 'kettlebell', 'bodyweight'];
 
-// ── registry validity + coverage ──────────────────────────────────────────────
-const v = sports.validate();
-assert(v.ok, `every sport module is valid (${v.errors.join(' | ') || 'no errors'})`);
-for (const id of ['run', 'cycle', 'swim', 'rugby', 'soccer', 'gaa']) {
-  assert(sports.has(id), `registry contains "${id}"`);
-}
-assert(sports.get('kabaddi') === undefined, 'unknown sport returns undefined (generic fallback)');
-
-// ── resolveProgram parity with the former hardcoded maps ───────────────────────
+// ── resolveProgram parity with the former legacy maps (now the SKB gymSupport) ─────────
 // Season-phased SKB (2026-07-09): the sport-specific vector is now the IN-SEASON one (off-season
 // rounds it out — tests/season-*.js); pin sport_season:'in' for the parity check.
 const rl = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'long', sport_intent: 'recreational', sport_season: 'in' });

@@ -8,7 +8,6 @@
  * Team package's "coach schedule as constraints" (docs/product/TEAM-ARCHITECTURE.md)
  * — same shape, different source. Gym-only: sport days are constraints, not sessions.
  */
-import { get as getSportModule } from '../../data/sportGymSupport/index.js';
 import { gymSupportFor } from '../sportKnowledge/gymSupport.js';
 
 export const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
@@ -22,12 +21,9 @@ export function deriveConstraints(profile = {}) {
   const busyDays = [...new Set(
     (profile.sport_days || []).map(k => KEY_IDX[k]).filter(i => i != null)
   )].sort((a, b) => a - b);
-  // P1 (2026-07-09): keyMuscles from the SKB gymSupport (relocated verbatim → byte-identical);
-  // legacy module is the fallback until the layer is deleted.
+  // keyMuscles from the SKB gymSupport (2026-07-09, legacy sportGymSupport removed).
   const gs = profile.sport ? gymSupportFor(profile) : null;
-  const mod = profile.sport ? getSportModule(profile.sport) : null;
-  const sportMuscles = (gs && Array.isArray(gs.keyMuscles)) ? gs.keyMuscles.slice()
-    : (mod && Array.isArray(mod.keyMuscles)) ? mod.keyMuscles.slice() : [];
+  const sportMuscles = (gs && Array.isArray(gs.keyMuscles)) ? gs.keyMuscles.slice() : [];
   return { busyDays, sportMuscles };
 }
 
