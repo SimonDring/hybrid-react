@@ -67,8 +67,10 @@ assert(
 );
 
 // ── T11–T12: resolveProgram — emphasis ────────────────────────────────────
-// long-distance emphasis config: calves: 1.4 (achilles tendon), chest: 0.45 (avoid mass)
-const longProg = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'long', experience: { gym: 'intermediate' } });
+// long-distance emphasis config: calves: 1.4 (achilles tendon), chest: 0.45 (avoid mass).
+// Season-phased SKB (2026-07-09): this sport-specific vector is the IN-SEASON one (off-season
+// rounds it out); pin sport_season:'in' to assert it.
+const longProg = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'long', sport_season: 'in', experience: { gym: 'intermediate' } });
 assert(
   longProg.emphasis.calves === 1.4,
   'T11 long distance calves emphasis = 1.4'

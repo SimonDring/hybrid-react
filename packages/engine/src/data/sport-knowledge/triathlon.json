@@ -778,7 +778,29 @@
         "single-leg/calf capacity",
         "CMJ",
         "RED-S/energy-availability screen"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "back": 1.1,
+          "shoulders": 1.05,
+          "chest": 0.9,
+          "biceps": 0.9,
+          "triceps": 0.9,
+          "quads": 1.15,
+          "hamstrings": 1.15,
+          "glutes": 1.15,
+          "calves": 1.15,
+          "core": 1.2
+        },
+        "roundOutSessionsPerWeek": 1,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "develop"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "triathlon S&C (Millet 2009): off-season rounds out the balanced physique; in-season is discipline-specific + prehab"
+      }
     },
     "preSeason": {
       "primaryObjective": "Convert base to race-specific endurance + brick capacity.",
@@ -792,7 +814,29 @@
         "thresholds",
         "brick decoupling",
         "CMJ"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "back": 1.1,
+          "shoulders": 1.05,
+          "chest": 0.8,
+          "biceps": 0.85,
+          "triceps": 0.85,
+          "quads": 1.15,
+          "hamstrings": 1.15,
+          "glutes": 1.15,
+          "calves": 1.15,
+          "core": 1.2
+        },
+        "roundOutSessionsPerWeek": 0,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "maintain"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "triathlon S&C (Millet 2009): off-season rounds out the balanced physique; in-season is discipline-specific + prehab"
+      }
     },
     "competition": {
       "primaryObjective": "Maintain qualities; sharpen; race well.",
@@ -805,7 +849,29 @@
       "testingRecommendations": [
         "readiness + run-load monitoring",
         "brick check (low volume)"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "back": 1.1,
+          "shoulders": 1.05,
+          "chest": 0.8,
+          "biceps": 0.85,
+          "triceps": 0.85,
+          "quads": 1.15,
+          "hamstrings": 1.15,
+          "glutes": 1.15,
+          "calves": 1.15,
+          "core": 1.2
+        },
+        "roundOutSessionsPerWeek": 0,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "maintain"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "triathlon S&C (Millet 2009): off-season rounds out the balanced physique; in-season is discipline-specific + prehab"
+      }
     },
     "playoffs": {
       "primaryObjective": "Peak for the A-race via a structured taper.",

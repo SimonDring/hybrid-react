@@ -25,8 +25,10 @@ for (const id of ['run', 'cycle', 'swim', 'rugby', 'soccer', 'gaa']) {
 assert(sports.get('kabaddi') === undefined, 'unknown sport returns undefined (generic fallback)');
 
 // ── resolveProgram parity with the former hardcoded maps ───────────────────────
-const rl = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'long', sport_intent: 'recreational' });
-assert(rl.style === 'sport' && rl.emphasis.calves === 1.4 && rl.emphasis.chest === 0.45, 'run-long emphasis unchanged (calves 1.4, chest 0.45)');
+// Season-phased SKB (2026-07-09): the sport-specific vector is now the IN-SEASON one (off-season
+// rounds it out — tests/season-*.js); pin sport_season:'in' for the parity check.
+const rl = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'long', sport_intent: 'recreational', sport_season: 'in' });
+assert(rl.style === 'sport' && rl.emphasis.calves === 1.4 && rl.emphasis.chest === 0.45, 'run-long IN-SEASON emphasis unchanged (calves 1.4, chest 0.45)');
 assert(rl.exercisePriority.includes('nordic_curl'), 'run-long still prioritises nordic_curl');
 const rsp = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'sprint', sport_intent: 'recreational', access: ['full_gym'] });
 assert(rsp.emphasis.glutes === 1.35 && rsp.exercisePriority[0] === 'hang_clean', 'run-sprint emphasis/priority unchanged (glutes 1.35, opens hang_clean)');

@@ -22,6 +22,6 @@ assert(PHASE_MAP.off === 'offSeason' && PHASE_MAP.in === 'competition' && PHASE_
 // un-migrated one returns null (the byte-identical guard — null → legacy fallback).
 assert(phaseProgrammingFor({ goal_type: 'sport', sport: 'run', run_discipline: 'middle', sport_season: 'off' }) != null,
   'T6a real registry: running_middle IS migrated → block (Approach A wired)');
-assert(phaseProgrammingFor({ goal_type: 'sport', sport: 'run', run_discipline: 'sprint', sport_season: 'off' }) === null,
-  'T6b real registry: running_sprint not migrated yet → null (byte-identical guard)');
+assert(phaseProgrammingFor({ goal_type: 'sport', sport: 'gaa', sport_code: 'rugby', sport_season: 'off' }) === null,
+  'T6b real registry: rugby not migrated yet → null (byte-identical guard for un-migrated sports)');
 assert(phaseProgrammingFor({ goal_type: 'build' }) === null, 'T7 build goal → null (never throws)');
