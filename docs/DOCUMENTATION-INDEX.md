@@ -15,9 +15,9 @@ flowchart TD
         KA[KNOWLEDGE-ARCHITECTURE<br/>8 kinds · 12 domains]
     end
     subgraph T2 ["T2 — Governing specifications"]
-        EDS[EDS — engine spec (FROZEN)<br/>P1–P15 · L1–L15 · D1–D16]
-        TAS[TAS — technical blueprint (FROZEN)<br/>L0–L6 · six-call API]
-        AIGAS[AIGAS — AI governance<br/>draft, pending ratification]
+        EDS["EDS — engine spec (FROZEN)<br/>P1–P15 · L1–L15 · D1–D16"]
+        TAS["TAS — technical blueprint (FROZEN)<br/>L0–L6 · six-call API"]
+        AIGAS["AIGAS — AI governance<br/>draft, pending ratification"]
     end
     subgraph T3 ["T3 — Supporting specs & references"]
         SKB[03 SPORT-KNOWLEDGE-BASE<br/>SportProfile schema]
