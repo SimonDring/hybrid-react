@@ -73,8 +73,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 10,
@@ -5555,8 +5555,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 10,
@@ -9246,8 +9246,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 10,
@@ -16251,8 +16251,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 10,
@@ -19587,8 +19587,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 10,
@@ -23790,8 +23790,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 10,
@@ -28248,8 +28248,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 12,
@@ -31599,8 +31599,8 @@
   "build·powerlifting·advanced·4d": {
     "meta": {
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 12,
@@ -35361,8 +35361,8 @@
   "build·strength·advanced·5d·75·full": {
     "meta": {
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 12,
@@ -39965,8 +39965,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 12,
@@ -44066,8 +44066,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 12,
@@ -45128,8 +45128,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 12,
@@ -48976,8 +48976,8 @@
         "sport": "cycle"
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 4,
@@ -49746,8 +49746,8 @@
         "sport": "cycle"
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 12,
@@ -53124,8 +53124,8 @@
         "sport": "cycle"
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 4,
@@ -54286,8 +54286,8 @@
         "sport": "gaa"
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 12,
@@ -59020,8 +59020,8 @@
         "sport": "gaa"
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 4,
@@ -60184,8 +60184,8 @@
         "sport": "gaa"
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 12,
@@ -63599,8 +63599,8 @@
         "sport": "run"
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 12,
@@ -68624,8 +68624,8 @@
         "sport": "run"
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 6,
@@ -70581,8 +70581,8 @@
         "sport": "run"
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 10,
@@ -70920,7 +70920,7 @@
                 },
                 "axialLoad": 0,
                 "dayIdx": 4,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "double_leg_pogo",
@@ -70936,11 +70936,35 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "ankle_plantarflex_band",
+                    "exId": "decline_pushup",
                     "group": "B",
-                    "name": "Banded Ankle Plantarflexion",
+                    "name": "Feet-elevated push-up",
                     "note": "",
                     "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
+                    "group": "C",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "D",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "D1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -70950,34 +70974,8 @@
                   },
                   {
                     "exId": "band_pull_apart",
-                    "group": "C",
-                    "name": "Band Pull-Apart",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 60,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "glute_bridge_activation",
-                    "group": "D",
-                    "name": "Glute Bridge (2s hold)",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "prone_hip_extension",
                     "group": "E",
-                    "name": "Prone Hip Extension",
+                    "name": "Band Pull-Apart",
                     "note": "",
                     "num": "E1",
                     "restSec": 60,
@@ -70988,11 +70986,37 @@
                     "volumeFactor": 0
                   },
                   {
-                    "exId": "prone_t_raise",
+                    "exId": "glute_bridge_activation",
                     "group": "F",
-                    "name": "Prone T Raise",
+                    "name": "Glute Bridge (2s hold)",
                     "note": "",
                     "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_hip_extension",
+                    "group": "G",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_t_raise",
+                    "group": "H",
+                    "name": "Prone T Raise",
+                    "note": "",
+                    "num": "H1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -71003,10 +71027,10 @@
                   },
                   {
                     "exId": "serratus_punch_cable",
-                    "group": "G",
+                    "group": "H",
                     "name": "Serratus Punch (cable)",
                     "note": "",
-                    "num": "G1",
+                    "num": "H1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -71015,7 +71039,7 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Friday · Lower Explosive"
+                "title": "Friday · Full body Power"
               }
             ],
             "taper": false,
@@ -71326,7 +71350,7 @@
                 },
                 "axialLoad": 0,
                 "dayIdx": 4,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "double_leg_pogo",
@@ -71342,11 +71366,35 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "ankle_plantarflex_band",
+                    "exId": "decline_pushup",
                     "group": "B",
-                    "name": "Banded Ankle Plantarflexion",
+                    "name": "Feet-elevated push-up",
                     "note": "",
                     "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
+                    "group": "C",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "D",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "D1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -71356,34 +71404,8 @@
                   },
                   {
                     "exId": "band_pull_apart",
-                    "group": "C",
-                    "name": "Band Pull-Apart",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 60,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "glute_bridge_activation",
-                    "group": "D",
-                    "name": "Glute Bridge (2s hold)",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "prone_hip_extension",
                     "group": "E",
-                    "name": "Prone Hip Extension",
+                    "name": "Band Pull-Apart",
                     "note": "",
                     "num": "E1",
                     "restSec": 60,
@@ -71394,11 +71416,37 @@
                     "volumeFactor": 0
                   },
                   {
-                    "exId": "prone_t_raise",
+                    "exId": "glute_bridge_activation",
                     "group": "F",
-                    "name": "Prone T Raise",
+                    "name": "Glute Bridge (2s hold)",
                     "note": "",
                     "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_hip_extension",
+                    "group": "G",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_t_raise",
+                    "group": "H",
+                    "name": "Prone T Raise",
+                    "note": "",
+                    "num": "H1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -71409,10 +71457,10 @@
                   },
                   {
                     "exId": "serratus_punch_cable",
-                    "group": "G",
+                    "group": "H",
                     "name": "Serratus Punch (cable)",
                     "note": "",
-                    "num": "G1",
+                    "num": "H1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -71421,7 +71469,7 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Friday · Lower Explosive"
+                "title": "Friday · Full body Power"
               }
             ],
             "taper": false,
@@ -71732,7 +71780,7 @@
                 },
                 "axialLoad": 0,
                 "dayIdx": 4,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "double_leg_pogo",
@@ -71748,11 +71796,35 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "ankle_plantarflex_band",
+                    "exId": "decline_pushup",
                     "group": "B",
-                    "name": "Banded Ankle Plantarflexion",
+                    "name": "Feet-elevated push-up",
                     "note": "",
                     "num": "B1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
+                    "group": "C",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "D",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "D1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -71762,34 +71834,8 @@
                   },
                   {
                     "exId": "band_pull_apart",
-                    "group": "C",
-                    "name": "Band Pull-Apart",
-                    "note": "",
-                    "num": "C1",
-                    "restSec": 60,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 12",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "glute_bridge_activation",
-                    "group": "D",
-                    "name": "Glute Bridge (2s hold)",
-                    "note": "",
-                    "num": "D1",
-                    "restSec": 75,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "prone_hip_extension",
                     "group": "E",
-                    "name": "Prone Hip Extension",
+                    "name": "Band Pull-Apart",
                     "note": "",
                     "num": "E1",
                     "restSec": 60,
@@ -71800,11 +71846,37 @@
                     "volumeFactor": 0
                   },
                   {
-                    "exId": "prone_t_raise",
+                    "exId": "glute_bridge_activation",
                     "group": "F",
-                    "name": "Prone T Raise",
+                    "name": "Glute Bridge (2s hold)",
                     "note": "",
                     "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_hip_extension",
+                    "group": "G",
+                    "name": "Prone Hip Extension",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_t_raise",
+                    "group": "H",
+                    "name": "Prone T Raise",
+                    "note": "",
+                    "num": "H1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -71815,10 +71887,10 @@
                   },
                   {
                     "exId": "serratus_punch_cable",
-                    "group": "G",
+                    "group": "H",
                     "name": "Serratus Punch (cable)",
                     "note": "",
-                    "num": "G1",
+                    "num": "H1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -71827,7 +71899,7 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Friday · Lower Explosive"
+                "title": "Friday · Full body Power"
               }
             ],
             "taper": false,
@@ -72221,11 +72293,35 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "ankle_plantarflex_band",
+                    "exId": "decline_pushup",
                     "group": "C",
-                    "name": "Banded Ankle Plantarflexion",
+                    "name": "Feet-elevated push-up",
                     "note": "",
                     "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
+                    "group": "D",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "E",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "E1",
                     "restSec": 60,
                     "rpe": "RPE 5",
                     "sets": "3 × 12",
@@ -72235,10 +72331,10 @@
                   },
                   {
                     "exId": "band_pull_apart",
-                    "group": "D",
+                    "group": "F",
                     "name": "Band Pull-Apart",
                     "note": "",
-                    "num": "D1",
+                    "num": "F1",
                     "restSec": 60,
                     "rpe": "RPE 5",
                     "sets": "3 × 12",
@@ -72248,34 +72344,8 @@
                   },
                   {
                     "exId": "hip_flexor_90_90",
-                    "group": "E",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "note": "",
-                    "num": "E1",
-                    "restSec": 75,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "thoracic_foam_roller",
-                    "group": "F",
-                    "name": "Thoracic Foam Roller Extension",
-                    "note": "",
-                    "num": "F1",
-                    "restSec": 75,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "cat_camel_thoracic",
                     "group": "G",
-                    "name": "Cat-Camel + Thoracic Rotation",
+                    "name": "90/90 Hip Flexor Stretch",
                     "note": "",
                     "num": "G1",
                     "restSec": 75,
@@ -72512,7 +72582,7 @@
                 },
                 "axialLoad": 0,
                 "dayIdx": 3,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "ankle_plantarflex_band",
@@ -72537,15 +72607,39 @@
                     "restSec": 60,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 12 ea.",
-                    "superset": false,
+                    "superset": true,
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "band_pull_apart",
+                    "exId": "decline_pushup",
+                    "group": "B",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "B2",
+                    "restSec": 20,
+                    "rpe": "RPE 6→7",
+                    "sets": "3 × 8",
+                    "superset": true,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
                     "group": "C",
-                    "name": "Band Pull-Apart",
+                    "name": "Pike push-up",
                     "note": "",
                     "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6→7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "band_pull_apart",
+                    "group": "D",
+                    "name": "Band Pull-Apart",
+                    "note": "",
+                    "num": "D1",
                     "restSec": 60,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 12",
@@ -72555,10 +72649,10 @@
                   },
                   {
                     "exId": "glute_bridge_activation",
-                    "group": "D",
+                    "group": "E",
                     "name": "Glute Bridge (2s hold)",
                     "note": "",
-                    "num": "D1",
+                    "num": "E1",
                     "restSec": 75,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 8",
@@ -72568,10 +72662,10 @@
                   },
                   {
                     "exId": "prone_hip_extension",
-                    "group": "E",
+                    "group": "F",
                     "name": "Prone Hip Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "F1",
                     "restSec": 60,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 12",
@@ -72581,10 +72675,10 @@
                   },
                   {
                     "exId": "prone_t_raise",
-                    "group": "F",
+                    "group": "G",
                     "name": "Prone T Raise",
                     "note": "",
-                    "num": "F1",
+                    "num": "G1",
                     "restSec": 60,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 12",
@@ -72595,10 +72689,10 @@
                   },
                   {
                     "exId": "serratus_punch_cable",
-                    "group": "G",
+                    "group": "H",
                     "name": "Serratus Punch (cable)",
                     "note": "",
-                    "num": "G1",
+                    "num": "H1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -72620,7 +72714,7 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Thursday · Lower"
+                "title": "Thursday · Full body"
               },
               {
                 "_objective": {
@@ -72905,7 +72999,7 @@
                 },
                 "axialLoad": 0,
                 "dayIdx": 3,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "ankle_plantarflex_band",
@@ -72930,15 +73024,39 @@
                     "restSec": 60,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 12 ea.",
-                    "superset": false,
+                    "superset": true,
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "band_pull_apart",
+                    "exId": "decline_pushup",
+                    "group": "B",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "B2",
+                    "restSec": 20,
+                    "rpe": "RPE 6→7",
+                    "sets": "3 × 8",
+                    "superset": true,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
                     "group": "C",
-                    "name": "Band Pull-Apart",
+                    "name": "Pike push-up",
                     "note": "",
                     "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6→7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "band_pull_apart",
+                    "group": "D",
+                    "name": "Band Pull-Apart",
+                    "note": "",
+                    "num": "D1",
                     "restSec": 60,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 12",
@@ -72948,10 +73066,10 @@
                   },
                   {
                     "exId": "glute_bridge_activation",
-                    "group": "D",
+                    "group": "E",
                     "name": "Glute Bridge (2s hold)",
                     "note": "",
-                    "num": "D1",
+                    "num": "E1",
                     "restSec": 75,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 8",
@@ -72961,10 +73079,10 @@
                   },
                   {
                     "exId": "prone_hip_extension",
-                    "group": "E",
+                    "group": "F",
                     "name": "Prone Hip Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "F1",
                     "restSec": 60,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 12",
@@ -72974,10 +73092,10 @@
                   },
                   {
                     "exId": "prone_t_raise",
-                    "group": "F",
+                    "group": "G",
                     "name": "Prone T Raise",
                     "note": "",
-                    "num": "F1",
+                    "num": "G1",
                     "restSec": 60,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 12",
@@ -72988,10 +73106,10 @@
                   },
                   {
                     "exId": "serratus_punch_cable",
-                    "group": "G",
+                    "group": "H",
                     "name": "Serratus Punch (cable)",
                     "note": "",
-                    "num": "G1",
+                    "num": "H1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -73013,7 +73131,7 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Thursday · Lower"
+                "title": "Thursday · Full body"
               },
               {
                 "_objective": {
@@ -73298,7 +73416,7 @@
                 },
                 "axialLoad": 0,
                 "dayIdx": 3,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "ankle_plantarflex_band",
@@ -73323,15 +73441,39 @@
                     "restSec": 60,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 12 ea.",
-                    "superset": false,
+                    "superset": true,
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "band_pull_apart",
+                    "exId": "decline_pushup",
+                    "group": "B",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "B2",
+                    "restSec": 20,
+                    "rpe": "RPE 6→7",
+                    "sets": "3 × 8",
+                    "superset": true,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
                     "group": "C",
-                    "name": "Band Pull-Apart",
+                    "name": "Pike push-up",
                     "note": "",
                     "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6→7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "band_pull_apart",
+                    "group": "D",
+                    "name": "Band Pull-Apart",
+                    "note": "",
+                    "num": "D1",
                     "restSec": 60,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 12",
@@ -73341,10 +73483,10 @@
                   },
                   {
                     "exId": "glute_bridge_activation",
-                    "group": "D",
+                    "group": "E",
                     "name": "Glute Bridge (2s hold)",
                     "note": "",
-                    "num": "D1",
+                    "num": "E1",
                     "restSec": 75,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 8",
@@ -73354,10 +73496,10 @@
                   },
                   {
                     "exId": "prone_hip_extension",
-                    "group": "E",
+                    "group": "F",
                     "name": "Prone Hip Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "F1",
                     "restSec": 60,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 12",
@@ -73367,10 +73509,10 @@
                   },
                   {
                     "exId": "prone_t_raise",
-                    "group": "F",
+                    "group": "G",
                     "name": "Prone T Raise",
                     "note": "",
-                    "num": "F1",
+                    "num": "G1",
                     "restSec": 60,
                     "rpe": "RPE 6→7",
                     "sets": "3 × 12",
@@ -73381,10 +73523,10 @@
                   },
                   {
                     "exId": "serratus_punch_cable",
-                    "group": "G",
+                    "group": "H",
                     "name": "Serratus Punch (cable)",
                     "note": "",
-                    "num": "G1",
+                    "num": "H1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -73406,7 +73548,7 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Thursday · Lower"
+                "title": "Thursday · Full body"
               },
               {
                 "_objective": {
@@ -73881,11 +74023,35 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "ankle_plantarflex_band",
+                    "exId": "decline_pushup",
                     "group": "C",
-                    "name": "Banded Ankle Plantarflexion",
+                    "name": "Feet-elevated push-up",
                     "note": "",
                     "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
+                    "group": "D",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 90,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "E",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "E1",
                     "restSec": 60,
                     "rpe": "RPE 5",
                     "sets": "3 × 12",
@@ -73895,10 +74061,10 @@
                   },
                   {
                     "exId": "band_pull_apart",
-                    "group": "D",
+                    "group": "F",
                     "name": "Band Pull-Apart",
                     "note": "",
-                    "num": "D1",
+                    "num": "F1",
                     "restSec": 60,
                     "rpe": "RPE 5",
                     "sets": "3 × 12",
@@ -73908,34 +74074,8 @@
                   },
                   {
                     "exId": "hip_flexor_90_90",
-                    "group": "E",
-                    "name": "90/90 Hip Flexor Stretch",
-                    "note": "",
-                    "num": "E1",
-                    "restSec": 75,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "thoracic_foam_roller",
-                    "group": "F",
-                    "name": "Thoracic Foam Roller Extension",
-                    "note": "",
-                    "num": "F1",
-                    "restSec": 75,
-                    "rpe": "RPE 5",
-                    "sets": "2 × 6",
-                    "superset": false,
-                    "tag": "mobility",
-                    "volumeFactor": 0
-                  },
-                  {
-                    "exId": "cat_camel_thoracic",
                     "group": "G",
-                    "name": "Cat-Camel + Thoracic Rotation",
+                    "name": "90/90 Hip Flexor Stretch",
                     "note": "",
                     "num": "G1",
                     "restSec": 75,
@@ -74172,7 +74312,7 @@
                 },
                 "axialLoad": 0,
                 "dayIdx": 3,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "ankle_plantarflex_band",
@@ -74197,15 +74337,39 @@
                     "restSec": 60,
                     "rpe": "RPE 7",
                     "sets": "3 × 12 ea.",
-                    "superset": false,
+                    "superset": true,
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "band_pull_apart",
+                    "exId": "decline_pushup",
+                    "group": "B",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "B2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
+                    "superset": true,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
                     "group": "C",
-                    "name": "Band Pull-Apart",
+                    "name": "Pike push-up",
                     "note": "",
                     "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "band_pull_apart",
+                    "group": "D",
+                    "name": "Band Pull-Apart",
+                    "note": "",
+                    "num": "D1",
                     "restSec": 60,
                     "rpe": "RPE 7",
                     "sets": "3 × 12",
@@ -74215,10 +74379,10 @@
                   },
                   {
                     "exId": "glute_bridge_activation",
-                    "group": "D",
+                    "group": "E",
                     "name": "Glute Bridge (2s hold)",
                     "note": "",
-                    "num": "D1",
+                    "num": "E1",
                     "restSec": 75,
                     "rpe": "RPE 7",
                     "sets": "3 × 6",
@@ -74228,10 +74392,10 @@
                   },
                   {
                     "exId": "prone_hip_extension",
-                    "group": "E",
+                    "group": "F",
                     "name": "Prone Hip Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "F1",
                     "restSec": 60,
                     "rpe": "RPE 7",
                     "sets": "3 × 12",
@@ -74241,10 +74405,10 @@
                   },
                   {
                     "exId": "prone_t_raise",
-                    "group": "F",
+                    "group": "G",
                     "name": "Prone T Raise",
                     "note": "",
-                    "num": "F1",
+                    "num": "G1",
                     "restSec": 60,
                     "rpe": "RPE 7",
                     "sets": "3 × 12",
@@ -74255,10 +74419,10 @@
                   },
                   {
                     "exId": "serratus_punch_cable",
-                    "group": "G",
+                    "group": "H",
                     "name": "Serratus Punch (cable)",
                     "note": "",
-                    "num": "G1",
+                    "num": "H1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -74280,7 +74444,7 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Thursday · Lower"
+                "title": "Thursday · Full body"
               },
               {
                 "_objective": {
@@ -74565,7 +74729,7 @@
                 },
                 "axialLoad": 0,
                 "dayIdx": 3,
-                "duration": "~30 min",
+                "duration": "~40 min",
                 "items": [
                   {
                     "exId": "ankle_plantarflex_band",
@@ -74590,15 +74754,39 @@
                     "restSec": 60,
                     "rpe": "RPE 7",
                     "sets": "3 × 12 ea.",
-                    "superset": false,
+                    "superset": true,
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "band_pull_apart",
+                    "exId": "decline_pushup",
+                    "group": "B",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "B2",
+                    "restSec": 20,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
+                    "superset": true,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
                     "group": "C",
-                    "name": "Band Pull-Apart",
+                    "name": "Pike push-up",
                     "note": "",
                     "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 6",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "band_pull_apart",
+                    "group": "D",
+                    "name": "Band Pull-Apart",
+                    "note": "",
+                    "num": "D1",
                     "restSec": 60,
                     "rpe": "RPE 7",
                     "sets": "3 × 12",
@@ -74608,10 +74796,10 @@
                   },
                   {
                     "exId": "glute_bridge_activation",
-                    "group": "D",
+                    "group": "E",
                     "name": "Glute Bridge (2s hold)",
                     "note": "",
-                    "num": "D1",
+                    "num": "E1",
                     "restSec": 75,
                     "rpe": "RPE 7",
                     "sets": "3 × 6",
@@ -74621,10 +74809,10 @@
                   },
                   {
                     "exId": "prone_hip_extension",
-                    "group": "E",
+                    "group": "F",
                     "name": "Prone Hip Extension",
                     "note": "",
-                    "num": "E1",
+                    "num": "F1",
                     "restSec": 60,
                     "rpe": "RPE 7",
                     "sets": "3 × 12",
@@ -74634,10 +74822,10 @@
                   },
                   {
                     "exId": "prone_t_raise",
-                    "group": "F",
+                    "group": "G",
                     "name": "Prone T Raise",
                     "note": "",
-                    "num": "F1",
+                    "num": "G1",
                     "restSec": 60,
                     "rpe": "RPE 7",
                     "sets": "3 × 12",
@@ -74648,10 +74836,10 @@
                   },
                   {
                     "exId": "serratus_punch_cable",
-                    "group": "G",
+                    "group": "H",
                     "name": "Serratus Punch (cable)",
                     "note": "",
-                    "num": "G1",
+                    "num": "H1",
                     "restSec": 60,
                     "rpe": "RPE 6",
                     "sets": "3 × 12",
@@ -74673,7 +74861,7 @@
                     "volumeFactor": 0
                   }
                 ],
-                "title": "Thursday · Lower"
+                "title": "Thursday · Full body"
               },
               {
                 "_objective": {
@@ -74857,8 +75045,8 @@
         "sport": "run"
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 4,
@@ -76542,8 +76730,8 @@
         "sport": "run"
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 6,
@@ -79267,8 +79455,8 @@
         "sport": "swim"
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 4,
@@ -80352,8 +80540,8 @@
         "sport": "swim"
       },
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 12,
@@ -83340,8 +83528,8 @@
   "sport·triathlon·intermediate·off·3d": {
     "meta": {
       "provenance": {
-        "engineVersion": "1.0.0",
-        "knowledgeSetVersion": "1.23.0"
+        "engineVersion": "1.1.0",
+        "knowledgeSetVersion": "1.24.0"
       },
       "validation": {
         "checked": 12,

@@ -138,6 +138,9 @@ function buildGymWeek(count, ctx, profile, program, diag) {
     priorityByIntent: program.priorityByIntent || new Map(),
     priorityQualities: diag.priorityQualities, season: program.season, skbIds: diag.skbIds,
     categoryPlan: diag.categoryPlan, discipline: program.discipline || null,
+    // Season-phased SKB (2026-07-09): the current-phase programming block + derived round-out
+    // targets (null for un-migrated sports → the allocator's round-out pass is a no-op).
+    programming: program.programming || null, roundOut: program.roundOut || null,
     // WP-49 T4b-2: which classic lift(s) the olympic athlete competes in (snatch|cj|both) — drives
     // the day emphasis. Default 'both' until the onboarding field lands (Task 6). Ignored off-olympic.
     competedLift: profile.olympic_lift || 'both',

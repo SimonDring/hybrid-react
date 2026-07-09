@@ -742,7 +742,29 @@
         "single-leg calf raise baseline",
         "hip abductor screen",
         "bone-health / energy-availability screen if indicated"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "quads": 1.15,
+          "hamstrings": 1.3,
+          "glutes": 1.25,
+          "calves": 1.25,
+          "core": 1.2,
+          "back": 1.0,
+          "shoulders": 0.95,
+          "chest": 0.9,
+          "biceps": 0.9,
+          "triceps": 0.9
+        },
+        "roundOutSessionsPerWeek": 1,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "develop"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "season-phased S&C: off-season rounds out the physique (Blagrove 2018 strength-for-economy base); in-season narrows to prehab (Nordic/calf, van Dyk 2019)"
+      }
     },
     "preSeason": {
       "primaryObjective": "Convert strength and aerobic base to race-pace-specific fitness; begin interval training; introduce reactive plyometrics; reduce gym volume as running intensity rises.",
@@ -758,7 +780,29 @@
         "critical-speed estimate from time trials",
         "running economy check (pace-HR proxy)",
         "calf raise retest"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "quads": 1.15,
+          "hamstrings": 1.3,
+          "glutes": 1.25,
+          "calves": 1.2,
+          "core": 1.2,
+          "back": 0.95,
+          "shoulders": 0.85,
+          "chest": 0.7,
+          "biceps": 0.7,
+          "triceps": 0.75
+        },
+        "roundOutSessionsPerWeek": 0,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "maintain"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "season-phased S&C: off-season rounds out the physique (Blagrove 2018 strength-for-economy base); in-season narrows to prehab (Nordic/calf, van Dyk 2019)"
+      }
     },
     "competition": {
       "primaryObjective": "Maintain aerobic fitness and economy; protect Achilles/hamstring; execute race-specific sharpening and taper into key competitions.",
@@ -773,7 +817,29 @@
         "weekly CMJ neuromuscular check",
         "race-time tracking",
         "Achilles soreness monitoring"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "quads": 1.15,
+          "hamstrings": 1.3,
+          "glutes": 1.25,
+          "calves": 1.2,
+          "core": 1.2,
+          "back": 0.9,
+          "shoulders": 0.8,
+          "chest": 0.55,
+          "biceps": 0.55,
+          "triceps": 0.7
+        },
+        "roundOutSessionsPerWeek": 0,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "maintain"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "season-phased S&C: off-season rounds out the physique (Blagrove 2018 strength-for-economy base); in-season narrows to prehab (Nordic/calf, van Dyk 2019)"
+      }
     },
     "playoffs": {
       "primaryObjective": "Peak for target championship — manage heats / semis / finals over multiple days; freshness above all.",

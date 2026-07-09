@@ -18,8 +18,10 @@ assert(programmingForPhase(fakeProfile, 'pre') === null, 'T3 pre with no block �
 assert(programmingForPhase({}, 'off') === null, 'T4 no seasonalModel → null (never throws)');
 assert(PHASE_MAP.off === 'offSeason' && PHASE_MAP.in === 'competition' && PHASE_MAP.transition === 'recovery', 'T5 phase map');
 
-// phaseProgrammingFor over the REAL registry: no sport has authored a block yet → null everywhere
-// (this is the byte-identical invariant — it flips to non-null only as sports migrate).
-assert(phaseProgrammingFor({ goal_type: 'sport', sport: 'run', run_discipline: 'middle', sport_season: 'off' }) === null,
-  'T6 real registry: running_middle not migrated yet → null (byte-identical guard)');
+// phaseProgrammingFor over the REAL registry: a MIGRATED sport returns its block; an
+// un-migrated one returns null (the byte-identical guard — null → legacy fallback).
+assert(phaseProgrammingFor({ goal_type: 'sport', sport: 'run', run_discipline: 'middle', sport_season: 'off' }) != null,
+  'T6a real registry: running_middle IS migrated → block (Approach A wired)');
+assert(phaseProgrammingFor({ goal_type: 'sport', sport: 'run', run_discipline: 'sprint', sport_season: 'off' }) === null,
+  'T6b real registry: running_sprint not migrated yet → null (byte-identical guard)');
 assert(phaseProgrammingFor({ goal_type: 'build' }) === null, 'T7 build goal → null (never throws)');

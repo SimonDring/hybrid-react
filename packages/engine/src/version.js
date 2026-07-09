@@ -10,7 +10,7 @@
  */
 import { KNOWLEDGE_SET_VERSION } from './lib/knowledge/entries.js';
 
-export const ENGINE_VERSION = '1.0.0';
+export const ENGINE_VERSION = '1.1.0'; // 1.1.0 (2026-07-09): season-phased SKB (Approach A) — resolveProgram reads per-phase SKB emphasis; the allocator's round-out pass covers a sport's derived under-developed patterns on an off-season round-out session. Gated on a programming block → byte-identical for un-migrated sports.
 
 /** The stamp attached to every plan / reflow output. */
 export function provenance() {
