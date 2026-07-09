@@ -255,6 +255,14 @@ So the audit's answer to "do we collect the required data to make the correct de
 Ordered by value-per-risk. Tiers 1–2 + the content fixes are being implemented in this pass (branch
 `skb-audit-fixes-2026-07-08`); Tier 3 is designed here for review, not built.
 
+> **UPDATE 2026-07-09** — T2 (season model) and the first slice of T3 (wire the SKB into generation)
+> were subsequently built on branch `season-phased-skb-2026-07-09` via **Approach A** (the SKB
+> `seasonalModel.programming` block drives the plan). Off-season now rounds the athlete out with a
+> sport-derived round-out session; in-season stays sport-specific. Endurance sports migrated; gated so
+> un-migrated sports are byte-identical. Design: `docs/superpowers/specs/2026-07-09-season-phased-skb-design.md`.
+> Remaining: `movementPolicy` consumption (in-season pool restriction), team-sport migration, retiring the
+> legacy layer. So the T2/T3 items below are PARTLY DONE — see that spec + `HANDOFF.md` for current status.
+
 ### Tier 1 — stops the reported bug (implementing now, low-risk, well-contained)
 
 - **T1a. Give triathlon its own gym-support module.** New `sportGymSupport/triathlon.js` blending
