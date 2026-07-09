@@ -1,8 +1,25 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-09 (retire-legacy + season-window — branch `season-phased-skb-2026-07-09`,
-stacked on `skb-audit-fixes-2026-07-08`; NOT merged / NOT pushed, awaiting Simon's review; 194/194,
-KSV 1.29.0, ENGINE_VERSION 1.4.0, build green). Keep this current at the end of each work session._
+_Last updated: 2026-07-09 (sport-enum onboarding fix — MERGED to main via PR #161; 195/195,
+KSV 1.30.0, build green). The retire-legacy + season-window work is now ON MAIN (merged via PR #160).
+Keep this current at the end of each work session._
+
+## ✅ MERGED — onboarding accepts triathlon + team sports (2026-07-09, PR #161)
+
+**Bug:** selecting Triathlon (or rugby/soccer/gaelic_football/hurling/field_hockey) in onboarding failed
+the profile save with **"Sport is not a recognised value"** and generated no plan. The app's
+`ENUMS.sport` (`apps/mobile/src/lib/validation/rules.js`) was a hand-listed `['run','cycle','swim']` that
+had drifted behind the engine binding — onboarding sets `profile.sport` to the binding's `engineSport`
+(triathlon→`triathlon`, GAA codes→`gaa`, etc.), so **6 of the 11 selectable sports were rejected on save**.
+**Fix (derive, don't duplicate):** the engine now exports `ENGINE_SPORT_IDS` (the distinct `engineSport`
+set of `SKB_ENGINE_BINDING`) and validation derives `ENUMS.sport` from it — a newly-bound flagship sport
+can never drift out again. New regression test `sport-onboarding-validation.js` walks every selectable
+sport through the real `answersToProfilePatch → validateProfile` chain. Additive (KSV 1.29→1.30 for the
+`data/` edit; golden-master diff = version stamp only; all plan output byte-identical). Spec/plan in
+`docs/superpowers/{specs,plans}/2026-07-09-sport-enum-onboarding-fix*`.
+
+---
+
 
 ## ⏰ REVIEW — retire the legacy sport layer + season-window detection (2026-07-09, autonomous)
 
