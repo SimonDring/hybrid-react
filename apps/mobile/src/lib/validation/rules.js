@@ -1,8 +1,14 @@
 /**
- * rules — the single, tunable source of truth for input limits. Pure data.
- * Numbers are [min, max]; `int:true` requires a whole number. Enum lists mirror
- * the values the UI already offers. Text caps are max character lengths.
+ * rules — the single, tunable source of truth for input limits. Numbers are [min, max];
+ * `int:true` requires a whole number. Enum lists mirror the values the UI already offers.
+ * Text caps are max character lengths.
+ *
+ * `sport` is DERIVED from the engine's sport binding (not hand-listed) so it can never drift
+ * behind a newly-bound flagship sport — the drift that rejected triathlon + the team sports on
+ * onboarding save as "not a recognised value" (2026-07-09).
  */
+import { ENGINE_SPORT_IDS } from '@performance-os/engine';
+
 export const LIMITS = {
   age:                { min: 13, max: 120, int: true },
   bodyweight_kg:      { min: 30, max: 300 },
@@ -23,7 +29,7 @@ export const SESSION_MINUTES = [20, 30, 45, 60, 75, 90];
 export const ENUMS = {
   goal_type:      ['build', 'sport'],
   strength_style: ['strength', 'bodybuilding', 'functional'],
-  sport:          ['run', 'cycle', 'swim'],
+  sport:          ENGINE_SPORT_IDS,                           // derived: run/cycle/swim/gaa/rugby/soccer/triathlon
   sport_intent:   ['compete', 'recreational', 'build_base'],   // 'build_base' kept for legacy profiles (migrated to recreational on read)
   sport_season:   ['in', 'off'],                               // compete only (engine season keys)
   sport_goal:     ['build_base', 'get_stronger', 'stay_durable'], // recreational training goal

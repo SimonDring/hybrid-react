@@ -18,3 +18,10 @@ export const SKB_ENGINE_BINDING = {
 export function bindingFor(skbId) {
   return SKB_ENGINE_BINDING[skbId] || null;
 }
+
+// The distinct engine-sport ids the binding can produce — the single source of truth for the
+// `sport` values a profile may legitimately hold. The app's onboarding input-validation derives
+// its accepted-sport list from this (rather than hand-copying it), so a newly-bound flagship sport
+// can never be rejected on save as "not a recognised value" (the triathlon/team-sport onboarding
+// bug, 2026-07-09).
+export const ENGINE_SPORT_IDS = [...new Set(Object.values(SKB_ENGINE_BINDING).map((b) => b.engineSport))];
