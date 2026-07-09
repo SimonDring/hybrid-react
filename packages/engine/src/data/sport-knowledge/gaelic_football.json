@@ -2702,18 +2702,6 @@
       "adductors",
       "quads"
     ],
-    "priorityExercises": [
-      "nordic_curl",
-      "copenhagen",
-      "split_squat",
-      "trap_bar_dl",
-      "hip_thrust",
-      "broad_jump",
-      "sl_pogo_jump",
-      "farmer_carry",
-      "pallof",
-      "sl_calf"
-    ],
     "seasonVolume": {
       "off": 0.9,
       "pre": 0.85,

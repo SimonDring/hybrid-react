@@ -54,16 +54,17 @@ assert(
   'T8 no run_discipline → the middle prior, 10 weeks (deliberate default 2026-07-04 — was the generic sportOff fallback)'
 );
 
-// ── T9–T10: resolveProgram — priority list ────────────────────────────────
-// hang_clean is in run_sprint priority list; tibialis_raise is run_long/middle only
+// ── T9–T10: resolveProgram — priority list (derived from the exerciseLibrary, P2 2026-07-09) ──
+// sprint prioritises power/olympic work (power_clean); tibialis_raise is a run-long/middle prehab
+// that isn't in the sprint library → not derived here.
 const sprintProg = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'sprint', experience: { gym: 'intermediate' }, access: ['full_gym'] });
 assert(
-  sprintProg.exercisePriority.includes('hang_clean'),
-  'T9 sprint program includes hang_clean in priority list'
+  sprintProg.exercisePriority.includes('power_clean'),
+  'T9 sprint priority (derived) leads with power/olympic work (power_clean)'
 );
 assert(
   !sprintProg.exercisePriority.includes('tibialis_raise'),
-  'T10 sprint program does NOT include tibialis_raise'
+  'T10 sprint priority does NOT include tibialis_raise'
 );
 
 // ── T11–T12: resolveProgram — emphasis ────────────────────────────────────

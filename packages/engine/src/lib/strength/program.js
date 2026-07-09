@@ -22,6 +22,7 @@ import { getDiscipline, resolveBuildDisciplineId } from '../../data/disciplines/
 import * as SKB from '../sportKnowledge/index.js';
 import { programmingForPhase } from '../sportKnowledge/seasonProgramming.js';
 import { gymSupportOf } from '../sportKnowledge/gymSupport.js';
+import { derivePriorityExercises } from '../sportKnowledge/derivePriority.js';
 import { deriveRoundOutTargets } from '../plan/roundOutTargets.js';
 
 // Sport emphasis vectors, priority-exercise lists and season volume scalars now live
@@ -72,7 +73,13 @@ export function resolveProgram(profile = {}) {
     // season-invariant data (emphasis fallback, priority, power) with no byDiscipline plumbing.
     const skbProfile = SKB.get(SKB.skbSportIdOf(profile));
     const gs = gymSupportOf(skbProfile);
-    const sportPriority = (gs && gs.priorityExercises) || [];
+    // P2 (2026-07-09): the ×1.35 priority list is DERIVED from the sport's own exerciseLibrary
+    // (single source — ranked by transferToSportRating, phase-suitable). Falls back to the
+    // relocated gymSupport.priorityExercises for a sport whose library is empty/unjoined.
+    const sportPriority = (() => {
+      const derived = derivePriorityExercises(skbProfile, season);
+      return derived.length ? derived : ((gs && gs.priorityExercises) || []);
+    })();
     const equip = availableEquip(profile.access || []);
     const lvlNum = LEVELS[level] ?? LEVELS.intermediate;
     const intents = sportPriority.map(id => ({ intent: id, chain: [id] }));

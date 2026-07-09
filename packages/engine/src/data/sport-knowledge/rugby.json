@@ -2715,19 +2715,6 @@
       "back",
       "quads"
     ],
-    "priorityExercises": [
-      "power_clean",
-      "hang_clean",
-      "back_squat",
-      "trap_bar_dl",
-      "hip_thrust",
-      "nordic_curl",
-      "copenhagen",
-      "broad_jump",
-      "farmer_carry",
-      "pallof",
-      "ab_wheel"
-    ],
     "seasonVolume": {
       "off": 0.9,
       "pre": 0.85,

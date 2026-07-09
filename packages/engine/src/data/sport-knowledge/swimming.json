@@ -2617,27 +2617,6 @@
       "shoulders",
       "core"
     ],
-    "priorityExercises": [
-      "face_pull",
-      "band_face_pull",
-      "sl_ext_rotation",
-      "cable_ext_rotation_90",
-      "reverse_pec_deck",
-      "prone_y_raise",
-      "prone_t_raise",
-      "prone_w_raise",
-      "serratus_punch_cable",
-      "serratus_wall_slide",
-      "band_pull_apart",
-      "straight_arm_pd",
-      "lat_pulldown",
-      "cable_woodchop",
-      "hip_thrust",
-      "cable_woodchop",
-      "glute_ham_raise",
-      "plank",
-      "side_plank"
-    ],
     "seasonVolume": {
       "off": 0.9,
       "pre": 0.85,

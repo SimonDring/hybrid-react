@@ -2709,23 +2709,6 @@
       "hamstrings",
       "quads"
     ],
-    "priorityExercises": [
-      "pullup",
-      "chest_supported_row",
-      "face_pull",
-      "sl_ext_rotation",
-      "straight_arm_pd",
-      "sl_calf",
-      "copenhagen",
-      "sl_hinge",
-      "split_squat",
-      "nordic_curl",
-      "hip_thrust",
-      "sl_leg_press",
-      "pallof",
-      "dead_bug",
-      "db_bench"
-    ],
     "seasonVolume": {
       "off": 0.9,
       "pre": 0.85,

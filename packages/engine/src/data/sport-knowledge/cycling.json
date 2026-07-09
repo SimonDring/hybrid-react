@@ -2671,21 +2671,6 @@
       "glutes",
       "hamstrings"
     ],
-    "priorityExercises": [
-      "sl_leg_press",
-      "split_squat",
-      "hip_thrust",
-      "glute_bridge_single_leg",
-      "lateral_band_walk",
-      "rdl",
-      "sl_hinge",
-      "goblet_squat",
-      "copenhagen",
-      "thoracic_foam_roller",
-      "hip_flexor_90_90",
-      "prone_hip_extension",
-      "pallof"
-    ],
     "seasonVolume": {
       "off": 0.9,
       "pre": 0.85,

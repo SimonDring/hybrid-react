@@ -22,7 +22,8 @@ const rl = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'l
 assert(rl.style === 'sport' && rl.emphasis.calves === 1.4 && rl.emphasis.chest === 0.45, 'run-long IN-SEASON emphasis unchanged (calves 1.4, chest 0.45)');
 assert(rl.exercisePriority.includes('nordic_curl'), 'run-long still prioritises nordic_curl');
 const rsp = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'sprint', sport_intent: 'recreational', access: ['full_gym'] });
-assert(rsp.emphasis.glutes === 1.35 && rsp.exercisePriority[0] === 'hang_clean', 'run-sprint emphasis/priority unchanged (glutes 1.35, opens hang_clean)');
+// emphasis unchanged; priority is now DERIVED from the exerciseLibrary (P2) → power/olympic work.
+assert(rsp.emphasis.glutes === 1.35 && rsp.exercisePriority.includes('power_clean'), 'run-sprint emphasis 1.35; derived priority includes power_clean');
 const sw = resolveProgram({ goal_type: 'sport', sport: 'swim', sport_intent: 'recreational', access: ['full_gym'] });
 assert(sw.emphasis.back === 1.3 && sw.exercisePriority.includes('face_pull'), 'swim emphasis/priority unchanged');
 const cy = resolveProgram({ goal_type: 'sport', sport: 'cycle', sport_intent: 'recreational' });
@@ -33,7 +34,7 @@ assert(cyIn.season === 'in' && cyIn.volumeScalar === 0.57, 'in-season volume sca
 // 2026-07-04; one athlete, one assumed discipline — same prior as the SKB lookup)
 const rNo = resolveProgram({ goal_type: 'sport', sport: 'run', sport_intent: 'recreational' });
 const rMid = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'middle', sport_intent: 'recreational' });
-assert(JSON.stringify(rNo) === JSON.stringify(rMid) && rNo.exercisePriority[0] === 'nordic_curl', 'run (no discipline) resolves as middle');
+assert(JSON.stringify(rNo) === JSON.stringify(rMid) && rNo.exercisePriority.length > 0, 'run (no discipline) resolves as middle');
 
 // ── resolvePeriodization parity ────────────────────────────────────────────────
 assert(resolvePeriodization({ goal_type: 'sport', sport: 'run', run_discipline: 'sprint', sport_intent: 'recreational' }).totalWeeks === 6, 'run-sprint off → 6-week block');

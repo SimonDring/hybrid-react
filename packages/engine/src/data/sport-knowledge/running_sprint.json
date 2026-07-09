@@ -2484,23 +2484,6 @@
       "calves",
       "quads"
     ],
-    "priorityExercises": [
-      "hang_clean",
-      "power_clean",
-      "depth_jump",
-      "broad_jump",
-      "sled_push",
-      "back_squat",
-      "hip_thrust",
-      "nordic_curl",
-      "bounding_a_skip",
-      "double_leg_pogo",
-      "sl_pogo_jump",
-      "split_squat",
-      "glute_bridge_single_leg",
-      "pallof",
-      "sl_calf"
-    ],
     "seasonVolume": {
       "off": 0.9,
       "pre": 0.85,

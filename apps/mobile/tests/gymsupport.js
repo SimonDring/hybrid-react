@@ -13,7 +13,8 @@ for (const id of skb.ids()) {
 
 // accessor resolves a profile → its gymSupport
 const gs = gymSupportFor({ goal_type: 'sport', sport: 'run', run_discipline: 'middle' });
-assert(gs && gs.emphasis && Array.isArray(gs.priorityExercises), 'T2 gymSupportFor resolves running_middle');
+// priorityExercises is DERIVED from the exerciseLibrary (P2), no longer stored on gymSupport.
+assert(gs && gs.emphasis && gs.periodization && typeof gs.systemicFactor === 'number', 'T2 gymSupportFor resolves running_middle');
 assert(gymSupportFor({ goal_type: 'build' }) === null, 'T3 build goal → null (never throws)');
 
 // validation rejects malformed gymSupport
