@@ -81,6 +81,10 @@ const MATRIX = {
   'sport·hurling·intermediate·off·3d': A({ goalType: 'sport', skbSport: 'hurling', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['tue', 'sat'] }),
   'sport·gaelic_football·intermediate·in·3d': A({ goalType: 'sport', skbSport: 'gaelic_football', sportIntent: 'compete', sportSeason: 'in_season', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['tue', 'sat'] }),
   'sport·field_hockey·advanced·off·4d': A({ goalType: 'sport', skbSport: 'field_hockey', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'advanced', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'female', lifts: {}, sportDays: ['wed', 'sat'] }),
+  // Retire-legacy P3 (2026-07-09): soccer + rugby season-phased — soccer off-season rounds out
+  // (upper), rugby stays balanced (no round-out). NEW keys pinning the team-sport season arc.
+  'sport·soccer·intermediate·off·3d': A({ goalType: 'sport', skbSport: 'soccer', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['tue', 'sat'] }),
+  'sport·rugby·advanced·off·4d': A({ goalType: 'sport', skbSport: 'rugby', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'advanced', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['wed', 'sat'] }),
 
   // Build-discipline cohort (WP-49 Plan 2 T1, additive): `discipline` feeds the athlete-model
   // diagnosis (disciplineDemandFor) but does NOT yet steer the plan (the D11 style==='sport'

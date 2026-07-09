@@ -786,7 +786,29 @@
       "testingRecommendations": [
         "full battery at start + end",
         "strength anchors (squat/trap-bar, bench, Nordic, neck)"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "glutes": 1.25,
+          "hamstrings": 1.25,
+          "quads": 1.15,
+          "back": 1.2,
+          "shoulders": 1.15,
+          "chest": 1,
+          "core": 1.2,
+          "triceps": 0.9,
+          "biceps": 0.9,
+          "calves": 0.9
+        },
+        "roundOutSessionsPerWeek": 1,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "develop"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "rugby S&C: off-season rounds out + hypertrophy/mass base; in-season maintains max-strength + collision robustness at minimal effective volume"
+      }
     },
     "preSeason": {
       "primaryObjective": "Convert strength to power and acceleration; rebuild collision conditioning and high-speed-running tolerance progressively; reach match fitness without a pre-season injury spike.",
@@ -800,7 +822,29 @@
         "Bronco / Yo-Yo IR1",
         "10/40 m",
         "CMJ + neck-strength baseline for the season"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "glutes": 1.25,
+          "hamstrings": 1.25,
+          "quads": 1.15,
+          "back": 1.2,
+          "shoulders": 1.15,
+          "chest": 1,
+          "core": 1.2,
+          "triceps": 0.9,
+          "biceps": 0.9,
+          "calves": 0.9
+        },
+        "roundOutSessionsPerWeek": 0,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "maintain"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "rugby S&C: off-season rounds out + hypertrophy/mass base; in-season maintains max-strength + collision robustness at minimal effective volume"
+      }
     },
     "competition": {
       "primaryObjective": "Maintain strength, power and robustness at minimal effective volume; maximise availability across a collision-heavy ~36-week season.",
@@ -812,7 +856,29 @@
       "recoveryEmphasis": "high",
       "testingRecommendations": [
         "weekly CMJ monitoring; periodic neck-strength check"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "glutes": 1.25,
+          "hamstrings": 1.25,
+          "quads": 1.15,
+          "back": 1.2,
+          "shoulders": 1.15,
+          "chest": 1,
+          "core": 1.2,
+          "triceps": 0.9,
+          "biceps": 0.9,
+          "calves": 0.9
+        },
+        "roundOutSessionsPerWeek": 0,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "maintain"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "rugby S&C: off-season rounds out + hypertrophy/mass base; in-season maintains max-strength + collision robustness at minimal effective volume"
+      }
     },
     "playoffs": {
       "primaryObjective": "Peak freshness + availability for finals; the collision cost of the run-in is already high.",
