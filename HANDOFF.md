@@ -1,8 +1,44 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-09 (season-phased SKB — Approach A — on branch `season-phased-skb-2026-07-09`,
-stacked on `skb-audit-fixes-2026-07-08`; NOT merged / NOT pushed, awaiting Simon's review; 189/189,
-KSV 1.25.0, ENGINE_VERSION 1.1.0). Keep this current at the end of each work session._
+_Last updated: 2026-07-09 (retire-legacy + season-window — branch `season-phased-skb-2026-07-09`,
+stacked on `skb-audit-fixes-2026-07-08`; NOT merged / NOT pushed, awaiting Simon's review; 194/194,
+KSV 1.29.0, ENGINE_VERSION 1.4.0, build green). Keep this current at the end of each work session._
+
+## ⏰ REVIEW — retire the legacy sport layer + season-window detection (2026-07-09, autonomous)
+
+**Same branch, continues the season-phased work. NOT pushed/merged. 194/194, build green.**
+Design → `docs/superpowers/specs/2026-07-09-retire-legacy-sport-layer-design.md`; plan →
+`docs/superpowers/plans/2026-07-09-retire-legacy-sport-layer.md`. Four phases, each its own commit(s):
+
+- **P1 — the legacy `sportGymSupport/` layer is DELETED.** Its data (emphasis, priority, power,
+  systemicFactor, seasonVolume, periodization, keyMuscles) was relocated **verbatim** into a new SKB
+  `gymSupport` section; program/sportLoad/periodization/constraints read the SKB via `gymSupportFor()`;
+  generic defaults moved to `data/periodizationDefaults.js`. **Byte-identical** (golden-master unchanged;
+  proven per-archetype). **The codebase now has ONE source — the SKB — for every sport.** *(This is your
+  core ask: legacy is redundant and gone.)*
+- **P2 — priority is DERIVED from the exerciseLibrary** (`derivePriorityExercises`, ranked by
+  `transferToSportRating`, phase-suitable) — the duplicated `priorityExercises` lists are deleted (single
+  source). Intentional selection change (12 sport fixtures re-baselined; 0 build). Season emphasis +
+  round-out keep each plan balanced.
+- **P3 — the 5 team/field sports are season-phased** (rugby/soccer/GAA/hurling/hockey). Off-season floors
+  the emphasis + a round-out that derives each sport's under-developed patterns (soccer/GAA/hockey → upper;
+  **rugby already balanced → none**). **All 11 sports are now on the season-phased standard.**
+- **P4 — season-window phase detection.** `deriveSeason` gains a window mode: a season-based athlete gives
+  first + last game and the phase is derived from where today falls (off → pre → in → transition across the
+  calendar; boundaries from SKB `meta`, defaults 6/3 wk). Onboarding collects the two dates; the wizard asks
+  them for season-based (team) sports (`selectable.seasonBased`). Byte-identical without a window set. **The
+  same window logic is the seam the future coach fixture-input (TEAM package) plugs into.**
+
+**Deferred (documented, not dormant):** `movementPolicy` (in-season pool restriction — deprioritise heavy
+spinal / cap upper), congestion-aware in-season micro-phasing (needs the coach's full fixture list), and a
+per-sport `meta.preSeasonWeeks`/`transitionWeeks` override (the helper reads it; not authored yet).
+
+**To merge:** the branch contains ALL of the 2026-07-08 audit + 2026-07-09 season + retire-legacy work.
+`git checkout main && git merge season-phased-skb-2026-07-09`. Each phase is a self-contained commit-group
+if you want to review/cherry-pick incrementally.
+
+---
+
 
 ## ⏰ REVIEW — season-phased SKB programming (2026-07-09, autonomous, Approach A)
 
