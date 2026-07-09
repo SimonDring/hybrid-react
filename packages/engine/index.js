@@ -60,7 +60,7 @@ export { competencyAdjustedTarget, constraintAdjustedTarget } from './src/lib/se
 export { profileToAthleteModel } from './src/lib/adapters/profileToAthleteModel.js';
 export { athleteModelToEngineInput } from './src/lib/adapters/athleteModelToEngineInput.js';
 export { selectableSports, positionsFor } from './src/lib/sportKnowledge/selectable.js';
-export { bindingFor } from './src/data/sportEngineBinding.js';
+export { bindingFor, ENGINE_SPORT_IDS } from './src/data/sportEngineBinding.js';
 
 // ── Prescription + progression contracts screens/stores legitimately consume ──
 export { nextE1RM, resolveLifts, matchLift, matchLiftForItem, applyWeights, estimateE1RM, parseReps, parseRpe, trackedLiftsInSession, epley1RM, pullupE1RM } from './src/lib/liftProgression.js';
