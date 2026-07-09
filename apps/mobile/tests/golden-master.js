@@ -71,12 +71,20 @@ const MATRIX = {
   'sport·cycle·intermediate·transition·3d': A({ goalType: 'sport', sport: 'cycle', sportIntent: 'compete', eventDate: inDays(-10), experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {} }),
   'sport·swim·intermediate·off·3d': A({ goalType: 'sport', sport: 'swim', sportIntent: 'recreational', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {} }),
   'sport·swim·advanced·in·3d': A({ goalType: 'sport', sport: 'swim', sportIntent: 'compete', eventDate: inDays(30), experienceLevel: 'advanced', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'female', lifts: {} }),
+  // Triathlon (SKB audit 08 T1): its own swim+bike+run gym-support module, no longer collapsed to
+  // 'run'. NEW key, additive — pins the blended (pull + shoulder-prehab + single-leg/calf) plan so
+  // it can't silently regress to a runner's leg-day.
+  'sport·triathlon·intermediate·off·3d': A({ goalType: 'sport', skbSport: 'triathlon', sportIntent: 'recreational', sportGoal: 'build_base', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['tue', 'sat'] }),
   // Team-sport cohort (WP-42b): the flip audit found ZERO team archetypes — the very
   // cohort WP-48 will flip had no snapshot protection. All three ride the legacy fill
   // today (gaa engine sport); their keys moving is the DELIBERATE signal of the flip.
   'sport·hurling·intermediate·off·3d': A({ goalType: 'sport', skbSport: 'hurling', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['tue', 'sat'] }),
   'sport·gaelic_football·intermediate·in·3d': A({ goalType: 'sport', skbSport: 'gaelic_football', sportIntent: 'compete', sportSeason: 'in_season', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['tue', 'sat'] }),
   'sport·field_hockey·advanced·off·4d': A({ goalType: 'sport', skbSport: 'field_hockey', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'advanced', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'female', lifts: {}, sportDays: ['wed', 'sat'] }),
+  // Retire-legacy P3 (2026-07-09): soccer + rugby season-phased — soccer off-season rounds out
+  // (upper), rugby stays balanced (no round-out). NEW keys pinning the team-sport season arc.
+  'sport·soccer·intermediate·off·3d': A({ goalType: 'sport', skbSport: 'soccer', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['tue', 'sat'] }),
+  'sport·rugby·advanced·off·4d': A({ goalType: 'sport', skbSport: 'rugby', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'advanced', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['wed', 'sat'] }),
 
   // Build-discipline cohort (WP-49 Plan 2 T1, additive): `discipline` feeds the athlete-model
   // diagnosis (disciplineDemandFor) but does NOT yet steer the plan (the D11 style==='sport'

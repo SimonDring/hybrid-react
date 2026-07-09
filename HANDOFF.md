@@ -1,8 +1,127 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-07 (WP-49 Plan 2 — the build flip — COMPLETE + deployed; main `1bbefb9`,
-182/182, KSV 1.20.0). Keep this current at the end of each work session so the next session (or a
-fresh agent) can resume without re-deriving context._
+_Last updated: 2026-07-09 (retire-legacy + season-window — branch `season-phased-skb-2026-07-09`,
+stacked on `skb-audit-fixes-2026-07-08`; NOT merged / NOT pushed, awaiting Simon's review; 194/194,
+KSV 1.29.0, ENGINE_VERSION 1.4.0, build green). Keep this current at the end of each work session._
+
+## ⏰ REVIEW — retire the legacy sport layer + season-window detection (2026-07-09, autonomous)
+
+**Same branch, continues the season-phased work. NOT pushed/merged. 194/194, build green.**
+Design → `docs/superpowers/specs/2026-07-09-retire-legacy-sport-layer-design.md`; plan →
+`docs/superpowers/plans/2026-07-09-retire-legacy-sport-layer.md`. Four phases, each its own commit(s):
+
+- **P1 — the legacy `sportGymSupport/` layer is DELETED.** Its data (emphasis, priority, power,
+  systemicFactor, seasonVolume, periodization, keyMuscles) was relocated **verbatim** into a new SKB
+  `gymSupport` section; program/sportLoad/periodization/constraints read the SKB via `gymSupportFor()`;
+  generic defaults moved to `data/periodizationDefaults.js`. **Byte-identical** (golden-master unchanged;
+  proven per-archetype). **The codebase now has ONE source — the SKB — for every sport.** *(This is your
+  core ask: legacy is redundant and gone.)*
+- **P2 — priority is DERIVED from the exerciseLibrary** (`derivePriorityExercises`, ranked by
+  `transferToSportRating`, phase-suitable) — the duplicated `priorityExercises` lists are deleted (single
+  source). Intentional selection change (12 sport fixtures re-baselined; 0 build). Season emphasis +
+  round-out keep each plan balanced.
+- **P3 — the 5 team/field sports are season-phased** (rugby/soccer/GAA/hurling/hockey). Off-season floors
+  the emphasis + a round-out that derives each sport's under-developed patterns (soccer/GAA/hockey → upper;
+  **rugby already balanced → none**). **All 11 sports are now on the season-phased standard.**
+- **P4 — season-window phase detection.** `deriveSeason` gains a window mode: a season-based athlete gives
+  first + last game and the phase is derived from where today falls (off → pre → in → transition across the
+  calendar; boundaries from SKB `meta`, defaults 6/3 wk). Onboarding collects the two dates; the wizard asks
+  them for season-based (team) sports (`selectable.seasonBased`). Byte-identical without a window set. **The
+  same window logic is the seam the future coach fixture-input (TEAM package) plugs into.**
+
+**Deferred (documented, not dormant):** `movementPolicy` (in-season pool restriction — deprioritise heavy
+spinal / cap upper), congestion-aware in-season micro-phasing (needs the coach's full fixture list), and a
+per-sport `meta.preSeasonWeeks`/`transitionWeeks` override (the helper reads it; not authored yet).
+
+**To merge:** the branch contains ALL of the 2026-07-08 audit + 2026-07-09 season + retire-legacy work.
+`git checkout main && git merge season-phased-skb-2026-07-09`. Each phase is a self-contained commit-group
+if you want to review/cherry-pick incrementally.
+
+---
+
+
+## ⏰ REVIEW — season-phased SKB programming (2026-07-09, autonomous, Approach A)
+
+**Branch `season-phased-skb-2026-07-09` (stacked on the 2026-07-08 audit branch) — NOT pushed/merged. 189/189, builds.**
+Design brainstormed with Simon → spec `docs/superpowers/specs/2026-07-09-season-phased-skb-design.md`
+→ plan `docs/superpowers/plans/2026-07-09-season-phased-skb.md` → implemented. This is the **first slice
+of T3** (wire the SKB into generation): the SKB `seasonalModel` now carries a machine-consumable
+`programming` block per phase, and the generator reads it directly (Approach A — SKB is the source).
+
+**What it does (the season arc, verified end-to-end):**
+- **Off-season** floors the sport's emphasis to a rounded base **+ adds one round-out session** that trains
+  the sport's *derived under-developed* patterns. The target is decided in the background from the sport's
+  own emphasis, so it generalises: **runner/cyclist → upper** (press 0→20+), **swimmer → lower** (squat/hinge/
+  calf, lower 12→62). Never a generic template; sourced sport-priority-first.
+- **In-season** keeps each sport's specific vector (byte-identical to the legacy emphasis) + no round-out.
+- Migrated: **running ×3, cycling, swimming, triathlon**. GAA/field sports not yet migrated (fall back to legacy).
+
+**Safety / how it's gated:** every new behaviour is gated on a `programming` block being present. Un-migrated
+sports and ALL build goals are **byte-identical** (golden-master: only the 6 off-season endurance fixtures
+drift; verified per-archetype). Pure/deterministic preserved.
+
+**Commits (7):** spec → plan → Exec A (pure units: schema validator, `movementPatternMap`, `roundOutTargets`,
+`seasonProgramming` accessor) → Exec B+C (engine wire in `program.js`/`allocator.js` + `running_middle` walking
+skeleton) → Exec D (endurance sports authored). Tests: `season-{pattern-map,roundout,accessor,schema,
+running-middle,endurance}.js`. Five pre-existing tests were re-pinned to `sport_season:'in'` (they asserted the
+old always-narrow vector, which now lives in-season) — documented inline.
+
+**Deferred (documented, NOT dormant):** `movementPolicy` (in-season pool restriction — deprioritise heavy
+bilateral spinal loading, cap upper to a maintenance touch). It's in the schema + validated, but the allocator
+does NOT consume it yet, so it is intentionally NOT authored on any block. It's the clean next increment (a
+candidate-filter in the allocator). Also not done: migrating the team/field sports; deleting the legacy layer.
+
+**Behaviour change to note for review:** a recreational/no-event endurance athlete now DEFAULTS to off-season
+(rounded-out) rather than the always-narrow sport vector — this is the intended "off-season = well-rounded base"
+Simon asked for, but it changes the default plan for that cohort. If you'd rather the default stay narrow, the
+lever is `deriveSeason`'s recreational fallback.
+
+**To merge:** this branch contains the 2026-07-08 audit work as its base, so merging it brings both. `git checkout
+main && git merge season-phased-skb-2026-07-09`. To take ONLY the audit, merge `skb-audit-fixes-2026-07-08` first.
+
+---
+
+
+## ⏰ MORNING REVIEW — SKB audit & triathlon fix (2026-07-08, autonomous overnight)
+
+**Branch `skb-audit-fixes-2026-07-08` — 4 commits, NOT pushed, NOT merged. All green (183/183), app builds.**
+Trigger: Simon's request for a full Sports Knowledge Base audit, prompted by a triathlon plan that came
+out spine-heavy and upper-body-blind. Full findings: **`docs/engine/08-SKB-CONSUMPTION-AND-SEASON-AUDIT.md`**.
+
+**Headline finding.** There are TWO sport models. The rich 21-section SKB (`data/sport-knowledge/*.json`)
+is **~95% dormant** for plan generation; plans are actually driven by a 32-line-per-sport legacy layer
+(`data/sportGymSupport/*.js`). The SKB content is strong (audit graded 9/11 A/A−); the problems are
+(a) it's disconnected from generation, (b) triathlon had no module and collapsed to `run`, (c) "season"
+can only scale volume, not reshape the plan.
+
+**What shipped (review these):**
+- **T1 — triathlon fix (`202e562`).** New `data/sportGymSupport/triathlon.js` (swim+bike+run emphasis
+  blend + pull/shoulder-prehab-led priority); `sportEngineBinding` triathlon→`triathlon` (was `run`).
+  *Proof:* the triathlon plan went from all-lower-body (trap-bar deadlift most days, 0 pulls / 0 presses)
+  to a Push/Full-body/Lower split with DB bench, barbell row, face pulls, single-leg calf, single-leg
+  leg press — **49 pulls / 52 presses**, one trap-bar deadlift. Additive to the golden-master (new fixture
+  + property test `skb-triathlon-blend.js`).
+- **T1b — SKB content fixes (`49510ad`).** Literature-grounded injury/reference additions (field_hockey
+  hand+facial, sprint adductor/groin, middle ITBS, long proximal-hamstring tendinopathy, swimming Batalha)
+  + field_hockey schemaVersion. **DORMANT** — proven: the only golden-master change is the version stamp.
+
+**What did NOT ship (needs YOUR call):**
+- **T2 — off-season generalisation** (`c7502c3`, doc-only). Your ask ("off-season = hit full-body, generalise")
+  is real, but I proved the obvious fix (emphasis floor + un-demote press + seed upper-body) is a **no-op for
+  runners/cyclists** — their off-season plans came out byte-identical. The blocker is the session **split**
+  (leg-dominated → never opens a push slot), so this is a `resolveSplit` change (core/shared, risky to do
+  blind) **plus an S&C judgement:** how much upper-body does an *endurance* athlete want off-season? Clear
+  yes for swim/tri (done via T1); a real trade-off for pure run/cycle. See audit §8 Tier 2.
+- **T3 — the real re-seat** (designed in the audit, not built): give the SKB machine-consumable per-muscle
+  emphasis / pattern-balance / discipline-blend data, then wire the SKB into generation (finish WP-23) and
+  make season drive selection. Staged, behind the golden-master, one sport at a time.
+
+**To merge if you're happy:** `git checkout main && git merge skb-audit-fixes-2026-07-08` (then push). To
+undo any single piece, each commit is self-contained and revertable. The triathlon fix (T1) is the one with
+real user-facing impact; T1b is safe polish; the audit doc + T2/T3 are the design record.
+
+---
+
 
 ## Governance FROZEN — the five documents are locked at v1.0 (2026-07-01)
 

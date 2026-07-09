@@ -792,7 +792,29 @@
       "testingRecommendations": [
         "full battery at start + end",
         "strength anchors (squat/trap-bar, Nordic, squeeze)"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "hamstrings": 1.3,
+          "glutes": 1.25,
+          "quads": 1.15,
+          "calves": 1.1,
+          "core": 1.2,
+          "back": 1,
+          "shoulders": 0.9,
+          "chest": 0.9,
+          "biceps": 0.9,
+          "triceps": 0.9
+        },
+        "roundOutSessionsPerWeek": 1,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "develop"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "soccer S&C: off-season rounds out (upper balance) + max-strength base; in-season prehab-heavy (Nordic/Copenhagen van Dyk 2019), congested-fixture aware"
+      }
     },
     "preSeason": {
       "primaryObjective": "Convert strength to acceleration/power; rebuild high-speed-running tolerance progressively (the hamstring-protective exposure); reach match fitness without the classic pre-season injury spike.",
@@ -806,7 +828,29 @@
         "Yo-Yo IR1",
         "10/30 m",
         "CMJ baseline for the season"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "hamstrings": 1.3,
+          "glutes": 1.25,
+          "quads": 1.15,
+          "calves": 1.1,
+          "core": 1.2,
+          "back": 1,
+          "shoulders": 0.85,
+          "chest": 0.8,
+          "biceps": 0.8,
+          "triceps": 0.8
+        },
+        "roundOutSessionsPerWeek": 0,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "maintain"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "soccer S&C: off-season rounds out (upper balance) + max-strength base; in-season prehab-heavy (Nordic/Copenhagen van Dyk 2019), congested-fixture aware"
+      }
     },
     "competition": {
       "primaryObjective": "Maintain qualities at minimal effective volume; maximise match availability across ~40 weeks.",
@@ -818,7 +862,29 @@
       "recoveryEmphasis": "high",
       "testingRecommendations": [
         "weekly CMJ + squeeze monitoring only"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "hamstrings": 1.3,
+          "glutes": 1.25,
+          "quads": 1.15,
+          "calves": 1.1,
+          "core": 1.2,
+          "back": 1,
+          "shoulders": 0.85,
+          "chest": 0.7,
+          "biceps": 0.7,
+          "triceps": 0.7
+        },
+        "roundOutSessionsPerWeek": 0,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "maintain"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "soccer S&C: off-season rounds out (upper balance) + max-strength base; in-season prehab-heavy (Nordic/Copenhagen van Dyk 2019), congested-fixture aware"
+      }
     },
     "playoffs": {
       "primaryObjective": "Peak freshness + availability for finals/promotion deciders.",
@@ -2625,5 +2691,88 @@
         "rewards": "Squat/trap-bar strength anchor progression"
       }
     ]
+  },
+  "gymSupport": {
+    "emphasis": {
+      "hamstrings": 1.3,
+      "glutes": 1.25,
+      "quads": 1.15,
+      "calves": 1.1,
+      "core": 1.2,
+      "back": 1,
+      "shoulders": 0.85,
+      "chest": 0.7,
+      "biceps": 0.7,
+      "triceps": 0.7
+    },
+    "power": true,
+    "keyMuscles": [
+      "hamstrings",
+      "glutes",
+      "adductors",
+      "quads"
+    ],
+    "seasonVolume": {
+      "off": 0.9,
+      "pre": 0.85,
+      "in": 0.6,
+      "transition": 0.7
+    },
+    "periodization": {
+      "off": {
+        "totalWeeks": 12,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 5
+          },
+          {
+            "intent": "build",
+            "weeks": 7
+          }
+        ],
+        "deloads": [
+          5,
+          10
+        ]
+      },
+      "pre": {
+        "totalWeeks": 6,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 3
+          },
+          {
+            "intent": "build",
+            "weeks": 3
+          }
+        ],
+        "deloads": [
+          6
+        ]
+      },
+      "in": {
+        "totalWeeks": 4,
+        "split": [
+          {
+            "intent": "build",
+            "weeks": 4
+          }
+        ],
+        "deloads": []
+      },
+      "transition": {
+        "totalWeeks": 4,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 4
+          }
+        ],
+        "deloads": []
+      }
+    },
+    "systemicFactor": 1.0
   }
 }

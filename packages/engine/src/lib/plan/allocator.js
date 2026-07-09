@@ -46,6 +46,7 @@ import { getDiscipline } from '../../data/disciplines/index.js';
 import { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, DISCIPLINE_DOSE_QUALITY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS, REACTIVE_LIMITS, doseForQuality } from '../../data/doseSchemes.js';
 import { deriveMovementRequirements } from '../session/movementRequirements.js';
 import { regionOf, hypertrophyRegionOf } from '../session/sessionSpecs.js';
+import { exerciseMatchesToken } from '../../data/movementPatternMap.js';
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
@@ -747,6 +748,39 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     }
   };
 
+  // Round-out coverage (season-phased SKB, 2026-07-09): guarantee the sport's DERIVED under-
+  // developed movement patterns appear on a round-out session — the off-season "round out the
+  // physique" work. Gated on a programming block (null for un-migrated sports → no-op → byte-
+  // identical). demotePress is intentionally OFF here: this IS the deliberate balance work the
+  // sport's own emphasis suppresses. Sourced sport-priority-first, then the catalogue. Called by
+  // BOTH the D11 and the legacy fill paths (each returns its own sessions).
+  const applyRoundOut = () => {
+    const roCfg = ctx.programming, roTargets = ctx.roundOut;
+    if (!roCfg || (roCfg.roundOutSessionsPerWeek || 0) < 1 || !roTargets || !(roTargets.patterns || []).length) return;
+    const gymDays = work.length;
+    const nRO = gymDays === 1 ? 1 : Math.min(roCfg.roundOutSessionsPerWeek, Math.max(1, gymDays - 1));
+    const dose = (roCfg.roundOut && roCfg.roundOut.dose) || 'develop';
+    const maxCover = dose === 'develop' ? roTargets.patterns.length : dose === 'maintain' ? 1 : 0;
+    const prioIds = new Set(ctx.exercisePriority || []);
+    for (const slot of work.slice(gymDays - nRO)) {   // the LAST nRO slots (deterministic)
+      let added = 0;
+      for (const token of roTargets.patterns) {
+        if (added >= maxCover) break;
+        if (slot.picks.some(p => exerciseMatchesToken(p.ex, token))) continue;   // already covered
+        const cands = EXERCISES.filter(ex =>
+          exerciseMatchesToken(ex, token) && slot.equip.has(ex.equip) && ex.level <= slot.level &&
+          !slot.exUsed.has(ex.id) && !isBlockedEx(ex) && stimulusFactor(ex, levelName) > 0 &&
+          (!ex.discipline || ex.discipline === ctx.discipline));
+        if (!cands.length) continue;
+        cands.sort((a, b) => ((prioIds.has(b.id) ? 1 : 0) - (prioIds.has(a.id) ? 1 : 0)) || ((hash(a.id) % 7) - (hash(b.id) % 7)));
+        const ex = cands[0];
+        const role = effectiveRoleOf(ex, slot.level, false);   // demotePress OFF for round-out
+        place(slot, { ex, sets: roleSetCount(ex, slot.scheme || s, style, role), contrib: muscleContribution(ex), effectiveRole: role });
+        added++;
+      }
+    }
+  };
+
   // Pick a fundamental-pattern anchor for a slot from candidate patterns (the
   // split's day patterns, or the rotating FUNDAMENTAL fallback).
   const patternAnchor = (slot, patterns) => {
@@ -910,6 +944,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
         }
       }
     });
+    applyRoundOut();   // season-phased SKB (2026-07-09) — gated; no-op for un-migrated sports
     // WP-49 T4c-3: a hypertrophy session gets DIRECT isolation for its region's smaller muscles
     // (arms/delts/calves) as working volume — BEFORE the factor-0 finisher, since it's real work.
     addHypertrophyIsolation(work, ctx, weeklyDelivered, weeklyCeiling, targets, s, style, deload, taper, repBump, levelName);
@@ -988,6 +1023,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     place(slot, pick);
   }
 
+  applyRoundOut();   // season-phased SKB (2026-07-09) — gated; no-op for un-migrated sports
   addSupportiveFinishers(work, ctx, levelName, s, style, deload, taper, repBump);
   injectSecondaryGoals(work, ctx, s, style, deload, taper, repBump);   // WP-49 T5 — accessory tail only
 

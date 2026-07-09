@@ -12,7 +12,10 @@ export function selectableSports() {
     .map((id) => {
       const p = SKB.get(id);
       const label = (p && p.meta && (p.meta.label || p.meta.name)) || humanize(id);
-      return { id, label };
+      // season-based (team) sports collect a first/last-game WINDOW; individual sports use a single
+      // event date. Drives the onboarding date inputs + deriveSeason's window mode (2026-07-09, P4).
+      const seasonBased = !!(p && p.meta && p.meta.teamOrIndividual === 'team');
+      return { id, label, seasonBased };
     });
 }
 

@@ -71,7 +71,9 @@ export const BLANK_ANSWERS = {
   sportGoal: '',                // recreational only: 'build_base' | 'get_stronger' | 'stay_durable'
   runDiscipline: '',            // run only: 'sprint' | 'middle' | 'long'
   sportDays: [],                // sport goals: weekday keys the athlete trains their sport
-  eventDate: '',                // optional ISO date YYYY-MM-DD
+  eventDate: '',                // optional ISO date YYYY-MM-DD (single-event / endurance)
+  firstGameDate: '',            // season-based sports: first competitive game (ISO YYYY-MM-DD)
+  lastGameDate: '',             // season-based sports: last competitive game (ISO YYYY-MM-DD)
   experienceLevel: 'intermediate',
   // Five tracked lifts. pull is entered as EITHER max pull-up reps OR a lat-pulldown
   // 1RM (kg) — pullMode says which; normalizePullToKg() converts to a kg e1RM.
@@ -163,6 +165,9 @@ export function answersToProfilePatch(a) {
         sport_season: seasonOut,
         sport_goal: goalOut,
         event_date: isSport && a.eventDate ? a.eventDate : null,
+        first_game_date: isSport && a.firstGameDate ? a.firstGameDate : null,
+        last_game_date: isSport && a.lastGameDate ? a.lastGameDate : null,
+        plan_start_date: resolveStartDate(a.startWhen, a.startDate),
         run_discipline: isSport && legacySport === 'run' ? (legacyRunDisc || null) : null
       };
       return resolvePeriodization(pseudo).totalWeeks;
@@ -188,6 +193,10 @@ export function answersToProfilePatch(a) {
     sport_intent: isSport ? (sportIntent || 'recreational') : null,
     sport_goal: goalOut,                           // recreational training goal | null
     event_date: isSport && a.eventDate ? a.eventDate : null,
+    // Season-based sports (2026-07-09, P4): the competitive-season window; deriveSeason() computes
+    // the phase from where today falls between the first and last game.
+    first_game_date: isSport && a.firstGameDate ? a.firstGameDate : null,
+    last_game_date: isSport && a.lastGameDate ? a.lastGameDate : null,
     sport_season: seasonOut,  // 'in' | 'off' | null (compete only); deriveSeason() falls back for recreational
     run_discipline: isSport && legacySport === 'run' ? (legacyRunDisc || null) : null,
     sport_days: isSport ? (a.sportDays || []) : null,

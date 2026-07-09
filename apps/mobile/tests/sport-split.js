@@ -24,7 +24,10 @@ const focusOf = (s) => (s.title || '').split(' · ').slice(1).join(' · ');
 const daysTraining = (sessions, muscle) =>
   sessions.filter(s => (volumeReport([s]).rows.find(r => r.muscle === muscle)?.sets || 0) >= 2).length;
 
-const prof = answersToProfile({ ...BLANK_ANSWERS, goalType: 'sport', sport: 'swim', sportIntent: 'recreational',
+// Season-phased SKB (2026-07-09): OFF-season now rounds a swimmer out — it deliberately trains the
+// NEGLECTED lower body (a round-out session), so "legs on 1–2 days only" is an IN-SEASON property.
+// Pin the season to in-season, where swim's leg de-emphasis holds (byte-identical to the legacy split).
+const prof = answersToProfile({ ...BLANK_ANSWERS, goalType: 'sport', sport: 'swim', sportIntent: 'compete', sportSeason: 'in_season',
   experienceLevel: 'intermediate', daysPerWeek: 4, sessionMinutes: 45, equipment: FULL, sex: 'male', lifts: {} });
 const prio = new Set(resolveProgram(prof).exercisePriority);
 const wk = generatePlan(prof).phases[0].weeks[0];

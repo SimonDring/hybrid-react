@@ -20,6 +20,8 @@
  * passes. This keeps the bar high for real content without blocking scaffolds.
  */
 
+import { MOVEMENT_POLICY_TOKENS } from '../../data/movementPatternMap.js';
+
 export const SCHEMA_VERSION = '1.0.0';
 
 export const EVIDENCE_LEVELS = ['L1', 'L2', 'L3', 'L4', 'L5'];
@@ -149,12 +151,102 @@ export function validateSportProfile(p) {
     errs.push(...provErrors(lbl, inj));
   });
 
+  // ── §9 seasonalModel — machine-consumable programming blocks (season-phased SKB,
+  //     2026-07-09) — validated only where a phase authored one (a missing block is a
+  //     valid scaffold that falls back to the legacy layer at plan time). ───────────────
+  if (isObj(p.seasonalModel)) {
+    for (const [phaseKey, phase] of Object.entries(p.seasonalModel)) {
+      if (isObj(phase) && phase.programming != null) {
+        errs.push(...validateProgramming(`${id}.seasonalModel.${phaseKey}.programming`, phase.programming));
+      }
+    }
+  }
+
+  // ── gymSupport — season-invariant gym-support data relocated from the legacy layer
+  //     (2026-07-09, P1). Validated where present; a missing block is a valid scaffold. ──
+  if (p.gymSupport != null) errs.push(...validateGymSupport(`${id}.gymSupport`, p.gymSupport));
+
   // ── §21 KPI framework — limits, weights, privacy ─────────────────────────────
   errs.push(...validateKpiFramework(id, p.kpiFramework));
 
   // ── privacy sweep across every dashboard-bearing surface ─────────────────────
   errs.push(...privacyErrors(id, p));
 
+  return errs;
+}
+
+/**
+ * §9 — a seasonalModel phase's machine-consumable `programming` block (season-phased SKB).
+ * Enforces: muscleEmphasis numbers in 0.1..2.0; roundOutSessionsPerWeek int ≥0; roundOut
+ * mode/dose from the vocabulary (explicit needs targets); movementPolicy tokens known;
+ * provenance present. A missing block never reaches here (validated only where authored).
+ */
+function validateProgramming(label, prog) {
+  if (!isObj(prog)) return [`${label}: must be an object`];
+  const errs = [];
+
+  const me = prog.muscleEmphasis;
+  if (!isObj(me)) errs.push(`${label}.muscleEmphasis: must be an object`);
+  else for (const [m, v] of Object.entries(me)) {
+    if (!inRange(v, 0.1, 2.0)) errs.push(`${label}.muscleEmphasis.${m}: must be a number in 0.1..2.0`);
+  }
+
+  if (prog.roundOutSessionsPerWeek != null &&
+      !(Number.isInteger(prog.roundOutSessionsPerWeek) && prog.roundOutSessionsPerWeek >= 0)) {
+    errs.push(`${label}.roundOutSessionsPerWeek: must be an integer ≥ 0`);
+  }
+
+  const ro = prog.roundOut;
+  if (ro != null) {
+    if (!isObj(ro)) errs.push(`${label}.roundOut: must be an object`);
+    else {
+      if (!['derive', 'explicit'].includes(ro.mode)) errs.push(`${label}.roundOut.mode: must be derive|explicit`);
+      if (ro.dose != null && !['develop', 'maintain', 'none'].includes(ro.dose)) errs.push(`${label}.roundOut.dose: must be develop|maintain|none`);
+      if (ro.mode === 'explicit') {
+        const hasM = isArr(ro.targetMuscles) && ro.targetMuscles.length;
+        const hasP = isArr(ro.targetPatterns) && ro.targetPatterns.length;
+        if (!hasM && !hasP) errs.push(`${label}.roundOut: explicit mode needs targetMuscles and/or targetPatterns`);
+        if (isArr(ro.targetPatterns)) for (const t of ro.targetPatterns) if (!MOVEMENT_POLICY_TOKENS.has(t)) errs.push(`${label}.roundOut.targetPatterns: unknown token "${t}"`);
+      }
+    }
+  }
+
+  const mp = prog.movementPolicy;
+  if (mp != null) {
+    if (!isObj(mp)) errs.push(`${label}.movementPolicy: must be an object`);
+    else for (const key of ['require', 'maintainOnly', 'deprioritize']) {
+      const list = mp[key];
+      if (list == null) continue;
+      if (!isArr(list)) { errs.push(`${label}.movementPolicy.${key}: must be an array`); continue; }
+      for (const t of list) if (!MOVEMENT_POLICY_TOKENS.has(t)) errs.push(`${label}.movementPolicy.${key}: unknown token "${t}"`);
+    }
+  }
+
+  errs.push(...provErrors(label, prog));
+  return errs;
+}
+
+/**
+ * gymSupport — season-invariant gym-support data (relocated verbatim from data/sportGymSupport/,
+ * P1 2026-07-09). emphasis 0.1..2.0; power boolean; systemicFactor 0.3..1.0; seasonVolume numbers;
+ * priorityExercises/keyMuscles arrays; periodization an object of block templates.
+ */
+function validateGymSupport(label, gs) {
+  if (!isObj(gs)) return [`${label}: must be an object`];
+  const errs = [];
+  if (gs.emphasis != null) {
+    if (!isObj(gs.emphasis)) errs.push(`${label}.emphasis: must be an object`);
+    else for (const [m, v] of Object.entries(gs.emphasis)) if (!inRange(v, 0.1, 2.0)) errs.push(`${label}.emphasis.${m}: must be 0.1..2.0`);
+  }
+  if (gs.power != null && typeof gs.power !== 'boolean') errs.push(`${label}.power: must be a boolean`);
+  if (gs.systemicFactor != null && !inRange(gs.systemicFactor, 0.3, 1.0)) errs.push(`${label}.systemicFactor: must be 0.3..1.0`);
+  if (gs.keyMuscles != null && !isArr(gs.keyMuscles)) errs.push(`${label}.keyMuscles: must be an array`);
+  if (gs.priorityExercises != null && !isArr(gs.priorityExercises)) errs.push(`${label}.priorityExercises: must be an array`);
+  if (gs.seasonVolume != null) {
+    if (!isObj(gs.seasonVolume)) errs.push(`${label}.seasonVolume: must be an object`);
+    else for (const [s, v] of Object.entries(gs.seasonVolume)) if (!isNum(v)) errs.push(`${label}.seasonVolume.${s}: must be a number`);
+  }
+  if (gs.periodization != null && !isObj(gs.periodization)) errs.push(`${label}.periodization: must be an object`);
   return errs;
 }
 

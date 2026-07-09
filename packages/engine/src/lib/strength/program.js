@@ -15,11 +15,15 @@
 import { deriveSeason } from '../plan/periodization.js';
 import { getGymLevel } from '../Utils.js';
 import { dosePrior } from '../priors.js';
-import sports from '../../data/sportGymSupport/index.js';
 import { sportLoadScalar } from './sportLoad.js';
 import { availableEquip, LEVELS } from '../../data/strengthExercises.js';
 import { resolveIntents } from './priorityIntents.js';
 import { getDiscipline, resolveBuildDisciplineId } from '../../data/disciplines/index.js';
+import * as SKB from '../sportKnowledge/index.js';
+import { programmingForPhase } from '../sportKnowledge/seasonProgramming.js';
+import { gymSupportOf } from '../sportKnowledge/gymSupport.js';
+import { derivePriorityExercises } from '../sportKnowledge/derivePriority.js';
+import { deriveRoundOutTargets } from '../plan/roundOutTargets.js';
 
 // Sport emphasis vectors, priority-exercise lists and season volume scalars now live
 // in the pluggable sport modules (src/data/sportGymSupport/) behind a registry — adding a sport
@@ -62,25 +66,42 @@ export function resolveProgram(profile = {}) {
 
   if (goalType === 'sport' && profile.sport) {
     const sport = profile.sport;
-    const mod = sports.get(sport);   // undefined for an unknown sport → generic defaults
     // Season: an explicit override wins, else derive from event date / intent.
     const season = profile.sport_season || deriveSeason(profile) || 'off';
-    // Run sub-disciplines (sprint/middle/long) override the module's defaults. An
-    // unstated discipline defaults to 'middle' — the SAME generic-runner prior as the
-    // SKB lookup (sportKnowledge skbSportIdFor): one athlete, one assumed discipline.
-    const disc = sport === 'run' ? (profile.run_discipline || 'middle') : null;
-    const byD = disc && mod && mod.byDiscipline ? mod.byDiscipline[disc] : null;
-    const sportPriority = (byD && byD.priorityExercises) || (mod && mod.priorityExercises) || [];
+    // The SKB is the sole source (2026-07-09, legacy sportGymSupport removed). The SKB id already
+    // encodes the run discipline (running_sprint/middle/long), so gymSupport carries the right
+    // season-invariant data (emphasis fallback, priority, power) with no byDiscipline plumbing.
+    const skbProfile = SKB.get(SKB.skbSportIdOf(profile));
+    const gs = gymSupportOf(skbProfile);
+    // P2 (2026-07-09): the ×1.35 priority list is DERIVED from the sport's own exerciseLibrary
+    // (single source — ranked by transferToSportRating, phase-suitable). Falls back to the
+    // relocated gymSupport.priorityExercises for a sport whose library is empty/unjoined.
+    const sportPriority = (() => {
+      const derived = derivePriorityExercises(skbProfile, season);
+      return derived.length ? derived : ((gs && gs.priorityExercises) || []);
+    })();
     const equip = availableEquip(profile.access || []);
     const lvlNum = LEVELS[level] ?? LEVELS.intermediate;
     const intents = sportPriority.map(id => ({ intent: id, chain: [id] }));
     const { list, byIntent } = resolveIntents(intents, equip, lvlNum);
+    // Season-phased SKB (Approach A): a machine-consumable programming block for THIS phase is the
+    // source of truth for per-phase emphasis + the round-out the split/allocator read. Absent → the
+    // gymSupport (season-invariant) emphasis. Resolved off the SAME `season` this function computed.
+    const programming = programmingForPhase(skbProfile, season);
+    const sportEmphasis = (gs && gs.emphasis) || {};
+    // Round-out targets = what the SPORT inherently under-develops. Derive them from the sport's
+    // most sport-SPECIFIC emphasis (its in-season / competition vector), NOT the current phase's
+    // (which may be floored/balanced for the off-season — deriving from that would find no gaps).
+    // Runner in-season chest 0.55 → upper gaps; swimmer in-season legs low → lower gaps.
+    const sportSpecific = (programmingForPhase(skbProfile, 'in') || {}).muscleEmphasis || sportEmphasis;
     return {
       goalType: 'sport', style: 'sport',
-      emphasis: (byD && byD.emphasis) || (mod && mod.emphasis) || {},
-      volumeScalar: sportLoadScalar(profile, { season, mod }) * volumeToleranceOf(profile),
-      power: mod ? !!mod.power : true, sport, season, level,
-      exercisePriority: list, priorityByIntent: byIntent
+      emphasis: programming ? programming.muscleEmphasis : sportEmphasis,
+      volumeScalar: sportLoadScalar(profile, { season, gymSupport: gs }) * volumeToleranceOf(profile),
+      power: gs && typeof gs.power === 'boolean' ? gs.power : true, sport, season, level,
+      exercisePriority: list, priorityByIntent: byIntent,
+      programming: programming || null,
+      roundOut: programming ? deriveRoundOutTargets(sportSpecific, programming.roundOut) : null
     };
   }
 

@@ -21,9 +21,11 @@ assert(resolveProgram({ goal_type: 'sport', sport: 'swim', sport_intent: 'compet
 assert(resolveProgram({ goal_type: 'sport', sport: 'run', sport_intent: 'recreational', sport_season: 'transition' }).volumeScalar === 0.63, 'T5 explicit transition override run → 0.70×0.90 = 0.63');
 
 // ---- sport goal → sport style + discipline emphasis + priority ----
-const rl = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'long', sport_intent: 'recreational' });
+// Season-phased SKB (2026-07-09): the sport-SPECIFIC narrow vector now lives IN-SEASON
+// (off-season rounds the emphasis out — see tests/season-*.js), so pin the season to 'in'.
+const rl = resolveProgram({ goal_type: 'sport', sport: 'run', run_discipline: 'long', sport_intent: 'recreational', sport_season: 'in' });
 assert(rl.style === 'sport', 'T6 sport goal → style "sport"');
-assert(rl.emphasis.calves === 1.4 && rl.emphasis.chest === 0.45, 'T7 run-long emphasis: calves up (1.4), chest down (0.45)');
+assert(rl.emphasis.calves === 1.4 && rl.emphasis.chest === 0.45, 'T7 run-long IN-SEASON emphasis: calves up (1.4), chest down (0.45)');
 assert(rl.exercisePriority.includes('nordic_curl'), 'T8 run-long prioritises nordic curl');
 const sw = resolveProgram({ goal_type: 'sport', sport: 'swim', sport_intent: 'recreational', access: ['full_gym'] });
 assert(sw.emphasis.back === 1.3 && sw.exercisePriority.includes('face_pull'), 'T9 swim emphasises back + prioritises face pull');

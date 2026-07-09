@@ -358,6 +358,30 @@
         "confidence": "moderate",
         "evidenceLevel": "L3",
         "source": "plantar-fasciopathy heavy-load / Rathleff loading literature; running-injury reviews"
+      },
+      {
+        "name": "Proximal hamstring tendinopathy (chronic)",
+        "incidence": "moderate in high-mileage and hill/long runners — a chronic overuse variant distinct from the acute hamstring strain",
+        "severity": "moderate-high if unmanaged (often chronic; deep buttock / ischial pain that is slow to resolve)",
+        "mechanism": "Cumulative compressive + tensile load on the proximal hamstring tendon at the ischial tuberosity, aggravated by uphill running, long runs, deep hip flexion (over-striding) and prolonged sitting — a load-capacity mismatch rather than an acute failure.",
+        "highRiskTissues": [
+          "proximal hamstring tendon (ischial insertion)"
+        ],
+        "riskFactors": {
+          "modifiable": [
+            "training-load / hill-volume spikes",
+            "insufficient posterior-chain tendon-loading capacity",
+            "over-striding mechanics"
+          ],
+          "nonModifiable": [
+            "prior proximal hamstring injury",
+            "age"
+          ]
+        },
+        "rtpConsiderations": "Progressive isometric then heavy-slow-resistance hamstring loading (limiting provocative deep-hip-flexion compression early); criteria-based return on load tolerance. Distinct from acute-strain RTP.",
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "proximal hamstring tendinopathy rehabilitation (Goom 2016); distance-running overuse literature"
       }
     ],
     "summary": "OVERUSE-dominant injury profile (the consequence of very high repetitive loading). Achilles tendinopathy is the signature injury; tibial/metatarsal bone stress — strongly linked to low energy availability (RED-S) — is the most serious; patellofemoral pain, ITB syndrome and plantar fasciopathy round out the lateral/anterior-knee and foot overuse picture. Bone stress and RED-S require specific screening in female and weight-conscious athletes. Single-leg calf/Achilles loading, tibialis and hip-abductor strengthening, plus prudent mileage progression, are the primary prevention levers."
@@ -743,7 +767,29 @@
         "single-leg calf raise baseline",
         "hip abductor screen",
         "bone-health / energy-availability screen if indicated"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "quads": 1.1,
+          "hamstrings": 1.3,
+          "glutes": 1.2,
+          "calves": 1.4,
+          "core": 1.25,
+          "back": 0.9,
+          "shoulders": 0.9,
+          "chest": 0.9,
+          "biceps": 0.9,
+          "triceps": 0.9
+        },
+        "roundOutSessionsPerWeek": 1,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "develop"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "distance S&C: off-season builds a rounded base + upper balance (Blagrove 2018); in-season is tendon/durability-specific"
+      }
     },
     "preSeason": {
       "primaryObjective": "Convert strength and aerobic base to race-pace-specific fitness; begin interval training; introduce reactive plyometrics; reduce gym volume as running intensity rises.",
@@ -759,7 +805,29 @@
         "critical-speed estimate from time trials",
         "running economy check (pace-HR proxy)",
         "calf raise retest"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "quads": 1.1,
+          "hamstrings": 1.3,
+          "glutes": 1.2,
+          "calves": 1.4,
+          "core": 1.25,
+          "back": 0.9,
+          "shoulders": 0.8,
+          "chest": 0.8,
+          "biceps": 0.8,
+          "triceps": 0.8
+        },
+        "roundOutSessionsPerWeek": 0,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "maintain"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "distance S&C: off-season builds a rounded base + upper balance (Blagrove 2018); in-season is tendon/durability-specific"
+      }
     },
     "competition": {
       "primaryObjective": "Maintain aerobic fitness and economy; protect Achilles/hamstring; execute race-specific sharpening and taper into key competitions.",
@@ -774,7 +842,29 @@
         "weekly CMJ neuromuscular check",
         "race-time tracking",
         "Achilles soreness monitoring"
-      ]
+      ],
+      "programming": {
+        "muscleEmphasis": {
+          "quads": 1.1,
+          "hamstrings": 1.3,
+          "glutes": 1.2,
+          "calves": 1.4,
+          "core": 1.25,
+          "back": 0.9,
+          "shoulders": 0.7,
+          "chest": 0.45,
+          "biceps": 0.5,
+          "triceps": 0.65
+        },
+        "roundOutSessionsPerWeek": 0,
+        "roundOut": {
+          "mode": "derive",
+          "dose": "maintain"
+        },
+        "confidence": "moderate",
+        "evidenceLevel": "L3",
+        "source": "distance S&C: off-season builds a rounded base + upper balance (Blagrove 2018); in-season is tendon/durability-specific"
+      }
     },
     "playoffs": {
       "primaryObjective": "Peak for target championship — manage heats / semis / finals over multiple days; freshness above all.",
@@ -2490,5 +2580,88 @@
         "rewards": "Completing each testing block (critical speed time-trials, calf raise, CMJ) — encourages objective tracking."
       }
     ]
+  },
+  "gymSupport": {
+    "emphasis": {
+      "quads": 1.1,
+      "hamstrings": 1.3,
+      "glutes": 1.2,
+      "calves": 1.4,
+      "core": 1.25,
+      "back": 0.9,
+      "shoulders": 0.7,
+      "chest": 0.45,
+      "biceps": 0.5,
+      "triceps": 0.65
+    },
+    "power": true,
+    "systemicFactor": 0.9,
+    "keyMuscles": [
+      "hamstrings",
+      "glutes",
+      "calves",
+      "quads"
+    ],
+    "seasonVolume": {
+      "off": 0.9,
+      "pre": 0.85,
+      "in": 0.6,
+      "transition": 0.7
+    },
+    "periodization": {
+      "off": {
+        "totalWeeks": 12,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 5
+          },
+          {
+            "intent": "build",
+            "weeks": 7
+          }
+        ],
+        "deloads": [
+          5,
+          10
+        ]
+      },
+      "pre": {
+        "totalWeeks": 6,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 3
+          },
+          {
+            "intent": "build",
+            "weeks": 3
+          }
+        ],
+        "deloads": [
+          6
+        ]
+      },
+      "in": {
+        "totalWeeks": 4,
+        "split": [
+          {
+            "intent": "build",
+            "weeks": 4
+          }
+        ],
+        "deloads": []
+      },
+      "transition": {
+        "totalWeeks": 4,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 4
+          }
+        ],
+        "deloads": []
+      }
+    }
   }
 }

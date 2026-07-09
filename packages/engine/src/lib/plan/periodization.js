@@ -17,8 +17,9 @@
  *  sport modules (src/data/sportGymSupport/); this file owns the BUILD profiles + season
  *  derivation and looks sports up via the registry. Adding a sport needs no edit here.
  */
-import sports from '../../data/sportGymSupport/index.js';
-import { SPORT_BLOCKS } from '../../data/sportGymSupport/_schema.js';
+import { gymSupportFor } from '../sportKnowledge/gymSupport.js';
+import { seasonFromWindow } from './seasonWindow.js';
+import { SPORT_BLOCKS } from '../../data/periodizationDefaults.js';
 import { getDiscipline, resolveBuildDisciplineId } from '../../data/disciplines/index.js';
 
 /**
@@ -37,6 +38,12 @@ import { getDiscipline, resolveBuildDisciplineId } from '../../data/disciplines/
  */
 export function deriveSeason(profile = {}, asOf = profile.plan_start_date || null) {
   if (!profile.sport) return null;
+
+  // Season-window mode (2026-07-09, P4): a season-based athlete states their first + last game;
+  // the phase is where `today` falls in that competitive window. Takes precedence over a single
+  // event_date (a team athlete has a season, not one race). Null when no window is set.
+  const windowPhase = seasonFromWindow(profile, asOf);
+  if (windowPhase) return windowPhase;
 
   if (profile.event_date && asOf) {
     const today = new Date(asOf + 'T00:00:00');
@@ -98,17 +105,12 @@ export function resolvePeriodization(profile = {}) {
   const goalType = profile.goal_type || (profile.sport ? 'sport' : 'build');
 
   if (goalType === 'sport' && profile.sport) {
-    const mod = sports.get(profile.sport);   // undefined for an unknown sport → generic blocks
     const season = deriveSeason(profile) || 'off';
-    // Run sub-disciplines (sprint/middle) override the season block; a season the
-    // discipline doesn't override (and 'long') falls back to the module's generic
-    // SPORT_BLOCKS. An unstated discipline defaults to 'middle' — the same prior as
-    // the SKB lookup (skbSportIdFor): one athlete, one assumed discipline.
-    const disc = profile.sport === 'run' ? (profile.run_discipline || 'middle') : null;
-    const byD = disc && mod && mod.byDiscipline ? mod.byDiscipline[disc] : null;
-    return (byD && byD.periodization && byD.periodization[season])
-      || (mod && mod.periodization && mod.periodization[season])
-      || SPORT_BLOCKS[season] || SPORT_BLOCKS.off;
+    // The per-season block templates come from the SKB gymSupport (each profile carries its own,
+    // incl. the run-discipline variants — the SKB id already encodes the discipline). SPORT_BLOCKS
+    // is the ultimate default for an unknown/unauthored sport (2026-07-09, legacy layer removed).
+    const gs = gymSupportFor(profile);
+    return (gs && gs.periodization && gs.periodization[season]) || SPORT_BLOCKS[season] || SPORT_BLOCKS.off;
   }
 
   // THE FLIP (WP-49 T4c): a build plan's periodisation comes from its DISCIPLINE module
