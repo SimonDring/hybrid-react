@@ -16,7 +16,16 @@ New reviews are authored directly into this folder, named `YYYY-MM-DD-<topic>.md
 | File | Date | What it is |
 |---|---|---|
 | `STATE-OF-THE-APP-2026-07-07.md` | 2026-07-07 | Plain-English status brief after the 30-PR programme. Written hours before the build flip deployed — its "#1 remaining gap: the build flip" is resolved. |
-| `2026-07-09-documentation-audit.md` | 2026-07-09 | The governance sprint's full documentation inventory, classification, and conflict report. |
+| `2026-07-09-documentation-audit.md` | 2026-07-09 | Governance sprint Phase 0: full documentation inventory, classification, and conflict report (incl. the C1–C5 amendment queue). |
+| `2026-07-09-architecture-review.md` | 2026-07-09 | Phase 1: executive architecture assessment, dependency review, architecture (AR1–8) + scalability (SR1–7) risk registers. |
+| `2026-07-09-technical-debt-register.md` | 2026-07-09 | Phase 1: TD-01…TD-29 consolidated debt register with owner-decision flags. |
+| `2026-07-09-platform-health-reverification.md` | 2026-07-09 | Phase 1: every 2026-07-06 Health Report finding re-verified against code with evidence. |
+| `2026-07-09-decision-engine-review.md` | 2026-07-09 | Phase 2: Olympic-institute-standard engine review (W1–W10, risks, 4-wave migration strategy). |
+| `2026-07-09-knowledge-architecture-review.md` | 2026-07-09 | Phase 3: knowledge base graded against the frozen KA/Ontology standards (K1–K3). |
+| `2026-07-09-ai-architecture-review.md` | 2026-07-09 | Phase 4: AI seam vs AIGAS compliance; pre-go-live checklist; Stage 6 readiness. |
+| `2026-07-09-data-architecture-review.md` | 2026-07-09 | Phase 5: data ownership/RLS verification, learning readiness, scaling walls (F1–F9). |
+| `2026-07-09-testing-strategy.md` | 2026-07-09 | Phase 6: the eight-layer testing strategy (proposal — graduates into living docs if adopted). |
+| `2026-07-09-strategic-roadmap.md` | 2026-07-09 | Phase 7: prioritised roadmap — Immediate → Short → Medium → Long → Research → Never. |
 
 ## Reviews that live elsewhere (kept in place — referenced by frozen docs or code)
 

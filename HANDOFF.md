@@ -29,6 +29,13 @@ move it to the archive file rather than letting this one grow._
 - **Docs:** governed as of 2026-07-09 — see `docs/DOCUMENTATION-GOVERNANCE.md` (policy),
   `docs/DOCUMENTATION-INDEX.md` (the map), and
   `docs/reviews/2026-07-09-documentation-audit.md` (the audit behind it).
+- **Governance sprint (2026-07-09, branch `governance-sprint-2026-07-09`):** the full
+  Phase 0–7 review set is in `docs/reviews/` (architecture, engine, knowledge, AI, data,
+  testing strategy, and the **prioritised roadmap** —
+  `docs/reviews/2026-07-09-strategic-roadmap.md`, which proposes the next execution
+  order). Two defect fix tasks were filed for Simon: the **Olympic 4×4 dose override**
+  (engine review W2) and the **player_status orphan on coach removal** (data review F3,
+  privacy). No production code or frozen doc was touched by the sprint.
 
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
