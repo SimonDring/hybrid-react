@@ -162,6 +162,10 @@ export function validateSportProfile(p) {
     }
   }
 
+  // ── gymSupport — season-invariant gym-support data relocated from the legacy layer
+  //     (2026-07-09, P1). Validated where present; a missing block is a valid scaffold. ──
+  if (p.gymSupport != null) errs.push(...validateGymSupport(`${id}.gymSupport`, p.gymSupport));
+
   // ── §21 KPI framework — limits, weights, privacy ─────────────────────────────
   errs.push(...validateKpiFramework(id, p.kpiFramework));
 
@@ -219,6 +223,30 @@ function validateProgramming(label, prog) {
   }
 
   errs.push(...provErrors(label, prog));
+  return errs;
+}
+
+/**
+ * gymSupport — season-invariant gym-support data (relocated verbatim from data/sportGymSupport/,
+ * P1 2026-07-09). emphasis 0.1..2.0; power boolean; systemicFactor 0.3..1.0; seasonVolume numbers;
+ * priorityExercises/keyMuscles arrays; periodization an object of block templates.
+ */
+function validateGymSupport(label, gs) {
+  if (!isObj(gs)) return [`${label}: must be an object`];
+  const errs = [];
+  if (gs.emphasis != null) {
+    if (!isObj(gs.emphasis)) errs.push(`${label}.emphasis: must be an object`);
+    else for (const [m, v] of Object.entries(gs.emphasis)) if (!inRange(v, 0.1, 2.0)) errs.push(`${label}.emphasis.${m}: must be 0.1..2.0`);
+  }
+  if (gs.power != null && typeof gs.power !== 'boolean') errs.push(`${label}.power: must be a boolean`);
+  if (gs.systemicFactor != null && !inRange(gs.systemicFactor, 0.3, 1.0)) errs.push(`${label}.systemicFactor: must be 0.3..1.0`);
+  if (gs.keyMuscles != null && !isArr(gs.keyMuscles)) errs.push(`${label}.keyMuscles: must be an array`);
+  if (gs.priorityExercises != null && !isArr(gs.priorityExercises)) errs.push(`${label}.priorityExercises: must be an array`);
+  if (gs.seasonVolume != null) {
+    if (!isObj(gs.seasonVolume)) errs.push(`${label}.seasonVolume: must be an object`);
+    else for (const [s, v] of Object.entries(gs.seasonVolume)) if (!isNum(v)) errs.push(`${label}.seasonVolume.${s}: must be a number`);
+  }
+  if (gs.periodization != null && !isObj(gs.periodization)) errs.push(`${label}.periodization: must be an object`);
   return errs;
 }
 

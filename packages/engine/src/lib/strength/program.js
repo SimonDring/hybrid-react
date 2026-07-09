@@ -22,6 +22,7 @@ import { resolveIntents } from './priorityIntents.js';
 import { getDiscipline, resolveBuildDisciplineId } from '../../data/disciplines/index.js';
 import * as SKB from '../sportKnowledge/index.js';
 import { programmingForPhase } from '../sportKnowledge/seasonProgramming.js';
+import { gymSupportOf } from '../sportKnowledge/gymSupport.js';
 import { deriveRoundOutTargets } from '../plan/roundOutTargets.js';
 
 // Sport emphasis vectors, priority-exercise lists and season volume scalars now live
@@ -73,19 +74,22 @@ export function resolveProgram(profile = {}) {
     // SKB lookup (sportKnowledge skbSportIdFor): one athlete, one assumed discipline.
     const disc = sport === 'run' ? (profile.run_discipline || 'middle') : null;
     const byD = disc && mod && mod.byDiscipline ? mod.byDiscipline[disc] : null;
-    const sportPriority = (byD && byD.priorityExercises) || (mod && mod.priorityExercises) || [];
+    // P1 (2026-07-09): the SKB's gymSupport section is the source for the season-invariant
+    // gym-support data (emphasis fallback, priority, power) — relocated verbatim from the legacy
+    // sportGymSupport modules, so reading it is byte-identical. `?? legacy` keeps un-relocated
+    // sports (none, post-relocation) working; the legacy fallback is removed when the layer is deleted.
+    const skbProfile = SKB.get(SKB.skbSportIdOf(profile));
+    const gs = gymSupportOf(skbProfile);
+    const sportPriority = (gs && gs.priorityExercises) || (byD && byD.priorityExercises) || (mod && mod.priorityExercises) || [];
     const equip = availableEquip(profile.access || []);
     const lvlNum = LEVELS[level] ?? LEVELS.intermediate;
     const intents = sportPriority.map(id => ({ intent: id, chain: [id] }));
     const { list, byIntent } = resolveIntents(intents, equip, lvlNum);
-    // Season-phased SKB (2026-07-09, Approach A): if the sport has authored a machine-consumable
-    // programming block for THIS phase, it is the source of truth for per-phase emphasis + the
-    // round-out/movement policy the split + allocator read. null (unmigrated) → legacy emphasis,
-    // byte-identical. Resolved off the SAME `season` this function already computed so the phase
-    // is consistent with the periodisation block.
-    const skbProfile = SKB.get(SKB.skbSportIdOf(profile));
+    // Season-phased SKB (Approach A): a machine-consumable programming block for THIS phase is the
+    // source of truth for per-phase emphasis + the round-out the split/allocator read. Absent → the
+    // gymSupport (season-invariant) emphasis. Resolved off the SAME `season` this function computed.
     const programming = programmingForPhase(skbProfile, season);
-    const legacyEmphasis = (byD && byD.emphasis) || (mod && mod.emphasis) || {};
+    const legacyEmphasis = (gs && gs.emphasis) || (byD && byD.emphasis) || (mod && mod.emphasis) || {};
     // Round-out targets = what the SPORT inherently under-develops. Derive them from the sport's
     // most sport-SPECIFIC emphasis (its in-season / competition vector), NOT the current phase's
     // (which may be floored/balanced for the off-season — deriving from that would find no gaps).
@@ -94,8 +98,8 @@ export function resolveProgram(profile = {}) {
     return {
       goalType: 'sport', style: 'sport',
       emphasis: programming ? programming.muscleEmphasis : legacyEmphasis,
-      volumeScalar: sportLoadScalar(profile, { season, mod }) * volumeToleranceOf(profile),
-      power: mod ? !!mod.power : true, sport, season, level,
+      volumeScalar: sportLoadScalar(profile, { season, mod, gymSupport: gs }) * volumeToleranceOf(profile),
+      power: gs && typeof gs.power === 'boolean' ? gs.power : (mod ? !!mod.power : true), sport, season, level,
       exercisePriority: list, priorityByIntent: byIntent,
       programming: programming || null,
       roundOut: programming ? deriveRoundOutTargets(sportSpecific, programming.roundOut) : null

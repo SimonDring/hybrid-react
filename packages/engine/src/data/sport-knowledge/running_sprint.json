@@ -2462,5 +2462,106 @@
         "rewards": "Completing each testing block (CMJ / NordBord / split times) — encourages objective tracking."
       }
     ]
+  },
+  "gymSupport": {
+    "emphasis": {
+      "quads": 1.2,
+      "hamstrings": 1.3,
+      "glutes": 1.35,
+      "calves": 1.2,
+      "core": 1.15,
+      "back": 1,
+      "shoulders": 1.1,
+      "chest": 0.7,
+      "biceps": 0.7,
+      "triceps": 0.7
+    },
+    "power": true,
+    "systemicFactor": 0.9,
+    "keyMuscles": [
+      "hamstrings",
+      "glutes",
+      "calves",
+      "quads"
+    ],
+    "priorityExercises": [
+      "hang_clean",
+      "power_clean",
+      "depth_jump",
+      "broad_jump",
+      "sled_push",
+      "back_squat",
+      "hip_thrust",
+      "nordic_curl",
+      "bounding_a_skip",
+      "double_leg_pogo",
+      "sl_pogo_jump",
+      "split_squat",
+      "glute_bridge_single_leg",
+      "pallof",
+      "sl_calf"
+    ],
+    "seasonVolume": {
+      "off": 0.9,
+      "pre": 0.85,
+      "in": 0.6,
+      "transition": 0.7
+    },
+    "periodization": {
+      "off": {
+        "totalWeeks": 6,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 2
+          },
+          {
+            "intent": "build",
+            "weeks": 3
+          },
+          {
+            "intent": "peak",
+            "weeks": 1
+          }
+        ],
+        "deloads": [
+          6
+        ]
+      },
+      "pre": {
+        "totalWeeks": 4,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 2
+          },
+          {
+            "intent": "build",
+            "weeks": 2
+          }
+        ],
+        "deloads": []
+      },
+      "in": {
+        "totalWeeks": 4,
+        "split": [
+          {
+            "intent": "build",
+            "weeks": 4
+          }
+        ],
+        "deloads": []
+      },
+      "transition": {
+        "totalWeeks": 4,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 4
+          }
+        ],
+        "deloads": []
+      }
+    }
   }
 }

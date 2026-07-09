@@ -18,6 +18,7 @@
  *  derivation and looks sports up via the registry. Adding a sport needs no edit here.
  */
 import sports from '../../data/sportGymSupport/index.js';
+import { gymSupportFor } from '../sportKnowledge/gymSupport.js';
 import { SPORT_BLOCKS } from '../../data/sportGymSupport/_schema.js';
 import { getDiscipline, resolveBuildDisciplineId } from '../../data/disciplines/index.js';
 
@@ -106,7 +107,12 @@ export function resolvePeriodization(profile = {}) {
     // the SKB lookup (skbSportIdFor): one athlete, one assumed discipline.
     const disc = profile.sport === 'run' ? (profile.run_discipline || 'middle') : null;
     const byD = disc && mod && mod.byDiscipline ? mod.byDiscipline[disc] : null;
-    return (byD && byD.periodization && byD.periodization[season])
+    // P1 (2026-07-09): the per-season block templates come from the SKB gymSupport (relocated
+    // verbatim, incl. run-discipline overrides → byte-identical); the legacy `byD`/`mod` chain is
+    // the fallback until the legacy layer is deleted. SPORT_BLOCKS is the ultimate default.
+    const gs = gymSupportFor(profile);
+    return (gs && gs.periodization && gs.periodization[season])
+      || (byD && byD.periodization && byD.periodization[season])
       || (mod && mod.periodization && mod.periodization[season])
       || SPORT_BLOCKS[season] || SPORT_BLOCKS.off;
   }

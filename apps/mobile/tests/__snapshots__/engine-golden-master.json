@@ -73,8 +73,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 10,
@@ -5555,8 +5555,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 10,
@@ -9246,8 +9246,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 10,
@@ -16251,8 +16251,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 10,
@@ -19587,8 +19587,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 10,
@@ -23790,8 +23790,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 10,
@@ -28248,8 +28248,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 12,
@@ -31599,8 +31599,8 @@
   "build·powerlifting·advanced·4d": {
     "meta": {
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 12,
@@ -35361,8 +35361,8 @@
   "build·strength·advanced·5d·75·full": {
     "meta": {
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 12,
@@ -39965,8 +39965,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 12,
@@ -44066,8 +44066,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 12,
@@ -45128,8 +45128,8 @@
         "sport": null
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 12,
@@ -48976,8 +48976,8 @@
         "sport": "cycle"
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 4,
@@ -49746,8 +49746,8 @@
         "sport": "cycle"
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 12,
@@ -53098,8 +53098,8 @@
         "sport": "cycle"
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 4,
@@ -54260,8 +54260,8 @@
         "sport": "gaa"
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 12,
@@ -58994,8 +58994,8 @@
         "sport": "gaa"
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 4,
@@ -60158,8 +60158,8 @@
         "sport": "gaa"
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 12,
@@ -63573,8 +63573,8 @@
         "sport": "run"
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 12,
@@ -68834,8 +68834,8 @@
         "sport": "run"
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 6,
@@ -70791,8 +70791,8 @@
         "sport": "run"
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 10,
@@ -75255,8 +75255,8 @@
         "sport": "run"
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 4,
@@ -76940,8 +76940,8 @@
         "sport": "run"
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 6,
@@ -79659,8 +79659,8 @@
         "sport": "swim"
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 4,
@@ -80744,8 +80744,8 @@
         "sport": "swim"
       },
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 12,
@@ -83720,8 +83720,8 @@
   "sport·triathlon·intermediate·off·3d": {
     "meta": {
       "provenance": {
-        "engineVersion": "1.1.0",
-        "knowledgeSetVersion": "1.25.0"
+        "engineVersion": "1.2.0",
+        "knowledgeSetVersion": "1.26.0"
       },
       "validation": {
         "checked": 12,

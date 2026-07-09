@@ -2580,5 +2580,103 @@
         "rewards": "Completing each testing block (critical speed time-trials, calf raise, CMJ) — encourages objective tracking."
       }
     ]
+  },
+  "gymSupport": {
+    "emphasis": {
+      "quads": 1.1,
+      "hamstrings": 1.3,
+      "glutes": 1.2,
+      "calves": 1.4,
+      "core": 1.25,
+      "back": 0.9,
+      "shoulders": 0.7,
+      "chest": 0.45,
+      "biceps": 0.5,
+      "triceps": 0.65
+    },
+    "power": true,
+    "systemicFactor": 0.9,
+    "keyMuscles": [
+      "hamstrings",
+      "glutes",
+      "calves",
+      "quads"
+    ],
+    "priorityExercises": [
+      "nordic_curl",
+      "rdl",
+      "trap_bar_dl",
+      "split_squat",
+      "sl_calf",
+      "tibialis_raise",
+      "lateral_band_walk",
+      "copenhagen",
+      "pallof",
+      "dead_bug",
+      "sl_hinge",
+      "glute_bridge_single_leg",
+      "step_up"
+    ],
+    "seasonVolume": {
+      "off": 0.9,
+      "pre": 0.85,
+      "in": 0.6,
+      "transition": 0.7
+    },
+    "periodization": {
+      "off": {
+        "totalWeeks": 12,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 5
+          },
+          {
+            "intent": "build",
+            "weeks": 7
+          }
+        ],
+        "deloads": [
+          5,
+          10
+        ]
+      },
+      "pre": {
+        "totalWeeks": 6,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 3
+          },
+          {
+            "intent": "build",
+            "weeks": 3
+          }
+        ],
+        "deloads": [
+          6
+        ]
+      },
+      "in": {
+        "totalWeeks": 4,
+        "split": [
+          {
+            "intent": "build",
+            "weeks": 4
+          }
+        ],
+        "deloads": []
+      },
+      "transition": {
+        "totalWeeks": 4,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 4
+          }
+        ],
+        "deloads": []
+      }
+    }
   }
 }

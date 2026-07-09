@@ -20,12 +20,15 @@ export function sportDayFactor(n) {
   return 0.78;             // ≥5
 }
 
-export function sportLoadScalar(profile = {}, { season = 'off', mod = null } = {}) {
-  const seasonBase = ((mod && mod.seasonModifiers) || DEFAULT_SEASON_VOLUME)[season] ?? 1.0;
+export function sportLoadScalar(profile = {}, { season = 'off', mod = null, gymSupport = null } = {}) {
+  // P1 (2026-07-09): seasonVolume + systemicFactor come from the SKB gymSupport (relocated verbatim
+  // from the legacy module → byte-identical); `|| mod` keeps the legacy fallback until it is deleted.
+  const seasonBase = ((gymSupport && gymSupport.seasonVolume) || (mod && mod.seasonModifiers) || DEFAULT_SEASON_VOLUME)[season] ?? 1.0;
   const goalFactor = profile.sport_intent === 'recreational'
     ? (GOAL_FACTOR[profile.sport_goal] ?? 1.0) : 1.0;
   const dayFactor = sportDayFactor(Array.isArray(profile.sport_days) ? profile.sport_days.length : 0);
-  const systemic = (mod && typeof mod.systemicFactor === 'number') ? mod.systemicFactor : 1.0;
+  const systemic = (gymSupport && typeof gymSupport.systemicFactor === 'number') ? gymSupport.systemicFactor
+    : (mod && typeof mod.systemicFactor === 'number') ? mod.systemicFactor : 1.0;
   // Round to 3 dp so the multiplier is tidy + FP-stable (it propagates into volume
   // targets and the golden-master snapshot), then clamp to the maintenance floor.
   const raw = Math.round(seasonBase * goalFactor * dayFactor * systemic * 1000) / 1000;

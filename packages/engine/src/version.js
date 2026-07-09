@@ -10,7 +10,7 @@
  */
 import { KNOWLEDGE_SET_VERSION } from './lib/knowledge/entries.js';
 
-export const ENGINE_VERSION = '1.1.0'; // 1.1.0 (2026-07-09): season-phased SKB (Approach A) — resolveProgram reads per-phase SKB emphasis; the allocator's round-out pass covers a sport's derived under-developed patterns on an off-season round-out session. Gated on a programming block → byte-identical for un-migrated sports.
+export const ENGINE_VERSION = '1.2.0'; // 1.2.0 (2026-07-09, retire-legacy P1): program/sportLoad/periodization/constraints read sport gym-support (emphasis/priority/power/systemicFactor/seasonVolume/periodization/keyMuscles) from the SKB gymSupport section instead of the legacy sportGymSupport modules — byte-identical (values relocated verbatim). 1.1.0 (2026-07-09): season-phased SKB (Approach A) — resolveProgram reads per-phase SKB emphasis; the allocator's round-out pass covers a sport's derived under-developed patterns on an off-season round-out session. Gated on a programming block → byte-identical for un-migrated sports.
 
 /** The stamp attached to every plan / reflow output. */
 export function provenance() {

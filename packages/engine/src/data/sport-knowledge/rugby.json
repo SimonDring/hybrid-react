@@ -2694,5 +2694,101 @@
         "rewards": "Squat/trap-bar/bench strength anchor progression"
       }
     ]
+  },
+  "gymSupport": {
+    "emphasis": {
+      "glutes": 1.25,
+      "hamstrings": 1.25,
+      "quads": 1.15,
+      "back": 1.2,
+      "shoulders": 1.15,
+      "chest": 1,
+      "core": 1.2,
+      "triceps": 0.9,
+      "biceps": 0.9,
+      "calves": 0.9
+    },
+    "power": true,
+    "keyMuscles": [
+      "glutes",
+      "hamstrings",
+      "back",
+      "quads"
+    ],
+    "priorityExercises": [
+      "power_clean",
+      "hang_clean",
+      "back_squat",
+      "trap_bar_dl",
+      "hip_thrust",
+      "nordic_curl",
+      "copenhagen",
+      "broad_jump",
+      "farmer_carry",
+      "pallof",
+      "ab_wheel"
+    ],
+    "seasonVolume": {
+      "off": 0.9,
+      "pre": 0.85,
+      "in": 0.6,
+      "transition": 0.7
+    },
+    "periodization": {
+      "off": {
+        "totalWeeks": 12,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 5
+          },
+          {
+            "intent": "build",
+            "weeks": 7
+          }
+        ],
+        "deloads": [
+          5,
+          10
+        ]
+      },
+      "pre": {
+        "totalWeeks": 6,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 3
+          },
+          {
+            "intent": "build",
+            "weeks": 3
+          }
+        ],
+        "deloads": [
+          6
+        ]
+      },
+      "in": {
+        "totalWeeks": 4,
+        "split": [
+          {
+            "intent": "build",
+            "weeks": 4
+          }
+        ],
+        "deloads": []
+      },
+      "transition": {
+        "totalWeeks": 4,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 4
+          }
+        ],
+        "deloads": []
+      }
+    },
+    "systemicFactor": 1.0
   }
 }

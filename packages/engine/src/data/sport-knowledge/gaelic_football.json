@@ -2681,5 +2681,100 @@
         "rewards": "Season-over-season capability growth chart — frames the long game over short-term grinding."
       }
     ]
+  },
+  "gymSupport": {
+    "emphasis": {
+      "hamstrings": 1.3,
+      "glutes": 1.25,
+      "quads": 1.15,
+      "calves": 1.1,
+      "core": 1.2,
+      "back": 1.05,
+      "shoulders": 1,
+      "chest": 0.8,
+      "biceps": 0.8,
+      "triceps": 0.8
+    },
+    "power": true,
+    "keyMuscles": [
+      "hamstrings",
+      "glutes",
+      "adductors",
+      "quads"
+    ],
+    "priorityExercises": [
+      "nordic_curl",
+      "copenhagen",
+      "split_squat",
+      "trap_bar_dl",
+      "hip_thrust",
+      "broad_jump",
+      "sl_pogo_jump",
+      "farmer_carry",
+      "pallof",
+      "sl_calf"
+    ],
+    "seasonVolume": {
+      "off": 0.9,
+      "pre": 0.85,
+      "in": 0.6,
+      "transition": 0.7
+    },
+    "periodization": {
+      "off": {
+        "totalWeeks": 12,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 5
+          },
+          {
+            "intent": "build",
+            "weeks": 7
+          }
+        ],
+        "deloads": [
+          5,
+          10
+        ]
+      },
+      "pre": {
+        "totalWeeks": 6,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 3
+          },
+          {
+            "intent": "build",
+            "weeks": 3
+          }
+        ],
+        "deloads": [
+          6
+        ]
+      },
+      "in": {
+        "totalWeeks": 4,
+        "split": [
+          {
+            "intent": "build",
+            "weeks": 4
+          }
+        ],
+        "deloads": []
+      },
+      "transition": {
+        "totalWeeks": 4,
+        "split": [
+          {
+            "intent": "base",
+            "weeks": 4
+          }
+        ],
+        "deloads": []
+      }
+    },
+    "systemicFactor": 1.0
   }
 }
