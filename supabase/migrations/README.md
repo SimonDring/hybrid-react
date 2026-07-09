@@ -49,6 +49,7 @@ step documented in `supabase/SECURITY-DEPLOY.md`.
 | `20260708_player_status_integrity.sql` | 2026-07-05 | S11: server-authoritative coach board — `derive_injury_status()` / `latest_readiness()` + `player_status_server_truth()` BEFORE trigger overrides injury_status/readiness with server truth and clamps the soft trend metrics | **No — staging only.** Pending prod (see `supabase/SECURITY-DEPLOY.md`) |
 | `20260709_player_status_identity.sql` | 2026-07-05 | Coach-board identity: `display_name` column on `player_status` (+ length check) + `player_display_name()`; extends the server-truth trigger to stamp the name server-side | **No — staging only.** Pending prod (see `supabase/SECURITY-DEPLOY.md`) |
 | `20260710_team_join_codes.sql` | 2026-07-05 | Team founding + invites via join codes: `join_code` column + partial unique index on `teams`, `gen_join_code()` / `create_team()` / `join_team_with_code()` / `rotate_team_code()` SECURITY DEFINER RPCs | **No — staging only.** Pending prod (see `supabase/SECURITY-DEPLOY.md`) |
+| `20260711_team_scoping.sql` | 2026-07-06 | WP-50 team-scoping fixes: `player_status` SELECT policy re-scoped to the row's team via `is_coach_of_team` (drops the over-broad `is_coach_of`), `teams.join_code` column revoked from members + coach-only `get_team_join_code()` RPC | **Yes** — applied to prod 2026-07-06 per `supabase/SECURITY-DEPLOY.md` (ahead of staging) |
 
 ### Ordering note (read before replaying the chain)
 
@@ -176,6 +177,9 @@ is simply faster and runs no SQL.)
 ---
 
 ## TODO (Simon): create the STAGING project — do this before any Team-package DDL
+
+(2026-07-09 note: other docs reference a staging harness as run — verify whether
+this TODO is already complete before acting.)
 
 The audit (V15/H1) flags that the first cross-user RLS policy must never be
 tested on production. Exact steps, ~15 minutes:

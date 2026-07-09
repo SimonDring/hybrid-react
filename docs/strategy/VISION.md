@@ -31,12 +31,13 @@ One person onboards through a short questionnaire and the decision engine produc
 multi-week, periodised plan tailored to their own goal. No external oversight — the person
 is their own athlete. This is the app as it stands.
 
-### 2. Team (the near-term priority — not built yet)
+### 2. Team (in build — data spine + coach dashboard live; schedule-constraints next)
 The same engine, wrapped for a squad, across two surfaces:
 
 - **Player — mobile** (`apps/mobile`): each player gets **exactly the same treatment as an
   individual** — their own tailored, adapting plan on their phone.
-- **Coach — web** (`apps/web`): an overall view of the squad. The coach provides the team's
+- **Coach — web** (`apps/web` — exists: marketing site + gated live dashboard): an overall
+  view of the squad. The coach provides the team's
   fixed schedule — matches, pitch / pool / track / pool sessions — which feed in as
   **constraints** so each player's gym plan works *around* their sport load instead of
   clashing with it. The coach sees **team recovery and performance translated into plain

@@ -1,8 +1,10 @@
 # Team Package — Architecture & Data-Isolation Blueprint
 
-> **STATUS: PLANNED — not built.** The current app is the **Individual** package only
-> (`apps/mobile`). This document is the blueprint a future session should build the Team
-> package *toward*. It is the recommended target, not a description of existing code.
+> **STATUS: BUILT** — the team data spine (`teams`/`team_members`/`player_status` +
+> additive RLS) is live on prod, and the coach dashboard (`apps/web`) is gated and
+> wired to live player status. Coach schedule→constraints is the remaining unbuilt
+> piece (see [docs/product/TEAM-NEXT-STEPS.md](TEAM-NEXT-STEPS.md)). This document
+> remains the binding design + privacy pattern. (Updated 2026-07-09.)
 > Vision context: [../strategy/VISION.md](../strategy/VISION.md). Binding guardrails are
 > also summarised in the repo-root `CLAUDE.md` ("TEAM DATA ISOLATION").
 >

@@ -11,6 +11,8 @@
 | **Method** | Full read of the Constitution, TAS, and EDS; requirement-level read of the Ontology + Knowledge Architecture; grounded in the Sprint-1 baseline. No code changed. |
 | **Prime directive** | *Re-seating, not rewrite* (EDS §18): keep the strong machinery, change the order and the primitive, wire the dormant knowledge, ship value continuously (Constitution Art 20). |
 
+> **Status banner (2026-07-09 governance sprint):** SUPPORTING (2026-07-01). The D1–D16 contracts, decision-ownership rules, and target module map remain the active design reference. The sprint backlog (Parts 7–8) is essentially executed — remaining open: D16 prior promotion and endurance-session programming (both deliberately deferred); Parts 4–5 (current-state mapping) are historical. This document is preserved as written; current state lives in `HANDOFF.md`; classification in `docs/DOCUMENTATION-INDEX.md`.
+
 **How to read.** Parts 1–3 define the *future* (reasoning chain, decisions, ownership) from first principles. Parts 4–5 map *current → future* (components, knowledge). Part 6 is the target module map. Parts 7–8 are the *plan* (waves, then executable sprints — the operational heart). Part 9 is traceability; Part 10 is the critical review with revisions folded back.
 
 The governing set already answers much of Parts 1, 2, and 6 (the EDS defines the decision graph D1–D16; the TAS defines the six layers). This blueprint's *new* work is the **mapping, sequencing, backlog, traceability, and multi-lens review** that turn those targets into an executable programme — plus a faithful consolidation of the reasoning model so a sprint can proceed without re-reading five documents.

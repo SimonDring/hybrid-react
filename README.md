@@ -13,18 +13,21 @@ one lockfile at the root).
 ```
 apps/
   mobile/    Player-facing app — React 18 + Vite PWA (the current shipping app).
-             Contains the deterministic decision engine in src/lib/ (for now).
-  web/       PLACEHOLDER — future Next.js marketing site + coach dashboard. Not built yet.
+             Consumes the decision engine from packages/engine.
+  web/       Next.js — config-driven marketing site + the coach dashboard (gated
+             server-side, wired to live team status via team-scoped RLS).
 
 packages/
   shared/    PLACEHOLDER — shared types / utils / status logic. Empty for now.
-  engine/    PLACEHOLDER — reserved slot for the decision / programming / recommendation
-             engine once it is extracted out of apps/mobile/src/lib/. Empty for now.
+  engine/    The extracted pure decision engine (@performance-os/engine): the
+             generatePlan pipeline + the sport / injury / recovery / load
+             knowledge and science data tables.
 
 supabase/    Shared backend — migrations, edge functions, schema.sql, config.toml.
-             Used by apps/mobile today and by apps/web in future.
+             Used by apps/mobile and apps/web.
 
 docs/        Product, strategy, prompts, and engineering docs.
+             Master map of all documentation: docs/DOCUMENTATION-INDEX.md.
 ```
 
 ## Getting started
