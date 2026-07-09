@@ -18,6 +18,7 @@
  *  derivation and looks sports up via the registry. Adding a sport needs no edit here.
  */
 import { gymSupportFor } from '../sportKnowledge/gymSupport.js';
+import { seasonFromWindow } from './seasonWindow.js';
 import { SPORT_BLOCKS } from '../../data/periodizationDefaults.js';
 import { getDiscipline, resolveBuildDisciplineId } from '../../data/disciplines/index.js';
 
@@ -37,6 +38,12 @@ import { getDiscipline, resolveBuildDisciplineId } from '../../data/disciplines/
  */
 export function deriveSeason(profile = {}, asOf = profile.plan_start_date || null) {
   if (!profile.sport) return null;
+
+  // Season-window mode (2026-07-09, P4): a season-based athlete states their first + last game;
+  // the phase is where `today` falls in that competitive window. Takes precedence over a single
+  // event_date (a team athlete has a season, not one race). Null when no window is set.
+  const windowPhase = seasonFromWindow(profile, asOf);
+  if (windowPhase) return windowPhase;
 
   if (profile.event_date && asOf) {
     const today = new Date(asOf + 'T00:00:00');

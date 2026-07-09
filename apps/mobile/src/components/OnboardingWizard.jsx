@@ -309,7 +309,20 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
               </OptionGrid>
             </div>
           )}
-          {a.sportIntent === 'compete' && (
+          {a.sportIntent === 'compete' && (SKB_SPORTS.find(s => s.id === a.skbSport)?.seasonBased) && (
+            <div style={{ display: 'grid', gap: 12 }}>
+              <div>
+                <label style={FIELD_LABEL}>First game of the season <span style={{ opacity: 0.5, fontWeight: 400, textTransform: 'none', fontSize: 10, letterSpacing: 0 }}>(optional)</span></label>
+                <input type="date" style={INPUT} value={a.firstGameDate || ''} onChange={e => set({ firstGameDate: e.target.value })} />
+              </div>
+              <div>
+                <label style={FIELD_LABEL}>Last game of the season <span style={{ opacity: 0.5, fontWeight: 400, textTransform: 'none', fontSize: 10, letterSpacing: 0 }}>(optional)</span></label>
+                <input type="date" style={INPUT} value={a.lastGameDate || ''} min={a.firstGameDate || undefined} onChange={e => set({ lastGameDate: e.target.value })} />
+              </div>
+              <div style={HINT}>We auto-calculate your off / pre / in-season phases around these — off-season builds a rounded base, in-season shifts to sport-specific + prehab.</div>
+            </div>
+          )}
+          {a.sportIntent === 'compete' && !(SKB_SPORTS.find(s => s.id === a.skbSport)?.seasonBased) && (
             <div>
               <label style={FIELD_LABEL}>Key event date <span style={{ opacity: 0.5, fontWeight: 400, textTransform: 'none', fontSize: 10, letterSpacing: 0 }}>(optional)</span></label>
               <input
