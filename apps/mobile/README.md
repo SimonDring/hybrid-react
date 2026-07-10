@@ -1,46 +1,52 @@
-# Hybrid Training — React migration
+# @performance-os/mobile — the player app
 
-React + Vite version of the Hybrid Training Plan PWA. This is Stage 2 of the migration roadmap.
+React 18 + Vite PWA. This is the **Individual package** of Performance OS (one
+person onboards and gets a tailored, periodised gym plan) and the **player
+surface** of the Team package — players in a team get exactly the same app.
 
-## Quick start
+## Run it
 
-```
+From the **repo root** (npm workspaces — one hoisted `node_modules`):
+
+```bash
 npm install
-npm run dev
+npm run dev        # delegates to this workspace; open http://localhost:5173/hybrid-react/
+npm run build      # builds into apps/mobile/dist
 ```
 
-Open `http://localhost:5173/hybrid-react/`.
+Deploys to GitHub Pages automatically via `.github/workflows/deploy.yml` on push
+to `main`. Secrets live in `apps/mobile/.env.local` (gitignored, next to
+`vite.config.js`).
 
-## Deploy
-
-```
-git add .
-git commit -m "your change"
-git push
-```
-
-GitHub Actions builds and deploys automatically via `.github/workflows/deploy.yml`.
-
-## File structure
+## Where things live
 
 ```
-.
-├── index.html              # Vite shell
-├── vite.config.js          # Vite + PWA plugin config
-├── package.json
-├── src/
-│   ├── main.jsx            # Entry point
-│   ├── App.jsx             # Root component with routing
-│   ├── components/         # TopBar, TabBar, ScreenContainer
-│   ├── screens/            # 16 screen components (.jsx)
-│   ├── stores/             # Zustand store
-│   ├── lib/                # Data layer (Storage, Database, Utils, SessionHelper)
-│   ├── data/               # Static training plan content
-│   └── styles/main.css     # Styles (carried over from v2.0)
-└── public/icons/           # PWA icons
+src/
+  screens/       one file per screen (~25, plus auth/)
+  components/    shared shell (TopBar, TabBar, ScreenContainer) + ui/ primitives
+  lib/           data + runtime layer: SyncService.js (ALL writes — Supabase
+                 primary, localStorage cache/offline fallback), Database.js,
+                 Storage.js, supabaseClient.js, PlanService.js (wraps the
+                 engine + runs the adaptive weekly reflow)
+  stores/        Zustand: trainingStore.js (app data), authStore.js (auth)
+  data/          app-side tables: activityTypes, strengthStandards,
+                 exerciseLibrary (form guide), athletePillars, providers, sports/
+  styles/        main.css — the dark-only "Midnight" design system
 ```
 
-## See also
+The **pure decision engine is not in this app** — it lives in
+`packages/engine` (`@performance-os/engine`) and is consumed as a workspace
+dependency. `PlanService.js` is the runtime wrapper around it.
 
-- `STAGE2-GUIDE.md` — step-by-step migration walkthrough
-- Original v2.0 vanilla JS PWA in separate repo
+Data flow: screens → trainingStore → SyncService → Supabase (primary), with
+localStorage as the instant-read cache. Never write to Database.js directly
+from a screen.
+
+## Docs
+
+- Repo-root `CLAUDE.md` — the working guide (rules, structure, data flow)
+- `HANDOFF.md` — current state of play
+- `docs/DOCUMENTATION-INDEX.md` — master map of all documentation
+
+The original Stage-2 migration walkthrough this app grew from is archived at
+`docs/archive/STAGE2-GUIDE.md`.

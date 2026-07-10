@@ -3,6 +3,8 @@
 _A multidisciplinary review of the gym decision engine._
 Date: 2026-06-23 · Method: full code-level architecture map + live literature grounding (Level 1–2 priority).
 
+> **Status banner (2026-07-09 governance sprint):** REVIEW/SUPPORTING evidence record (2026-06-23). Its evidence review remains the citation base for the EDS; its present-tense architecture claims are historical — the engine now lives in packages/engine, ACWR is demoted to a soft input, and the diagnosis-first D1–D16 architecture superseded the module plan critiqued here. This document is preserved as written; current state lives in `HANDOFF.md`; classification in `docs/DOCUMENTATION-INDEX.md`.
+
 **Review panel (the decision quality we are benchmarking against):** Olympic S&C Coach ·
 Professional Team Sports Scientist · High-Performance Director · Sports Rehabilitation
 Specialist · Exercise Physiologist · Strength-Training Researcher · Senior Software

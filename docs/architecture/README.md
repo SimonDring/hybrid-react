@@ -14,6 +14,15 @@ integration — is validated against before implementation.
 |---|---|
 | **[TAS.md](TAS.md)** | The Technical Architecture Specification — the six-layer architecture, the pure-engine boundary and public API, the Decision Engine in depth, knowledge/data flow, configuration separation, the two learning systems, explainability, extensibility, testing, observability, the future-AI seam, security/privacy, the four-lens critical review, and a Current Realization appendix mapping the abstractions to today's stack. |
 | **[AIGAS.md](AIGAS.md)** | The AI Governance & Architecture Specification — the constitutional role of AI: the augmentation-layer principle (the deterministic engine decides; AI interprets, communicates, analyses and augments), the AI/engine boundary and the two entry seams, the capability taxonomy (permitted vs prohibited AI work), explainability/transparency/confidence rules, human oversight, provider independence, cost governance, privacy, observability, and graceful degradation. Every AI capability is validated against it before being built. *(v1.0 draft — pending ratification into the frozen set.)* |
+| [MIGRATION-BLUEPRINT.md](MIGRATION-BLUEPRINT.md) | *Supporting* — the engine-rebuild master plan: the D1–D16 decision contracts, current→future mapping, and the target module map. Its sprint backlog has been executed; the contracts and module map remain the reference. |
+| [ATHLETE-MODEL.md](ATHLETE-MODEL.md) | *Supporting* — the living implementation reference for the Athlete Model (schema, field registry, builder, persistence). |
+| [D7-BLOCK-OBJECTIVE-SPEC.md](D7-BLOCK-OBJECTIVE-SPEC.md) | *Working* — the D7 block-objective design spec; its §9 decisions are still open. |
+| [REASSESSMENT-2026-07-05.md](REASSESSMENT-2026-07-05.md) | *Review (dated, point-in-time)* — the work-package (WP) ledger as of 2026-07-05. |
+| [AIGAS-REVIEW-2026-07-06.md](AIGAS-REVIEW-2026-07-06.md) | *Review (dated, point-in-time)* — the AIGAS panel review; ratification evidence. |
+
+Moved (2026-07-09): `BASELINE-ARCHITECTURE-ASSESSMENT.md` and
+`PHASE3-ARCHITECTURAL-AUDIT.md` are now in `docs/archive/`;
+`STATE-OF-THE-APP-2026-07-07.md` is in `docs/reviews/`.
 
 ## Where this sits
 

@@ -1,5 +1,7 @@
 # Sport Knowledge Base (SKB) — schema, authoring & policy
 
+> **Status banner (2026-07-09 governance sprint):** CANONICAL schema (the 21-section SportProfile contract) with a historical status section. Since 2026-07-09 the SKB is the SOLE sport source (the legacy sportGymSupport layer was deleted, PR #160); 11 profiles are authored, all season-phased. Any "not merged yet / nothing consumes it" wording below is historical. This document is preserved as written; current state lives in `HANDOFF.md`; classification in `docs/DOCUMENTATION-INDEX.md`.
+
 > **What this is:** a reusable, evidence-tagged per-sport knowledge base — the closest
 > digital equivalent we can build of what an elite Head of Performance knows about a sport,
 > in a shape a deterministic engine (and a future AI layer / coach dashboard) can consume.

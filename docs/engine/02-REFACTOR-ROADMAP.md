@@ -5,6 +5,8 @@ architecture), §8 (folder structure), §9 (data contracts), §10 (refactor plan
 §12 (long-term roadmap)._
 Date: 2026-06-23.
 
+> **Status banner (2026-07-09 governance sprint):** ARCHIVE-in-place (2026-06-23). The migration it plans (phases 0–5) is complete, and the delivered engine follows the EDS's diagnosis-first D1–D16 architecture rather than the GoalModule/SportModule registries specified here. Kept in place because the frozen EDS links it; its §9 frozen PlanOutput contract remains load-bearing. This document is preserved as written; current state lives in `HANDOFF.md`; classification in `docs/DOCUMENTATION-INDEX.md`.
+
 > **Role in the doc set.** This is the **software design & build plan** — the orchestrator target,
 > folder structure, typed data contracts, and the phased migration that operationalise the engine
 > design. A *foundational* spec governed by the **[Engine Design Specification](00-ENGINE-DESIGN-SPECIFICATION.md)** (the EDS);

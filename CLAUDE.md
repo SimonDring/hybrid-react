@@ -1,246 +1,228 @@
-App Overview:
-An ELITE STRENGTH & CONDITIONING PLATFORM — an automated S&C coach, not a
-plan generator. It automates the periodised strength & conditioning programming
-an elite coach would write: diagnosed from the sport the user plays (or their
-own goal — getting stronger, building muscle, functional fitness), their
-personal strengths and weaknesses, their needs and available time, and their
-injury history — then reassessed as they train. The multi-week, periodised gym
-plan is the OUTPUT of that coaching decision-making, never the product itself.
-It tracks training sessions, weekly check-ins, daily recovery metrics, and
-injuries, and reassesses at the end of each training block. The target user is
-someone who wants elite-quality training for their goal and the time they have,
-without access to an elite S&C coach. It's a PWA today; the long-term aim is an
-AI-coached native iOS app.
+# CLAUDE.md — the operational handbook
 
-Product North Star:
-The platform opens ELITE strength & conditioning to clubs, teams, and people who
-can't afford an elite S&C coach. It ships as two packages:
-1. INDIVIDUAL — what exists today: one person onboards and gets a tailored plan,
-   no external oversight.
-2. TEAM (the near-term priority, NOT built yet) — a player-facing mobile app
-   (apps/mobile, same treatment as an individual) PLUS a coach-facing web dashboard
-   (apps/web). The coach supplies the team's fixed schedule (matches, pitch / pool /
-   track sessions) as CONSTRAINTS that feed each player's plan so gym work doesn't
-   clash with sport load, and gets a plain-English view of team recovery + loading
-   ("doing too much / too little") aimed at coaches who are NOT S&C specialists.
-Full vision: docs/strategy/VISION.md. Team build blueprint + the data-isolation
-rules that protect player data: docs/product/TEAM-ARCHITECTURE.md.
-
-Scope note (important): the engine is GYM-ONLY today. When a user picks a sport,
-it biases the gym programming (per-muscle emphasis, priority lifts, periodisation
-season) to SUPPORT that sport — it does NOT yet generate endurance/aerobic
-sessions (actual run/cycle/swim workouts). Users currently do their own sport
-training (wearables track it). Programming real endurance sessions is a planned
-future stage, not current scope. The user's onboarding goal drives the training —
-no goals are hard-coded into the app.
-
-The long term aim of this app is to be an app that is designed to be a fitness companion where it can react to daily life in adjusting workout programming and regime based on dynamic goals and time available. It should create detail from initial input, with AI learning integrated to adjust the plan. Wearable integration will provide data from workouts to determine how hard each user is working, injuries, illness, and ability to meet the plan, and adjust to maximise a persons ability to reach their goals.
+This file is the operating context for every session. Read it, then read
+`HANDOFF.md` (current state + open queue). Everything else is reachable through
+`docs/DOCUMENTATION-INDEX.md`.
 
 The user (Simon) is a beginner coder. Explain changes in plain language. Give
 context for why, not just what. Don't assume prior technical knowledge.
 
-Tech Stack & Structure:
-React 18 + Vite (build tool, dev server)
-React Router 6 (navigation)
-Zustand 5 (state)
-Supabase (Postgres + Auth) — online-first sync
-localStorage (offline cache + fallback)
-Deployed to GitHub Pages via GitHub Actions on push to main
-Base path: /hybrid-react/
+## App overview
 
-Where things live
+An ELITE STRENGTH & CONDITIONING PLATFORM — an automated S&C coach, not a
+plan generator. It automates the periodised strength & conditioning programming
+an elite coach would write: diagnosed from the sport the user plays (running,
+cycling, swimming, triathlon, rugby, soccer, GAA, hurling, field hockey) or
+their own goal (getting stronger, building muscle, functional fitness, olympic
+weightlifting), their personal strengths and weaknesses, their needs and
+available time, and their injury history — then reassessed as they train. The
+multi-week, periodised gym plan is the OUTPUT of that coaching
+decision-making, never the product itself. It tracks training sessions, weekly
+check-ins, daily recovery metrics, and injuries, and reassesses at the end of
+each training block. It's a PWA today; the long-term aim is an AI-coached
+native iOS app.
 
-Monorepo — npm workspaces. Run `npm run dev` / `npm run build` from the REPO ROOT
-(they delegate to apps/mobile). Top level:
-  apps/mobile/ — the app today (React + Vite PWA; the Individual package + the player surface)
-  apps/web/ — RESERVED: coach dashboard + marketing site (Next.js; not built yet)
-  packages/engine/ — the EXTRACTED decision engine (`@performance-os/engine`): the pure
-    generatePlan pipeline + the sport-knowledge / injury / recovery / load knowledge and
-    science data tables. apps/mobile consumes it as a workspace dependency. (packages/shared/
-    is still reserved/empty.)
-  supabase/ — schema.sql, migrations, edge functions, runbook (shared backend, at the root)
-  docs/ — SCHEMA.md, decision-engine-evaluation.md, SECURITY-AUDIT.md, strategy/, product/, prompts/,
-    *** FROZEN GOVERNANCE SET (v1.0, 2026-07-01) — do NOT edit as routine work: the Constitution,
-    Decision Ontology, Knowledge Architecture (foundation/), the EDS (engine/00), and the TAS
-    (architecture/TAS.md). They are the authoritative baseline; new work is VALIDATED AGAINST them,
-    never modifies them. Changing one = a deliberate, versioned amendment (Constitution → Amendment
-    & Stewardship), reviewed + reconciled across the set. ***
-    foundation/ — the PLATFORM-LEVEL governing framework, ABOVE the engine spec: CONSTITUTION.md
-    (immutable Articles — the ultimate tie-breaker), DECISION-ONTOLOGY.md (canonical vocabulary),
-    KNOWLEDGE-ARCHITECTURE.md (how knowledge is structured, not hard-coded), PANEL-REVIEW.md,
-    README.md (index + the governance stack). Validate any new feature/algorithm/schema against
-    these BEFORE building.
-    architecture/ — the TECHNICAL blueprint (TAS.md, FROZEN): how the software is BUILT to implement
-    the governing docs — the six-layer architecture, the pure-engine boundary + public API, knowledge/
-    data flow, the two learning systems, the AI seam. Every engineering decision validates against it.
-    architecture/ ALSO holds the two Sprint-1/2 planning docs (NOT frozen — the LIVING REBUILD PLAN,
-    derived from and validated against the frozen set):
-      • BASELINE-ARCHITECTURE-ASSESSMENT.md — the observational baseline: what exists today, how
-        coaching decisions are actually made, knowledge + data-flow catalogues, alignment vs the
-        frozen set, technical debt, what to preserve / replace / remove.
-      • MIGRATION-BLUEPRINT.md — the master rebuild plan: the future decision chain, the D1–D16
-        decision catalogue, current→future mapping, knowledge migration, the target module map, the
-        migration WAVES (W0–W11) + an executable SPRINT BACKLOG (Sprint 0–12), traceability + a
-        six-lens review. START engine-rebuild work from its Part 8 backlog (next up: "Sprint 0 —
-        Safety net & CI gate" = fix the broken `npm test` + add a CI test gate).
-    engine/ — the FOUNDATIONAL engine spec set (how the engine reasons, BENEATH the Constitution):
-    docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md (the EDS) + 01-PANEL-REVIEW, 02-REFACTOR-ROADMAP,
-    03-SPORT-KNOWLEDGE-BASE, 04-PHYSIOLOGICAL-FRAMEWORK, 05-INDEX-LAYER-FOLLOWUPS. The EDS is the
-    reference for any engine feature/refactor/fix. Index + the foundational-vs-running distinction:
-    docs/engine/README.md. (This CLAUDE.md and HANDOFF.md are the RUNNING docs — they track current
-    status against those foundational targets.)
-  HANDOFF.md — current state of play (keep updated at the end of each session)
+Product North Star: the platform opens ELITE strength & conditioning to clubs,
+teams, and people who can't afford an elite S&C coach. Two packages:
+1. INDIVIDUAL — live: one person onboards and gets a tailored plan.
+2. TEAM — the data spine is LIVE on prod (teams/team_members/player_status with
+   privacy-preserving RLS) and the coach web dashboard (apps/web) is gated and
+   wired to live player status. Still to come: the coach's team schedule as
+   CONSTRAINTS feeding each player's plan. Coaches see derived readiness/load
+   signals only — never raw vitals.
+Full vision: docs/strategy/VISION.md. Team blueprint + binding data-isolation
+rules: docs/product/TEAM-ARCHITECTURE.md.
 
-Inside apps/mobile/ — NOTE: every `src/...` path elsewhere in this doc is relative to here:
-  src/screens/ — one file per screen (~23, plus the auth/ subdir)
-  src/components/ — shared shell (TopBar, TabBar, ScreenContainer) + ui/ primitives
-  src/lib/ — app-side data + runtime layer: Database.js, Storage.js, SyncService.js,
-    supabaseClient.js, PlanService.js (wraps the engine + runs the adaptive reflow),
-    sessionOverrides.js, verdicts.js
-  NOTE: the PURE decision engine has MOVED OUT to packages/engine (`@performance-os/engine`) —
-    see the next section.
-  src/stores/ — trainingStore.js (app data), authStore.js (auth session)
-  src/data/ — APP-side data tables: activityTypes.js (session-table column registry),
-  strengthStandards.js (1RM/BW display bands), exerciseLibrary.js (form-guide content for the ⓘ
-  guide — text how-to/cues, matched by name; NOT a competing exercise catalogue), athletePillars.js
-  (Atlas), providers.js (wearable providers), sports/.
-  NOTE: the ENGINE's science tables — strengthExercises.js, muscleVolume.js (MEV/MAV/MRV landmarks),
-  rehabExercises.js, injuryTaxonomy.js — live in packages/engine/src/data, NOT here. (There is no
-  exerciseDemos.js — the ⓘ guide shows a "form video coming soon" placeholder.)
-  src/styles/main.css — all styles (dark-only "Midnight" design system)
+Scope note: the engine is GYM-ONLY today. A user's sport shapes the gym
+programming (via the Sport Knowledge Base: emphasis, priority patterns,
+season-phased periodisation) to SUPPORT the sport — it does NOT yet generate
+endurance/aerobic sessions. That is a planned future stage. The user's
+onboarding goal drives the training — no goals are hard-coded.
 
-The decision engine (core — generates the gym plan)
+Long term: a fitness companion that reacts to daily life — adjusting programming
+to dynamic goals and available time, with AI learning and wearable data
+(effort, injury, illness, adherence) steering the plan toward each person's goal.
 
-LOCATION: the pure engine now lives in packages/engine/src/lib/ (the `@performance-os/engine`
-package). The `src/lib/...` and `src/data/...` paths in THIS section are relative to
-packages/engine/ — NOT apps/mobile/. Only PlanService.js (the runtime wrapper) stays in
-apps/mobile/src/lib/. The GOVERNING design for everything below is the foundational spec set in
-docs/engine/ — start with the EDS (00-ENGINE-DESIGN-SPECIFICATION.md).
+## Documentation governance (read before citing or writing any doc)
 
-generatePlan(profile) in packages/engine/src/lib/PlanGenerator.js is a PURE function — the same
-profile always produces the same plan. Pipeline:
-- resolveProgram (src/lib/strength/program.js) — goal → style, per-muscle emphasis,
-  volume scalar, exercise-priority list.
-- resolvePeriodization (src/lib/plan/periodization.js) — block length, phase split,
-  deload weeks.
-- weeklyMuscleTargets (src/lib/strength/targets.js) — MEV→MAV volume ramp per muscle.
-- allocateGym (src/lib/plan/allocator.js) — greedy fill: pattern anchors, deficit
-  pay-down, weekly MRV ceiling, supersets, rep/RPE scheme, session titles + durations.
-- scheduler (src/lib/plan/scheduler.js) — lays the sessions onto weekdays.
+- **Precedence**: Constitution → Ontology + Knowledge Architecture → EDS / TAS /
+  AIGAS → supporting references → working docs → reviews → archive. Higher wins.
+  Full rules: docs/DOCUMENTATION-GOVERNANCE.md. Master map + owner of every
+  concept: docs/DOCUMENTATION-INDEX.md.
+- **The FROZEN set (v1.0, 2026-07-01)** — never edit as routine work:
+  docs/foundation/CONSTITUTION.md (20 Articles — the tie-breaker),
+  DECISION-ONTOLOGY.md, KNOWLEDGE-ARCHITECTURE.md,
+  docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md (the EDS),
+  docs/architecture/TAS.md. New work is VALIDATED AGAINST them, never modifies
+  them. Changing one = a deliberate, versioned amendment (Constitution →
+  Amendment & Stewardship), reconciled across the whole set. Frozen-doc defects
+  go to the amendment queue (documentation audit §2), not inline fixes.
+  docs/architecture/AIGAS.md governs all AI work (draft pending ratification).
+- **Status lives in HANDOFF.md only.** Specs never carry "currently"/"not built
+  yet" claims — that is how this repo's docs rotted before 2026-07-09. Reviews
+  (docs/reviews/) are dated evidence, never current state.
+- **Archive, never delete.** Superseded docs move to docs/archive/ (git mv) or
+  get a dated banner if frozen docs/code reference their path.
 
-PlanService.js wraps the engine for screens (getPhases/getPhase/getWeek) and runs the
-adaptive RUNTIME reflow: the CURRENT week reflows around what's actually been done +
-readiness + training-load (ACWR), including adaptive deloads (force/defer). The pure
-generator is never mutated. Volume accounting lives in src/lib/plan/volume.js +
-src/data/muscleVolume.js; injuries filter sessions via src/lib/injury/.
+## Philosophy (distilled from the frozen set — the originals win)
 
-Try it: the /dev route (DevPlayground) generates a plan from any onboarding answers
-with a live actual-vs-target volume readout. Engine tests: node tests/*.js.
+- **Engineering**: the reasoning core is pure and deterministic (Art 18); the
+  same profile always produces the same plan; knowledge is data, separate from
+  reasoning (Art 17) — adding a sport/exercise/rule is a data change, not a core
+  edit; validation is a separable layer that disposes what construction proposes
+  (Art 19); simplicity is a feature — complexity must earn its place (Art 20).
+- **Coaching**: diagnosis precedes prescription; reason in physical qualities,
+  not muscles (Art 5); adaptation is chosen before dose — volume is a guardrail,
+  not a goal (Art 6); minimum effective intervention (Art 7); the gym serves the
+  sport (Art 2); safety and recoverability override optimisation (Arts 8–9).
+- **AI (AIGAS)**: the deterministic engine makes coaching decisions; AI
+  interprets, communicates, analyses, augments — NEVER replaces the engine or
+  the human. AI enters only through two seams (validated decision substitution;
+  knowledge/priors), always behind D14 validation, never with a browser-held key.
+- **Evidence**: confidence governs authority (Art 13) — contested science can
+  never hard-gate; every recommendation must be explainable (Art 14); no silent
+  truncation or debt (Art 15).
 
-The Athlete Model (Sprint 3): the athlete representation every FUTURE coaching decision reads —
-packages/engine/src/lib/athlete (schema + field-registry justification gate + validation + builder)
-and packages/engine/src/lib/performance (capability-per-physical-quality with confidence), fed by
-packages/engine/src/data (qualities/adaptations/priors/training-age bands), with adapters that
-round-trip to today's engine input (proven byte-identical by apps/mobile/tests/athlete-adapter-golden-master.js).
-App-side apps/mobile/src/lib/AthleteModelService.js persists it (versioned) at users.profile.athlete_model
-and Onboarding.jsx dual-writes it alongside the legacy profile — the live plan generator is UNCHANGED
-(parallel, proven by tests). Design: docs/superpowers/specs/2026-07-01-athlete-model-design.md; tech
-doc: docs/architecture/ATHLETE-MODEL.md. Plan 2 (done): the onboarding sport list is SKB-derived
-(packages/engine/src/lib/sportKnowledge/selectable.js) and the Performance Model's demandProfile is
-populated from the SKB (packages/engine/src/lib/performance/demandProfile.js) — the live plan is
-still unchanged; next is the diagnosis engine (couple demand × capability). Diagnosis (done): the
-Performance Model now computes the diagnosis itself (performance/diagnose.js D4 limiting factors,
-performance/prioritise.js D5 priority qualities) — model output only, it does not yet steer the plan.
+## Tech stack & structure
 
-How data flows (IMPORTANT)
+React 18 + Vite · React Router 6 · Zustand 5 · Supabase (Postgres + Auth,
+online-first sync) · localStorage (offline cache) · GitHub Pages via Actions on
+push to main (base path /hybrid-react/) · apps/web: Next.js.
+
+Monorepo — npm workspaces. `npm run dev` / `npm run build` from the REPO ROOT
+(delegate to apps/mobile). Top level:
+- apps/mobile/ — the app today (React PWA; Individual package + player surface)
+- apps/web/ — Next.js: config-driven marketing site + the coach dashboard
+  (gated, live-wired to player_status; leads/analytics stubs await wiring)
+- packages/engine/ — `@performance-os/engine`: the pure decision engine +
+  knowledge/science data tables (packages/shared/ still reserved/empty)
+- supabase/ — schema.sql, migrations (ledger: supabase/migrations/README.md —
+  canonical), edge functions, SECURITY-DEPLOY.md runbook
+- docs/ — governed per docs/DOCUMENTATION-GOVERNANCE.md; map in
+  docs/DOCUMENTATION-INDEX.md
+- HANDOFF.md — current state of play (update at the end of each session; history
+  lives in docs/archive/)
+
+Inside apps/mobile/ (paths below relative to here):
+- src/screens/ — one file per screen (~25, plus auth/)
+- src/components/ — shell (TopBar, TabBar, ScreenContainer) + ui/ primitives
+- src/lib/ — app-side data/runtime layer: Database.js, Storage.js,
+  SyncService.js, supabaseClient.js, PlanService.js (wraps the engine + runs the
+  adaptive reflow), AthleteModelService.js, AiService.js (behind flags),
+  sessionOverrides.js, verdicts.js, teamStatus.js, validation/, and more
+- src/stores/ — trainingStore.js (app data), authStore.js (auth session)
+- src/data/ — APP-side tables only: activityTypes.js, strengthStandards.js
+  (display bands), exerciseLibrary.js (form-guide content for the ⓘ guide),
+  metricGlossary.js, providers.js
+- src/styles/main.css — all styles (dark-only "Midnight" design system)
+
+The ENGINE's science/knowledge tables live in packages/engine/src/data — the
+SKB (sport-knowledge/*.json — the SOLE source for every sport), exercise
+catalogue + quality tags, muscle-volume landmarks (MEV/MAV/MRV), injury
+taxonomy, rehab exercises, dose schemes, governed knowledge entries
+(knowledge/entries.js, versioned as KNOWLEDGE_SET_VERSION).
+
+## The decision engine (core)
+
+The pure engine lives in packages/engine (governing spec: the EDS).
+`generatePlan(profile)` in src/lib/PlanGenerator.js is PURE — same profile,
+same plan (dates from profile.plan_start_date, never the clock).
+
+It is DIAGNOSIS-FIRST end to end (since the build flip, 2026-07-07):
+
+```
+onboarding → Athlete Model (WHO) → Performance Model:
+  capabilities × demandProfile → D4 limiting factors → D5 priority qualities
+  → D9 session objective → D10 movement requirements
+  → D11 intervention selection (value hierarchy, transfer-per-fatigue budget)
+  → D12 dose by quality → scheduling → D14 validation (plan.meta.validation)
+```
+
+- Build goals run the discipline engine (get stronger → powerlifting; build
+  muscle / functional → hypertrophy; olympic weightlifting first-class).
+- Sport goals are steered by the SKB — all 11 sports, season-phased (off-season
+  round-out ↔ in-season specific), season window derived from first/last game.
+- Muscle-volume (MEV/MAV/MRV) is the downstream LEDGER/guardrail, not the driver.
+- Injuries filter at selection (constraints-first) with the render-time filter
+  as backstop; validators cap verdicts by knowledge confidence (Art 13).
+
+PlanService.js (app-side) wraps the engine for screens and runs the adaptive
+RUNTIME reflow: the current week reflows around what's been done + readiness +
+training load, incl. adaptive deloads. The pure generator is never mutated.
+Freeze-on-start: a STARTED session is pinned, never recomputed.
+
+Try it: the /dev route (DevPlayground) generates a plan from any onboarding
+answers with a live volume readout. Tests: `npm test` (CI-gated; golden master
+re-baselined only deliberately via UPDATE=1, audited key-by-key).
+
+## How data flows (IMPORTANT)
+
 Screens → trainingStore (Zustand) → SyncService → Supabase (primary)
 ↘ Database.js / localStorage (cache)
 
-WRITES go through SyncService. It writes to Supabase first (when signed in),
-then updates localStorage. Falls back to localStorage if offline.
-READS go through the store's buildView(), which reads localStorage directly
-for instant rendering.
-On sign-in, the store's syncFromCloud() pulls all rows from Supabase.
+WRITES go through SyncService (Supabase first when signed in, then
+localStorage; falls back offline). READS go through the store's buildView()
+(localStorage, instant). On sign-in, syncFromCloud() pulls from Supabase.
 
-Hard rules — do not break these
+## Hard rules — do not break these
 
-NEVER commit .env.local. It holds Supabase keys. It is gitignored.
-NEVER put the Supabase service_role key in app code. Only the anon key
-belongs in the browser, protected by Row Level Security.
-TEAM DATA ISOLATION (binding once the Team package is built). Players see ONLY
-their own rows. Coach access is ADDITIVE and TEAM-SCOPED — a coach can read their
-own team's players, never another team's; players can never see each other. RAW
-wearable/health vitals (daily_metrics health columns, wearable_readings) are NEVER
-readable by a coach: they roll UP into a derived readiness/load signal, and the
-coach sees only that derived signal + plan/adherence + injury status/availability —
-never the underlying HRV / sleep / resting-HR. Any cross-user access goes through
-deliberate, tested RLS that EXTENDS auth.uid() = user_id (never service_role in the
-browser). Design + RLS pattern: docs/product/TEAM-ARCHITECTURE.md.
-ALL data writes go through SyncService (via the store actions). Never write
-to Database.js directly from a screen.
-Use the REAL theme variables, never invented ones:
-USE:   --bg-surface, --bg-surface-2, --txt-strong, --txt-muted, --txt-body,
---hairline, --rust, --moss, --ochre, --shadow-sm, --shadow-md
-NEVER: --card-bg, --border, --accent-bg  (these don't exist; they cause
-broken colours in dark/auto mode — this bug has recurred 3 times)
-Don't rewrite Database.js. It's stable and tested; other code depends on
-its synchronous API. SyncService wraps it.
-Don't change the Supabase schema without a versioned migration.
-The five governing documents are FROZEN (v1.0). Do NOT edit the Constitution, Decision Ontology,
-Knowledge Architecture (docs/foundation/), the EDS (docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md),
-or the TAS (docs/architecture/TAS.md) as part of routine work. They are the authoritative baseline
-every feature/algorithm/schema is validated against; changing one is a deliberate, versioned
-amendment (per the Constitution's Amendment & Stewardship section), reviewed and reconciled across
-the whole set — never an inline edit during feature work.
-The app must still run (npm run dev) at the end of every change.
+- NEVER commit .env.local (Supabase keys; gitignored).
+- NEVER put the service_role key in app code. Only the anon key belongs in the
+  browser, protected by Row Level Security.
+- TEAM DATA ISOLATION (binding, live). Players see ONLY their own rows. Coach
+  access is ADDITIVE and TEAM-SCOPED. RAW vitals (daily_metrics health columns,
+  wearable_readings) are NEVER coach-readable — coaches get only the derived
+  readiness/load signal + plan/adherence + injury availability. Cross-user
+  access only via deliberate, tested RLS extending auth.uid() = user_id.
+  Pattern: docs/product/TEAM-ARCHITECTURE.md; proofs: supabase rls-harness.
+- ALL data writes go through SyncService (via store actions). Never write to
+  Database.js directly from a screen. Don't rewrite Database.js (stable,
+  synchronous API others depend on).
+- Use REAL theme variables only:
+  USE: --bg-surface, --bg-surface-2, --txt-strong, --txt-muted, --txt-body,
+  --hairline, --rust, --moss, --ochre, --shadow-sm, --shadow-md
+  NEVER: --card-bg, --border, --accent-bg (don't exist; this bug has recurred 3×).
+- No Supabase schema change without a versioned migration + a row in the ledger
+  (supabase/migrations/README.md).
+- The frozen five are never edited inline (see Documentation governance above).
+- The engine stays pure: no clock reads, no randomness, no I/O inside
+  packages/engine plan generation.
+- Never call an AI provider with a key in the browser — server-side Edge
+  Function only (ai-render), behind the AIGAS gates.
+- The app must still run (npm run dev) at the end of every change.
 
-Workflow rules
+## Workflow — how work runs here
 
-Test with npm run dev before committing.
-Commit in small, described steps. Tag milestones with git tag.
-Review every diff before committing.
-Theme variables, RLS (auth.uid() = user_id), and the store→Sync→Supabase
-path are the three things most likely to cause silent failures. Check them
-first when something "doesn't save".
+1. **Reason before coding.** Locate the decision you're touching in the D1–D16
+   catalogue (EDS §20) and the concept's canonical doc (DOCUMENTATION-INDEX).
+   Validate the approach against the Constitution/EDS/TAS BEFORE building.
+   If it needs new knowledge, it's a data/knowledge-entry change, not core code.
+2. **Sprints begin with**: superpowers:brainstorming → design spec
+   (docs/superpowers/specs/YYYY-MM-DD-*-design.md, committed) → plan
+   (docs/superpowers/plans/) → subagent-driven development → whole-branch
+   review → PR. Specs/plans are immutable records once merged.
+3. **Test with npm test + npm run dev before committing.** Commit small,
+   described steps; review every diff. Golden-master changes must be intended,
+   audited, and explained.
+4. **Merges are Simon's** (deploys are consequential). Standing charter
+   (2026-07-03): green, low-risk PRs may merge autonomously; HIGH-risk re-seats,
+   coaching-philosophy calls, public-interface changes, and anything touching
+   the frozen set PAUSE for Simon.
+5. **Drift prevention**: status claims go in HANDOFF.md only; update HANDOFF +
+   the DOCUMENTATION-INDEX at session end; run a docs staleness sweep after
+   each major milestone (template: docs/reviews/2026-07-09-documentation-audit.md).
+6. Debugging silent failures: theme variables, RLS (auth.uid() = user_id), and
+   the store→Sync→Supabase path are the three usual suspects when something
+   "doesn't save".
 
-Known issues / current state
+## Current state & roadmap
 
-Decision engine is mature + evidence-based — exhaustively evaluated 2026-06-21
-(docs/decision-engine-evaluation.md). Shipped: weekly MRV ceiling, real event taper
-(keeps intensity, cuts volume), adaptive deloads (fatigue/ACWR-driven), sport-specific
-session anchors, honest durations. It is GYM-ONLY — sport selection biases the gym
-plan; it does not yet program run/cycle/swim sessions (a future stage).
-
-ENGINE RE-SEATING (planned, not started — the current major direction). The engine today is a
-VOLUME-FIRST gym planner (it computes per-muscle set targets, then fills them). The frozen governing
-set defines a DIAGNOSIS-FIRST coaching engine that reasons in physical qualities/adaptations, with
-muscle-volume as a downstream ledger. The precise gap + the phased, executable path from one to the
-other live in docs/architecture/BASELINE-ARCHITECTURE-ASSESSMENT.md (where we are) and
-MIGRATION-BLUEPRINT.md (how we get there — begin at its Part 8 "Sprint 0: safety net & CI gate").
-It's a RE-SEATING, not a rewrite: the pure engine + golden-master, the injury system, the SKB, and
-freeze-on-commit are preserved. See HANDOFF.md for the current sprint pointer.
-Sync layer (SyncService) handles sessions, weekly check-ins, injuries, and daily
-metrics; the store is offline-first (instant local write, background cloud sync).
-Wearable + training-load (Strava ingest → HR zones → ACWR → plan adaptation) is live.
-AI features (virtual physio, AI plan adjustment, quarterly AI assessment) are
-PLACEHOLDERS only. Real AI is a later stage and needs a server-side Edge Function
-holding the API key — never call Claude with a key in the browser.
-Apple Sign-In, HealthKit, push notifications, native app = a later stage, future.
-
-Roadmap (for context)
-Stage 3 (DONE): Supabase backend + auth + sync; wearable + training-load (ACWR);
-gym decision-engine rebuild + hardening; "Midnight" dark UI.
-Stage 4 (DONE): richer auth — Apple/Google OAuth, open signup, per-user cache isolation.
-Stage 4.5 (DONE): monorepo restructure — app → apps/mobile, npm workspaces, apps/web +
-packages/{shared,engine} reserved, supabase/ at root (2026-06-22).
-Stage 5 (NEXT — current priority): TEAM PACKAGE — coach-facing web (apps/web) alongside
-the existing player mobile (apps/mobile). The coach's team schedule becomes constraints on
-each player's plan; a plain-English team-loading overview reuses the existing verdicts +
-training-load (ACWR) layer; a teams/team_members data model with additive, privacy-preserving
-RLS keeps raw vitals private (see docs/product/TEAM-ARCHITECTURE.md).
-Stage 6: Claude AI plan generation/adjustment via a Supabase Edge Function — the
-deterministic engine + the loadDecision/deloadRecommendation signals are clean inputs an
-AI layer can consume or override behind PlanService (never call Claude with a key in the browser).
-Stage 7 (future): real endurance session programming (run/cycle/swim workouts);
-React Native / Expo native iOS app + HealthKit + App Store.
-
+Current state, open queue, and invariants: **HANDOFF.md** (always the freshest).
+Canonical stage map:
+- Stages 3–4.5 (DONE): Supabase backend/auth/sync; wearables + training load
+  (ACWR, demoted to soft input); Midnight UI; OAuth + open signup; monorepo.
+- Stage 5 (CURRENT): TEAM package — spine + dashboard live; next: coach schedule
+  → per-player plan constraints; plain-English team loading view.
+- Stage 6: AI layer via Supabase Edge Function per AIGAS (seam built, flags OFF;
+  needs eval harness + Simon's go-live).
+- Stage 7 (future): real endurance programming; React Native/Expo iOS + HealthKit.

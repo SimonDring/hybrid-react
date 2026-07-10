@@ -114,6 +114,13 @@ Google is the easier of the two. ~10 minutes.
 
 ## Step 2 — Apple
 
+> Note (2026-07-09): the deep-dive Apple guide is
+> `docs/setup/sign-in-with-apple.md`. The two guides currently recommend
+> DIFFERENT Apple Services IDs (`com.simondring.hybridtraining.web` here vs
+> `com.simondring.performanceos.web` there) — before changing anything, check
+> which ID is actually configured in the Apple Developer portal; a merge of
+> these guides is queued.
+
 Apple is fiddlier and **requires a paid Apple Developer account** ($99/yr). Budget
 ~30 minutes. You'll create four things: an **App ID**, a **Services ID**, a
 **key**, and then assemble a **client secret**.

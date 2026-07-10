@@ -9,6 +9,13 @@ purely about configuring two external dashboards — **Apple Developer** and
 **Time:** ~30–45 minutes. **Do the phases in order** — Supabase needs values that
 Apple hands you first.
 
+> Note (2026-07-09): the general OAuth guide (Google + Apple) is
+> `supabase/OAUTH-SETUP.md`. The two guides currently recommend DIFFERENT Apple
+> Services IDs (`com.simondring.performanceos.web` here vs
+> `com.simondring.hybridtraining.web` there) — before changing anything, check
+> which ID is actually configured in the Apple Developer portal; a merge of
+> these guides is queued.
+
 ---
 
 ## What you're actually doing (plain English)

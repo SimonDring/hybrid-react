@@ -1,8 +1,9 @@
 # D7 · Block Objective — Design Specification (WP-47)
 
-- **Status:** DESIGN SPEC — *build paused for Simon's review.* This document proposes the
-  coaching model and the software seam; **no engine code changes until Simon signs off** on
-  the open questions in §9. Nothing here has been built.
+- **Status:** WORKING design spec. The gated slice is BUILT and dormant (PRs #147/#151/#154,
+  2026-07-06): D7 steers deload rhythm + phase split behind a learned-recoverability-prior gate
+  that no athlete passes until D16 promotion. §9 open questions + the D6 strategy object still
+  gate broad activation — Simon's call. (Header updated 2026-07-09.)
 - **Author:** continuous lead-engineer pass, 2026-07-06.
 - **Implements (frozen, not modified):** EDS `docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md`
   → **D7 · Periodisation / Block Objective** (and its neighbours D5, D6, D8, D16).

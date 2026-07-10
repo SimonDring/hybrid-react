@@ -307,8 +307,10 @@ set of priority qualities to develop:
 entries — each one *carries* the `adaptations[]` that develop that quality, rather than being a flat
 list of adaptations itself.
 
-**This diagnosis is model output only.** Nothing in the live plan generator reads
-`limitingFactors`/`priorityAdaptations` yet — see §12.
+**This diagnosis now steers the live plan (updated 2026-07-09).** All cohorts are
+diagnosis-steered — run, cycle, swim, all team sports, and build goals (the build flip deployed
+2026-07-07: build goals run the discipline engine — powerlifting/hypertrophy/olympic — with real
+goal-demand profiles per WP-42). The original "model output only" limitation in §12 is resolved.
 
 ### 5.5 Exercise-quality knowledge layer (Sprint 5, PARALLEL)
 
@@ -349,7 +351,7 @@ qualities and requirements (the runner gets durability/economy and no chest work
 competency-gated strength base). Both golden masters stay byte-identical. Consumed next by **D11**
 (Sprint 8, the allocator re-seat). Design/plan: `docs/superpowers/{specs,plans}/2026-07-02-session-objective-movement-requirements*`.
 
-### 5.7 D11 intervention selection — the run/cycle re-seat (Sprint 8, LIVE for run + cycle)
+### 5.7 D11 intervention selection — the run/cycle re-seat (Sprint 8; now LIVE for ALL cohorts — updated 2026-07-09)
 
 `packages/engine/src/lib/plan/selectInterventions.js` re-seats exercise selection for **run and cycle**
 athletes: instead of the muscle-deficit greedy fill, it selects the minimum-effective set of exercises
@@ -358,7 +360,10 @@ that satisfy the D9/D10 requirement, ordered by **transfer-per-fatigue** in the 
 mobility), **capped at 2 exercises per movement pattern**, and **stopping at the fatigue budget** (banks
 the rest). Muscle-volume is now the downstream **ledger** (the MRV ceiling still guards, in-loop).
 `allocator.js` branches: run/cycle with a non-empty diagnosis → D11; **build and swim are unchanged**
-(byte-identical, gated by `apps/mobile/tests/build-parity.js`).
+(byte-identical, gated by `apps/mobile/tests/build-parity.js`). *(Updated 2026-07-09: this
+run/cycle-only branch is historical — swim, all team sports, and build goals are now
+diagnosis-steered too; build goals run the discipline engine (powerlifting/hypertrophy/olympic)
+since the build flip deployed 2026-07-07.)*
 
 The diagnosis reaches the plan via `performanceModelForProfile(profile, asOf)`
 (`packages/engine/src/lib/performance/forProfile.js`), threaded through `generatePlan(profile, opts?)` →
@@ -374,8 +379,9 @@ stay diagnosis-driven.
 
 The run/cycle golden master was deliberately **re-baselined** (only `sport·run-*`/`sport·cycle-*`
 archetypes changed); `d11-runner-quality.js` gates the *nature* of the change (durability in, chest flyes
-out, leaner sessions). **Deferred:** swim (a swimmer's gym need is upper-pull/shoulder, not the
-mobility→robustness the diagnosis produces — kept on the legacy path); D12 dose schemes; the
+out, leaner sessions). **Deferred at Sprint 8 (updated 2026-07-09 — swim has since been
+diagnosis-steered like every other cohort):** swim (a swimmer's gym need is upper-pull/shoulder, not the
+mobility→robustness the diagnosis produces — kept on the legacy path at the time); D12 dose schemes; the
 MRV→validator extraction; SKB-primary selection (Sprint 9); D11 for on-demand "Train Now". Design/plan:
 `docs/superpowers/{specs,plans}/2026-07-03-d11-intervention-selection*`.
 
@@ -518,7 +524,9 @@ isolated from decision code.
 - **Non-queryable across athletes** — the model lives inside `users.profile`; a normalized
   `athlete_profiles` table is deferred to the Team package (cross-athlete reads).
 - **The diagnosis (`limitingFactors` / `priorityAdaptations`) is model output only — it does not
-  yet steer plan generation.** D4/D5 (§5.4) now compute the demand × capability diagnosis, but
+  yet steer plan generation.** *(resolved — see HANDOFF.md; updated 2026-07-09: all cohorts —
+  run, cycle, swim, team sports, and build goals — are diagnosis-steered; the build flip deployed
+  2026-07-07.)* D4/D5 (§5.4) now compute the demand × capability diagnosis, but
   nothing downstream reads it: the live plan generator still runs entirely off the legacy profile
   via `athleteModelToEngineInput`, unchanged. Coupling the diagnosis into what the plan actually
   builds (the diagnosis→plan re-seating) is the **next sprint**.
@@ -526,7 +534,10 @@ isolated from decision code.
   and wired into the `magnitude` formula so a later sprint can enrich them (from the quality
   registry's `fatigueCost`/prerequisites and the injury system) without changing the shape or
   breaking consumers.
-- **Build-goal diagnosis is empty.** `diagnoseLimitingFactors` only ever produces factors when a
+- **Build-goal diagnosis is empty.** *(resolved — see HANDOFF.md; updated 2026-07-09: build goals
+  have real goal-demand profiles (WP-42) and run the discipline engine —
+  powerlifting/hypertrophy/olympic — since the build flip deployed 2026-07-07.)*
+  `diagnoseLimitingFactors` only ever produces factors when a
   `demandProfile` exists, and `demandProfile` is only built from a primary **sport** (§5.2). Athletes
   whose goal is a build-goal (get stronger, build muscle, general fitness) with no sporting context
   get `limitingFactors: []` and `priorityAdaptations: []` — not because the diagnosis is broken, but
@@ -538,7 +549,8 @@ isolated from decision code.
 - **Revised onboarding question wording landed in Plan 2** — SKB-driven sport + position selection,
   session-duration, training-age, and movement-competency steps are now in `OnboardingWizard.jsx`;
   see §5.2/§5.3 for the mechanism. Live plans are unchanged (golden master green).
-- **Pre-existing engine golden-master drift (unrelated to this sprint).** `apps/mobile/tests/golden-master.js`
+- **Pre-existing engine golden-master drift (unrelated to this sprint).** *(resolved — see
+  HANDOFF.md.)* `apps/mobile/tests/golden-master.js`
   reports a 19-archetype `restSec` drift that predates Sprint 3 (the snapshot was last regenerated at
   `49f9263`; allocator rest logic changed afterward; the broken `npm test` never ran it). It is
   tracked separately (the blueprint's "Sprint 0 — safety net & CI gate") and was **not** touched

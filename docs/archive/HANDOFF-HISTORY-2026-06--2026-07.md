@@ -1,0 +1,1813 @@
+# Project Handoff — state of play
+
+_Last updated: 2026-07-09 (sport-enum onboarding fix — MERGED to main via PR #161; 195/195,
+KSV 1.30.0, build green). The retire-legacy + season-window work is now ON MAIN (merged via PR #160).
+Keep this current at the end of each work session._
+
+## ✅ MERGED — onboarding accepts triathlon + team sports (2026-07-09, PR #161)
+
+**Bug:** selecting Triathlon (or rugby/soccer/gaelic_football/hurling/field_hockey) in onboarding failed
+the profile save with **"Sport is not a recognised value"** and generated no plan. The app's
+`ENUMS.sport` (`apps/mobile/src/lib/validation/rules.js`) was a hand-listed `['run','cycle','swim']` that
+had drifted behind the engine binding — onboarding sets `profile.sport` to the binding's `engineSport`
+(triathlon→`triathlon`, GAA codes→`gaa`, etc.), so **6 of the 11 selectable sports were rejected on save**.
+**Fix (derive, don't duplicate):** the engine now exports `ENGINE_SPORT_IDS` (the distinct `engineSport`
+set of `SKB_ENGINE_BINDING`) and validation derives `ENUMS.sport` from it — a newly-bound flagship sport
+can never drift out again. New regression test `sport-onboarding-validation.js` walks every selectable
+sport through the real `answersToProfilePatch → validateProfile` chain. Additive (KSV 1.29→1.30 for the
+`data/` edit; golden-master diff = version stamp only; all plan output byte-identical). Spec/plan in
+`docs/superpowers/{specs,plans}/2026-07-09-sport-enum-onboarding-fix*`.
+
+---
+
+
+## ⏰ REVIEW — retire the legacy sport layer + season-window detection (2026-07-09, autonomous)
+
+**Same branch, continues the season-phased work. NOT pushed/merged. 194/194, build green.**
+Design → `docs/superpowers/specs/2026-07-09-retire-legacy-sport-layer-design.md`; plan →
+`docs/superpowers/plans/2026-07-09-retire-legacy-sport-layer.md`. Four phases, each its own commit(s):
+
+- **P1 — the legacy `sportGymSupport/` layer is DELETED.** Its data (emphasis, priority, power,
+  systemicFactor, seasonVolume, periodization, keyMuscles) was relocated **verbatim** into a new SKB
+  `gymSupport` section; program/sportLoad/periodization/constraints read the SKB via `gymSupportFor()`;
+  generic defaults moved to `data/periodizationDefaults.js`. **Byte-identical** (golden-master unchanged;
+  proven per-archetype). **The codebase now has ONE source — the SKB — for every sport.** *(This is your
+  core ask: legacy is redundant and gone.)*
+- **P2 — priority is DERIVED from the exerciseLibrary** (`derivePriorityExercises`, ranked by
+  `transferToSportRating`, phase-suitable) — the duplicated `priorityExercises` lists are deleted (single
+  source). Intentional selection change (12 sport fixtures re-baselined; 0 build). Season emphasis +
+  round-out keep each plan balanced.
+- **P3 — the 5 team/field sports are season-phased** (rugby/soccer/GAA/hurling/hockey). Off-season floors
+  the emphasis + a round-out that derives each sport's under-developed patterns (soccer/GAA/hockey → upper;
+  **rugby already balanced → none**). **All 11 sports are now on the season-phased standard.**
+- **P4 — season-window phase detection.** `deriveSeason` gains a window mode: a season-based athlete gives
+  first + last game and the phase is derived from where today falls (off → pre → in → transition across the
+  calendar; boundaries from SKB `meta`, defaults 6/3 wk). Onboarding collects the two dates; the wizard asks
+  them for season-based (team) sports (`selectable.seasonBased`). Byte-identical without a window set. **The
+  same window logic is the seam the future coach fixture-input (TEAM package) plugs into.**
+
+**Deferred (documented, not dormant):** `movementPolicy` (in-season pool restriction — deprioritise heavy
+spinal / cap upper), congestion-aware in-season micro-phasing (needs the coach's full fixture list), and a
+per-sport `meta.preSeasonWeeks`/`transitionWeeks` override (the helper reads it; not authored yet).
+
+**To merge:** the branch contains ALL of the 2026-07-08 audit + 2026-07-09 season + retire-legacy work.
+`git checkout main && git merge season-phased-skb-2026-07-09`. Each phase is a self-contained commit-group
+if you want to review/cherry-pick incrementally.
+
+---
+
+
+## ⏰ REVIEW — season-phased SKB programming (2026-07-09, autonomous, Approach A)
+
+**Branch `season-phased-skb-2026-07-09` (stacked on the 2026-07-08 audit branch) — NOT pushed/merged. 189/189, builds.**
+Design brainstormed with Simon → spec `docs/superpowers/specs/2026-07-09-season-phased-skb-design.md`
+→ plan `docs/superpowers/plans/2026-07-09-season-phased-skb.md` → implemented. This is the **first slice
+of T3** (wire the SKB into generation): the SKB `seasonalModel` now carries a machine-consumable
+`programming` block per phase, and the generator reads it directly (Approach A — SKB is the source).
+
+**What it does (the season arc, verified end-to-end):**
+- **Off-season** floors the sport's emphasis to a rounded base **+ adds one round-out session** that trains
+  the sport's *derived under-developed* patterns. The target is decided in the background from the sport's
+  own emphasis, so it generalises: **runner/cyclist → upper** (press 0→20+), **swimmer → lower** (squat/hinge/
+  calf, lower 12→62). Never a generic template; sourced sport-priority-first.
+- **In-season** keeps each sport's specific vector (byte-identical to the legacy emphasis) + no round-out.
+- Migrated: **running ×3, cycling, swimming, triathlon**. GAA/field sports not yet migrated (fall back to legacy).
+
+**Safety / how it's gated:** every new behaviour is gated on a `programming` block being present. Un-migrated
+sports and ALL build goals are **byte-identical** (golden-master: only the 6 off-season endurance fixtures
+drift; verified per-archetype). Pure/deterministic preserved.
+
+**Commits (7):** spec → plan → Exec A (pure units: schema validator, `movementPatternMap`, `roundOutTargets`,
+`seasonProgramming` accessor) → Exec B+C (engine wire in `program.js`/`allocator.js` + `running_middle` walking
+skeleton) → Exec D (endurance sports authored). Tests: `season-{pattern-map,roundout,accessor,schema,
+running-middle,endurance}.js`. Five pre-existing tests were re-pinned to `sport_season:'in'` (they asserted the
+old always-narrow vector, which now lives in-season) — documented inline.
+
+**Deferred (documented, NOT dormant):** `movementPolicy` (in-season pool restriction — deprioritise heavy
+bilateral spinal loading, cap upper to a maintenance touch). It's in the schema + validated, but the allocator
+does NOT consume it yet, so it is intentionally NOT authored on any block. It's the clean next increment (a
+candidate-filter in the allocator). Also not done: migrating the team/field sports; deleting the legacy layer.
+
+**Behaviour change to note for review:** a recreational/no-event endurance athlete now DEFAULTS to off-season
+(rounded-out) rather than the always-narrow sport vector — this is the intended "off-season = well-rounded base"
+Simon asked for, but it changes the default plan for that cohort. If you'd rather the default stay narrow, the
+lever is `deriveSeason`'s recreational fallback.
+
+**To merge:** this branch contains the 2026-07-08 audit work as its base, so merging it brings both. `git checkout
+main && git merge season-phased-skb-2026-07-09`. To take ONLY the audit, merge `skb-audit-fixes-2026-07-08` first.
+
+---
+
+
+## ⏰ MORNING REVIEW — SKB audit & triathlon fix (2026-07-08, autonomous overnight)
+
+**Branch `skb-audit-fixes-2026-07-08` — 4 commits, NOT pushed, NOT merged. All green (183/183), app builds.**
+Trigger: Simon's request for a full Sports Knowledge Base audit, prompted by a triathlon plan that came
+out spine-heavy and upper-body-blind. Full findings: **`docs/engine/08-SKB-CONSUMPTION-AND-SEASON-AUDIT.md`**.
+
+**Headline finding.** There are TWO sport models. The rich 21-section SKB (`data/sport-knowledge/*.json`)
+is **~95% dormant** for plan generation; plans are actually driven by a 32-line-per-sport legacy layer
+(`data/sportGymSupport/*.js`). The SKB content is strong (audit graded 9/11 A/A−); the problems are
+(a) it's disconnected from generation, (b) triathlon had no module and collapsed to `run`, (c) "season"
+can only scale volume, not reshape the plan.
+
+**What shipped (review these):**
+- **T1 — triathlon fix (`202e562`).** New `data/sportGymSupport/triathlon.js` (swim+bike+run emphasis
+  blend + pull/shoulder-prehab-led priority); `sportEngineBinding` triathlon→`triathlon` (was `run`).
+  *Proof:* the triathlon plan went from all-lower-body (trap-bar deadlift most days, 0 pulls / 0 presses)
+  to a Push/Full-body/Lower split with DB bench, barbell row, face pulls, single-leg calf, single-leg
+  leg press — **49 pulls / 52 presses**, one trap-bar deadlift. Additive to the golden-master (new fixture
+  + property test `skb-triathlon-blend.js`).
+- **T1b — SKB content fixes (`49510ad`).** Literature-grounded injury/reference additions (field_hockey
+  hand+facial, sprint adductor/groin, middle ITBS, long proximal-hamstring tendinopathy, swimming Batalha)
+  + field_hockey schemaVersion. **DORMANT** — proven: the only golden-master change is the version stamp.
+
+**What did NOT ship (needs YOUR call):**
+- **T2 — off-season generalisation** (`c7502c3`, doc-only). Your ask ("off-season = hit full-body, generalise")
+  is real, but I proved the obvious fix (emphasis floor + un-demote press + seed upper-body) is a **no-op for
+  runners/cyclists** — their off-season plans came out byte-identical. The blocker is the session **split**
+  (leg-dominated → never opens a push slot), so this is a `resolveSplit` change (core/shared, risky to do
+  blind) **plus an S&C judgement:** how much upper-body does an *endurance* athlete want off-season? Clear
+  yes for swim/tri (done via T1); a real trade-off for pure run/cycle. See audit §8 Tier 2.
+- **T3 — the real re-seat** (designed in the audit, not built): give the SKB machine-consumable per-muscle
+  emphasis / pattern-balance / discipline-blend data, then wire the SKB into generation (finish WP-23) and
+  make season drive selection. Staged, behind the golden-master, one sport at a time.
+
+**To merge if you're happy:** `git checkout main && git merge skb-audit-fixes-2026-07-08` (then push). To
+undo any single piece, each commit is self-contained and revertable. The triathlon fix (T1) is the one with
+real user-facing impact; T1b is safe polish; the audit doc + T2/T3 are the design record.
+
+---
+
+
+## Governance FROZEN — the five documents are locked at v1.0 (2026-07-01)
+
+The platform's five governing/architecture documents are now **FROZEN** — the authoritative,
+locked baseline. All future engineering, coaching, product, and AI work is **validated against**
+them; it does **not** modify them. Changing one is a deliberate, versioned **amendment** (per the
+Constitution's *Amendment & Stewardship* section), reviewed and reconciled across the whole set —
+never an inline edit during feature work.
+
+The frozen set:
+1. **Constitution** — `docs/foundation/CONSTITUTION.md` (20 immutable Articles — the tie-breaker)
+2. **Decision Ontology** — `docs/foundation/DECISION-ONTOLOGY.md`
+3. **Knowledge Architecture** — `docs/foundation/KNOWLEDGE-ARCHITECTURE.md`
+4. **Engine Design Specification (EDS)** — `docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md`
+5. **Technical Architecture Specification (TAS)** — `docs/architecture/TAS.md`
+
+`CLAUDE.md` carries this as a hard rule. The supporting docs (engine 01–05, foundation
+`PANEL-REVIEW.md`, the READMEs) remain **living references** — only the five above are frozen.
+
+**NEW (2026-07-06): AIGAS authored — `docs/architecture/AIGAS.md`.** The **AI Governance &
+Architecture Specification**: the constitutional role of AI ("the deterministic engine makes
+coaching decisions; AI interprets, communicates, analyses and augments them"). Defines the AI/engine
+boundary, the two entry seams (decision substitution behind D14 validation; knowledge/priors), the
+capability taxonomy C1–C9 with explicit prohibitions, confidence/oversight/privacy/cost/observability
+rules, and full traceability to the frozen set (its Appendix A). Status: **v1.0 draft, pending
+ratification into the frozen set** via the Constitution's Amendment & Stewardship process (a panel
+review pass, like PANEL-REVIEW.md did for the foundation set, is the natural next step). Every
+Stage 6+ AI capability is validated against it before being built.
+
+## ▶ RESUME HERE — the 2026-07-06 reassessment programme (supersedes the 2026-07-03 pointer below)
+
+**Simon's standing directive (2026-07-05):** full reassessment against the frozen set → prioritised
+backlog → execute by priority autonomously; pause only for coaching-philosophy / architecture /
+public-interface calls. **The backlog is `docs/architecture/REASSESSMENT-2026-07-05.md`** (six
+code-verified parallel audits; WP-38…WP-59 continue the Phase-3 ledger — headline findings: the
+stored Athlete Model never reached the live diagnosis; build cohort has no diagnosis while GAA
+cohorts are shown one their plan ignores; D6/D7/D8 missing; D14 covered 5/16 validators on the
+baseline path only; injured legacy-path athletes got silent-debt handling).
+
+**THE OPEN QUEUE (15 PRs, 2026-07-06) + suggested merge order — merges are Simon's;
+engine-suite green on all (152/152 at the tip); Vercel checks = the documented 24 h
+rate-limit flake:**
+THE STACK (land in order; after each base squash-merges, re-land the next rebased if
+GitHub auto-closes it — the #126 dance):
+`#127 → #131 → #132 → #136 → #139 (WP-44 governance ratchets, KSV→1.5.0) → #140
+(WP-52 match-day marker) → #141 (WP-45 one muscle model) → #142 (WP-59 first learning
+loop, STAGED)`.
+INDEPENDENTS (any order, off main): `#128 → #129 → #130 → #133 → #134 (then staging
+apply + harness run per SECURITY-DEPLOY.md) → #135 → #137 (WP-60 AIGAS build, all OFF)
+→ #138 (WP-57 one governed ACWR classifier)`.
+Known trivial conflicts: #127 and #131 both bumped KNOWLEDGE_SET_VERSION and re-baseline
+the same snapshot provenance lines — whichever lands second needs a one-line note
+reconcile + `UPDATE=1` re-run (the KSV chain runs 1.2.0→1.5.0 across #127/#131/#136/#139);
+#129 and #132 touch different regions of reflow.js.
+
+**SECOND WAVE (Simon's 2026-07-06 morning directive — cohort table closed, all sports
+steered, AIGAS review + build):**
+- **PR #136 — WP-48 the team-sport flip** (stacked on #132): hurling / gaelic_football /
+  field_hockey / **soccer** are category-led D11 — the diagnosis steers, meta.diagnosis +
+  D9 objectives ship. WP-23 id normalisation (mb_rotational_throw→cable_woodchop etc.;
+  hurling's empty plyo/upper-body categories gain seated_box_jump + pullup, seed-tagged
+  ⚠ for Simon). **SOCCER SKB AUTHORED TO FLAGSHIP** (agent-built, salvaged after a
+  session-limit cutoff, validated: completeness 1.00, 14/14 catalogue-joined — ⚠ the
+  whole profile is Simon's to review). tests/d11-team-quality.js (40 checks). KSV →
+  1.3.0; golden movement audited BY KEY = exactly the 3 team archetypes. **RUGBY LANDED + FLIPPED**
+  (agent-authored flagship: 18 qualities incl. neckStrength, 5 positions, 12 structured
+  rules, 17/18 joined, ⚠ science for Simon): ALL TEN SPORTS ARE DIAGNOSIS-STEERED, ZERO
+  STUBS REMAIN. d11-team-quality gates five sports (50 checks); suite 148/148.
+- **AIGAS review (item 3):** docs/architecture/AIGAS-REVIEW-2026-07-06.md — ALIGNED,
+  recommend ratification, 6 reconciliation notes (on main).
+- **PR #142 — WP-59 the first honest learning loop** (stacked on #141, the deepest tip):
+  the diagnosis is now a FALSIFIABLE HYPOTHESIS. Two pure modules — `learning/blockOutcome`
+  (per-D5-priority verdicts responded/flat/declined/insufficient from e1RM slope +
+  recovery trend, plus ONE conservative DOWNWARD candidate `volumeTolerance 0.9` only when
+  BOTH signals corroborate — Art 13/16) and `indices/readinessValidation` (does readiness
+  predict the athlete's own session experience? — the readout WP-44 named as owed).
+  **STAGED, NOT LIVE:** `AthleteModelService.syncStagedPriors` (wired at BlockCheckin,
+  change-driven, fire-and-forget) writes `athlete_model.stagedPriors` which NOTHING in the
+  engine reads; the live lever `learnedPriors.volumeTolerance` stays population/1 (test-
+  pinned). Promotion staged→learned is Simon's call (same twice-gated pattern as the AI
+  seam). tests: first-learning-loop.js (9) + staged-priors-wiring.js (10). Suite 152/152.
+  ⚠ FOR SIMON: (1) when/if to promote the first learned prior; (2) whether the detection
+  thresholds should become knowledge-base entries rather than module constants.
+- **PR #137 — WP-60 the AIGAS build (item 4, from main, everything OFF):** Seam-1
+  decision contracts as code (D11) + validateProposal → D14 disposal, engine purity
+  test-pinned; ai-render edge function (server-side key, §19 leak gate, §7 grounding
+  prompt, §20 stamps, AI_ENABLED kill switch) + AiService (ai_features profile flag,
+  artefact builder strips RAW_VITAL_KEYS, §9 degradation). Go-live is Simon's, twice-
+  gated; a per-capability eval harness is REQUIRED before any go-live (recorded).
+
+Also shipped this session (earlier additions):
+- **PR #132 — WP-43 explainability floor** (stacked on #131). Every legacy-path session now
+  carries an honest STYLE-derived `_objective` (source 'style' — never a diagnosis claim);
+  the reflow stamps `_ruleTrim {ruleIds, mult}` + `_catchUp {sets}`; WeekDetail renders the
+  three missing banners (deload deferred / sport-week trim / catch-up included). Golden
+  re-baseline audited additive-only (0 deletions). Provenance-persistence-to-rows recorded
+  for the platform band (needs schema tolerance).
+- **PR #131 also carries WP-42b**: team-sport golden archetypes (hurling/gaelic_football/
+  field_hockey — additive-only re-baseline) + `tests/d11-build-quality.js`, the Art-3 build
+  style-identity gate the WP-49 flip must keep green.
+- **PR #133 — WP-51** (agent-built, reviewed): schema.sql + migrations ledger reconciled
+  through 20260710 (the file was missing the ENTIRE team spine).
+- **PR #134 — WP-50** (agent-built, reviewed): team-scoped `player_status` SELECT
+  (`is_coach_of_team(team_id)`; drops the over-broad `is_coach_of`), `teams.join_code`
+  column revoke + coach-only `get_team_join_code` RPC, web repointed, 10 new harness cases.
+  **NOT staging-proven yet** — apply migration 20260711 to staging and run the harness.
+
+**Earlier in the session:**
+- **PR #127 — WP-38, the assessment chain repaired.** Stored model (position, resistance/sport
+  years) reaches the live diagnosis via the adapter (#94/#101 pattern); D3 position boost live;
+  measuredAt stamped → recency confidence real; per-lift strength standards (bench no longer
+  scored on the squat multiple; mean-of-lifts); sport-experience priors — a 15-year runner is no
+  longer "aerobically novice". KNOWLEDGE_SET_VERSION → **1.2.0** (audited provenance-only
+  re-baseline). Seed science flagged in the PR for Simon's review.
+- **PR #128 — WP-39, D14 validates what SHIPS.** Every rendered week carries `week._validation`
+  (report-only, active injuries in ctx, WeakMap-memoised); substitutions injury-aware; validator
+  treats filter-struck items as not-shipped. Proof: the unfiltered baseline VETOES under a
+  hamstring strain; the shipped week is clean.
+- **PR #129 — WP-40, injury equality on the legacy path.** The legacy fill honours
+  ctx.blockedNameRegexes at every selection site + `despineWeek` (a de-spine swap re-introduced
+  an RDL after clean selection — the hole affected D11 too). Injured build athletes ship full
+  legal sessions; pure baseline byte-identical by construction.
+
+**✅ WP-49 PLAN 2 — THE BUILD FLIP — COMPLETE + DEPLOYED (2026-07-07). main tip `1bbefb9`.
+Suites 182/182. KSV 1.20.0.** Build goals now run off the diagnosis-first DISCIPLINE engine end to
+end (the legacy volume-first path is retired). All sports byte-identical throughout; injury safety
+intact; final whole-branch review verdict SHIP. What a user gets:
+- **Get stronger → powerlifting** — Upper/Lower split, squat/bench/deadlift-led, heavy low-rep
+  (4×5→4×4, 180 s rest), 12-week block (deloads 4,9).
+- **Build muscle → hypertrophy** — Full-body / Upper-Lower / Push-Pull-Legs by day count, compounds
+  PLUS direct arm/delt/calf/leg isolation, higher-rep short-rest (3×12, 90 s), 10-week block (5,10).
+- **Functional → hypertrophy** + an auto conditioning secondary (its distinctive layer).
+- **Olympic weightlifting** — snatch/C&J/squat day-emphasis around an onboarding "which lift do you
+  compete in?" question; classic lifts dosed as explosive power work.
+- Barbell-only disciplines fall back to hypertrophy without a barbell (equipment-preset aware).
+
+The pieces (all merged to main, each its own commit; every step all-sports-byte-identical):
+- **The flip** (`468986e`/merge `4736b29`): resolveBuildDisciplineId as the single source of truth
+  (program + diagnosis agree); legacy BUILD_INTENTS retired; onboarding olympic option + competed-lift.
+- **Olympic reflow** (`fc59e8b`): day-emphasis threaded through the reflow; +olympic_lift in the plan
+  cache signature (was missing → switching competed lift didn't regenerate).
+- **Secondary goals** (`eb44991`): posture/prehab/mobility/conditioning menu, factor-0 corrective on
+  the accessory tail (main work provably untouched); functional auto-conditioning.
+- **4c-1 periodisation** (`946be81`): per-discipline blocks/deloads; fixed olympic→functional-8wk bug,
+  hypertrophy off-block split (9 vs declared 10), and the barbell gate (full_gym preset).
+- **4c-2 dose** (`9b2456b`): discipline-character phase-progressing dose (DISCIPLINE_DOSE_QUALITY +
+  doseCharacter rest); a discipline now ALWAYS steers (an already-strong athlete no longer falls to
+  the legacy default scheme — flip-audit item #4).
+- **4c-3 isolation** (`1bbefb9`): hypertrophy direct-isolation pass (target-gated to ramp with the
+  block, MRV backstop, hypertrophy-gated).
+
+Tests: wp49-discipline-{selection,program,diagnosis,steers,periodization,dose},
+wp49-{olympic-reflow,secondary-goals,hypertrophy-isolation}.js.
+
+**Remaining follow-up (NOT part of Plan 2):** the `volumeTolerance` learned-prior scales the volume
+target but not delivered sets in the diagnosis-first path (a dormant seam — sports byte-identical, so
+not a regression); it only matters once the recoverability prior is promoted at D16. See also the
+ACWR cold-start calibration gate Simon flagged (don't let acute:chronic load steer a fresh plan until
+enough per-user data exists).
+
+**⇒ (earlier context, pre-flip) ✅ 29 PRs MERGED (2026-07-06). `main` KSV = 1.9.0. Suites 167/167.**
+- **Batch 1 — #127–#142** (WP-38/39/40/41/42/43/44/45/48/50/51/52/56/57/59/60): the post-#126
+  audit backlog; 9 independents + a 7-PR stack, each reconciled + golden-audited.
+- **Batch 2 — #144–#149** (Simon-directed): WP-46 s1 (exId identity, #144) → s2 (engine joins key on
+  exId, #145) → WP-58 (governed strength-standards table + fitnessAge constants, #146) → WP-47 D7
+  block objective **ADVISORY** (#147) → WP-55 **reflow baseline-identity** — the neutral-day churn
+  that dropped programmed power work is fixed (#148) → WP-53 engine `rollUp` **stage 1** (pure port,
+  snapshot-locked, #149).
+- **Batch 3 — #150–#152** (Simon reviewed + approved the three flagged calls): WP-58 **reconcile**
+  (capability anchors derived from the governed advanced band — one source, #150) → WP-47 **steer**
+  (the D7 block plan drives the deload rhythm for diagnosed sport cohorts w/ a recoverability prior;
+  gated + reversible, golden byte-identical, #151) → WP-53 **stage 2** (the coach board consumes
+  engine `rollUp`; duplicate deleted; `next build` verified, #152).
+- **Batch 4 — #154–#155** (WP-47 + WP-46 to completion): WP-47 **block-structure steer** —
+  blockPlanToSplit drives the diagnosis's phase split (base|build|peak fit to totalWeeks) behind the
+  same gate; golden byte-identical bar an additive `steered` field (#154). WP-46 **fuzzy joins done**
+  — matchLift → PROGRESSION_LIFTS + the core hold regex → CORE_HOLDS (governed exId maps reproducing
+  the matchers exactly; plans byte-identical; rename-proof). The app form-guide is deliberately left
+  pattern/alias-based (many-to-one display, not an id join). (#155)
+
+**⚠️ PENDING PROD APPLIES (yours, per supabase/SECURITY-DEPLOY.md).** As of 2026-07-06 the DB
+migrations through `20260711` are applied to prod (Simon, ahead of staging — no active users). Still
+to confirm: the paired **Edge Functions** deploy separately from `db push` — the OAuth-nonce
+callbacks + `fitbit-sync` (S1/S4/S8) and `ai-render` (WP-60, optional; AI go-live only). None break
+the running app.
+
+**NOTE on D7 steering (WP-47).** Both the deload rhythm AND the block structure are now diagnosis-
+driven — but GATED on the athlete carrying a learned recoverability prior, which nothing promotes
+yet (staged priors are not read; that's the D16 promotion decision, Simon's call). So it is DORMANT
+for every current athlete (golden byte-identical) until priors are promoted; activating it broadly
+(steering all diagnosed sport cohorts, prior or not) is the live-plan flip and stays Simon's.
+
+**⇒ NEXT (remaining, in backlog order):**
+- **WP-49 build flip** — **PAUSE FOR SIMON** (the six product decisions in reassessment §Priority 11).
+- **AI go-live** — WP-60 seam is merged behind flags; needs the eval harness + your `AI_ENABLED` deploy.
+- **D16 prior promotion** — promote staged recoverability priors to `learnedPriors` so the D7 steer +
+  volumeTolerance actually fire (the twice-gated pattern; Simon's call, needs the falsifiability read).
+- Block-plan model refinement — one block per D5 priority today, so single-priority athletes get a
+  single-phase steered plan; richer intra-quality intensity progression is a further enhancement.
+**PAUSES for Simon:** WP-49 build flip; activating D7 steering broadly (beyond the recoverability-
+prior gate); D16 prior promotion; review of the seed science flagged in #127 (per-lift standards,
+priors) and #131 (goal demand vectors); WP-41 stage 2 (id-level contraindication vocabulary).
+
+## ▶ (superseded 2026-07-06) engine-rebuild status & the next step (2026-07-03)
+
+_Older "▶ START/NEXT" pointers in the entries below are historical and superseded._
+
+**Where we are (2026-07-03).** The **diagnosis-first engine rebuild has reached the plan.** The
+diagnosis now **actually steers live gym plans for run + cycle athletes** — this is no longer a
+parallel/additive model. Build and swim stay on the original volume-first planner (byte-identical).
+Seven merged PRs on **`main`**:
+
+| PR | Delivered | Live plan change? |
+|---|---|---|
+| #54 | **Athlete + Performance Model** (Plan 1) — capability per quality + confidence | no (parallel) |
+| #55 | **Safety net** (Sprint 0) — fixed golden master + `npm test`; CI test gate | no |
+| #56 | **SKB-driven onboarding + demand profile** (Plan 2) | no |
+| #57 | **Diagnosis (D4/D5)** — limiting factors + priority qualities | no |
+| #58 | **Exercise-quality tagging** (Sprint 5) — every exercise tagged by quality/force-velocity/fatigue-cost | no (the enabler) |
+| #59 | **D9/D10** (Sprint 7) — session objective + movement requirements | no (parallel spec) |
+| **#60** | **D11 re-seat** (Sprint 8) — **run/cycle selection is now diagnosis-driven** | **YES (run + cycle)** |
+
+Plus **PRs #61–#66** (2026-07-03): **Phase A of the audit backlog** — deploy gated on tests, the
+date-flaky test fixed, the engine's three clock leaks closed (Art 18), **Train Now on the D11
+brain**, a reflow D11 regression test, and a worktree-resolution guard. Details in the Phase A
+entry below; the audit (`docs/architecture/PHASE3-ARCHITECTURAL-AUDIT.md`) is the current backlog —
+next band is **Phase B (confidence tiers → deload thresholds → recovery honesty → validator suite)**.
+
+**The reasoning chain, now WIRED into the live plan for run/cycle:**
+
+```
+onboarding → Athlete Model (WHO) → Performance Model:
+   capabilities × demandProfile → limitingFactors (D4) → priorityAdaptations (D5)   [diagnosis]
+     ├─ RUN / CYCLE (LIVE):  D9 session objective → D10 movement requirements
+     │     → D11 selectInterventions (value hierarchy §34, transfer-per-fatigue, stop at fatigue budget)
+     │     → the generated plan.   Muscle-volume is now the downstream MRV LEDGER, not the driver.
+     └─ BUILD / SWIM (legacy):  the original volume-first allocateGym fill — unchanged, byte-identical.
+```
+
+The wiring: `generatePlan(profile, opts?)` derives the diagnosis via `performanceModelForProfile(profile,
+asOf)` and threads `priorityQualities`/`season`/`skbIds` through `buildWeek` → `allocateGym`; the
+PlanService reflow (`gymCtx`) does the same so reflowed run/cycle weeks stay D11-driven. The D11 gate is
+`style==='sport' && priorityQualities.length>0 && D11_SPORTS.has(ctx.sport)`, `D11_SPORTS = {run,cycle}`.
+
+**Code map (the new engine layer):**
+- **Diagnosis (D1–D5):** `packages/engine/src/lib/athlete/` (schema + justification gate + builder);
+  `packages/engine/src/lib/performance/` — `estimation.js` (capabilities), `demandProfile.js`,
+  `diagnose.js` (D4), `prioritise.js` (D5), `derivePerformanceModel.js`, **`forProfile.js`
+  (`performanceModelForProfile` — derive the diagnosis from a legacy profile; the plan's entry point)**.
+- **Session decisions (D9/D10) — Sprint 7:** `packages/engine/src/lib/session/` — `sessionObjective.js`
+  (D9: `gymTrainableTargets`, `assignTargetQualities`, `competencyAdjustedTarget`, `deriveSessionObjective`),
+  `movementRequirements.js` (D10 + `contraindicatedPatternsFrom`), `sessionSpecs.js` (`deriveSessionSpecs`, `regionOf`).
+- **Selection (D11) — Sprint 8:** `packages/engine/src/lib/plan/selectInterventions.js` (value hierarchy,
+  transfer-per-fatigue, stopping rule, cap 2/pattern); the `allocateGym` sport branch in
+  `plan/allocator.js` (`finaliseSlot` extracted so build stays byte-identical).
+- **Knowledge — Sprint 5/7:** `packages/engine/src/data/` — `exerciseQualities.js` (exercise→quality/
+  force-velocity/fatigue-cost tags + `FORCE_VELOCITY`), `qualityMovementMap.js` (quality→movement reqs +
+  `CARDIO_GYM_SUPPORT`), plus `qualities.js` (with `doseResponse`), `adaptations.js`, `sportEngineBinding.js`,
+  `sportQualityMap.js`, `qualityCompatibility.js`, `trainingAgeBands.js`, `capabilityPriors.js`.
+- **Adapters:** `packages/engine/src/lib/adapters/profileToAthleteModel.js` (infers the SKB sport id from
+  the legacy `sport`+`run_discipline`) + `athleteModelToEngineInput.js`.
+- **App side:** `AthleteModelService.js` (persist at `users.profile.athlete_model`), `PlanService.js`
+  (`gymCtx` now derives the diagnosis for the reflow), `onboardingModel.js`, `OnboardingWizard.jsx`.
+- **Safety net:** `apps/mobile/tests/build-parity.js` (9 build archetypes byte-identical — the gate that
+  proves the sport re-seat never touches build); `golden-master.js` (19 archetypes; re-baselined per sprint
+  with review via `UPDATE=1`); `d11-runner-quality.js` (proves run/cycle plans improved, not just changed).
+- **Tech docs:** `docs/architecture/ATHLETE-MODEL.md` (§5.4 diagnosis, §5.5 exercise tags, §5.6 D9/D10,
+  §5.7 D11 re-seat). Specs/plans: `docs/superpowers/{specs,plans}/`.
+
+**⇒ THE NEXT STEP — pick one; each needs its own brainstorm** (start with `superpowers:brainstorming` →
+spec → plan → subagent-driven-development, per "How work is run" below). In rough priority:
+
+1. **Swim re-seat** — bring swim into D11 (currently deferred to legacy). This is the highest-value
+   correctness gap — see the dedicated **"Swim re-seat — what's required"** section below. Best done
+   *after* or *with* Sprint 9 (SKB-primary), because a swimmer's gym plan should be driven by the SKB's
+   swim `exerciseLibrary`, not the raw diagnosis.
+2. **Blueprint Sprint 9 (W7) — SKB-primary demand + retire the emphasis vectors.** `D2`/`D11` read the
+   SKB demand profile + `exerciseLibrary` transfer ratings directly; derive muscle-emphasis from demand;
+   retire `lib/sports/*`. One sport model, not two. This also unlocks the swim re-seat.
+3. **D12 — dose schemes keyed by quality** (not style). Move the `allocator.js scheme()` rep/RPE/rest
+   tables into `knowledge/programming` keyed by the target quality; readiness scales volume AND intensity.
+4. **Small follow-ups (quick, low-risk):**
+   - ~~Wire D11 into "Train Now"~~ **DONE** (PR #64, Phase A — see the 2026-07-03 Phase A entry below).
+   - ~~Reflow-specific D11 regression test~~ **DONE** (PR #65 — `tests/reflow-d11-quality.js`).
+   - **Enrich the D4 neutral seams** — `trainability`/`injuryRisk` are still `1.0` in `diagnose.js`
+     (= audit WP-36).
+   - **NEW FINDING (from PR #65): the reflow collapses D11 day differentiation** — the baseline
+     generator alternates a runner's week (Lower vs Lower Explosive pogo/reactive days) but the reflow
+     rebuilds each horizon slot independently and every pending day comes out identical (the durability
+     list), losing the D9 quality rotation in what the athlete actually sees. Documented as a known gap
+     in `tests/reflow-d11-quality.js`; belongs to the WP-24 reflow re-seat (add the ≥2-distinct-days
+     assertion when fixed).
+
+**The general lesson from Sprint 8 (carry into every sport re-seat):** the diagnosis→gym-target mapping
+breaks when a sport's top limiting factor is **not a gym-trainable strength driver**. Three cases seen,
+each with its handling: **cardio** (aerobic/anaerobic → gym-support qualities via `CARDIO_GYM_SUPPORT`);
+**mobility/stability** (→ `robustness`, since a "mobility session" is no stimulus); **power for a
+beginner** (→ the `maxStrength` prerequisite, since power exercises are competency-gated). Run/cycle work
+cleanly because durability/power **is** their gym need. Swim does not (see below).
+
+### Swim re-seat — what's required to bring it to standard
+
+**Why it's deferred.** When swim was wired into D11 (Sprint 8), every swim session collapsed to
+posterior-chain hinges (RDL/deadlift/glute), undifferentiated (all "Lower"), under-dosed (~63% of the old
+volume), with **no pressing or pulling** — clearly worse than the swimmer's current legacy plan. So swim
+is excluded from `D11_SPORTS` and keeps the legacy volume-first fill (which gives it a proper upper/lower
+split with rows, pulls, and pressing).
+
+**Root cause.** A swimmer is **not strength-limited** — they're relatively strong for their needs. So
+the diagnosis (D4/D5) correctly names their biggest demand−capability gap as **`mobility`** (shoulder/
+thoracic ROM), with tiny strength gaps (`explosiveStrength 0.14`, `maxStrength 0.06`). D9's stopgap
+translates `mobility → robustness`, and D11 then fills the session with the highest-value **robustness**
+compounds — which are hinges. Those hinges eat the fatigue budget before the **swim-specific upper-pull
+work** (tier-4 sport accessories: rows, lat pulldown, face pulls, shoulder ER) gets a look-in. The
+model assumes *gym target = the top trainable limiting factor*; for an athlete whose limiter isn't a gym
+strength quality, that assumption fails.
+
+**What "the required standard" is** — a good swimmer gym session (per the SKB `swimming.json`
+`gymPhilosophy`/`exerciseLibrary`): **strength for economy without added mass** + **upper-body PULL
+strength** (lats/mid-back — the propulsive musculature) + **shoulder stability & rotator-cuff / scapular
+health** (swimmers' #1 injury site) + **core anti-rotation** + **posterior-chain durability**. Differentiated
+across days, not all-hinge; a real dose, not 63%.
+
+**The fixes required (do these, roughly in order):**
+1. **Drive the swim gym target from the sport's PRESCRIBED gym focus, not the raw diagnosis gap.** The
+   SKB `swimming.json` already encodes this: its `exerciseLibrary.categories` are the tiers a swimmer's
+   session should cover (posterior chain, strength-for-economy, plyometric/reactive, single-leg, calf/
+   Achilles/prehab, **shoulder/scapular prehab**, **upper-pull**, core anti-rotation/anti-extension), and
+   `gymPhilosophy` says *what transfers*. **This is exactly what Blueprint Sprint 9 (SKB-primary) delivers:**
+   D11 selects candidates from the sport's `exerciseLibrary` (via `SKB.section(id,'exerciseLibrary')`),
+   tier-mapped from its `categories`, instead of from the raw quality target. Once D11 reads the swim
+   library, a swimmer gets rows + pulldowns + shoulder ER + Pallof + a durability compound — the right
+   session. **So the cleanest path is: do Sprint 9 first, then add `'swim'` to `D11_SPORTS`.**
+2. **If done before Sprint 9 (interim):** add a swim-appropriate gym-target in `sessionObjective.js` — a
+   sport→gym-driver map so swim's target resolves to **upper-pull strength + shoulder stability**, applied
+   to UPPER patterns (`hpull`/`vpull`/`vpush` + `iso` shoulder), and **boost the tier-4 sport-accessory
+   value** in `selectInterventions.js` so the swim-tagged rows/pulls/ER work isn't crowded out by lower-
+   body compounds. Also ensure the week is **differentiated** (not every day the same target) and not
+   under-dosed (raise the fatigue budget for a maintenance-style sport, or don't stop so early).
+3. **Confirm the swimmer's diagnosis is sane first.** Re-run the probe (below) and check whether the swim
+   `demandProfile`/`limitingFactors` reasonably reflect a swimmer (upper-pull + shoulder should rank as
+   real needs). If the SKB→PM quality mapping (`sportQualityMap.js`) is dropping the swimmer's upper-pull
+   signal, fix that mapping too — the PM's fixed-10 vocabulary has no "upper-pull" quality, so swim's
+   pull need currently shows up only as generic `maxStrength`/`hypertrophy`, which the diagnosis scores as
+   already-met. This vocabulary gap is the deep reason swim needs the SKB `exerciseLibrary` (movement-
+   specific), not just the quality diagnosis.
+
+**How to validate the swim re-seat:**
+- Probe: `node --input-type=module -e "import { BLANK_ANSWERS, answersToProfile } from './apps/mobile/src/lib/onboardingModel.js'; import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js'; const p=generatePlan(answersToProfile({...BLANK_ANSWERS,goalType:'sport',sport:'swim',experienceLevel:'intermediate',daysPerWeek:4,days:['mon','tue','thu','fri'],strengthAccess:'full_gym'})); console.log(p.phases[0].weeks[0].sessions.map(s=>(s.items||[]).map(i=>i.name).join(', ')));"`
+  — a good result shows **upper-pull + shoulder work across differentiated days**, not all-hinge.
+- Add a `d11-swim-quality.js` test (mirror `d11-runner-quality.js`): assert the plan includes upper-pull
+  (row/pulldown), shoulder health (external rotation / face pull / scapular), and core anti-rotation;
+  assert it is NOT posterior-chain-only and NOT under-dosed; assert days are differentiated.
+- The swim golden-master archetypes (`sport·swim·intermediate·off·3d`, `sport·swim·advanced·in·3d`) will
+  change → re-baseline deliberately with review (only swim keys should move; `build-parity` must stay green).
+
+**How work is run here (follow this):** `superpowers:brainstorming` → design spec in
+`docs/superpowers/specs/YYYY-MM-DD-*.md` (commit) → `superpowers:writing-plans` (plan in
+`docs/superpowers/plans/`) → `superpowers:subagent-driven-development` (fresh implementer + task
+reviewer per task; SDD ledger at `.git/sdd/progress.md`, NOT committed) → opus whole-branch review →
+PR → **confirm before merging** (merges deploy + are consequential). Tests: **`npm test` now works**
+(runs every `apps/mobile/tests/*.js` via `apps/mobile/tests/run-all.mjs`; CI-gated by
+`.github/workflows/test.yml`); the golden master is order-insensitive (`UPDATE=1` only for intended
+changes). Browser-verify UI via the preview MCP (onboarding is behind auth — drive the wired service
+via `preview_eval` importing `/hybrid-react/src/lib/AthleteModelService.js`, as prior sessions did).
+
+**Invariants / decisions to carry forward:** the re-seat is now LIVE for run/cycle, so the invariant is
+**"build + swim byte-identical, sport re-seated deliberately"** — `build-parity.js` gates build byte-for-
+byte, and the golden master is **re-baselined per sprint with review** (`UPDATE=1`; confirm only the
+intended sport archetypes moved, no build). `generatePlan` stays **pure/deterministic** — the diagnosis
+`asOf` comes from `profile.plan_start_date`, never the clock. Muscle-volume is the downstream **MRV
+ledger** (`VOLUME_LANDMARKS`), no longer the selection driver, for run/cycle. Backward-compat via
+`meta.enginePassthrough`; the **SKB is the
+source of truth** for selectable sports (GAA/hurling/triathlon are now selectable; authoring a flagship
+profile + a `sportEngineBinding` entry auto-adds a sport); `trainability`/`injuryRisk` in D4 are
+**neutral seams (=1.0)** ready to enrich (injury-risk from the injury system; trainability from the
+quality registry); build-goal diagnosis is empty (goal-as-sport demand profiles are future); the
+Performance-Model quality vocabulary is a fixed 10 (`maxStrength, hypertrophy, explosiveStrength,
+reactiveStrength, strengthEndurance, aerobicCapacity, anaerobicCapacity, mobility, stability,
+robustness`); **raw vitals never enter the model** (Constitution Art 11 — `daily_metrics` stays
+owner-only). Deferred cosmetic minors (non-blocking): a `diagnose.js` comment overstatement; the
+`prioritise.js` unknown-confidence→k=1 fallback is undocumented; `selectable.js` sport labels use
+`humanize(id)` (e.g. "Running Sprint") since flagship `meta` has no display label.
+
+## Latest work — Phase B (honesty band) begun: WP-08/09/10 + the reflow differentiation fix + WP-07 (2026-07-04)
+
+Continuous-iteration mode (Simon's standing charter 2026-07-03): merges of green low/medium-risk
+PRs are autonomous; HIGH-risk re-seats still pause for review. Suite now **123/123**.
+
+- **PR #67 — reflow D11 day differentiation fix.** The reflow rebuilt one slot per allocateGym
+  call, so the D9 quality rotation restarted at 0 and a runner's reflowed week collapsed to the
+  durability day (explosive/pogo days vanished). Fixed by threading each slot's baseline identity
+  (`ctx.weekGymCount` + `ctx.weekSlotIdx`) — same mechanism as the `resolveSplit[s.i]` share.
+  `reflow-d11-quality.js` now ENFORCES differentiation + baseline objective parity. No re-baseline.
+- **PR #68 — WP-07 migration discipline** (agent-built): migrations ledger
+  (`supabase/migrations/README.md`, keep-names/document-forward convention), schema.sql reconciled
+  with all 16 migrations (8 gaps fixed: wearable_connections, workouts, both RPCs, HR columns,
+  CHECKs, avatar policies, injury triage fields, NOT NULLs), `apps/mobile/.env.local.example`.
+  **Staging-project TODO for Simon** in the runbook (7 steps, needs his Supabase account).
+- **PR #69 — WP-08 confidence authority tiers (Art 13 operative).** `knowledge/authority.js`:
+  `authorityOf(entry) → gate|soft|reported` from KB confidence via the governed mapping entry
+  `knowledge.authority.mapping`. ACWR demotion now derived (load.js floor;
+  deloadRecommendation corroboration), not hardwired. Behaviour identical.
+- **PR #70 — WP-09 deload/recovery cut-points → KB.** `recovery.bands` /
+  `recovery.volume_modifiers` / `recovery.deload_thresholds` (honest L5-low tags); PlanService
+  memo-key band reads the same entry. Boundary-exact pins in `kb-recovery-thresholds.js`.
+- **PR #71 — WP-10 recovery honesty (FIRST deliberate behaviour change; spec:
+  `docs/superpowers/specs/2026-07-04-recovery-honesty-design.md`).** Low readiness → target RPE −1
+  (floor 5), suggested kg follow via the inverse-Epley coupling in applyWeights (allocator
+  `shiftRpe` in finaliseSlot, ctx.rpeOffset — pure generator passes none ⇒ byte-identical);
+  travel 'easy' = shorter (KB volumeCap 0.7) AND lighter (RPE −1), offsets take the min; Train
+  Now inherits the offset; eased weeks carry `_intensityEased` (surfacing = WP-30). Knowledge:
+  `recovery.intensity_policy` (L4 moderate → authority 'soft'), `recovery.travel_policy`.
+  **Stale audit claim found:** subjective ≥ objective already held (0.6/0.4 Saw blend) — pinned.
+- **PR #72 — WP-11 validator suite scaffold + MRV validator (Art 19).**
+  `packages/engine/src/lib/validation/` — contract + `validateWeek()` runner with **Art-13
+  verdict capping** (a validator's max verdict derives from its knowledge entry's authority:
+  reported→observe-only, soft→trim, gate→veto — contested science structurally cannot veto).
+  MRV = the first validator, verdict class TRIM (deliberate reconciliation vs the audit's
+  "GATE" wording: volume.landmarks is moderate-confidence → soft authority). Zero residual
+  violations across 7 archetypes; synthetic over-MRV week fails with a plain-English reason.
+- **PR #73 — WP-12 validators II + §37 conflict order + plan.meta.** Four more validators,
+  tiered per EDS §37 (injury contraindication t1/veto — a valid week is a FIXED POINT of the
+  injury filter; duration honesty + equipment t4; purpose coherence t5), `CONFLICT_ORDER`
+  verbatim from §37, findings sorted safety-first. `plan.meta.validation` = every generated
+  plan ships its compliance proof. **Deliberate re-baseline of BOTH snapshots** (golden-master
+  19 + build-parity 9), proven structurally additive-only (old≡new after deleting meta) and
+  every archetype's report ALL-PASS. New KB entries: programming.session_ceiling,
+  validation.session_purpose, injury.contraindication_policy.
+- **PR #74 — WP-13 constraints-first injuries (EDS L8).** The D11 reflow + Train Now pass
+  active injuries into SELECTION at two levels: pattern (new D10
+  `contraindicatedPatternsForInjuries`) + name (`selectInterventions` excludes candidates
+  matching the injury system's blocked regexes — the pattern vocabulary is majority-vote
+  coarse and can't say "no jumping"). A severity-4 hamstring runner now keeps ALL 7
+  in-horizon days (previously 3 collapsed into one-exercise rehab replacements); hinges
+  return on recovery (injury signature in the reflow memo key). The render-time filter stays
+  as the BACKSTOP (beyond-horizon baseline days, legacy build/swim, the coverage fallback)
+  and still appends rehab work. **WP-12 validator fixed along the way:** the fixed-point-diff
+  definition false-vetoed already-filtered weeks (the filter legitimately APPENDS rehab work);
+  now a direct no-shipped-item-matches-a-blocked-regex check (idempotent, catches
+  under-blocking). Suite 126/126; goldens + build-parity untouched.
+  **Known quality gap (task chip filed):** an injured runner's sessions are legal but
+  all-accessory — when a target quality's drivers are blocked, D9/D11 should re-target the
+  next priority quality (squats/lunges are legal for a hamstring strain and should appear).
+- **PR #75 — D9 constraint gate (WP-13 follow-on).** When an injury removes a target
+  quality's drivers, the session RE-TARGETS the athlete's next trainable priority (fallback:
+  maxStrength base) via `constraintAdjustedTarget` (sessionObjective.js), mirroring the
+  competency-gate precedent. The feasibility oracle mirrors selection's FULL driver gate
+  (tier legality alone was wrong — robustness had legal squat drivers that its own
+  post-subtraction ideal patterns excluded; `tierOf` now exported). Outcome: the hamstring
+  runner's sessions contain a REAL strength compound (Back squat) instead of accessory-only;
+  all WP-13 guarantees hold. NOTE for Sprint 9: the quality-tags × movement-requirements
+  vocabulary mismatch is the same family as the swim gap (H5).
+- **PR #76 — H9 seed-evidence review (docs).** `docs/engine/06-SEED-EVIDENCE-REVIEW.md`
+  (agent-authored, review-only): 14 proposed corrections (2 HIGH, 7 MED, 5 LOW) over
+  exerciseQualities/qualities/qualityMovementMap + the D11 weights, with a consumption-chain
+  impact model. Verdict: seed data safe to keep steering live plans while corrections land;
+  lists which needsReview flags can be cleared. **C3–C9 (MED) are STAGED — land with WP-21
+  before it doses from this data**; C10–C14 (LOW) opportunistic.
+- **PR #77 — H9 HIGH corrections applied (C1/C2 + completions).**
+  (1) `cardioGymSupport(quality, sport)` — cyclists/swimmers no longer get plyometrics from
+  the sport-agnostic aerobic translation (no SSC; heavy strength per Rønnestad/Aagaard);
+  runners keep reactive work. (2) Robustness tag×map coherence: squat/carry join its ideal
+  patterns, lunge gains a robustness tag, and the loaded **hinge is robustness-PRIMARY**
+  (nordic precedent; HSR/eccentric literature) — without which the F7 fatigue-collapse let a
+  backpack carry ANCHOR sessions over the RDL. (3) The supportive finisher is shared with the
+  D11 path (fatigue-bounded ≠ time-bounded; beginners get their prehab back). Live outcomes:
+  cyclist = zero plyos + squat-led; runner durability = RDL → trap-bar → carry. Re-baseline
+  audited key-by-key: exactly the 8 run/cycle archetypes moved; build + swim byte-identical.
+  Suite **127/127**.
+- **PR #78 — WP-14: the dose model is governed knowledge.** `data/doseSchemes.js`: all
+  rep/RPE schemes (styles × base/build/peak + deload/taper + light-equipment override),
+  POWER_DOSE, REST_SECONDS (incl. supersetB 20s), ISO/CORE strings — per-block provenance.
+  Keys are quality ids where true (maxStrength/hypertrophy/strengthEndurance);
+  `sportSupport` is the documented TRANSITIONAL composite until WP-21. `allocator.scheme()`
+  is a thin bridge lookup; byte-identity proven by UNTOUCHED golden masters (no re-baseline)
+  + 42 assertions in `tests/dose-schemes.js` (per-cell fidelity incl. fallback semantics).
+  Suite **128/128**.
+- **PR #79 — WP-21: D12 dose-by-quality (spec:
+  `docs/superpowers/specs/2026-07-04-dose-by-quality-design.md`).** D11 sessions dose from
+  their D9 target quality via `doseForQuality()` + per-slot `slot.scheme` (fallback: the
+  sportSupport bridge). New REVIEWED blocks: robustness = **HSR** with the tempo cue on the
+  item note (H9 C6, Kongsgaard/Beyer); explosiveStrength = strength-speed triples;
+  reactiveStrength + **REACTIVE_LIMITS.footContacts {80/100/120}** enforced at placement
+  (H9 C7; the 48–72 h spacing half belongs to D13 — still open). C8 partial: hypertrophy
+  doseResponse text only; **the build accessory rest floor is DEFERRED to the build flip**.
+  Acceptance live: sprinter vs marathoner dose provably differently (signature test,
+  19 assertions in `tests/dose-by-quality.js`). Re-baseline audited: the same 8 run/cycle
+  archetypes; build+swim byte-identical. Suite **129/129**.
+- **PR #80 — WP-15: D11 weights → KB + C4 weighted-mean fatigue.** Two audited commits:
+  (1) six governed entries (selection.fatigue_budget / fatigue_units / transfer_weights /
+  pattern_cap + volume.style_top / level_bands) with the H9 §4 confidence tags — byte-
+  identical, goldens untouched at that commit; (2) **C4**: fatigueScalar = weighted MEAN of
+  the 3-D fatigue vector (governed combineWeights) instead of max() — a marathoner's
+  durability day now fits FOUR working movements (Bulgarian split squat joins — the F1
+  unilateral work — its metabolic-dominant cost no longer masquerading as full-CNS).
+  Re-baseline audited: same 8 run/cycle archetypes; build+swim byte-identical. Suite
+  **129/129**. Every scientific constant on the D11 path is now governed knowledge.
+- **SPRINT 9 (design APPROVED by Simon 2026-07-04 — Option B / id-normalise / run-cycle-first;
+  spec: `docs/superpowers/specs/2026-07-04-sprint9-skb-primary-design.md`) — 4 of 5 steps SHIPPED:**
+  - **PR #81 — 19.0 the id join.** 35 SKB library ids normalised to catalogue ids; explicit
+    reasoned allowlist (cycling neck_isometrics; gaa/hurling distinct movements → WP-23);
+    `tests/skb-catalogue-join.js` makes rot loud; flip-line sports resolve 100%. Audited side
+    effect: cycle's dormant ×1.5 boost ACTIVATED (3 cycle archetypes re-baselined).
+  - **PR #82 — 19a rating-based value.** skbIds = Map(id→transferToSportRating); library value
+    = rating ÷ skbRatingDivisor(2, governed — deliberately DOMINANT within a tier) ÷ fatigue;
+    membership grants tier-4 standing; ×1.5 boost retired. quality-gate.js caught the first
+    calibration (divisor 4 → cyclist Wednesdays filled with pull-ups). Runner leads = trap-bar
+    (rating 9) over RDL (8) — authored ordering live. 6 run/cycle archetypes re-baselined.
+  - **PR #83 — 19b category-coverage planner (PARALLEL).** `session/categoryCoverage.js`:
+    weekCategoryPlan distributes library categories across sessions (differentiated by
+    construction; dose quality from the highest-rated movement; suitability/difficulty gates).
+    Scope decision: category-led = swim ONLY (CATEGORY_LED set); run/cycle stay rating-based.
+  - **PR #84 — WP-20 THE SWIM FLIP.** Swim joins D11 category-led (plan + reflow + Train Now).
+    The week: Mon Pull (pull-up 4×5/row 4×5/straight-arm/Pallof) · Tue Explosive (broad jump/
+    hang clean/swing/woodchop) · Thu trap-bar+pulls+ER+face pull · Sat core+carries. Gate
+    `tests/d11-swim-quality.js` (11 assertions). Contract retirements recorded in-test:
+    P4 heavy-press control → heavy-PULL control (the governed swim library has NO press
+    category — knowledge decision; revisit as a knowledge edit if wrong); sport-anchor/split
+    swim leads = library movements. P5 surfaced a real all-paths finisher bug (prone Y/T/W
+    stacking) — fixed. Re-baseline audited item-by-item: 2 swim + 1 run-sprint (finisher swap
+    only). Suite **132/132**.
+- **PR #85 — 19c (honest scope): the legacy sport tables are governed DATA.**
+  `lib/sports/*` → `data/sportGymSupport/` verbatim (byte-identical; Art 17), with a
+  field-by-field deprecation map in the registry header. Substantive retirement (demand-derived
+  emphasis, SPORT_BLOCKS → SKB seasonalModel — which is NARRATIVE today and can't carry block
+  templates — deleting the priority lists that remain the legacy-fallback net) is WP-23 work,
+  recorded. **SPRINT 9 COMPLETE** — all sport knowledge lives in data (SKB primary + the residue
+  table); run/cycle rating-driven, swim category-led, one id space, join guarded.
+- **PRs #86/#87 — WP-24a/b: THE REFLOW RE-SEAT (2 of 3 stages).** The runtime coaching brain
+  is pure engine code: `plan/reflow.js` owns the LEDGER (withinEpoch/weekTarget — the
+  'must-match-PlanGenerator' mirror is ONE implementation now — gymSessionsWithDates/
+  missedWindowVolume/horizonSlots + sessionKey/intentOfTitle/localISO/sessionDiscipline) and
+  the POLICY (`reflowPhases(inputs)` — deload force/defer, missed-window spread + forgiveness,
+  recovery×load×travel×rule scaling, RPE offset, lightening, pins/freeze, rebuild + de-spine —
+  verbatim, every read an argument). `recentSessionRecovery` is shared by policy AND memo key
+  (no drift possible). PlanService.adaptedPhases = gather → key → delegate → cache. Parity:
+  **132/132 with ZERO drift** across the whole reflow corpus, both stages.
+- **PR #88 — WP-24c: PlanService is the L3 orchestrator. THE REFLOW RE-SEAT IS COMPLETE
+  (V2 CLOSED).** `_runtime` → an immutable whole-swapped frozen snapshot behind one accessor
+  (setRuntime signature unchanged); Train Now's bonus-vs-catch-up decision → engine
+  `trainNowSpec` with the ≤5 threshold governed (`programming.train_now` — the last app-side
+  programming literal); dead derivations + 8 engine deep-imports pruned. PlanService 818+ →
+  **658 lines** of fetch/invoke/cache/persist + calendar/decoration glue. Zero drift at every
+  stage (24a/b/c); suite **132/132**.
+- **PR #89 — WP-25: the named public API + the deep-import RATCHET (V11/T21).** The barrel
+  headlines the six calls (plan · reflow · deriveReadiness · deriveLoad · validate + trainNow;
+  explain/rollUp documented RESERVED for WP-30/WP-34); curated domain exports; ~45 deep-import
+  lines repointed (PlanService, store, AthleteModelService, onboarding, 9 screens);
+  `tests/engine-api-boundary.js` allowlists every remaining deep import WITH its retiring
+  owner (Utils→WP-26, atlas→WP-29, DevPlayground=dev tooling) — new deep imports fail, stale
+  entries fail, the list only shrinks. Suite **133/133**; production build clean.
+- **PR #90 — WP-26: the engine/UI split (V11 remainder).** The pure engine no longer ships
+  presentation: `escapeHtml`/`chevronRight`/`countCompleted`/`formatDuration` DELETED (dead —
+  zero callers); `weekKey` DELETED (byte-identical duplicate of the barrel's `sessionKey`);
+  Readiness's ACCENT theme-token map + plain-English COPY block DELETED (dead — verdicts.js is
+  the app's copy layer; `computeReadiness` now returns the domain signal only);
+  `parseExercise` + `fmtSleep` MOVED to NEW `apps/mobile/src/lib/uiHelpers.js`. 12 app files
+  repointed; the atlas pair now imports ONLY from the barrel (its allowlist entries retired
+  ahead of WP-29). The boundary ALLOWLIST is **10 → 2 entries** (PlanService reflow namespace
+  + DevPlayground dev tooling). 133/133; /dev smoke clean.
+- **PR #91 — WP-27: provenance stamps.** Every plan + reflow output carries
+  `provenance = { engineVersion, knowledgeSetVersion }`: NEW `packages/engine/src/version.js`
+  (ENGINE_VERSION '1.0.0', package.json synced + test-enforced) and `KNOWLEDGE_SET_VERSION`
+  ('1.0.0') living WITH the KB in knowledge/entries.js (science bumps it; logic bumps
+  ENGINE_VERSION). `generatePlan` → meta.provenance; `reflowPhases` → the same stamp; barrel
+  exports all three. Snapshot re-baseline audited line-by-line: 112 insertions / 0 deletions =
+  exactly the 4 provenance lines × 28 keys. Suite **134/134**.
+- **PR #92 — WP-30: explainability surfacing (V5 CLOSED for the D11 cohort).** 30a: every
+  D11 session now SHIPS `_objective = { quality, purpose, rationale }` (the D9 objective was
+  built per slot — with the injury re-target + category-coverage notes appended — then
+  dropped; now threaded through finaliseSlot + the scheduler like axialLoad);
+  `plan.meta.diagnosis = { sport, limitingFactors, priorityQualities }` with the diagnosis's
+  own rationale strings, ABSENT on build (nothing invented). 30b: SessionDetail "Why this
+  session" line; WeekDetail "Eased this week" (`_intensityEased`) + current-week "Missed work
+  forgiven" callouts (forgiveness was dev-only — Art 10); DevPlayground per-session "why".
+  Golden re-baseline line-audited (1820 insertions / 0 deletions, all _objective/diagnosis
+  keys). Preview-verified live on /dev. Spec:
+  docs/superpowers/specs/2026-07-04-wp30-explainability-design.md. Suite **135/135**.
+  Deferred + recorded: legacy-anchor rationale (free with the WP-22 build flip);
+  substitution rationale (needs its own emission).
+- **PR #93 — the discipline-less runner default (the WP-30 finding, done deliberately).**
+  One athlete, one assumed discipline: an unstated running discipline = MIDDLE DISTANCE
+  everywhere — NEW `sportKnowledge.skbSportIdFor(sport, runDiscipline)` is the ONE engine-
+  sport→SKB-id derivation (the dead `'run'→'running'` alias removed); the adapter, the
+  reflow rules lookup (which ALSO used the dead alias — no runner of ANY discipline ever
+  matched; inert since running's decisionRules are prose), and the legacy table reads
+  (strength/program.js + plan/periodization.js) all take the same prior, so the defaulted
+  athlete is BYTE-IDENTICAL to an explicit `runDiscipline:'middle'` athlete (tested).
+  Goldens byte-identical with NO re-baseline (every golden runner states a discipline —
+  zero keys allowed to move, zero moved); three tests re-pinned from the old generic
+  fallback to the new prior. Suite **136/136**.
+- **PR #94 — GAA players route to THEIR sport's SKB profile (persist the answer, never
+  guess).** `'gaa'` is ambiguous (Gaelic football AND hurling) and `skb.get('gaa')` matched
+  nothing — the only structured decisionRules besides swimming's (12 per code) NEVER fired
+  for real runtime profiles, and GAA athlete models got no primarySport → no diagnosis.
+  Onboarding already REQUIRES the exact SKB id (`answers.skbSport`) — it now PERSISTS as
+  `profile.sport_code` (JSON field, no migration), and every SKB lookup resolves through
+  NEW `skbSportIdOf(profile)`: sport_code → the dual-written athlete model's primarySport
+  (pre-sport_code profiles) → the skbSportIdFor floor. A code-less `'gaa'` profile stays
+  deliberately INERT (never the wrong code — tested). The activation: runtime-shaped GAA
+  profiles now fire their structured reflow rules (verified live: hurler + 2 matches →
+  `two_matches_reduce_gym_volume`); GAA is not in D11_SPORTS so no plan cohort moves.
+  Suite **137/137**, ZERO snapshot movement. (Note: tests/skb-rules.js was green all along
+  because it passes SKB ids as `profile.sport` — a shape real profiles never have;
+  tests/skb-gaa-routing.js uses the genuine runtime shape.)
+- **PR #95 — WP-29: Atlas re-based onto the Performance Model (V6 CLOSED).** The parallel
+  assessment DELETED (atlas/signals maths + data/sports pillar picks + invented
+  top-5%/elite benchmarks, −428 lines). The Atlas renders the SAME model the planner
+  diagnoses from: sport athletes see capability inside the sport's demand ring and the
+  focus IS the engine's top D4 limiting factor with its own emitted rationale (tested for
+  run middle/sprint, swim, hurling); build athletes get a capability view and NO invented
+  focus. NEW apps/mobile/src/lib/atlas.js is presentation-only. Suite 137/137.
+- **PR #96 — the SKB profile review (Simon's ask).** Full verdict matrix at
+  docs/engine/07-SKB-PROFILE-REVIEW.md: schema valid ×10, 21 sections ×10, 8 flagships at
+  completeness 1.00, rugby/soccer correctly gated scaffolds. THE GAP CLOSED: the five
+  endurance profiles' 50 decisionRules were PROSE-only (the reflow could execute none) —
+  39 structured with the GAA/swim trigger conventions (prose/evidence untouched), 11 left
+  prose BY DESIGN (D13 scheduling / medical referral / pure emphasis — documented).
+  +22 activation gates in skb-rules.js. Live: low-readiness runners autoregulate, ACWR
+  spikes force-deload cyclists, tri A-race proximity sheds soreness work.
+- **PR #97 — Field Hockey (Simon's ask): the 11th SKB profile, flagship depth.** All 21
+  sections, completeness 1.00; hockey-specific science encoded (crouched-posture lumbar
+  overload + a dedicated structured rule, one-sided-stick asymmetry, strike volume counted
+  like sprint volume, turf ankle exposure); 12 structured rules from day one; 14
+  catalogue-joined exercises; binds engineSport 'gaa'; onboarding-selectable automatically
+  (4 positions). KNOWLEDGE_SET_VERSION 1.0.0 → 1.1.0 (re-baseline audit: 28 lines, all the
+  version string). End-to-end proven: Midfielder onboards → plan stamped 1.1.0 → 7-quality
+  demand → anaerobic-capacity diagnosis → 2-match week fires the congestion rule → Atlas
+  renders it.
+- **PR #98 — Train Now REMOVED (Simon's decision, 2026-07-04).** Screen/route/store
+  action/generateTrainNow/ADAPTED badge/engine trainNowSpec/_trainNow decoration/KB entry
+  programming.train_now/tests — all deleted. THE PUBLIC API IS FIVE CALLS: plan · reflow ·
+  deriveReadiness · deriveLoad · validate. KEPT deliberately: the sessionOverrides
+  pin/freeze-on-start mechanism (predates Train Now; still guards Start-freeze +
+  substitutions); old stored Train Now overrides degrade to plain pinned snapshots, and a
+  guard asserts _trainNow never reappears. Suite 136/136.
+- **PR #99 — the staged H9 corrections CLEARED** (C3 calf robustness-primary; C5 loaded-
+  lunge contradiction fixed + bodyweight lunges re-route via classTag; C9 explosive lunge
+  pattern; C11 sled never-reactive; C12 resolved as documentation — movement-class COST vs
+  per-quality fatigueCost are different measurements, deliberately not unified; C13 SE
+  drops the driverless lunge). **C10 PARTIAL**: glute_bridge re-tagged as specified;
+  hip_thrust DEFERRED with in-code reasons — its hinge-default robustness-primary standing
+  is what keeps it selectable for cyclists (the quality-gate guard); that sport value
+  belongs to SKB ratings when they outrank pattern tiers (WP-22/23). C14 skipped
+  (cosmetic). Golden audit BY KEY: 8 run/cycle archetypes moved, build + swim
+  byte-identical; filler carries lost their tie-break, tendon anchors stayed. 06-SEED-
+  EVIDENCE-REVIEW.md status table updated. Still open from H9: C7 plyo 48–72 h spacing
+  (D13), C8 build rest floor (build flip).
+- **PR #100 — WP-36: the D4 seams enriched.** trainability (NEW qualities.js
+  trainabilityByBand — Rhea 2003 diminishing-returns priors; tissue/control/range stay
+  responsive) × injuryRisk (NEW data/regionQualityRisk.js — hamstring→robustness ×1.25
+  etc., MAX not stacked, every history shape tolerated). Both are magnitude RE-RANKERS —
+  never gates, confidence untouched (the acceptance) — and both are EXPLAINED in the
+  emitted rationale, so the WP-30 surfaces show the why automatically. Acceptance proven:
+  a hamstring-history runner's robustness limiter boosts ×1.25 and tops the ranking
+  (tests/d4-seams.js, 13 checks). Goldens: 10/19 moved — run/cycle re-ranked; swim moved
+  in META.DIAGNOSIS ONLY (sessions byte-identical); build byte-identical. **Follow-up
+  chip spawned**: the app never populates athlete_model.constraints.injuryHistory — wire
+  the store's resolved injuries in so real athletes get the boost the engine now computes.
+- **PR #101 — the WP-36 follow-up chip: resolved injuries reach the diagnosis.**
+  AthleteModelService.syncInjuryHistory() mirrors RECOVERED injury rows (taxonomy
+  body_part_key) into the persisted model's constraints.injuryHistory — deduped per part
+  (newest resolution; recurrences never stack), ACTIVE injuries stay out, change-driven
+  writes only (idempotent); the store's three injury actions fire it; the adapter maps
+  the history from the dual-written model riding users.profile (the #94 pattern) so
+  EVERY read path sees it (Atlas, PlanService, generatePlan meta). A recovered-hamstring
+  runner's robustness limiter boosts ×1.25, ranked first, with the reason in the emitted
+  rationale. tests/injury-history-wiring.js (8 checks through the real localStorage-shim
+  app path). Suite **138/138**; goldens untouched.
+- **PR #102 — WP-31: the sync outbox (V16 CLOSED).** Offline/failed cloud writes were
+  silently lost (local-only fallback; the next sign-in pull clobbered them). The outbox is
+  a persisted, per-namespace DIRTY-TABLES set (lib/syncOutbox.js) — not an operation log:
+  the local Database is the source of truth and draining pushes the dirty tables' CURRENT
+  local rows (the runSessionDMigration repair pattern) — idempotent, self-deduplicating,
+  never-stale, ordering-free. Soft deletes converge via the new read-only
+  Database allWithDeleted() accessor. All 15 SyncService writes instrumented; drain
+  triggers: window 'online', session arrival, and syncFromCloud drains BEFORE
+  pullFromSupabase (the clobber is impossible now). uid() no longer hand-parses the
+  sb-*-auth-token blob — getSession() + onAuthStateChange keep a cached id (ensureUid()
+  covers cold boot). tests/sync-outbox.js: the simulated airplane-mode round trip,
+  19 checks incl. a lockstep guard (every queueable table has a drain source). 139/139.
+- **PR #103 — WP-28: portable freezes (V8 CLOSED).** The freeze-on-start pin store was a
+  RAW un-namespaced localStorage key — invisible to other devices and shared across
+  ACCOUNTS on one device (leak closed with a one-time namespaced migration). Pins now
+  mirror to users.profile.session_overrides (NO schema migration — profile is jsonb,
+  RLS-correct, outbox-protected offline) and syncFromCloud reconciles pull → local with
+  FROZEN-WINS semantics (Art 10: per key the EARLIER createdAt is kept — whichever device
+  froze the session first defined what the athlete trained; a later re-freeze never
+  rewrites history; one-sided keys survive both directions). sessionOverrides.js rewritten
+  transparently (all callers untouched). tests/portable-freezes.js: the two-device
+  simulation, 10 checks incl. THE ACCEPTANCE (device B shows device A's frozen content).
+  One CI flake fixed properly: the test awaits an exposed flushMirror() promise instead of
+  sleeping. Suite **140/140**.
+- **PR #104 — WP-37: the typed learned-priors read-path.** NEW lib/priors.js — every
+  fallback prior resolves through ONE typed interface with per-prior provenance
+  ({value, source, confidence}). NO WRITER (D16 future); live reads = population
+  defaults, output BYTE-IDENTICAL (goldens untouched in the same suite run). The seam is
+  real: D1 estimation reads capabilityPrior(quality, band, model.learnedPriors) — a
+  learned value changes the estimate and DECLARES itself in the evidence; D12 reads the
+  volumeTolerance prior inside resolveProgram (the ONE volume-scalar seam plan + reflow
+  share — 0.7 tolerance moved total sets 861→656 in test). recoveryRate stays typed but
+  unconsumed (runtime recovery layer, with D16). tests/typed-priors.js (12 checks).
+  Suite **141/141**.
+- **PR #105 — H9 C7 closed: 48–72 h plyometric spacing at the D13 scheduler.**
+  finaliseSlot stamps plyoLoad (both allocator paths; scheduling signal only, not
+  emitted); the scheduler pays a governed penalty for ADJACENT plyo-loaded days (the
+  heavy-axial rule's family); the constant lives with the contact ceilings
+  (REACTIVE_LIMITS.spacing, same C7 evidence). ZERO golden movement — the archetypes
+  already satisfied the window (the muscle-recovery penalty implicitly separated them),
+  so C7 lands as the GUARD + the pin (tests/plyo-spacing.js: sprint gaps 3, hurling 2–4,
+  cramped weeks still schedule — a penalty, never a gate). Suite **142/142**.
+  H9 is now fully dispositioned: every correction landed, deferred-with-reasons
+  (C10 hip_thrust), or skipped-as-cosmetic (C14); only C8's build rest floor rides the
+  build flip.
+- **PRs #106/#107 — THE TEAM SPINE IS LIVE (WP-32 + WP-33), staging-proven then
+  production-applied with Simon's approval (2026-07-05).** Simon created
+  hybrid-training-staging (ref nqlzashaqyqbwdlnaadw; 17/17 migrations baselined; CLI
+  linked to STAGING as the safe default — prod ggldomlmycvpwtzzjzcd is NOT linked).
+  #106: supabase/tests/rls-harness.mjs (on-demand, NOT in CI; hard prod-ref guard) proved
+  the existing isolation — 28/28. #107: migration 20260705_team_spine.sql — teams /
+  team_members / player_status (the ONLY coach-readable surface, derived signals only),
+  SECURITY DEFINER helpers, coach policies. TWO HOLES found in adversarial self-review
+  and closed BEFORE applying (member self-promotion → BEFORE UPDATE trigger; status
+  re-pointing → membership re-check). Harness grew to 46/46 incl. both attacks, teammate
+  isolation, outsider-coach isolation, coach-cannot-write, and the binding rule (coach
+  reads ZERO raw vitals + ZERO private injury detail of their own player). Simon then
+  baselined prod history (repair 001→20260701) + pushed 20260705; verified live on the
+  REAL prod ref (tables exist, RLS holding, raw vitals locked). NOTE: Simon's
+  .env.local.prod-backup was found to contain STAGING values — the prod anon pair is no
+  longer on his disk (harmless: dashboard/API-keys retrievable; GitHub Actions secrets
+  unaffected).
+- **PR #108 — the player-side STATUS ROLL-UP (first feature on the live spine).**
+  lib/teamStatus.js deriveStatus(view) is PURE + built against a five-column allowlist
+  (readiness/load_state/acwr/adherence_pct/injury_status) — the SECOND, in-code
+  enforcement of the isolation rule (RLS is the first): the vitals that feed readiness
+  never leave owner-only tables. SyncService listMyActiveTeams()+pushPlayerStatus()
+  (upsert onConflict team_id,user_id, real auth uid); store refreshTeamStatus() fires
+  after every signal-changing write + sign-in, no outbox (self-heals from local truth).
+  tests/team-status-rollup.js (10 checks, privacy guard led). Suite 143/143.
+- **MULTI-USER SECURITY AUDIT + HARDENING (Simon's ask, 2026-07-05) — DONE (PRs
+  #109–#114).** Four parallel reviewers → docs/SECURITY-AUDIT.md addendum (15 findings,
+  prioritized). Implemented S1–S10, staging-proven (rls-harness 28→57 checks), main green
+  throughout:
+  - **S1 (CRITICAL, #111)**: OAuth `state` → single-use signed nonce (oauth_states table
+    + issue/consume RPCs); client legacy-fallback so the app deploys independently.
+  - **S2 (CRITICAL, #110)**: revoke column SELECT on wearable_connections tokens (browser
+    could exfiltrate refresh tokens).
+  - **S3/S6/S9/S10 (#110)**: DB CHECK constraints on coach-visible free-text + 256KB
+    profile cap; delete_user() completeness; removed-member rejoin blocked;
+    handle_new_user search_path.  ALSO recovered the WP-33 team-spine migration onto main
+    (PR #107 had stalled — the DB was live but the file never merged) and CLOSED #107.
+  - **S4/S8 (#112)**: stop logging raw vitals; clamp the sync date span (92d).
+  - **S5/S15 (#109)**: removed the git-tracked .env.local.prod-backup (glob-ignored);
+    encode OAuth state.
+  - **S7 (#113)**: closed the outbox-drain vs namespace-switch race (syncFromCloud is the
+    sole post-namespace drain trigger).
+  - Single-user isolation model audited CLEAN (namespaced cache, no service_role in
+    browser, React auto-escaping, CSP present).
+  - **⚠ PENDING FOR SIMON — supabase/SECURITY-DEPLOY.md**: apply migrations 20260706 +
+    20260707 to PROD + deploy 3–4 Edge Functions (the batched, human-gated step). The
+    app's legacy OAuth fallback keeps wearable connect working until then. Plus dashboard
+    Auth settings (Confirm email ON, rate limit — S14).
+  - **Deferred, task chips spawned**: S11 (player_status server-side derivation — it's
+    client-attested today; no live data yet), S12 (coach-dashboard auth gate — before any
+    live data wired), S13 (next bump before apps/web ships).
+- **PR #115 — S12: the coach dashboard is GATED.** apps/web `middleware.ts` gates
+  `/dashboard/*` server-side on a valid Supabase session + an active `team_members`
+  coach row (via @supabase/ssr cookie clients); `signInCoach` is real
+  (signInWithPassword + coach check); session.ts is now display-only. The dashboard
+  STILL renders MOCK data — live player_status/team reads stay behind the gate + team-
+  scoping (chip: S11 server-side derivation). Needs NEXT_PUBLIC_SUPABASE_* in Vercel env
+  (SECURITY-DEPLOY.md). S13 (next 14→16 major bump, HIGH advisories) deferred — a careful
+  standalone migration before apps/web ships (chip open).
+- **PR #116 — S11: player_status safety fields are SERVER-AUTHORITATIVE.** A BEFORE
+  INSERT/UPDATE trigger (migration 20260708) overrides injury_status (from the player's
+  `injuries`) + readiness (from their logged `daily_metrics.readiness_score`) with server
+  truth — a player can no longer fake availability/readiness on the coach board. The soft
+  trend metrics (acwr/load_state/adherence) stay engine-computed (avoids EWMA-in-SQL drift)
+  + clamped. Spec: docs/superpowers/specs/2026-07-05-player-status-integrity.md. Harness
+  62/62. Prod apply of 20260708 batched (SECURITY-DEPLOY.md). Full-engine server derivation
+  = future Edge-Function option.
+- **PR #117 — S13: next 14→16 bump (advisories cleared).** 14 HIGH/CRITICAL Next
+  advisories gone (next@16 accepts React 18 — no React-19 migration); middleware.ts →
+  proxy.ts (Next 16 convention; the S12 gate unchanged). Merged past the Vercel
+  hobby-tier deploy rate-limit flake (both Vercel checks 24h-limited; the real `build` +
+  engine-suite checks passed).
+- **PRs #120/#121 — TEAM JOIN CODES (Simon chose join codes over email invites).**
+  #120 the RPC layer (migration 20260710): create_team (found + auto-coach + unique
+  6-char code), join_team_with_code (self-join, case-insensitive, idempotent, respects
+  coach removal), rotate_team_code (coach-only). Harness 75/75 (11 join checks). #121 the
+  mobile join UI: Teams screen at /settings/teams (join by code + your-teams list + leave)
+  + a Settings nav card; SyncService joinTeamWithCode/listMyTeams/leaveTeam. #122 the WEB
+  founding UI: /get-started page (create team + share/rotate code + copy), reachable OUTSIDE
+  the coach-gate (a new coach isn't a coach until they found a team — the proxy sends a
+  signed-in non-coach there, and /get-started needs only a session); lib/teams.ts
+  (create/list/rotate); AccountMenu "Manage teams" link. THE JOIN-CODE FLOW IS END-TO-END
+  (coach founds on web → shares code → player joins on mobile → roll-up populates the board).
+- **PR #123 — THE COACH BOARD IS LIVE (2026-07-05, MERGED).** The dashboard
+  reads the live spine behind the S12 gate (spec:
+  docs/superpowers/specs/2026-07-05-live-coach-board-design.md): lib/liveBoard.ts (RSC read
+  under the coach's own RLS session; **query errors THROW** — a failed read must never
+  render as an empty board or bounce a coach to /get-started; status rows **reconciled
+  against the ACTIVE roster** so left members / a playing coach never render as players and
+  joined ≥ reporting always; soft-deleted teams excluded via teams!inner deleted_at) +
+  lib/liveDerive.ts (pure: the seven coach-safe fields → RAG/reasons/confidence; grey keeps
+  its real load/adherence reasons). The web adopted the DB load_state vocabulary
+  (no-data/ramping/balanced/high/overreaching); the mock squad chain + mockClock/
+  mockConstraints are DELETED (Constraints option lists live in lib/constraints.ts; the
+  provider seeds constraints from the LIVE team row — the "Football · In-season" mock leak
+  into Focus is gone); honest empty states via shared ui CardEmptyState + AwaitingSyncNote;
+  zero-player boards lead with the join code (keyed on the ROSTER, not reporting rows);
+  "Updated today" uses the roster denominator. Verified END-TO-END on staging (seeded coach
+  + green/red/grey/never-synced players via the RPCs, signed in through the real gate,
+  board/table/drawer/zero-state/Focus checked in-browser); an 8-angle self-review then
+  found 7 correctness issues (error swallowing, zero-state key, mock-constraints leak,
+  roster reconcile, soft-delete, denominator, grey reasons) — all fixed + re-verified live.
+  build + engine-suite (143/143) green; the two Vercel fails = the documented 24h
+  deploy-rate-limit flake. **MERGED by Simon 2026-07-05** (note: the session permission
+  layer declines self-authored-PR merges — the charter's autonomous-merge clause is
+  narrower now; leave green PRs for Simon). Board follow-ups recorded in the spec:
+  per-player history feed, team switcher, team-load aggregation.
+- **PR #124 — TEAM SCHEDULE → PLAN CONSTRAINTS, both stages (2026-07-05, MERGED;
+  spec: docs/superpowers/specs/2026-07-05-team-schedule-constraints-design.md;
+  Simon's decisions: matches block + fixtures taper, autonomous delivery).**
+  STAGE 1 (web): Constraints Save persists sport/season (label→code via ONE
+  SEASON_CODE_OF map) + {weeklyPattern, fixtures} to teams.schedule under coach RLS —
+  failure surfaces the error and commits nothing; liveBoard reads it back (defensive
+  parse — the column defaults to '[]'), seeds the provider, and derives team.nextFixture
+  so Match-week runs on real fixtures. Select honesty: out-of-list values (sport 'gaa')
+  are REPRESENTED — the silent option-0 fallback corrupted a team's sport to 'Football'
+  once on staging; class closed. E2E-proven on staging incl. the player-side member-RLS
+  read (the stage-2 contract).
+  STAGE 2 (engine+mobile): NEW pure `applyTeamSchedule(profile, schedule, asOf)`
+  (packages/engine/src/lib/plan/teamSchedule.js, barrel-exported) maps the schedule onto
+  fields the engine ALREADY honours — match days leave availability.days (days_per_week
+  follows; ≥2-day floor), ALL sport-load days union into sport_days (the scheduler's
+  existing keep-away/lighten machinery), and ONE gated fixture may become event_date
+  (**the peak-event gate**: athlete has no own event + exactly one upcoming match +
+  ≥21 days out, judged against plan_start_date never the clock — a league team's weekly
+  fixture must never collapse plans into a permanent taper). No/invalid schedule returns
+  the SAME reference ⇒ goldens byte-identical by construction (suite 144/144, zero
+  golden movement). Mobile: SyncService.fetchMyTeamSchedule (member RLS) →
+  teamScheduleCache (namespaced Storage) refreshed on sign-in sync + join/leave;
+  PlanService's ONE profile seam (activeProfile()) applies the transform, so baseline +
+  reflow + gymCtx all see it and profileSignature/_cache.sig propagate schedule changes
+  through both memos automatically. tests/team-schedule.js (21 checks incl. the
+  E2E no-gym-on-match-day proof against a non-vacuous baseline).
+  ⇒ NEXT (Team): surface the constraint on the PLAYER side (a "match day" marker in the
+  mobile week view — currently invisible to the athlete); then the board follow-ups
+  (history feed, team switcher). WP-22/23 build flip stays LAST (pause).
+- **PR #126 — UI: skeleton loaders + jargon tooltips, both apps (2026-07-05, MERGED;
+  opened as #125 stacked on #124 — GitHub auto-closes a stacked PR when its squashed base
+  branch is deleted, so it re-landed rebased-onto-main as #126; spec:
+  docs/superpowers/specs/2026-07-05-ui-skeletons-tooltips-design.md; Simon's scope:
+  per-panel web skeletons + mobile's genuine waits; tooltips on every jargon term +
+  metric card).** Skeletons: web Skeleton primitive +
+  app/dashboard/loading.tsx mirroring the Home frames; mobile ONE .skeleton class (real
+  Midnight vars) at its only two real waits (first sign-in sync splash, Teams list fetch)
+  — instant local-cache screens deliberately untouched. Tooltips: one accessible InfoTip
+  per app (hover/focus/tap; popover PORTALLED to body with fixed positioning — immune to
+  the squad table's overflow-x and the drawer's transform); copy in ONE place per app
+  (web dashboardCopy.ts JARGON ×16 reusing STATUS_META/LOAD_META language; mobile
+  metricGlossary.js ×8); sweep = 6 overview cards, 6 table headers, drawer stats +
+  workload ratio, confidence, Next-match, awaiting-sync, block direction; mobile
+  readiness/recovery, ACWR, RPE, taper/deload, dev volume. Verified live (tooltip open,
+  themed); web typecheck+build green; suite 144/144.
+- **PR #118 — coach-board IDENTITY.** migration 20260709: player_status gains a
+  server-derived `display_name` (a trigger stamps it from the player's profile, same
+  un-spoofable pattern as S11; a coach can't read teammates' `users` rows, so the board
+  needed this to name its rows). Harness 64/64. Also: docs/product/TEAM-NEXT-STEPS.md —
+  the decisions + recommended order for founding/invite, dashboard live-wiring, schedule→
+  constraints.
+- **SECURITY STATUS — COMPLETE (S1–S13 + S11).** Remaining: S14 (prod Auth dashboard:
+  Confirm-email + rate-limit — SIMON), S15 (LOW accepted nits: CORS `*`, setReassess loose
+  match, 010 NOT VALID, avatars-public-by-design). Prod DB/function deploy = the batched
+  step in supabase/SECURITY-DEPLOY.md (migrations 20260706/07/08/09 + 3 Edge Functions +
+  Vercel NEXT_PUBLIC_SUPABASE_* for the dashboard).
+- **⇒ NEXT:** the Team founding/invite UI (player-side; makes the roll-up fire for real
+  teams) → wire the coach dashboard to LIVE player_status behind the S12 gate (the board is
+  now trustworthy per S11). **WP-22/23 (build flip)** remains last (HIGH-risk, PAUSE for
+  Simon). (Dev notes: /dev remounts
+  periodically — click + assert in ONE preview_eval; a preset click + Generate in the same
+  tick generates from STALE answers. Vercel hobby-tier deploy rate limit can FAIL the web
+  preview check for 24 h — an infra flake; merge on engine-suite green, documented in PR
+  #98's merge.)
+- ~~the H9 seed-evidence pass~~ **DONE** (see PRs #76/#77 above) (one-day scientific review of
+  `exerciseQualities.js` tags + `qualities.js` doseResponse — they steer live run/cycle plans
+  and are still `needsReview:true` seed data; must land before WP-21 doses from them), then
+  **WP-14** (allocator `scheme()` dose tables → knowledge/programming keyed by (quality,
+  phase) with a byte-identical style bridge — the D12 enabler). Sprint 9 (SKB-primary) is
+  HIGH-risk — pause for Simon's review before flipping.
+
+## Latest work — Phase A of the audit backlog: hygiene & safety, WP-01…WP-06 (2026-07-03)
+
+Six small, independent PRs (**#61–#66**, all merged to `main`) executing Phase A of the Phase 3
+audit's backlog (`docs/architecture/PHASE3-ARCHITECTURAL-AUDIT.md` §8). Suite now **120/120**
+(three new test files). WP-07 (migration discipline + staging) is the one Phase A item left —
+repo-side work queued as a task chip; the staging Supabase project needs Simon's account.
+
+- **#61 WP-01** — `deploy.yml` gains a `test` job that `build` needs: a red suite can no longer
+  reach GitHub Pages (V15's cheapest fix).
+- **#62 WP-02** — `reflow-start-consistency.js` de-flaked: fixed-clock Date shim (`FAKE_TODAY`
+  override) + the candidate scan widened to the whole plan (a Sunday plan-start left week 1's gym
+  days all in the past — the real weekday flake). Proven green on all 7 weekdays.
+- **#63 WP-03 (V4)** — the three determinism clock leaks closed: race-taper anchor
+  (`PlanGenerator.js`), `deriveSeason` (now measures the event window from `asOf` =
+  `plan_start_date`), `continueBlock` (caller supplies `todayISO`; the engine THROWS rather than
+  read the clock — BlockCheckin.jsx passes it). New `tests/determinism-clock.js` pins byte-identical
+  plans across mocked clock days months apart, dated AND undated profiles. Golden master untouched.
+  Undated profiles (synthetic/dev only — onboarding always sets a start date) now deterministically
+  get no race taper / intent-derived season instead of clock-derived.
+- **#64 WP-04 (A5)** — **Train Now is on the D11 brain**: `generateTrainNow`'s ctx carries
+  `sport/power/priorityQualities/season/skbIds` like `gymCtx`. Runner's on-demand session = hinge/
+  durability work, no chest flyes. Build byte-identical at the allocator (pinned by
+  `tests/train-now-d11.js`); swim probed byte-identical.
+- **#65 WP-05** — `tests/reflow-d11-quality.js`: run profile through the real read path
+  (`getPhases()` → reflow) asserts D11 content idle + mid-week. Surfaced the reflow
+  day-differentiation collapse (see the finding in the follow-ups list above).
+- **#66 WP-06** — `packages/engine` gets `npm test`; `run-all.mjs` guards that
+  `@performance-os/engine` resolves INSIDE the current checkout and fails with instructions
+  otherwise (the recorded worktree trap, now automated).
+
+## Latest work — Sprint 8: D11 intervention-selection re-seat (run + cycle) (2026-07-03)
+
+On branch **`feat/d11-intervention-selection`**. The FIRST sprint where live plans change: for **run and
+cycle**, exercise selection is now diagnosis-driven (D11 value-hierarchy, transfer-per-fatigue, stop at
+the fatigue budget) instead of muscle-deficit fill. **Build and swim are byte-identical** (build-parity
+gate; swim deferred to the legacy path). Design/plan: `docs/superpowers/{specs,plans}/2026-07-03-d11-intervention-selection*`.
+
+- **New** `plan/selectInterventions.js` (D11, EDS §34, cap 2/pattern), `performance/forProfile.js`
+  (`performanceModelForProfile` — diagnosis from a legacy profile), wired through `generatePlan` +
+  the PlanService reflow. Muscle-volume is now the in-loop MRV ledger, not the driver.
+- **Fixes surfaced by the re-seat:** mobility/stability → robustness (session-support, not drivers);
+  beginners targeting power build the max-strength base first (`competencyAdjustedTarget`).
+- **Safety:** `build-parity.js` proves build byte-identical; sport golden master re-baselined (only
+  run/cycle changed); `d11-runner-quality.js` proves the change is an improvement. Full suite 117/117.
+- **Deferred / near-term follow-ups:** (1) re-seat **swim** once the model surfaces its upper-pull/
+  shoulder need (its diagnosis currently points to mobility→robustness, wrong for a swimmer); (2) wire
+  D11 into on-demand **"Train Now"** (`generateTrainNow` still uses the legacy fill for run/cycle);
+  (3) add a reflow-specific D11 regression test; (4) **D12** dose schemes keyed by quality; (5) the
+  MRV→validator extraction; (6) SKB-primary selection (Sprint 9).
+
+## Latest work — Sprint 7: session objective (D9) + movement requirements (D10) (2026-07-02)
+
+On branch **`feat/session-decisions-d9-d10`**. The diagnosis→plan chain gains its next two decisions,
+as PARALLEL model output (nothing in `generatePlan` reads it; both golden masters byte-identical).
+Design/plan: `docs/superpowers/{specs,plans}/2026-07-02-session-objective-movement-requirements*`.
+
+- **New `packages/engine/src/lib/session/`** — `deriveSessionSpecs` (barrel) computes per session a D9
+  objective (purpose + target quality + intensity zone + fatigue budget) and D10 movement requirements
+  (patterns + force-velocity + contraction), driven by the diagnosis.
+- **New `packages/engine/src/data/qualityMovementMap.js`** — the quality→movement knowledge + the
+  cardio→gym-support translation (`aerobicCapacity → robustness + reactiveStrength`).
+- **Contraindications up front** (L8): `contraindicatedPatternsFrom` maps injury name-regexes onto
+  movement patterns; a novice's high-skill force-velocity is downgraded to a strength base (L4).
+- **Validated by the EDS §22 archetypes**: in-season runner vs novice sprinter come out categorically
+  different (disjoint targets). Read-only `/dev` "SESSION DECISIONS" panel shows the output.
+- **PARALLEL** — full `npm test` green; both golden masters byte-identical (no `UPDATE=1`). Frozen set untouched.
+- **Next:** Blueprint **Sprint 8 (D11)** — re-seat the allocator to select exercises that satisfy these
+  requirements (the first sprint where live plans change).
+
+## Latest work — Sprint 5: exercise-quality tagging (the re-seat enabler) (2026-07-02)
+
+On branch **`feat/exercise-quality-tags`**. The on-path enabler for the diagnosis→plan re-seating
+(Blueprint **Sprint 5 / Wave W5**): the exercise catalogue is now tagged by the physical
+quality/adaptation it develops, its force-velocity profile, and its fatigue cost — the bridge the
+diagnosis (which speaks in qualities) needs before it can steer exercise selection (the allocator
+picks by muscle). Design/plan: `docs/superpowers/{specs,plans}/2026-07-02-exercise-quality-tagging-*`.
+
+- **New `packages/engine/src/data/exerciseQualities.js`** — `exerciseQualities(id)` (also on the
+  barrel) tags all 118 exercises via CLASS rules → PATTERN defaults → per-exercise OVERRIDES
+  (mirrors `exerciseSimilarity.js`). Honest seed evidence (`confidence` + `needsReview:true`).
+- **`qualities.js`** — every quality gained a `doseResponse` (no label without a dose + assessment).
+- **Read-only `/dev` readout** shows each exercise's quality tags; the plan itself is unchanged.
+- **PARALLEL — nothing in `generatePlan` reads it.** Both golden masters stay byte-identical green
+  (verified: full `npm test` green, no `UPDATE=1`). Frozen governance set untouched.
+- **Next:** Blueprint **Sprint 7 (D9/D10)** — session objective + movement requirements — then
+  **Sprint 8 (D11)** re-seats the allocator's `bestExercise` to select by these qualities.
+
+## Latest work — Diagnosis layer: D4 limiting factors + D5 priority qualities (2026-07-02)
+
+On branch **`feat/diagnosis-d4-d5`**. The Performance Model now *diagnoses* — it doesn't just hold
+capability and demand, it compares them. Design spec:
+`docs/superpowers/specs/2026-07-02-diagnosis-d4-d5-design.md`. Tech doc updated:
+`docs/architecture/ATHLETE-MODEL.md` §5.4/§12.
+
+- **D4 — `diagnoseLimitingFactors`** (`packages/engine/src/lib/performance/diagnose.js`): ranks the
+  gap between sport/position demand and athlete capability per quality
+  (`magnitude = max(0, demandImportance − capabilityLevel) × demandImportance`, `trainability`/
+  `injuryRisk` neutral seams at `1.0`), confidence = the weakest input (the capability estimate),
+  with a plain-English rationale. A sport athlete always gets a full diagnosis (every demanded
+  quality ranked, including met demands at zero magnitude); a non-sport model gets `[]`.
+- **D5 — `prioritiseQualities`** (`packages/engine/src/lib/performance/prioritise.js` +
+  `packages/engine/src/data/qualityCompatibility.js`): selects a confidence-scaled set (`k`: low→1,
+  moderate→2, high→3) of positive-magnitude priority qualities, each traced back to its limiter and
+  mapped to the quality registry's developing `adaptations[]`, respecting a compatibility guard
+  (defers a candidate that conflicts with an already-selected higher priority — seeded with
+  `maxStrength` × `aerobicCapacity`).
+- **`derivePerformanceModel` now populates both fields** purely from capability × demand — no clock,
+  no plan change. **The live plan is unchanged**: nothing downstream reads the diagnosis yet, and
+  the golden master stays green.
+- **Next:** steer the plan from the diagnosis (the diagnosis→plan re-seating).
+
+## Latest work — Sprint 3 Plan 2: SKB-driven onboarding + demand-profile wiring (2026-07-02)
+
+On branch **`feat/plan2-onboarding-skb`**. Wires the (previously dormant) Sport Knowledge Base into
+onboarding and into the Performance Model's `demandProfile`, and revises the onboarding question set
+per the Plan 1 "NOT yet built" note. Design spec: `docs/superpowers/specs/2026-07-02-plan2-onboarding-skb-design.md`.
+Tech doc updated: `docs/architecture/ATHLETE-MODEL.md` §5.2/§5.3/§12.
+
+- **SKB-driven sport selection.** `selectableSports()` (`packages/engine/src/lib/sportKnowledge/selectable.js`)
+  derives the onboarding sport list from the SKB itself — completeness-gated (`SKB.completeness(id).complete`)
+  **and** has an engine binding (`bindingFor(id)`, `packages/engine/src/data/sportEngineBinding.js`,
+  new `SKB_ENGINE_BINDING` table mapping SKB sport ids to the legacy engine sport module + discipline).
+  `positionsFor(skbId)` feeds a new onboarding position step. Authoring a new flagship SKB profile +
+  one binding entry is now enough to make a sport selectable — no wizard change needed.
+- **`demandProfile` is live.** `derivePerformanceModel` now calls `buildDemandProfile(sportId,
+  positionId)` (`packages/engine/src/lib/performance/demandProfile.js`): base importance per
+  Performance-Model quality from the SKB's `physicalProfile.qualities` (mapped through
+  `sportQualityMap.js`'s `SKB_TO_PM_QUALITY` table), boosted to a 0.9 floor for the chosen position's
+  `primaryQualities`. SKB qualities with no PM home yet (`sprintSpeed`, `acceleration`,
+  `changeOfDirection`, `gripStrength`, etc.) are documented and dropped, not approximated.
+- **Legacy round-trip preserved.** `profileToAthleteModel`/`athleteModelToEngineInput` now carry the
+  SKB sport id on `sportingContext.primarySport`, while the exact legacy `sport`/`run_discipline`
+  travel in `meta.enginePassthrough` and win on read-back — **the live plan generator output is
+  unchanged** (golden master + the athlete-adapter golden master both green).
+- **Onboarding UI:** `OnboardingWizard.jsx` gained SKB-driven sport + position steps, plus new
+  session-duration, training-age, and movement-competency steps feeding `onboardingModel.js`'s
+  backward-compatible `answersToProfilePatch` bridge and `answersToAthleteModelInputs` overlay.
+- **Tests (all new, all green):** `sport-engine-binding.js`, `skb-selectable.js`, `sport-quality-map.js`,
+  `demand-profile.js`, `performance-demand.js`, `adapter-sport-position.js`, `answers-athlete-rich.js` —
+  plus the unchanged `golden-master.js` and `athlete-adapter-golden-master.js`, both still green.
+- **Frozen docs untouched** (verified: zero diff to `docs/foundation/`, the EDS, and the TAS).
+- **Not done here (deliberately out of scope):** no diagnosis step — `demandProfile` is modelled but
+  does not yet change what the plan generator produces (nothing compares demand against capability
+  yet). **Next:** the diagnosis engine — couple demand × capability into limiting factors / priority
+  adaptations, per the Migration Blueprint's re-seating path.
+
+## Latest work — Sprint 0: engine test safety net + CI gate (2026-07-02)
+
+Merged (**PR #55**, branch `chore/sprint0-safety-net`). The blueprint's "Sprint 0 — safety net & CI
+gate", done between Plan 1 and Plan 2 because the test protection was broken.
+
+- **`npm test` was pointing at a non-existent `apps/mobile/tests/data-layer.js`** → it failed instantly
+  and the ~90-file node suite never ran in CI. Fixed: `apps/mobile/tests/run-all.mjs` runs every
+  `tests/*.js` and fails (exit 1) on any non-zero exit; `apps/mobile/package.json`'s `test` script points
+  at it (root `npm test` delegates).
+- **The golden master had drifted far** (its snapshot was last regenerated at `49f9263`, before a large
+  body of intentional merged engine work). Root cause: the broken `npm test` meant nobody re-ran it. Made
+  the comparison **order-insensitive** (`stableStringify` — recursive key-sort) so refactors that only
+  reorder keys no longer produce false drift, then re-baselined the snapshot to current shipped behaviour
+  (validated by the other ~97 green tests). Future diffs are now minimal/reviewable.
+- **CI gate:** `.github/workflows/test.yml` runs `npm ci` + `npm test` on push to `main` and every PR.
+- Verified non-vacuous (perturbing a snapshot value fails the gate). No engine behaviour changed.
+
+## Latest work — Sprint 3 Plan 1: Athlete & Performance Model foundation (2026-07-02)
+
+On branch **`feat/athlete-model-sprint3`**. The first **code** of the engine re-seating: a pure
+**Athlete Model** (who the athlete is) + a derived **Performance Model** (capability per physical
+quality, with confidence) in `packages/engine`, an app-side service, and tested adapters. Built
+subagent-driven (SDD ledger at `.git/sdd/progress.md`), TDD per task, every task reviewed. Full
+tech doc: **`docs/architecture/ATHLETE-MODEL.md`**; design spec + plan under `docs/superpowers/`.
+
+- **Two pure domains** (`packages/engine/src/lib/`): `athlete/` (schema + defaults, a
+  **field-registry justification gate** where a test fails if any stored field lacks a documented
+  "why + which D1–D16 decision it serves", validation, pure builder) and `performance/`
+  (`estimateCapability` measured-vs-inferred + confidence, `derivePerformanceModel`). Seed
+  **knowledge** in `packages/engine/src/data/`: 10 physical qualities + adaptations, training-age
+  bands, population capability priors. All pure/deterministic (injected `asOf`; no clock/random).
+- **Adapters + the safety net.** `profileToAthleteModel` (legacy `users.profile` → model) and
+  `athleteModelToEngineInput` (model → the engine's read-set). `apps/mobile/tests/athlete-adapter-golden-master.js`
+  proves **10 archetypes are byte-identical** — a plan generated by driving the engine through the
+  model equals the legacy plan (verified non-vacuous: perturbing `strength_style`/`experience` makes
+  them differ). This is how "existing functionality remains operational" is *demonstrated*.
+- **App side.** `apps/mobile/src/lib/AthleteModelService.js` — build / persist (**versioned
+  `users.profile.athlete_model`** via SyncService, offline-first) / load / `upgradeAthleteModel` /
+  lazy-derive for existing users. `onboardingModel.js` gained `answersToAthleteModelInputs`;
+  `Onboarding.jsx` **dual-writes** the model alongside the legacy profile (non-blocking). Browser-
+  verified: onboarding persists `profile.athlete_model` (schemaVersion 1) and it reloads.
+- **Parallel, not live.** The live plan generator is **untouched** — it still consumes the legacy
+  profile; the adapter is proven by tests but not in the hot path (spec's "parallel, proven by
+  tests"). No programme logic rewritten; the `athlete_model` is a JSONB sub-object (no new table, no
+  DDL — `supabase/migrations/20260701_athlete_model.sql` is a documented no-op). Raw vitals are
+  **never** copied into the model (Article 11) — it references `daily_metrics`, owner-only.
+- **Tests:** `node apps/mobile/tests/athlete-*.js` + `performance-model.js` + `adapter-*.js` +
+  `answers-to-athlete-model.js` (all green). **Frozen docs untouched** (verified: zero diff to the
+  five governing docs). **Next — Plan 2:** revise the onboarding *question set* (outcome-based
+  multi-goal, measurable training age, session duration, movement competency) feeding the model.
+- **Pre-existing issue surfaced (NOT this sprint):** the engine golden-master
+  (`apps/mobile/tests/golden-master.js`) drifts 19 archetypes (`restSec` 75→90) on `main` — snapshot
+  stale since `49f9263`, allocator changed after, and the broken `npm test` never ran it. Exactly the
+  blueprint's "Sprint 0 — safety net & CI gate" work; flagged as a follow-up, not touched here.
+
+## Latest work — Sprints 1 & 2: Baseline Assessment + Migration Blueprint (2026-07-01)
+
+Two new **planning documents** in `docs/architecture/` (NOT frozen — the *living rebuild plan*,
+derived from and validated against the frozen governing set). They turn "the engine is mid-migration"
+into a precise, executable programme.
+
+- **Sprint 1 → `docs/architecture/BASELINE-ARCHITECTURE-ASSESSMENT.md`** — a 25-section
+  **observational** baseline (no code changed): what exists today, how coaching decisions are
+  actually made (a full decision catalogue), where knowledge lives, the data flow, alignment vs
+  each frozen doc, technical debt, and what to preserve / replace / remove. Headline: the engine is
+  an **excellent VOLUME-FIRST gym planner** whose central shape is exactly what the Constitution's
+  Articles 4/5/6 name as their "Violated" examples — the gap is **orientation, not quality**.
+- **Sprint 2 → `docs/architecture/MIGRATION-BLUEPRINT.md`** — the master **rebuild plan** (10 parts):
+  the future decision chain (diagnosis as the pivot; adaptation chosen before exercise); the
+  **D1–D16 decision catalogue** with contracts; decision-ownership (the anti-hard-coding rules); a
+  current→future mapping (Retain/Refactor/Replace/Remove per component); the knowledge-migration plan
+  (code → the 12 domains); the target module map (**one engine, not many**); the migration
+  **waves W0–W11**; an executable **Sprint 0–12 backlog**; a traceability matrix; and a six-lens
+  critical review.
+
+**The rebuild is a RE-SEATING, not a rewrite** (EDS §18): keep the pure/deterministic engine +
+golden-master (G1), the injury subsystem (G3), the SKB schema (G5), freeze-on-commit (G6), and
+privacy-by-validation (G8); change the *primitive* (physical qualities/adaptations, not per-muscle
+volume) and the *order* (diagnose → prioritise → dose → validate); wire the dormant SKB. **W0–W4
+ship value and are independent of the risky re-seating (W5–W9)** — the platform improves continuously.
+
+### ▶ START SPRINT 3 HERE — "Sprint 0: Safety net & CI gate" (Blueprint Part 8)
+
+The very first execution step, because there is currently **no automated test protection**:
+1. **Fix `npm test`** — it points at a non-existent `apps/mobile/tests/data-layer.js` and fails
+   immediately. The real 84-file engine suite only runs via the manual `node tests/*.js` glob.
+2. **Add a CI test gate** — neither `.github/workflows/deploy.yml` (build-only) nor `web-ci.yml`
+   runs the engine suite or the golden-master. Add a job that runs both on PR + push to `main`.
+3. **Lock the golden-master** (`apps/mobile/tests/golden-master.js`, 19-archetype byte-identical
+   snapshot) as the safety net every later wave depends on; document the `UPDATE=1` workflow.
+
+Then proceed to Blueprint **Sprint 1 (confidence operative)** → **Sprint 2 (recovery honest)** →
+**Sprint 3 (validator suite)** → **Sprint 4 (constraints-first)** — all independent of the re-seating.
+Read `MIGRATION-BLUEPRINT.md` **Part 8** for each sprint's full objective / scope / validation /
+success, and **Part 7** for how the waves sequence. Validate every step against the frozen set.
+
+- **Docs-only; no code changed; no frozen document was modified** (verified: zero diff to the frozen
+  set). The two new docs are living planning artefacts, not part of the frozen v1.0 set.
+
+## Latest work — foundation governing framework (`docs/foundation/`) (2026-06-30)
+
+Merged to **`main`** (PR #49, merge commit `7166bd3`). Added a new **platform-level
+governing framework** that sits *above* the engine-scoped EDS — the layer every future
+engineering, coaching, product, and AI decision is validated against **before** building.
+Full index + governance stack: `docs/foundation/README.md`.
+
+- **`CONSTITUTION.md`** — 20 immutable Articles (5 Titles), the conflict-resolution order,
+  an amendment process, and a mapping table that **subsumes the EDS's Core Philosophy (§2),
+  First Principles (P1–P15), and Engine Laws (L1–L15)** (nothing orphaned — Appendix A).
+- **`DECISION-ONTOLOGY.md`** — the canonical vocabulary: ~40 entities in 7 families; the
+  **three orthogonal structures** (Reasoning Spine · Containment Hierarchy · Diagnostic
+  Triangle); reinstates **Performance Outcome**, makes **Fatigue** + **Override** first-class,
+  and adds the **Organisation/Team/Coach/Position** entities the EDS left implicit.
+- **`KNOWLEDGE-ARCHITECTURE.md`** — the **8-kind data taxonomy** (Knowledge / Decision Logic /
+  Inference / Calculation / Stored / Derived / Assumption / Prediction) + 12 governed knowledge
+  domains, grounded in the real SKB / evidence-KB / index schemas.
+- **`PANEL-REVIEW.md`** — six-lens expert critique with revisions folded back; **`README.md`** —
+  index, reading order, governance stack.
+- **Reconciliation:** the EDS no longer calls *itself* "the constitution"; its §2/P/L are now
+  derivations of the Constitution's Articles (pointers + Appendix A mapping). `docs/engine/README.md`
+  and `CLAUDE.md` updated so the new layer is discoverable.
+- **Additive / docs-only** — no engine code changed; nothing consumes these yet. They are
+  **foundational** (the target), not running status. **Next:** check in-flight engine work (SKB
+  wiring; the orchestrator/evidence-architecture refactor) against the Constitution + Ontology
+  before extending it.
+
+## Latest work — SKB: triathlon authored to flagship depth (2026-06-30)
+
+New profile `packages/engine/src/data/sport-knowledge/triathlon.json`, authored from
+scratch to **flagship depth** (all 21 sections, scores 1.00 completeness), modelled on
+`swimming.json` as a **single unified profile** with distance archetypes (Sprint /
+Olympic / 70.3 / Ironman / draft-legal) in `positions`.
+
+- **Sport-specific shape:** the **run is the binding constraint** (highest-injury
+  discipline — `durability` weighted 9, lower-limb soreness is the top readiness factor,
+  load rules cap **run** load specifically); the **run-off-the-bike "brick"** is the
+  signature quality (own assessment + `brick_decoupling` KPI); strength is for
+  **economy + durability without added mass**, sequenced away from key endurance sessions
+  (concurrent-training interference — Rønnestad & Mujika 2014; Fyfe 2014); `singleLegEmphasis`
+  HIGH (running is single-leg); **RED-S / energy availability** built in as the
+  highest-severity risk (decision rule + readiness factor + assessment + status-only coach
+  flag — Mountjoy 2018).
+- **Engine wiring:** one import + one `PROFILES` entry in `sportKnowledge/index.js`.
+- **Test:** `apps/mobile/tests/sport-knowledge.js` — triathlon added to the registry
+  coverage list and into `FLAGSHIPS`.
+- Still **additive** — nothing in the app consumes the SKB yet; not a selectable
+  onboarding sport (would need `onboardingModel.js` + `activityTypes.js`).
+
+## Latest work — SKB: cycling authored to flagship depth (2026-06-29)
+
+Promoted `packages/engine/src/data/sport-knowledge/cycling.json` from a stub to a
+**fully-authored** profile (all 21 sections), modelled on `swimming.json` (the closest
+individual-endurance reference) with real evidence provenance.
+
+- **Sport-specific shape:** discipline archetypes in `positions` (GC/climber, sprinter,
+  TT, criterium/puncheur, **track sprinter**, endurance/domestique); readiness elevates
+  **leg/quad soreness** (knee is the overuse target); a **power-to-weight (FTP W/kg)** KPI
+  is the climbing/GC currency; the gym serves the evidence-based **strength→economy** gain
+  (Rønnestad & Mujika 2014; Sunde 2010; Aagaard 2011) + **in-season maintenance**
+  (Rønnestad 2010). Injuries are the two cycling faces: overuse (anterior knee, low back,
+  neck, ITB, saddle/bar neuropathies) + acute **crash trauma** (clavicle).
+- **Engine wiring:** already imported in `sportKnowledge/index.js` and in `PROFILES`, so
+  no registry change was needed — authoring the JSON is the whole change (the SKB's "add a
+  sport = JSON + one registry line" promise; the line already existed).
+- **Test:** `apps/mobile/tests/sport-knowledge.js` — cycling moved from the stub list into
+  `FLAGSHIPS`, plus cycling-specific distinctness assertions (aerobic endurance leads,
+  rotational power low, carries the `ftp_wkg` KPI).
+- **Docs:** `docs/engine/03-SPORT-KNOWLEDGE-BASE.md` updated (cycling now a reference
+  profile; three stubs remain: rugby, soccer, running).
+- Still **additive** — nothing in the app consumes the SKB yet.
+
+## Latest work — Sport Knowledge Base v1 (GAA flagship) (2026-06-28)
+
+On worktree branch **`claude/elated-benz-f95b79`** (local). New **Sport Knowledge Base
+(SKB)** — a reusable, evidence-tagged per-sport knowledge module a deterministic engine can
+consume (the "sport is the priority" layer). **Additive only — no plan-generation rewiring;
+nothing in the app consumes it yet.** Full doc: `docs/engine/03-SPORT-KNOWLEDGE-BASE.md`.
+
+- **Schema + accessor:** `packages/engine/src/lib/sportKnowledge/{schema.js,index.js}`.
+  21-section `SportProfile` contract with per-recommendation provenance
+  (`confidence`/`evidenceLevel`/`source`), mirroring the existing `knowledge/` pattern.
+  `validate()` (structural) + `completeness()` (authoring depth, à la `kb.staleEntries`).
+- **Privacy enforced in the validator:** `RAW_VITALS` + a rule that **fails** if any
+  raw-vital KPI (HRV/sleep/RHR) is flagged coach/team-visible — the binding
+  `TEAM-ARCHITECTURE.md` rule, now a test, not a comment.
+- **Data (pure JSON):** `packages/engine/src/data/sport-knowledge/`. **Gaelic football**,
+  **hurling** and **swimming** authored fully across all 21 sections. The two GAA codes are
+  **separate sports** (hurling carries the striking / grip / rotational-power demands
+  football lacks); swimming is an individual endurance sport (positions = event/stroke
+  archetypes; readiness elevates shoulder soreness; taper is the headline load tool).
+  Schema-conformant **stubs**: rugby, soccer, running (cycling was promoted to a full
+  profile on 2026-06-29 — see the entry above).
+- Exposed on the engine barrel: `import { sportKnowledge } from '@performance-os/engine'`.
+- **Verified:** `node apps/mobile/tests/sport-knowledge.js` (51 assertions pass —
+  validity, flagship completeness + distinctness, stub scaffolds, energy %s, privacy rule,
+  KPI limits, score weights, decision rules); `sports.js` + `knowledge.js` no regressions;
+  barrel loads JSON in Node 26; esbuild (Vite 5.4's bundler) bundles the `with { type:
+  'json' }` imports cleanly. NB: this worktree has no `node_modules` — a local
+  `node_modules/@performance-os/{engine,shared}` symlink was added so `node` resolves the
+  worktree engine; `npm install` at the worktree root would supersede it.
+- **Next:** author the stubs to depth; wire `decisionRules`/`readinessModel`/
+  `loadManagement` into `PlanService` + the future coach dashboard; have the thin
+  `src/lib/sports/*.js` modules derive from the SKB.
+
+## Latest work — Session UI v2 + timer reliability + engine cleanups (2026-06-28)
+
+Continues on branch **`feat/focused-session-runner`** (local only — NOT pushed, no PR).
+Six brainstormed specs, all built + preview-verified. Specs under
+`docs/superpowers/specs/2026-06-28-*-design.md` (session-ui-v2, rest-timer-reliability,
+primaries-straight-sets, region-pure-days-and-ordering, exercise-video-placeholder,
+on-the-fly-exercise-substitution).
+
+- **Spec A — Session UI v2.** The session preview is now mobile-first: one compact row
+  per exercise (name + a single sets×reps badge; weight/RPE/cues moved into the runner).
+  Primer and Main are **bordered section cards** (colour surrounds the block, no left
+  rail): **Primer = teal `--accent`**, **Main = neutral**; **rust removed** from the
+  session views + runner (it's legacy; the Midnight primary accent is teal). In the
+  runner the primer runs as a **circuit, round-by-round** ("Round 1 of 2 → Start main"),
+  no per-move rest. (Supersedes the "primer colour --moss" open item below.)
+- **Spec B — Rest-timer reliability (serverless).** `RestTimer` rewritten to
+  **timestamp-based** timing (tracks the end time, derives the display) so a screen
+  lock no longer freezes/drifts it; a `visibilitychange`/`pageshow` handler catches up
+  and fires completion once on return. New `hooks/useWakeLock.js` keeps the screen awake
+  for the whole runner (re-acquires on visibility; silent no-op on unsupported iOS).
+  New `lib/sound.js` beep on completion (+ existing vibrate; AudioContext unlocked on
+  taps). Also fixes the prior "setState while rendering" warning. The manual "Log your
+  top set" form is **removed** — progression derives solely from logged sets.
+  **Deferred (needs backend/native):** locked-screen Web Push banner + native iOS Live
+  Activity — a PWA can't schedule local notifications (verified: iOS Web Push is
+  server-only, installed-PWA only).
+- **Spec C — Primary lifts always run as straight sets.** `structureItems` no longer
+  crams a light filler into a primary's rest gap (it under-rested the heavy lift).
+  Primaries run straight with full rest; accessories still antagonist-superset among
+  themselves. Golden-master regenerated — **exercise selection + volume byte-identical**
+  across all 19 archetypes (570 session blocks); only superset structure changed.
+- **Spec D — Region-pure focused days + compounds-lead ordering.** A focused Upper/Lower
+  day no longer absorbs cross-region weekly-deficit spillover: in `bestExercise`, a
+  candidate whose muscles are ENTIRELY off-focus is now excluded (not just suppressed).
+  Hybrid lifts that hit an in-focus muscle stay (a Rack Pull on Upper trains the back);
+  factor-0 prehab finisher work (tag 'mobility') is region-agnostic; **sport is exempt**
+  (sport threads its priority work through every session). `structureItems` ordering
+  re-tiered to compounds → isolation → core → mobility, with the anchor pulled to front
+  AFTER the sort so a sport-priority iso/accessory anchor still leads. Fixes the reported
+  "why is Floor Press on the Tuesday lower day, last?" — Phase1/Wk1 Tuesday now reads
+  **Lower** (Box squat · Deficit Deadlift · Calf/Tibialis · Nordic curl · Ab Wheel), no
+  stray press. New `tests/region-pure.js`; `session-density` volume canary + sport tests
+  pass; golden-master regenerated.
+
+- **Spec E — Exercise video placeholder.** Deleted the stick-figure demos
+  (`StickFigureDemo.jsx` + `data/exerciseDemos.js`); the ⓘ guide keeps its written
+  content and the demo block is now a future-ready video area — plays `entry.video` when
+  one exists, else a "form video coming soon" shell with a disabled upload affordance.
+- **Spec F — On-the-fly exercise substitution (runner).** New `substituteOptions`
+  engine module + an "Equipment taken? Substitute" control on each working set: ranked
+  same-muscle alternatives (same pattern first; squat → leg press / split squat, never
+  OHP), filtered to available equipment, each with a recomputed weight target. Picking
+  one swaps the exercise for THIS session only (local `sessionOverrides`, keyed by name)
+  — future weeks untouched. Only true variants (same `matchLift` key) move the tracked
+  e1RM; others log history only. Runner steps rebuild from a content signature so a swap
+  is seamless. Substitute shows only on an exercise's FIRST set (committing the swap to
+  the whole exercise); the sheet numbers options 1..n with #1 badged "best match".
+- **Spec G — Science-based substitution ranking.** New allocator-safe enrichment
+  (`data/exerciseSimilarity.js`: accurate primary/secondary muscles via pattern defaults
+  + per-exercise overrides, and an equip→modality matrix). `substituteOptions` now gates
+  to the same movement TIER + training the original's PRIMARY mover, then ranks by a
+  multi-axis likeness score (primary alignment, coverage, synergist overlap, pattern,
+  modality/force-vector, loadability via the exerciseLoad coefficient, same tracked lift,
+  laterality, ROM). Fixes the rear-delt-for-biceps-curl and hip-thrust-for-squat
+  mis-rankings; chest subs rank above triceps-biased ones. muscleContribution/allocator
+  untouched. `tests/substitutions.js` extended (15 assertions).
+
+Verified live (375px): compact bordered cards, no rust on page/runner, primer circuit,
+timestamp timer counting + catch-up, wake-lock requested, completion form has no
+top-set inputs, full Save & complete runs clean. `npm run build` clean; `node tests/*.js`
+green except the pre-existing date-dependent `reflow-start-consistency.js`.
+
+## Latest work — focused session runner + primer/main sections (2026-06-28)
+
+On branch **`feat/focused-session-runner`** (local only — NOT pushed, no PR). Built
+overnight from a brainstorm; awaiting Simon's review. Spec + plan committed under
+`docs/superpowers/{specs,plans}/2026-06-28-*`.
+
+Two connected features:
+1. **Primer / Main sections.** Every gym session now shows a colour-coded **Primer**
+   block (green `--moss`) — 1–3 movement-specific activation moves matched to the
+   day's main lifts (band pull-aparts before bench, etc.) — then the **Main** block
+   (rust `--rust`). New engine module `buildPrimer` (`packages/engine/src/lib/plan/primers.js`
+   + `data/primers.js`, unit-tested in `apps/mobile/tests/primers.js`); applied as a
+   decoration in `PlanService.injuryFilteredPhases` (strips the legacy functional
+   P1–P4 primer, prepends the curated one, tags every item `section`). Engine left
+   untouched so all engine snapshot tests stay green.
+2. **Focused set-by-set runner.** `Start session` now freezes the session and opens
+   a full-screen runner (`screens/SessionRunner.jsx`, route `.../sessions/:idx/run`)
+   that walks one set at a time: primers are quick prep/Done; strength items expand
+   into per-set steps with reps/weight (±2.5 kg) / RPE steppers, carry-forward, and a
+   rest countdown that auto-advances (RestTimer `onComplete`). Supersets interleave by
+   round. Every set persists to a new **`set_logs`** table (migration 013 + schema;
+   offline-first via Storage/Database/SyncService/store `logSet`; degrades gracefully
+   if 013 isn't applied). On completion the top working set per lift is derived from
+   the logged sets and feeds the existing RPE progression. The old tap-each-exercise
+   checklist is removed; Resume re-enters the runner and skips logged sets.
+
+Verified in the preview: primer/main overview, full runner flow (steppers,
+carry-forward, superset interleave, rest auto-advance, resume), `set_logs`
+persistence, and progression (`lift_log.bench` updated from a logged 87.5 kg set).
+`node tests/*.js` green except the **pre-existing** date-dependent
+`reflow-start-consistency.js` (fails on clean HEAD too). `npm run build` clean.
+
+**Open for review:** primer colour `--moss` equals `--accent` (swap to `--ochre` for
+more contrast?); runner renders within the app shell (TopBar/TabBar visible) rather
+than a true viewport overlay; migration 013 not yet applied to the live DB.
+
+## What this app is now
+
+A **dynamic, personalised gym-plan generator** for busy people who want to trust
+they're getting the best possible training for their goal and the time they have.
+The **decision engine** is the core: a short onboarding questionnaire → a multi-week,
+periodised strength programme tuned to the user's **own** goal (get stronger, build
+muscle, functional fitness, or strength support for a sport they train).
+
+**Scope (important):** the engine is **gym-only today**. Picking a sport (run / cycle /
+swim) biases the gym programming (emphasis, priority lifts, periodisation season) to
+**support** that sport — it does **not** yet generate endurance sessions (real
+run/cycle/swim workouts); that's a planned future stage. No goals are hard-coded —
+the user's onboarding goal drives everything. (CLAUDE.md reflects this; the old
+personal half-marathon/2.5km-swim goals were removed.)
+
+**Structure + direction (2026-06-22):** the repo is now a **monorepo** (npm workspaces) —
+the app lives in `apps/mobile/`, with `apps/web/` (coach dashboard — **first version now
+built**, on mock data) and `packages/{shared,engine}/` reserved; `supabase/` + `docs/` sit at the root. Run
+`npm run dev` from the **repo root**. The product **North Star** is now set: open
+**elite S&C** to teams and budget-constrained individuals, as two packages — **Individual**
+(what's here today) and **Team** (player mobile + coach web; the near-term priority, not
+built). Full vision: `docs/strategy/VISION.md`; team blueprint + data-isolation rules:
+`docs/product/TEAM-ARCHITECTURE.md`.
+
+## Latest work — decision-engine evidence-architecture refactor (2026-06-23)
+
+On branch **`feat/decision-engine-evidence-architecture`** (PR open, not merged). A
+multidisciplinary review of the decision engine (`docs/engine/01-PANEL-REVIEW.md` +
+`02-REFACTOR-ROADMAP.md`) plus a staged, low-regression refactor toward an
+**orchestrator architecture** where specialist knowledge is modular, pluggable, and
+evidence-traceable. Six themed commits; `node tests/*.js` = **42 files green**; build
+clean; runtime paths preview-verified.
+
+- **Phase 0 — golden-master safety net** (`tests/golden-master.js`): snapshots
+  `generatePlan` across 19 archetypes + an in-process determinism check, so the
+  pure-engine refactors below are proven **byte-identical** (`UPDATE=1` regenerates).
+- **Phase 1 — evidence knowledge base** (`src/lib/knowledge/`): every scientific
+  constant becomes an auditable entry (`evidenceLevel`/`source`/`confidence`/
+  `lastReviewed`). Volume landmarks (`muscleVolume`) + ACWR thresholds (`trainingLoad`)
+  read from it; contested science tagged `confidence:low/moderate`.
+- **Phase 2 — pluggable sport modules** (`src/lib/sports/`): sport emphasis/priority/
+  periodisation extracted behind a `SportModule` registry; `resolveProgram` /
+  `resolvePeriodization` are thin lookups. **rugby/soccer/gaa** scaffolds prove a new
+  sport = one data file, zero core edits. Plans byte-identical for run/cycle/swim.
+- **Phase 3 — recovery + load contracts** (`src/lib/recovery/`, `src/lib/load/`): clean
+  `RecoveryOutput`/`LoadOutput` consumed by `PlanService` + the store. **ACWR demoted**
+  to a soft, low-confidence input (Impellizzeri/Lolli) — no longer cuts volume below
+  0.85 or forces a deload alone (now needs corroboration). **Subjective wellness**
+  blended ≥ objective (Saw 2016) + illness/travel overrides, captured via a new **Home
+  daily check-in card** → `daily_metrics`. *Intentionally changes runtime behaviour*
+  (verified in-app: illness → forced deload). **New migration** below.
+- **Phase 4 — data-driven injury profiles** (`src/lib/injury/`): per-region
+  contraindications relocated from the inline regex table into structured,
+  evidence-tagged `InjuryProfile` data behind a registry; `injuryRules` is a thin
+  accessor with **identical output** (parity green). Each profile carries risk factors,
+  return-to-performance, and a dosed prevention protocol (Copenhagen/Nordic/FIFA-11+)
+  linked to KB entries. (Matching stays name-based — items carry only a name; the
+  knowledge is what became data-driven.)
+
+**Frozen throughout:** the PlanOutput shape screens consume + the full test suite.
+
+- **Phase 5 — engine extracted to `packages/engine`** (`@performance-os/engine`): the
+  self-contained pure tree (39 modules: `PlanGenerator`, `strength`/`plan`/`sports`/
+  `knowledge`/`recovery`/`load`/`injury`, `liftProgression`, `Utils`, `Readiness` + 4
+  data tables) moved via `git mv` (renames preserved) into `packages/engine/src`,
+  mirroring structure so internal imports survive. Barrel `index.js` + `./lib/*` /
+  `./data/*` subpath exports; `apps/mobile` consumes it as a workspace dep (113 import
+  sites repointed). **PlanService stays** as the thin app adapter (Database/store/
+  overrides). golden-master **byte-identical**, suite 42/42, build clean, app verified.
+
+## Latest work — coach web dashboard, first version (2026-06-22)
+
+On branch **`feat/coach-web-dashboard`** (not yet merged). Filled the reserved `apps/web/`
+slot with the **first version of the coach-facing dashboard** — the Stage 5 Team package's
+coach surface. **Next.js 14 (App Router) · TypeScript · Tailwind v4 · Recharts**, a new
+workspace alongside `apps/mobile`. Runs on **realistic mock data** (24 players); no backend
+or auth yet, but structured so both slot in without touching the UI.
+
+- **Decision-led, not a data dump.** Every player becomes a RAG status (ready / monitor /
+  adjust / no-data) with plain-English meaning + a recommended coach action + player action +
+  reason + confidence (from data completeness) + next review. Reuses the mobile engine's
+  verdict vocabulary (`verdicts.js`, `trainingLoad.js` ACWR bands, `Readiness.js` scoring).
+- **Privacy boundary enforced in code.** `types/dashboard.ts` splits `PlayerPrivateSource`
+  (raw vitals — mock-only) from `CoachVisiblePlayer` (derived, maps 1:1 to the planned
+  `player_status` table). `lib/derive.ts` is the roll-up; raw vitals never reach a component
+  (`grep -rE "sleepHours|hrv|soreness" components/` = nothing). Honours the CLAUDE.md hard rule.
+- **The swap point for going live is one file:** `data/mockApi.ts` (async `getTeam` /
+  `getPlayers` / `getLoadTrend`). Replace bodies with Supabase `player_status` queries; the
+  roll-up moves server-side. See `apps/web/README.md` for the API-migration + auth + extend guide.
+- Sections: header (team context + 2 CTAs), 6 overview cards, readiness split, match-week
+  panel, prioritised attention list (with the spotlight recommendation card — the
+  differentiator), coach actions, filter/sort/search squad table, Recharts load-trend chart,
+  adherence heatmap, and a player-detail slide-over drawer.
+- **Verified:** `tsc --noEmit` clean, `next build` green (`/dashboard` prerenders), and
+  browser-checked on desktop + tablet (filter, sort, search, row→drawer, Escape-to-close all work).
+- **Run:** `npm run dev -w @performance-os/web` → http://localhost:3000/dashboard.
+
+**Update — tabbed restructure + Constraints (same branch).** The single long page became a
+**collapsible left sidebar + four routed views**: **Home** (`/dashboard`), **Focus**
+(`/dashboard/focus` — team training direction + the flagged players it affects), **Squad**
+(`/dashboard/squad` — table + chart + heatmap), and **Constraints** (`/dashboard/constraints`).
+A shared `DashboardProvider` (client context in `components/dashboard/`) holds cross-view state
+(selected player + drawer, editable constraints, toast); `app/dashboard/layout.tsx` fetches data
+once and the layout stays mounted across view switches. The new **Constraints** view is a working
+form (sport, season, weekly training pattern, fixtures → `TeamConstraints`, shaped for the future
+`teams.schedule` jsonb) plus a plain-English cascade explainer (team constraints → each player's
+onboarding → personalised plan); editing the season updates the Focus direction live via context.
+Old `DashboardShell`/`DashboardHeader` were removed. Verified: `next build` green (all 4 routes
+prerender), `tsc` clean, browser-checked (each view renders; client soft-nav keeps provider state;
+constraints edit→save→commit cycle works).
+
+## Latest work — monorepo restructure (2026-06-22)
+
+Merged to **`main`** (commit `1125f5d`), GitHub Pages deploy green. The app moved **as one
+unit** into `apps/mobile/` and the repo became an **npm-workspaces monorepo**:
+
+- `apps/mobile/` — the app (src, public, tests, index.html, vite.config.js, .env.local).
+- `apps/web/` — reserved for the coach dashboard + marketing site (Next.js; not built).
+- `packages/{shared,engine}/` — reserved (the engine stays in `apps/mobile/src/lib/` for now).
+- `supabase/` + `docs/` at the repo root (shared backend; docs gained `strategy/`, `product/`,
+  `prompts/`).
+- Root `package.json` defines the workspaces + delegating scripts — **run `npm run dev` /
+  `npm run build` from the repo root.** CI (`.github/workflows/deploy.yml`) now publishes
+  `apps/mobile/dist`. Repo name + Vite base `/hybrid-react/` are unchanged, so the live URL is
+  unaffected.
+
+All 226 relative imports survived (the app moved as a unit); `npm install` (4 workspaces,
+hoisted), build, engine tests, and the dev server were all verified, and the Pages deploy
+succeeded. Docs (CLAUDE.md, the new vision/team docs) were refreshed in the same session.
+
+## Latest work — five tracked lifts + a target weight on every exercise (2026-06-22)
+
+On **`main`** (committed only when asked). Two linked changes so the athlete logs just
+their **five** main lifts and every other exercise gets a realistic, auto-progressing
+target weight. TDD throughout; `node tests/*.js` = **35 files green** (added
+`tests/onboarding-lifts.js`, `tests/exercise-load.js`; extended `tests/validation.js`).
+
+- **Onboarding now captures 5 lifts** (was squat/bench/deadlift): adds **OHP** + a
+  **pull** movement entered as either pull-up max-reps **or** lat-pulldown 1RM (a toggle;
+  reps → kg e1RM via Epley using bodyweight). New "Your main lifts" step
+  (`OnboardingWizard.jsx`) shows whenever barbell **or** cable **or** bodyweight is
+  available (not just barbell), with a **"Help me test"** mode — enter weight + reps-to-
+  failure → live e1RM (blanks only). Per-lift provenance stored in `profile.lifts_source`
+  (`entered`/`tested`/`estimated`). Model + normalisation in `onboardingModel.js`
+  (`normalizePullToKg`); Epley helpers `epley1RM`/`pullupE1RM` exported from
+  `liftProgression.js`. `strengthStandards.js` gained ohp/pull ÷BW bands. `validation`
+  extended to the five lifts (+ `pullupReps` limit).
+- **Atlas + Progress translate the new lifts per sport** (`atlas/signals.js`, `goals.js`):
+  `LIFT_MUSCLES` now maps `ohp→[shoulders,triceps]` and `pull→[back,biceps]`, so a
+  swimmer's `upper_pull` + `shoulder_health` pillars become **real** (driven by actual
+  pull-up/OHP strength) instead of level estimates. The overall `strength` score is now
+  **sport-weighted** via `resolveProgram().emphasis` (`SPORT_EMPHASIS`) — swimmers' pull/OHP
+  count more, sprinters' squat/deadlift count more; `build` stays a neutral average. The
+  Atlas stays a sport-relevant **pillar** radar (not a generic 5-lift chart). `goals.js`
+  `LIFTS` adds Overhead press + Pull → 5 milestone cards on Progress / Atlas "Your lifts".
+  Tests extended in `tests/atlas-and-coachnote.js` (T15–T19) + `tests/goals.js` (T13–T17).
+- **Every loadable exercise gets a suggested weight** — new pure
+  `src/lib/strength/exerciseLoad.js`: `anchorFor(exercise)` maps each exercise to one of
+  the 5 e1RMs + a research-calibrated coefficient (StrengthLevel accessory↔main ratios,
+  e.g. lateral raise ≈0.20×OHP, leg ext ≈0.74×squat, leg curl ≈0.42×deadlift; isolation
+  coefficients scale with level, dumbbells are per-hand). `applyWeights` (in
+  `liftProgression.js`) now weights **all** items via this, not just the matched main;
+  `matchLift` is now only for the top-set **log** form (the 5 mains). Bodyweight/band/core
+  keep their natural cues (no kg). Weights climb automatically as the mains' e1RMs climb.
+  Audited: 120/120 loadable items in a full plan get a sane weight, 0 absurd isolations.
+- Design + research notes: `docs/superpowers/specs/`-style plan lives at
+  `~/.claude/plans/polished-sprouting-zephyr.md` (sources: StrengthLevel comparison pages).
+
+## Latest work — sport-companion repositioning: home + Atlas (2026-06-21)
+
+On branch **`feat/sport-companion-home-atlas`** (not yet merged). Repositions the app
+from a generic gym-plan generator toward a **sport-specific training companion**.
+Built in three phases, each verified at an iPhone viewport via the preview MCP; the
+pure helpers are covered by `tests/atlas-and-coachnote.js` (40 assertions, all pass).
+
+- **Home redesign** (`src/screens/Home.jsx`): identity header (avatar + name →
+  `/profile`, day + date) → auto-generated **coach note** (`src/lib/coachNote.js` —
+  what/why/how-it-helps-your-sport, read from `resolveProgram` + plan position) →
+  **week schedule** as the hero (`src/components/WeekSchedule.jsx`) → catch-up →
+  readiness + load tiles. **Train Now button removed.**
+- **Nav**: 5 tabs → **4 — Home · Plan · Health · Atlas** (`TabBar.jsx`). Profile is no
+  longer a tab (reached from the home avatar). The old **Progress** screen folds into
+  Atlas; `/progress` now redirects to `/atlas` (`Progress.jsx` orphaned, safe to delete).
+- **Avatar**: `src/components/ui/Avatar.jsx` (photo or initials). Upload =
+  `src/lib/avatarUpload.js` (canvas square-crop/downscale → Supabase Storage when
+  signed in, else a local data-URL fallback). **Needs migration applied:**
+  `supabase/migrations/009_avatars_storage.sql` (public `avatars` bucket + own-folder
+  RLS). URL saved to `profile.avatar.url` (existing JSONB — no schema change).
+- **Profile** (`src/screens/Profile.jsx`) is now the account/setup hub: editable photo
+  + name, YOU/TRAINING/PLAN cards, **Connections & Settings** rows → integrations +
+  settings. Strength-goal card moved out (now in Atlas).
+- **Atlas** (`src/screens/Atlas.jsx`) — the new feature. Radar (`RadarChart.jsx`, SVG,
+  no chart lib) of sport-specific pillars vs **estimated** top-5%/elite, ranked
+  worst-gap-first bars, a "biggest gap" note tied to `resolveProgram.emphasis`, and the
+  folded strength-progress rings. Powered by an **extensible** stack: signal providers
+  (`src/lib/atlas/signals.js`) → pillar library (`src/data/athletePillars.js`) →
+  per-sport registry (`src/data/sports/` — run sprint/middle/long, cycle, swim, + build
+  default; "how to add a sport" header). Adding a sport (hurling, GAA, soccer, rugby,
+  field hockey…) is a config drop-in — `computePillars`, the radar and the screen don't change.
+
+Follow-ups: real top-5%/elite benchmark data (current values are estimates);
+per-pillar trend once history accrues; delete orphaned `Progress.jsx`; team-sport
+onboarding + engine emphasis maps.
+
+## Latest work — decision-engine evaluation + hardening (2026-06-21)
+
+The engine was put through an **exhaustive evaluation** (~60k generated plans swept
+via the `/dev` playground + a cited literature review) → **`docs/decision-engine-evaluation.md`**.
+It found the engine robust and evidence-based, with a ranked list of fixes (F1–F10).
+**All fixes + two follow-ups are implemented, tested, and merged to `main`** (PRs #10
+and #11):
+
+| Area | Change | Result |
+|---|---|---|
+| **Volume (F1)** | Hard **weekly MRV ceiling** on actual allocated volume | Build-grid plans over MRV **869 → 0** (back was hitting ~57 vs MRV 25) |
+| **Volume tracking** | Overshoot penalty in the allocator | Base-week actual/target **110–123% → ~100%** |
+| **Durations (F5)** | Estimate from realised work; filler pass respects the time budget | 1-day plans no longer cram 13 exercises into "~60 min" |
+| **Primer (F2/F6)** | Equipment-filter the warm-up; trim it on ≤30-min sessions | No "Band Pull-Apart" for band-less users |
+| **Taper (F4)** | Event taper now **keeps intensity, cuts volume** (was a deload) | Peaks instead of detraining (Bosquet/Travis-Mujika) |
+| **Sport (F8)** | Sessions **lead with sport-specific work**; sprint chest trimmed | Swimmer opens on a pull, sprinter on Power Clean/plyos |
+| **Adaptive deloads (F9)** | Fatigue/ACWR/readiness can **force** a deload or **defer** a planned one | Runtime layer only; pure generator untouched |
+| **Titles (F3) / copy (F7)** | Honest session labels; vestigial "aerobic" copy removed | — |
+| **Cleanup** | Deleted legacy `Plan.js` fallback (personal-goal plan) + ~930 LOC of dead code (orphaned screens/builders/utilities) | Plan is always per-user generated |
+
+**Engine test suite:** `node tests/*.js` — 260+ assertions pass (new suites:
+volume-ceiling, volume-tracking, duration, taper, sport-anchor, primer-equip,
+session-titles, adaptive-deload). Determinism + full build/sport sweeps clean.
+
+## Earlier shipped initiatives (still live on `main`)
+
+- **Wearable + training-load (sub-projects A–D).** Connect Strava → workouts ingest →
+  sessions auto-link and gain HR + Karvonen/HRR zones from the everyday band → an
+  Edwards-TRIMP → EWMA acute/chronic → **ACWR** signal → the current gym week
+  auto-adjusts (ease / deload / nudge-up) with a revertible "Plan adjusted" banner +
+  a **Training Load** view. (This `loadDecision` signal is exactly what F9's adaptive
+  deload now consumes.) Specs/plans under `docs/superpowers/`.
+- **"Midnight" UI redesign** — dark-only design system (tokens/type/shell), rule-based
+  `verdicts` layer, redesigned tabs (Home readiness+load rings, Program week stepper,
+  Progress, Profile). **Merged.** `?preview=1` seeds a mock athlete so screens render
+  without sign-in (`src/lib/previewSeed.js`).
+- **Auth overhaul** (Welcome screen, Apple/Google OAuth, open signup, per-user cache
+  isolation) and **Fitbit/Google Health** fixes.
+
+## Manual setup — status
+
+| Item | Status |
+|---|---|
+| Supabase migrations 004–007 (allowlist drop, device roles, `workouts`, `set_device_primary` RPC) | Applied. If "Make primary" misbehaves, re-verify **007** in the SQL Editor. |
+| Migration **008** (`session_logs` HR columns) | ✅ applied |
+| Edge Functions: `fitbit-auth-callback`, `fitbit-sync`, `strava-auth-callback`, `strava-sync`, `enrich-sessions` | ✅ deployed (`config.toml` pins `verify_jwt` per fn) |
+| Secrets: `STRAVA_CLIENT_ID`/`SECRET`, `VITE_STRAVA_CLIENT_ID`, Google/Fitbit OAuth | ✅ set |
+
+**Pending on the engine branch:** migration `20260623_daily_metrics_subjective.sql`
+(adds `stress`/`illness`/`travel` to `daily_metrics` for the subjective check-in) —
+apply when `feat/decision-engine-evidence-architecture` merges. No new functions/secrets.
+
+## Known limitations / expectations (not bugs)
+
+- **Engine is gym-only** — sport selection biases the gym plan; it does not program
+  run/cycle/swim sessions (future stage).
+- **Adaptive deloads / training-load need ~4 weeks of history** before ACWR is
+  meaningful; until then the plan runs as designed.
+- **HR enrichment is recent-sessions-only** (Google Health intraday API has no date
+  filter); **cardio HR zones come from the everyday band**, not Strava streams.
+- **Garmin direct API** stays a placeholder; Strava carries Garmin-recorded workouts.
+- **Fitbit/Google OAuth in "Testing" mode** expires the refresh token ~weekly — the
+  reconnect nudge handles it.
+
+## Non-blocking follow-ups (your call)
+
+- **Engine extraction — DONE (2026-06-23).** The engine now lives in
+  `packages/engine` (`@performance-os/engine`); see its README. The one remaining
+  refinement (optional): split `PlanService`'s current-week reflow into a pure engine
+  function + a thin adapter, so a second runtime can reflow, not just generate. Not
+  required — generation, periodisation, recovery/load, and injury all run from the package today.
+- **Stale remote branches** safe to delete: `engine-fixes`, `chore/remove-dead-code`
+  (both merged), plus older merged/dormant ones (`fix/pwa-oauth-redirect`,
+  `strength-refocus`, `adaptive-gym-engine`, `ui-overhaul`, etc.).
+- **Midnight secondary screens** (SessionDetail, PhaseDetail, Settings, Wearables,
+  Trends, Injuries, TrainingLoad, Onboarding, auth) inherit Midnight tokens but
+  weren't bespoke-redesigned — optional polish + dead-CSS sweep.
+- **Training-load (D) tidy-ups from earlier review:** revert actions read `profile`
+  via a redundant `buildView()`; `currentAdaptation` reverted branch drops `d.reason`.
+
+## What's next
+
+- **Stage 5 (current priority) — the TEAM PACKAGE.** Coach-facing web (`apps/web`) alongside
+  the existing player mobile (`apps/mobile`). Full blueprint + the binding data-isolation
+  rules: `docs/product/TEAM-ARCHITECTURE.md`. First sub-steps, in order:
+  1. **Data + RLS spine** — `teams` + `team_members` + a derived `player_status` surface + an
+     `is_coach_of()` helper, in a versioned migration, with RLS tests proving a coach sees
+     their team's *derived* status only (never raw vitals) and players can't see each other.
+  2. **`apps/web` scaffold** — coach dashboard shell (auth + team list).
+  3. **Team schedule entry** → persisted on `teams.schedule`.
+  4. **Constraints into the engine** — feed the schedule into `scheduler.js` / `PlanService.js`
+     so player plans avoid sport-load clashes (the pure `generatePlan` stays untouched).
+  5. **Coach loading overview** — aggregate `player_status` into a plain-English team view
+     built on the existing `verdicts` + ACWR layer.
+- **Following — Claude AI plan generation/adjustment** via a server-side Edge Function. The
+  deterministic engine (`generatePlan`) + `loadDecision` / `deloadRecommendation` are clean
+  inputs an AI layer can consume or override behind PlanService (never a key in the browser).
+- **Later — real endurance session programming** (run/cycle/swim workouts), so sport goals
+  get actual cardio sessions, not just gym support.
+
+## How work is run here
+
+**Validate against the frozen governance set first.** Before building any engine, coaching,
+product, or AI feature, check it against the **five FROZEN documents** (v1.0) — the
+**Constitution**, **Decision Ontology**, **Knowledge Architecture** (`docs/foundation/`), the
+**EDS** (`docs/engine/00`), and the **TAS** (`docs/architecture/TAS.md`). New work is validated
+*against* them and never edits them — changes are deliberate amendments (see the freeze entry
+above). When the rules disagree, the higher document wins (the Constitution is the tie-breaker).
+
+Engine changes this session: branch → small themed commits → node tests per change →
+`/dev` sweep + preview verification → PR. The deterministic engine lives in
+`src/lib/PlanGenerator.js` → `resolveProgram` (`strength/program.js`) +
+`resolvePeriodization` (`plan/periodization.js`) + `weeklyMuscleTargets`
+(`strength/targets.js`) + the greedy `allocateGym` (`plan/allocator.js`); the
+runtime reflow + adaptive deload live in `PlanService.js`. Earlier initiatives used
+brainstorm (spec) → writing-plans → subagent-driven implementation; the SDD ledger is
+at `.git/sdd/progress.md` (not committed).

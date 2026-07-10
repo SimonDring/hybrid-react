@@ -14,8 +14,9 @@ Built with **Next.js 14 (App Router) · TypeScript · Tailwind CSS v4 · Rechart
 The marketing site and dashboard share the player app's "Midnight" design system
 and the decision engine's verdict language, so the whole product reads as one.
 
-> First version runs on **realistic mock data**. No backend or auth yet — but the
-> code is structured so both slot in without touching the UI (see below).
+> The dashboard is **live-wired** (updated 2026-07-09): it is gated server-side
+> (valid coach session required) and reads real `player_status` rows through
+> team-scoped RLS — the mock data layer has been deleted (PR #123).
 
 ## Marketing site
 
@@ -68,8 +69,9 @@ change. Asset slots + sizes: `public/images/README.md`.
   gated SERVER-SIDE by `proxy.ts` (Next 16's middleware convention) (valid session + active coach in `team_members`);
   without Supabase env the dashboard is denied (redirects to `/login`). Set
   `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` (see `.env.example`) to
-  enable it. NOTE: the dashboard still renders MOCK data — live `player_status`/team
-  reads are a separate step (must stay behind this gate + team-scoping).
+  enable it. The dashboard renders LIVE `player_status`/team reads behind this gate,
+  scoped by team RLS (`lib/liveBoard.ts` + `lib/liveDerive.ts`) — the mock squad
+  chain is gone. (updated 2026-07-09)
 
 ## Views (left sidebar)
 
@@ -169,28 +171,25 @@ lib/
 types/dashboard.ts              the contracts
 ```
 
-Only `data/mockApi.ts` reads the mock arrays — every view reads through the
-provider / async getters. That's the single swap point for going live.
+Every view reads through the provider / async getters — the data seam that
+formerly served mock arrays now serves live Supabase reads via
+`lib/liveBoard.ts`. (updated 2026-07-09)
 
-## Replacing mock data with the backend
+## Live data (updated 2026-07-09 — this replaced the mock layer)
 
-Implement the getters in `data/mockApi.ts` against Supabase; **nothing in the
-components changes**.
+The dashboard is wired to the live team spine (PR #123; the `data/mock*` chain
+was deleted). `lib/liveBoard.ts` assembles the board in a server component
+behind the `proxy.ts` gate: every query runs on the coach's own cookie session,
+so **team-scoped RLS** (`is_coach_of_team`) does the scoping — a coach only
+ever receives their own team's derived `player_status` rows, and raw vitals are
+not selectable. `lib/liveDerive.ts` maps those coach-safe rows to
+`CoachVisiblePlayer`.
 
-```ts
-// data/mockApi.ts
-export async function getPlayers(): Promise<CoachVisiblePlayer[]> {
-  const { data } = await supabase.from("player_status").select("*");
-  // RLS (is_coach_of_team) returns only this coach's team; raw vitals are not selectable.
-  return data.map(rowToCoachVisiblePlayer);
-}
-```
+Genuinely future items:
 
-- The roll-up (`lib/derive.ts`) moves **server-side** — a Supabase Edge Function
-  or DB view that writes the `player_status` table. `derive.ts` documents the
-  exact contract that function must satisfy.
-- Drop the `now` field from `getDashboardData` and let relative-time formatting
-  fall back to the real clock (the helpers already accept a `now` arg).
+- **Team load-trend history** — there is no team-load history feed yet;
+  `loadTrend` is empty and the chart renders an honest empty state.
+- **Team switcher** — v1 shows the coach's first (oldest-membership) team.
 
 ## Adding auth
 

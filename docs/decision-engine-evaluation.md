@@ -3,6 +3,8 @@
 _Robustness + scientific review of the gym plan generator._
 Date: 2026-06-21 · Method: exhaustive automated sweep + real-UI verification + cited literature review.
 
+> **Status banner (2026-07-09 governance sprint):** REVIEW (2026-06-21). The founding F1–F10 engine evaluation and golden-master seed. Its findings have shipped and its paths predate the packages/engine extraction. Kept in place because the frozen EDS links it. This document is preserved as written; current state lives in `HANDOFF.md`; classification in `docs/DOCUMENTATION-INDEX.md`.
+
 > **Relation to the foundational specs.** This evaluation (and its F1–F10 findings) **seeded** the
 > engine documentation set in [engine/](engine/README.md): it was extended by the
 > [Panel Review](engine/01-PANEL-REVIEW.md) and is now governed by the

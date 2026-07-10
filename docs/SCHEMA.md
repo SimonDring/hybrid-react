@@ -1,5 +1,7 @@
 # Data model summary
 
+> **Status banner (2026-07-09 governance sprint):** SUPPORTING — FLAGGED STALE (last reconciled pre-team-spine). Documents 12 tables and invite-gated signup; reality is 19 tables (see supabase/migrations/README.md), open signup (migration 004), and the team spine (teams/team_members/player_status). A full reconcile is queued in HANDOFF.md's open queue. The users.profile goal-model section remains current. For an accurate human-readable data reference meanwhile, see docs/architecture-atlas/03-PLATFORM-DATA-DICTIONARY.md. This document is preserved as written; current state lives in `HANDOFF.md`; classification in `docs/DOCUMENTATION-INDEX.md`.
+
 Human-readable overview of the database. The authoritative SQL is in
 `supabase/schema.sql`; the in-app mirror is the `SCHEMA` constant in
 `src/lib/Database.js`. Keep all three in sync when the model changes.

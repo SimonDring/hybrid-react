@@ -8,6 +8,8 @@ overnight (see the last section for what I actually did).
 `main` at the time of writing: **30 PRs merged since the 2026-07-05 audit (#127–#156)**, knowledge
 version **1.9.0**, engine test suites **167/167 green**.
 
+> **Status banner (2026-07-09 governance sprint):** REVIEW (2026-07-07). Written hours before the build flip deployed: its "#1 remaining gap — the build flip" is resolved, and its KSV/test counts (1.9.0 / 167) are superseded (1.30.0 / 195 as of 2026-07-09). This document is preserved as written; current state lives in `HANDOFF.md`; classification in `docs/DOCUMENTATION-INDEX.md`.
+
 ---
 
 ## 1. The one-paragraph summary

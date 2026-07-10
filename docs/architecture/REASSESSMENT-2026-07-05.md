@@ -8,6 +8,8 @@ planning chain D6–D13; governance/validation/explainability; runtime/monitorin
 legacy-path/flip readiness; team/platform surfaces). Doc claims were not trusted — every
 finding below carries file-level evidence in the audit transcripts (session 2026-07-05).
 
+> **Status banner (2026-07-09 governance sprint):** REVIEW (2026-07-05). The WP-38…WP-61 ledger other documents cite by number. Its verdicts and PAUSE flags are overtaken: WP-49 (the build flip) shipped 2026-07-07, the legacy sport layer was deleted (PR #160), and all 11 sports are diagnosis-steered and season-phased. This document is preserved as written; current state lives in `HANDOFF.md`; classification in `docs/DOCUMENTATION-INDEX.md`.
+
 ---
 
 ## 0. Executive summary
