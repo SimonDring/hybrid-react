@@ -359,6 +359,40 @@ async function main() {
   // WP-50 cleanup: A's extra membership + status row on O's team go with the
   // existing oTeam/player_status cleanup below.
 
+  // ══ F3 (20260712) — an ENDED membership ends the coach's read ════════════════
+  // docs/reviews/2026-07-09-data-architecture-review.md F3: a coach-removed
+  // player's derived row previously survived AND stayed coach-readable. Two
+  // layers under test: the policy (coach read requires the player's ACTIVE
+  // membership) and the cleanup trigger (the row itself is deleted).
+  // (a) The coach-removal path: C removes B from the roster (hard DELETE).
+  const { data: preRemove } = await C.client.from('player_status')
+    .select('user_id').eq('team_id', team.id).eq('user_id', B.id);
+  ok((preRemove || []).length === 1, "F3: pre-check — the coach reads B's row while B is an active member");
+  const { data: removedRows } = await C.client.from('team_members')
+    .delete().eq('team_id', team.id).eq('user_id', B.id).select('id');
+  ok((removedRows || []).length === 1, 'F3: the coach removes B from the roster');
+  const { data: postRemove } = await C.client.from('player_status')
+    .select('user_id').eq('team_id', team.id).eq('user_id', B.id);
+  ok((postRemove || []).length === 0, "F3: the coach can NO LONGER read the removed player's status row");
+  const { data: bOwnRow } = await B.client.from('player_status')
+    .select('id').eq('team_id', team.id).eq('user_id', B.id);
+  ok((bOwnRow || []).length === 0, "F3: the derived row itself is GONE (cleanup trigger) — even B's own read finds nothing");
+  // (b) The self-'left' path: A marks themselves left on O's team WITHOUT the
+  // client deleting the row — the trigger must do it, and O loses the read.
+  const { data: leftUpd } = await A.client.from('team_members')
+    .update({ status: 'left' }).eq('team_id', oTeam.id).eq('user_id', A.id).select('id');
+  ok((leftUpd || []).length === 1, 'F3: A marks themselves left on team Y (own-row status update)');
+  const { data: oPostLeft } = await O.client.from('player_status')
+    .select('user_id').eq('team_id', oTeam.id).eq('user_id', A.id);
+  ok((oPostLeft || []).length === 0, "F3: coach Y can no longer read the departed player's row");
+  const { data: aOwnY } = await A.client.from('player_status')
+    .select('id').eq('team_id', oTeam.id).eq('user_id', A.id);
+  ok((aOwnY || []).length === 0, 'F3: the team-Y derived row is gone (trigger), with no client-side delete');
+  // (c) An ex-member cannot republish (insert requires ACTIVE membership).
+  const { error: republishErr } = await B.client.from('player_status')
+    .insert({ user_id: B.id, team_id: team.id, readiness: 50 });
+  ok(!!republishErr, 'F3: a removed player cannot republish a status row (insert requires active membership)');
+
   // join-code cleanup
   await A.client.from('player_status').delete().eq('user_id', A.id);
   await C.client.from('team_members').delete().eq('team_id', joinTeam.id);
