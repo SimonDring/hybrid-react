@@ -29,13 +29,21 @@ move it to the archive file rather than letting this one grow._
 - **Docs:** governed as of 2026-07-09 — see `docs/DOCUMENTATION-GOVERNANCE.md` (policy),
   `docs/DOCUMENTATION-INDEX.md` (the map), and
   `docs/reviews/2026-07-09-documentation-audit.md` (the audit behind it).
-- **Governance sprint (2026-07-09, branch `governance-sprint-2026-07-09`):** the full
-  Phase 0–7 review set is in `docs/reviews/` (architecture, engine, knowledge, AI, data,
-  testing strategy, and the **prioritised roadmap** —
-  `docs/reviews/2026-07-09-strategic-roadmap.md`, which proposes the next execution
-  order). Two defect fix tasks were filed for Simon: the **Olympic 4×4 dose override**
-  (engine review W2) and the **player_status orphan on coach removal** (data review F3,
-  privacy). No production code or frozen doc was touched by the sprint.
+- **Governance sprint + Immediate-tier execution — ALL MERGED (2026-07-10, PRs
+  #162–#167).** The full Phase 0–7 review set is in `docs/reviews/` (architecture,
+  engine, knowledge, AI, data, testing strategy, and the **prioritised roadmap** —
+  `docs/reviews/2026-07-09-strategic-roadmap.md`: the next execution order). The
+  roadmap's Immediate tier is executed and live: **Olympic 4×4 dose defect FIXED**
+  (#163 — classic lifts dose from the discipline scheme; only the olympic archetype
+  re-baselined; `tests/olympic-dose.js`), **player_status roster-removal privacy gap
+  FIXED in the repo** (#166 — `coach_reads_member` policy + cleanup trigger, migration
+  `20260712`; ⚠ staging apply + harness still owed, see open queue #4), **CI hygiene**
+  (#164 — per-test timeout, one test definition, doc-aware deploys), **ESLint floor
+  with engine-purity rules** (#165 — Art 18 enforced at lint time; found
+  TrainingCalendar.jsx provably dead, TD-22), and the **CLAUDE.md overview reframed**
+  per Simon (#167 + #162 — an elite S&C platform; the plan is the OUTPUT). Suite
+  196/196. Remaining Immediate items are Simon-gated: I5 (enforce injury vetoes) +
+  the 5 missing rehab regions (science review).
 
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
@@ -52,7 +60,10 @@ move it to the archive file rather than letting this one grow._
    harness (recorded as REQUIRED), the edge-function deploy, and Simon's `AI_ENABLED`
    decision. AIGAS itself still needs its ratification panel pass (
    `docs/architecture/AIGAS-REVIEW-2026-07-06.md` recommends ratification).
-4. **⚠ Pending prod applies** — DB migrations through `20260711` are on prod; the paired
+4. **⚠ Pending applies (NEW STEP FIRST)** — **`20260712_player_status_membership_scope.sql`
+   (the F3 privacy fix, merged #166) is in the repo but applied NOWHERE yet: apply to
+   STAGING → run `node supabase/tests/rls-harness.mjs` (7 new F3 cases) → prod, per
+   `supabase/SECURITY-DEPLOY.md`.** DB migrations through `20260711` are on prod; the paired
    **Edge Functions deploy separately**: OAuth-nonce callbacks + `fitbit-sync` (S1/S4/S8)
    and `ai-render` (AI go-live only). WP-50 staging harness run still owed
    (per `supabase/SECURITY-DEPLOY.md`).
