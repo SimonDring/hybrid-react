@@ -171,6 +171,14 @@ const POWER_SETS = POWER_DOSE.sets;
 const POWER_RPE = POWER_DOSE.rpe;
 const POWER_REST = POWER_DOSE.restSec;
 const POWER_NOTE = POWER_DOSE.note;
+// POWER_DOSE is BALLISTIC/plyometric dosing (jumps, throws — de Villarreal 2009). The
+// Olympic discipline's classic lifts share quality:'power' (they are power work) but must
+// dose from their own discipline scheme (1–3 rep mains @ 180 s per doseCharacter) — never
+// the flat 4×4. Discipline-tagged lifts are only selectable when their discipline is
+// active (selectInterventions/bestExercise filters), so this predicate can only ever
+// change olympic-discipline plans. power_clean (sprint-tagged, no discipline field)
+// deliberately keeps POWER_DOSE — re-dosing it for sprint cohorts is a separate call.
+const olympicClassicLift = (ex) => ex.quality === 'power' && ex.discipline === 'olympic';
 
 // Clamp the rep number(s) in a "sets" string to a per-exercise ceiling. Some
 // movements have a hard rep ceiling far below the generic accessory/iso scheme —
@@ -224,7 +232,7 @@ function effectiveRoleOf(ex, slotLevel, demotePress) {
 // effectiveRole overrides ex.role when minLevelForPrimary demotes the exercise.
 function roleSetCount(ex, s, style, effectiveRole) {
   const role = effectiveRole != null ? effectiveRole : ex.role;
-  if (ex.quality === 'power') return parseSetCount(POWER_SETS);
+  if (ex.quality === 'power' && !olympicClassicLift(ex)) return parseSetCount(POWER_SETS);
   if (role === 'primary') return parseSetCount(s.main);
   if (ex.pattern === 'core') return 3;
   if (ex.pattern === 'calf') return parseSetCount('3 × 12');
@@ -261,7 +269,7 @@ function makeItem(ex, idx, s, style, deload, repBump, effectiveRole, taper) {
   // WP-49 T4c: a discipline scheme carries its own rest (doseCharacter.restSec) — a powerlifter's
   // mains rest 180 s even though the post-flip style id isn't the legacy 'strength'. Power work and
   // schemes without an explicit rest fall back to the role-based prescription (byte-identical).
-  const schemeRest = ex.quality !== 'power' && s && (role === 'primary' ? s.mainRestSec : s.accRestSec);
+  const schemeRest = (ex.quality !== 'power' || olympicClassicLift(ex)) && s && (role === 'primary' ? s.mainRestSec : s.accRestSec);
   const restSec = schemeRest || restForRole(ex, style, role);
   const cap = (str) => {
     const floored = ex.repFloor ? floorReps(str, ex.repFloor) : str;
@@ -270,7 +278,7 @@ function makeItem(ex, idx, s, style, deload, repBump, effectiveRole, taper) {
   // Power / plyometric work: dosed by quality (low reps, full recovery), never
   // the role scheme and never the female rep bump. Deload/taper still thins it
   // via the allocator's slot budget; the prescription itself stays explosive.
-  if (ex.quality === 'power') {
+  if (ex.quality === 'power' && !olympicClassicLift(ex)) {
     return { num, exId: ex.id, name: ex.name, sets: POWER_SETS + per, rpe: POWER_RPE, note: POWER_NOTE, restSec };
   }
   if (role === 'primary') {
@@ -936,7 +944,9 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
         const powerContacts = (() => { const m = /(\d+)\s*×\s*(\d+)/.exec(POWER_DOSE.sets); return m ? Number(m[1]) * Number(m[2]) : 16; })();
         let footContacts = 0;
         for (const p of picks) {
-          if (p.ex.quality === 'power') {
+          // Ground-contact budget applies to BALLISTIC power work (jumps) — a barbell
+          // classic lift has no landing contacts and must never be skipped by this cap.
+          if (p.ex.quality === 'power' && !olympicClassicLift(p.ex)) {
             if (footContacts + powerContacts > contactCeiling) continue;
             footContacts += powerContacts;
           }

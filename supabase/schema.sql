@@ -829,16 +829,29 @@ set search_path = public as $$
   );
 $$;
 
--- Is the CALLER an active coach of any team the target player is an active member of?
-create or replace function public.is_coach_of(target uuid)
+-- NOTE: the player-scoped helper is_coach_of(target uuid) was DROPPED by
+-- migration 20260711 (WP-50): it answered "does the caller coach ANY team this
+-- player is on?", which made coach reads player-scoped instead of team-scoped
+-- (a cross-team leak) and doubled as a public membership oracle. Kept out of
+-- this bootstrap so it cannot be reintroduced by accident.
+drop function if exists public.is_coach_of(uuid);
+
+-- Coach read helper (migration 20260712): may the CALLER, as an active coach
+-- of `team`, read `member`'s derived row on that team? Requires the member's
+-- membership to still be ACTIVE — a removed/'left' player's data is no longer
+-- coach-readable (F3, 2026-07-09 data-architecture review). Not an oracle:
+-- constantly false for non-coaches of `team`.
+create or replace function public.coach_reads_member(team uuid, member uuid)
 returns boolean language sql security definer stable
 set search_path = public as $$
   select exists (
     select 1
     from team_members coach
-    join team_members member on member.team_id = coach.team_id
-    where coach.user_id = auth.uid() and coach.role = 'coach' and coach.status = 'active'
-      and member.user_id = target and member.status = 'active'
+    join team_members player on player.team_id = coach.team_id
+    where coach.team_id = team
+      and coach.user_id = auth.uid()
+      and coach.role = 'coach' and coach.status = 'active'
+      and player.user_id = member and player.status = 'active'
   );
 $$;
 
@@ -862,6 +875,16 @@ create policy "authenticated may found a team" on public.teams
 drop policy if exists "coaches manage their team" on public.teams;
 create policy "coaches manage their team" on public.teams
   for update using (is_coach_of_team(id)) with check (is_coach_of_team(id));
+
+-- teams.join_code is COLUMN-revoked (migration 20260711, WP-50): RLS scopes
+-- rows, column privileges scope columns — any member could previously read the
+-- invite code. Coaches read it via the get_team_join_code RPC (below, with
+-- rotate_team_code). NOTE for app code: select('*') on teams now fails —
+-- always list columns explicitly.
+revoke select on public.teams from anon, authenticated;
+grant select (id, name, sport, season, schedule, created_by,
+              created_at, updated_at, deleted_at)
+  on public.teams to authenticated;
 
 -- team_members: you always see YOUR OWN membership rows; a coach sees (and
 -- manages) the roster of THEIR team only. Players do not see the roster.
@@ -920,6 +943,31 @@ create trigger team_members_guard
   before update on public.team_members
   for each row execute function public.team_members_guard();
 
+-- An ended membership takes its derived player_status row with it (migration
+-- 20260712, F3): covers the coach's roster DELETE and any status → 'left'.
+-- SECURITY DEFINER — the acting coach has no DELETE policy on player_status;
+-- this is server truth, same family as player_status_server_truth.
+create or replace function public.team_members_cleanup_status()
+returns trigger language plpgsql security definer
+set search_path = public as $$
+begin
+  if tg_op = 'DELETE' then
+    delete from player_status
+      where team_id = old.team_id and user_id = old.user_id;
+    return old;
+  end if;
+  if new.status = 'left' and old.status is distinct from 'left' then
+    delete from player_status
+      where team_id = new.team_id and user_id = new.user_id;
+  end if;
+  return new;
+end; $$;
+
+drop trigger if exists team_members_cleanup_status on public.team_members;
+create trigger team_members_cleanup_status
+  after delete or update of status on public.team_members
+  for each row execute function public.team_members_cleanup_status();
+
 -- player_status: the player writes THEIR OWN roll-up; reads are the player
 -- themselves OR an active coach of their team. Teammates see nothing.
 drop policy if exists "own status write" on public.player_status;
@@ -931,9 +979,15 @@ create policy "own status update" on public.player_status
   for update using (auth.uid() = user_id)
   with check (auth.uid() = user_id and is_member_of_team(team_id));
 
+-- Coach reads are TEAM-scoped (20260711) AND require the player's membership
+-- to still be ACTIVE (20260712) — when a membership ends, so does the coach's
+-- read. The player always reads their own row.
 drop policy if exists "player or their coach" on public.player_status;
 create policy "player or their coach" on public.player_status
-  for select using (auth.uid() = user_id or is_coach_of(user_id));
+  for select using (
+    auth.uid() = user_id
+    or coach_reads_member(team_id, user_id)
+  );
 
 drop policy if exists "own status delete" on public.player_status;
 create policy "own status delete" on public.player_status
@@ -1100,6 +1154,23 @@ begin
 end; $$;
 revoke all on function public.rotate_team_code(uuid) from public;
 grant execute on function public.rotate_team_code(uuid) to authenticated;
+
+-- A coach DISPLAYS the code (migration 20260711, WP-50 — join_code is
+-- column-revoked, so the RPC is the only read path). Coach-only; returns the
+-- code, or null when the team has none yet.
+create or replace function public.get_team_join_code(p_team uuid)
+returns text language plpgsql security definer stable
+set search_path = public as $$
+declare code text;
+begin
+  if not is_coach_of_team(p_team) then
+    raise exception 'Only a coach of this team may read the join code';
+  end if;
+  select join_code into code from teams where id = p_team and deleted_at is null;
+  return code;
+end; $$;
+revoke all on function public.get_team_join_code(uuid) from public;
+grant execute on function public.get_team_join_code(uuid) to authenticated;
 
 -- ============================================================================
 -- TABLE: oauth_states (see migration 20260707, S1 CRITICAL)
