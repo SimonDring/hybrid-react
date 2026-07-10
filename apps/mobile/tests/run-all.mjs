@@ -41,11 +41,19 @@ if (!engineEntry.startsWith(repoRoot + sep)) {
 // the extension filter, and __snapshots__ is a directory (also excluded).
 const files = readdirSync(dir).filter((f) => f.endsWith('.js')).sort();
 
+// Per-file timeout: the whole suite runs in ~15 s, so any single file at 120 s is hung,
+// not slow. Without this, one hang stalls the CI gate (and therefore every deploy)
+// indefinitely — the runner is serial by design.
+const FILE_TIMEOUT_MS = 120_000;
+
 const failed = [];
 const t0 = Date.now();
 for (const f of files) {
-  const r = spawnSync(process.execPath, [join(dir, f)], { encoding: 'utf8' });
-  if (r.status === 0) {
+  const r = spawnSync(process.execPath, [join(dir, f)], { encoding: 'utf8', timeout: FILE_TIMEOUT_MS, killSignal: 'SIGKILL' });
+  if (r.error && r.error.code === 'ETIMEDOUT') {
+    failed.push(f);
+    process.stdout.write(`  ✗ ${f} — TIMED OUT after ${FILE_TIMEOUT_MS / 1000}s (killed; a test file must never hang)\n`);
+  } else if (r.status === 0) {
     process.stdout.write(`  ✓ ${f}\n`);
   } else {
     failed.push(f);
