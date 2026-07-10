@@ -3,6 +3,12 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+    # Doc-only commits don't change the built app — don't redeploy Pages for them.
+    # test.yml still runs on every push to main (no path filter there), so the
+    # engine gate is never skipped. workflow_dispatch remains for manual deploys.
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
   workflow_dispatch:
 
 permissions:
@@ -15,19 +21,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # The engine regression gate: a red suite must never deploy. Same suite as
-  # .github/workflows/test.yml (which still gates PRs); duplicated here because a
-  # push to main triggers this workflow independently and GitHub Actions can't
-  # `needs:` across workflows.
+  # The engine regression gate: a red suite must never deploy. Reuses the SAME
+  # workflow as PR/push testing via workflow_call — one definition, no drift
+  # (previously a copy-pasted job; governance sprint 2026-07-09, TD-10).
   test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm test
+    uses: ./.github/workflows/test.yml
 
   build:
     needs: test
