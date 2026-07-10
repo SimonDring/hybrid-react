@@ -9,14 +9,18 @@ context for why, not just what. Don't assume prior technical knowledge.
 
 ## App overview
 
-A dynamic, personalised gym-plan generator. From a short onboarding
-questionnaire it builds a multi-week, periodised strength programme tailored to
-each user's OWN goal — getting stronger, building muscle, functional fitness,
-olympic weightlifting, or strength support for a sport they train (running,
-cycling, swimming, triathlon, rugby, soccer, GAA, hurling, field hockey). It
-tracks training sessions, weekly check-ins, daily recovery metrics, and
-injuries, and reassesses at the end of each training block. It's a PWA today;
-the long-term aim is an AI-coached native iOS app.
+An ELITE STRENGTH & CONDITIONING PLATFORM — an automated S&C coach, not a
+plan generator. It automates the periodised strength & conditioning programming
+an elite coach would write: diagnosed from the sport the user plays (running,
+cycling, swimming, triathlon, rugby, soccer, GAA, hurling, field hockey) or
+their own goal (getting stronger, building muscle, functional fitness, olympic
+weightlifting), their personal strengths and weaknesses, their needs and
+available time, and their injury history — then reassessed as they train. The
+multi-week, periodised gym plan is the OUTPUT of that coaching
+decision-making, never the product itself. It tracks training sessions, weekly
+check-ins, daily recovery metrics, and injuries, and reassesses at the end of
+each training block. It's a PWA today; the long-term aim is an AI-coached
+native iOS app.
 
 Product North Star: the platform opens ELITE strength & conditioning to clubs,
 teams, and people who can't afford an elite S&C coach. Two packages:
