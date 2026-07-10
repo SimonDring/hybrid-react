@@ -10,6 +10,13 @@
     "dev": "npm run dev -w hybrid-react",
     "build": "npm run build -w hybrid-react",
     "preview": "npm run preview -w hybrid-react",
-    "test": "npm run test -w hybrid-react"
+    "test": "npm run test -w hybrid-react",
+    "lint": "eslint apps/mobile/src packages/engine/src apps/mobile/tests"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.7.0"
   }
 }

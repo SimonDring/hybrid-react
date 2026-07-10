@@ -20,4 +20,7 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
+      # Correctness lint + the engine-purity ruleset (Art 18 at edit time) — errors
+      # fail the gate; warnings don't (the floor is signal, not ceremony).
+      - run: npm run lint
       - run: npm test
