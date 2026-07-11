@@ -45,7 +45,29 @@ move it to the archive file rather than letting this one grow._
   196/196. Remaining Immediate items are Simon-gated: I5 (enforce injury vetoes) +
   the 5 missing rehab regions (science review).
 
+- **Sprint 2 — decision-engine forensic audit COMPLETE (2026-07-11, PR pending).**
+  Ten deliverables in `docs/reviews/2026-07-11-engine-audit-*.md`: current-state map,
+  constitutional alignment (5.4/10 — the four failed verbs are *measure, progress,
+  dispose, learn*), coaching-quality verdict, bodybuilding-bias report, knowledge-usage
+  census, technical + scientific risk registers, gap analysis (G1–G22), ranked P0–P3
+  backlog, and a DRAFT migration blueprint (waves A–F). Headline NEW defects found:
+  post-flip style-id fallthrough (all 3 build disciplines silently run the *functional*
+  volume band — re-baselined into goldens unnoticed), the D14 report is invisible
+  (zero UI consumers), empty rehab sessions are filtered out of their own validator,
+  D7 steer silently live in prod (schema-default prior arms it; goldens never exercise
+  it), plan-memo staleness (profileSignature omits sport_code/game dates/model), the
+  legacy fill's real cohorts are triathlon + zero-gap run/cycle + code-less GAA (not
+  un-modelled sports), and the SKB projection drops 11 qualities (not 8; one is a
+  mapping bug). Next step: Simon reviews the backlog (09) + blueprint (10) and adopts
+  a Wave A start.
+
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
+
+0. **⚠ Adopt the Sprint 2 audit backlog** — `docs/reviews/2026-07-11-engine-audit-09-
+   improvement-backlog.md` (P0 set: style-band fix, injury empty-session close, injury-
+   veto enforcement, minimum viable progression 🔒, legacy-cohort rescue, mapping bug +
+   droppedDemands, memo signature). Wave plan: deliverable 10. P0-1/P0-2/P0-5/P0-6/P0-7
+   are autonomous-lane candidates once the audit PR merges.
 
 1. **⚠ D16 prior promotion** — staged recoverability priors (`athlete_model.stagedPriors`,
    written at block check-in) are read by NOTHING. Promoting staged→learned is the switch
