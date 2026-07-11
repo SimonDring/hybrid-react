@@ -3,6 +3,8 @@
 // formatVersion is PURE and unit-tested; getAppVersion reads globals injected by vite `define` at
 // build time and must only run in the browser/build (never imported by the node test suite).
 
+/* global __APP_VERSION__, __APP_COMMIT__ */ // injected by vite `define` (vite.config.js)
+
 /** Format a build stamp. `commit` optional. e.g. formatVersion('2.0.0','a1b2c3d') → 'v2.0.0 · a1b2c3d'. */
 export function formatVersion(version, commit) {
   const v = `v${version || '?'}`;
