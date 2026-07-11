@@ -4,6 +4,7 @@ import { useTrainingStore } from '../stores/trainingStore.js';
 import { useAuthStore } from '../stores/authStore.js';
 import Database from '../lib/Database.js';
 import { runSessionDMigration } from '../lib/SyncService.js';
+import { getAppVersion } from '../lib/appVersion.js';
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -205,7 +206,7 @@ export default function Settings() {
 
       <h2 className="h3">About</h2>
       <ul className="kv-list">
-        <li><span className="k">Version</span><span className="v">2.0 React</span></li>
+        <li><span className="k">Version</span><span className="v" style={{ fontFamily: 'var(--mono)', fontSize: 12 }}>{getAppVersion()}</span></li>
         <li><span className="k">Schema</span><span className="v">v4</span></li>
         <li><span className="k">Storage</span><span className="v">Local (this device)</span></li>
       </ul>

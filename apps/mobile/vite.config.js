@@ -1,6 +1,19 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { readFileSync } from 'node:fs';
+import { execSync } from 'node:child_process';
+
+// Build identity, injected via `define` below and shown in Settings — so "which version is this
+// device running?" is answerable at a glance (the question that made a stale-cache report slow to
+// diagnose). Version from package.json; commit from CI's GITHUB_SHA or local git (best-effort).
+const APP_VERSION = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')).version;
+const APP_COMMIT = (() => {
+  try {
+    const sha = process.env.GITHUB_SHA || execSync('git rev-parse HEAD', { stdio: ['ignore', 'pipe', 'ignore'] }).toString();
+    return sha.trim().slice(0, 7);
+  } catch { return ''; }
+})();
 
 // Set base path here when deploying to a GitHub Pages subdirectory.
 // E.g. if your URL is https://yourname.github.io/hybrid-react/
@@ -47,7 +60,11 @@ export default defineConfig({
     cspMetaPlugin(),
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // 'prompt' (not 'autoUpdate'): a new service worker WAITS and the app surfaces a visible
+      // "Update available — Reload" toast (src/components/UpdatePrompt.jsx) instead of swapping the
+      // bundle silently. Silent autoUpdate let installed iOS PWAs keep serving the old cached build
+      // with no signal — the root cause of "I still see the old bug after it was fixed" reports.
+      registerType: 'prompt',
       includeAssets: ['icons/icon.svg'],
       manifest: {
         // One brand across mobile app, coach dashboard and website.
@@ -98,6 +115,10 @@ export default defineConfig({
       }
     })
   ],
+  define: {
+    __APP_VERSION__: JSON.stringify(APP_VERSION),
+    __APP_COMMIT__: JSON.stringify(APP_COMMIT)
+  },
   build: {
     outDir: 'dist',
     sourcemap: false
