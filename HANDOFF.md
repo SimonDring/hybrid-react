@@ -45,7 +45,7 @@ move it to the archive file rather than letting this one grow._
   196/196. Remaining Immediate items are Simon-gated: I5 (enforce injury vetoes) +
   the 5 missing rehab regions (science review).
 
-- **Sprint 2 — decision-engine forensic audit COMPLETE (2026-07-11, PR pending).**
+- **Sprint 2 — decision-engine forensic audit MERGED (2026-07-11, #169).**
   Ten deliverables in `docs/reviews/2026-07-11-engine-audit-*.md`: current-state map,
   constitutional alignment (5.4/10 — the four failed verbs are *measure, progress,
   dispose, learn*), coaching-quality verdict, bodybuilding-bias report, knowledge-usage
@@ -58,16 +58,16 @@ move it to the archive file rather than letting this one grow._
   it), plan-memo staleness (profileSignature omits sport_code/game dates/model), the
   legacy fill's real cohorts are triathlon + zero-gap run/cycle + code-less GAA (not
   un-modelled sports), and the SKB projection drops 11 qualities (not 8; one is a
-  mapping bug). Next step: Simon reviews the backlog (09) + blueprint (10) and adopts
-  a Wave A start.
+  mapping bug).
 
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
-0. **⚠ Adopt the Sprint 2 audit backlog** — `docs/reviews/2026-07-11-engine-audit-09-
-   improvement-backlog.md` (P0 set: style-band fix, injury empty-session close, injury-
-   veto enforcement, minimum viable progression 🔒, legacy-cohort rescue, mapping bug +
-   droppedDemands, memo signature). Wave plan: deliverable 10. P0-1/P0-2/P0-5/P0-6/P0-7
-   are autonomous-lane candidates once the audit PR merges.
+0. **⚠ HOLD — no audit fixes yet (Simon, 2026-07-11).** The Sprint 2 audit is merged
+   (#169) but **nothing from its backlog starts now, including the P0s**. Simon is
+   running one more sprint first; when it completes, the governance sprint
+   (`2026-07-09-*` reviews), the engine audit (`2026-07-11-engine-audit-*`), and that
+   sprint's output together become the inputs for creating THE DEVELOPMENT PLAN.
+   Wave A (blueprint deliverable 10) waits for that plan.
 
 1. **⚠ D16 prior promotion** — staged recoverability priors (`athlete_model.stagedPriors`,
    written at block check-in) are read by NOTHING. Promoting staged→learned is the switch
