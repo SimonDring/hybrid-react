@@ -55,9 +55,9 @@ GA-512), and no decision in the engine that reads the athlete's data and
 decides what it means (GA-417). Deliverable 08 traced this to a single root:
 the Constitution's Preamble frames the platform's only product as the
 intervention, so every document below inherited that stance (GA-113,
-confirmed). Eighteen findings are rank-1 structural blockers; seventeen of
+confirmed). Eighteen findings are rank-1 structural blockers; sixteen of
 those eighteen are this one gap seen from different altitudes. The
-eighteenth family — the duty-of-care perimeter (youth athletes, consent, data
+remaining two — the duty-of-care perimeter (youth athletes, consent, data
 ownership: GA-107, GA-109) — is constitutionally silent and bites at the Team
 stage the platform is already in.
 
@@ -312,7 +312,7 @@ All three are SPEC-FILLABLE edits to the living DOCUMENTATION-GOVERNANCE.md.
   core requirement — and no single-document fix resolves it. *Direction:*
   clarify to "recomputable given the same inputs and knowledge version;
   point-in-time derived values may be materialised as dated historical
-  evidence", scoped by ND-1's history-store design.
+  evidence" (per 08's GA-802 row, quoted as evidence), scoped by ND-1's history-store design.
 - **AQ-6 — Title III: developmental-stage duty of care (GA-107).** *Target:*
   `docs/foundation/CONSTITUTION.md`, Title III (new Article). *Benchmark:*
   P5.3. *Rationale:* no Article recognises developmental stage or age-band
