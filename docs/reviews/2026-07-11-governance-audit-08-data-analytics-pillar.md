@@ -201,7 +201,7 @@ and the EDS's decision-record mechanics (GA-407) beneath it.
 
 - Decision-explanation delivery is world-class three documents deep: the
   right (GA-105), the mechanics (GA-407), the one-trace/three-audiences
-  read-model and the AI faithfulness gates (GA-607). The pattern to extend
+  read-model (audit 05 §2 P2.11 / GA-507; TAS §11) and the AI faithfulness gates (GA-607). The pattern to extend
   is already built and proven.
 - Analytical delivery — progress trends, longitudinal insights, squad
   reports — has no compliant home: surfaces may compute nothing, no
@@ -232,7 +232,7 @@ complete while the athlete-understanding vocabulary stops at training-state
 signals — no test result, no match datum, no insight, no report, no squad
 signal, no analysis structure (GA-203, GA-205–GA-209, GA-207; audit 02 §7).
 At the knowledge tier, the KA governs evidence-in world-classly and the
-athlete-data side of the estate thin-to-silently (GA-306, GA-307, GA-309,
+athlete-data side of the estate thin-to-silently (GA-306, GA-307,
 GA-310; audit 03 §7). Meanwhile the programming pillar collected WORLD-CLASS
 verdicts in depth: GA-101, GA-102, GA-110 (Constitution), GA-201, GA-202
 (Ontology), GA-401 through GA-406 (EDS). The asymmetry the hypothesis predicted is real,
@@ -260,7 +260,7 @@ Ontology declared everything beyond athlete state "derived" exhaust (GA-207),
 the TAS gave the second product one word at L5 (GA-512), and the KA's
 evidence scale never grew a rung for the platform's own data (GA-306). These
 are not four accidents; they are one purpose-level omission propagating down
-the precedence ladder, exactly as audit 01 §5.1 predicted ("a purpose-level
+the precedence ladder, exactly as audit 01 §4 (GA-113) predicted ("a purpose-level
 gap the P2.x-owning documents cannot repair from below"). Audit 01's watch
 item compounds it: Art 20's defer-until-consumer discipline is a
 chicken-and-egg trap for analytics, whose consumers are the decisions that
