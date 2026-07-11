@@ -26,6 +26,16 @@ New reviews are authored directly into this folder, named `YYYY-MM-DD-<topic>.md
 | `2026-07-09-data-architecture-review.md` | 2026-07-09 | Phase 5: data ownership/RLS verification, learning readiness, scaling walls (F1–F9). |
 | `2026-07-09-testing-strategy.md` | 2026-07-09 | Phase 6: the eight-layer testing strategy (proposal — graduates into living docs if adopted). |
 | `2026-07-09-strategic-roadmap.md` | 2026-07-09 | Phase 7: prioritised roadmap — Immediate → Short → Medium → Long → Research → Never. |
+| `2026-07-11-engine-audit-01-current-state.md` | 2026-07-11 | Sprint 2 forensic audit 1/10: how the engine actually works today (verified pipeline, cohort map, D1–D16 status). |
+| `2026-07-11-engine-audit-02-constitutional-alignment.md` | 2026-07-11 | Sprint 2, 2/10: Article-by-Article scorecard (aggregate 5.4/10) + component alignment + conflict-order check. |
+| `2026-07-11-engine-audit-03-coaching-quality.md` | 2026-07-11 | Sprint 2, 3/10: coach-vs-generator verdict, quantified per decision area and cohort. |
+| `2026-07-11-engine-audit-04-bodybuilding-bias.md` | 2026-07-11 | Sprint 2, 4/10: every volume-first/muscle-first remnant, classified DRIVER/LEDGER/COSMETIC. |
+| `2026-07-11-engine-audit-05-knowledge-usage.md` | 2026-07-11 | Sprint 2, 5/10: knowledge consumption census (~65/35 knowledge-driven), corrections to the 07-09 record. |
+| `2026-07-11-engine-audit-06-technical-risk-register.md` | 2026-07-11 | Sprint 2, 6/10: TR-01…TR-20 incl. new defects (style-band fallthrough, invisible D14 report, memo staleness). |
+| `2026-07-11-engine-audit-07-scientific-risk-register.md` | 2026-07-11 | Sprint 2, 7/10: SR-01…SR-16 coaching/science risks (progression, unmeasured diagnosis, injury edges). |
+| `2026-07-11-engine-audit-08-gap-analysis.md` | 2026-07-11 | Sprint 2, 8/10: current → desired → gap → impact → priority across G1–G22. |
+| `2026-07-11-engine-audit-09-improvement-backlog.md` | 2026-07-11 | Sprint 2, 9/10: ranked P0–P3 backlog with 🔒 Simon-gates. |
+| `2026-07-11-engine-audit-10-migration-blueprint-draft.md` | 2026-07-11 | Sprint 2, 10/10: DRAFT migration playbook (waves A–F, dependency spine, Simon decision ledger). |
 
 ## Reviews that live elsewhere (kept in place — referenced by frozen docs or code)
 
