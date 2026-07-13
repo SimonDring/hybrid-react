@@ -74,7 +74,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 10,
@@ -5556,7 +5556,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 10,
@@ -9247,7 +9247,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 10,
@@ -16252,7 +16252,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 10,
@@ -19588,7 +19588,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 10,
@@ -23791,7 +23791,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 10,
@@ -28249,7 +28249,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,
@@ -31859,7 +31859,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,
@@ -35621,7 +35621,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,
@@ -40225,7 +40225,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,
@@ -44326,7 +44326,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,
@@ -45388,7 +45388,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,
@@ -49236,7 +49236,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 4,
@@ -50020,7 +50020,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,
@@ -53420,7 +53420,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 4,
@@ -54594,7 +54594,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,
@@ -59328,7 +59328,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 4,
@@ -60504,7 +60504,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,
@@ -64093,6 +64093,12 @@
             "magnitude": 0,
             "qualityId": "reactiveStrength",
             "rationale": "you meet the reactiveStrength demand (0.6); maintain it."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0,
+            "qualityId": "strengthEndurance",
+            "rationale": "you meet the strengthEndurance demand (0.7); maintain it."
           }
         ],
         "priorityQualities": [
@@ -64106,7 +64112,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,
@@ -68101,7 +68107,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,
@@ -73394,7 +73400,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 6,
@@ -75363,7 +75369,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 10,
@@ -79827,7 +79833,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 4,
@@ -81512,7 +81518,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 6,
@@ -84231,7 +84237,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,
@@ -88099,7 +88105,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 4,
@@ -89209,7 +89215,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,
@@ -92277,7 +92283,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.30.0"
+        "knowledgeSetVersion": "1.31.0"
       },
       "validation": {
         "checked": 12,

@@ -13,9 +13,14 @@ export const SKB_TO_PM_QUALITY = {
   stability: 'stability',
   balance: 'stability',
   durability: 'robustness',
-  // UNMAPPED (return null — future quality expansion / sport-skill layer, not this sprint):
+  // strengthEndurance IS a Performance-Model quality (qualities.js) — its identity mapping
+  // was missing, silently dropping authored demand (rugby importance 7). P0-6 fix.
+  strengthEndurance: 'strengthEndurance',
+  // UNMAPPED (return null — future quality expansion / sport-skill layer, not this sprint).
+  // Unmapped authored demand is NOT silently discarded: the projection declares it in the
+  // droppedDemands honesty ledger (demandProfile.js — Art 15). Currently unmapped:
   //   sprintSpeed, acceleration, deceleration, changeOfDirection, coordination,
-  //   rotationalPower, gripStrength, neckStrength
+  //   rotationalPower, gripStrength, neckStrength, collisionRobustness, aerialAbility
 };
 
 export function mapSkbQuality(name) {
