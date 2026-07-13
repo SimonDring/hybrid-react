@@ -34,3 +34,36 @@ export function buildDemandProfile(sportId, positionId) {
 
   return [...byPm.entries()].map(([qualityId, v]) => ({ qualityId, importance: v.importance, source: 'skb', evidence: v.evidence }));
 }
+
+// The honesty ledger (Art 15, P0-6): authored SKB demand the projection could NOT carry into
+// the Performance Model — declared, never silently discarded. Mirrors buildDemandProfile's own
+// semantics: importance scaled 0..1, position primaries floored at PRIMARY_FLOOR. Deterministic
+// order (importance desc, then name asc). Pure; never throws on unknown sport/position.
+export function droppedDemandsFor(sportId, positionId) {
+  const profile = SKB.get(sportId);
+  if (!profile || !profile.physicalProfile || !profile.physicalProfile.qualities) return [];
+
+  const dropped = new Map(); // skbQuality → { importance, evidence }
+  for (const [skbName, q] of Object.entries(profile.physicalProfile.qualities)) {
+    if (mapSkbQuality(skbName) || !q || typeof q.importance !== 'number') continue;
+    const importance = Math.min(1, Math.max(0, q.importance / 10));
+    dropped.set(skbName, { importance, evidence: `skb:${sportId}:${skbName}` });
+  }
+
+  // a dropped quality that is a position PRIMARY is at least as demanding as the
+  // projection would have made it (same floor buildDemandProfile applies)
+  const positions = SKB.section(sportId, 'positions') || [];
+  const pos = positions.find((p) => p.name === positionId);
+  if (pos && Array.isArray(pos.primaryQualities)) {
+    for (const skbName of pos.primaryQualities) {
+      if (mapSkbQuality(skbName)) continue;
+      const cur = dropped.get(skbName);
+      if (!cur) dropped.set(skbName, { importance: PRIMARY_FLOOR, evidence: `skb:${sportId}:pos:${positionId}` });
+      else if (cur.importance < PRIMARY_FLOOR) dropped.set(skbName, { importance: PRIMARY_FLOOR, evidence: `skb:${sportId}:pos:${positionId}` });
+    }
+  }
+
+  return [...dropped.entries()]
+    .map(([skbQuality, v]) => ({ skbQuality, importance: v.importance, source: 'skb', evidence: v.evidence }))
+    .sort((a, b) => (b.importance - a.importance) || a.skbQuality.localeCompare(b.skbQuality));
+}

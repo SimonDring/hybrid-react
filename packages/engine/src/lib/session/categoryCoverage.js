@@ -102,9 +102,12 @@ export function weekCategoryPlan(skbSportId, sessionCount, { levelName = 'interm
 // Sports whose gym week is CATEGORY-LED (the quality diagnosis cannot express their
 // needs — swim's upper-pull, the invasion sports' rotational power / change-of-direction /
 // prevention work; flipped per sport: swim WP-20, the team sports WP-48 on Simon's
-// 2026-07-06 direction). Run/cycle stay rating-based (their categories agree with their
-// diagnosed qualities — recorded 19b scope decision).
-const CATEGORY_LED = new Set(['swimming', 'hurling', 'gaelic_football', 'field_hockey', 'soccer', 'rugby']);
+// 2026-07-06 direction, triathlon P0-5 audit B1). Triathlon is category-led for the same
+// reason as swim: its gym need is a swim+bike+run BLEND (upper pull + shoulder prehab +
+// single-leg/calf durability) that the fixed-10 quality vocabulary cannot name — its
+// authored library encodes it as categories. Run/cycle stay rating-based (their categories
+// agree with their diagnosed qualities — recorded 19b scope decision).
+const CATEGORY_LED = new Set(['swimming', 'hurling', 'gaelic_football', 'field_hockey', 'soccer', 'rugby', 'triathlon']);
 
 /** The category plan for a sport IF it is category-led; null otherwise. */
 export function categoryPlanFor(skbSportId, sessionCount, opts = {}) {

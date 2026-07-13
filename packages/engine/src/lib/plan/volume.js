@@ -81,6 +81,10 @@ export function countWeeklyVolume(sessions = []) {
   for (const s of sessions) {
     for (const it of s.items || []) {
       if (it.tag === 'mobility') continue; // health/activation (factor 0) + warm-up primer
+      // P0-2 (engine-audit TR-04): items the injury filter struck (`substituted`)
+      // are hidden at render and never performed — counting them was phantom
+      // volume in MRV checks and progress bars.
+      if (it.substituted) continue;
       const sets = parseSetCount(it.sets);
       if (!sets) continue; // warm-ups / time-based rows aren't counted as volume
       const vf = it.volumeFactor == null ? 1 : it.volumeFactor; // stimulus credit (0.5 isoCore, 1 loaded)

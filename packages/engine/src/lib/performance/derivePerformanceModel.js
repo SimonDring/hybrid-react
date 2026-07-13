@@ -4,7 +4,7 @@
 // output; they do not yet steer plan generation (that re-seating is a later sprint).
 import { qualityIds } from '../../data/qualities.js';
 import { estimateCapability, bandForModel } from './estimation.js';
-import { buildDemandProfile } from './demandProfile.js';
+import { buildDemandProfile, droppedDemandsFor } from './demandProfile.js';
 import { goalDemandProfile } from '../../data/goalDemand.js';
 import { disciplineDemandFor, demandVectorToProfile, disciplineIdFor } from './disciplineDemand.js';
 import { diagnoseLimitingFactors } from './diagnose.js';
@@ -35,6 +35,10 @@ export function derivePerformanceModel(model, asOf) {
     derivedAt: asOf || null,
     capabilities,
     demandProfile,
+    // The projection's honesty ledger (Art 15, P0-6): authored SKB demand with no
+    // Performance-Model home yet — declared here so screens can cite what the
+    // diagnosis could NOT see, never silently discarded. Empty for build goals.
+    droppedDemands: sc.primarySport ? droppedDemandsFor(sc.primarySport, sc.position || null) : [],
     limitingFactors,
     priorityAdaptations,
   };

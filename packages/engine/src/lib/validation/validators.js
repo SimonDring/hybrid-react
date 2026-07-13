@@ -21,8 +21,15 @@ const exForItem = (it) => (it.exId != null && EX_BY_ID.get(it.exId)) || EX_BY_NA
 const UPPER = new Set(['chest', 'back', 'shoulders', 'biceps', 'triceps']);
 const LOWER = new Set(['quads', 'hamstrings', 'glutes', 'calves']);
 
-const gymSessions = (week) => (week.sessions || []).filter((s) => !s.discipline || s.discipline === 'gym');
-const mainItems = (s) => (s.items || []).filter((it) => it.section !== 'primer');
+// P0-2 (engine-audit TR-04): validators judge what SHIPS — gym sessions AND the
+// injury system's own rehab replacements (discipline:'rehab'). Filtering to gym
+// only made the rehab-replaced session invisible to the very "shipped empty"
+// veto written for it. Endurance disciplines (run/swim/ride) stay out of scope.
+const shippedSessions = (week) => (week.sessions || []).filter((s) => !s.discipline || s.discipline === 'gym' || s.discipline === 'rehab');
+// Struck items (`substituted` — hidden at render, never performed) are not
+// shipped work; judging or counting them re-litigates the injury filter's own
+// verdict (P0-2: they were phantom volume in the region-share tally too).
+const mainItems = (s) => (s.items || []).filter((it) => it.section !== 'primer' && !it.substituted);
 
 // ── Tier 1 · SAFETY: contraindicated movements never ship ────────────────────
 // Direct policy check: no shipped working item may match an active injury's
@@ -41,13 +48,11 @@ export const injuryContraindicationValidator = {
     const blocked = blockedNameRegexesForInjuries(injuries);
     if (!blocked.length) return [];
     const findings = [];
-    for (const s of gymSessions(week)) {
+    for (const s of shippedSessions(week)) {
       for (const it of mainItems(s)) {
+        // Struck (`substituted`) items are already excluded by mainItems — WP-40
+        // replaces mark-and-hide with real redistribution.
         if (it.tag === 'rehab' || /pain-free/i.test(it.name || '')) continue;
-        // An item the injury system itself struck (marked `substituted` — hidden at
-        // render, never performed) is not shipped; judging it would re-litigate the
-        // filter's own verdict. WP-40 replaces mark-and-hide with real redistribution.
-        if (it.substituted) continue;
         if (blocked.some((r) => r.test(it.name || ''))) {
           findings.push({
             verdict: 'veto',
@@ -71,7 +76,7 @@ export const durationHonestyValidator = {
   run(week) {
     const { minutes, slackMin } = kb.value('programming.session_ceiling');
     const findings = [];
-    for (const s of gymSessions(week)) {
+    for (const s of shippedSessions(week)) {
       const m = /~?(\d+)\s*min/.exec(s.duration || '');
       if (!m) continue;
       const est = Number(m[1]);
@@ -96,7 +101,7 @@ export const equipmentValidator = {
     if (!ctx.access || !ctx.access.length) return [];
     const have = availableEquip(ctx.access);
     const findings = [];
-    for (const s of gymSessions(week)) {
+    for (const s of shippedSessions(week)) {
       for (const it of mainItems(s)) {
         const ex = exForItem(it);
         if (ex && ex.equip && !have.has(ex.equip)) {
@@ -120,9 +125,15 @@ export const purposeCoherenceValidator = {
   run(week) {
     const { regionMajority } = kb.value('validation.session_purpose');
     const findings = [];
-    for (const s of gymSessions(week)) {
+    for (const s of shippedSessions(week)) {
       if (mainItems(s).length === 0) {
-        findings.push({ verdict: 'veto', reason: `${s.title || 'session'}: shipped empty — no working items`, detail: { session: s.title } });
+        // P0-2 (TR-04/SR-03): name the unservable outcome explicitly — the injury
+        // filter stamps `unservable` when a region has no rehab content and no
+        // safe work remains (Art 15: surfaced, never a false "rehab" banner).
+        const reason = s.unservable
+          ? `${s.title || 'session'}: unservable — injury blocks all work and no rehab content exists for this region`
+          : `${s.title || 'session'}: shipped empty — no working items`;
+        findings.push({ verdict: 'veto', reason, detail: { session: s.title, unservable: !!s.unservable } });
         continue;
       }
       const focus = ((s.title || '').split('·')[1] || '').trim().toLowerCase();

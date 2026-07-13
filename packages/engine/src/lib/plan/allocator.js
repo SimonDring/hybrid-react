@@ -43,6 +43,7 @@ import { selectInterventions, tierOf } from './selectInterventions.js';
 import { deriveSessionObjective, assignTargetQualities, competencyAdjustedTarget, constraintAdjustedTarget } from '../session/sessionObjective.js';
 import { getSecondaryGoal } from '../../data/secondaryGoals.js';
 import { getDiscipline } from '../../data/disciplines/index.js';
+import { styleFamily } from '../strength/styleFamily.js';
 import { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, DISCIPLINE_DOSE_QUALITY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS, REACTIVE_LIMITS, doseForQuality } from '../../data/doseSchemes.js';
 import { deriveMovementRequirements } from '../session/movementRequirements.js';
 import { regionOf, hypertrophyRegionOf } from '../session/sessionSpecs.js';
@@ -85,18 +86,22 @@ const EX_BY_ID = new Map(EXERCISES.map(e => [e.id, e]));
 // (WP-42a display honesty: a plan never ships a diagnosis it ignored). Extend the sets
 // here when a cohort flips (WP-48 team sports, WP-49 build) and both stay in lockstep.
 const D11_SPORTS = new Set(['run', 'cycle']);
-export function diagnosisSteers({ style, sport, priorityQualities = [], categoryPlan = null, discipline = null } = {}) {
+export function diagnosisSteers({ style, sport, categoryPlan = null, discipline = null } = {}) {
   // WP-49 (Plan 2 T3/T4c): a build-discipline profile (powerlifting/hypertrophy/olympic) ALWAYS
   // steers — the discipline IS the athlete's chosen path, so it uses the diagnosis-first engine
   // (its own priority lifts + in-character dose) whether or not the diagnosis found a capability
   // gap. Without this, an already-strong athlete (empty diagnosis) fell to the legacy fill and got
   // the default scheme. The empty-diagnosis case seeds the discipline's canonical quality below.
   if (discipline) return true;
-  // Rating-based (run/cycle) needs a non-empty diagnosis; category-led needs a plan —
-  // categoryPlanFor() is itself gated by CATEGORY_LED (swim + the team sports + soccer,
-  // WP-48), so a present categoryPlan IS the flip decision for that sport.
-  return style === 'sport' && ((priorityQualities.length > 0 && D11_SPORTS.has(sport))
-    || !!categoryPlan);
+  // Rating-based (run/cycle) always steers — P0-5 (audit B1): a ZERO-GAP runner/cyclist (an
+  // experienced athlete whose diagnosis finds nothing to fix) previously fell to the legacy
+  // deficit fill; now they keep the value-ordered D11 week on its maintenance floor
+  // (gymTrainableTargets' maxStrength fallback — the sport mirror of the build seed above).
+  // meta.diagnosis stays gated on a NON-EMPTY diagnosis in PlanGenerator (display honesty:
+  // no diagnosis claim is invented for an athlete without gaps). Category-led needs a plan —
+  // categoryPlanFor() is itself gated by CATEGORY_LED (swim + the team sports + soccer +
+  // triathlon, WP-48/P0-5), so a present categoryPlan IS the flip decision for that sport.
+  return style === 'sport' && (D11_SPORTS.has(sport) || !!categoryPlan);
 }
 
 // Supportive finisher: round a short session out toward FINISHER_TARGET_MIN with
@@ -110,12 +115,17 @@ const FINISHER_CAP_MIN = 15;
 // balanced (their selection is already governed by sport priority + emphasis, and
 // steering sport toward strength nudges it into synergist-volume overshoot).
 function primaryQuality(style) {
-  if (style === 'strength') return 'strength';
-  if (style === 'bodybuilding') return 'hypertrophy';
+  const fam = styleFamily(style);
+  if (fam === 'strength') return 'strength';
+  if (fam === 'bodybuilding') return 'hypertrophy';
   return null;   // sport + functional = balanced (no steer)
 }
-// Map the build style to its goalTag value (bodybuilding is tagged 'hypertrophy').
-const styleGoalTag = (style) => (style === 'bodybuilding' ? 'hypertrophy' : style);
+// Map the build style to its goalTag value (the exercise goalTags vocabulary is
+// strength/hypertrophy/functional — the bodybuilding FAMILY is tagged 'hypertrophy').
+const styleGoalTag = (style) => {
+  const fam = styleFamily(style);
+  return fam === 'bodybuilding' ? 'hypertrophy' : fam;
+};
 // Hard gate: a power-quality exercise is allowed only when the goal wants power AND
 // it's contextually relevant (in the resolved priority list, or goal-tagged).
 function powerAllowed(ex, power, prioritySet, style) {
@@ -143,19 +153,23 @@ function stretchMult(ex, goalPrimary) {
 // to the old style-keyed tables (golden masters prove it). Taper keeps intensity
 // (peaking — Bosquet 2007; Travis & Mujika 2020); deload drops it (recovery). ----
 function scheme(style, intent, deload, taper, light = false) {
-  const q = DOSE_SCHEMES[STYLE_SCHEME_BRIDGE[style] || DEFAULT_SCHEME_KEY];
+  // P0-1 (audit TR-01): a discipline-id style resolves through its own dose pin
+  // (DISCIPLINE_DOSE_QUALITY — the same scheme WP-49 T4c pins per-session), so the
+  // fallback scheme and the pinned scheme never disagree. Before this, disciplines
+  // fell through the legacy-keyed bridge to the functional scheme.
+  const q = DOSE_SCHEMES[STYLE_SCHEME_BRIDGE[style] || DISCIPLINE_DOSE_QUALITY[style] || DEFAULT_SCHEME_KEY];
   if (taper) return q.taper;
   if (deload) return q.deload;
   let out = q[intent] || DOSE_SCHEMES[DEFAULT_SCHEME_KEY].base;
   // Max-strength mains need a barbell — light-equipment override (see the module).
-  if (style === 'strength' && light) {
+  if (styleFamily(style) === 'strength' && light) {
     const h = LIGHT_STRENGTH_MAINS[intent] || LIGHT_STRENGTH_MAINS.fallback;
     out = { ...out, main: h.main, acc: h.acc };
   }
   return out;
 }
 
-const isoStr = (style) => (style === 'bodybuilding' ? ISO_SETS.bodybuilding : ISO_SETS.default);
+const isoStr = (style) => (styleFamily(style) === 'bodybuilding' ? ISO_SETS.bodybuilding : ISO_SETS.default);
 const coreStr = (light) => (light ? CORE_SETS.light : CORE_SETS.default);
 const mainNote = (deload, taper) =>
   taper ? 'taper — keep the load, just fewer sets. Arrive fresh.'
@@ -246,7 +260,7 @@ function roleSetCount(ex, s, style, effectiveRole) {
 function restForRole(ex, style, effectiveRole) {
   const role = effectiveRole != null ? effectiveRole : ex.role;
   if (ex.quality === 'power') return POWER_REST;
-  if (role === 'primary') return (style === 'strength' || style === 'sport') ? REST_SECONDS.primaryHeavy : REST_SECONDS.primaryOther;
+  if (role === 'primary') return (styleFamily(style) === 'strength' || style === 'sport') ? REST_SECONDS.primaryHeavy : REST_SECONDS.primaryOther;
   if (role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf') return REST_SECONDS.isoCoreCalf;
   // Accessory compound. A GENUINE high-CNS accessory (heavy RDL / Good morning / Rack
   // pull) now runs as a STRAIGHT SET, so it needs real rest — not the 75s that assumed
@@ -456,10 +470,11 @@ function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyD
 
     const effectiveRole = effectiveRoleOf(ex, slot.level, demotePress);
 
-    // Cap at 2 primaries per slot — beyond that, extra heavy mains crowd out accessories
+    // Cap primaries per slot (3 for the strength family — its sessions are built around
+    // heavy mains — 2 otherwise): beyond that, extra heavy mains crowd out accessories
     // without adding meaningful variety, and make sessions uncomfortably long.
     if (!fillersOnly && effectiveRole === 'primary' &&
-        slot.picks.filter(p => p.ex.role === 'primary' && p.effectiveRole === 'primary').length >= (style === 'strength' ? 3 : 2)) continue;
+        slot.picks.filter(p => p.ex.role === 'primary' && p.effectiveRole === 'primary').length >= (styleFamily(style) === 'strength' ? 3 : 2)) continue;
 
     const sets = roleSetCount(ex, s, style, effectiveRole);
     if (sets <= 0) continue;
@@ -554,7 +569,7 @@ const REGION = {
 // membership / sport tag / build goal) then variety. Returns ordered candidates.
 function finisherPool(slot, ctx, levelName) {
   const sport = ctx.sport || null;
-  const goal = ctx.style;                        // strength | bodybuilding | functional | sport
+  const goal = styleGoalTag(ctx.style);          // goalTags vocabulary (strength/hypertrophy/functional) — discipline ids map through their family (P0-1)
   const prio = new Set(ctx.exercisePriority || []);
   const blockedRx = ctx.blockedNameRegexes || [];
   const cands = EXERCISES.filter(ex => {
@@ -639,7 +654,9 @@ export function qualityTag(picks = [], style) {
  *          intensity, lowerBody } — one per slot, scheduler/renderer ready.
  */
 export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
-  const style = ['strength', 'bodybuilding', 'functional', 'sport'].includes(ctx.style) ? ctx.style : 'functional';
+  // P0-1 (audit TR-01): discipline ids are first-class styles — before this, they were
+  // coerced to 'functional' here, so every build discipline ran functional volume/scheme.
+  const style = ['strength', 'bodybuilding', 'functional', 'sport'].includes(styleFamily(ctx.style)) ? ctx.style : 'functional';
   const deload = !!ctx.deload;
   const taper = !!ctx.taper;
   const intent = ctx.intent || 'base';
@@ -1212,7 +1229,7 @@ function styleObjective(slot, style, ctx) {
       rationale: `Gym work that supports your sport: the sport's emphasis template biases this ${focus} day's muscles, and selection fills each toward its weekly target. This day: ${phase}.`,
     },
   };
-  const o = BY_STYLE[style] || BY_STYLE.functional;
+  const o = BY_STYLE[style] || BY_STYLE[styleFamily(style)] || BY_STYLE.functional;
   return { ...o, source: 'style' };
 }
 

@@ -4,12 +4,15 @@
 // decisionRules besides swimming's never fired for the athletes they were written
 // for, and a legacy GAA profile got no demand profile → no diagnosis.
 //
-// The decision: never guess between the two codes. Onboarding already REQUIRES the
-// exact SKB id (answers.skbSport) — it now PERSISTS as profile.sport_code, and every
-// SKB lookup resolves through skbSportIdOf(profile): stored answer → dual-written
-// athlete-model primarySport (profiles saved before sport_code) → legacy derivation.
-// A code-less 'gaa' profile stays inert — deliberately — rather than getting the
-// wrong sport's rules.
+// The decision: onboarding REQUIRES the exact SKB id (answers.skbSport) — it PERSISTS
+// as profile.sport_code, and every SKB lookup resolves through skbSportIdOf(profile):
+// stored answer → dual-written athlete-model primarySport (profiles saved before
+// sport_code) → legacy derivation.
+// P0-5 (2026-07-13, audit B1/SR-06) revised the code-less floor: a legacy 'gaa' row
+// with NO stored code resolves to the gaelic_football GENERIC prior (the invasion-sport
+// common denominator — same shape as the discipline-less runner → running_middle
+// default) instead of staying inert. Inert meant the neutral-bodybuilder legacy fill —
+// worse coaching than the generic code. A stored answer still ALWAYS wins.
 
 import assert from 'node:assert';
 import { skbSportIdOf, skbSportIdFor } from '@performance-os/engine/lib/sportKnowledge/index.js';
@@ -43,15 +46,16 @@ ok(skbSportIdOf({ sport: 'gaa', sport_code: 'hurling' }) === 'hurling', 'the sto
 ok(skbSportIdOf({ sport: 'gaa', athlete_model: { sportingContext: { primarySport: 'gaelic_football' } } }) === 'gaelic_football',
   'the dual-written athlete model disambiguates profiles saved before sport_code');
 ok(skbSportIdOf({ sport: 'run', run_discipline: 'long' }) === 'running_long', 'legacy derivation is the floor');
-ok(skbSportIdOf({ sport: 'gaa' }) === 'gaa' && skbSportIdFor('gaa') === 'gaa',
-  "a code-less 'gaa' profile stays unresolved — inert, never the wrong code");
+ok(skbSportIdOf({ sport: 'gaa' }) === 'gaelic_football' && skbSportIdFor('gaa') === 'gaelic_football',
+  "a code-less 'gaa' profile resolves to the gaelic_football generic prior (P0-5 — never the inert legacy fill)");
 
 // ── the ACTIVATION: real runtime GAA profiles now fire their structured rules ─
 const fired = evaluateRules({ sport: 'gaa', sport_code: 'hurling' }, { matchesThisWeek: 2 });
 ok(fired.effects.some((e) => e.type === 'reduce_volume_pct'),
   'a hurler (runtime profile shape) fires hurling rules: 2 matches → volume cut');
-const inert = evaluateRules({ sport: 'gaa' }, { matchesThisWeek: 2 });
-ok(inert.effects.length === 0, 'a code-less gaa profile fires NOTHING (deliberate — no guessing)');
+const generic = evaluateRules({ sport: 'gaa' }, { matchesThisWeek: 2 });
+ok(generic.effects.some((e) => e.type === 'reduce_volume_pct'),
+  'a code-less gaa profile fires the gaelic_football generic rules (P0-5): 2 matches → volume cut');
 
 // ── the adapter: a coded GAA profile gets a real primarySport (→ demand → D4/D5) ─
 const model = profileToAthleteModel(hurler, '2026-07-04');
