@@ -127,8 +127,8 @@ move it to the archive file rather than letting this one grow._
    (12 of 19 tables documented); merge the two OAuth guides (they recommend different
    Apple Services IDs — verify the live value in the Apple portal first); ⚠ product
    naming decision ("Hybrid Training" vs "Performance OS" vs `hybrid-react`); the five
-   constitutional amendment candidates (C1–C5 in
-   `docs/reviews/2026-07-09-documentation-audit.md` §2).
+   constitutional amendment candidates (C1–C5 — now tracked in
+   `docs/AMENDMENT-QUEUE.md`; evidence stays in the 2026-07-09 audit §2).
 
 ## Governance (unchanged)
 
