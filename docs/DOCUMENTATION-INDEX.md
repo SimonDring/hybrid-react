@@ -104,8 +104,12 @@ feed the archive. Full precedence rules: governance doc §1.
 ## T5 · Reviews — see [`reviews/README.md`](reviews/README.md)
 
 Dated evidence, never current state. In `docs/reviews/`: STATE-OF-THE-APP
-(2026-07-07), the documentation audit (2026-07-09), and this sprint's phase
-reviews. In place (frozen/code references): `decision-engine-evaluation.md`,
+(2026-07-07), the documentation audit (2026-07-09), the governance-sprint phase
+reviews (2026-07-09), the Sprint 2 engine forensic audit
+(`2026-07-11-engine-audit-01…10`), and the governance forensic audit
+(`2026-07-11-governance-audit-00…09` — the frozen set judged against a
+world-class end-state benchmark; 92-finding register + amendment queue in
+deliverable 09). In place (frozen/code references): `decision-engine-evaluation.md`,
 `engine/01`, `engine/06–08`, `architecture/REASSESSMENT-2026-07-05.md`,
 `architecture/AIGAS-REVIEW-2026-07-06.md`, `foundation/PANEL-REVIEW.md`,
 `SECURITY-AUDIT.md` (June body).

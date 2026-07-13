@@ -1,6 +1,6 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-09 (documentation governance sprint). This file carries **current
+_Last updated: 2026-07-11 (governance forensic audit). This file carries **current
 state and the open queue only**. The full session-by-session history (2026-06-11 →
 2026-07-09, ~1,800 lines) is preserved verbatim at
 [`docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md`](docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md).
@@ -60,14 +60,38 @@ move it to the archive file rather than letting this one grow._
   un-modelled sports), and the SKB projection drops 11 qualities (not 8; one is a
   mapping bug).
 
+- **Governance forensic audit DELIVERED (2026-07-11, branch `governance-audit-2026-07-11`).**
+  Ten deliverables in `docs/reviews/2026-07-11-governance-audit-00…09`: a
+  first-principles world-class benchmark (six pillars, 43 capabilities), seven
+  per-document forensic audits of the governing tier, the data & analytics
+  deep-dive, and the verdict + 92-finding register. Headline verdict (deliverable
+  09 §1): the programming half of the governance is world-class; the second
+  product — measuring/modelling/analysing the athlete — is thin-to-absent with one
+  confirmed constitutional root (GA-113) and no architectural owner. Queue-ready
+  outputs: AQ-1…AQ-9 amendment candidates + ND-1 (a Data & Analytics Architecture
+  Specification, peer to the EDS). Three amendment-pipeline defects
+  (GA-701/702/703) must be fixed (living-doc edits) before the queue can land.
+  Every finding traceable: 31 COVERED · 41 SPEC-FILLABLE · 15 AMENDMENT · 5
+  NEW-DOCUMENT. No frozen document was touched.
+- **Decision Engine V2 design sprint: PARKED by Simon (2026-07-11).** Spec
+  (`docs/superpowers/specs/2026-07-11-decision-engine-v2-design.md`) + plan
+  (`docs/superpowers/plans/2026-07-11-decision-engine-v2-design.md`) are committed
+  on branch `engine-v2-design-2026-07-11`; **no deliverables authored yet** — Simon
+  ordered the governance audit first. Audit 09 §5 flags which V2-design premises
+  its findings alter (knowledge-ownership targets; the V2-P/closed-catalogue
+  question → AQ-4).
+
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
 0. **⚠ HOLD — no audit fixes yet (Simon, 2026-07-11).** The Sprint 2 audit is merged
-   (#169) but **nothing from its backlog starts now, including the P0s**. Simon is
-   running one more sprint first; when it completes, the governance sprint
-   (`2026-07-09-*` reviews), the engine audit (`2026-07-11-engine-audit-*`), and that
-   sprint's output together become the inputs for creating THE DEVELOPMENT PLAN.
-   Wave A (blueprint deliverable 10) waits for that plan.
+   (#169) but **nothing from its backlog starts now, including the P0s**. The
+   development-plan inputs are now FOUR and all exist: the governance sprint
+   (`2026-07-09-*` reviews), the engine audit (`2026-07-11-engine-audit-*`), the
+   governance forensic audit (`2026-07-11-governance-audit-*`, PR pending Simon),
+   and the parked V2 design set (branch `engine-v2-design-2026-07-11`, unexecuted).
+   Next step: Simon merges the governance-audit PR, then THE DEVELOPMENT PLAN is
+   created from the four inputs. Wave A (blueprint deliverable 10) waits for that
+   plan.
 
 1. **⚠ D16 prior promotion** — staged recoverability priors (`athlete_model.stagedPriors`,
    written at block check-in) are read by NOTHING. Promoting staged→learned is the switch
