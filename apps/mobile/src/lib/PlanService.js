@@ -286,12 +286,19 @@ function decoratePhases(phases, access) {
 // construction proposes, validation proves). Memoised per adapted-week identity: the
 // adaptedPhases memo returns stable week objects until runtime state changes, so a
 // WeakMap keyed on them re-validates only when the reflow (or the injury set) moved.
+
+// P0-3 (engine-audit 09): the D14 injury-veto GATE. DEFAULT OFF — validation stays
+// report-only, exactly today's behaviour. When ON, validateWeek removes items the
+// tier-1 injury validator vetoed and injuryFilteredPhases ships the gated week
+// (report.week). Promotion to ON is SIMON'S I5 CALL — flip this constant only then.
+const ENFORCE_INJURY_VETOES = false;
+
 const _weekValidation = new WeakMap();
 function shippedValidation(adaptedWeek, shippedWeek, access, active) {
   const sig = JSON.stringify([access, active.map(i => [i.body_part_key, i.severity, i.rehab_phase, i.status])]);
   const hit = _weekValidation.get(adaptedWeek);
   if (hit && hit.sig === sig) return hit.report;
-  const report = validateWeek(shippedWeek, { access, injuries: active });
+  const report = validateWeek(shippedWeek, { access, injuries: active, enforceInjuryVetoes: ENFORCE_INJURY_VETOES });
   _weekValidation.set(adaptedWeek, { sig, report });
   return report;
 }
@@ -315,6 +322,10 @@ function injuryFilteredPhases() {
       let w = active.length ? applyInjuryRules(week, active) : week;
       w = history.length ? applyPrevention(w, history) : w;
       const _validation = shippedValidation(week, w, access, active);
+      // P0-3: when the enforcement gate is ON, ship the gated week the report
+      // proved (report.week is only present when the flag is on; with the flag
+      // OFF — the default — this is a no-op and behaviour is byte-identical).
+      if (_validation.week && _validation.week !== w) w = _validation.week;
       return w === week ? { ...week, _validation } : { ...w, _validation };
     })
   }));
