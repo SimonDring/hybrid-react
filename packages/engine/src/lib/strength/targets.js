@@ -19,6 +19,7 @@
 
 import { MUSCLE_GROUPS, VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
 import { LEVELS } from '../../data/strengthExercises.js';
+import { DISCIPLINE_STYLE_FAMILY } from './styleFamily.js';
 import { roundHalf } from '../Utils.js';
 import kb from '../knowledge/kb.js';
 
@@ -41,7 +42,8 @@ const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
 /**
  * Weekly set target per muscle group.
  * @param {object} ctx
- *   style       'strength' | 'bodybuilding' | 'functional'
+ *   style       'strength' | 'bodybuilding' | 'functional' | a build discipline id
+ *               ('powerlifting' | 'hypertrophy' | 'olympic' — resolved via its family)
  *   intent      'base' | 'build' | 'peak'   (reserved — peak can trim accessories)
  *   weekInPhase 1-based week within the current phase
  *   phaseWeeks  total weeks in the current phase
@@ -53,7 +55,11 @@ const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
  * @returns {{ [muscle]: number }} sets/week, rounded to the nearest 0.5
  */
 export function weeklyMuscleTargets(ctx = {}) {
-  const style = STYLE_TOP[ctx.style] != null ? ctx.style : 'functional';
+  // P0-1 (audit TR-01): a build DISCIPLINE id (powerlifting/hypertrophy/olympic) resolves
+  // through its legacy style family, because the governed KB entry keys the band on the
+  // legacy vocabulary. Without this, every discipline silently took the functional band.
+  const requested = STYLE_TOP[ctx.style] != null ? ctx.style : DISCIPLINE_STYLE_FAMILY[ctx.style];
+  const style = STYLE_TOP[requested] != null ? requested : 'functional';
   const styleTop = STYLE_TOP[style] + (LEVEL_TOP_BONUS[ctx.level] ?? 0);
   const startFrac = LEVEL_START[ctx.level] ?? 0;
   const phaseWeeks = Math.max(1, ctx.phaseWeeks || 1);
