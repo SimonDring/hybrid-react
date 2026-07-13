@@ -86,18 +86,22 @@ const EX_BY_ID = new Map(EXERCISES.map(e => [e.id, e]));
 // (WP-42a display honesty: a plan never ships a diagnosis it ignored). Extend the sets
 // here when a cohort flips (WP-48 team sports, WP-49 build) and both stay in lockstep.
 const D11_SPORTS = new Set(['run', 'cycle']);
-export function diagnosisSteers({ style, sport, priorityQualities = [], categoryPlan = null, discipline = null } = {}) {
+export function diagnosisSteers({ style, sport, categoryPlan = null, discipline = null } = {}) {
   // WP-49 (Plan 2 T3/T4c): a build-discipline profile (powerlifting/hypertrophy/olympic) ALWAYS
   // steers — the discipline IS the athlete's chosen path, so it uses the diagnosis-first engine
   // (its own priority lifts + in-character dose) whether or not the diagnosis found a capability
   // gap. Without this, an already-strong athlete (empty diagnosis) fell to the legacy fill and got
   // the default scheme. The empty-diagnosis case seeds the discipline's canonical quality below.
   if (discipline) return true;
-  // Rating-based (run/cycle) needs a non-empty diagnosis; category-led needs a plan —
-  // categoryPlanFor() is itself gated by CATEGORY_LED (swim + the team sports + soccer,
-  // WP-48), so a present categoryPlan IS the flip decision for that sport.
-  return style === 'sport' && ((priorityQualities.length > 0 && D11_SPORTS.has(sport))
-    || !!categoryPlan);
+  // Rating-based (run/cycle) always steers — P0-5 (audit B1): a ZERO-GAP runner/cyclist (an
+  // experienced athlete whose diagnosis finds nothing to fix) previously fell to the legacy
+  // deficit fill; now they keep the value-ordered D11 week on its maintenance floor
+  // (gymTrainableTargets' maxStrength fallback — the sport mirror of the build seed above).
+  // meta.diagnosis stays gated on a NON-EMPTY diagnosis in PlanGenerator (display honesty:
+  // no diagnosis claim is invented for an athlete without gaps). Category-led needs a plan —
+  // categoryPlanFor() is itself gated by CATEGORY_LED (swim + the team sports + soccer +
+  // triathlon, WP-48/P0-5), so a present categoryPlan IS the flip decision for that sport.
+  return style === 'sport' && (D11_SPORTS.has(sport) || !!categoryPlan);
 }
 
 // Supportive finisher: round a short session out toward FINISHER_TARGET_MIN with

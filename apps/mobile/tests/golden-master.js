@@ -85,6 +85,11 @@ const MATRIX = {
   // (upper), rugby stays balanced (no round-out). NEW keys pinning the team-sport season arc.
   'sport·soccer·intermediate·off·3d': A({ goalType: 'sport', skbSport: 'soccer', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['tue', 'sat'] }),
   'sport·rugby·advanced·off·4d': A({ goalType: 'sport', skbSport: 'rugby', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'advanced', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['wed', 'sat'] }),
+  // P0-5 legacy-cohort rescue (audit B1): a CODE-LESS legacy GAA row — sport 'gaa' via the old
+  // answer seed, NO skbSport → sport_code null, no stored athlete model. Resolves to the
+  // gaelic_football generic prior and rides the category-led D11 path. NEW key, additive —
+  // pins the rescue so this cohort can't silently regress to the neutral-bodybuilder fill.
+  'sport·gaa-codeless·intermediate·off·3d(legacy)': A({ goalType: 'sport', sport: 'gaa', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['tue', 'sat'] }),
 
   // Build-discipline cohort (WP-49 Plan 2 T1, additive): `discipline` feeds the athlete-model
   // diagnosis (disciplineDemandFor) but does NOT yet steer the plan (the D11 style==='sport'

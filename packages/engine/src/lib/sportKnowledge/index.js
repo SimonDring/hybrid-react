@@ -53,6 +53,14 @@ export function normalizeSportId(id) { if (!id) return null; return ID_ALIASES[i
 export function skbSportIdFor(sport, runDiscipline) {
   if (!sport) return null;
   if (sport === 'run') return `running_${runDiscipline || 'middle'}`;
+  // P0-5 (audit B1/SR-06): a legacy 'gaa' row with no stored code gets the GENERIC GAA
+  // prior — gaelic_football, the invasion-sport common denominator of the two codes —
+  // exactly the running_middle default's shape: the diagnosis must never silently vanish
+  // because one answer predates the sport_code field. A stored sport_code (every profile
+  // saved since 2026-07-04) always wins upstream in skbSportIdOf, so a hurler who SAID
+  // hurling is never re-routed; only the code-less rows (previously the neutral-bodybuilder
+  // legacy fill) resolve here.
+  if (sport === 'gaa') return 'gaelic_football';
   return normalizeSportId(sport) || sport;
 }
 
@@ -60,9 +68,8 @@ export function skbSportIdFor(sport, runDiscipline) {
  * The SKB profile id for a PROFILE. Precedence: the athlete's stored answer
  * (profile.sport_code — the exact SKB id onboarding collects), then the dual-written
  * athlete model's primarySport (profiles saved before sport_code persisted), then the
- * legacy derivation above. GAA matters here: profile.sport is 'gaa' for BOTH Gaelic
- * football and hurling, so without the stored answer the id stays unresolved ('gaa'
- * matches no profile) — deliberately inert rather than guessing the wrong code.
+ * legacy derivation above (which resolves the code-less 'gaa' ambiguity to the
+ * gaelic_football generic prior — P0-5).
  */
 export function skbSportIdOf(profile = {}) {
   return profile.sport_code
