@@ -354,6 +354,9 @@ export function profileSignature(profile) {
     // exact SKB id, and the dual-written athlete model all steer generatePlan — without
     // them an edit here never regenerated the memoised plan.
     sc: profile.sport_code, fgd: profile.first_game_date, lgd: profile.last_game_date,
+    // plan_start_date anchors EVERY date in the plan (PlanGenerator reads it, never
+    // the clock) — a changed start date must bust the memo or dates go stale.
+    psd: profile.plan_start_date,
     am: athleteModelSignature(profile.athlete_model)
   });
 }

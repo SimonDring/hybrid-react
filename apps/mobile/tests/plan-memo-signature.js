@@ -112,4 +112,8 @@ assert(sig({ athlete_model: tsModel }) === sig(),
 // ── a pre-existing field still invalidates (no regression) ───────────────────
 assert(sig({ sport_season: 'in' }) !== sig(), 'T15 sport_season still invalidates (regression guard)');
 
+// ── plan_start_date anchors every date in the plan (PlanGenerator reads it) ──
+assert(sig({ plan_start_date: '2026-07-20' }) !== sig(),
+  'T16 plan_start_date change invalidates (all plan dates anchor to it)');
+
 console.log('\nplan-memo-signature: done.');

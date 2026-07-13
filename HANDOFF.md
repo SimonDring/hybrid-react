@@ -1,6 +1,6 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-13 (THE DEVELOPMENT PLAN created). This file carries **current
+_Last updated: 2026-07-13 (Phase 0: Track B merged, Track A Wave A complete pending PR). This file carries **current
 state and the open queue only**. The full session-by-session history (2026-06-11 →
 2026-07-09, ~1,800 lines) is preserved verbatim at
 [`docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md`](docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md).
@@ -81,6 +81,25 @@ move it to the archive file rather than letting this one grow._
   its findings alter (knowledge-ownership targets; the V2-P/closed-catalogue
   question → AQ-4).
 
+- **Phase 0 (2026-07-13): Track B MERGED · Track A Wave A COMPLETE, pending PR.**
+  Track B (#172): the amendment pipeline is repaired (GA-701/702/703) and
+  `docs/AMENDMENT-QUEUE.md` is live. Track A Wave A sits on branch
+  `phase0-wave-a-2026-07-13` awaiting its PR — the six P0 engine-audit fixes:
+  - **P0-6** — strengthEndurance projection restored + `droppedDemands` ledger
+    (no more silent SKB quality loss).
+  - **P0-7** — plan-memo signature covers sport_code / game dates / athlete-model
+    subset + plan_start_date (memo can no longer serve a stale plan).
+  - **P0-1** — volume bands keyed on discipline, not style id (build-goal
+    fallthrough to *functional* fixed; sports byte-identical).
+  - **P0-2** — rehab sessions visible to their own validators; unservable rehab
+    surfaced; phantom volume fixed (TR-04/SR-03).
+  - **P0-3** — injury-veto gate at D14, behind `ENFORCE_INJURY_VETOES=false`
+    (default OFF; flip awaits I5, Simon-gated).
+  - **P0-5** — triathlon + zero-gap run/cycle + code-less GAA rescued off the
+    legacy fill onto the diagnosis-first path (quality gate: improved/not-degraded).
+  Still owed from Wave A review: **P1-10** staging apply (runbook shipped in the
+  Wave A PR — see open queue #4).
+
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
 0. **⚠ THE DEVELOPMENT PLAN — created 2026-07-13, adoption = Simon's merge.**
@@ -109,7 +128,7 @@ move it to the archive file rather than letting this one grow._
 4. **⚠ Pending applies (NEW STEP FIRST)** — **`20260712_player_status_membership_scope.sql`
    (the F3 privacy fix, merged #166) is in the repo but applied NOWHERE yet: apply to
    STAGING → run `node supabase/tests/rls-harness.mjs` (7 new F3 cases) → prod, per
-   `supabase/SECURITY-DEPLOY.md`.** DB migrations through `20260711` are on prod; the paired
+   `supabase/SECURITY-DEPLOY.md`. Step-by-step runbook shipped in the Wave A PR (P1-10).** DB migrations through `20260711` are on prod; the paired
    **Edge Functions deploy separately**: OAuth-nonce callbacks + `fitbit-sync` (S1/S4/S8)
    and `ai-render` (AI go-live only). WP-50 staging harness run still owed
    (per `supabase/SECURITY-DEPLOY.md`).
