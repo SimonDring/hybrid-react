@@ -324,7 +324,9 @@ function injuryFilteredPhases() {
   return decoratePhases(filtered, access);
 }
 
-function profileSignature(profile) {
+// Exported for tests/plan-memo-signature.js — the memo goes stale silently if a
+// plan-driving field is missing here, so the coverage is pinned by a test.
+export function profileSignature(profile) {
   return JSON.stringify({
     f: profile.focus, e: profile.experience, g: profile.goals,
     a: profile.availability, ac: profile.access, p: profile.pool_length_m,
@@ -336,8 +338,35 @@ function profileSignature(profile) {
     // a goal change (build↔sport, run discipline, season/event) wouldn't regenerate.
     gt: profile.goal_type, sp: profile.sport, si: profile.sport_intent,
     rd: profile.run_discipline, ed: profile.event_date, sps: profile.sport_season,
-    spd: profile.sport_days
+    spd: profile.sport_days,
+    // P0-7 (engine-audit TR-06): the season window (deriveSeason's window mode), the
+    // exact SKB id, and the dual-written athlete model all steer generatePlan — without
+    // them an edit here never regenerated the memoised plan.
+    sc: profile.sport_code, fgd: profile.first_game_date, lgd: profile.last_game_date,
+    am: athleteModelSignature(profile.athlete_model)
   });
+}
+
+// The plan-driving SUBSET of the dual-written athlete model (users.profile.athlete_model)
+// — NOT the whole object: updatedAt is stamped new Date().toISOString() on every persist
+// (AthleteModelService), so hashing the model whole would regenerate the plan on every
+// model sync even when nothing plan-driving changed. These are exactly the fields
+// generatePlan reads, directly or via profileToAthleteModel: learnedPriors (D7 block
+// steer + D12 volume scalar), sportingContext.primarySport/position (skbSportIdOf
+// fallback + adapter), trainingHistory years, constraints.injuryHistory (D4 injuryRisk),
+// performanceMetrics (the adapter's measuredAt trust). Extend this alongside any new
+// engine read of profile.athlete_model.
+function athleteModelSignature(am) {
+  if (!am) return null;
+  const sc = am.sportingContext || {};
+  const th = am.trainingHistory || {};
+  return {
+    lp: am.learnedPriors,
+    ps: sc.primarySport, pos: sc.position,
+    rty: th.resistanceTrainingYears, sy: th.sportYears,
+    ih: (am.constraints && am.constraints.injuryHistory) || null,
+    pm: am.performanceMetrics || null
+  };
 }
 
 // Returns the generated plan for the current user, or null to use the legacy plan.
