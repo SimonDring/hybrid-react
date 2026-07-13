@@ -97,6 +97,7 @@ feed the archive. Full precedence rules: governance doc §1.
 | [`../CLAUDE.md`](../CLAUDE.md) | The operational handbook every session loads — philosophy, precedence, hard rules, session protocol |
 | [`../HANDOFF.md`](../HANDOFF.md) | **The single living status tracker**: current state + open queue. History → archive |
 | [`DEVELOPMENT-PLAN.md`](DEVELOPMENT-PLAN.md) | **The roadmap-of-record** (2026-07-13): composes the four audit/design inputs into phases 0–4 → Decision Engine V2 + the Data & Analytics product. Owns the ORDER; HANDOFF owns the status |
+| [`AMENDMENT-QUEUE.md`](AMENDMENT-QUEUE.md) | **The amendment queue's single home**: lifecycle register (QUEUED→BATCHED→RATIFIED/REJECTED) for frozen-set/T2 amendment candidates. Evidence stays in reviews; process rules in governance doc §3 |
 | [`architecture/D7-BLOCK-OBJECTIVE-SPEC.md`](architecture/D7-BLOCK-OBJECTIVE-SPEC.md) | Live design spec; §9 open questions gate D7 broad activation + D6 |
 | [`engine/05-INDEX-LAYER-FOLLOWUPS.md`](engine/05-INDEX-LAYER-FOLLOWUPS.md) | Deferred index-layer specs; Spec B (integrator re-weighting) still open |
 | [`product/TEAM-NEXT-STEPS.md`](product/TEAM-NEXT-STEPS.md) | Team package tracker (schedule→constraints is next) |

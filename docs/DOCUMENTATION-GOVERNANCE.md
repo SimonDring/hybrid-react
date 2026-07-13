@@ -1,6 +1,6 @@
 # Documentation Governance
 
-**Status: governing (living) · v1.0 · 2026-07-09**
+**Status: governing (living) · v1.1 · 2026-07-13**
 This is the documentation constitution: how documents are classified, where they
 live, how they change, and which one wins when they disagree. It governs all
 documentation; it does not govern the platform itself — that is the (frozen)
@@ -55,19 +55,72 @@ Every document has exactly one class, recorded in `docs/DOCUMENTATION-INDEX.md`:
 ## 3. The frozen set and amendments
 
 The frozen set is: **Constitution, Decision Ontology, Knowledge Architecture, EDS,
-TAS** (v1.0, 2026-07-01). AIGAS is governing-designate pending its ratification
-panel. Frozen documents are never edited as part of feature or documentation
-work — including "harmless" fixes (typos, counts, status stamps). A change is a
-formal amendment per the Constitution's *Amendment & Stewardship* section:
-proposed in writing with rationale, reviewed for consistency, version-bumped,
-and reconciled across the whole set in the same change.
+TAS** (v1.0, 2026-07-01). AIGAS is governing-designate pending ratification
+(the path below). Frozen documents are never edited as part of feature or
+documentation work — including "harmless" fixes (typos, counts, status stamps).
+A change is a formal amendment per the Constitution's *Amendment & Stewardship*
+section: proposed in writing with rationale, reviewed for consistency,
+version-bumped, and reconciled across the whole set in the same change.
 
-Known amendment candidates are queued in
-`docs/reviews/2026-07-09-documentation-audit.md` §2 (C1–C5): stamping freeze
-status into the docs themselves, the TAS "seven kinds" vs KA "eight kinds"
-reconciliation, hard-coded sport counts, the EDS rank ambiguity, and one
-mojibake glyph. Add newly-found frozen-doc defects to that queue; do not fix
-them inline.
+### The amendment queue
+
+Amendment candidates are queued in **`docs/AMENDMENT-QUEUE.md`** — the queue's
+single living home (WORKING class). Add newly-found frozen-doc defects and
+amendment candidates there, as lifecycle rows linking to their dated evidence;
+do not fix them inline, and do not queue them anywhere else (HANDOFF, review
+files, session notes). The reviews that *discover* candidates (e.g. the
+2026-07-09 documentation audit §2, governance audit 09 §3) stay immutable
+REVIEW evidence per §2 — the register tracks what happens to each candidate;
+the evidence says what it is and why.
+
+### Ratification — how a document enters T2 (or the frozen set)
+
+A document becomes governing by ratification, never by accumulation of
+citations. The path:
+
+1. **Proposal.** The completed document is proposed for T2 in writing: its
+   tier, what it owns (one concept-owner each, §5), and every governing
+   document it touches.
+2. **Adversarial panel review.** A dedicated dated review (in `docs/reviews/`)
+   whose job is to break the document — internal consistency, consistency with
+   the frozen set, fitness against the platform's ambition. Every finding is
+   dispositioned (fixed, or explicitly accepted with rationale) before
+   ratification.
+3. **Ratification by Simon.** In writing; merging the ratification change
+   counts.
+4. **The flip.** One change: the document's status line flips to governing,
+   its index entry (tier + ownership) updates, and every cross-reference that
+   called it draft/designate is reconciled. A ratified document may then be
+   frozen under the same amendment discipline as the original set.
+
+Until ratified, a designate document binds new work (build against it) but
+loses precedence conflicts against the ratified set (§1). This path applies to
+AIGAS now (queued as AQ-8 — the proving case) and to every future T2
+candidate, starting with the Data & Analytics Architecture Specification
+(queued as ND-1).
+
+### Batch amendments
+
+The Constitution's amendment process is written per-amendment; nothing in it
+forbids one reconciled pass carrying many. Amendments are processed in
+**batches**:
+
+- **One written set.** A batch is assembled from the register: selected rows
+  flip QUEUED → BATCHED, and the batch is drafted as a single written proposal
+  covering every change and its rationale.
+- **Whole-set consistency review.** The batch is reviewed together against
+  every affected document before anything lands; cross-document effects
+  (vocabulary, counts, cross-references) are reconciled inside the batch,
+  never deferred.
+- **One version bump per affected document**, however many batch items touch
+  it, with the batch identified in each document's revision note.
+- **Simon ratifies the batch.** Frozen-set changes always pause for Simon
+  (CLAUDE.md workflow rule 4). On merge, the register rows flip to RATIFIED
+  (or REJECTED, reason in Notes).
+- **Cadence.** Assemble a batch whenever the register warrants it — at minimum
+  after each governance audit or stage transition. The queue must not grow
+  monotonically: a queue that only ever grows converts freeze discipline into
+  preservation of known error.
 
 ## 4. Placement — where a document lives
 
