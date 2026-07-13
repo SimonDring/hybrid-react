@@ -99,6 +99,12 @@ move it to the archive file rather than letting this one grow._
     legacy fill onto the diagnosis-first path (quality gate: improved/not-degraded).
   Still owed from Wave A review: **P1-10** staging apply (runbook shipped in the
   Wave A PR — see open queue #4).
+- **Phase 1 (2026-07-13): the AQ-1…9 ratification batch is DRAFTED — PR #175 awaits
+  Simon's ratification decision.** Six proposal files + whole-batch consistency
+  review in `docs/design/amendment-batch-2026-07/` (nothing applied to frozen
+  docs); AQ rows flipped to BATCHED in `docs/AMENDMENT-QUEUE.md`. Simon's AQ-1/
+  AQ-2 direction verdict unlocks the ND-1 authoring sprint. Wave A follow-up
+  fixes: PR #174.
 
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
