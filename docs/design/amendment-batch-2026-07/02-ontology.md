@@ -4,10 +4,10 @@
 Spec: [`docs/superpowers/specs/2026-07-13-phase1-amendment-batch-design.md`](../../superpowers/specs/2026-07-13-phase1-amendment-batch-design.md)
 
 **Target document:** `docs/foundation/DECISION-ONTOLOGY.md` (v1.0, FROZEN — quoted here, never edited).
-**Items:** AQ-2 (merged GA-203, GA-205, GA-206, GA-207, GA-208, GA-209) and the ontology half of AQ-4 (GA-204; the EDS half, GA-419, is drafted in [`03-eds.md`](03-eds.md) — numbered AQ-4.1 there, AQ-4.2 here, one doctrine stated once in each document).
+**Items:** AQ-2 (merged GA-203, GA-205, GA-206, GA-207, GA-208, GA-209) and the ontology half of AQ-4 (GA-204; the EDS half, GA-419, is drafted in [`03-eds.md`](03-eds.md) — numbered **AQ-4.1 here, AQ-4.2 there** per batch reading order, one doctrine stated once in each document).
 **Evidence:** governance audit 09 §3 (queue entries AQ-2, AQ-4); audit 02 (GA-203/204/205–209, §5–§7); audit 08 §4 (pairing rulings) and GA-802/GA-804.
 
-**How the entries compose.** AQ-2.1, AQ-2.2, and AQ-2.3 are one coherent edit applied together: 2.1 adds the fourth structure to §1, 2.2 adds the entity family the structure names, 2.3 carries the consequential renumbering and relationship rows. AQ-4.2 then lands on the renumbered document. Section numbers in proposed text refer to the document *as amended* (the renumbering map is in AQ-2.3).
+**How the entries compose.** AQ-2.1, AQ-2.2, and AQ-2.3 are one coherent edit applied together: 2.1 adds the fourth structure to §1, 2.2 adds the entity family the structure names, 2.3 carries the consequential renumbering and relationship rows. AQ-4.1 then lands on the renumbered document. Section numbers in proposed text refer to the document *as amended* (the renumbering map is in AQ-2.3).
 
 ---
 
@@ -96,7 +96,7 @@ Confidence rail (§2, §9), unchanged.
 **Consistency:**
 - **AQ-1 (01-constitution.md).** §1.4's phrase "the evidence-graded understanding of the athlete" deliberately echoes AQ-1's second-product language so the structure traces to the amended Preamble. If AQ-1's final wording differs, the 07 review should align this phrase — one noun phrase, stated identically in both.
 - **AQ-3 (03-eds.md).** The DECISION link is where the EDS-side analysis decision family attaches; §1.4 names the seam ("entry into the Reasoning Spine") without defining any decision — decisions are the EDS's to catalogue.
-- **§2 is deliberately untouched.** The Reasoning Spine diagram and edge rationale gain no steps: analysis products enter existing decisions as inputs via consumers/confidence, not as new spine edges. This preserves audit 02 §5.2's warning (the spine reads as normative and closed) without redrawing it — the registration rule for genuinely new decisions is AQ-4.2's business.
+- **§2 is deliberately untouched.** The Reasoning Spine diagram and edge rationale gain no steps: analysis products enter existing decisions as inputs via consumers/confidence, not as new spine edges. This preserves audit 02 §5.2's warning (the spine reads as normative and closed) without redrawing it — the registration rule for genuinely new decisions is AQ-4.1's business.
 - **The three v1.0 structures are unchanged in content**; the Diagnostic Triangle remains "the conceptual engine of the whole platform" (§1.3) — the Analysis Spine feeds it (better-measured Capability), never rivals it.
 
 **Not changed:** the "single biggest improvement" blockquote at the end of §1 (it records the v1.0 correction *of the brief's chain*, whose three structures are the ones the brief tangled — a historical record, accurate as written); the "three movements" framing of "How to read" (structures / spine / catalogue — still three movements); §2 in its entirety; every edge rationale; the cross-cutting rails.
@@ -374,7 +374,7 @@ Renumbering map (headings only; content unchanged except the table rows below):
 | — | **§10. Family VIII — Measurement & Analysis** (new, AQ-2.2) |
 | §10. Relationship summary & cardinalities | §11 |
 | §11. What this ontology deliberately changed | §12 |
-| — | **§13. Growth: additive extension vs. structural amendment** (new, AQ-4.2) |
+| — | **§13. Growth: additive extension vs. structural amendment** (new, AQ-4.1) |
 
 The relationship table (renumbered §11) gains these rows, appended after
 `Training Outcome —updates→ Prior (via Learning)`:
@@ -404,9 +404,9 @@ The closing line's version stamp changes with the whole-batch version bump — *
 
 ---
 
-### AQ-4.2 — The additive-extension clause (ontology half)
+### AQ-4.1 — The additive-extension clause (ontology half)
 
-**Target:** `docs/foundation/DECISION-ONTOLOGY.md` — the header table's **Principle** row, and a new final section (§13 in the as-amended numbering, after §12). The paired EDS half (AQ-4.1 — the decision-catalogue extension clause, GA-419) is drafted in [`03-eds.md`](03-eds.md); it is one doctrine, stated once in each document.
+**Target:** `docs/foundation/DECISION-ONTOLOGY.md` — the header table's **Principle** row, and a new final section (§13 in the as-amended numbering, after §12). The paired EDS half (AQ-4.2 — the decision-catalogue extension clause, GA-419) is drafted in [`03-eds.md`](03-eds.md); it is one doctrine, stated once in each document.
 
 **Current text:**
 
@@ -470,15 +470,15 @@ entry* is governed by the EDS's paired extension clause. What no addition may
 ever do silently is alter the meaning of what is already here.
 ```
 
-**Rationale:** GA-204 (ADEQUATE — "the 'concepts added here first' Principle × frozen status makes every extension a frozen-doc amendment — a growth tax the end-state cadence will pay repeatedly"; direction: "an extension clause distinguishing *additive* entity/decision registration inside an existing family (versioned, routine) from *structural* change to the three structures (constitutional amendment)"). Audit 02 §5.1 (the growth bottleneck is the top over-specification risk; "GA-204's extension clause is the release valve") and §6.5 (the low-change-cadence assumption is falsified; "GA-204's additive-vs-structural distinction is the survivable form of the freeze"). AQ-4 (audit 09 §3): "the same doctrine stated once in each document." Benchmark: P6.2. The registration-rule paragraph answers audit 02 §5.2 (the spine reads normative and closed) at the vocabulary level, leaving decision admission criteria (contract completeness, graph position, validation integration) to the EDS half — AQ-4.1.
+**Rationale:** GA-204 (ADEQUATE — "the 'concepts added here first' Principle × frozen status makes every extension a frozen-doc amendment — a growth tax the end-state cadence will pay repeatedly"; direction: "an extension clause distinguishing *additive* entity/decision registration inside an existing family (versioned, routine) from *structural* change to the three structures (constitutional amendment)"). Audit 02 §5.1 (the growth bottleneck is the top over-specification risk; "GA-204's extension clause is the release valve") and §6.5 (the low-change-cadence assumption is falsified; "GA-204's additive-vs-structural distinction is the survivable form of the freeze"). AQ-4 (audit 09 §3): "the same doctrine stated once in each document." Benchmark: P6.2. The registration-rule paragraph answers audit 02 §5.2 (the spine reads normative and closed) at the vocabulary level, leaving decision admission criteria (contract completeness, graph position, validation integration) to the EDS half — AQ-4.2.
 
 **Consistency:**
-- **AQ-4.1 (03-eds.md) is the pair.** The split of labour is deliberate and must survive the 07 review: the ontology's clause governs *entities and naming* (template completeness, one family, one structure, no redefinition); the EDS's clause governs *decisions* (admission criteria, DAG position, D1–D16 semantics never silently altered). The shared sentence of doctrine — additive registration is versioned and routine; structural change is an amendment — should read equivalently in both.
+- **AQ-4.2 (03-eds.md) is the pair.** The split of labour is deliberate and must survive the 07 review: the ontology's clause governs *entities and naming* (template completeness, one family, one structure, no redefinition); the EDS's clause governs *decisions* (admission criteria, DAG position, D1–D16 semantics never silently altered). The shared sentence of doctrine — additive registration is versioned and routine; structural change is an amendment — should read equivalently in both.
 - **AQ-2 is the proving case:** Family VIII itself enters as a *structural* amendment (a new family + a new structure — exactly the tier this clause reserves for full amendment), while its future growth (e.g. an Endurance Test entity inside Family VIII) becomes additive. The clause makes the batch's own machinery self-describing.
 - **DOCUMENTATION-GOVERNANCE (living):** the clause leans on the batch protocol landed there (#172); it adds no new process, only classifies which changes may use the lighter path. GOV's precedence is below this document's, so the clause states the rule and GOV carries the mechanics — no circularity.
 - **Constitution (Amendment & Stewardship):** the clause narrows nothing constitutional — the steward still ratifies every edit; Title III is untouched; the frozen set's "validated against, never modified" posture survives because additive edits are, by construction, incapable of modifying existing meaning.
 
-**Not changed:** the Principle's first two sentences, verbatim — concepts-first discipline is strengthened, not relaxed; the freeze itself (the document remains frozen; the clause defines *how* it may grow, not that it is open); the fixed entity template; the three v1.0 structures and the spine's content; the EDS-side admission criteria (AQ-4.1's, not restated here).
+**Not changed:** the Principle's first two sentences, verbatim — concepts-first discipline is strengthened, not relaxed; the freeze itself (the document remains frozen; the clause defines *how* it may grow, not that it is open); the fixed entity template; the three v1.0 structures and the spine's content; the EDS-side admission criteria (AQ-4.2's, not restated here).
 
 ---
 

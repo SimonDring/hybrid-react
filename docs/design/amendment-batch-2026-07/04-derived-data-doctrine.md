@@ -146,7 +146,7 @@ rule 5).
 
 **Proposed text (a new rule 5, appended after rule 4):**
 
-> 5. **Point-in-time derived values may be materialised as dated historical evidence.** *Recomputable* means recomputable **given the same inputs and knowledge version** — recomputing last season's readiness under this season's knowledge produces a different number that is wrong *as history*. A derived signal as computed that day (readiness, load state, an estimated 1RM) may therefore be persisted **append-only**, stamped with the engine + knowledge-set versions that computed it (SA7), and read strictly as historical evidence — the longitudinal athlete record (P2.6 territory). It is never re-served as the current value (current values are always recomputed); it changes nothing in rule 1 (the plan remains derived — a hypothesis, regenerable); and it crosses the coach boundary only under rule 4's derived-only roll-up. Which signals are materialised, and their retention, is the data-architecture specification's design scope, not this section's.
+> 5. **Point-in-time derived values may be materialised as dated historical evidence.** *Recomputable* means recomputable **given the same inputs and knowledge version** — recomputing last season's readiness under this season's knowledge produces a different number that is wrong *as history*. A derived signal as computed that day (readiness, load state, an estimated 1RM) may therefore be persisted **append-only**, stamped with the engine + knowledge-set versions that computed it (SA7), and read strictly as historical evidence — the longitudinal athlete record. It is never re-served as the current value (current values are always recomputed); it changes nothing in rule 1 (the plan remains derived — a hypothesis, regenerable); and it crosses the coach boundary only under rule 4's derived-only roll-up. Which signals are materialised, and their retention, is the data-architecture specification's design scope, not this section's.
 
 **Rationale:** GA-802 (audit 08 §4) · AQ-5 (audit 09 §3) · benchmark P2.6 × P3.5
 · audit 04 §5.4 ("the reconstruction guarantee silently rests on an unbuilt
@@ -163,9 +163,9 @@ to engine-computed signals, not view-model side-effects); rule 4's privacy
 invariant governs every crossing. §27.1's team surface is unchanged — the coach
 still reads only the derived, privacy-bounded roll-up, whether live or
 historical. Coordinates with batch item 03 (AQ-3): the analysis decision family
-reads materialised history as its evidence base; analysis *outputs* (insights)
-are Inferences with confidence, not Derived Data — the boundary batch item 02
-(AQ-2) states.
+reads materialised history as its evidence base; analysis *outputs* (Insights)
+are Derived Data promoted to named entities, carrying attributed confidence —
+the kind boundary batch item 02 (AQ-2) states.
 
 **Not changed:** Rules 1–4 verbatim; §27.1 verbatim; the Knowledge and
 Athlete-state rows of the table; §28's confidence machinery. The EDS still
@@ -218,10 +218,11 @@ store-as-truth / **materialise-as-dated-history**) the data pillar needs. The �
 privacy crossing is unchanged in kind: history is owner-private athlete state;
 the server-side roll-up remains the only boundary crossing (T19 intact). The
 provenance stamp referenced is the one §4.1 already defines — no new mechanism.
-Coordinates with batch item 05 (AQ-9): the structural repair's restored
-"Security & Privacy" section assembles §7's boundary rules — it must quote this
-*amended* note text; and if its corrected § map renumbers §7 or §4.1 (neither is
-on GA-509's defect list, so it should not), this file's two § references follow. §16.1 C3's minimal
+Coordinates with batch item 05 (AQ-9): the structural repair's restored §8
+cites §7's boundary steps ⑦/⑧ and does not quote note ④, so the two TAS
+amendments are textually independent and land in either order; and 05's adopted
+repair renumbers nothing (§7 and §4.1 keep their numbers), so this file's two §
+references stand as written. §16.1 C3's minimal
 retention posture is left as written; ND-1's history-store design is the
 document that revisits retention, per AQ-5's scoping.
 
@@ -260,13 +261,15 @@ be kept is already governed elsewhere: TAS §16.1 C3 persists traces for
 committed plans — evidence of what was *decided*, not a served plan.
 
 **Interactions with the rest of the batch:** 02 (AQ-2) — materialised history is
-what the Measurement & Analysis family's Analysis/Insight entities consume; the
-Derived Data ↔ Analysis/Insight boundary is stated there and honoured here
-(insights are Inferences, not Derived Data). 03 (AQ-3) — the analysis decision
-reads athlete data *including materialised history*; without AQ-5 that input
-class cannot lawfully exist. 05 (AQ-9) — the restored TAS Security & Privacy
-section quotes the amended §7 note (this file's AQ-5.3 text wins over the
-pre-amendment wording). Version bumps: one per document for the whole batch,
+what the Measurement & Analysis family's Insight entities consume; the
+Stored-vs-Derived kind boundary is stated there and honoured here (Insights are
+Derived Data promoted to named entities; a point-in-time Insight, like any
+derived value, may itself be materialised under this doctrine). 03 (AQ-3) — the
+analysis decision reads athlete data *including materialised history*; without
+AQ-5 that input class cannot lawfully exist. 05 (AQ-9) — disjoint by design: the
+restored §8 cites §7 steps ⑦/⑧ and never quotes note ④, so the two amendments
+land in either order; wherever note ④ is later quoted, this file's amended text
+wins over the pre-amendment wording. Version bumps: one per document for the whole batch,
 planned in 07.
 
 **What this proposal deliberately does NOT do:** design the history store

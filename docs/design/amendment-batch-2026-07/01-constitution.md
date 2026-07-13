@@ -31,6 +31,16 @@ Title III, after Article 11.** Page order within Title III becomes 8, 9, 10,
 writes this convention into "How to read this document" so the out-of-sequence
 numbers are self-explaining, permanently.
 
+**Partial-ratification contingency (added by the 07 consistency review).** The
+two Articles are independent. If Simon ratifies only one of them, the surviving
+Article takes the next unused number — **21** — and the AQ-6/7.2 edits contract
+accordingly: (a)'s worked example reads "8–11, then 21"; (b) names only the
+surviving duty; (c) adds only "21" to the tier-1 citation. AQ-7.1's insertion
+anchor in that case is Article 11's closing bullet (already stated in its
+Target), and its one lean on Article 21 — the guardian-consent sentence's
+"Article 21's duty of care extends to the consent itself" — is dropped from the
+drafted text.
+
 **Version bump.** One bump for the whole batch per document (task 07 owns the
 coordinated plan): on ratification the header Status row `v1.0 — foundational,
 governing` and the closing line `*— End of the Engine Constitution v1.0 —*`

@@ -69,7 +69,7 @@ Proposed (one line added beneath, same band style):
 
 > `OBSERVE ──▶ ASSESS ──▶ …` with the caption row `(D-in)     (D1) …`
 
-Proposed: the `(D-in)` caption becomes `(D17)` — the OBSERVE arc gains its producing decision; nothing else in the diagram moves. (b) The re-entry trigger — current:
+Proposed: the `(D-in)` caption becomes `(D17)` — the OBSERVE arc gains its producing decision; nothing else in the diagram moves (`(D17)` is one character narrower than `(D-in)`, so the ratification edit pads one trailing space to keep the box border aligned). (b) The re-entry trigger — current:
 
 > - **Trigger to re-enter at DIAGNOSE**: end of block; new injury; goal/sport change; a learning signal that a prior has shifted enough to change the diagnosis (e.g., a quality the athlete has now developed past its limiting threshold).
 
@@ -98,7 +98,7 @@ Proposed:
 - **Consumer set — a deliberate drafting call.** The plan task lists "feeds D1/D4/D7/D12 and the reporting surface"; this draft wires D1/D4/D15/D16 + trigger + reporting + AI seam, and leaves **D7/D12 indirect** (they receive analysis only via D16's priors and D4's diagnosis). A direct D17→D7/D12 edge would let an interpretation steer a block objective or a dose without passing the diagnosis or the validators — exactly the "insight silently steers" failure P2.10 forbids. Flagged for the 07 review; the audit's own remedy line (D4/D15 + AI seam) supports the narrower wiring.
 - **Ontology pairing (AQ-2, `02-ontology.md`)**: D17 consumes the Measurement & Analysis family's observation entities (Test Result, Match/Competition Performance, External Load) and emits its Analysis/Insight and Report entities; D17 is the decision seat of the Analysis Spine's *model→insight* arc. The 07 review reconciles the two files' vocabulary verbatim.
 - **AQ-4.2 (below)**: D17's family members register additively via §20.1; D17 itself enters by this full amendment.
-- **AQ-5 (`04-derived-data-doctrine.md`)** touches §27 **rule 1**; this proposal touches §27 **rule 3** — disjoint rules in the same section; 07 must read the combined §27 end-to-end.
+- **AQ-5 (`04-derived-data-doctrine.md`)** touches §27's derived-artefacts table row and appends a **new rule 5** (rule 1 is quoted there only as an anchor, unchanged); this proposal touches §27 **rule 3** — disjoint edits in the same section; 07 must read the combined §27 end-to-end.
 - **GA-414 / ND-1**: D17 deliberately does *not* specify the longitudinal history store it reads (versioning, append-only mechanics, career span) — that is ND-1 territory; D17 names typed inputs only, per the audit's "names here, mechanics there" split.
 - **AIGAS / E3**: D17 members are prime substitution candidates; substitution stays behind the §19 contract with D14 as the safety harness — no AIGAS change required, and nothing here pre-empts its ratification (AQ-8).
 - **Privacy (Art 11, L13, §27.1)**: the squad roll-up member consumes derived signals only; the existing build-failing privacy validator is named in D17's failure modes. Nothing widens coach visibility.
@@ -180,4 +180,4 @@ Proposed:
 
 ---
 
-*Version-bump note: per the batch protocol, the EDS receives **one** version bump for the whole batch (this file's AQ-3 + AQ-4.2, and AQ-5's §27 rule-1 edit from `04-derived-data-doctrine.md`); the bump is planned in `07-consistency-review.md`, applied only in Simon's ratification PR.*
+*Version-bump note: per the batch protocol, the EDS receives **one** version bump for the whole batch (this file's AQ-3 + AQ-4.2, and AQ-5's §27 edits — the derived-artefacts table row + new rule 5 — from `04-derived-data-doctrine.md`); the bump is planned in `07-consistency-review.md`, applied only in Simon's ratification PR.*

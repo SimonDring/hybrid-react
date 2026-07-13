@@ -247,12 +247,19 @@ dramatically…two existing seams…").
 Simon's ratification merge (Option B: RATIFIED at the follow-up flip PR), notes
 cell citing this file + the panel record.
 
-**Conditional item — AIGAS's own "TAS §15" citations.** AIGAS cites TAS §15 in
-§6.2, §10, and five Appendix A rows. **If** AQ-9's structural repair renumbers
-the "Future AI architecture" section (05-tas-structural-repair.md decides), those
-AIGAS citations are updated to the new number in this same ratification PR —
-the batch reconciles cross-document effects internally, never deferred (GOV §3,
-batch protocol). If AQ-9 keeps the section at §15, no edit.
+**14 — AIGAS's own "TAS §15" citations: RESOLVED, no edit needed.** AIGAS cites
+TAS §15 in §6.2, §10, and five Appendix A rows. AQ-9's adopted repair
+(05-tas-structural-repair.md §1) renumbers **nothing** — the restored Security &
+Privacy section takes the vacant §8 slot and §15 remains "Future AI
+architecture" — so all AIGAS §15 citations, and the §15 target of item 5 above,
+stand exactly as written (pinned by the 07 consistency review).
+
+**15 — AIGAS's two inherited "TAS §12" citations** (lines 59 and 391: `TAS §12
+(golden-master, CI determinism)`). These carry the same ±1 drift AQ-9 repairs
+inside the TAS (testing is actual §13); 05 §5 routes the fix here because AIGAS
+is not frozen until this flip. *Current:* `TAS §12` (both lines) → *Proposed:*
+`TAS §13` — an ordinary pre-ratification edit riding this same PR, so the
+document freezes without a known-broken reference.
 
 **Not reconciled, deliberately:** `docs/reviews/*` (including governance audits
 06–09), `docs/archive/*`, `docs/superpowers/*`, and
@@ -297,10 +304,10 @@ records; their "pending ratification" statements are true as of their dates
   T19/§16/§17 cross-refs claim §15 is "Security & Privacy" while the actual §15
   is "Future AI architecture"); AQ-8 inserts a forward-reference into the
   "Future AI architecture" section *wherever AQ-9's corrected map places it*.
-  This file deliberately targets the section **by title, not number**; the
-  final § number (and the conditional AIGAS-citation updates in §4) are pinned
-  by 07-consistency-review once 05's repair shape is fixed. One TAS version
-  bump covers AQ-5 + AQ-8 + AQ-9 together.
+  This file deliberately targets the section **by title, not number**; 05's
+  adopted repair renumbers nothing, so the 07 consistency review pins the
+  number at **§15** (§4 items 14–15 record the resolved citation position).
+  One TAS version bump covers AQ-5 + AQ-8 + AQ-9 together.
 - **01-constitution.md (AQ-1/6/7).** Disjoint sections: those items touch the
   Preamble and Title III; this one appends a note to Appendix A. One
   Constitution version bump covers all four. The new Appendix A note must not
