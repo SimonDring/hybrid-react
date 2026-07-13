@@ -56,7 +56,7 @@ to dynamic goals and available time, with AI learning and wearable data
   docs/architecture/TAS.md. New work is VALIDATED AGAINST them, never modifies
   them. Changing one = a deliberate, versioned amendment (Constitution →
   Amendment & Stewardship), reconciled across the whole set. Frozen-doc defects
-  go to the amendment queue (documentation audit §2), not inline fixes.
+  go to the amendment queue (docs/AMENDMENT-QUEUE.md), not inline fixes.
   docs/architecture/AIGAS.md governs all AI work (draft pending ratification).
 - **Status lives in HANDOFF.md only.** Specs never carry "currently"/"not built
   yet" claims — that is how this repo's docs rotted before 2026-07-09. Reviews
