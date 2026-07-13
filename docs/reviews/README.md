@@ -36,6 +36,16 @@ New reviews are authored directly into this folder, named `YYYY-MM-DD-<topic>.md
 | `2026-07-11-engine-audit-08-gap-analysis.md` | 2026-07-11 | Sprint 2, 8/10: current → desired → gap → impact → priority across G1–G22. |
 | `2026-07-11-engine-audit-09-improvement-backlog.md` | 2026-07-11 | Sprint 2, 9/10: ranked P0–P3 backlog with 🔒 Simon-gates. |
 | `2026-07-11-engine-audit-10-migration-blueprint-draft.md` | 2026-07-11 | Sprint 2, 10/10: DRAFT migration playbook (waves A–F, dependency spine, Simon decision ledger). |
+| `2026-07-11-governance-audit-00-benchmark.md` | 2026-07-11 | Governance forensic audit 1/10: the world-class benchmark — six pillars, 43 capability IDs (P1.1–P6.5), document-ownership map. The yardstick for 01–09. |
+| `2026-07-11-governance-audit-01-constitution.md` | 2026-07-11 | Governance audit 2/10: Constitution vs the benchmark (GA-1xx; 8/12 WORLD-CLASS; duty-of-care + data-pillar-purpose amendment candidates). |
+| `2026-07-11-governance-audit-02-decision-ontology.md` | 2026-07-11 | Governance audit 3/10: Decision Ontology vs the benchmark (GA-2xx; measurement/analysis entity family missing — one coherent amendment). |
+| `2026-07-11-governance-audit-03-knowledge-architecture.md` | 2026-07-11 | Governance audit 4/10: Knowledge Architecture vs the benchmark (GA-3xx; every gap spec-fillable via its own extension points). |
+| `2026-07-11-governance-audit-04-eds.md` | 2026-07-11 | Governance audit 5/10: EDS vs the benchmark (GA-4xx; 19 capabilities; no analysis decision in D1–D16; closed-catalogue extension clause). |
+| `2026-07-11-governance-audit-05-tas.md` | 2026-07-11 | Governance audit 6/10: TAS vs the benchmark (GA-5xx; P2 pillar THIN/SILENT; incl. GA-509 — verified §-numbering defect in the frozen TAS). |
+| `2026-07-11-governance-audit-06-aigas.md` | 2026-07-11 | Governance audit 7/10: AIGAS vs the benchmark (GA-6xx; strongest single document; ratification limbo flagged). |
+| `2026-07-11-governance-audit-07-doc-governance.md` | 2026-07-11 | Governance audit 8/10: the governance PROCESS vs the benchmark (GA-7xx; amendment-queue home, ratification path, owner-assignment gaps — all living-doc fixes). |
+| `2026-07-11-governance-audit-08-data-analytics-pillar.md` | 2026-07-11 | Governance audit 9/10: cross-document data & analytics deep-dive (CAPTURE→MODEL→ANALYSE→DECIDE→PRESENT; hypothesis CONFIRMED; GA-8xx systemic findings). |
+| `2026-07-11-governance-audit-09-verdict-and-register.md` | 2026-07-11 | Governance audit 10/10: the verdict + full 92-finding register + queue-ready amendment candidates (AQ-1–9, ND-1: Data & Analytics Architecture Spec). |
 
 ## Reviews that live elsewhere (kept in place — referenced by frozen docs or code)
 
