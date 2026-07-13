@@ -25,11 +25,13 @@ const LOWER = new Set(['quads', 'hamstrings', 'glutes', 'calves']);
 // injury system's own rehab replacements (discipline:'rehab'). Filtering to gym
 // only made the rehab-replaced session invisible to the very "shipped empty"
 // veto written for it. Endurance disciplines (run/swim/ride) stay out of scope.
-const shippedSessions = (week) => (week.sessions || []).filter((s) => !s.discipline || s.discipline === 'gym' || s.discipline === 'rehab');
+const isShipped = (s) => !s.discipline || s.discipline === 'gym' || s.discipline === 'rehab';
+const shippedSessions = (week) => (week.sessions || []).filter(isShipped);
 // Struck items (`substituted` — hidden at render, never performed) are not
 // shipped work; judging or counting them re-litigates the injury filter's own
 // verdict (P0-2: they were phantom volume in the region-share tally too).
-const mainItems = (s) => (s.items || []).filter((it) => it.section !== 'primer' && !it.substituted);
+const isMain = (it) => it.section !== 'primer' && !it.substituted;
+const mainItems = (s) => (s.items || []).filter(isMain);
 
 // ── Tier 1 · SAFETY: contraindicated movements never ship ────────────────────
 // Direct policy check: no shipped working item may match an active injury's
@@ -48,20 +50,26 @@ export const injuryContraindicationValidator = {
     const blocked = blockedNameRegexesForInjuries(injuries);
     if (!blocked.length) return [];
     const findings = [];
-    for (const s of shippedSessions(week)) {
-      for (const it of mainItems(s)) {
-        // Struck (`substituted`) items are already excluded by mainItems — WP-40
-        // replaces mark-and-hide with real redistribution.
-        if (it.tag === 'rehab' || /pain-free/i.test(it.name || '')) continue;
+    // Indexed walk (not shippedSessions/mainItems): detail must pin the EXACT
+    // position in week.sessions[..].items[..] so the D14 gate removes only the
+    // occurrence this report vetoed — duplicate session titles or same-name
+    // items can never widen the removal (whole-branch review 2026-07-13).
+    (week.sessions || []).forEach((s, sessionIndex) => {
+      if (!isShipped(s)) return;
+      (s.items || []).forEach((it, itemIndex) => {
+        // Struck (`substituted`) items are excluded (isMain) — WP-40 replaces
+        // mark-and-hide with real redistribution.
+        if (!isMain(it)) return;
+        if (it.tag === 'rehab' || /pain-free/i.test(it.name || '')) return;
         if (blocked.some((r) => r.test(it.name || ''))) {
           findings.push({
             verdict: 'veto',
             reason: `${s.title || 'session'}: "${it.name}" is contraindicated by an active injury`,
-            detail: { session: s.title, item: it.name }
+            detail: { session: s.title, sessionIndex, item: it.name, itemIndex }
           });
         }
-      }
-    }
+      });
+    });
     return findings;
   }
 };

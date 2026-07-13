@@ -60,31 +60,39 @@ function capVerdict(verdict, authority) {
 }
 
 // ── P0-3 · the D14 injury-veto GATE (engine-audit 09; EDS §37 tier 1) ─────────
-// Executes EXACTLY what the report vetoed: items named by tier-1
+// Executes EXACTLY what the report vetoed: items pinned by tier-1
 // injury.contraindication findings whose verdict SURVIVED the authority cap as
 // 'veto' (Art 13 — if the knowledge entry were ever downgraded below 'gate',
-// nothing is removed). Pure: the input week is never mutated; sessions are
-// cloned only where an item actually comes out. The same working-item guards
-// the validator applied (no primer, no struck, no rehab-prescribed work) keep
-// the gate's reach identical to the report's.
-function applyInjuryVetoes(week, findings) {
+// nothing is removed). Removal is keyed on the finding's detail.sessionIndex +
+// detail.itemIndex (positions in week.sessions[..].items[..], stamped by the
+// validator) — never on titles or names, so duplicate session titles or
+// same-name items can never widen the removal beyond what the report named
+// (whole-branch review 2026-07-13). A finding without integer indexes is not
+// enforced (it stays reported — the gate never guesses which occurrence).
+// Pure: the input week is never mutated; sessions are cloned only where an
+// item actually comes out. The same working-item guards the validator applied
+// (no primer, no struck, no rehab-prescribed work) keep the gate's reach
+// within the report's even for hand-built findings. Exported: this is the
+// gate's contract surface (Art 19 — findings are authoritative wherever they
+// come from), tested directly in tests/injury-veto-gate.js.
+export function applyInjuryVetoes(week, findings) {
   const vetoes = findings.filter((f) =>
-    f.validatorId === injuryContraindicationValidator.id && f.verdict === 'veto' && f.detail && f.detail.item);
+    f.validatorId === injuryContraindicationValidator.id && f.verdict === 'veto' && f.detail
+    && Number.isInteger(f.detail.sessionIndex) && Number.isInteger(f.detail.itemIndex));
   if (!vetoes.length) return { week, removed: [] };
-  // detail.session is the session title the validator stamped — group by it.
-  const bySession = new Map();
+  const bySession = new Map(); // sessionIndex → Map(itemIndex → reason)
   for (const f of vetoes) {
-    if (!bySession.has(f.detail.session)) bySession.set(f.detail.session, new Map());
-    bySession.get(f.detail.session).set((f.detail.item || '').toLowerCase(), f.reason);
+    if (!bySession.has(f.detail.sessionIndex)) bySession.set(f.detail.sessionIndex, new Map());
+    bySession.get(f.detail.sessionIndex).set(f.detail.itemIndex, f.reason);
   }
   const removed = [];
-  const sessions = (week.sessions || []).map((s) => {
-    const flagged = bySession.get(s.title);
+  const sessions = (week.sessions || []).map((s, si) => {
+    const flagged = bySession.get(si);
     if (!flagged) return s;
-    const items = (s.items || []).filter((it) => {
+    const items = (s.items || []).filter((it, ii) => {
       const working = it.section !== 'primer' && !it.substituted && it.tag !== 'rehab' && !/pain-free/i.test(it.name || '');
-      const hit = working && flagged.has((it.name || '').toLowerCase());
-      if (hit) removed.push({ session: s.title, item: it.name, reason: flagged.get((it.name || '').toLowerCase()) });
+      const hit = working && flagged.has(ii);
+      if (hit) removed.push({ session: s.title, item: it.name, reason: flagged.get(ii) });
       return !hit;
     });
     return items.length === (s.items || []).length ? s : { ...s, items };

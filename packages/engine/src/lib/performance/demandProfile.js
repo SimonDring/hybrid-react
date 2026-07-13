@@ -6,63 +6,59 @@ import { mapSkbQuality } from '../../data/sportQualityMap.js';
 
 const PRIMARY_FLOOR = 0.9;   // a position's primary qualities are at least this demanding
 
-export function buildDemandProfile(sportId, positionId) {
+// The ONE walk over the SKB structures (whole-branch review 2026-07-13: the
+// projection and the honesty ledger used to duplicate this traversal — same
+// 0..1 scaling, same PRIMARY_FLOOR — and could drift apart). Every authored
+// quality lands in exactly one of two maps, under the SAME semantics:
+//   projected — pmId → { importance, evidence }   (mapSkbQuality knows it)
+//   dropped   — skbName → { importance, evidence } (the projection cannot carry it)
+function walkDemands(sportId, positionId) {
+  const projected = new Map();
+  const dropped = new Map();
   const profile = SKB.get(sportId);
-  if (!profile || !profile.physicalProfile || !profile.physicalProfile.qualities) return [];
+  if (!profile || !profile.physicalProfile || !profile.physicalProfile.qualities) return { projected, dropped };
 
-  // base: max importance per PM quality across all contributing SKB qualities
-  const byPm = new Map(); // pmId → { importance, evidence }
+  // base: importance scaled 0..1; mapped qualities keep the MAX per PM quality
   for (const [skbName, q] of Object.entries(profile.physicalProfile.qualities)) {
+    if (!q || typeof q.importance !== 'number') continue;
     const pm = mapSkbQuality(skbName);
-    if (!pm || !q || typeof q.importance !== 'number') continue;
     const importance = Math.min(1, Math.max(0, q.importance / 10));
-    const cur = byPm.get(pm);
-    if (!cur || importance > cur.importance) byPm.set(pm, { importance, evidence: `skb:${sportId}:${skbName}` });
+    if (pm) {
+      const cur = projected.get(pm);
+      if (!cur || importance > cur.importance) projected.set(pm, { importance, evidence: `skb:${sportId}:${skbName}` });
+    } else {
+      dropped.set(skbName, { importance, evidence: `skb:${sportId}:${skbName}` });
+    }
   }
 
-  // position boost: elevate the position's primaryQualities to the floor
+  // position boost: the position's primaryQualities are elevated to the floor —
+  // on whichever side of the projection seam they land
   const positions = SKB.section(sportId, 'positions') || [];
   const pos = positions.find((p) => p.name === positionId);
   if (pos && Array.isArray(pos.primaryQualities)) {
     for (const skbName of pos.primaryQualities) {
       const pm = mapSkbQuality(skbName);
-      if (!pm) continue;
-      const cur = byPm.get(pm) || { importance: 0, evidence: `skb:${sportId}:position` };
-      if (cur.importance < PRIMARY_FLOOR) byPm.set(pm, { importance: PRIMARY_FLOOR, evidence: `skb:${sportId}:pos:${positionId}` });
+      const side = pm ? projected : dropped;
+      const key = pm || skbName;
+      const cur = side.get(key);
+      if (!cur || cur.importance < PRIMARY_FLOOR) side.set(key, { importance: PRIMARY_FLOOR, evidence: `skb:${sportId}:pos:${positionId}` });
     }
   }
 
-  return [...byPm.entries()].map(([qualityId, v]) => ({ qualityId, importance: v.importance, source: 'skb', evidence: v.evidence }));
+  return { projected, dropped };
+}
+
+export function buildDemandProfile(sportId, positionId) {
+  const { projected } = walkDemands(sportId, positionId);
+  return [...projected.entries()].map(([qualityId, v]) => ({ qualityId, importance: v.importance, source: 'skb', evidence: v.evidence }));
 }
 
 // The honesty ledger (Art 15, P0-6): authored SKB demand the projection could NOT carry into
-// the Performance Model — declared, never silently discarded. Mirrors buildDemandProfile's own
-// semantics: importance scaled 0..1, position primaries floored at PRIMARY_FLOOR. Deterministic
+// the Performance Model — declared, never silently discarded. Same traversal as the projection
+// (walkDemands), so the two can never disagree on scaling or the position floor. Deterministic
 // order (importance desc, then name asc). Pure; never throws on unknown sport/position.
 export function droppedDemandsFor(sportId, positionId) {
-  const profile = SKB.get(sportId);
-  if (!profile || !profile.physicalProfile || !profile.physicalProfile.qualities) return [];
-
-  const dropped = new Map(); // skbQuality → { importance, evidence }
-  for (const [skbName, q] of Object.entries(profile.physicalProfile.qualities)) {
-    if (mapSkbQuality(skbName) || !q || typeof q.importance !== 'number') continue;
-    const importance = Math.min(1, Math.max(0, q.importance / 10));
-    dropped.set(skbName, { importance, evidence: `skb:${sportId}:${skbName}` });
-  }
-
-  // a dropped quality that is a position PRIMARY is at least as demanding as the
-  // projection would have made it (same floor buildDemandProfile applies)
-  const positions = SKB.section(sportId, 'positions') || [];
-  const pos = positions.find((p) => p.name === positionId);
-  if (pos && Array.isArray(pos.primaryQualities)) {
-    for (const skbName of pos.primaryQualities) {
-      if (mapSkbQuality(skbName)) continue;
-      const cur = dropped.get(skbName);
-      if (!cur) dropped.set(skbName, { importance: PRIMARY_FLOOR, evidence: `skb:${sportId}:pos:${positionId}` });
-      else if (cur.importance < PRIMARY_FLOOR) dropped.set(skbName, { importance: PRIMARY_FLOOR, evidence: `skb:${sportId}:pos:${positionId}` });
-    }
-  }
-
+  const { dropped } = walkDemands(sportId, positionId);
   return [...dropped.entries()]
     .map(([skbQuality, v]) => ({ skbQuality, importance: v.importance, source: 'skb', evidence: v.evidence }))
     .sort((a, b) => (b.importance - a.importance) || a.skbQuality.localeCompare(b.skbQuality));
