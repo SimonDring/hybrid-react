@@ -24,9 +24,39 @@ function buildInjuryLabel(inj) {
     .filter(Boolean).join(' ');
 }
 
-function buildRehabSession(injuries) {
+const PHASE_LABELS = { protect: 'Protect & Rest', early_motion: 'Early Motion', loading: 'Loading', return_to_sport: 'Return to Sport' };
+
+// P0-2 (engine-audit TR-04/SR-03): when an injury blocks every working item and
+// the region has NO rehab content, there is nothing safe to prescribe. The honest
+// outcome is an explicit, surfaced `unservable` session (Art 15) — never an empty
+// session behind a banner claiming it was "replaced with rehab". The D14 suite
+// vetoes it (shipped-empty/unservable), so the failure is loud, not silent.
+function buildUnservableSession(injuries, blockedCount) {
+  const labels = injuries.map(buildInjuryLabel);
+  const phase = injuries[0].rehab_phase || 'protect';
+  return {
+    title: `Injury — ${labels.join(' & ')} · No safe session`,
+    discipline: 'rehab',
+    unservable: true,
+    focus: `Injury: ${labels.join(' & ')}`,
+    duration: '—',
+    intensity: 'rest',
+    lowerBody: false,
+    items: [],
+    injuryBanner: {
+      injuries: labels,
+      unservable: true,
+      message: `We can't build a safe session around your ${labels.join(' and ')} injury — every planned exercise is contraindicated and we have no rehab programming for this area yet. Treat this as a rest day, and get a professional assessment if it isn't improving.`,
+      phase: PHASE_LABELS[phase] || phase,
+      blockedCount,
+      fullReplacement: false
+    }
+  };
+}
+
+function buildRehabSession(injuries, blockedCount) {
   const primary = injuries[0];
-  const phaseLabels = { protect: 'Protect & Rest', early_motion: 'Early Motion', loading: 'Loading', return_to_sport: 'Return to Sport' };
+  const phaseLabels = PHASE_LABELS;
   const phase = primary.rehab_phase || 'protect';
   const label = buildInjuryLabel(primary);
   const rehabItems = getRehabExercisesFor(primary.body_part_key, phase, primary.severity || 3)
@@ -41,6 +71,10 @@ function buildRehabSession(injuries) {
       rationale: ex.rationale,
       tag: 'rehab'
     }));
+
+  // Bare region: no rehab content exists for this body part at this phase —
+  // surface the truth instead of shipping an empty "rehab" session (P0-2).
+  if (rehabItems.length === 0) return buildUnservableSession(injuries, blockedCount);
 
   return {
     title: `Rehab — ${label} · ${phaseLabels[phase] || phase}`,
@@ -86,7 +120,7 @@ function applyToSession(session, injuries) {
   // Full session replacement only when severity is high enough AND most exercises are blocked
   const hasHighSeverity = injuries.some(inj => (inj.severity || 3) >= FULL_REPLACE_MIN_SEVERITY);
   if (hasHighSeverity && overlapRatio > REHAB_REPLACEMENT_THRESHOLD) {
-    return buildRehabSession(injuries);
+    return buildRehabSession(injuries, blockedCount);
   }
 
   // Collect rehab exercises, deduplicated by id
@@ -112,8 +146,16 @@ function applyToSession(session, injuries) {
       });
   });
 
+  // Hollow session guard (P0-2): every working item struck in place and no rehab
+  // content to add — the athlete would see an empty session behind a "modified
+  // for your injury" banner. Same honest outcome as the full-replace path.
+  const visibleWorking = modifiedItems.filter(it => !it.substituted && it.tag !== 'mobility');
+  if (blockedCount > 0 && visibleWorking.length === 0 && rehabItems.length === 0) {
+    return buildUnservableSession(injuries, blockedCount);
+  }
+
   const injuryLabels = injuries.map(buildInjuryLabel);
-  const phaseLabels = { protect: 'Protect & Rest', early_motion: 'Early Motion', loading: 'Loading', return_to_sport: 'Return to Sport' };
+  const phaseLabels = PHASE_LABELS;
 
   return {
     ...session,
