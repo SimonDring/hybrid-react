@@ -1,6 +1,6 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-11 (governance forensic audit). This file carries **current
+_Last updated: 2026-07-13 (THE DEVELOPMENT PLAN created). This file carries **current
 state and the open queue only**. The full session-by-session history (2026-06-11 →
 2026-07-09, ~1,800 lines) is preserved verbatim at
 [`docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md`](docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md).
@@ -83,15 +83,15 @@ move it to the archive file rather than letting this one grow._
 
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
-0. **⚠ HOLD — no audit fixes yet (Simon, 2026-07-11).** The Sprint 2 audit is merged
-   (#169) but **nothing from its backlog starts now, including the P0s**. The
-   development-plan inputs are now FOUR and all exist: the governance sprint
-   (`2026-07-09-*` reviews), the engine audit (`2026-07-11-engine-audit-*`), the
-   governance forensic audit (`2026-07-11-governance-audit-*`, PR pending Simon),
-   and the parked V2 design set (branch `engine-v2-design-2026-07-11`, unexecuted).
-   Next step: Simon merges the governance-audit PR, then THE DEVELOPMENT PLAN is
-   created from the four inputs. Wave A (blueprint deliverable 10) waits for that
-   plan.
+0. **⚠ THE DEVELOPMENT PLAN — created 2026-07-13, adoption = Simon's merge.**
+   The governance-audit PR (#170) is MERGED; all four inputs composed into
+   [`docs/DEVELOPMENT-PLAN.md`](docs/DEVELOPMENT-PLAN.md): Phase 0 (Wave A
+   engine fixes ∥ amendment-pipeline fixes) → Phase 1 (amendment batch AQ-1…9 +
+   commission the Data & Analytics Spec ND-1) → Phase 2 (V2 design re-scope +
+   authoring) → Phase 3 (migration M0–M6; legacy fill DELETED at M2) → Phase 4
+   (data/analytics product, team analytics, AI go-live, Stage 7). **Merging the
+   plan's PR lifts the 2026-07-11 HOLD and starts Phase 0.** Sequencing
+   decisions recorded in the plan §1 (parallel tracks; re-scope V2 first).
 
 1. **⚠ D16 prior promotion** — staged recoverability priors (`athlete_model.stagedPriors`,
    written at block check-in) are read by NOTHING. Promoting staged→learned is the switch
