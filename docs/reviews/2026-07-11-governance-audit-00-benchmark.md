@@ -354,7 +354,7 @@ should judge whether principle-level coverage suffices.
 ## §4 How to read verdicts
 
 Deliverables 01–08 verdict each owned capability with exactly one of the
-following tokens (Global Constraints 3):
+following tokens (spec §3 Part 2):
 
 - **`WORLD-CLASS`** — the document governs this capability at the standard
   §1–§2 define; nothing material missing at end-state ambition.
@@ -371,7 +371,7 @@ Every `SILENT` or `PRECLUDES` verdict must additionally state: **what
 breaks**, **when it bites** (which product stage), and **absorbable without
 amendment? yes/no + why**.
 
-Every finding is classed as exactly one of (Global Constraints 4):
+Every finding is classed as exactly one of (spec §3 Part 4):
 
 - **`COVERED`** — governance already world-class here; recorded honestly as a
   positive finding.

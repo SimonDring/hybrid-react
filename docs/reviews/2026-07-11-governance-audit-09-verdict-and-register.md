@@ -40,8 +40,8 @@ GA-401), the safety and honesty floor (hard caps that nothing can argue away,
 explanations guaranteed from the real decision record — GA-101–GA-105, GA-405,
 GA-407), the rule that scientific confidence controls how much authority any
 piece of knowledge gets (GA-111, GA-301), the AI governance (the strongest
-single document examined; AI can propose but never decide — GA-601 through
-GA-609), and the extensibility crown jewels: a new sport is data, a new
+single document examined; AI can propose but never decide — GA-601–GA-602, GA-604–GA-605,
+GA-607–GA-609), and the extensibility crown jewels: a new sport is data, a new
 wearable is an adapter (GA-302, GA-501). If you built the first product on
 this governance alone, you would be proud of it. Do not let any future
 amendment weaken any of it (§4 honour-roll).
@@ -233,8 +233,8 @@ All three are SPEC-FILLABLE edits to the living DOCUMENTATION-GOVERNANCE.md.
   (quality→authority propagation rule), and GA-803 (ratify-or-supersede the
   de facto material) folded under it per 08 §4. *Target:* a new governing
   document, peer to the EDS, entering T2 via the GA-703 path. *Benchmark:*
-  P2.1, P2.3–P2.11, P3.5 (the cluster 00 §3 flagged as candidate
-  new-document territory). *Rationale:* the hypothesis was confirmed
+  P2.1, P2.3–P2.11, P3.5 (00 §3's candidate cluster, plus P2.3 per 08 §4's
+  ANALYSE scope). *Rationale:* the hypothesis was confirmed
   independently from the architecture side (GA-512: no T3 spec pile
   substitutes for a coherent peer architecture; the TAS's own seam test
   licenses an analytics subsystem, audit 05 §5.3) and the decision/model side
@@ -370,7 +370,7 @@ The seven §7 verdicts from deliverables 01–07, tightened:
    set within its home territory — evidence-in and sports-in meet the
    benchmark outright — but it governs the front door far better than the
    back of house (cadence, retirement, internal evidence); every gap is
-   absorbable through its own extension points: the only document with zero
+   absorbable through its own extension points: the only frozen document with zero
    amendment candidates.
 4. **EDS (04):** the deepest and most self-critical document — world-class as
    the engine specification for pillar 1 — but it governs the athlete as
