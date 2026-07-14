@@ -10,7 +10,7 @@
 
 | | |
 |---|---|
-| **Status** | v1.0 — foundational, governing |
+| **Status** | v1.1 — foundational, governing · amended 2026-07-13 — 2026-07 amendment batch (AQ-1…AQ-9); proposals in docs/design/amendment-batch-2026-07/ |
 | **Authority** | The highest document in the platform. Supersedes and unifies the EDS's Core Philosophy (§2), First Principles (P1–P15), and Engine Laws (L1–L15), which are now *derivations* of the Articles here (see the [mapping table](#appendix-a--mapping-the-eds-onto-the-articles)). |
 | **Scope** | Platform-wide: engineering, coaching, product, data, and AI. Not engine-only. |
 | **Technology-independence** | Every Article must remain valid regardless of future technology — language, framework, model, or device. It speaks of athletes, coaches, evidence, and decisions, never of React, Supabase, or a particular model. |
@@ -40,6 +40,17 @@ to make that reasoning the permanent shape of the platform, so that — across a
 decade, dozens of contributors, and technologies not yet invented — everyone who
 builds here shares one mental model of how the platform thinks.
 
+That reasoning consumes and produces a second thing of permanent value. An
+elite performance department delivers two inseparable products: the
+**programme**, and the **understanding of the athlete** that makes the
+programme right — a longitudinal, evidence-graded model of who this athlete
+is: tested capacities, training and injury history, competition output,
+recovery patterns. The platform builds both. The understanding is not a rival
+objective and never becomes one; it exists so that every coaching decision —
+this week's, and one made five years from now — is made about the real
+athlete, from evidence, and can say so. A platform that produced only the
+programme would be a plan generator with a coach's vocabulary.
+
 Every recommendation the platform makes answers a single question:
 
 > **"What is the highest-value intervention for this athlete now — given their
@@ -47,12 +58,20 @@ Every recommendation the platform makes answers a single question:
 > they actually live — that maximises their long-term performance?"**
 
 If a feature, a number, a module, or a decision cannot trace its existence back to
-that question, it does not belong in the platform.
+that question, it does not belong in the platform. The trace may be direct — an
+intervention for this athlete now — or it may run through the understanding of
+the athlete: capturing, keeping, and analysing the evidence without which the
+question cannot be answered well, for this athlete or the next. Work that
+serves the understanding serves the question; work that serves neither still
+does not belong.
 
 ## How to read this document
 
-The Articles are grouped into five Titles. Each Article states one principle, then
-explains it under a fixed template:
+The Articles are grouped into five Titles. Articles are numbered in order of
+adoption, not position: an amendment that adds an Article gives it the next
+unused number and places it within its Title, so no existing Article's number
+ever changes (thus Title III runs 8–11, then 21–22). Each Article states one
+principle, then explains it under a fixed template:
 
 - **Principle** — the rule, in one sentence (the quotable invariant).
 - **Why it exists** — the reasoning behind it.
@@ -371,6 +390,94 @@ coaching, made permanent.*
   failure, a legal liability, and the end of athlete trust — unrecoverable
   reputational damage.
 
+## Article 21 — The platform prescribes for the athlete's developmental stage, never for a default adult
+
+> **Every prescription honours the athlete's developmental stage. What may and
+> may not be prescribed to a developing or an ageing athlete is explicit,
+> governed knowledge — never an assumption that the athlete is a mature adult —
+> and where age-modulated evidence is thin, the platform defaults to the
+> conservative choice. The athlete's long-term development outranks any
+> short-term adaptation, at every age.**
+
+- **Why it exists.** The platform's target customer — clubs and teams without
+  an S&C budget — prominently includes youth squads, and masters athletes are
+  already in the individual package. The gravest way to harm the people the
+  platform exists to serve is to reason about a fifteen-year-old or a
+  sixty-year-old from the physiology of a twenty-five-year-old. No other
+  Article supplies this duty: competency gating (Article 8) and
+  caution-under-uncertainty (Articles 13, 16) are age-blind, and a duty of
+  care belongs in the unamendable floor, not in a lower document's
+  discretion.
+- **In practice.** *Holds:* a youth athlete's programming is bounded by
+  maturation stage — movement competency, skill acquisition, and appropriate
+  loading before maximal expressions — however well heavier work would "fit
+  the plan"; a masters athlete gets recovery-weighted dosing and
+  tissue-appropriate progressions by default, not by exception. *Violated:* a
+  minor onboards and receives programming reasoned entirely from adult
+  assumptions because nothing forbade it; an age-band rule lives only in a
+  code comment no scientist can review.
+- **Implications.** Developmental stage is a first-class input that *shapes*
+  diagnosis and construction, never a filter applied afterward. The stage
+  rules themselves — what is gated, moderated, or emphasised at each stage of
+  an athlete's development — enter as governed, evidence-tagged knowledge
+  under Article 17, reviewable by specialists and versioned, never hard-coded.
+  Thin evidence for an age band lowers confidence, and lower confidence
+  narrows what may be prescribed (Article 13): for a developing athlete the
+  margin always widens toward safety, never toward stimulus.
+- **Governs.** Age and developmental stage as inputs to every training
+  decision; maturation-aware competency gating; the knowledge home for
+  age-band and long-term-development rules; the conservative default wherever
+  stage-specific evidence is thin; the onboarding of youth squads under the
+  team package.
+- **Failure mode if violated.** The platform harms a developing athlete it
+  was built to serve — an ethical failure before it is anything else, and the
+  single fastest way to lose the trust of the clubs the mission depends on.
+
+## Article 22 — The athlete owns their data; consent is the basis of every grant
+
+> **An athlete's data belongs to the athlete. Any visibility another party
+> holds — a coach, a team, the platform itself — exists only by the athlete's
+> informed consent: specific in scope, freely given, and revocable. The athlete
+> may take their data with them or have it erased, and secondary use — research,
+> evidence generation, benchmarking — happens only under explicit,
+> privacy-preserving consent.**
+
+- **Why it exists.** Article 11 protects what others may *see*; it does not
+  say why they may see anything at all. Without a consent basis of
+  constitutional rank, team membership silently becomes a visibility grant,
+  internal research over athlete data has no principle to be validated
+  against, and export and deletion arrive as ad-hoc product choices rather
+  than rights. As the platform's second product — the longitudinal
+  understanding of the athlete — grows in value, the athlete's ownership of
+  it must be settled *before* anyone is tempted to treat it as the
+  platform's asset rather than the athlete's.
+- **In practice.** *Holds:* joining a team grants the coach a scoped,
+  derived-only view because the athlete consented to exactly that grant, and
+  revoking it — or leaving the team — closes the view; an athlete leaving the
+  platform exports their full history; athlete data enters an internal
+  evidence study only under explicit, informed, privacy-preserving consent.
+  *Violated:* team membership implies coach visibility with no recorded
+  consent behind the grant; athlete histories are aggregated into research
+  nobody agreed to; a deletion request becomes an unanswered support ticket.
+- **Implications.** Consent is durable, inspectable athlete state — scoped
+  (what, to whom, for what purpose), revocable without penalty to the
+  coaching the athlete receives, and never a formality buried in onboarding.
+  Consent widens *who* may see; it never deepens *what* crosses — a grant can
+  expose no more than Article 11 permits, so no consent can authorise a raw
+  vital across a person boundary. Export and erasure are governed rights with
+  defined behaviour, not favours. Where the athlete is a minor, consent
+  involves the guardian as applicable law requires, and Article 21's duty of
+  care extends to the consent itself.
+- **Governs.** The consent model beneath every team and cross-user
+  visibility surface; the recording of grants and revocations as durable
+  athlete state; data portability and erasure; the gate on all secondary use
+  of athlete data; the rule that cross-user access extends athlete ownership
+  deliberately — now with its consent basis named — and is tested.
+- **Failure mode if violated.** The platform quietly comes to own what it
+  merely stewards: a legal exposure that compounds the moment minors or
+  research enter, and an ethical breach of the trust that persuades athletes
+  to share data at all.
+
 ---
 
 # Title IV — Evidence and Honesty
@@ -655,7 +762,7 @@ tier but never *across* tiers.**
 
 ```
    1. SAFETY & LAW        never violate an Article; never an unsafe or
-                          contraindicated prescription            (Art 8, 11, 18, 19)
+                          contraindicated prescription      (Art 8, 11, 18, 19, 21, 22)
    2. SPORT PROTECTION    never compromise the athlete's sport     (Art 2)
    3. RECOVERABILITY      never exceed the recoverable ceiling     (Art 9)
    4. ATHLETE INTENT      honour committed/frozen choices and the
@@ -681,7 +788,8 @@ Questions, not in an ad-hoc code branch.
 A constitution earns its authority by changing rarely and deliberately.
 
 - **What may never be amended.** The protections of Title III (safety, the human as
-  final authority, raw-data privacy) and the honesty commitments of Title IV are the
+  final authority, raw-data privacy, the developmental-stage duty of care, and the
+  athlete's ownership of their data) and the honesty commitments of Title IV are the
   platform's ethical floor. They may be *clarified* but never weakened.
 - **How an Article changes.** An amendment is proposed in writing with its rationale,
   reviewed against the whole document for consistency, and recorded with a date and a
@@ -737,6 +845,8 @@ detailed engineering expression of these Articles.
 > validator), the mechanism stays in the EDS as the engineering *how*; the Article
 > states the immutable *what* and *why*.
 
+**The AI layer.** The AI Governance & Architecture Specification (AIGAS, ratified 2026-07-13) extends these Articles to artificial intelligence — most directly Articles 10, 13, 14, 15, 18 and 19 — under the same rule as the EDS: the Articles state the immutable *what* and *why*; AIGAS states the *how* for the AI layer, and its Appendix A traces every clause back to this document. Where AIGAS and any foundational document conflict, the foundational document wins and AIGAS is corrected.
+
 ---
 
-*— End of the Engine Constitution v1.0 —*
+*— End of the Engine Constitution v1.1 —*

@@ -42,7 +42,7 @@ Constitution is the ultimate tie-breaker.
 | **[KNOWLEDGE-ARCHITECTURE.md](KNOWLEDGE-ARCHITECTURE.md)** | How knowledge exists so the engine reasons rather than hard-codes. | The eight-kind data taxonomy · the twelve knowledge domains · knowledge versioning & governance |
 | **[PANEL-REVIEW.md](PANEL-REVIEW.md)** | The six-lens critique of the set and the revisions folded back. | The review provenance · the standing commitments |
 | **[../architecture/TAS.md](../architecture/TAS.md)** | The Technical Architecture Specification (frozen v1.0) — the technical blueprint beneath the EDS: how the software is *built* to implement the governing docs. | The six-layer architecture · the pure-engine boundary + public API · knowledge/data flow · the AI seam |
-| **[../architecture/AIGAS.md](../architecture/AIGAS.md)** | The AI Governance & Architecture Specification (v1.0 draft, pending ratification — peer of the TAS). | The constitutional role of AI · the AI/engine boundary · permitted vs prohibited AI capabilities |
+| **[../architecture/AIGAS.md](../architecture/AIGAS.md)** | The AI Governance & Architecture Specification (ratified 2026-07-13 — the sixth governing document, peer of the TAS). | The constitutional role of AI · the AI/engine boundary · permitted vs prohibited AI capabilities |
 
 Documentation-wide precedence and classification:
 [`docs/DOCUMENTATION-GOVERNANCE.md`](../DOCUMENTATION-GOVERNANCE.md) +

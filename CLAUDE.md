@@ -50,14 +50,15 @@ to dynamic goals and available time, with AI learning and wearable data
   Full rules: docs/DOCUMENTATION-GOVERNANCE.md. Master map + owner of every
   concept: docs/DOCUMENTATION-INDEX.md.
 - **The FROZEN set (v1.0, 2026-07-01)** — never edit as routine work:
-  docs/foundation/CONSTITUTION.md (20 Articles — the tie-breaker),
+  docs/foundation/CONSTITUTION.md (22 Articles — the tie-breaker),
   DECISION-ONTOLOGY.md, KNOWLEDGE-ARCHITECTURE.md,
   docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md (the EDS),
-  docs/architecture/TAS.md. New work is VALIDATED AGAINST them, never modifies
+  docs/architecture/TAS.md, docs/architecture/AIGAS.md (ratified 2026-07-13;
+  Appendix B living). New work is VALIDATED AGAINST them, never modifies
   them. Changing one = a deliberate, versioned amendment (Constitution →
   Amendment & Stewardship), reconciled across the whole set. Frozen-doc defects
   go to the amendment queue (docs/AMENDMENT-QUEUE.md), not inline fixes.
-  docs/architecture/AIGAS.md governs all AI work (draft pending ratification).
+  docs/architecture/AIGAS.md governs all AI work (ratified — frozen; Appendix B living).
 - **Status lives in HANDOFF.md only.** Specs never carry "currently"/"not built
   yet" claims — that is how this repo's docs rotted before 2026-07-09. Reviews
   (docs/reviews/) are dated evidence, never current state.
@@ -184,7 +185,7 @@ localStorage; falls back offline). READS go through the store's buildView()
   NEVER: --card-bg, --border, --accent-bg (don't exist; this bug has recurred 3×).
 - No Supabase schema change without a versioned migration + a row in the ledger
   (supabase/migrations/README.md).
-- The frozen five are never edited inline (see Documentation governance above).
+- The frozen six are never edited inline (see Documentation governance above).
 - The engine stays pure: no clock reads, no randomness, no I/O inside
   packages/engine plan generation.
 - Never call an AI provider with a key in the browser — server-side Edge
