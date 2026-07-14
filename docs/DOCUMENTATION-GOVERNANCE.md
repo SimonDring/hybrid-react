@@ -19,7 +19,7 @@ fixed in the lower/staler document.
 ```
 T0  CONSTITUTION                      docs/foundation/CONSTITUTION.md   (frozen)
 T1  DECISION-ONTOLOGY  +  KNOWLEDGE-ARCHITECTURE                        (frozen)
-T2  EDS (engine)  ·  TAS (technical)  ·  AIGAS (AI, pending ratification)
+T2  EDS (engine)  ·  TAS (technical)  ·  AIGAS (AI)
 T3  Supporting specs & references     (SKB schema, physiological framework,
                                        migration blueprint, athlete model,
                                        team architecture, atlas suite, READMEs)
@@ -55,8 +55,8 @@ Every document has exactly one class, recorded in `docs/DOCUMENTATION-INDEX.md`:
 ## 3. The frozen set and amendments
 
 The frozen set is: **Constitution, Decision Ontology, Knowledge Architecture, EDS,
-TAS** (v1.0, 2026-07-01). AIGAS is governing-designate pending ratification
-(the path below). Frozen documents are never edited as part of feature or
+TAS** (v1.0, 2026-07-01) **and AIGAS** (ratified 2026-07-13 via the path below —
+the path's proving case). Frozen documents are never edited as part of feature or
 documentation work — including "harmless" fixes (typos, counts, status stamps).
 A change is a formal amendment per the Constitution's *Amendment & Stewardship*
 section: proposed in writing with rationale, reviewed for consistency,
@@ -94,8 +94,8 @@ citations. The path:
    frozen under the same amendment discipline as the original set.
 
 Until ratified, a designate document binds new work (build against it) but
-loses precedence conflicts against the ratified set (§1). This path applies to
-AIGAS now (queued as AQ-8 — the proving case) and to every future T2
+loses precedence conflicts against the ratified set (§1). This path was proven
+by AIGAS's ratification (AQ-8, 2026-07-13) and applies to every future T2
 candidate, starting with the Data & Analytics Architecture Specification
 (queued as ND-1).
 

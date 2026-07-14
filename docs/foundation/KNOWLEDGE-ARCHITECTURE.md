@@ -11,7 +11,7 @@
 
 | | |
 |---|---|
-| **Status** | v1.0 — foundational |
+| **Status** | v1.1 — foundational · amended 2026-07-13 — 2026-07 amendment batch (AQ-1…AQ-9); proposals in docs/design/amendment-batch-2026-07/ |
 | **Authority** | Subordinate to the [Constitution](CONSTITUTION.md) (esp. Articles 13, 17, 18) and the [Decision Ontology](DECISION-ONTOLOGY.md) (the entities knowledge describes). The canonical home for *how knowledge and data are structured, owned, versioned, and classified*. |
 | **Scope** | Platform-wide. The engine-level realisations live in the [EDS](../engine/00-ENGINE-DESIGN-SPECIFICATION.md) Part VII and the existing knowledge modules; this document is the governing model they implement. |
 | **Grounding** | Built on the schemas that already exist in code: the evidence knowledge base (`packages/engine/src/lib/knowledge/schema.js`), the Sport Knowledge Base (`.../sportKnowledge/schema.js`, 21 sections, 10 sports authored), the physiological index contract (`.../indices/contract.js`), the exercise library (`.../data/strengthExercises.js`), and the injury subsystem. These are the templates; this document generalises them. |
@@ -90,7 +90,7 @@ here it is, made operational.
 | **3** | **Inference** | A *judgement* derived by reasoning over uncertain inputs (a diagnosis, a priority) | Ephemeral; recomputed | **Yes** (inherits input confidence) | Output of a Decision |
 | **4** | **Calculation** | A *deterministic computation* with a single correct answer given inputs | Ephemeral; recomputed | No (it is exact) | Inside Decisions / utilities |
 | **5** | **Stored Data** | A *recorded fact about reality* — what the athlete is/did | Long-lived, per-athlete, private | n/a (it is ground truth) | Athlete State (persisted) |
-| **6** | **Derived Data** | Something *computed from* stored data + knowledge | Ephemeral / recomputable | Sometimes (e.g. readiness confidence) | Computed; never stored as truth |
+| **6** | **Derived Data** | Something *computed from* stored data + knowledge | Ephemeral / recomputable; point-in-time values may be materialised as dated history | Sometimes (e.g. readiness confidence) | Computed; never served as *current* truth from storage |
 | **7** | **Assumption** | A belief the platform acts on but has *not verified* | Until tested or replaced | **Must be flagged** | Made explicit; ideally retired |
 | **8** | **Prediction** | A *forward-looking estimate* about a future state or response | Updated by outcomes | **Yes** (a learned confidence) | Priors / forecasts (Learning) |
 
@@ -114,8 +114,17 @@ The four most-confused pairs, sharpened:
   dressing a contested judgement as an exact number.
 - **Stored vs. Derived Data.** Stored Data is ground truth recorded from reality (the
   athlete did 3×4 @ RPE 7). Derived Data is computed from it (readiness = 62). *Only
-  Stored Data is persisted as truth; Derived Data is always recomputable* — which is
-  why the Plan itself is Derived, not Stored (Constitution Article 18).
+  Stored Data is persisted as truth; Derived Data is recomputable — given the same
+  inputs and knowledge version* — which is why the Plan itself is Derived, not Stored
+  (Constitution Article 18). One qualification keeps history honest: recomputing
+  yesterday's readiness under today's knowledge yields a different (and historically
+  false) number, so a point-in-time derived value MAY be **materialised as dated
+  historical evidence** — append-only, stamped with its computation date and the
+  engine + knowledge-set versions that computed it, and read only as *what was
+  computed then*. Materialised history is a recorded fact **about a past
+  computation** — it becomes Stored Data *about* a derivation, athlete-owned and
+  private (§7) — and is never re-served as the current value, which is always
+  recomputed.
 
 ## 2.2 The classification rule (use this on every new datum)
 
@@ -150,6 +159,7 @@ Applying the rule to concrete items, to show the taxonomy bites:
 | Limiting-factor gap = importance × (target − current) | **Calculation** *on* **Inference** inputs | The arithmetic is exact; its *inputs* are inferred, so the *output* is an Inference |
 | The athlete did 3×4 squat @ RPE 7 on Tuesday | **Stored Data** | Recorded reality |
 | Today's readiness score = 62 (amber) | **Derived Data** (with confidence) | Computed from stored vitals + wellness |
+| Readiness = 62 *as computed on 4 Mar*, stamped with the engine + knowledge-set versions | **Derived Data**, materialised as **dated historical evidence** | Append-only record of what was computed then (§2.1); read as history, never re-served as current |
 | The full 16-week plan | **Derived Data** | Recomputed from state + knowledge; never stored as truth |
 | ACWR = 1.4 | **Derived Data**, surfaced as a **reported metric** only | Computed, but low-confidence → may not gate |
 | "This athlete recovers ~20% faster than average" | **Prediction** (learned, confidence rising) | A forward estimate about *this* athlete |
@@ -504,4 +514,4 @@ them is also the privacy boundary (Constitution Article 11):
 
 ---
 
-*— End of the Knowledge Architecture v1.0 —*
+*— End of the Knowledge Architecture v1.1 —*

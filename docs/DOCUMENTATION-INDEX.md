@@ -10,14 +10,14 @@ If a document isn't listed here, it isn't governed — add it or archive it.
 ```mermaid
 flowchart TD
     subgraph T0T1 ["T0/T1 — Foundation (FROZEN v1.0)"]
-        CONST[CONSTITUTION<br/>20 Articles — the tie-breaker]
+        CONST[CONSTITUTION<br/>22 Articles — the tie-breaker]
         ONT[DECISION-ONTOLOGY<br/>the vocabulary]
         KA[KNOWLEDGE-ARCHITECTURE<br/>8 kinds · 12 domains]
     end
     subgraph T2 ["T2 — Governing specifications"]
         EDS["EDS — engine spec (FROZEN)<br/>P1–P15 · L1–L15 · D1–D16"]
         TAS["TAS — technical blueprint (FROZEN)<br/>L0–L6 · six-call API"]
-        AIGAS["AIGAS — AI governance<br/>draft, pending ratification"]
+        AIGAS["AIGAS — AI governance (FROZEN)<br/>two seams · C1–C9 · 8 prohibitions"]
     end
     subgraph T3 ["T3 — Supporting specs & references"]
         SKB[03 SPORT-KNOWLEDGE-BASE<br/>SportProfile schema]
@@ -62,7 +62,7 @@ flowchart TD
 Implementation sits below T3 and validates upward; reviews observe everything and
 feed the archive. Full precedence rules: governance doc §1.
 
-## T0–T2 · Canonical (the frozen set + AIGAS)
+## T0–T2 · Canonical (the frozen set)
 
 | Document | Purpose | Owns (canonical for) | Depends on | Related |
 |---|---|---|---|---|
@@ -71,7 +71,7 @@ feed the archive. Full precedence rules: governance doc §1.
 | [`foundation/KNOWLEDGE-ARCHITECTURE.md`](foundation/KNOWLEDGE-ARCHITECTURE.md) | Knowledge separate from reasoning: 8 kinds of work, 12 knowledge domains, entry shape, governance | How knowledge/data are structured, owned, versioned | Constitution, Ontology | EDS Part VII implements it |
 | [`engine/00-ENGINE-DESIGN-SPECIFICATION.md`](engine/00-ENGINE-DESIGN-SPECIFICATION.md) | How the platform reasons: P1–P15, L1–L15, the D1–D16 decision catalogue, three loops, domain models, validation | The engine's decision architecture | Constitution, Ontology, KA | engine 01–05 (subordinate companions) |
 | [`architecture/TAS.md`](architecture/TAS.md) | How software is built to honour the above: L0–L6 layers, module catalogue, six-call engine API, data lifecycle, two learning systems | The technical architecture | All four above | AIGAS (peer), MIGRATION-BLUEPRINT (derived plan) |
-| [`architecture/AIGAS.md`](architecture/AIGAS.md) | What AI may be: four verbs, two seams, C1–C9 capability taxonomy, 8 prohibitions, trust/ops rules | The AI/engine boundary | All governing docs | AIGAS-REVIEW (ratification evidence) · **pending panel + ratification** |
+| [`architecture/AIGAS.md`](architecture/AIGAS.md) | What AI may be: four verbs, two seams, C1–C9 capability taxonomy, 8 prohibitions, trust/ops rules | The AI/engine boundary | All governing docs | AIGAS-REVIEW + governance audit 06 (panel record) · **ratified 2026-07-13** |
 
 ## T3 · Supporting
 

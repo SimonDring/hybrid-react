@@ -10,7 +10,7 @@
 
 | | |
 |---|---|
-| **Status** | v1.0 — governing technical blueprint |
+| **Status** | v1.1 — governing technical blueprint · amended 2026-07-13 — 2026-07 amendment batch (AQ-1…AQ-9); proposals in docs/design/amendment-batch-2026-07/ |
 | **Authority** | Subordinate to the four governing documents: the [Constitution](../foundation/CONSTITUTION.md), the [EDS](../engine/00-ENGINE-DESIGN-SPECIFICATION.md), the [Decision Ontology](../foundation/DECISION-ONTOLOGY.md), and the [Knowledge Architecture](../foundation/KNOWLEDGE-ARCHITECTURE.md). The canonical home for *how the software is shaped*. **Where this document conflicts with a governing document, the governing document wins and this one is corrected.** |
 | **Scope** | The whole platform: engine, knowledge, orchestration, identity/teams, persistence, wearables, learning, AI, and the player/coach surfaces. |
 | **Implementation-independence** | The body names no framework. It defines layers, contracts, and boundaries that remain valid if the frontend, backend, database, or AI stack changes. A single [Current Realization appendix](#appendix-a--current-realization) maps the abstractions to today's stack. |
@@ -24,9 +24,9 @@
   the philosophy, and the layered model that challenges the brief's flat module list.
 - **§4** — the module catalogue: every layer and module under a fixed template.
 - **§5** — the Decision Engine in depth (the most important section).
-- **§6–§11** — the cross-cutting architectures: knowledge flow, data lifecycle,
-  configuration, learning, explainability, extensibility.
-- **§12–§15** — testing, observability, future AI, security & privacy.
+- **§6–§12** — the cross-cutting architectures: knowledge flow, data lifecycle,
+  security & privacy, configuration, learning, explainability, extensibility.
+- **§13–§15** — testing, observability, future AI.
 - **§16** — the critical review through four expert lenses, with revisions folded back.
 - **Appendices** — the current-stack realization and the traceability matrix.
 
@@ -46,8 +46,8 @@ register; each risk closes against a section.
 | # | Gap | Resolved in |
 |---|---|---|
 | **T1** | **Engine execution location undecided.** The EDS mandates a pure library but never says *where* it runs (client / server / both). Determines reuse by the coach surface and AI. | §4.1 (isomorphic engine), §6 |
-| **T2** | **"Plan is derived, never stored" assumes cheap, online recompute.** At team scale that is N recomputes per coach view. *Cache* vs *store-as-truth* is never distinguished. | §4.3, §7, §12 |
-| **T3** | **Reproducibility has no version-pinning.** Explainability + audit require binding a recommendation to the `engine-version × knowledge-version` that produced it. | §6.10, §9, §13 |
+| **T2** | **"Plan is derived, never stored" assumes cheap, online recompute.** At team scale that is N recomputes per coach view. *Cache* vs *store-as-truth* is never distinguished. | §4.3, §7, §16.1 |
+| **T3** | **Reproducibility has no version-pinning.** Explainability + audit require binding a recommendation to the `engine-version × knowledge-version` that produced it. | §6, §9, §14 |
 | **T4** | **Portable athlete state is assumed but unbuilt.** Learned priors and committed freezes are device-local today (EDS W3). | §4.4 (persistence), §7 |
 | **T5** | **Knowledge delivery is unspecified.** Knowledge payloads are large; bundling bloats the offline client, fetching breaks the synchronous pure pass. | §4.2, §6 |
 
@@ -58,7 +58,7 @@ register; each risk closes against a section.
 | **T6** | **Contracts are aspirational** — without runtime-validated boundaries the decision graph degrades into an implicit pipeline (EDS C2.2). | §5.3 |
 | **T7** | **Engine coupled to storage + UI** — reached only via an adapter after a sync DB read, with mutable module-level runtime state in the view store (EDS W1/A5/W4). | §4.1, §4.3 |
 | **T8** | **Two surfaces, two implementations** — the coach web app re-derives readiness/verdicts in its own code; drift is guaranteed. | §4.1, §4.6 |
-| **T9** | **AI threatens the synchronous deterministic core** — AI is remote, slow, non-deterministic; it cannot sit inline in the pure pass. | §5.13, §14 |
+| **T9** | **AI threatens the synchronous deterministic core** — AI is remote, slow, non-deterministic; it cannot sit inline in the pure pass. | §5.13, §15 |
 | **T10** | **Duplicated planning logic** — generator and reflow re-derive the same math with no parity test (EDS W2). | §4.1, §5.1 |
 
 ### 1.3 Scalability risks
@@ -83,7 +83,7 @@ register; each risk closes against a section.
 | # | Leak | Resolved in |
 |---|---|---|
 | **T18** | Readiness/load/deload computed in the view store (EDS A5). | §4.1, §4.3 |
-| **T19** | The coach-visible roll-up computed **client-side, across a trust boundary** — decision *and* privacy leakage. | §4.4, §15 |
+| **T19** | The coach-visible roll-up computed **client-side, across a trust boundary** — decision *and* privacy leakage. | §4.4, §8 |
 | **T20** | The coach surface computes its own statuses/recommendations — coach decisions made outside the engine. | §4.6, §5 |
 
 ### 1.6 Unclear boundaries the TAS must draw
@@ -270,9 +270,9 @@ layer it is stated once for the layer.
   throw a blank plan (EDS L14). A contract violation ⇒ fail fast in dev, fall back to
   the last valid decision in prod, and record it. Never silently ship.
 - **Testing.** Golden-master across an archetype matrix; per-decision unit tests;
-  property tests for purity/determinism; CI-enforced determinism (§12).
+  property tests for purity/determinism; CI-enforced determinism (§13).
 - **Observability.** Emits a structured decision trace per run (the observability +
-  explainability substrate are the same data, §11/§13).
+  explainability substrate are the same data, §11/§14).
 - **Extensibility.** New reasoning = a new decision honouring the contract; new content
   = L2 data. The graph shape is stable (§5).
 
@@ -297,7 +297,7 @@ layer it is stated once for the layer.
 - **Testing.** Schema validation; domain-invariant tests (e.g. energy-system %s sum to
   ~100); privacy sweep (no raw-vital KPI coach-visible); scientific-review checklist.
 - **Observability.** Knowledge-access tracing: which entries a decision read (the
-  "knowledge tracing" the brief asks for, §13).
+  "knowledge tracing" the brief asks for, §14).
 - **Extensibility.** Add a sport/exercise/quality/injury = a data file + registry line,
   zero engine edits. **Delivery (closes T5):** knowledge is loadable in slices — the
   client lazy-loads only the athlete's sport(s); the server holds the full set for the
@@ -453,7 +453,7 @@ events.
   coaching — §9).
 - **Failure modes.** Offline ⇒ render cached artefacts; degraded data ⇒ show confidence
   honestly (Const. Art 14), never fabricate.
-- **Testing.** Component + interaction tests; **coach acceptance tests** (§12); the
+- **Testing.** Component + interaction tests; **coach acceptance tests** (§13); the
   explanation surface is snapshot-tested against decision traces.
 - **Observability.** UX + engagement analytics (never as a coaching objective — Const.
   Art 1).
@@ -462,8 +462,8 @@ events.
 ## 4.7 Cross-cutting concerns
 
 Not modules — properties every layer must exhibit. Each has a dedicated section:
-**Explainability** (§11), **Observability** (§13), **Audit** (§4.4), **Configuration**
-(§9), **Versioning & Reproducibility** (§6.10/§9), **Security & Privacy** (§15).
+**Explainability** (§11), **Observability** (§14), **Audit** (§4.4), **Configuration**
+(§9), **Versioning & Reproducibility** (§6/§9), **Security & Privacy** (§8).
 
 ---
 
@@ -539,7 +539,7 @@ enforcement is non-negotiable, not aspirational.
 
 Inputs: `AthleteState`, a pinned `KnowledgeSet`, `Priors`. Each decision declares
 exactly which knowledge domains it reads (e.g. D4 reads Sport + Quality&Adaptation +
-Injury); the engine emits a **knowledge-access trace** (§13) so "which data influenced
+Injury); the engine emits a **knowledge-access trace** (§14) so "which data influenced
 this" is answerable (Const. Art 14).
 
 ## 5.5 Outputs
@@ -628,7 +628,7 @@ it proposes asynchronously, the deterministic path always produces a result firs
 confidence only by passing validation and by its track record (Knowledge Architecture
 Domain 11). **(3)** the API key is server-side only (Const. Art 11; never in the
 browser). Candidate decisions for AI, and the open question of *how* its proposals are
-bounded beyond the validators, are recorded in §14.
+bounded beyond the validators, are recorded in §15.
 
 ---
 
@@ -706,13 +706,75 @@ The complete lifecycle, every transition documented, with the privacy boundary m
 ```
 
 Transition notes: ②→③ the engine never fetches (L3 injects); ④ the plan is *cached*
-(recomputable), never *stored as truth* (closes T2); ⑦ raw vitals enter owner-only
-storage and **never leave it**; ⑧ the only boundary crossing is the **server-side**
-roll-up (closes T19); ⑩ learning writes priors, never plans (Const. Art 18).
+(recomputable — always meaning: given the same inputs and knowledge version), never
+*stored as truth* (closes T2); ⑦ raw vitals enter owner-only storage and **never
+leave it**; ⑧ the only boundary crossing is the **server-side** roll-up (closes
+T19) — and a derived signal *as computed that day* may additionally be persisted
+**append-only as dated historical evidence**, carrying its provenance stamp
+(`engineVersion × knowledgeSetVersion`, §4.1), owner-private like all athlete
+state, read as history and never re-served as current, crossing the boundary only
+via the same derived-only roll-up; ⑩ learning writes priors, never plans
+(Const. Art 18).
 
 ---
 
-# 8. (folded into §7 — the data lifecycle is the single source for data flow)
+# 8. Security & privacy architecture (the trust boundary)
+
+> **Restored section (v1.1).** The "How to read" map, §4.7, risk T19, §16.3 C1,
+> and §17 step 6 all designate this section as the canonical home for security &
+> privacy; a numbering fold at the original §8 left it unwritten while its rules
+> landed at their points of enforcement. This section **restates** those rules
+> and points to where each binds. It adds no new policy. (The data lifecycle
+> remains solely §7's — nothing here re-describes data flow.)
+
+Security and privacy are enforced as **architecture, not convention** (Const.
+Art 11). The lifecycle marks the boundary (§7 ⑧); this section states the
+binding rules.
+
+## 8.1 The raw-vitals trust boundary
+
+- Raw vitals (health metrics, wearable readings) are **owner-only stored data**
+  (§7 ⑦; §4.4 Persistence & Sync). They **never have a coach policy** — not a
+  restricted one, none (§16.3 C1).
+- The **only** artefact that crosses a person boundary is the **derived**,
+  server-computed roll-up — `rollUp(athleteState, knowledge) →
+  CoachVisibleStatus` (§4.1) — materialized server-side (§4.4; §16.1 C1). No
+  surface ever reads a raw vital across the boundary (closes T19, with §4.4).
+
+## 8.2 Access control
+
+- Access is **default-deny**: a predicate that errors denies, never grants
+  (§4.4 Membership & Access).
+- Cross-user access only **extends** athlete ownership via deliberate, tested,
+  team-scoped predicates (`is_coach_of()`-style) — additive, never a bypass
+  (§4.4; Const. Art 11). **RLS tests are required before relying on a policy**
+  (§16.3 C1).
+- Identity is established entirely outside the engine (§4.4 Identity &
+  Authentication); an auth outage honours cached sessions offline and never
+  leaks data.
+
+## 8.3 Credentials & keys
+
+- Privileged keys (`service_role`-class) are **never client-side** (§16.3 C1).
+- AI provider keys are **server-side only** (§5.13, hard rule 3).
+
+## 8.4 Enforcement in the build & tests
+
+- A **privacy validator fails the build** on any raw-vital coach exposure
+  (§16.3 C1); knowledge entries pass a privacy sweep on load — no raw-vital KPI
+  is ever coach-visible (§4.2).
+- Population learning aggregates **derived signals only**; an aggregation that
+  cannot guarantee privacy does not run (§4.5, §10).
+
+## 8.5 Audit
+
+- Every consequential action — overrides, access to derived surfaces, knowledge
+  edits, learning changes — is recorded in the append-only Audit Log (§4.4); an
+  audit write failure is itself an alert, never silently dropped.
+
+The rules above bind at their stated points of enforcement; this section is the
+one place they are read together — the cross-cutting concern of §4.7, given its
+promised home.
 
 ---
 
@@ -736,7 +798,7 @@ Nothing is mixed. Every datum has exactly one home, by lifetime, owner, and auth
 Two rules: **(1)** coaching *science* is Knowledge (L2); coaching *preference* (a
 coach's or org's philosophy) is configuration/overrides — they never mix. **(2)** No
 "feature flag" in the engine may change *reasoning* — that would be hidden,
-unversioned knowledge (§5.1). Reasoning changes only via knowledge or engine versions.
+unversioned knowledge (§4.1). Reasoning changes only via knowledge or engine versions.
 
 ---
 
@@ -791,7 +853,7 @@ data:
 
 Architecturally: decisions emit traces → L3 records them → the engine's `explain()`
 read-model assembles an `Explanation` → surfaces render it. **The same trace is the
-observability and audit substrate** (§13) — explanation, debugging, and audit are one
+observability and audit substrate** (§14) — explanation, debugging, and audit are one
 data structure, three lenses. Explanations are rendered for the athlete (plain English),
 the coach (with more detail), and engineers (the full trace), all from one source.
 
@@ -875,6 +937,8 @@ AI capability will expand dramatically; **none of it requires architectural rede
 because it all enters through two existing seams: a **substituted decision** (§5.13) or
 a **new intervention/knowledge** (§6, §12).
 
+This section defines **where** AI attaches to the architecture. **What AI is allowed to be** — its constitutional role, the capability taxonomy, the prohibitions, and the standards every AI capability must satisfy before it is built — is governed by the [AIGAS](AIGAS.md) (ratified 2026-07-13, this document's peer). The two seams below are the same two seams AIGAS §6.2 closes; the pair is amended together or not at all.
+
 | AI capability | Enters as | Bounded by |
 |---|---|---|
 | LLMs (explanations, drafting knowledge, conversation) | decision substitution + knowledge authoring | validators; human review of authored knowledge |
@@ -906,14 +970,14 @@ Reviewed through four lenses; the critiques are genuine, the revisions folded ba
   outcome/ingestion events), and §4.3's cache is keyed by a precise signature so the
   player path is recompute-once. The synchronous engine is never on a fan-out read path.
 - **C2 — "Isomorphic engine" can rot if client and server diverge in subtle ways
-  (number precision, locale).** **Revision:** §12 adds a cross-runtime determinism test
+  (number precision, locale).** **Revision:** §13 adds a cross-runtime determinism test
   (the same inputs must produce byte-identical output on client and server) to CI. The
   engine forbids locale/precision-dependent operations (already implied by purity;
   now tested).
 - **C3 — Provenance stamping everything has a storage cost.** **Assessment:** stamps
   are small (two version ids); traces are emitted but only *persisted* for committed
   plans and on demand for replay (not every ephemeral recompute). Noted as a retention
-  policy in §13.
+  policy in §14.
 
 ## 16.2 Lens — Distinguished Engineer, Microsoft (coupling, contracts, compatibility)
 
@@ -935,7 +999,7 @@ Reviewed through four lenses; the critiques are genuine, the revisions folded ba
 ## 16.3 Lens — Chief Architect, global SaaS (multi-tenancy, security, ops)
 
 - **C1 — Multi-tenancy + the privacy boundary is the highest-risk area; one RLS mistake
-  leaks health data.** **Revision:** §15 makes the raw-vitals boundary a **trust
+  leaks health data.** **Revision:** §8 makes the raw-vitals boundary a **trust
   boundary, not a code convention**: raw vitals are owner-only and *never* have a coach
   policy; only the server-computed derived surface is coach-readable; cross-user access
   *extends* `auth.uid()` via tested predicates; the `service_role` key is never
@@ -943,7 +1007,7 @@ Reviewed through four lenses; the critiques are genuine, the revisions folded ba
   tests are required before relying on a policy.
 - **C2 — Operational config and coaching config blur under delivery pressure.**
   **Revision:** §9's table makes the separation explicit and auditable; the engine
-  rejects any reasoning-changing flag (§5.1). Ops can tune cache/AI; ops cannot tune
+  rejects any reasoning-changing flag (§4.1). Ops can tune cache/AI; ops cannot tune
   coaching.
 - **C3 — Offline-first + a server-materialized coach surface creates consistency
   questions.** **Revision:** §4.4 states the model: the player path is offline-first
@@ -1009,7 +1073,7 @@ The TAS is a destination; it is reached incrementally, each step shipping value
    provenance (closes T3, T16). Derive emphasis from the SKB (closes T15).
 4. **Contracts enforced (§5.3).** Runtime-validated boundaries (closes T6).
 5. **Portable state (§4.4).** Sync priors + freezes (closes T4).
-6. **Server roll-up + materialized coach surface (§4.4, §15).** The privacy-correct,
+6. **Server roll-up + materialized coach surface (§4.4, §8).** The privacy-correct,
    scalable coach path (closes T19, T11). Surfaces stop re-deriving (closes T8, T14,
    T20).
 7. **Wearable ACL (§4.4).** Queued, adapter-based ingestion (closes T13).
@@ -1064,7 +1128,7 @@ with no trace does not belong in this document.
 | Every decision overridable; freeze-on-commit (§5.11) | Constitution Art 10; EDS L10 |
 | AI proposes off the critical path, validators gate (§5.13, §15) | Constitution Arts 13, 18; EDS E3, SA8 |
 | Two learning systems via priors only (§10) | Constitution Arts 16, 18; EDS §25 |
-| Raw-vitals trust boundary; server-side roll-up (§7, §15) | Constitution Art 11; EDS L13; TEAM-ARCHITECTURE |
+| Raw-vitals trust boundary; server-side roll-up (§7, §8) | Constitution Art 11; EDS L13; TEAM-ARCHITECTURE |
 | Configuration fully separated from knowledge (§9) | Knowledge Architecture §2, §6 |
 | Eight-kind taxonomy enforced in the engine (§5.2) | Knowledge Architecture §2 |
 | Smallest-version-first sequencing (§17) | Constitution Art 20; EDS §41 |
@@ -1072,4 +1136,4 @@ with no trace does not belong in this document.
 
 ---
 
-*— End of the Technical Architecture Specification v1.0 —*
+*— End of the Technical Architecture Specification v1.1 —*
