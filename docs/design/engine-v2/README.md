@@ -41,7 +41,7 @@ AI boundaries) → **10/11/12** (migration architecture, phases, module diagram)
 | Doc | Deliverable | Status in this set |
 |---|---|---|
 | [00-ARCHITECTURE.md](00-ARCHITECTURE.md) | V2 architecture, frozen-set reconciliation, Amendment Register | The anchor: the first-principles coaching narrative, the engine shape it implies, the nine load-bearing commitments (C1–C9), a 21-row reconciliation matrix against the v1.1 set (13 AGREES · 8 DEEPENS · 0 DIVERGES), and an empty Amendment Register with two additive-extension candidates (AE-1/AE-2) |
-| [01-DECISION-HIERARCHY.md](01-DECISION-HIERARCHY.md) | Coaching decision hierarchy | Pending |
+| [01-DECISION-HIERARCHY.md](01-DECISION-HIERARCHY.md) | Coaching decision hierarchy | The 13 levels of coaching judgement (Athlete → … → Iteration), each defined against its Ontology owner, justified by what breaks without it (nothing kept on gym convention), and reconciled one-home-each to the four ratified structures — Review housed on the Analysis Spine (§1.4); stage maps provisional until 02 |
 | [02-COACHING-PIPELINE.md](02-COACHING-PIPELINE.md) | Pipeline stage specification (naming authority) | Pending |
 | [03-PERFORMANCE-MODEL.md](03-PERFORMANCE-MODEL.md) | Performance & adaptation model | Pending |
 | [04-KNOWLEDGE-OWNERSHIP-MAP.md](04-KNOWLEDGE-OWNERSHIP-MAP.md) | Knowledge ownership map | Pending |
