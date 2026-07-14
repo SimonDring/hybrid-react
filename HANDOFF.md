@@ -125,14 +125,16 @@ move it to the archive file rather than letting this one grow._
   guard (TR-01 recurrence killer); RLS harness wired into CI (inert until Simon
   adds `RLS_STAGING_SUPABASE_URL/ANON_KEY`); perf baselines. Suite 203/203 app +
   6/6 engine; Opus review re-verified the net can actually fail.
-  **⚠ HEADLINE FINDING (Simon's call): reflow ≠ baseline for in-season sport
-  athletes.** Building the reflow≡baseline property caught a live divergence — a
-  near-competition sprinter's runtime reflow re-derives the horizon at ×0.6 on a
-  *fully neutral* live state (SKB `inseason_minimal_effective_strength` fires off
-  the profile's season, not off anything that changed). Either a taper
-  double-count (defect) or intended runtime sport-conservatism. NOT fixed — pinned
-  as an XFAIL that flips to hard CI failure if it silently changes. Resolve before
-  M2 retires the legacy fill.
+  **HEADLINE FINDING — CAUGHT *and* FIXED (Simon ruled 2026-07-14).** The
+  reflow≡baseline property caught a live double-count: an in-season sport athlete's
+  runtime reflow re-applied the SKB season trim (×0.6) off the *profile's* season —
+  not live state — on top of a baseline plan that already periodises in-season.
+  Fix: reflow diverges ONLY for live state (completions/readiness/injuries/freezes);
+  calendar/season signals are excluded from the reflow rule path (`reflowAdjust`
+  `REFLOW_EXCLUDED_SIGNALS`). Baseline byte-identical; the property is now a HARD
+  invariant (XFAIL retired). ⚠ Still Simon's call, deferred: `competition_within_h`
+  (taper) + `matches_this_week` (fixtures) are the same class — taper needs a
+  baseline-double-count confirm, fixtures need D8 baseline ownership (M6).
 
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
