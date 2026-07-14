@@ -53,14 +53,11 @@ function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
   else console.log('PASS:', msg);
 }
-// XFAIL: a KNOWN, documented current-engine divergence (the M0 FINDING above). If the
-// property is still violated → record it, do NOT gate the suite. If the property has
-// UNEXPECTEDLY started to hold → the engine changed under us; FAIL loudly so this gets
-// promoted back to a hard assert rather than silently rotting.
-function xfail(violated, msg) {
-  if (violated) { console.log('XFAIL (M0 FINDING, pending Simon):', msg); }
-  else { console.error('FAIL: expected-divergence now HOLDS — re-tighten to a hard assert:', msg); process.exitCode = 1; }
-}
+// (The M0 in-season-reflow FINDING is RESOLVED — 2026-07-14: the reflow now excludes
+// calendar/season-schedule signals from its SKB rule evaluation (reflowAdjust.js
+// REFLOW_EXCLUDED_SIGNALS), so season no longer drives a neutral reflow. reflow≡baseline
+// is a HARD invariant below with no known exceptions; any profile-derived divergence now
+// fails the suite.)
 
 const FULL = ['barbell', 'dumbbell', 'machine', 'cable', 'band', 'kettlebell', 'bodyweight'];
 
@@ -147,31 +144,27 @@ for (const [name, profile] of Object.entries(ALL_PROFILES)) {
   const ruleAdj = neutralRuleAdj(profile, today);
   const skbFires = ruleAdj.volumeMult !== 1 || ruleAdj.forceDeload;
 
+  // Post-fix invariant: NO profile-derived SKB rule may drive a neutral reflow. Season is
+  // excluded (baseline owns it); if a calendar-class rule (competition taper / fixtures)
+  // ever fires here, it is the SAME double-count class and must be caught, not tolerated.
+  assert(!skbFires,
+    `reflow≡baseline: ${name} — no profile-derived SKB rule fires in a neutral reflow` +
+    (skbFires ? ` (fired: ${ruleAdj.ruleIds.join(',') || '(forceDeload)'} ×${ruleAdj.volumeMult} — a calendar-schedule signal is leaking into reflow; it belongs in baseline periodisation)` : ''));
+
   const { phases } = reflow(neutralReflowInput(profile, plan));
   const identical = JSON.stringify(phases) === JSON.stringify(plan.phases);
 
-  if (!skbFires) {
-    // No profile-derived SKB adjustment → reflow≡baseline MUST hold, byte-for-byte.
-    assert(identical, `reflow≡baseline: ${name} — neutral reflow reproduces the baseline phases byte-identically`);
-    // And specifically the horizon weeks (1 & 2), where reshaping WOULD land.
-    const baseWeeks = plan.phases.flatMap((p) => (p.weeks || []).map((w) => [w.num, w]));
-    const rflWeeks = new Map(phases.flatMap((p) => (p.weeks || []).map((w) => [w.num, w])));
-    for (const [num, w] of baseWeeks) {
-      if (num === 1 || num === 2) {
-        assert(JSON.stringify(rflWeeks.get(num)) === JSON.stringify(w),
-          `reflow≡baseline: ${name} — horizon week ${num} is byte-identical to baseline`);
-      }
+  // Neutral reflow ≡ baseline, byte-for-byte — for EVERY profile (incl. the in-season
+  // sprinter that once diverged).
+  assert(identical, `reflow≡baseline: ${name} — neutral reflow reproduces the baseline phases byte-identically`);
+  // And specifically the horizon weeks (1 & 2), where any reshaping would land.
+  const baseWeeks = plan.phases.flatMap((p) => (p.weeks || []).map((w) => [w.num, w]));
+  const rflWeeks = new Map(phases.flatMap((p) => (p.weeks || []).map((w) => [w.num, w])));
+  for (const [num, w] of baseWeeks) {
+    if (num === 1 || num === 2) {
+      assert(JSON.stringify(rflWeeks.get(num)) === JSON.stringify(w),
+        `reflow≡baseline: ${name} — horizon week ${num} is byte-identical to baseline`);
     }
-  } else {
-    // KNOWN M0 FINDING — an SKB rule fires from the profile (no live-state change), so the
-    // neutral reflow diverges. Record it (XFAIL) and PIN that it is attributable to the
-    // fired ruleId(s) + a volume trim, so the divergence can't silently change shape.
-    xfail(!identical, `reflow≡baseline: ${name} — neutral reflow diverges (SKB rule fired: ${ruleAdj.ruleIds.join(',') || '(forceDeload)'} ×${ruleAdj.volumeMult})`);
-    assert(ruleAdj.ruleIds.length > 0 || ruleAdj.forceDeload,
-      `finding-attribution: ${name} — the divergence is attributable to a fired SKB decision rule, not an untraced source`);
-    // The reshaped current week carries the visible-runtime-trim stamp (WP-43 `_ruleTrim`).
-    const cw = phases.flatMap((p) => p.weeks || []).find((w) => w.num === 1);
-    assert(cw && (cw._adapted === true), `finding-attribution: ${name} — the reflow marks the diverged week _adapted (the trim is visible, not silent)`);
   }
 }
 
