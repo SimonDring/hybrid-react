@@ -101,7 +101,7 @@ flowchart TB
   CE -. "enters at D9's head — the box, before construction" .-> S1
 
   S5 -- "dosed session + volume ledger (output only)" --> S6["S6 · VALIDATION HAND-OFF (D13 placement → D14)<br/>MRV gate + MEV floor CHECK the ledger after decisions;<br/>purpose coherence · duration honesty · conflict order (02 §3);<br/>trim or veto — never 'build more'"]
-  S6 --> S7["S7 · THE FINAL SESSION<br/>ordered items, each carrying<br/>{intervention, dose, rationale, objective-link, confidence}"]
+  S6 --> S7["S7 · THE FINAL SESSION<br/>ordered items, each carrying<br/>{intervention, dose, rationale, objectiveLink, confidence}"]
   S3 -. "banked time, recorded" .-> S7
   S6 -. "disposals + report (Art 15)" .-> S7
   S7 -. "per-item trace material" .-> XP["08's explanation read-model"]
@@ -270,7 +270,7 @@ builder behaving *correctly* (Constitution Arts 7, 14).
 
 ---
 
-## §4 S4 · Recovery constraints within the session
+## §4 S4 · Recovery shaping — recovery constraints within the session
 
 The builder shapes recovery at the session's own scale. Between-session
 recovery — spacing, sport proximity, key-session protection — is D13's
@@ -439,7 +439,7 @@ Session {
 ```
 
 **Every item answers for itself.** The per-item
-`{intervention, dose, rationale, objective-link, confidence}` bundle is
+`{intervention, dose, rationale, objectiveLink, confidence}` bundle is
 deliberate: it is the unit of trace material 08's read-model renders — "why
 this exercise", "why this dose", "why this order", each answered from the
 decision that made it, at the moment of prescription, never reconstructed

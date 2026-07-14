@@ -27,10 +27,11 @@ Three rules govern everything below:
    has a conventional origin (the seven-day week is the honest case), that is
    said out loud and the level is justified — or restructured — on coaching
    grounds.
-3. **"Maps to" is provisional.** Stage IDs cite the ratified D1–D17 catalogue
-   (EDS §20, v1.1). `02-COACHING-PIPELINE.md` (Task 4) is the naming
-   authority; every "Maps to" cell below is provisional until it lands, and
-   the whole-set review (Task 15) re-verifies the mapping.
+3. **"Maps to" defers to 02.** Stage IDs cite the ratified D1–D17 catalogue
+   (EDS §20, v1.1). `02-COACHING-PIPELINE.md` is the naming authority; its
+   §1.1 table and rulings R1–R4 have confirmed every "Maps to" cell below
+   (02 §4, "The stage list, closed"), and the whole-set review re-verified
+   the mapping. Any future change to 02's assignments reopens this table.
 
 A caution inherited from the Ontology: the brief this hierarchy descends from
 once presented these levels as a single top-to-bottom chain, and the Ontology's
@@ -43,7 +44,7 @@ conflated chain the Ontology already dismantled.
 
 ### The thirteen levels at a glance
 
-| # | Level | The question at this altitude | Maps to (provisional — Task 4 fixes) |
+| # | Level | The question at this altitude | Maps to (confirmed — 02 §1.1 + rulings R1–R4) |
 |---|---|---|---|
 | 1 | Athlete | Who am I coaching? | D1 |
 | 2 | Goals | What are they training for? | input boundary of D2 (deliberately no engine decision) |

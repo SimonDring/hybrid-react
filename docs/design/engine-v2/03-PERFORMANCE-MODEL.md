@@ -23,8 +23,9 @@ stages assume but do not themselves define:
 
 It uses the stage IDs of `02` §1.1 **verbatim** (D1–D17) and the coaching-level
 names of `01` (Athlete … Iteration). It defines no new stage and no new
-structure. It **proposes** two additive-extension entries under the Ontology §13
-lane (§2.4) and produces the five **adaptation-class** names
+structure. It **proposes** the AE-1 additive-extension candidate list — ten new
+quality entries under the Ontology §13 lane (§2.4) — and produces the five
+**adaptation-class** names
 (Primary / Secondary / Supporting / Maintenance / Recovery, §3) that
 `05-SESSION-BUILDER.md`, `07-PROGRESSION.md`, and `13-VALIDATION-STRATEGY.md`
 cite. Claims about the shipped engine cite the Sprint 2 forensic audit

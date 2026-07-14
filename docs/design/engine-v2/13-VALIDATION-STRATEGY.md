@@ -27,14 +27,11 @@ Two vocabularies anchor everything below:
   M2 = Wave B progression · M3 = Wave C measurement · M4 = Wave D validation &
   seams · M5 = Wave E substrate & learning · M6 = Wave F structure & breadth).
 
-> **Dependency note (for Task 15).** At authoring time the migration set
-> (`10-MIGRATION-ARCHITECTURE.md` / `11-MIGRATION-PHASES.md` /
-> `12-MODULE-DEPENDENCY-DIAGRAM.md`) had not yet landed on this branch. §1's
-> module rows are therefore drafted against the same sources Task 12 hardens —
-> the EDS §39 module map, `00-ARCHITECTURE.md` §2's layers, `02`'s stage table,
-> and audit 10 §2's disposition — with the M0–M6 phase IDs taken from the
-> sprint plan's binding definition. Rows flagged **⚑T15** must be reconciled
-> node-for-node against 10 §2's module table in the whole-set consistency pass.
+> **Module vocabulary.** §1's rows are keyed one-to-one to the seventeen V2
+> modules of [`10-MIGRATION-ARCHITECTURE.md`](10-MIGRATION-ARCHITECTURE.md)
+> §2.2, under the same IDs — the same node set
+> `12-MODULE-DEPENDENCY-DIAGRAM.md` diagram 1 draws (reconciled node-for-node
+> in the whole-set consistency pass).
 
 **The one law of this document:** every migration phase lands its net **before**
 its behaviour change ("test the property, then change the behaviour" — audit 10
@@ -54,29 +51,42 @@ golden-master (§2) · **P** property (§5) · **SV** scientific validation (§4
 **SIM** simulation (§5.4) · **CA** coach acceptance (§7) · **PB** performance
 benchmark (§6).
 
-All rows carry ⚑T15 (see §0 note); module names follow EDS §39's conceptual
-map plus the V2 layers of 00/02/06/08.
+One row per module of 10 §2.2, under the same ID — seventeen rows, matching
+diagram 1 of `12-MODULE-DEPENDENCY-DIAGRAM.md` node-for-node; the ratified
+conceptual map behind them is EDS §39's.
 
-| Module | Expected behaviour (one sentence) | Inputs | Outputs | Test classes |
+| Module (10 §2.2) | Expected behaviour (one sentence) | Inputs | Outputs | Test classes |
 |---|---|---|---|---|
-| `core/orchestrator` | Runs the D1–D17 graph in ratified order, composing stage outputs with no knowledge content and no I/O (EDS §39; TAS §4.1). | `AthleteState`, pinned `KnowledgeSet`, `Priors` | `Plan` + decision trace + provenance stamp | U · GM · P · PB |
-| `core/contracts` | Validates every stage's inputs/outputs at the boundary — `{value, confidence, rationale}` present, typed, confidence ≤ weakest input (TAS §5.3, §5.7) — failing fast in dev/CI, falling back with an audit event in prod. | every stage boundary | pass / contract-violation | U · P |
-| `decisions/assessment` (D1–D3) | Builds an athlete model and refined demand profile honest about measured vs assumed, with per-attribute confidence and attributed deltas (EDS D1–D3; 02 §2.1–§2.3). | onboarding, lifts, tests, priors, insights, SKB | `AthleteModel`, `RefinedDemandProfile` | U · GM · P (additive-identity) · CA |
-| `decisions/diagnosis` (D4–D5) | Emits a non-empty ranked limiter list and a k=1–3 priority set where every priority traces to a limiter and every non-selection is parked with a reason (EDS D4/D5; 02 §2.4–§2.5). | model, demand, priors, insights | `RankedLimitingFactors`, `PriorityQualities` | U · GM · SV · CA |
-| `decisions/strategy` (D6–D8) | Produces a typed strategy, block sequence with exit criteria, and sport-shaped weeks — never a calendar template (EDS D6–D8; 02 §2.6–§2.8). | priorities, season calendar, priors | `Strategy`, `PeriodisedBlocks`, `WeeklyObjective` | U · GM · SV · SIM · CA |
-| `constraints` (the resolved artefact — [`06-CONSTRAINT-ENGINE.md`](06-CONSTRAINT-ENGINE.md)) | Composes D1/D6/D8 outputs into one typed constraint artefact consumed by D9–D13 and re-checked by D14 — injuries pre-shape, never post-filter (ruling R4, 02 §4; EDS §36; commitment C2). | D1/D6/D8 outputs, sport calendar | the constraint artefact | U · P · GM |
-| `decisions/session-builder` (D9–D12 — [`05-SESSION-BUILDER.md`](05-SESSION-BUILDER.md)) | Constructs the minimum effective session inside the constraint box: one objective, requirements before exercises, value-ordered selection with a stopping rule, doses citing their knowledge entries (EDS D9–D12; Arts 6, 7). | objectives, constraint artefact, knowledge | `DosedSession`s + volume ledger | U · GM · SV · CA |
-| `decisions/scheduler` (D13) | Places sessions to minimise interference with governed penalty weights and traced placements — the pin's strongest layer, preserved (audit 03 §2; EDS D13). | dosed sessions, spacing constraints | `ScheduledWeek` + penalty accounting | U · GM · P |
-| `validation/*` (D14 suite + resolution pass) | Runs every EDS §35.1 validator on every pass, disposes (trim/veto with reason + tier), and resolves conflicts by the compiled conflict order — fail-closed on validator crash (02 §2.14, §3; Art 19). | scheduled week, laws, ledger, artefact | `ValidatedWeek` + `ValidationReport` + resolution records | U · P · GM · CA |
-| `runtime/reflow` (D15) | Projects pending work only, by re-running D9–D14; committed sessions frozen absolutely; identical inputs reproduce the baseline exactly (EDS D15; 02 §2.15; Art 10). | plan, live state, freezes, derived signals | `AdaptedPendingSessions` | U · P (reflow≡baseline) · GM · CA |
-| `analysis/*` (D17 family) | Interprets accumulated data into attributed, confidence-tiered insights — never prescribes, degrades explicitly, squad roll-ups from derived signals only (EDS D17; 02 §2.17; Art 11). | athlete history, knowledge | `Insights` | U · K (privacy) · P · CA |
-| `learning/*` (D16) | Writes priors only — three tiers, versioned, provenance-stamped; an output naming a plan/session/dose is a contract violation (EDS D16; 02 §2.16; Art 18). | outcomes, insights, overrides | `UpdatedPriors` | U · P · SIM |
-| `explain` (read-model — [`08-EXPLAINABILITY.md`](08-EXPLAINABILITY.md)) | Renders the decision trace so every prescribed item answers its six questions without re-deciding anything (Art 14; commitment C6). | decision trace, validation report | explanations | U · CA · PB |
-| `knowledge/*` (the twelve KA §4 domain registries) | Every registry validates members on load — structure, provenance-where-authored, domain invariants, privacy — and malformed knowledge fails fast, never inside a pass (KA §3.2, §5). | authored entries | validated registries | K · U |
-| (platform) `orchestration / sync / app shell` | Injects state + pinned knowledge into the pure engine and persists outputs — computes no coaching decision (TAS §4.3–§4.4). | engine artefacts | rendered surfaces, stored state | Integration (contract tests with fakes — TAS §13) · CA |
+| **M-ATH** · Athlete model (D1) | Builds the confidence-honest `AthleteModel` — per-quality measured estimators behind one interface, measured evidence displacing inferred priors with the displacement recorded (C8; EDS D1; 02 §2.1). | onboarding, lifts, Test Results, priors, insights | `AthleteModel` | U · GM · P (additive-identity) · CA |
+| **M-DEM** · Demand (D2/D3) | Resolves and refines the demand profile from the SKB / goal-as-sport modules with the mandatory `droppedDemands` ledger — an authored demand is homed or declared, never silently dropped (02 §2.2–§2.3; SR-05). | goal/sport, season window, SKB, position, individual signals | `DemandProfile`, `RefinedDemandProfile` (Performance Outcome carried) | U · GM · K · P (`droppedDemands` always present) |
+| **M-DIAG** · Diagnosis (D4/D5) | Emits a non-empty ranked limiter list and a k=1–3 priority set with typed Adaptation Targets, where every priority traces to a limiter and every non-selection is parked with a reason (EDS D4/D5; 02 §2.4–§2.5, ruling R2). | model, demand, priors, insights | `RankedLimitingFactors`, `PriorityQualities` | U · GM · SV · CA |
+| **M-STRAT** · Strategy (D6) | Commits the typed develop/maintain map at intervention-class granularity with a chosen concurrency model — down-scopes recorded, never silent (02 §2.6, ruling R1). | priorities, constraints, training history | `Strategy` | U · GM · SV |
+| **M-PERIOD** · Periodisation (D7/D8) | Produces the block sequence with typed exit criteria/handover and fixture-aware weekly objectives — sport-shaped weeks, never a calendar template (EDS D7/D8; 02 §2.7–§2.8). | priorities, strategy, season calendar, priors | `PeriodisedBlocks`, `WeeklyObjective` | U · GM · SV · SIM · CA |
+| **M-CONSTR** · Constraint engine ([`06-CONSTRAINT-ENGINE.md`](06-CONSTRAINT-ENGINE.md)) | Composes D1/D6/D8 outputs into one resolved, typed constraint envelope consumed by D9–D13 and re-checked by D14 — injuries pre-shape, never post-filter (ruling R4, 02 §4; EDS §36; commitment C2). | D1/D6/D8 outputs, sport calendar | the constraint envelope | U · P · GM |
+| **M-SESS** · Session builder (D9–D11 — [`05-SESSION-BUILDER.md`](05-SESSION-BUILDER.md)) | Constructs inside the box: one named objective, requirements before any exercise name, value-ordered selection under the anti-filler admission rule and the stopping rule — the one selection engine for every cohort (05 S1–S4; EDS D9–D11; Art 7; C7). | objectives, constraint envelope, knowledge | `SessionObjective`, `MovementRequirements`, `SelectedInterventions` | U · GM · SV · CA |
+| **M-DOSE** · Dose (D12) | Assigns the smallest sufficient, context-aware dose per intervention, every magnitude citing its knowledge entry, carrying the advancement decision (progress/hold/deload) with its driver signal (05 S5; 02 §2.12; Arts 6, 7; C4). | selected interventions, envelope, dose knowledge, priors | `DosedSession`s + volume ledger (output only) | U · GM · SV · CA |
+| **M-SCHED** · Scheduler (D13) | Places sessions to minimise interference with governed penalty weights and traced placements — the pin's strongest layer, preserved (audit 03 §2; EDS D13). | dosed sessions, spacing constraints | `ScheduledWeek` + penalty accounting | U · GM · P |
+| **M-VAL** · Validation (D14 suite + resolution pass) | Runs every EDS §35.1 validator on every pass, disposes (trim/veto with reason + tier), and resolves conflicts by the compiled conflict order — fail-closed on validator crash (02 §2.14, §3; Art 19). | scheduled week, laws, ledger, envelope | `ValidatedWeek` + `ValidationReport` + resolution records | U · P · GM · CA · PB |
+| **M-EXPL** · Explanation read-model ([`08-EXPLAINABILITY.md`](08-EXPLAINABILITY.md)) | Renders the decision trace so every prescribed item answers its six questions without re-deciding anything (Art 14; commitment C6). | decision trace, validation report | explanations | U · CA · PB |
+| **M-RT** · Runtime projection (D15) | Projects pending work only, by re-running D9–D14; committed sessions frozen absolutely; identical inputs reproduce the baseline exactly (EDS D15; 02 §2.15; Art 10). | plan, live state, freezes, derived signals | `AdaptedPendingSessions` | U · P (reflow≡baseline) · GM · CA · PB |
+| **M-ANLYS** · Analysis (D17 family) | Interprets accumulated data into attributed, confidence-tiered insights — never prescribes, degrades explicitly, squad roll-ups from derived signals only (EDS D17; 02 §2.17; Art 11). | athlete history, knowledge | `Insights` | U · K (privacy) · P · CA |
+| **M-LEARN** · Learning (D16) | Writes priors only — three tiers, versioned, provenance-stamped; an output naming a plan/session/dose is a contract violation (EDS D16; 02 §2.16; Art 18). | outcomes, insights, overrides | `UpdatedPriors` | U · P · SIM |
+| **M-KNOW** · Knowledge registries (the twelve KA §4 domains) | Every registry validates members on load — structure, provenance-where-authored, domain invariants, privacy — and malformed knowledge fails fast, never inside a pass (KA §3.2, §5). | authored entries | validated registries | K · U · PB |
+| **M-HIST** · History substrate (DAAS §3 — designate, in review) | Persists outcomes, readiness snapshots, and Family VIII captures append-only with bounded sync — written by the impure layer, read by the async band only; V2 consumes the record, never re-owns it (TR-03; Art 22). | engine artefacts, captures, overrides | the longitudinal record (append-only) | Integration · P (append-only, bounded sync) · CA |
+| **M-ORCH** · Orchestration (L3, thin/impure) | Fetches state, pins versions, invokes the pure core, persists outputs, emits traces — computes no coaching decision (TAS §4.3–§4.4; 10 §2.2). | athlete state, engine artefacts | persisted state, rendered surfaces | Integration (contract tests with fakes — TAS §13) · CA |
 
-Two suite-wide mechanics back this table:
+Four suite-wide mechanics back this table:
 
+- **The graph composition is tested as a property of the whole pass, not a
+  module.** The D1→D14 spine runs in ratified order, composing stage outputs
+  with no knowledge content and no I/O (EDS §21, §39; TAS §4.1) — asserted by
+  the golden master (§2) plus the purity and determinism properties of §5.2,
+  across every module row above.
+- **Contract enforcement at every stage boundary is cross-cutting machinery**
+  (TAS §5.3; 04 §5): `{value, confidence, rationale}` present and typed,
+  confidence ≤ weakest input (TAS §5.7), failing fast in dev/CI and falling
+  back with an audit event in prod — exercised by §5.2's contract properties
+  against every boundary in the table.
 - **The engine owns its suite.** As of the audit pin the engine had no test
   suite of its own — it delegated to the app's (TR-11; audit 06). M0 seeds an
   engine-owned suite (`packages/engine`), with the app suite retained for the
@@ -160,7 +170,10 @@ audit 06). The discipline, binding from M0 on every phase:
 ## §3 Knowledge validation
 
 Knowledge is the engine's substance; a fabricated or malformed entry corrupts
-every plan downstream of it. Three mechanisms, all mechanical:
+every plan downstream of it. Three mechanisms, all mechanical — together they
+discharge the seven knowledge-validation hooks registered for this document
+in [`04-KNOWLEDGE-OWNERSHIP-MAP.md`](04-KNOWLEDGE-OWNERSHIP-MAP.md) §6
+(KV-1–KV-7):
 
 ### 3.1 Validate-on-load at every registry
 
@@ -172,7 +185,9 @@ coach-visible — the build-failing SKB sweep, preserved from the pin's
 strongest patterns; audit 10 §2 "survives unchanged"). Malformed knowledge
 fails fast at the boundary with a precise error — **never inside a decision
 pass** (KA §5; 02 §2.2). V2 makes this universal: a registry without a
-validator cannot register (the KA's rule made a CI fact).
+validator cannot register (the KA's rule made a CI fact). This is hook
+**KV-1**, including 04 §4's loud-failure rule for unwireable
+`decisionRules` effects.
 
 ### 3.2 The `validate:knowledge` gate (G19)
 
@@ -186,6 +201,16 @@ knowledge-externalisation work: every constant moved onto the governed
 surface (commitment C3) lands **inside** the gate's sweep, and the gate's
 entry count is asserted monotonically non-decreasing — knowledge can be
 added or reviewed, never silently dropped from governance.
+
+Three more hooks ride the same gate: the **closure lint** (**KV-4**) — a
+static check that no numeric literal steers a decision in the reasoning core
+unless it is a domain-free Calculation constant or annotated to its governed
+entry / seed label (the 04 §3 list is its initial worklist); the
+**single-operative-source check** (**KV-2**) — no governed entry may have an
+operative code twin (04 §3 row 6's defect class); and **consumption
+coverage** (**KV-5**) — every authored knowledge surface declares its
+consumers or an explicit deferral (04 §4's discipline), with
+authored-but-unconsumed a detected defect, not a fact of life.
 
 ### 3.3 The KSV ratchet and provenance completeness
 
@@ -203,7 +228,11 @@ added or reviewed, never silently dropped from governance.
   the §3.2 gate: authored content missing provenance is malformed, full stop.
   The staleness watchdog (Domain 10's review-cadence check on `lastReviewed`)
   enters the gate **report-only** at M4 and promotes per §8's ladder — a
-  stale entry warns long before it blocks.
+  stale entry warns long before it blocks (hook **KV-6**). And every
+  seed-labelled value under 04 §3's closure rule is enumerable with its
+  authority cap and replacement path, and appears in the validation report of
+  any plan it steered (hook **KV-7**; Arts 13, 15). Hook **KV-3**
+  (authority-tier compliance) is §4.2's subject.
 
 ---
 
@@ -228,7 +257,9 @@ knowledge edit, golden-master-gated (KA §5).
 
 ### 4.2 Authority-tier tests (Art 13)
 
-Confidence governs authority, and the tests make the tiers load-bearing:
+Confidence governs authority, and the tests make the tiers load-bearing
+(hook KV-3 — granted tier ≤ mapping(confidence), consumer usage ≤ granted
+tier; 04 §6):
 
 - **Contested science can never hard-gate.** For every knowledge entry whose
   confidence tier is below gate, a test asserts no D14 verdict at gate
@@ -396,6 +427,15 @@ The scenario list grows with each phase (each 🔒 Simon decision that changes
 coaching behaviour adds its own acceptance script), but a scenario, once
 passing, **never leaves the suite** — coach acceptance is a ratchet, like
 everything else here.
+
+**AI touchpoints test against the register [`09-AI-BOUNDARIES.md`](09-AI-BOUNDARIES.md)
+§6 fixes (AI-T1–T11).** Within M0–M6 exactly one is exercised: CA-8 proves,
+with a human proposer, the substitution seam AI-T8 will later use (the
+proposal contract, D14 disposal, and recorded outcome are identical for coach
+and model). Every other touchpoint arms only in Phase 4, behind its AIGAS
+per-capability eval harness and Simon's go-live (11 §6; AIGAS §9, §17) — and
+each arming touchpoint adds its own acceptance script here, keyed to its
+AI-T id, before it serves an athlete or coach.
 
 ---
 

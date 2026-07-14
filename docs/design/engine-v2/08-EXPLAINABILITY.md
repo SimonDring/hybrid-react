@@ -122,11 +122,11 @@ audit 08; Art 14 scored 5/10, HIGH — audit 02 §1).
 
 **The V2 rule.** *Every prescribed item carries its why at delivery time.* The
 session artefact of 05 §7 makes this structural: the final session is ordered
-items, each carrying `{intervention, dose, rationale, objective-link,
+items, each carrying `{intervention, dose, rationale, objectiveLink,
 confidence}` — so the per-item why is a **field of the prescription**, not a
 lookup into a separate system. The `rationale` is D11's per-pick rationale and
 D12's per-dose rationale verbatim (02 §2.11, §2.12 — "why this exercise / why
-this dose at prescription — commitment C6"); the `objective-link` walks the
+this dose at prescription — commitment C6"); the `objectiveLink` walks the
 spine D9 already records (day intent → block objective → priority → limiter —
 02 §2.9), which is exactly the "Why?" and "Why now?" chain of §2. Rendering
 per-item explanation is therefore a presentation act over data the plan
