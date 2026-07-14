@@ -115,6 +115,25 @@ move it to the archive file rather than letting this one grow._
   ten 🔒 Simon decision points ledgered in deliverable 11 §8.3. Ratifying the
   blueprint opens Phase 3 (the build).
 
+- **Phase 3 · M0 (the test net) — DONE, PR pending Simon's merge (2026-07-14).**
+  The CI net under the whole V2 migration, all ADDITIVE (zero engine-source change):
+  an engine-owned property suite (`packages/engine/tests/prop-*` — purity,
+  determinism, contracts, additive-identity, reflow≡baseline) closing the TR-11
+  self-test gap; 16 new golden archetypes for the audit's blind paths (armed-D7,
+  injured incl. 5 bare regions, measured-vs-prior, zero-gap rescue, non-logging
+  progressor — 0 existing snapshots moved); a mechanical snapshot expected-delta
+  guard (TR-01 recurrence killer); RLS harness wired into CI (inert until Simon
+  adds `RLS_STAGING_SUPABASE_URL/ANON_KEY`); perf baselines. Suite 203/203 app +
+  6/6 engine; Opus review re-verified the net can actually fail.
+  **⚠ HEADLINE FINDING (Simon's call): reflow ≠ baseline for in-season sport
+  athletes.** Building the reflow≡baseline property caught a live divergence — a
+  near-competition sprinter's runtime reflow re-derives the horizon at ×0.6 on a
+  *fully neutral* live state (SKB `inseason_minimal_effective_strength` fires off
+  the profile's season, not off anything that changed). Either a taper
+  double-count (defect) or intended runtime sport-conservatism. NOT fixed — pinned
+  as an XFAIL that flips to hard CI failure if it silently changes. Resolve before
+  M2 retires the legacy fill.
+
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
 0. **⚠ THE DEVELOPMENT PLAN — created 2026-07-13, adoption = Simon's merge.**
