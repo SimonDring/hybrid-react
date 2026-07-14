@@ -15,7 +15,7 @@ document of the second product.*
 | **Authority** | Subordinate to the [Constitution](../foundation/CONSTITUTION.md), the [Decision Ontology](../foundation/DECISION-ONTOLOGY.md), and the [Knowledge Architecture](../foundation/KNOWLEDGE-ARCHITECTURE.md). Peer to the [EDS](../engine/00-ENGINE-DESIGN-SPECIFICATION.md) and the [TAS](TAS.md), coordinated with [AIGAS](AIGAS.md): the EDS governs how the platform *decides*, the TAS governs *where software responsibilities live*, AIGAS governs *what AI may be* — this document governs how the platform **measures, models, analyses, and reports the athlete**. Where it conflicts with a governing document, the governing document wins and this one is corrected. |
 | **Scope** | Platform-wide and permanent: every capture stream, every element of the longitudinal athlete record, every analytical product (trend, insight, benchmark, squad signal, report), and every delivery surface for analytical content — present or future — is validated against this document before it is built. |
 | **Commissioning evidence** | Benchmark capabilities P2.1–P2.11 + P3.5 ([governance audit 00 §2](../reviews/2026-07-11-governance-audit-00-benchmark.md)); the consolidated per-link requirements of [governance audit 08 §4](../reviews/2026-07-11-governance-audit-08-data-analytics-pillar.md); the GA-512 new-document ruling; the cross-document fixes GA-801, GA-803, GA-804 (audit 08 §5). |
-| **Citation convention** | This document builds on the amended governing vocabulary of the 2026-07 amendment batch — the Analysis Spine and Family VIII (Ontology, [batch 02](../design/amendment-batch-2026-07/02-ontology.md), AQ-2), decision D17 and the §20.1 extension clause (EDS, [batch 03](../design/amendment-batch-2026-07/03-eds.md), AQ-3/AQ-4.2), Constitution Articles 21 and 22 ([batch 01](../design/amendment-batch-2026-07/01-constitution.md), AQ-6/AQ-7), and the derived-data doctrine clarification ([batch 04](../design/amendment-batch-2026-07/04-derived-data-doctrine.md), AQ-5). Until Simon's ratification PR applies the batch, citations to that vocabulary resolve to the batch proposal files; after it lands, they resolve to the amended sections themselves. **The pre-ratification consistency pass reconciles this document against the applied text; any drift is recorded as a finding, never silently fixed.** |
+| **Citation convention** | This document builds on the amended governing vocabulary ratified into the frozen set (v1.1, 2026-07-14): the Analysis Spine and Family VIII (Ontology §1.4/§10), decision D17 and the §20.1 extension clause (EDS §20), Constitution Articles 21 and 22, and the derived-data doctrine clarification (KA §2.1 / EDS §27 rule 5 / TAS §7). Citations resolve to the applied documents; the 2026-07 batch proposal files ([01](../design/amendment-batch-2026-07/01-constitution.md)–[04](../design/amendment-batch-2026-07/04-derived-data-doctrine.md)) remain the drafting provenance for `AQ-n` references in this text. **This document was authored on a branch predating the ratification merge, so the applied wording was not verifiable here: the pre-ratification consistency pass reconciles this text against the applied documents, and any drift is recorded as a finding, never silently fixed.** |
 | **What this is not** | Not an implementation guide, not a database schema, not a product roadmap, and not a status document (status lives in HANDOFF.md only). It defines *governance*: what is captured, how it is modelled, what may claim what authority, and who sees it. Mechanisms — table designs, job cadences, chart types — belong to the Phase 3/4 supporting specs that cite this document. |
 | **Traceability** | Every normative statement traces to a Constitution Article, a governing-document clause, or a commissioning evidence line (P2.x / GA-xxx). A statement with no trace does not belong here. The coverage map is §10. |
 
@@ -107,7 +107,15 @@ data underneath it (§4.2).
   specifies *what fills* the analytics territory the TAS reserved (the L5 Analytics
   module, TAS §4.5; the read-model seam, TAS §11 and §16.1 C1) and never relocates a
   TAS boundary. Where an analytics requirement seems to need a new boundary, that is
-  a TAS amendment candidate, not a DAAS invention.
+  a TAS amendment candidate, not a DAAS invention. **One wording tension is recorded
+  now as a named consistency-pass / amendment-queue candidate, not resolved by a
+  silent reading:** TAS §4.5 describes L5 as writing "PRIORS the engine READS; never
+  mutates plans" — priors as L5's only channel toward the engine — and TAS §4.3
+  assigns L1 invocation to L3; this document's §2.3 reads L5 Analytics as D17's
+  impure shell, producing materialised read-models. The readings are reconcilable
+  (read-models are serving artefacts, not an engine channel — nothing L5 produces
+  enters the engine except as D17 outputs under §2.4), but the TAS §4.5 wording
+  should be clarified when the TAS next amends.
 - **Coordinated** with AIGAS: every AI touchpoint in this document (C4 summarisation,
   C5 analysis, C6 drafting, C2 rendering) stays behind AIGAS's categories, seams, and
   gates unchanged (AIGAS §6.2, §11); §2.3.4 defines the grounding surface AIGAS's
@@ -189,9 +197,10 @@ made except against this specification.** The ratify-or-supersede disposition:
    **recorded divergence with a migration obligation** (Phase 3), never a standard.
 2. **`docs/SCHEMA.md`** — superseded: Phase 3 authors a DAAS-validated data reference
    as its successor; the stale document is archived per DOCUMENTATION-GOVERNANCE §4.
-3. **`player_status` / `CoachVisibleStatus`** — ratified as the live first member of
-   the Squad Signal lineage (§5.1); its derived-only posture is confirmed, its
-   point-in-time-only limitation is a §9 staging item, not a design.
+3. **`player_status` / `CoachVisibleStatus`** — ratified as the first member of the
+   Squad Signal lineage (§5.1; live at commissioning, 2026-07 — status: HANDOFF.md);
+   its derived-only posture is confirmed, its point-in-time-only limitation is a §9
+   staging item, not a design.
 
 Validated by: the DOCUMENTATION-INDEX ownership registration performed at this
 document's ratification (the GA-704 mechanism), and the Phase 3 specs' traceability
@@ -279,9 +288,11 @@ Testing is a first-class, scheduled, versioned act — not an onboarding questio
   versioned knowledge entry — procedure, conditions, equipment, the qualities it
   estimates and the mapping onto each quality's scale, typical error, competency
   prerequisites, injury contraindications, re-test cadence — under the KA universal
-  entry shape, homed with the quality taxonomy (Domain 3) and sport batteries (the
-  SKB `assessments` section, Domain 2). **A protocol change is a new version, never a
-  silent edit** — versioning is what keeps a 2026 result comparable with a 2031 one.
+  entry shape. Each protocol entry lives in **exactly one registry** — a generic
+  quality assessment with the quality taxonomy (Domain 3), a sport-specific battery
+  with the sport (the SKB `assessments` section, Domain 2) — never both. **A protocol
+  change is a new version, never a silent edit** — versioning is what keeps a 2026
+  result comparable with a 2031 one.
 - **Scheduling is a decision, not a habit.** Which assessments to run, and when, is
   assessment-scheduling reasoning — a future D17-adjacent decision admitted through
   EDS §20.1 when built (§9); until then, cadence guidance from the protocol entry is
@@ -292,7 +303,11 @@ Testing is a first-class, scheduled, versioned act — not an onboarding questio
   conditions/deviations, provenance (`measured` or `self-administered`). Test Results
   are Stored Data in the longitudinal record (§3) — Capability remains the
   recomputable current estimate; the Test Result is the evidence it is estimated from
-  (Ontology Family VIII boundary).
+  (Ontology Family VIII boundary). *Reconciling clause:* the Ontology's Test Result
+  attribute "the Confidence contribution it makes" is realised at derivation — the
+  contribution materialises when a Capability or analytical product is derived from
+  the result (§4.2 step 2) — never as confidence stored on the observation itself
+  (§2.1.1 rule 3).
 
 Validated by: registry validation on protocol entries (KA §3.2); the §8 attribution
 validator on any product citing a Test Result (protocol version must be present);
@@ -565,6 +580,8 @@ Article 22 (batch 01) binds the record end to end:
   erasure right** (the AQ-5 batch-wide reading, restated here as binding).
 - Every consent grant and revocation is durable, inspectable state *in* the record.
   Coach/team visibility exists only per grant, and revocation closes it forward.
+  Enforcement mechanics — the storage-layer consent checks behind every grant — are
+  the TAS-side consent-enforcement companion spec's (GA-510), cited here, not owned.
 - Consent **widens who, never deepens what**: no grant exposes raw vitals across a
   person boundary (Art 11 is the ceiling; Art 22 the basis).
 - Secondary use — internal evidence (§6.3), any research aggregate — requires the
@@ -686,7 +703,7 @@ checks (V-A1); the privacy validator reading rule 6 from dictionary privacy clas
 ```
 member Athlete State (owner-private)
    → engine rollUp() / D17 squad roll-up member (server-side; derived only)
-   → CoachVisibleStatus (per-member derived signal — the live first member)
+   → CoachVisibleStatus (per-member derived signal — the first member)
    → Squad Signal (roster aggregate + per-member derived values; Family VIII)
    → coach dashboard render / coach-addressed Report (§7)
 ```
@@ -694,7 +711,7 @@ member Athlete State (owner-private)
 Every hop is governed elsewhere and composed here: the server-side roll-up is the
 *only* person-boundary crossing (TAS §7 ⑧); the roll-up is engine logic, never
 per-surface re-derivation (TAS §4.1); `player_status` is ratified as this lineage's
-live realisation (§1.5). **A squad view that would need a raw vital fails the build**
+realisation (§1.5 — live at commissioning, 2026-07; status: HANDOFF.md). **A squad view that would need a raw vital fails the build**
 (EDS L13 / the privacy validator — cited, already binding).
 
 ## 5.2 The signal family
@@ -707,8 +724,9 @@ summary. Rules:
 
 - **Derived-only inputs, by construction** (Art 11; Ontology Squad Signal). Member
   contributions are the already-consented, already-derived per-member signals —
-  never anything the member's grant does not cover (Art 22: joining a team *is* the
-  scoped grant; leaving or revoking closes the view forward).
+  never anything the member's grant does not cover (Art 22: joining a team is
+  accompanied by an explicit, recorded, scoped grant — membership never implies
+  visibility; leaving or revoking closes the view forward).
 - **Aggregation for judgement, never for prescription.** A Squad Signal informs the
   coach; it re-enters any athlete's plan **only as Constraints** from the coach's
   scheduling decisions (Ontology; the Team package's founding rule — no second
@@ -791,7 +809,7 @@ governance, or not at all:
    internal provenance (cohort, window, method), never a fabricated citation.
    *Grading note:* the KA evidence scale (L1–L5) has no rung for platform-internal
    observational evidence (GA-306); until that KA amendment is ratified, internal
-   findings enter at the scale's observational-expert tier with an
+   findings enter at L5 (expert opinion / anatomical logic) carrying the
    `internal-observational` marker, and **are capped at soft-input authority
    regardless of effect size** — internal evidence may tilt, never gate, until the
    scale itself says otherwise. The amendment remains queued; this document does not
@@ -915,7 +933,7 @@ consumed by a decision; **an artefact that fails is not served — it is recorde
 
 Validator thresholds are Validation Knowledge (KA Domain 11 discipline); the suite is
 deterministic and human-authored; no AI authors, tunes, or vetoes a validator
-(AIGAS §13.2, inherited).
+(AIGAS §13, item 2 — inherited).
 
 ## 8.3 Falsifiability
 
@@ -946,7 +964,8 @@ C3). Order is by value-per-risk, aligned to the DEVELOPMENT-PLAN's Phase 3/4 slo
 (status and dates live in HANDOFF.md, never here):
 
 1. **S1 — The Metric Dictionary v1 + provenance tagging** (§4.1, §2.1.1) over the
-   already-live streams (session logs, check-ins, daily metrics, wearable readings).
+   streams live at commissioning, 2026-07 (session logs, check-ins, daily metrics,
+   wearable readings — status: HANDOFF.md).
    Everything else keys on it; retrofitting semantics later is the expensive path.
 2. **S2 — The history substrate** (§3.1–§3.3): append-only observation persistence +
    the initial materialised set + stamps. Cures the latest-only JSONB divergence
@@ -958,7 +977,7 @@ C3). Order is by value-per-risk, aligned to the DEVELOPMENT-PLAN's Phase 3/4 slo
    capture + scheduled cadence surfacing; the assessment-scheduling *decision*
    registers via EDS §20.1 when reasoning (not just cadence) is ready.
 5. **S5 — Squad Signal history + team trend views** (§5): materialised snapshots
-   over the live `player_status` lineage; the coach's plain-English loading view.
+   over the `player_status` lineage (§1.5); the coach's plain-English loading view.
 6. **S6 — Sport & Match ingestion v1** (§2.1.5): manual logging + file import of
    availability/minutes/RPE; vendor GPS adapters as demand arrives.
 7. **S7 — Norms v1** (§6.1–§6.2): authored bands for the highest-traffic
@@ -995,7 +1014,7 @@ owning section — the table an auditor verdicts this document against:
 | P2.2 Daily monitoring | **§2.1.3** (+ §3.4 baselines) | Defined semantics per metric; individually baselined; derivations stated (derivation math: KA D7/EDS, linked) |
 | P2.3 Gym-performance capture & analysis | **§2.1.4** (capture) + **§2.3.1** (trends) | Set-granular prescribed-vs-done; trend products quantify whether training works |
 | P2.4 Match/pitch data | **§2.1.5** (+ §9 S6, D-1) | Defined ingestion path on the ACL pattern; availability/minutes first-class; total-load reactivity |
-| P2.5 Recovery analytics | **§2.3.1** family 3 | Descriptive recovery domain owned; Insight/Prediction boundary drawn to D16/D12 |
+| P2.5 Recovery analytics | **§2.3.1** family 3 | Descriptive recovery domain owned; Insight/Prediction boundary drawn to D16 / KA Domain 12 |
 | P2.6 Longitudinal athlete model | **§3** | Append-only; versioned; honest reconstruction grades; career-span queries |
 | P2.7 Team & squad analytics | **§5** | Coach questions answered plainly; derived-only lineage; history via snapshots |
 | P2.8 Benchmarking & norms | **§6.1–§6.2** | Bands governed with provenance + axes; defensible-claim rule; Art 21 default |
