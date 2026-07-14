@@ -323,7 +323,7 @@ Each entry uses: **Decision → Context → Problem → Alternatives considered 
 
 **Benefits.** A small number of already-caught inconsistencies exist between the frozen set and reality (e.g., a stale claim in one internal doc about how "steered" a decision currently is) — but these are caught and named explicitly in living documents rather than causing silent disagreement about what the target architecture even is.
 
-**Future considerations.** The one document not yet formally folded into the frozen set is AIGAS (see ADR-11) — currently a "v1.0 draft, pending ratification."
+**Future considerations.** AIGAS was ratified into the frozen set on 2026-07-13 (see ADR-11).
 
 **Open questions.** None regarding the freeze mechanism itself; only the pending AIGAS ratification is an open item.
 

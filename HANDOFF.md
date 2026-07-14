@@ -129,8 +129,10 @@ move it to the archive file rather than letting this one grow._
 3. **⚠ AI go-live (WP-60 / AIGAS)** — the seam is merged behind flags (ai-render edge
    function, AiService, `AI_ENABLED` kill switch, all OFF). Needs: per-capability eval
    harness (recorded as REQUIRED), the edge-function deploy, and Simon's `AI_ENABLED`
-   decision. AIGAS itself still needs its ratification panel pass (
-   `docs/architecture/AIGAS-REVIEW-2026-07-06.md` recommends ratification).
+   decision. AIGAS is ratified (2026-07-13, AQ-8 — panel record:
+   `docs/architecture/AIGAS-REVIEW-2026-07-06.md` + governance audit 06); the
+   remaining Stage 6 preconditions are listed in
+   `docs/design/amendment-batch-2026-07/06-aigas-ratification.md` §5.
 4. **⚠ Pending applies (NEW STEP FIRST)** — **`20260712_player_status_membership_scope.sql`
    (the F3 privacy fix, merged #166) is in the repo but applied NOWHERE yet: apply to
    STAGING → run `node supabase/tests/rls-harness.mjs` (7 new F3 cases) → prod, per
@@ -157,11 +159,12 @@ move it to the archive file rather than letting this one grow._
 
 ## Governance (unchanged)
 
-The five governing documents are **FROZEN v1.0 (2026-07-01)**: Constitution, Decision
+The six governing documents are **FROZEN** (frozen v1.0 2026-07-01; each at v1.1 since
+the 2026-07 amendment batch, ratified 2026-07-13): Constitution, Decision
 Ontology, Knowledge Architecture (`docs/foundation/`), the EDS
-(`docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md`), the TAS (`docs/architecture/TAS.md`).
-AIGAS (`docs/architecture/AIGAS.md`) is governing for AI work, pending formal
-ratification. All work validates against them; changing one is a versioned amendment,
+(`docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md`), the TAS (`docs/architecture/TAS.md`),
+and AIGAS (`docs/architecture/AIGAS.md`) — governing for AI work, ratified 2026-07-13
+into the frozen set (AQ-8; Appendix B living). All work validates against them; changing one is a versioned amendment,
 never an inline edit. Documentation precedence and lifecycle:
 `docs/DOCUMENTATION-GOVERNANCE.md`.
 

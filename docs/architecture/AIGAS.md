@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| **Status** | v1.0 — governing AI architecture specification (draft for ratification into the frozen set, per the Constitution's Amendment & Stewardship process) |
+| **Status** | v1.1 — governing AI architecture specification · RATIFIED 2026-07-13 into the frozen set as the sixth governing document (Amendment & Stewardship; ratification record: the 2026-07 amendment batch) · Parts I–VI and Appendix A frozen; Appendix B is living |
 | **Authority** | Subordinate to the four governing documents: the [Constitution](../foundation/CONSTITUTION.md), the [EDS](../engine/00-ENGINE-DESIGN-SPECIFICATION.md), the [Decision Ontology](../foundation/DECISION-ONTOLOGY.md), and the [Knowledge Architecture](../foundation/KNOWLEDGE-ARCHITECTURE.md). Peer to the [TAS](TAS.md): the TAS defines *where* AI attaches to the software; this document defines *what AI is allowed to be* and the standards every AI capability must satisfy. Where this document conflicts with a governing document, the governing document wins and this one is corrected. Where it conflicts with the TAS, both are reconciled against the governing documents. |
 | **Scope** | Platform-wide and permanent: every AI capability — present or future, athlete-facing or coach-facing, online or offline, from any provider — is validated against this document before it is built. |
 | **Audience** | Principal architects, AI engineers, S&C coaches, sports scientists, performance directors, and executive leadership. Written to be legible to all six. |
@@ -56,7 +56,7 @@ The relationship is asymmetric by design and must remain so:
 
 This is the load-bearing argument of the whole document, and it is worth stating in full. Coaching decisions remain the exclusive product of the deterministic engine because determinism is what makes the platform:
 
-- **Testable.** `decision(knowledge, athleteState) → output` is a pure function; the same inputs always produce identical output, so a golden-master across an archetype matrix catches any unintended behaviour change (EDS P12; TAS §12). A stochastic decision-maker cannot be regression-tested this way; every model update would be an untested change to every athlete's programme.
+- **Testable.** `decision(knowledge, athleteState) → output` is a pure function; the same inputs always produce identical output, so a golden-master across an archetype matrix catches any unintended behaviour change (EDS P12; TAS §13). A stochastic decision-maker cannot be regression-tested this way; every model update would be an untested change to every athlete's programme.
 - **Reproducible and auditable.** Any recommendation ever shipped can be replayed by pinning its provenance stamp (`engineVersion × knowledgeSetVersion`, TAS §5.12). When an athlete gets injured, or a coach challenges a prescription, the platform can show exactly what it decided, from what inputs, under which knowledge version. "The model said so" is not an audit trail.
 - **Explainable with real reasons.** The engine's rationale is the *actual* causal chain of the decision — the trace of D1–D16 (Art 14; EDS L11). A language model's explanation of its own output is a plausible narrative, not a causal record; presenting it as the reason for a coaching decision would be a fabricated explanation, which Article 14 prohibits in substance.
 - **Safe to change.** Behaviour shifts only through versioned knowledge, versioned engine code, or versioned priors (Art 18; TAS §10) — each attributable, reviewable, and reversible. A model swap or provider fine-tune must never be able to silently change what an athlete is told to lift.
@@ -146,6 +146,8 @@ All AI capability, present and future, enters the architecture through exactly t
 **Seam 2 — Knowledge and priors** (TAS §6, §10, §15). AI contributes *inputs the engine reads*: drafted L2 knowledge entries (gated by human scientific review, §23) and predictions or priors via the L5 learning layer (gated by prior validation and staging, §22). The engine's behaviour shifts only via versioned priors and knowledge it reads — never by in-place mutation (Art 18).
 
 Everything user-visible that AI does — explanation, conversation, summarisation — sits *outside* both seams entirely: it renders engine outputs and never feeds anything back into the decision path at all.
+
+Precisely: the two seams bound every path by which AI may *influence a coaching decision*. Capabilities that produce inputs upstream of the engine (C1 extraction as user-confirmed structured state; C9 perception as assessments with field-tested reliability, §11) and capabilities that render engine outputs downstream (C2–C4) sit outside both seams and are governed by their category gates (§11), not by seam contracts. A capability becomes seam-bound the moment its output would alter a decision without passing through validated substitution (Seam 1) or versioned knowledge and priors (Seam 2). There is no fourth route.
 
 ## §7 · Explainability requirements
 
@@ -388,7 +390,7 @@ This document changes the way all governing-tier documents change (Constitution,
 | AIGAS clause | Traces to |
 |---|---|
 | Central principle; §2 role of AI; §26 vision | Constitution Arts 4, 10, 18; EDS §1 (decision-engine thesis) |
-| §3.1 determinism of coaching decisions | Constitution Art 18; EDS P12, SA9; TAS §12 (golden-master, CI determinism) |
+| §3.1 determinism of coaching decisions | Constitution Art 18; EDS P12, SA9; TAS §13 (golden-master, CI determinism) |
 | §4 four acts, engine owns content | Constitution Arts 4, 14; Decision Ontology Family VII (Decision vs Recommendation vs Inference) |
 | §5 AI never source of truth | Constitution Arts 15, 17, 18; Knowledge Architecture §2.1 (eight kinds), §3.1 (sources never fabricated) |
 | §6 boundary; off critical path; server-side keys | Constitution Art 18; TAS §3.3 (T9), §4.3, §5.13 |
@@ -412,7 +414,7 @@ This document changes the way all governing-tier documents change (Constitution,
 
 ## Appendix B — Current realization (2026-07)
 
-The body of this document is implementation-agnostic; this appendix maps it to today's stack and is updated as the stack evolves (same convention as TAS Appendix A).
+The body of this document is implementation-agnostic; this appendix maps it to today's stack and is updated as the stack evolves (same convention as TAS Appendix A). Designated LIVING at ratification (2026-07-13): unlike Parts I–VI and Appendix A, this appendix is updated by ordinary edits, not amendment.
 
 - **No AI capability is live.** The virtual physio, AI plan adjustment, and quarterly AI assessment in the app are placeholders. This document precedes and governs their build (Stage 6 of the roadmap).
 - **The planned entry point** is a Supabase Edge Function holding the provider API key server-side — satisfying §6's server-side-only rule; no model key ever ships in the browser.
