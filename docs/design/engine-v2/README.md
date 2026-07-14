@@ -53,7 +53,7 @@ AI boundaries) → **10/11/12** (migration architecture, phases, module diagram)
 | [10-MIGRATION-ARCHITECTURE.md](10-MIGRATION-ARCHITECTURE.md) | Migration architecture | Pending |
 | [11-MIGRATION-PHASES.md](11-MIGRATION-PHASES.md) | Migration phases | Pending |
 | [12-MODULE-DEPENDENCY-DIAGRAM.md](12-MODULE-DEPENDENCY-DIAGRAM.md) | Module dependency diagram | Pending |
-| [13-VALIDATION-STRATEGY.md](13-VALIDATION-STRATEGY.md) | Validation strategy | Pending |
+| [13-VALIDATION-STRATEGY.md](13-VALIDATION-STRATEGY.md) | Validation strategy | The test net under the migration: per-module validation for every V2 module, the golden-athlete matrix + M0 extension set with the TR-01 re-baseline discipline, knowledge validation (validate-on-load, `validate:knowledge` gate, KSV ratchet, provenance), scientific validation (dose-response envelopes, Art 13 authority tests, the Wave-B progression-sanity/dose-coherence net), regression pins + property classes (reflow≡baseline, cross-runtime determinism, additive byte-identity), performance budgets, 13 coach-acceptance scenarios mapped to phases M0–M6, and the false-positive budget that governs every validator promotion |
 
 ## Atlas update
 
