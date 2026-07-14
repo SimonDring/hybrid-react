@@ -24,7 +24,7 @@ export default [
 
   // ── Base: correctness-only, everywhere we lint ────────────────────────────
   {
-    files: ['apps/mobile/src/**/*.{js,jsx}', 'apps/mobile/tests/**/*.{js,mjs}', 'packages/engine/**/*.js'],
+    files: ['apps/mobile/src/**/*.{js,jsx}', 'apps/mobile/tests/**/*.{js,mjs}', 'packages/engine/**/*.{js,mjs}'],
     languageOptions: {
       ecmaVersion: 'latest',   // the SKB uses import attributes (`with { type: 'json' }`)
       sourceType: 'module',
