@@ -12,6 +12,7 @@
     "preview": "npm run preview -w hybrid-react",
     "test": "npm run test -w hybrid-react",
     "test:engine": "npm run test:engine -w @performance-os/engine",
+    "bench": "npm run bench -w @performance-os/engine",
     "lint": "eslint apps/mobile/src packages/engine/src apps/mobile/tests packages/engine/tests"
   },
   "devDependencies": {

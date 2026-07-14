@@ -32,3 +32,54 @@ jobs:
       # (no continue-on-error, no if:) so it can't be silently skipped — a missing
       # or empty suite fails run-engine.mjs itself, and a red test fails this step.
       - run: npm run test:engine
+
+  # RLS harness (Phase 3 M0 T4 — CA-12/CA-1's "privacy validator + RLS harness (in
+  # CI from M0)"). supabase/tests/rls-harness.mjs proves the binding data-isolation
+  # rules (repo CLAUDE.md; docs/product/TEAM-ARCHITECTURE.md) against a LIVE
+  # Supabase project — it signs up throwaway users and asserts cross-user reads
+  # fail. There is no offline/local substitute: RLS is enforced by Postgres itself,
+  # so the proof needs a real project.
+  #
+  # This must NEVER run against production — the harness hard-refuses the known
+  # production project ref itself, as a second layer — so it needs its OWN staging
+  # secrets, distinct from the VITE_SUPABASE_URL/VITE_SUPABASE_ANON_KEY secrets
+  # deploy.yml uses to build against production. Until those staging secrets exist
+  # in this repo's Actions secrets, the `if:` guard below is false and this job is
+  # SKIPPED (not failed, not silently absent) — see the M0 Task 4 report for the
+  # one-time setup Simon would do to arm it (Settings → Secrets and variables →
+  # Actions → add RLS_STAGING_SUPABASE_URL / RLS_STAGING_SUPABASE_ANON_KEY, pointed
+  # at hybrid-training-staging, never at production).
+  rls-harness:
+    runs-on: ubuntu-latest
+    if: ${{ secrets.RLS_STAGING_SUPABASE_URL != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - name: Write staging credentials (the harness reads apps/mobile/.env.local)
+        run: |
+          cat > apps/mobile/.env.local <<EOF
+          VITE_SUPABASE_URL="${{ secrets.RLS_STAGING_SUPABASE_URL }}"
+          VITE_SUPABASE_ANON_KEY="${{ secrets.RLS_STAGING_SUPABASE_ANON_KEY }}"
+          EOF
+      - run: node supabase/tests/rls-harness.mjs
+
+  # Expected-delta guard (Phase 3 M0 T4 — 13-VALIDATION-STRATEGY.md §2.3, the
+  # TR-01 recurrence guard made mechanical). TR-01 was a real regression
+  # re-baselined into apps/mobile/tests/__snapshots__/ unnoticed; this job
+  # fails the build if a diff touches that directory without an accompanying
+  # expected-delta note (apps/mobile/tests/__snapshots__/EXPECTED-DELTA.md
+  # updated in the same diff, or an "EXPECTED-DELTA:" line in the commit
+  # message — see snapshot-note-guard.mjs's header for the full convention).
+  # No npm ci needed — the guard shells only to git. fetch-depth: 0 so it can
+  # diff against the PR's base branch (or HEAD~1 on a push), not just the
+  # shallow single commit actions/checkout gives by default.
+  snapshot-note-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: node apps/mobile/tests/snapshot-note-guard.mjs

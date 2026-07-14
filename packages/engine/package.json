@@ -11,6 +11,7 @@
   },
   "scripts": {
     "test": "node ../../apps/mobile/tests/run-all.mjs",
-    "test:engine": "node tests/run-engine.mjs"
+    "test:engine": "node tests/run-engine.mjs",
+    "bench": "node tests/bench.mjs"
   }
 }
