@@ -10,7 +10,7 @@ If a document isn't listed here, it isn't governed — add it or archive it.
 ```mermaid
 flowchart TD
     subgraph T0T1 ["T0/T1 — Foundation (FROZEN v1.0)"]
-        CONST[CONSTITUTION<br/>20 Articles — the tie-breaker]
+        CONST[CONSTITUTION<br/>22 Articles — the tie-breaker]
         ONT[DECISION-ONTOLOGY<br/>the vocabulary]
         KA[KNOWLEDGE-ARCHITECTURE<br/>8 kinds · 12 domains]
     end

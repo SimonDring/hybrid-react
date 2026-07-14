@@ -50,7 +50,7 @@ to dynamic goals and available time, with AI learning and wearable data
   Full rules: docs/DOCUMENTATION-GOVERNANCE.md. Master map + owner of every
   concept: docs/DOCUMENTATION-INDEX.md.
 - **The FROZEN set (v1.0, 2026-07-01)** — never edit as routine work:
-  docs/foundation/CONSTITUTION.md (20 Articles — the tie-breaker),
+  docs/foundation/CONSTITUTION.md (22 Articles — the tie-breaker),
   DECISION-ONTOLOGY.md, KNOWLEDGE-ARCHITECTURE.md,
   docs/engine/00-ENGINE-DESIGN-SPECIFICATION.md (the EDS),
   docs/architecture/TAS.md, docs/architecture/AIGAS.md (ratified 2026-07-13;
