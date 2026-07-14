@@ -16,7 +16,7 @@
 
 | | |
 |---|---|
-| **Status** | Draft v1.0 — foundational |
+| **Status** | v1.1 — foundational, governing · amended 2026-07-13 — 2026-07 amendment batch (AQ-1…AQ-9); proposals in docs/design/amendment-batch-2026-07/ |
 | **Scope** | The decision engine: how the platform *reasons*, not how it is *coded* |
 | **Audience** | Any engineer, scientist, or coach who must understand or extend the platform |
 | **Implementation-independence** | This document names no React component, API, or table unless unavoidable. It describes the engine's mind, not its body. |
@@ -869,9 +869,40 @@ The decisions the engine makes, in dependency order. This is the spine of §8 ma
 - **~** Low early (little data) → rising; confidence is itself a learned quantity.
 - **deps** accumulated history. **→** D1, D4, D7, D12 (next loop). **✗** Noisy/sparse data ⇒ slow learning rate, wide posterior; never overfit a single session.
 
+### D17 · Observation & Analysis  (a family)
+- **Purpose** — Read the athlete's accumulated data and decide what it *means* — before anyone decides what to do about it.
+- **▶** Athlete-state history (sessions done, prescribed vs. actual, readiness inputs, training load); assessment/test results, competition performances, and external-load observations (athlete state); analysis knowledge (signal-derivation models, baselines, trend/anomaly rules, benchmarks); the knowledge-set version.
+- **⚙** Pure interpretation, no prescription: derive the platform's derived signals (readiness, load state); evaluate trends against this athlete's own baselines; detect anomalies; compare against population/sport benchmarks; assemble squad roll-ups from members' *derived* signals only (L13). Every finding is *attributed* — it names the data and knowledge that produced it — and is assigned an authority tier by its confidence at birth (§28.3): gate-capable findings are rare and must be operationally validated; contested metrics enter as soft input or reported metric, never higher.
+- **◀** *Insights*: attributed, confidence-tiered interpretations — each a `{value, confidence, rationale}` — spanning derived signals, trend/anomaly findings, benchmark comparisons, re-diagnosis triggers, and report content. An insight states what the data means; it prescribes nothing.
+- **~** Bounded by data sufficiency and signal validity (§28); sparse history ⇒ fewer, humbler insights, surfaced as such (L11).
+- **deps** accumulated athlete state + knowledge — asynchronous, like D16; never on the planning pass's critical path. **→** D1 and D4 (next planning loop: insights as assessment evidence and diagnosis inputs); D15 (derived signals as typed runtime inputs); D16 (insights as evidence for prior updates); the Coaching Loop's re-diagnosis trigger (§23); the reporting surface (athlete-facing insight; the coach's derived view, §27.1); the AI seam (E3 — family members are substitutable behind this contract). **✗** Missing or noisy data ⇒ degrade explicitly ("not enough data to say"), never impute silently or fabricate certainty (L14); an over-trusted metric ⇒ capped by §28.3 (it may tilt or be shown, never decide); a squad view that would need raw vitals ⇒ the privacy validator fails the build (L13, §27.1).
+
+D17 is a decision **family**: its members — signal derivation, trend & anomaly detection, benchmark comparison, squad roll-up, report assembly — share this contract and this graph position, and new members register additively under §20.1 (a dated additive entry, not an amendment). D17 is pure (P12): same (history, knowledge) ⇒ same insights; time enters only as data timestamps, never as a clock read.
+
+> **The D15/D16/D17 boundary (load-bearing).** D17 decides what the data *means*; D15 decides what the athlete *does about it* this week; D16 decides what the engine *believes differently* next time. D17 emits interpretations — it never reshapes a session and never touches a plan: every planning consequence of an insight reaches the athlete only through D15's re-run of construction (D9–D14) or the next planning pass, where D14's validators dispose as always (L8, L10). D16 emits priors — parameters the next planning loop reads; an insight is not a prior: an insight *describes the athlete's data*, a prior *parameterises future decisions*. D16 may consume D17's outputs as evidence; D17 never writes a prior and never edits a plan (L9).
+
+### 20.1 Extending the catalogue
+
+The catalogue is **closed against silent change and open to governed growth**. Both halves are load-bearing.
+
+**What never changes silently.** The contract and semantics of an existing decision are never altered, split, merged, or re-ordered except by a full amendment under the documentation governance. "The decision graph is stable" (§42) means *its members mean what this section says they mean* — not that the catalogue is finished.
+
+**How a new decision enters.** A genuinely new decision — or a new member of an existing family — is admitted as a **dated additive entry** under the governance batch protocol, versioned like knowledge rather than treated as a constitutional event, when it presents all four of:
+
+1. **Contract completeness** — every field of §19's contract (id, purpose, inputs, reasoning, output, confidence, dependencies, consumers, failure modes, rationale), fully stated.
+2. **Graph position** — declared parents and consumers that keep the graph a directed acyclic graph. The newcomer may register as a consumer of existing outputs; it rewires no existing edge and alters no existing decision's inputs, outputs, or semantics.
+3. **Validation & explainability integration** — its output carries `{output, confidence, rationale}` (L11, §28); its authority is governed by the tiers of §28.3; and anything that would change a plan routes through D14's validators (L8) — a new decision never acquires the last word.
+4. **Knowledge separation** — its domain content enters as knowledge-module entries (P11); an admission adds a *decision*, never embedded facts.
+
+Each admission is recorded in the amendment queue as a dated additive entry, and the catalogue carries a version stamp alongside the knowledge-set version, so any past plan can name the catalogue it was reasoned under.
+
+**What remains a full amendment.** Changing an existing decision's contract or semantics; removing a decision; restructuring the planning spine (the D1→D14 order); anything touching an Engine Law or First Principle. A proposal that cannot yet meet the four criteria is not ready: record it in Open Questions (§44) until it is.
+
+*(This clause is mirrored by the Decision Ontology's additive-vs-structural extension clause: a new decision and the new entities it reasons over enter through the same governed door, in the same batch.)*
+
 ## 21. The decision graph
 
-The decisions form a directed acyclic graph. The planning pass runs it top-to-bottom (D1→D14); the runtime re-runs the lower subgraph (D9–D14) over the immutable baseline; the learning loop runs asynchronously and feeds priors back to the top.
+The decisions form a directed acyclic graph. The planning pass runs it top-to-bottom (D1→D14); the runtime re-runs the lower subgraph (D9–D14) over the immutable baseline; the learning loop runs asynchronously and feeds priors back to the top. Observation & analysis (D17) runs in the same asynchronous band: it reads accumulated history and feeds interpretations *forward* — into the next planning pass, the runtime, and the reporting surface — never backward into a committed plan.
 
 ```
             ┌──────────────────────── KNOWLEDGE ARCHITECTURE (Part VII) ───────────────────────┐
@@ -913,6 +944,7 @@ The decisions form a directed acyclic graph. The planning pass runs it top-to-bo
                                                                           adapted pending sessions
    ───────────────────────────────────────────────────────────────────────────────────────────
    LEARNING (async — L9)   D16 LEARN  ──updates priors──▶ (back to D1, D4, D7, D12 next loop)
+   ANALYSIS (async — L9)   D17 OBSERVE/ANALYSE ──insights──▶ (D1/D4 next loop · D15 · D16 · reporting)
 ```
 
 Read this graph as the literal architecture: **boxes are pure decisions, arrows are typed data, the knowledge band feeds them all, and nothing in the core hard-codes a sport, an injury, or a quality** (P11). The pivot (D4) is drawn prominently because it is where understanding becomes response — the act the current engine omits entirely.
@@ -979,7 +1011,7 @@ The outermost loop. It is the human coaching process of §5, executed continuous
    │                        (runs across the season)                        │
    │                                                                        │
    │   OBSERVE ──▶ ASSESS ──▶ DIAGNOSE ──▶ PRIORITISE ──▶ PLAN ──▶ INTERVENE│
-   │     (D-in)     (D1)        (D4)         (D5)        (D6–14)    (render) │
+   │     (D17)      (D1)        (D4)         (D5)        (D6–14)    (render) │
    │     ▲                                                            │      │
    │     │                                                            ▼      │
    │   LEARN ◀────────────────── VALIDATE ◀───────────────────── (athlete   │
@@ -990,7 +1022,7 @@ The outermost loop. It is the human coaching process of §5, executed continuous
 ```
 
 - **Cadence**: a full turn spans a block (weeks); re-diagnosis happens at block boundaries and on significant events (injury, goal change, a competition result, a sustained readiness shift).
-- **Trigger to re-enter at DIAGNOSE**: end of block; new injury; goal/sport change; a learning signal that a prior has shifted enough to change the diagnosis (e.g., a quality the athlete has now developed past its limiting threshold).
+- **Trigger to re-enter at DIAGNOSE**: end of block; new injury; goal/sport change; a learning signal that a prior has shifted enough to change the diagnosis, or an analysis insight (D17) crossing a re-diagnosis threshold (e.g., a quality the athlete has now developed past its limiting threshold, or a sustained readiness shift).
 - **Why it's a loop, not a pipeline**: the athlete is non-stationary. Their limiting factors *change* as they develop. A static plan is a coaching failure by month two even if it was optimal in week one. The loop exists to keep re-asking "what is the highest-value intervention *now*?" (the one question, §1).
 
 ## 24. The Planning Loop (the deterministic core)
@@ -1144,14 +1176,15 @@ A clean separation of three data kinds, by lifetime and ownership. Conflating th
 |---|---|---|---|---|
 | **Knowledge** | Evidence-tagged domain facts (Part VII §26) | Versioned, slow-changing, shared by all athletes | The platform (curated, reviewed) | Sport profiles, dose-response curves, volume landmarks, validators |
 | **Athlete state** | What is true about one athlete | Long-lived, per-athlete, private | The athlete | Profile, history, logs, readiness inputs, injuries, learned priors |
-| **Derived artefacts** | What the engine computes from the above | Ephemeral / recomputable | (computed) | The plan, the adapted week, readiness/load signals, the coach's derived view |
+| **Derived artefacts** | What the engine computes from the above | Ephemeral / recomputable; point-in-time values may be materialised as dated history (rule 5) | (computed) | The plan, the adapted week, readiness/load signals, the coach's derived view |
 
 Architectural rules following from this split:
 
 1. **The plan is derived, not stored as truth.** It is recomputed from athlete state + knowledge (it is today — keep this). Persist *state and outcomes*, recompute *artefacts*. This is what keeps the engine pure and the plan honest (a hypothesis, regenerable).
 2. **Athlete state is the only thing that must be durably, portably persisted.** Including *committed-session freezes* and *learned priors* — the two things currently device-local or absent (W3). The freeze must travel with the athlete, not the device (L10 in practice).
-3. **Derived signals are computed by decisions, in the engine — not in the UI store.** Readiness and load are *decisions* (parts of D15's inputs), not view-model side-effects. Moving them out of `buildView` into the engine is the fix for A5/W4.
+3. **Derived signals are computed by decisions, in the engine — not in the UI store.** Readiness and load are *decisions* — produced by D17 (Observation & Analysis) and consumed by D15 as typed inputs — not view-model side-effects. Moving them out of `buildView` into the engine is the fix for A5/W4.
 4. **Privacy is a data-architecture invariant, enforced by validation (L13, G8).** Raw vitals (HRV, sleep, RHR) are athlete-state of the most sensitive kind. They may roll *up* into a derived readiness/load artefact that crosses the coach boundary; they may never cross it themselves. The SKB's privacy validator (which *fails the build* if a raw-vital KPI is flagged coach-visible) is the canonical mechanism; the data architecture extends it to all cross-person surfaces.
+5. **Point-in-time derived values may be materialised as dated historical evidence.** *Recomputable* means recomputable **given the same inputs and knowledge version** — recomputing last season's readiness under this season's knowledge produces a different number that is wrong *as history*. A derived signal as computed that day (readiness, load state, an estimated 1RM) may therefore be persisted **append-only**, stamped with the engine + knowledge-set versions that computed it (SA7), and read strictly as historical evidence — the longitudinal athlete record. It is never re-served as the current value (current values are always recomputed); it changes nothing in rule 1 (the plan remains derived — a hypothesis, regenerable); and it crosses the coach boundary only under rule 4's derived-only roll-up. Which signals are materialised, and their retention, is the data-architecture specification's design scope, not this section's.
 
 ### 27.1 The team data surface
 
@@ -1602,7 +1635,7 @@ The architecture's worth is measured by how gracefully it admits the things it d
 
 **E7 — Richer learning (cross-athlete).** As the population grows, sport and population priors (D16's outer tiers) become data-driven rather than purely literature-seeded — the engine learns what works *for athletes like this one*, not just *for this one*. Requires privacy-preserving aggregation (derived, never raw — L13). *Expansion type: aggregation pipeline feeding priors.*
 
-The unifying theme: **the decision graph is stable; expansions are new knowledge, new interventions, new state, or substituted decisions.** If a proposed feature would require re-architecting the decision graph, that is a signal the feature is misframed — or that the architecture has a genuine gap worth recording in Open Questions (§44).
+The unifying theme: **the decision graph is stable; expansions are new knowledge, new interventions, new state, substituted decisions — or, where a genuinely new decision has earned its place, a governed addition to the catalogue (§20.1).** If a proposed feature would require re-architecting the decision graph, that is a signal the feature is misframed — or that the architecture has a genuine gap: record it in Open Questions (§44), and when it matures into a decision meeting §20.1's admission criteria, admit it there — never by an ungoverned fork.
 
 ---
 
