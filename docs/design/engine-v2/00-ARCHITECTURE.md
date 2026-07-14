@@ -430,7 +430,7 @@ not permit (requires an Amendment Register entry in §4).
 | AI proposes at the two seams only; deterministic validators keep the last word | Constitution Art 18; AIGAS §3, §6, §11; TAS §5.13 | AGREES | V2 changes nothing at the AI boundary; `09` binds the set's AI touchpoints to AIGAS's categories and gates unchanged. |
 | The layered shape: pure core / knowledge / orchestration / platform / async band / surfaces | TAS §3.2, §3.3 | AGREES | V2 fills the TAS's layers and relocates no boundary; any analytics-shaped tension follows the DAAS's recorded TAS-clarification candidate (DAAS §1.2), not a new reading. |
 
-**Result: 13 AGREES · 8 DEEPENS · 0 DIVERGES.** No V2 element requires the
+**Result: 14 AGREES · 8 DEEPENS · 0 DIVERGES.** No V2 element requires the
 amended v1.1 set to change. This is the expected outcome, not a surprise: the
 audit itself concluded the architecture is the Constitution's shape and that
 "no amendment is required by anything in this audit" (audit 10 §2), and the

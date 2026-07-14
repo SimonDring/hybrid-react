@@ -699,7 +699,7 @@ two the amended set was built to house.
 **The finding, in one line:** all thirteen levels resolve into the ratified
 structures with nothing left over — no new entity, no new structure, no new
 stage, and no level whose justification rests on gym convention. This is the
-hierarchy-level confirmation of `00-ARCHITECTURE.md` §3's verdict (13 AGREES ·
+hierarchy-level confirmation of `00-ARCHITECTURE.md` §3's verdict (14 AGREES ·
 8 DEEPENS · 0 DIVERGES) and its empty Amendment Register: V2's decision
 hierarchy is the amended v1.1 set's own shape, operationalised.
 

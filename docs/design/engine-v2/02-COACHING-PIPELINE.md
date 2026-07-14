@@ -58,7 +58,7 @@ safely, not further altitudes of judgement (01 §10).
 | **D4** | Limiting-Factor Diagnosis ★ | Identify what most constrains this athlete's performance now — the pivot | 4 · Adaptation Targets (diagnosis half) |
 | **D5** | Priority-Quality Selection | Choose the few qualities (and their adaptation targets) worth developing this block | 4 · Adaptation Targets (response half — ruling R2) |
 | **D6** | Training Strategy | Commit intervention classes per target and the concurrency/sequencing model | 5 · Interventions (class commitment — ruling R1) |
-| **D7** | Periodisation / Block Objective | Structure the macrocycle into blocks, each with one dominant objective | 6 · Training Block Objectives |
+| **D7** | Periodisation / Block Objective | Structure the macrocycle into blocks, each with one dominant objective | 6 · Training Block Objectives (+ 11 · Progression, block-over-block arm — ruling R3) |
 | **D8** | Weekly Objective (microcycle) | Lay each week's loading pattern around the fixed sport schedule | 7 · Weekly Objectives |
 | **D9** | Session Objective | Give each session exactly one named purpose with a fatigue budget | 8 · Session Objectives |
 | **D10** | Movement / Quality Requirements | Translate the session objective into movement and loading characteristics — before any exercise is named | 9 · Exercise Selection (requirements half) |
@@ -505,6 +505,9 @@ then assumed:
   fatigue budget (EDS D9; Constitution Art 7).
 - **Inputs** — `WeeklyObjective` (D8); `PriorityQualities` (D5); the day's
   intent; the resolved constraint artefact (ruling R4 — the box, before
+  construction; D9 consumes it under Art 19's rule that construction happens
+  inside the constraint box — an application of the box at session
+  construction's head, not a widening of EDS §36's shaping table — before
   construction: time, equipment, injuries, readiness envelope).
 - **Knowledge Required** — Programming Knowledge (KA §4 Domain 6);
   Quality & Adaptation Knowledge (Domain 3). Detail: `04`.
@@ -1057,7 +1060,7 @@ constraint layer (commitment C2) registers as a named pass under §20.1.
 **Ruling: no admission — the constraint layer is a typed artefact, not a
 decision.** The ratified owner already places constraint computation *inside*
 existing stages — "computed first (during D1/D6/D8)" (EDS §36) — and the
-KA's own taxonomy classifies constraint resolution as Calculation over
+KA §2.2's classification rule classifies constraint resolution as Calculation over
 already-decided facts, not Decision Logic (KA §2; TAS §5.2): athlete
 constraints are D1 outputs, strategy bounds D6 outputs, spacing and sport
 calendar D8 outputs. V2's constraint engine (`06-CONSTRAINT-ENGINE.md`)
