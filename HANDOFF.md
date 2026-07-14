@@ -106,6 +106,15 @@ move it to the archive file rather than letting this one grow._
   AQ-2 direction verdict unlocks the ND-1 authoring sprint. Wave A follow-up
   fixes: PR #174.
 
+- **Phase 2 (2026-07-14): the V2 BLUEPRINT SET IS AUTHORED — PR pending Simon's
+  ratification (DEVELOPMENT-PLAN §5.3).** All 14 deliverables in
+  `docs/design/engine-v2/` (+ atlas §4.8): anchors gate-reviewed; the whole-set
+  consistency pass is the review-of-record (verdict: READY); reconciliation vs
+  the ratified v1.1 set = 22 rows, 0 divergences, empty Amendment Register.
+  Migration hardened to M0–M6 (M1 = Wave A, LANDED; legacy fill DELETED at M2);
+  ten 🔒 Simon decision points ledgered in deliverable 11 §8.3. Ratifying the
+  blueprint opens Phase 3 (the build).
+
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
 0. **⚠ THE DEVELOPMENT PLAN — created 2026-07-13, adoption = Simon's merge.**
