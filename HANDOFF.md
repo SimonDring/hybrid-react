@@ -37,7 +37,7 @@ move it to the archive file rather than letting this one grow._
   (#163 — classic lifts dose from the discipline scheme; only the olympic archetype
   re-baselined; `tests/olympic-dose.js`), **player_status roster-removal privacy gap
   FIXED in the repo** (#166 — `coach_reads_member` policy + cleanup trigger, migration
-  `20260712`; ⚠ staging apply + harness still owed, see open queue #4), **CI hygiene**
+  `20260712`; applied to prod 2026-07-14 — see open queue #4), **CI hygiene**
   (#164 — per-test timeout, one test definition, doc-aware deploys), **ESLint floor
   with engine-purity rules** (#165 — Art 18 enforced at lint time; found
   TrainingCalendar.jsx provably dead, TD-22), and the **CLAUDE.md overview reframed**
@@ -97,8 +97,8 @@ move it to the archive file rather than letting this one grow._
     (default OFF; flip awaits I5, Simon-gated).
   - **P0-5** — triathlon + zero-gap run/cycle + code-less GAA rescued off the
     legacy fill onto the diagnosis-first path (quality gate: improved/not-degraded).
-  Still owed from Wave A review: **P1-10** staging apply (runbook shipped in the
-  Wave A PR — see open queue #4).
+  Wave A review residual **P1-10 CLOSED (2026-07-14)**: the F3 migration is applied
+  to prod (see open queue #4 — only the Edge Function deploys remain).
 - **Phase 1 (2026-07-13): the AQ-1…9 ratification batch is DRAFTED — PR #175 awaits
   Simon's ratification decision.** Six proposal files + whole-batch consistency
   review in `docs/design/amendment-batch-2026-07/` (nothing applied to frozen
@@ -114,6 +114,27 @@ move it to the archive file rather than letting this one grow._
   Migration hardened to M0–M6 (M1 = Wave A, LANDED; legacy fill DELETED at M2);
   ten 🔒 Simon decision points ledgered in deliverable 11 §8.3. Ratifying the
   blueprint opens Phase 3 (the build).
+
+- **Phase 3 · M0 (the test net) — DONE, PR pending Simon's merge (2026-07-14).**
+  The CI net under the whole V2 migration, all ADDITIVE (zero engine-source change):
+  an engine-owned property suite (`packages/engine/tests/prop-*` — purity,
+  determinism, contracts, additive-identity, reflow≡baseline) closing the TR-11
+  self-test gap; 16 new golden archetypes for the audit's blind paths (armed-D7,
+  injured incl. 5 bare regions, measured-vs-prior, zero-gap rescue, non-logging
+  progressor — 0 existing snapshots moved); a mechanical snapshot expected-delta
+  guard (TR-01 recurrence killer); RLS harness wired into CI (inert until Simon
+  adds `RLS_STAGING_SUPABASE_URL/ANON_KEY`); perf baselines. Suite 203/203 app +
+  6/6 engine; Opus review re-verified the net can actually fail.
+  **HEADLINE FINDING — CAUGHT *and* FIXED (Simon ruled 2026-07-14).** The
+  reflow≡baseline property caught a live double-count: an in-season sport athlete's
+  runtime reflow re-applied the SKB season trim (×0.6) off the *profile's* season —
+  not live state — on top of a baseline plan that already periodises in-season.
+  Fix: reflow diverges ONLY for live state (completions/readiness/injuries/freezes);
+  calendar/season signals are excluded from the reflow rule path (`reflowAdjust`
+  `REFLOW_EXCLUDED_SIGNALS`). Baseline byte-identical; the property is now a HARD
+  invariant (XFAIL retired). ⚠ Still Simon's call, deferred: `competition_within_h`
+  (taper) + `matches_this_week` (fixtures) are the same class — taper needs a
+  baseline-double-count confirm, fixtures need D8 baseline ownership (M6).
 
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
@@ -142,13 +163,11 @@ move it to the archive file rather than letting this one grow._
    `docs/architecture/AIGAS-REVIEW-2026-07-06.md` + governance audit 06); the
    remaining Stage 6 preconditions are listed in
    `docs/design/amendment-batch-2026-07/06-aigas-ratification.md` §5.
-4. **⚠ Pending applies (NEW STEP FIRST)** — **`20260712_player_status_membership_scope.sql`
-   (the F3 privacy fix, merged #166) is in the repo but applied NOWHERE yet: apply to
-   STAGING → run `node supabase/tests/rls-harness.mjs` (7 new F3 cases) → prod, per
-   `supabase/SECURITY-DEPLOY.md`. Step-by-step runbook shipped in the Wave A PR (P1-10).** DB migrations through `20260711` are on prod; the paired
-   **Edge Functions deploy separately**: OAuth-nonce callbacks + `fitbit-sync` (S1/S4/S8)
-   and `ai-render` (AI go-live only). WP-50 staging harness run still owed
-   (per `supabase/SECURITY-DEPLOY.md`).
+4. **⚠ Pending applies — DB done, Edge Functions still owed.** **`20260712_player_status_membership_scope.sql`
+   (the F3 privacy fix; P1-10) is APPLIED (Simon, 2026-07-14)** per the runbook — DB
+   migrations through `20260712` now on prod; ledger updated. **Still owed: the paired
+   Edge Functions deploy separately** — OAuth-nonce callbacks + `fitbit-sync` (S1/S4/S8)
+   and `ai-render` (AI go-live only), per `supabase/SECURITY-DEPLOY.md`.
 5. **ACWR cold-start calibration gate** — don't let acute:chronic load steer a fresh
    plan until enough per-user recovery data exists (fresh plans false-flag returning
    users as overtraining). Future WP, design not started.

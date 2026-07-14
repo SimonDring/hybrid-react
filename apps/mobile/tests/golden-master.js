@@ -18,6 +18,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
+import { applyInjuryRules } from '@performance-os/engine/lib/injury/injuryFilter.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
@@ -37,9 +38,18 @@ const A = (o) => ({ ...BLANK_ANSWERS, ...o });
 // (WP-49 Plan 2 T1's new build-discipline archetypes) is silently dropped by it — spread it back
 // onto the profile afterwards, exactly as the app's own adapter call site would (the profile is
 // the thing that ultimately carries `discipline` into generatePlan/profileToAthleteModel).
+//
+// M0 T2 (2026-07-14) extends the same trick to `athlete_model`: PlanGenerator.js reads D7's
+// recoverability prior from `profile.athlete_model.learnedPriors.recoveryRate.value` and the
+// position-modifier demand boost from `profile.athlete_model.sportingContext.position` — BOTH
+// read the raw profile field directly, never through profileToAthleteModel's adapter (which does
+// not forward learnedPriors/position at all — verified against packages/engine/src/lib/adapters/
+// profileToAthleteModel.js). answersToProfilePatch has no `athlete_model` concept, so — same as
+// `discipline` — it must be spread back on afterwards for these archetypes to actually arm anything.
 const toProfile = (answers) => {
   const profile = answersToProfile(answers);
-  return answers.discipline ? { ...profile, discipline: answers.discipline } : profile;
+  const withDiscipline = answers.discipline ? { ...profile, discipline: answers.discipline } : profile;
+  return answers.athlete_model ? { ...withDiscipline, athlete_model: answers.athlete_model } : withDiscipline;
 };
 
 // ── archetype matrix — decision-bearing branches, not exhaustive ───────────────
@@ -99,11 +109,126 @@ const MATRIX = {
   'build·powerlifting·advanced·4d': { ...A({ goalType: 'build', experienceLevel: 'advanced', daysPerWeek: 4, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: { squat: 180, bench: 130, deadlift: 230 } }), discipline: 'powerlifting' },
   'build·hypertrophy·intermediate·5d': { ...A({ goalType: 'build', experienceLevel: 'intermediate', daysPerWeek: 5, days: ['mon', 'tue', 'wed', 'fri', 'sat'], equipment: FULL, sex: 'male', lifts: {} }), discipline: 'hypertrophy' },
   'build·olympic·advanced·4d': { ...A({ goalType: 'build', experienceLevel: 'advanced', daysPerWeek: 4, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: { squat: 150 } }), discipline: 'olympic' },
+
+  // ── M0 T2 extension set (2026-07-14, docs/design/engine-v2/13-VALIDATION-STRATEGY.md §2.2) ──
+  // Additive only — every archetype above is untouched. Fills the audit's "armed-production
+  // paths" blind spot (TR-05/TR-11; audit 06): states real users reach that no archetype
+  // exercised, because every existing profile happens to leave these seams unarmed.
+
+  // Armed-D7 (audit 08 G13 / audit 06 TR-05): profile.athlete_model.learnedPriors.recoveryRate
+  // is read DIRECTLY off the raw profile by PlanGenerator.js (never via profileToAthleteModel,
+  // which does not forward learnedPriors) — the D7 progression/deload arm was previously only
+  // ever exercised on the schema default (recoveryRate 1, band 'moderate', gate closed because
+  // profile.athlete_model is normally absent → null → blockDeloadSteers() false). These two
+  // pin the gate OPEN at both bands (verified empirically: unarmed !== armedLow !== armedHigh;
+  // blockPlan.steered flips false→true) — low recoverability (<0.9, tighter deload cadence +
+  // shorter blocks) and high (>1.1, longer). Reuses the rugby·advanced·off·4d shape (already
+  // diagnosis-bearing) so only the prior differs.
+  'sport·rugby·advanced·off·4d·armed-d7-low': { ...A({ goalType: 'sport', skbSport: 'rugby', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'advanced', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['wed', 'sat'] }), athlete_model: { learnedPriors: { recoveryRate: { value: 0.75, source: 'learned', confidence: 'moderate' } } } },
+  'sport·rugby·advanced·off·4d·armed-d7-high': { ...A({ goalType: 'sport', skbSport: 'rugby', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'advanced', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['wed', 'sat'] }), athlete_model: { learnedPriors: { recoveryRate: { value: 1.2, source: 'learned', confidence: 'moderate' } } } },
+
+  // Measured-vs-prior pair (audit 07 SR-02 / audit 08 G1): the D1 measured-estimator seam.
+  // ONE quality (maxStrength) can be "measured" — from profile.lifts via performanceMetrics —
+  // every other quality is always prior-inferred (estimation.js). Identical profile in every
+  // other respect; only `lifts` differs, isolating exactly this seam. bodyweight_kg is required
+  // for both twins (the measured side needs it for the bodyweight-multiple scoring).
+  'measured·strength·intermediate·4d·full·prior': A({ goalType: 'build', strengthStyle: 'strength', experienceLevel: 'intermediate', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', bodyweight_kg: '82', lifts: {} }),
+  'measured·strength·intermediate·4d·full·measured': A({ goalType: 'build', strengthStyle: 'strength', experienceLevel: 'intermediate', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', bodyweight_kg: '82', lifts: { squat: 150, bench: 105, deadlift: 190, ohp: 75, pull: 10 } }),
+
+  // Non-logging progressor (audit 07 SR-01 / audit 08 G9): pins the plan a non-logging
+  // intermediate actually gets today — an athlete who enters no lifts and never logs a set.
+  // The 12-week plan this profile resolves to CONTAINS weeks 5 and 6 (mid-phase, no deload/
+  // taper edge), letting a later property test (M0 T3) diff them directly out of this one
+  // snapshot. Verified empirically against the CURRENT (pre-M2) engine: week 5 and week 6's
+  // items are byte-identical (flat load/reps within a phase) — this is the honest, un-fixed
+  // SR-01 gap (13-VALIDATION-STRATEGY.md CA-3: the M2 exit gate, not this phase's job). Pinning
+  // it here is what lets M2's fix show up later as a deliberate, reviewed delta.
+  'progression·strength·intermediate·5d·full·nonlogging': A({ goalType: 'build', strengthStyle: 'strength', experienceLevel: 'intermediate', daysPerWeek: 5, sessionMinutes: 60, days: ['mon', 'tue', 'wed', 'fri', 'sat'], equipment: FULL, sex: 'male', lifts: {} }),
+
+  // Steered-path archetypes (audit 10 P1-4 "continuous rails") — position modifiers. NOTE: SKB
+  // decisionRules (competition_within_h / matches_this_week / acwr / readiness / ...) are
+  // evaluated ONLY by evaluateRules() from PlanService's REFLOW (packages/engine/src/lib/
+  // sportKnowledge/rules.js), never from generatePlan() — golden-master.js calls generatePlan
+  // directly and has no runtime context to trigger a decisionRule, so that half of this family
+  // is out of this file's reach (a Task 3/reflow-property concern, not a golden-snapshot one;
+  // documented rather than faked — Global Constraint 2). Position DOES flow through generatePlan
+  // (profile.athlete_model.sportingContext.position -> demandProfile.js's primaryQualities
+  // floor-boost), so these two pin genuinely different diagnoses than the equivalent no-position
+  // archetypes already in the matrix (verified: rugby "Outside backs" -> aerobicCapacity vs the
+  // no-position rugby row's maxStrength; soccer "Goalkeeper" -> explosiveStrength vs the
+  // no-position soccer row's aerobicCapacity).
+  'sport·rugby·advanced·off·4d·position-outside-backs': { ...A({ goalType: 'sport', skbSport: 'rugby', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'advanced', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['wed', 'sat'] }), athlete_model: { sportingContext: { position: 'Outside backs (wings, fullback, centres)' } } },
+  'sport·soccer·intermediate·off·3d·position-goalkeeper': { ...A({ goalType: 'sport', skbSport: 'soccer', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'intermediate', daysPerWeek: 3, sessionMinutes: 60, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['tue', 'sat'] }), athlete_model: { sportingContext: { position: 'Goalkeeper' } } },
 };
+
+// Legacy-rescue: zero-gap run/cycle (audit 04 B1 / audit 08 G6; rescued Wave A PR #173, proven
+// by tests/legacy-cohort-rescue.js). Triathlon and code-less GAA are ALREADY pinned above
+// (rows added pre-M0) — both already show meta.diagnosis present in the committed snapshot,
+// confirming they land on D11, not the fill. "Zero-gap run/cycle" is the one rescued cohort
+// with NO golden-snapshot pin yet: an athlete whose diagnosis finds no capability gap at all
+// (prioritise.js returns [] — the literal audit-01 defect locus). generatePlan's documented
+// opts.performanceModel override seam (the same one legacy-cohort-rescue.js uses) constructs
+// it deterministically rather than relying on a naturally-maxed-out athlete. Keyed in
+// OPTS_MATRIX (not MATRIX) because it needs a second generatePlan argument the plain archetypes
+// don't; MATRIX carries the base answers so `toProfile` still runs the ordinary path.
+const ZERO_GAP_PERFORMANCE_MODEL = { priorityAdaptations: [], limitingFactors: [] };
+const OPTS_MATRIX = {
+  'sport·run-middle·advanced·zero-gap': { performanceModel: ZERO_GAP_PERFORMANCE_MODEL },
+  'sport·cycle·advanced·zero-gap': { performanceModel: ZERO_GAP_PERFORMANCE_MODEL },
+};
+MATRIX['sport·run-middle·advanced·zero-gap'] = A({ goalType: 'sport', sport: 'run', runDiscipline: 'middle', sportIntent: 'recreational', experienceLevel: 'advanced', daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', bodyweight_kg: '80', lifts: { squat: 220, bench: 150, deadlift: 270, ohp: 100 } });
+MATRIX['sport·cycle·advanced·zero-gap'] = A({ goalType: 'sport', sport: 'cycle', sportIntent: 'recreational', experienceLevel: 'advanced', daysPerWeek: 3, sessionMinutes: 45, days: ['mon', 'wed', 'fri'], equipment: FULL, sex: 'male', bodyweight_kg: '80', lifts: { squat: 220, bench: 150, deadlift: 270, ohp: 100 } });
+
+// Injured athletes across regions, INCLUDING the five bare rehab regions (audit 10 §5 /
+// Simon ledger item 4: shin, quad, elbow, wrist, cervical have contraindication data —
+// packages/engine/src/data/injury/profiles.js — but NO authored rehab exercises —
+// packages/engine/src/data/rehabExercises.js). Do NOT author rehab content here (out of
+// scope science) — pin whatever the CURRENT engine honestly does.
+//
+// CRITICAL scoping fact (verified against PlanGenerator.js:261-262's own comment and a grep for
+// applyInjuryRules/applyPrevention call sites): generatePlan(profile) is INJURY-BLIND. Active-
+// injury contraindication/rehab-session logic (packages/engine/src/lib/injury/injuryFilter.js)
+// is applied only by the APP layer (PlanService.js's injuryFilteredPhases, reading a persisted
+// injuries table), never inside generatePlan. So these archetypes pin generatePlan(baseAnswers)
+// THEN apply the engine's own pure applyInjuryRules(week, [injury]) to one representative week —
+// exactly the seam PlanService calls, exercised directly the way tests/legacy-cohort-rescue.js
+// exercises other pure engine internals. knee/shoulder (authored rehab) sit alongside the five
+// bare regions so the pin shows the full honesty spectrum: authored rehab session (knee,
+// shoulder) · partial in-place substitution with no rehab to add (shin, quad, cervical — bare,
+// below the full-replace threshold) · the explicit `unservable` safety-net banner (elbow, wrist —
+// bare, above it). Severity 4 + phase 'protect' forces the most restrictive block set regardless
+// of declared phase (injuryRules.js's severity>=4 rule) — the worst-case, most legible pin.
+const INJURY_BASE_ANSWERS = A({ goalType: 'build', strengthStyle: 'strength', experienceLevel: 'intermediate', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: { squat: 140, bench: 100, deadlift: 180 } });
+const INJURY_REGIONS = ['knee', 'shoulder', 'shin', 'quad', 'elbow', 'wrist', 'cervical'];
+const INJURY_MATRIX = {};
+for (const region of INJURY_REGIONS) {
+  INJURY_MATRIX[`injured·${region}·intermediate·4d·full`] = { region, injury: { body_part_key: region, status: 'active', severity: 4, rehab_phase: 'protect', side: 'n/a' } };
+}
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
   else console.log('PASS:', msg);
+}
+
+// Every archetype key the matrix knows, whichever of the three shapes it's stored in
+// (plain MATRIX / MATRIX+OPTS_MATRIX / INJURY_MATRIX). Keeps buildCurrent() and the
+// in-process determinism check (below) walking exactly the same set.
+const ALL_KEYS = [...Object.keys(MATRIX), ...Object.keys(INJURY_MATRIX)];
+
+// Generates one archetype's pinned value. Injury archetypes aren't a generatePlan()
+// output at all — generatePlan is injury-blind (PlanGenerator.js's own comment: "runtime
+// context (active injuries) is validated where it's known — the app layer"); the pin is
+// one representative week AFTER the engine's own pure applyInjuryRules() — the same seam
+// PlanService's injuryFilteredPhases calls — so the snapshot is the week an injured
+// athlete would actually see, not the injury-blind baseline.
+function generateArchetype(key) {
+  if (key in INJURY_MATRIX) {
+    const { injury } = INJURY_MATRIX[key];
+    const basePlan = generatePlan(toProfile(INJURY_BASE_ANSWERS));
+    const baseWeek = basePlan.phases[0].weeks[1];
+    return applyInjuryRules(baseWeek, [injury]);
+  }
+  return generatePlan(toProfile(MATRIX[key]), OPTS_MATRIX[key] || {});
 }
 
 // Build the current snapshot (archetype → serialized plan), failing loudly if any
@@ -111,9 +236,9 @@ function assert(cond, msg) {
 function buildCurrent() {
   const out = {};
   let threw = 0;
-  for (const [key, answers] of Object.entries(MATRIX)) {
+  for (const key of ALL_KEYS) {
     try {
-      out[key] = generatePlan(toProfile(answers));
+      out[key] = generateArchetype(key);
     } catch (e) {
       threw++;
       console.error('FAIL: archetype threw —', key, '—', e && e.message);
@@ -158,9 +283,9 @@ const current = buildCurrent();
 // is clock-independent (both calls within microseconds) and catches accidental
 // nondeterminism a refactor might introduce (Set/Map iteration order, stray Date use)
 // — independent of whether the committed snapshot is up to date.
-for (const [key, answers] of Object.entries(MATRIX)) {
+for (const key of ALL_KEYS) {
   if (!(key in current)) continue;
-  const again = JSON.stringify(generatePlan(toProfile(answers)));
+  const again = JSON.stringify(generateArchetype(key));
   assert(again === JSON.stringify(current[key]), `deterministic: ${key}`);
 }
 

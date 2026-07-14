@@ -38,11 +38,14 @@ function fires(trigger, ctx) {
   }
 }
 
-export function evaluateRules(profile = {}, context = {}) {
+export function evaluateRules(profile = {}, context = {}, { excludeSignals = [] } = {}) {
   const prof = skb.get(skbSportIdOf(profile));
   if (!prof || !Array.isArray(prof.decisionRules)) return { effects: [] };
   const effects = [];
   for (const r of prof.decisionRules) {
+    // A caller may exclude whole trigger-signal classes (e.g. the reflow excludes
+    // calendar/season-schedule signals it must not re-apply — see reflowAdjust.js).
+    if (excludeSignals.length && r.trigger && excludeSignals.includes(r.trigger.signal)) continue;
     if (r.trigger && r.effect && fires(r.trigger, context)) {
       effects.push({ type: r.effect.type, params: r.effect.params || {}, ruleId: r.id });
     }

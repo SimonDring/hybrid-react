@@ -10,6 +10,8 @@
     "./data/*": "./src/data/*"
   },
   "scripts": {
-    "test": "node ../../apps/mobile/tests/run-all.mjs"
+    "test": "node ../../apps/mobile/tests/run-all.mjs",
+    "test:engine": "node tests/run-engine.mjs",
+    "bench": "node tests/bench.mjs"
   }
 }

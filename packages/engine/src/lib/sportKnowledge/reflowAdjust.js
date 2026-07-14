@@ -7,8 +7,22 @@
  */
 import { evaluateRules } from './rules.js';
 
-export function ruleVolumeAdjustment(profile, context = {}) {
-  const { effects } = evaluateRules(profile, context);
+// Calendar / season-schedule signals are KNOWN at plan-generation time and are already
+// applied by baseline periodisation (seasonProgramming → the SKB `competition` block;
+// V2 D7/D8). They must NOT drive the runtime reflow, or in-season volume is reduced
+// TWICE — once in the baseline plan, once again here — excessively cutting load with
+// nothing having actually changed. The reflow may diverge from baseline only for LIVE
+// state: completions (→ acwr), readiness, injuries (soreness/illness), freezes
+// (Simon's ruling, 2026-07-14; the M0 reflow≡baseline property caught the season
+// double-count). `competition_within_h` (taper) and `matches_this_week` (fixtures) are
+// the same class and are candidates to join this list once baseline owns them
+// (taper: confirm the baseline-taper double-count; fixtures: needs the D8 fixture→
+// constraint work, M6) — flagged for Simon, deferred here to avoid removing behaviour
+// baseline can't yet replace.
+export const REFLOW_EXCLUDED_SIGNALS = ['season'];
+
+export function ruleVolumeAdjustment(profile, context = {}, { excludeSignals = REFLOW_EXCLUDED_SIGNALS } = {}) {
+  const { effects } = evaluateRules(profile, context, { excludeSignals });
   let volumeMult = 1, forceDeload = false;
   const ruleIds = [];
   for (const e of effects) {
