@@ -220,6 +220,46 @@ flowchart LR
 
 **Why it matters.** This is the single clearest piece of evidence that the "evidence-based, honest about confidence" claim in the Vision document is actually implemented in code, not just asserted in marketing copy — a genuinely unusual level of engineering discipline for a project this size.
 
+### 4.8 Decision Engine V2 (proposal) *(added 2026-07-14 — describes a design proposal, NOT the running engine)*
+
+> **Boundary note.** Everything in §§4.0–4.7 above describes the engine as it runs today. This subsection is different in kind: it points at a **design proposal only**. A complete V2 design set exists at `docs/design/engine-v2/` (authored 2026-07-14, tier T4 working documents, **not adopted** — it becomes the blueprint only when Simon ratifies it via `docs/DEVELOPMENT-PLAN.md` §5.3, "Ratify the blueprint"). No element of the V2 design exists in code yet; nothing below is a description of current behaviour.
+
+**What the proposal targets, in brief** (from the set's anchor, `00-ARCHITECTURE.md` §2). One pure, deterministic reasoning core — assessment, planning, validation, readiness, and recommendation are decisions inside it, not separate engines. The engine is an explicit, ordered graph of coaching decisions (the ratified D1→D17 catalogue), with sessions rendered *from* decisions, never assembled directly. Knowledge — including every magnitude and coefficient — is versioned, evidence-tagged data the core consumes, never contains. Constraints (time, equipment, injuries, calendar, readiness) resolve into one typed artefact *before* construction, so validation becomes the backstop it was always meant to be, not the primary defence. Construction proposes; an independent validator suite disposes, with the Constitution's conflict order compiled into an explicit resolution pass inside D14. Explanation is a read-model over the decision trace — assembled from the reasoning, never reconstructed after the fact. Analysis (D17) and learning (D16) run in an async band off the planning path: insights and priors flow forward-only into the *next* planning pass. Runtime adapts by projection over pending work only — the generated plan is immutable and a started session is frozen absolutely. And there is exactly ONE selection engine: the legacy volume-first fill is designed out entirely, its retirement a gated migration phase.
+
+The proposed module graph, reduced to its spine (the full typed version is diagram 1 of `12-MODULE-DEPENDENCY-DIAGRAM.md`; like the original, this is a design artefact, non-normative):
+
+```mermaid
+flowchart TB
+  MKNOW[["Knowledge registries — versioned,\nevidence-tagged data\n(sport, qualities, exercises, dose,\nconstraint, injury, stage rules, analysis)"]]
+
+  subgraph CORE["Planning pass — pure, deterministic (D1→D14)"]
+    MATH["Athlete model (D1)"] --> MDIAG["Demand + diagnosis\n(D2–D5)"]
+    MDIAG --> MSTRAT["Strategy + periodisation\n(D6–D8)"]
+    MCONSTR["Constraint engine —\nthe box, resolved\nBEFORE construction"]
+    MATH --> MCONSTR
+    MSTRAT --> MCONSTR
+    MSTRAT --> MSESS["Session builder + dose + schedule\n(D9–D13) — the ONE selection engine"]
+    MCONSTR --> MSESS
+    MSESS --> MVAL["Validation (D14) —\nsuite + conflict-order pass"]
+  end
+
+  MEXPL[["Explanation read-model —\nthe decision trace, rendered"]]
+  MRT["Runtime projection (D15) —\npending work only,\nfreeze-on-start absolute"]
+
+  subgraph ASYNC["Async band — off the planning path"]
+    MANLYS["Analysis (D17)"] ==> MLEARN["Learning (D16) —\nwrites priors only"]
+  end
+
+  MKNOW --> CORE
+  MKNOW --> MANLYS
+  CORE -. "trace + report" .-> MEXPL
+  MVAL --> MRT
+  MANLYS == "insights → next pass" ==> MATH
+  MLEARN == "priors → next pass" ==> MATH
+```
+
+**Where to read the proposal.** Start at the set's own index and status banner: [`docs/design/engine-v2/README.md`](../design/engine-v2/README.md) — it gives the reading order (anchor documents 00–02 first) and the rule the whole set obeys: every document is a proposal validated against the frozen governance set as amended (v1.1), with genuine divergences queued in an Amendment Register, never applied.
+
 ---
 
 ## 5. Adaptive Runtime — PlanService
