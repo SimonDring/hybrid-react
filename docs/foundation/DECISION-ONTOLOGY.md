@@ -11,11 +11,11 @@
 
 | | |
 |---|---|
-| **Status** | v1.0 — foundational |
+| **Status** | v1.1 — foundational · amended 2026-07-13 — 2026-07 amendment batch (AQ-1…AQ-9); proposals in docs/design/amendment-batch-2026-07/ |
 | **Authority** | Governs all naming and modelling across the platform. Subordinate to the [Constitution](CONSTITUTION.md); the canonical home for *what each concept is*. The [EDS](../engine/00-ENGINE-DESIGN-SPECIFICATION.md) and code must use these terms with these meanings. |
 | **Scope** | Platform-wide: engine, app, team, AI, and data model. |
 | **Relationship to the EDS** | The EDS defines *decisions* (D1–D16) and *domain models* operationally; this document defines the *entities those decisions operate on* and their relationships. Where the EDS §6 glossary and this document overlap, this document is the canonical definition; the EDS points here. |
-| **Principle** | Nothing should be implemented until the entity it manipulates is defined here. New concepts are added to this ontology *first*, then built. |
+| **Principle** | Nothing should be implemented until the entity it manipulates is defined here. New concepts are added to this ontology *first*, then built. Additive growth inside an existing family is a versioned, dated edit under the extension clause (§13); changing the structures themselves is a constitutional-grade amendment. |
 
 ---
 
@@ -23,13 +23,15 @@
 
 The ontology is in three movements:
 
-1. **The three structures** (§1) — the single most important correction this document
-   makes. The platform's concepts are not one hierarchy; they are *three orthogonal
-   structures* that the original brief mashed together. Getting them apart dissolves
-   most ambiguity.
+1. **The four structures** (§1) — the single most important correction this document
+   makes, extended once by amendment. The platform's concepts are not one hierarchy;
+   they are *four orthogonal structures*: the three the original brief mashed
+   together, plus the Analysis Spine — added when the platform's second product, the
+   evidence-graded understanding of the athlete, entered scope. Getting them apart
+   dissolves most ambiguity.
 2. **The reasoning spine** (§2) — the challenged-and-improved order in which decisions
    are made, with a rationale for *every* edge.
-3. **The entity catalogue** (§3–§9) — every entity, grouped into seven families, each
+3. **The entity catalogue** (§3–§10) — every entity, grouped into eight families, each
    defined under a fixed template:
 
    - **Definition** — what it is.
@@ -54,13 +56,14 @@ canonical term.
 
 ---
 
-# 1. The three structures
+# 1. The four structures
 
 The brief proposes a single top-to-bottom hierarchy: *Athlete → Goal → Performance
 Outcome → … → Session → Week → Block → Season.* **This is the document's first thing
 to challenge, because it conflates three different relationships into one chain, and
-that conflation is the source of most modelling confusion.** There are three distinct
-structures, and every entity belongs to one of them:
+that conflation is the source of most modelling confusion.** There are four distinct structures, and every entity belongs to one of them. Three
+define how the platform *coaches*; the fourth (§1.4, added by amendment) defines how
+what the platform *observes* becomes what it *understands*:
 
 ### 1.1 The Reasoning Spine (temporal: what is decided before what)
 
@@ -120,6 +123,36 @@ Article 5), this triangle is *how it thinks*. Every limiting factor is a gap on 
 quality axis; every priority is a chosen gap to close; every intervention is a way
 to close it. A workout generator has no triangle — it jumps from goal to exercises.
 This platform's identity is that the triangle sits between them.
+
+### 1.4 The Analysis Spine (evidential: how observation becomes understanding)
+
+The lifecycle of the athlete's data. The Reasoning Spine (§1.1) is the order in
+which coaching *decisions* are made; the Analysis Spine is the path *evidence*
+travels to reach them — and to reach the humans the platform serves. It exists
+because the platform's product is not only the plan but the evidence-graded
+understanding of the athlete the plan is reasoned from, and that understanding has
+its own lifecycle:
+
+   CAPTURE       the observation itself — Test Result · Match Performance
+                 · External Load Observation · training logs · vitals
+      │  ▼ an observation is kept comparable, attributed, and private
+   MODEL         the athlete's longitudinal record (Athlete State and its history)
+      │  ▼ data is interpreted, never merely accumulated
+   INSIGHT       the derived, attributed interpretation — Insight · Squad Signal
+                 · the content of a Report
+      │  ▼ confidence governs authority (the same rail as everywhere else)
+   DECISION      entry into the Reasoning Spine (diagnosis, runtime, learning)
+                 and delivery to the athlete or coach (Report, Recommendation)
+
+**Why this is a fourth structure and not more spine:** the Reasoning Spine already
+ends in Learning, and Learning updates Priors — but priors are not the only thing
+data becomes. A test result sharpens a Capability; a season of match data feeds the
+transfer check; a trend becomes an Insight a coach reads; a roster of derived
+signals becomes a Squad Signal. None of these is a *coaching decision step*; all of
+them are *evidence moving toward one*. The Analysis Spine gives that movement a
+home without adding a single step to the order of coaching. Its entities live in
+Family VIII (§10); its confidence-and-authority discipline is the existing
+Confidence rail (§2, §9), unchanged.
 
 > **The single biggest improvement over the brief's hierarchy:** separating these
 > three structures. The brief's chain is the Reasoning Spine with the Containment
@@ -1155,7 +1188,223 @@ it learns. These entities make the Constitution's honesty (Title IV) and archite
 
 ---
 
-# 10. Relationship summary & cardinalities
+# 10. Family VIII — Measurement & Analysis
+
+What the platform *observes* about the athlete, and what it *understands* from
+those observations — the entities of the Analysis Spine (§1.4). Family VI defines
+the athlete's training *state*; this family defines the *evidence*: the measured
+facts that persist as ground truth (Test Result, Match Performance, External Load
+Observation), and the derived, attributed interpretations built from them (Insight,
+Squad Signal, Report). *Added by amendment: v1.0's vocabulary stopped at
+training-state signals, so the platform's second product — the evidence-graded
+understanding of the athlete — had nothing named to be built from, and the
+analytics→decision loop had no entities to enter through.*
+
+Two boundaries govern the whole family:
+
+- **Kind vs. entity.** In the Knowledge Architecture's classification (KA §2),
+  Test Results and observations are *Stored Data* — ground truth recorded from
+  reality — while Insights, Squad Signals, and Reports are *Derived Data* —
+  computed, attributed, recomputable, never stored as truth. This family names the
+  entities; the KA owns the kinds. An Insight is Derived Data *promoted to a named
+  entity* because decisions and humans consume it and it must therefore carry its
+  derivation, confidence, and authority tier like everything else they consume.
+- **Names here, mechanics elsewhere.** As with Family VII (whose structure is the
+  Knowledge Architecture's subject), these entities' storage, ingestion, and
+  computation mechanics belong to the architecture tier — the TAS's boundaries and
+  the data-pillar specification it governs. Here, as everywhere, we define what
+  each concept *is*.
+
+## Assessment
+- **Definition.** A structured, repeatable, versioned measurement protocol the
+  athlete performs under stated conditions to estimate one or more **Physical
+  Qualities** — the instrument side of measurement, distinct from any single
+  result it produces. *Synonyms:* test, testing protocol; a scheduled set of
+  Assessments is a testing battery.
+- **Purpose.** The thing that turns **Capability** from inference into
+  measurement. The Diagnostic Triangle's athlete side is only as strong as what
+  has been measured, and "*a quality with no assessment and no dose model is a
+  label*" (§5, Constitution Article 12) — this entity is what the **Physical
+  Quality**'s "assessment method" attribute names. Versioning is what keeps
+  results comparable across years: a protocol change is a new version, never a
+  silent edit.
+- **Attributes.** Id; the protocol (procedure, conditions, equipment); version;
+  the **Quality**(ies) it estimates and the mapping onto each quality's scale;
+  measurement reliability/typical error; required competency; **Injury**
+  contraindications; re-test cadence guidance; **Evidence**.
+- **Relationships.** Authored as **Knowledge** (lives in a **Registry**; adding an
+  assessment is a data change); estimates `1..*` **Physical Qualities**; each
+  administration to an **Athlete** produces `1` **Test Result**; may be placed in
+  a **Session** as a scheduled slot; bounded by **Constraints** and **Injury**
+  contraindications like any prescribed activity.
+- **Produced from / Feeds.** Authored by sports scientists as data; feeds the
+  assessment-scheduling decision and, through its results, the athlete's
+  **Capability**.
+- **Consumers.** Assessment scheduling; diagnosis (via the Capabilities its
+  results sharpen); the athlete-facing "how we measure this."
+- **Example.** "Drop jump (reactive-strength index), protocol v2 — contact mat,
+  30 cm box, standardised warm-up; estimates reactive strength; typical error
+  ±0.1; re-test every 6–8 weeks; contraindicated during patellar-tendinopathy
+  stage 1–2."
+
+## Test Result
+- **Definition.** One datum produced by administering an **Assessment** to an
+  **Athlete** on a date — the measured value plus the protocol version and
+  conditions needed to compare it with any other administration, this season or
+  five years from now.
+- **Purpose.** The comparable, durable data point the longitudinal understanding
+  of the athlete is built from. **Capability** is the *current estimate*; a Test
+  Result is the *evidence* — keeping them distinct lets the estimate stay
+  recomputable while the measured fact persists as ground truth (Stored Data,
+  KA §2). A series of Test Results is what a trend is a trend *of*.
+- **Attributes.** **Assessment** id + protocol version; date; raw value(s); the
+  derived score on the quality's scale (with the mapping version used);
+  conditions and deviations; source quality (measured | self-administered);
+  the **Confidence** contribution it makes.
+- **Relationships.** Produced by `1` **Assessment** administration; belongs to
+  `1` **Athlete** (part of **Athlete State**; owned by the athlete like all of
+  it); sharpens `1..*` **Capabilities** (source flips from "inferred" toward
+  "measured"; **Confidence** rises); read by **Learning** and by the analysis
+  decisions; interpreted, in series, by **Insights**.
+- **Produced from / Feeds.** Captured when an assessment is performed; feeds
+  Capability updates, diagnosis, learning, and trend analysis.
+- **Consumers.** Diagnosis (via Capability); learning; insights; the athlete's
+  progress view.
+- **Example.** "RSI 1.4, 2026-07-01, drop-jump protocol v2, no deviations →
+  reactive-strength Capability: moderate, measured (confidence: high)."
+
+## Match Performance
+- **Definition.** The dated record of an **Athlete**'s participation and output
+  in a **Competition** or sport session — exposure (minutes, availability) and
+  the sport's outcome KPIs, as *data about the athlete*. *Synonym:* competition
+  performance.
+- **Purpose.** Makes the Competition a *producer of observations*, not only a
+  calendar anchor (§4's anchoring role is untouched). It is the ground truth the
+  **Performance Outcome** transfer check reads — did developing the prioritised
+  qualities move what happens on the pitch? — and the exposure record the sport
+  half of **Load** is estimated from.
+- **Attributes.** Date and the **Competition**/session it belongs to; exposure
+  (minutes played, availability status); output KPIs (mapped to the **Sport**'s
+  KPI framework); context (importance, congestion); source and provenance.
+- **Relationships.** Produced in the context of `1` **Competition** (or sport
+  session); belongs to `1` **Athlete**; contributes exposure to **Load**
+  (directly, or via attached **External Load Observations** where instrumented);
+  feeds the transfer validation in **Learning** via the **Performance Outcome**;
+  availability status feeds the coach's availability view (status only — never
+  clinical detail, per **Injury**).
+- **Produced from / Feeds.** Logged by the athlete/coach or ingested; feeds load
+  accounting, transfer validation, and insights.
+- **Consumers.** Learning (transfer check); load computation; insights; the
+  coach's availability and loading views (derived).
+- **Example.** "Sunday championship match: full 60 minutes at midfield;
+  high-speed running above season average; flagged heavy — Monday's gym session
+  reflows to a primer."
+
+## External Load Observation
+- **Definition.** A single captured measurement of training stress from outside
+  the gym — a GPS/accelerometry datum, a pitch-session RPE, distances, sprint
+  counts — with provenance: source, device class, reliability.
+- **Purpose.** **Load** was defined "gym + sport" from its first line (§8); this
+  is the named carrier of the sport half — the *observation itself*, distinct
+  from the accumulated **Load** it aggregates into. It *extends* Family VI's
+  system; it redefines nothing in it. Provenance is the point: what a datum came
+  from bounds the confidence of everything derived from it.
+- **Attributes.** Metric (name, unit, semantics — normalised at the ingestion
+  boundary); value; timestamp/window; source and device class; reliability/
+  quality tag; the sport session or **Match Performance** it attaches to.
+- **Relationships.** Belongs to `1` **Athlete** (part of **Athlete State**; raw
+  observations follow the raw-vitals rule — a **Coach** sees only what is
+  derived); aggregates into **Load**; attaches to `0..1` **Match Performance**;
+  its quality tag bounds the **Confidence** of derived products.
+- **Produced from / Feeds.** Ingested from devices or logged; feeds Load,
+  Fatigue modelling, and insights.
+- **Consumers.** Load computation; the runtime; insights; learning.
+- **Example.** "Tuesday pitch session, GPS vest: 6.2 km total, 14 sprints —
+  reliability high; counted into this week's Load; Thursday's heavy lower-body
+  session spacing re-checked."
+
+## Insight
+- **Definition.** A derived, attributed interpretation of an athlete's data — a
+  trend, change-point, comparison against their own history, or flag — carrying
+  its full derivation (which data, which method, which knowledge version), its
+  **Confidence**, and the authority tier that confidence grants.
+- **Purpose.** The named product of analysis, so analytics enters the decision
+  loop through the same consumers-and-confidence discipline as every other
+  entity — instead of as ad-hoc computed values with improvised standing. An
+  Insight may *inform* a decision or merely be *reported*; whether it may ever
+  gate is governed by **Confidence** (Constitution Article 13), exactly as for
+  any input. It interprets; it never mutates **Athlete State** and never
+  prescribes (prescription is the Reasoning Spine's).
+- **Attributes.** The statement (typed form + plain-English); derivation (source
+  data references, method, knowledge/engine versions); **Confidence**; authority
+  tier (gate | soft input | reported metric — granted, not asserted); audience
+  relevance; produced date.
+- **Relationships.** Derived from **Test Results**, **Match Performances**,
+  **External Load Observations**, **Training History**, and Family VI signals;
+  produced by the analysis decisions (the EDS catalogues them); consumed by
+  diagnosis (a re-diagnosis trigger enters here), the runtime, **Learning**, and
+  **Reports**; presented to humans only with its rationale attached
+  (Constitution Article 14).
+- **Produced from / Feeds.** Computed by analysis decisions off the planning
+  critical path; feeds decisions, reports, and the athlete/coach surfaces.
+- **Consumers.** Diagnosis; the runtime; learning; reports; the explanation
+  system.
+- **Example.** "Estimated squat 1RM flat for six weeks while volume held —
+  possible plateau. Derived from 14 logged sessions, e1RM method v3; confidence
+  moderate → soft input to the next block's diagnosis, and we say so."
+
+## Squad Signal
+- **Definition.** A derived, per-**Team**, privacy-bounded aggregate over the
+  roster — a squad readiness roll-up, a team loading view, an availability
+  board — computed from members' *derived* signals only, never raw vitals.
+- **Purpose.** Names the squad-level objects the Team package's coach surface
+  serves, under the same rule that created it: a Team adds constraints and a
+  derived read surface, "not a second reasoning system" (§3). A Squad Signal is
+  that read surface's typed content — aggregation for a coach's judgement, never
+  input into another athlete's plan.
+- **Attributes.** The **Team**; signal type; per-member derived values
+  (readiness band, load state, availability) and the roster aggregate;
+  **Confidence**; the window.
+- **Relationships.** Aggregates members' **Readiness**/**Load**/availability
+  (derived only — Constitution Article 11); belongs to `1` **Team**; consumed by
+  the **Coach**'s dashboard and, prospectively, by the coach's scheduling
+  judgement (which re-enters athletes' plans only as **Constraints**); athletes
+  never see each other's contributions (data isolation, §3).
+- **Produced from / Feeds.** Rolled up from members' derived state; feeds the
+  coach surface.
+- **Consumers.** The coach dashboard; team-level reports.
+- **Example.** "Senior hurlers, match week: three players red on readiness,
+  squad acute load 12% above the four-week norm, two unavailable (rehab) — a
+  plain-English 'who is doing too much / too little' view."
+
+## Report
+- **Definition.** A composed, audience-addressed delivery artefact — a bundle of
+  **Insights**, state signals, and progress against the **Performance Outcome**,
+  rendered in the audience's language, with every figure traceable to the data
+  it came from.
+- **Purpose.** Gives *analytical* delivery the governance coaching delivery
+  already has: a **Recommendation** delivers advice; a Report delivers
+  understanding. Naming it makes two duties enforceable — accuracy (every
+  surfaced figure traces to underlying data and carries its confidence) and
+  privacy (the audience's scope is applied at composition, not at display).
+- **Attributes.** Audience (**Athlete** | **Coach**); period; contents (insight
+  and signal references); the privacy scope applied; generated date; the
+  knowledge/engine versions it was composed under.
+- **Relationships.** Composes `1..*` **Insights** (plus Family VI signals and
+  **Performance Outcome** progress); addressed to `1` **Athlete** or **Coach**;
+  a coach-addressed Report is bounded by the derived-only rule (Constitution
+  Article 11 — raw vitals never); an AI-rendered Report passes through the AI
+  seam's existing gates unchanged.
+- **Produced from / Feeds.** Assembled from insights and signals; feeds the
+  athlete/coach surfaces and (as engagement/acceptance) learning.
+- **Consumers.** The athlete; the coach; learning.
+- **Example.** "End-of-block report: hamstring robustness up (Nordic strength
+  measured, +15%); aerobic-capacity gap unchanged (unservable — surfaced, per
+  Article 15); readiness stable; next block's focus and why."
+
+---
+
+# 11. Relationship summary & cardinalities
 
 The load-bearing relationships, collected for quick reference. (Read `A —rel→ B
 [card]` as "A relates to B, with this cardinality on B.")
@@ -1184,10 +1433,19 @@ The load-bearing relationships, collected for quick reference. (Read `A —rel�
 | Decision —may be replaced by→ Override / AI | `1 : 0..1` | Same contract seam; Validation still gates |
 | Knowledge Entry —carries→ Evidence + Confidence | `1 : 1` | Universal |
 | Training Outcome —updates→ Prior (via Learning) | `* : *` | Three tiers |
+| Assessment —estimates→ Physical Quality | `1 : 1..*` | Protocol is knowledge, versioned |
+| Assessment —administered as→ Test Result | `1 : 0..*` | One result per administration |
+| Athlete —has→ Test Result | `1 : 0..*` | Stored Data; part of Athlete State |
+| Test Result —sharpens→ Capability | `1 : 1..*` | Source flips inferred → measured |
+| Competition —produces→ Match Performance | `1 : 0..*` | Per athlete; anchor role unchanged |
+| External Load Observation —aggregates into→ Load | `* : 1` | The sport half's named carrier |
+| Insight —derived from→ (Test Results · Match Performances · Observations · History · state signals) | `1 : 1..*` | Derivation always attributed |
+| Report —composes→ Insight | `1 : 1..*` | Audience-scoped at composition |
+| Team —has→ Squad Signal | `1 : 0..*` | Derived only; raw vitals never |
 
 ---
 
-# 11. What this ontology deliberately changed (vs. the brief and the EDS)
+# 12. What this ontology deliberately changed (vs. the brief and the EDS)
 
 A record of the challenges made, so future readers inherit the *reasoning*:
 
@@ -1216,4 +1474,50 @@ A record of the challenges made, so future readers inherit the *reasoning*:
 
 ---
 
-*— End of the Decision Ontology v1.0 —*
+# 13. Growth: additive extension vs. structural amendment
+
+The Principle — concepts are defined here *first* — is discipline, not a
+bottleneck, and this section keeps it that way. The platform grows in entity
+families (measurement, endurance, return-to-play, nutrition…), and if every new
+entity required a constitutional-grade amendment, contributors would learn to
+bypass the ontology — recreating the vocabulary drift it exists to prevent. So
+this document distinguishes two kinds of change:
+
+**Additive extension (a versioned, dated edit — routine, batchable).** A change
+is *additive* when it only adds vocabulary:
+
+- a **new entity inside an existing family** (I–VIII), defined under the fixed
+  template (§ "How to read") — all seven fields, including Consumers and the
+  Confidence it carries or grants;
+- placed in **exactly one family** and belonging to **exactly one structure**
+  (§1);
+- whose **relationships to existing entities are stated with cardinality**, and
+  appended to the relationship summary (§11);
+- that **redefines nothing**: no existing entity's Definition, no existing
+  relationship or cardinality, no structure, no family boundary.
+
+An additive extension enters by a dated, versioned edit under the amendment
+batch protocol (DOCUMENTATION-GOVERNANCE), recorded in this document's version
+history — proposed, reviewed for consistency with the whole set, ratified by
+the steward. It does not require the full frozen-set amendment machinery,
+because by construction it cannot contradict anything: it only names what was
+nameless.
+
+**Structural amendment (constitutional-grade — deliberate, reconciled,
+versioned).** Everything else, in particular:
+
+- a **new family**, or a **new structure** in §1;
+- **redefining or removing** any existing entity, relationship, or cardinality;
+- changing the **template** itself, this section, or the header Principle.
+
+The same rule, seen from the Reasoning Spine: the spine (§2) is the *order* of
+coaching, exemplary and load-bearing — but it is not a closed membership list.
+A genuinely new **Decision** registers into the engine's DAG by declaring its
+purpose, typed inputs and outputs, dependencies, and consumers under the
+Decision template (§9); its *entities* enter under this clause; its *catalogue
+entry* is governed by the EDS's paired extension clause. What no addition may
+ever do silently is alter the meaning of what is already here.
+
+---
+
+*— End of the Decision Ontology v1.1 —*
