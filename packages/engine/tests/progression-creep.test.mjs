@@ -224,7 +224,7 @@ const hypProfile = (extra = {}) => ({
   const dp = [];
   for (const w of [6, 8]) {
     for (const s of weekOf(plan, w).sessions) for (const it of s.items)
-      if (it.progression && it.progression.currency === 'reps' && it.progression.driver === 'estimated — double progression (reps→load, completion-gated)') dp.push({ w, name: it.name, reps: parseReps(it.sets) });
+      if (it.progression && it.progression.currency === 'reps' && it.progression.driver === 'estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)') dp.push({ w, name: it.name, reps: parseReps(it.sets) });
   }
   assert(dp.length > 0, 'hypertrophy accessories also climb reps via the SAME double-progression path (no fork)');
 }
@@ -460,7 +460,7 @@ const sportOff = (extra = {}) => ({
   const dp = [];
   for (const w of [6, 9]) {
     for (const s of weekOf(plan, w).sessions) for (const it of s.items)
-      if (it.progression && it.progression.currency === 'reps' && it.progression.driver === 'estimated — double progression (reps→load, completion-gated)') dp.push({ w, name: it.name });
+      if (it.progression && it.progression.currency === 'reps' && it.progression.driver === 'estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)') dp.push({ w, name: it.name });
   }
   assert(dp.length > 0, 'sport off-season accessories climb reps via the SAME double-progression path (no fork)');
 }

@@ -305,6 +305,10 @@ export function reflowPhases({
         // (which anyway keeps the baseline session) and a reshaped one both carry the identical
         // creep; progression never leaks a per-week change into reflow that isn't in baseline.
         // loggedLiftKeys keeps logged compounds untouched.
+        // ⚠ INVARIANT: this forward projection MUST stay identical to PlanGenerator's creepWeeks
+        // derivation (PlanGenerator.js). When the dormant `completed_weeks` history field is wired
+        // live (M3/M5), it must be threaded into BOTH sites the same way, or a neutral reflow would
+        // carry more creep than baseline and break reflow≡baseline. Keep them a single rule.
         creepWeeks: (s.phase.weeks || []).filter((w) => w.num < s.week.num && !w.deload && !w.taper).length,
         loggedLiftKeys: new Set(Object.keys((profile && profile.lift_log) || {}))
       }

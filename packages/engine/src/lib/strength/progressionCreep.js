@@ -99,7 +99,9 @@ export function creepConfig({ discipline, creepWeeks = 0, deload = false, taper 
     // NOT live state), passed IDENTICALLY into the baseline and the reflow's re-derivation, so
     // this never leaks a calendar effect into a neutral reflow (the M0 reflow≡baseline invariant).
     const ss = kb.value('progression.sport_support');
-    if (!ss || !Array.isArray(ss.creepSeasons) || !ss.creepSeasons.includes(season || 'off')) return null;
+    // Fail SAFE toward maintenance: an unknown/absent season must NOT creep (never over-reach
+    // a sport athlete whose phase we can't resolve). Sport profiles always carry a derived season.
+    if (!ss || !Array.isArray(ss.creepSeasons) || !season || !ss.creepSeasons.includes(season)) return null;
     adaptation = ss.adaptation;                           // maxStrength — the sport compound load-creeps like a powerlifter…
     rate = ss.weeklyLoadPct;                              // …but at HALF the rate (gym-support volume is lower, 🔒 1)
   } else {
@@ -226,7 +228,7 @@ export function applyProgressionCreep(items = [], opts = {}) {
         // T3 — hypertrophy: REPS-FIRST double progression on the primary too (no
         // near-maximal single to ramp toward; climb reps toward the top of the range,
         // load held — progression.reps_first_model). Same mechanism as accessories.
-        applyDoubleProgression(it, cfg, 'estimated — reps-first double progression (hypertrophy primary; completion-gated)');
+        applyDoubleProgression(it, cfg, 'estimated — reps-first double progression (hypertrophy primary; forward-projected, completion-gated when logged history is present)');
         continue;
       }
       // LOAD creep on the compound top set (no-op when creepWeeks === 0).
@@ -238,11 +240,11 @@ export function applyProgressionCreep(items = [], opts = {}) {
       it.estimated = true;
       it.progression = {
         level: 'exercise', currency: 'load',
-        driver: 'estimated — governed creep rate (completion-gated forward projection)',
+        driver: 'estimated — governed creep rate (forward-projected; completion-gated when logged history is present)',
         confidence: 'low', adaptation: cfg.adaptation, weeklyLoadPct: cfg.loadRate, weeks: cfg.weeks,
       };
     } else if (role === 'accessory') {
-      applyDoubleProgression(it, cfg, 'estimated — double progression (reps→load, completion-gated)');
+      applyDoubleProgression(it, cfg, 'estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)');
     }
   }
   return items;

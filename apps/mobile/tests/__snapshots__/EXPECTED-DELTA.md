@@ -178,3 +178,6 @@ neither is present.
 - Claim: no other archetype moved (audited key-by-key against this note — the 30 non-PL
   archetypes differ ONLY on the knowledgeSetVersion stamp line; verified by a per-line
   diff excluding that line).
+
+## 2026-07-15 — M2a review fixes
+EXPECTED-DELTA: 39 crept archetypes — driver/progression LABEL string only (honesty reword: "completion-gated" -> "forward-projected; completion-gated when logged history is present"). ZERO numeric/structural change (verified: 0 archetypes differ once the label is scrubbed). No KSV change (logic string, not a science table).
