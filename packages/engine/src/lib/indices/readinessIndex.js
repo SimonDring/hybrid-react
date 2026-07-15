@@ -61,7 +61,11 @@ export function readinessIndex({ metric = {}, prior = [], objectiveScore = null,
   const sleep = sleepIndex(metric);
   const cardio = cardiovascularRecoveryIndex(metric, prior);
   const wellness = wellnessIndex(subjective);
-  const recovery = recoveryIndex({ objectiveScore, subjective, source: metric.source });
+  // Thread the personal history + the driving row's date so the Recovery Index reports
+  // an HONEST confidence (TR-13/SR-04): matured by how many prior observations exist and
+  // down-weighted when the driving row is stale. This is the confidence that governs the
+  // authority of the readiness-driven volume cut downstream (recoveryFromScore).
+  const recovery = recoveryIndex({ objectiveScore, subjective, source: metric.source, prior, asOf, date: metric.date });
   const fatigue = fatigueIndex({ recovery, cardio, recentRecovery, illness: !!metric.illness });
 
   const sub = { sleep, cardio, wellness, recovery, fatigue };

@@ -178,6 +178,24 @@ move it to the archive file rather than letting this one grow._
   example is partial until the 🔒3 vocabulary (strength is one quality today).
   **Next: M3b — athlete-signal confidence operative** (TR-13; separate PR).
 
+- **Phase 3 · M3b — ATHLETE-SIGNAL CONFIDENCE OPERATIVE, PR pending Simon's merge
+  (2026-07-15).** M3a merged (#183). M3b closes TR-13/SR-04: one un-baselined bad
+  wellness entry can no longer swing volume. `recoveryIndex` computes REAL
+  `baselineMaturity` (was hard-coded 1); a recency factor down-weights stale rows;
+  the readiness cut is scaled by an authority gate on confidence (bounded below 0.5,
+  full for mature signals — Art 13). **Acceptance:** immature single bad entry →
+  ~3.3% cut (was ~22%); mature 10-day → full 22% (authority kept); stale < fresh.
+  **Review caught + fixed a regression:** the confidence denominator treated
+  'no wearable' as low confidence — a mature MANUAL-only logger was wrongly muted;
+  now confidence reflects the maturity of the data the athlete actually gives (a
+  diligent manual logger reaches full authority; only thin history gates). Golden
+  byte-identical (recovery drives reflow, not baseline); no KSV. **⚠ Simon calls:**
+  the `FULL_AUTHORITY_CONFIDENCE`=0.5 threshold (now reachable by mature manual
+  loggers); the gate cut-points stay in-code PROVISIONAL, tracked for the **M6 P2-10
+  knowledge-governance sweep** (with the M2b `styleObjective`/`SELECTION_SCORING`
+  leftovers + the deferred taper/fixture calendar signals).
+  **M3 then complete** (M3a measured diagnosis + M3b signal confidence).
+
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
 0. **⚠ THE DEVELOPMENT PLAN — created 2026-07-13, adoption = Simon's merge.**

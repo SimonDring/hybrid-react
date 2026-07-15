@@ -50,6 +50,22 @@ export function baselineMaturity(count = 0, required = 7) {
 }
 
 /**
+ * Recency weight in (0, 1] for a driving reading dated `date`, seen from `asOf` (both
+ * local YYYY-MM-DD). A same-day reading weighs 1; older readings decay with a half-life
+ * of `halfLifeDays` (a reading `halfLifeDays` old weighs 0.5). A STALE driving row is
+ * thus down-weighted, so a single old wellness/metric entry cannot swing today's
+ * adaptation (SR-04). Pure — dates are ARGUMENTS, never the clock (Art 18). Missing
+ * dates → 1 (can't judge staleness → don't penalise). Future-dated → clamped to fresh.
+ */
+export function recencyFactor(asOf, date, halfLifeDays = 3) {
+  if (!asOf || !date || !halfLifeDays) return 1;
+  const ms = Date.parse(asOf) - Date.parse(date);
+  if (!Number.isFinite(ms)) return 1;
+  const days = Math.max(0, ms / 86400000);
+  return Math.max(0, Math.min(1, 0.5 ** (days / halfLifeDays)));
+}
+
+/**
  * Coefficient of variation (%) of the present numbers — SD / mean × 100. Needs ≥2
  * points and a non-zero mean, else null. A low, steady HRV CV reflects a stable
  * autonomic baseline (recovery capacity); a collapsing CV is a separate acute
@@ -64,4 +80,4 @@ export function coefficientOfVariation(nums = []) {
   return (Math.sqrt(variance) / m) * 100;
 }
 
-export default { mean, clamp100, deviationScore, baselineMaturity, coefficientOfVariation };
+export default { mean, clamp100, deviationScore, baselineMaturity, recencyFactor, coefficientOfVariation };

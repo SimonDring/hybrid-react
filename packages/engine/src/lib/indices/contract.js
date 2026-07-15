@@ -42,13 +42,18 @@ export function bandFromValue(v, greenCut = 70) {
 
 /**
  * Confidence in [0, 1]: Σ(weight · present · sourceReliability · baselineMaturity) / Σ(weight).
- * Every EXPECTED part counts in the denominator, so absent parts pull confidence down.
+ * Every EXPECTED part counts in the denominator, so an expected-but-absent part pulls
+ * confidence down (graceful degradation). A part explicitly marked `expected: false` and
+ * absent is EXCLUDED entirely — it is an input the athlete does not provide (e.g. no
+ * wearable), so it must not penalise a signal built from what they DO provide. Present
+ * parts always count regardless of `expected`. (Default `expected: true` → unchanged.)
  *
- * @param {{name:string, present:boolean, weight?:number, source?:string, baselineMaturity?:number}[]} parts
+ * @param {{name:string, present:boolean, weight?:number, source?:string, baselineMaturity?:number, expected?:boolean}[]} parts
  */
 export function computeConfidence(parts = []) {
   let num = 0, den = 0;
   for (const p of parts) {
+    if (p.expected === false && !p.present) continue; // input the athlete doesn't provide → don't penalise
     const w = p.weight ?? 1;
     den += w;
     if (p.present) {
