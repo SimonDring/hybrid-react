@@ -41,9 +41,15 @@ obeys four architectural laws, each enforced in the schema, not by reviewer vigi
    or third party reads an athlete's observations or raw-bearing derivations. Ever.
 3. **Only a derived roll-up crosses a person boundary, and only by consent.** Exactly ONE
    new table is cross-person readable — `squad_signal_snapshots` — and it has **no
-   raw-vital column by construction**. A coach-visible raw value would require an
-   `ALTER TABLE ... ADD COLUMN` (a schema change + a migration + a failing privacy sweep).
-   That is the meaning of "make a leak require a schema change" (Art 11; spec Rule 3).
+   raw-vital column by construction**. The leak FLOOR that holds *today*, structurally, is
+   two facts: (a) that table has no raw-vital column, so there is nothing raw to cross, and
+   (b) the nine owner-private tables carry every raw/raw-bearing value and have *no coach
+   policy at all*. A coach-visible raw value would therefore require an
+   `ALTER TABLE ... ADD COLUMN` **plus** a new coach policy — a deliberate schema change, not a
+   coding slip. That is the meaning of "make a leak require a schema change" (Art 11; spec
+   Rule 3). *A CI privacy sweep is a **future** backstop on top of this floor, not the floor
+   itself: it keys on the Metric Dictionary `privacy_class`, which is not yet built (EXT-5;
+   DAAS §9 S1) — no control in this design relies on it existing.*
 4. **Every derived row is stamped.** Materialised rows carry `engine_version ×
    knowledge_set_version` + the producing method version + input references (DAAS §3.2;
    TAS §4.1). History is read strictly as "what was computed then", never re-served as
@@ -370,12 +376,16 @@ row access. This is the Art 11 floor.
 ```sql
 -- consent_grants: the athlete manages their own grants; a grantee coach may READ grants that
 -- name their team (so they know their own scope), but never write them.
+-- RLS MUST be enabled first: without it the policies are INERT and the table falls back to
+-- the blanket authenticated grant → a cross-athlete map of who-consented-to-what leaks.
+alter table public.consent_grants enable row level security;
 create policy "grantor manages grants" on public.consent_grants
   for all using (auth.uid() = grantor_user_id) with check (auth.uid() = grantor_user_id);
 create policy "named coach reads their grants" on public.consent_grants
   for select using (grantee_team_id is not null and is_coach_of_team(grantee_team_id));
 
 -- consent_events: owner reads their own audit trail; inserts are trigger-only (SECURITY DEFINER).
+alter table public.consent_events enable row level security;
 create policy "own consent events read" on public.consent_events
   for select using (auth.uid() = grantor_user_id);
 ```
@@ -401,8 +411,11 @@ $$;
 
 The append-only history of the derived coach surface (DAAS §5.2; closes the point-in-time-only
 limitation of `player_status`, DAAS §1.5). **Every column is derived-safe by construction —
-there is no raw-vital column, and a migration that added one would fail the CI privacy sweep
-(DAAS §4.1 / EDS L13).**
+there is no raw-vital column, so there is nothing raw for a coach read to expose.** This is the
+structural floor and it holds today. *When the Metric Dictionary + its CI privacy sweep exist
+(EXT-5; DAAS §4.1 / EDS L13), the sweep becomes an additional automated backstop that fails the
+build if a raw-vital column is ever added here — but the guarantee does not depend on that
+sweep: the protection is the absence of the column.*
 
 ```
 squad_signal_snapshots
@@ -481,14 +494,21 @@ existing style, `supabase/tests/rls-harness.mjs`) must assert **every** line bel
 - P14 — the coach can NO LONGER read that member's snapshot (policy: `has_active_grant` false).
 - P15 — the crossed snapshot rows are GONE (cleanup trigger), not merely hidden.
 - P16 — an ended MEMBERSHIP (F3) independently ends the crossing, even with a live grant.
-- P17 — secondary-use / AI-processing reads require the *distinct* `secondary_use` /
-  `ai_processing` flags; absence of the flag excludes the record (Art 22; DAAS §2.3.4, §6.3).
+- P17 — the *distinct* `secondary_use` / `ai_processing` flags are RECORDED on the grant now,
+  and read back exactly as written (default `false`). **Not yet enforced:** no predicate in
+  this design consults them, so P17 asserts *recording fidelity*, not a live crossing control —
+  enforcement (a research/AI-scan read that a false flag must deny) lands with §6.3 / GA-510
+  and gets its own proof then (Art 22; DAAS §2.3.4, §6.3).
 
-**Consent surface:**
+**Consent surface (the consent pair — cross-athlete isolation):**
 - P18 — the athlete reads their own `consent_events` audit trail; a coach cannot.
 - P19 — a coach reads grants naming their own team but cannot create or revoke a grant.
+- P20 — athlete B reads ZERO of athlete A's `consent_grants` rows (RLS enabled per B1; the
+  who-consented-to-what map never leaks cross-athlete), and cannot insert/update/delete A's.
+- P21 — athlete B reads ZERO of athlete A's `consent_events` rows; a signed-out (anon) client
+  reads nothing from either consent table.
 
-Nineteen assertions across five groups. All must pass on staging before any prod apply (§6).
+Twenty-one assertions across five groups. All must pass on staging before any prod apply (§6).
 
 ---
 
@@ -604,7 +624,7 @@ pattern, e.g.:
 > `supabase/SECURITY-DEPLOY.md` step.
 
 **The runbook** follows the proven order (`SECURITY-DEPLOY.md`): (1) apply to **staging**;
-(2) run `rls-harness.mjs` extended with the §3.5 proof set — **all 19 assertions green**;
+(2) run `rls-harness.mjs` extended with the §3.5 proof set — **all 21 assertions green**;
 (3) Simon reviews; (4) `supabase db push` to **prod** with Simon's approval. No prod apply
 without the harness green (the "policies ship only with their proofs" rule, TEAM-ARCH §5).
 
@@ -686,6 +706,50 @@ $$;
 
 ---
 
+## 6.5 Conditions & open decisions (privacy panel: SOUND WITH CONDITIONS, 2026-07-15)
+
+The adversarial privacy panel returned **SOUND WITH CONDITIONS**: no raw-data-crossing path
+exists. Three BLOCKING doc-fixes were applied to this design before 🔒 6 (B1 — enable RLS on
+both consent tables, §3.2; B2 — cross-athlete isolation proofs P20/P21 for the consent pair,
+§3.5; B3 — the leak floor reframed off the not-yet-built CI sweep and P17 relabelled
+recorded-not-enforced, §0/§3.4/§3.5). The following carry forward to the migration author and
+to Simon, recorded verbatim so nothing is lost.
+
+**CONDITIONS on the real migration** (must be authored into the migration and be **green on
+staging** before any prod apply):
+- **C1** — `squad_signal_snapshots` ships WITH its server-truth trigger (generalising
+  `player_status_server_truth`) AND the append-only guard trigger, AND a proof that **a member
+  cannot publish false snapshot values** (injury_status / readiness overridden from the
+  member's own owner-private data; soft metrics clamped). No snapshot table without this trigger.
+- **C2** — a **lock-down / oracle proof** that a non-coach cannot use `has_active_grant` to
+  enumerate grants: the SECURITY DEFINER function must be constantly false for a non-coach of
+  `team` (never a membership/consent oracle), mirroring the `coach_reads_member` non-oracle
+  posture (`schema.sql`).
+- **C3** — **all 12 tables explicitly listed in `delete_user()`** (the nine owner-private, the
+  cross-person snapshot, and the consent pair) — belt-and-suspenders beyond `ON DELETE CASCADE`,
+  matching the existing explicit-delete pattern for the team surfaces.
+
+**⚠ SIMON DECISION (D1) — cleanup trigger vs the athlete's own record.** As designed, the
+`consent_revocation_cleanup` trigger (§2.2) DELETES the athlete's own `squad_signal_snapshots`
+history for the revoked scope. But the POLICY layer alone (`has_active_grant` false) already
+ends the coach's crossing — and this table is billed as the athlete's dated career record,
+which Art 22 export must return. Deleting the owner's own evidence to end someone else's read is
+in tension with that.
+> **Panel recommendation:** end the crossing at the **POLICY layer only** on revocation; do NOT
+> delete the owner's own record. Keep the cleanup-trigger deletion for the F3 *membership-ended*
+> path (where the row's team context itself is gone) but not for consent revocation. **Flagged
+> for Simon's ruling before the migration is authored.** If Simon rules "delete on revocation
+> too", record it here and the migration follows; the default recommendation is policy-only.
+
+**DEFERRED (explicit, priced):**
+- **D2** — RLS-harness CI-gating (TR-11): the harness is manual/non-CI, so the 21 assertions
+  (incl. P20/P21) inherit that gap until it is CI-gated. Deferred, not dropped.
+- **EXT-5 / DAAS §9 S1** — Metric Dictionary authoring (the `privacy_class` the future CI
+  privacy sweep keys on). The M5 leak floor does NOT depend on it (§0 law 3, §3.4); it is a
+  future automated backstop and a sequencing prerequisite the panel noted.
+
+---
+
 ## 7. Panel-review readiness checklist
 
 Each governing requirement, and the one line by which this design satisfies it:
@@ -693,10 +757,10 @@ Each governing requirement, and the one line by which this design satisfies it:
 | # | Requirement (source) | How this design satisfies it |
 |---|---|---|
 | 1 | **Art 11 — no raw crossing** | Nine owner-private tables carry raw/raw-bearing data with NO coach policy; the sole cross-person table (`squad_signal_snapshots`) has no raw-vital column by construction — a leak needs an `ALTER TABLE` + a failing privacy sweep (§0 law 3, §3.4). Proofs P4, P10. |
-| 2 | **Art 22 — ownership / consent / revocation / erasure / secondary use** | `consent_grants` + `consent_events` make consent durable, inspectable, revocable athlete state; membership never implies visibility (grant required, §3.4); revocation ends the crossing forward + deletes crossed rows (§2.2); distinct `secondary_use`/`ai_processing` flags; `export_user_record()` + extended `delete_user()` (§2.3). Proofs P12–P19. |
+| 2 | **Art 22 — ownership / consent / revocation / erasure / secondary use** | `consent_grants` + `consent_events` make consent durable, inspectable, revocable athlete state; membership never implies visibility (grant required, §3.4); revocation ends the crossing forward at the policy layer (`has_active_grant` false; the cleanup-delete on revocation is Simon-decision D1, §6.5); `secondary_use`/`ai_processing` flags recorded now (enforced later, P17/§6.3); `export_user_record()` + extended `delete_user()` (§2.3). Proofs P12–P21. |
 | 3 | **Art 21 — developmental-stage duty of care** | `test_results` / `baselines` carry maturity and protocol/mapping versions so youth/masters comparisons render humbly and stage-appropriately; benchmark authority is capped downstream (DAAS §6.1) — the substrate never presents a population constant as a developing athlete's "normal" (§1.3 baselines). |
 | 4 | **TEAM-ARCHITECTURE isolation (coach access additive + team-scoped + derived-only)** | The crossing reuses `coach_reads_member` (team-scoped, F3) AND adds `has_active_grant`; the server-truth trigger keeps the board derived + honest; raw tables get no new policy (§3.1, §3.4). Proofs P7–P11. |
-| 5 | **The RLS proof set** | Nineteen assertions across owner-isolation, append-only integrity, the derived crossing, consent-revocation, and the consent surface — all must be green on staging before prod (§3.5, §6.2). |
+| 5 | **The RLS proof set** | Twenty-one assertions across owner-isolation, append-only integrity, the derived crossing, consent-revocation, and the consent-pair cross-athlete isolation — all must be green on staging before prod (§3.5, §6.2). |
 | 6 | **Derived-data doctrine — stamping** | Every derived/materialised row carries `engine_version × knowledge_set_version` + `method_id/version` + `input_refs` + `computed_for`; read strictly as "what was computed then"; corrections append via `supersedes_id`; a CI stamp-presence check gates every materialised class (§1.2; DAAS §3.2). |
 | 7 | **DAAS §3 record shape** | Append-only observations + dated materialised derivations + baselines + consent grants compose the career-long owner-owned record; reconstruction grades R1/R2/R3 hold (observations exact; derivations exact from materialisation start; no back-computation); history is never re-served as current (§1, §3; DAAS §3.1–§3.4). |
 
