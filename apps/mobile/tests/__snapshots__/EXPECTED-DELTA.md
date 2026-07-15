@@ -184,3 +184,6 @@ EXPECTED-DELTA: 39 crept archetypes — driver/progression LABEL string only (ho
 
 ## 2026-07-15 — M3a T1 measured strength estimator
 EXPECTED-DELTA: 4 lift-bearing archetypes (build·strength·intermediate, measured·strength measured-twin, build·olympic·advanced, sport·run-sprint·advanced) each gain a "Measured — displaces <prior>" D4 rationale line when logged lifts yield a measured maxStrength estimate. NO magnitude/priority/plan change for these 4 (measured estimate landed within the prior priority set). ALL no-lift archetypes byte-identical (additive-first). No KSV change (reuses existing STRENGTH_STANDARDS).
+
+## 2026-07-15 — M3a T2 silent-list burn-down
+EXPECTED-DELTA: additive field only — plan.meta.diagnosis.droppedDemands (with plain-language reasons) now surfaced for sport archetypes (was computed but never reached the plan). [] for build/no-sport. Verified: stripping droppedDemands from both snapshots = zero other diffs across all 45 archetypes. No plan/magnitude/priority change.

@@ -60,6 +60,15 @@ export function buildDemandProfile(sportId, positionId) {
 export function droppedDemandsFor(sportId, positionId) {
   const { dropped } = walkDemands(sportId, positionId);
   return [...dropped.entries()]
-    .map(([skbQuality, v]) => ({ skbQuality, importance: v.importance, source: 'skb', evidence: v.evidence }))
+    .map(([skbQuality, v]) => ({
+      skbQuality,
+      importance: v.importance,
+      source: 'skb',
+      evidence: v.evidence,
+      // M3 T2 (P1-9, Art 15): a natural-language reason alongside the provenance
+      // pointer, so a screen (or this report) can say WHY the quality is parked,
+      // not just cite its evidence key.
+      reason: `${skbQuality} is authored in the sport's demand profile (importance ${Math.round(v.importance * 100) / 100}) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.`,
+    }))
     .sort((a, b) => (b.importance - a.importance) || a.skbQuality.localeCompare(b.skbQuality));
 }

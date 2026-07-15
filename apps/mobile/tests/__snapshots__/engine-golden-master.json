@@ -31,6 +31,7 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -6575,6 +6576,7 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -11146,6 +11148,7 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -19447,6 +19450,7 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -23431,6 +23435,7 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -27956,6 +27961,7 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -33461,6 +33467,7 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -55051,6 +55058,7 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -59908,6 +59916,7 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -61775,6 +61784,7 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [],
         "limitingFactors": [
           {
             "confidence": "moderate",
@@ -71468,6 +71478,7 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [],
         "limitingFactors": [
           {
             "confidence": "moderate",
@@ -77846,6 +77857,7 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -84219,6 +84231,7 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -97165,6 +97178,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.6,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.6,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.6,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.3,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.3,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.2,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -97949,6 +98004,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.6,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.6,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.6,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.3,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.3,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.2,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -103005,6 +103102,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.6,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.6,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.6,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.3,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.3,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.2,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -104179,6 +104318,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.9,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.9) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.8,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.8,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.7,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          },
+          {
+            "importance": 0.7,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.5,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.3,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -110203,6 +110384,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.9,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.9) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.8,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.8,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.6,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          },
+          {
+            "importance": 0.5,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.4,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.4) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -114903,6 +115126,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.9,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.9) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.8,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.8,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.6,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          },
+          {
+            "importance": 0.5,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.4,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.4) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -116079,6 +116344,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.9,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.9) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.8,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.8,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.8,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          },
+          {
+            "importance": 0.8,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.4,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.4) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -120929,6 +121236,58 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.8,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "collisionRobustness is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "collisionRobustness"
+          },
+          {
+            "importance": 0.8,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          },
+          {
+            "importance": 0.7,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.7,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.7,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.7,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.6,
+            "reason": "aerialAbility is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "aerialAbility"
+          },
+          {
+            "importance": 0.5,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.5,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -127095,6 +127454,58 @@
           "source": "diagnosis",
           "steered": true
         },
+        "droppedDemands": [
+          {
+            "importance": 0.8,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "collisionRobustness is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "collisionRobustness"
+          },
+          {
+            "importance": 0.8,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          },
+          {
+            "importance": 0.7,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.7,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.7,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.7,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.6,
+            "reason": "aerialAbility is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "aerialAbility"
+          },
+          {
+            "importance": 0.5,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.5,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -133284,6 +133695,58 @@
           "source": "diagnosis",
           "steered": true
         },
+        "droppedDemands": [
+          {
+            "importance": 0.8,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "collisionRobustness is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "collisionRobustness"
+          },
+          {
+            "importance": 0.8,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          },
+          {
+            "importance": 0.7,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.7,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.7,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.7,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.6,
+            "reason": "aerialAbility is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "aerialAbility"
+          },
+          {
+            "importance": 0.5,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.5,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -139419,6 +139882,58 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.9,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.9) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.8,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "collisionRobustness is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "collisionRobustness"
+          },
+          {
+            "importance": 0.8,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          },
+          {
+            "importance": 0.7,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.7,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.7,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.6,
+            "reason": "aerialAbility is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "aerialAbility"
+          },
+          {
+            "importance": 0.5,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.5,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -145588,6 +146103,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.6,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.4,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.4) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.3,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.2,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.2,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.2,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -152024,6 +152581,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.6,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.4,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.4) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.3,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.2,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.2,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.2,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -158169,6 +158768,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.7,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.6,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.5,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.3,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.3,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          },
+          {
+            "importance": 0.2,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.2,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -163443,6 +164084,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 1,
+            "reason": "acceleration is authored in the sport's demand profile (importance 1) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 1,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 1) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.8,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.5,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.4,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.4) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          },
+          {
+            "importance": 0.3,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.2,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -165128,6 +165811,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 1,
+            "reason": "acceleration is authored in the sport's demand profile (importance 1) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 1,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 1) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.8,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.5,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.5) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.4,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.4) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          },
+          {
+            "importance": 0.3,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.2,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -168231,6 +168956,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.9,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.9) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.8,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.8,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.6,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          },
+          {
+            "importance": 0.4,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.4) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -173023,6 +173790,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.9,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.9) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.8,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.8,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.6,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          },
+          {
+            "importance": 0.4,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.4) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -177809,6 +178618,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.9,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.9) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.6,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.6,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          },
+          {
+            "importance": 0.6,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.3,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.2,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.2,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -178919,6 +179770,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.9,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.9) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.6,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.6,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          },
+          {
+            "importance": 0.6,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.3,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.2,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.2,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
@@ -183573,6 +184466,48 @@
           "source": "diagnosis",
           "steered": false
         },
+        "droppedDemands": [
+          {
+            "importance": 0.6,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.4,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.4) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.4,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.4) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          },
+          {
+            "importance": 0.3,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          },
+          {
+            "importance": 0.3,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.3) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.2,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.2,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.2,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          }
+        ],
         "limitingFactors": [
           {
             "confidence": "low",
