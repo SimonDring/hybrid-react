@@ -58,6 +58,35 @@ function volumeFromScore(score, greenCut = BANDS.greenCut) {
   return VOL_MOD.low;
 }
 
+// ── Signal-confidence gate on the readiness-driven cut (TR-13/SR-04; Art 13 — confidence
+// governs authority). The volume/intensity CUT is scaled by how much we trust the signal
+// (its input completeness × source reliability × baseline maturity × recency, already
+// blended into `confidence`): at/above FULL_AUTHORITY_CONFIDENCE the cut applies in FULL;
+// below it the cut is bounded toward the plan — never less than MIN_RETAINED_FRACTION of it
+// (uncertainty widens the margin toward the established trajectory, never halts) — so one
+// un-baselined OR stale wellness entry can NUDGE, never swing, volume. rpeOffset is discrete,
+// so intensity is eased only at/above RPE_AUTHORITY_CONFIDENCE. These constants live beside the
+// confidence model they consume (as readinessIndex's V2_WEIGHTS do); the reliability + maturity
+// inputs are the governed/derived signal. The gate is INERT unless a confidence is supplied, so
+// every legacy caller (no confidence → full authority) is byte-identical.
+const FULL_AUTHORITY_CONFIDENCE = 0.5;
+const MIN_RETAINED_FRACTION = 0.15;
+const RPE_AUTHORITY_CONFIDENCE = 0.5;
+
+/** Fraction (MIN_RETAINED_FRACTION..1) of a readiness cut to apply at this confidence. */
+function authorityGate(confidence) {
+  if (confidence == null) return 1;                    // no confidence → legacy full authority
+  const c = Math.max(0, Math.min(1, confidence));
+  const scaled = MIN_RETAINED_FRACTION + (1 - MIN_RETAINED_FRACTION) * (c / FULL_AUTHORITY_CONFIDENCE);
+  return Math.max(MIN_RETAINED_FRACTION, Math.min(1, scaled));
+}
+
+/** Scale a volume modifier's CUT (its distance below 1.0) by the confidence gate. */
+function gateVolume(modifier, confidence) {
+  if (confidence == null || modifier >= 1) return modifier;
+  return Math.round((1 - (1 - modifier) * authorityGate(confidence)) * 1000) / 1000;
+}
+
 /**
  * @param {Object} inputs
  * @param {number|null} inputs.objectiveScore  0..100 wearable readiness (Readiness.js)
@@ -105,10 +134,14 @@ export function recoveryFromScore(score = null, { illness = false, travel = fals
   let sessionOverride = null;
   if (illness) sessionOverride = 'rest';
   else if (travel) sessionOverride = 'easy';
+  // Confidence gates the CUT: a low-confidence (immature-baseline / stale / single-entry)
+  // signal produces a bounded, small adjustment; a mature, high-confidence one keeps full
+  // authority (TR-13/SR-04). Inert when confidence is absent → legacy behaviour preserved.
+  const rawRpe = rpeOffsetFromScore(score, greenCut);
   return {
     readinessLevel: bandFromScore(score, greenCut),
-    volumeModifier: volumeFromScore(score, greenCut),
-    rpeOffset: rpeOffsetFromScore(score, greenCut),
+    volumeModifier: gateVolume(volumeFromScore(score, greenCut), confidence),
+    rpeOffset: (confidence == null || confidence >= RPE_AUTHORITY_CONFIDENCE) ? rawRpe : 0,
     intensityModifier: 1,   // superseded by rpeOffset; kept for shape-compat
     sessionOverride,
     score,
