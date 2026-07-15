@@ -240,6 +240,24 @@ move it to the archive file rather than letting this one grow._
   the append-only outcomes/history + consent SCHEMA + RLS/privacy design for panel
   review (🔒 6), before any migration Simon applies; then D16 promotion policy (🔒 7).**
 
+- **Phase 3 · M5 — OUTCOMES-SUBSTRATE SCHEMA & PRIVACY DESIGN, PR pending Simon's
+  🔒 6 sign-off (2026-07-15).** DAAS ratified (#186). First M5 deliverable, DESIGN ONLY
+  (no migration ships — Simon 2026-07-15): `docs/design/m5-substrate/SCHEMA-AND-PRIVACY.md`
+  — append-only outcomes/history (9 owner-private tables replacing the 256 KB
+  users.profile blob — TR-03), consent_grants/events, and the single derived cross-person
+  table (squad_signal_snapshots); consent revocation ends the crossing (F3 pattern
+  generalised); a 21-assertion RLS proof set. Built on the canonical DAAS §3/§3.5/§5 +
+  Art 11/22 + TEAM-ARCHITECTURE. **Adversarial privacy panel: SOUND WITH CONDITIONS** —
+  confirmed no raw-vital crossing path + synchronous revocation, and CAUGHT a real leak
+  (consent tables missing enable-RLS → cross-athlete consent-map exposure) now fixed
+  (B1), plus consent-isolation proofs (B2) and a reframed over-stated CI sweep (B3).
+  **⚠ ONE DECISION FOR SIMON (D1):** on revocation, delete the athlete's own derived
+  history, or end the crossing at the policy layer only (panel + I recommend policy-only —
+  Art 22 the athlete owns/exports their record). **Conditions C1–C3 attach to the real
+  migration** (server-truth + append-only + oracle proofs, green on staging). **After
+  🔒 6: the real migration is authored + Simon-applied (staging→rls-harness→prod), then
+  the D16 promotion policy (🔒 7).** Nothing has touched the database.
+
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
 0. **⚠ THE DEVELOPMENT PLAN — created 2026-07-13, adoption = Simon's merge.**
