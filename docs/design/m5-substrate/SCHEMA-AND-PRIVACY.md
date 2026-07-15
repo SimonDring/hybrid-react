@@ -57,7 +57,7 @@ obeys four architectural laws, each enforced in the schema, not by reviewer vigi
 
 The consent join is the spine of law 3: the cross-person read requires BOTH an active team
 membership (the existing `coach_reads_member`, F3) AND an active consent grant. Revoking the
-grant ends the read forward *and* deletes the crossed snapshot rows — the F3 pattern,
+grant ends the read forward at the policy layer (the athlete's own rows are kept — 🔒 D1 policy-only),
 generalised (§2, §3).
 
 **What this substrate never touches:** the pure plan path. The engine (`packages/engine`,
@@ -313,13 +313,22 @@ memberships:
    *active* grant via `has_active_grant()`. The instant `revoked_at` is set,
    `has_active_grant()` returns false → the coach's read ends forward (§3.3). No denominator
    is silently shifted — the signal notes the composition change (DAAS §5.2).
-2. **Cleanup layer.** A trigger `consent_revocation_cleanup` (SECURITY DEFINER, mirroring
-   `team_members_cleanup_status`) deletes the crossed `squad_signal_snapshots` rows scoped to
-   the revoked grant. The derived row that was crossing is *gone*, not merely hidden.
+2. **No cleanup DELETE of the athlete's own record — RESOLVED policy-only (🔒 D1, Simon
+   2026-07-15).** Unlike `player_status` (a pure coach surface, safely deleted on departure
+   by F3), `squad_signal_snapshots` is ALSO the athlete's own dated career record (§3.2;
+   Art 22 export). So revocation ends the crossing at the **policy layer ONLY** — the
+   `has_active_grant()` predicate going false is the complete control; the rows are **not
+   deleted**. There is NO `consent_revocation_cleanup` DELETE trigger on this table. The
+   athlete retains their history; the coach simply can no longer read it. (Migration note:
+   if the athlete later re-grants, historical snapshots become coach-visible again under the
+   fresh consent — acceptable, it is re-consented data; a coach surface wanting only current
+   signals filters by `created_at`. Flagged as a migration-time consideration, not a schema
+   change.)
 
 Membership AND consent are both required: leaving the team (F3) OR revoking the grant (§2.2)
-independently ends the crossing. "Membership never implies visibility" (Art 22) is thus
-structural — a member with no active grant is invisible to the coach.
+independently ends the crossing at the policy layer. "Membership never implies visibility"
+(Art 22) is thus structural — a member with no active grant is invisible to the coach, and
+no athlete's own record is ever destroyed to achieve that.
 
 ### 2.3 Erasure and export as rights (Art 22)
 
@@ -729,17 +738,14 @@ staging** before any prod apply):
   cross-person snapshot, and the consent pair) — belt-and-suspenders beyond `ON DELETE CASCADE`,
   matching the existing explicit-delete pattern for the team surfaces.
 
-**⚠ SIMON DECISION (D1) — cleanup trigger vs the athlete's own record.** As designed, the
-`consent_revocation_cleanup` trigger (§2.2) DELETES the athlete's own `squad_signal_snapshots`
-history for the revoked scope. But the POLICY layer alone (`has_active_grant` false) already
-ends the coach's crossing — and this table is billed as the athlete's dated career record,
-which Art 22 export must return. Deleting the owner's own evidence to end someone else's read is
-in tension with that.
-> **Panel recommendation:** end the crossing at the **POLICY layer only** on revocation; do NOT
-> delete the owner's own record. Keep the cleanup-trigger deletion for the F3 *membership-ended*
-> path (where the row's team context itself is gone) but not for consent revocation. **Flagged
-> for Simon's ruling before the migration is authored.** If Simon rules "delete on revocation
-> too", record it here and the migration follows; the default recommendation is policy-only.
+**D1 — RESOLVED (Simon 2026-07-15): POLICY-ONLY revocation.** On consent revocation, the crossing
+ends at the **RLS policy layer only** (`has_active_grant()` → false; the coach reads nothing
+forward). The athlete's own `squad_signal_snapshots` history is **kept, never deleted** — it is
+the athlete's dated career record, which they own and Art 22 export must return; destroying the
+owner's own evidence to end someone else's read is rejected. There is **no
+`consent_revocation_cleanup` DELETE trigger** on `squad_signal_snapshots`. (The F3
+*membership-ended* cleanup of `player_status` is unaffected — that row is a pure coach surface
+with no athlete-history role.) The migration authored from this design implements policy-only.
 
 **DEFERRED (explicit, priced):**
 - **D2** — RLS-harness CI-gating (TR-11): the harness is manual/non-CI, so the 21 assertions
