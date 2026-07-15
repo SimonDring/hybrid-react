@@ -287,11 +287,17 @@ function decoratePhases(phases, access) {
 // adaptedPhases memo returns stable week objects until runtime state changes, so a
 // WeakMap keyed on them re-validates only when the reflow (or the injury set) moved.
 
-// P0-3 (engine-audit 09): the D14 injury-veto GATE. DEFAULT OFF — validation stays
-// report-only, exactly today's behaviour. When ON, validateWeek removes items the
-// tier-1 injury validator vetoed and injuryFilteredPhases ships the gated week
-// (report.week). Promotion to ON is SIMON'S I5 CALL — flip this constant only then.
-const ENFORCE_INJURY_VETOES = false;
+// P0-3 (engine-audit 09) → M4a I5: the D14 SAFETY & LAW veto GATE. NOW ON (Simon's
+// I5 sign-off, 2026-07-15 — safety-only enforcement). validateWeek removes items the
+// tier-1 injury/lawfulness validators vetoed (keyed on item identity, not names) and
+// injuryFilteredPhases ships the gated week (report.week); a region with no safe work
+// surfaces the honest `unservable` outcome (injuryFilter P0-2), never a contraindicated
+// session. The engine never again ships a contraindicated exercise to an injured
+// athlete. Every non-safety validator stays report-only (safety only enforces).
+// In normal operation the upstream injury filter already substitutes contraindicated
+// work, so this D14 gate is the independent BACKSTOP — it bites only when an item
+// slips the filter (Art 19: construction proposes, validation disposes).
+const ENFORCE_INJURY_VETOES = true;
 
 const _weekValidation = new WeakMap();
 function shippedValidation(adaptedWeek, shippedWeek, access, active) {
