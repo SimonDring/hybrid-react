@@ -281,7 +281,11 @@ export function generatePlan(profile = {}, opts = {}) {
   // plan complies — and the report any other construction path must produce.
   // Profile-known context only (equipment); runtime context (active injuries)
   // is validated where it's known (the app layer / tests).
-  const vctx = { access: profile.access || [] };
+  // planPhases lets the M4b plan-scoped OBSERVERS (progression-sanity, deload-presence)
+  // run over the whole plan from inside the per-week validateWeek — they emit once, on
+  // the plan's terminal week (observers.js#isPlanTerminalWeek). Report-only ('note'):
+  // they never move a plan, so meta.validation stays byte-identical (goldens prove it).
+  const vctx = { access: profile.access || [], planPhases: phases };
   let allPass = true, checked = 0;
   const problemWeeks = [];
   for (const phase of phases) {

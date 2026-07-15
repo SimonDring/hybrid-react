@@ -72,7 +72,7 @@ export function validateProposal(decisionId, proposal, ctx = {}) {
   const accepted = report.counts.veto === 0 && report.counts.trim === 0;
   return {
     accepted,
-    reason: accepted ? null : (report.findings.find((f) => f.verdict !== 'pass') || {}).reason || 'validation failed',
+    reason: accepted ? null : (report.findings.find((f) => f.verdict !== 'pass' && f.verdict !== 'note') || {}).reason || 'validation failed',
     findings: report.findings,
   };
 }
