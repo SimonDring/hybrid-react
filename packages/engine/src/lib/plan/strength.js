@@ -101,6 +101,9 @@ export function buildWeek(ctx = {}) {
       categoryPlan: ctx.categoryPlan || null, discipline: ctx.discipline || null,
       secondaryGoals: ctx.secondaryGoals || [],   // WP-49 T5 — accessory-tail corrective add-ons
       programming: ctx.programming || null, roundOut: ctx.roundOut || null,   // season-phased SKB (2026-07-09)
+      // Phase 3 M2 T2 — estimator-driven creep inputs (POWERLIFTING only, gated in the allocator):
+      // completed prior working weeks in the block + the athlete's LOGGED lift keys (untouched).
+      creepWeeks: ctx.creepWeeks || 0, loggedLiftKeys: ctx.loggedLiftKeys instanceof Set ? ctx.loggedLiftKeys : new Set(),
     }
   });
 

@@ -24,6 +24,29 @@ neither is present.
 
 ---
 
-*No entries yet — this file is seeded empty by Phase 3 M0 T4. The first
-re-baseline after this guard lands appends its entry above the line, per the
-shape above.*
+## 2026-07-15 — Phase 3 M2 T2: progression core — estimator-driven creep, POWERLIFTING only
+- Changed archetypes (content): the 15 POWERLIFTING-discipline archetypes only —
+  `build·strength·{beginner·3d,intermediate·4d,intermediate·1d,advanced·5d}`,
+  `build·powerlifting·advanced·4d`, `measured·strength·{prior,measured}`,
+  `progression·strength·intermediate·5d·full·nonlogging`, and the 7 `injured·*`
+  archetypes (all strength-style build → powerlifting discipline). Every genuinely
+  non-PL archetype (all `build·bodybuilding·*`, `build·functional·*`,
+  `build·hypertrophy·*`, `build·olympic·*`, and ALL `sport·*` — 30 in total) is
+  BYTE-IDENTICAL bar the version stamp.
+- Added archetypes: none.
+- Keys that moved, per archetype (PL only): `meta.provenance.knowledgeSetVersion`
+  (1.31.0 → 1.32.0 — moves on ALL 45); AND, on the PL 15 only,
+  `phases[].weeks[].sessions[].items[]` — primary compound `.weight` (progressive
+  LOAD creep within each block), accessory `.sets` (double-progression rep climb),
+  and the new `.estimated` / `.progression` / `.warmupRamp` fields on crept items.
+  All movement is PROGRESSIVE (load up within a block; no within-block regression —
+  the deload week correctly drops and does not creep).
+- Why: Phase 3 M2 T2 (docs/superpowers/plans/2026-07-15-phase3-m2-progression.md;
+  spec §2/§7; 07-PROGRESSION §1–§2) — estimator-driven creep closes SR-01/G9 (the
+  non-logging athlete finally overloads) + SR-10 (programmed warm-up ramps). Gated to
+  the powerlifting discipline (hypertrophy/olympic/sports are T3–T5). Governed by three
+  new knowledge entries (progression.estimator_creep / .double_progression /
+  .warmup_ramp), KNOWLEDGE_SET_VERSION 1.31.0 → 1.32.0.
+- Claim: no other archetype moved (audited key-by-key against this note — the 30 non-PL
+  archetypes differ ONLY on the knowledgeSetVersion stamp line; verified by a per-line
+  diff excluding that line).

@@ -292,7 +292,15 @@ export function reflowPhases({
         weekGymCount: gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, weekSlotIdx: s.i,
         rpeOffset, contraindicatedPatterns, blockedNameRegexes,
         categoryPlan: categoryPlanFor(gctx.skbSportId, gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, { levelName: gctx.level, season: gctx.season }),
-        discipline: gctx.discipline || null
+        discipline: gctx.discipline || null,
+        // Phase 3 M2 T2 — reproduce the baseline's block-scoped creep when this slot is
+        // re-derived (POWERLIFTING only, gated in the allocator). creepWeeks is the FORWARD
+        // PROJECTION over the block's prior working weeks — the SAME rule the pure generator
+        // uses for a fresh plan — so a neutral reflow (which anyway keeps the baseline session)
+        // and a reshaped one both carry the identical creep; progression never leaks a per-week
+        // change into reflow that isn't in baseline. loggedLiftKeys keeps logged compounds untouched.
+        creepWeeks: (s.phase.weeks || []).filter((w) => w.num < s.week.num && !w.deload && !w.taper).length,
+        loggedLiftKeys: new Set(Object.keys((profile && profile.lift_log) || {}))
       }
     })[0];
     if (spec) {
