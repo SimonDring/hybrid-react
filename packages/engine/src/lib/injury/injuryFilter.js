@@ -2,21 +2,50 @@
 // Post-generation session filter. Pure functions — no side effects.
 // Called from PlanService.js after plan generation.
 
-import { getContraindications } from './injuryRules.js';
+import { getContraindications, getContraindicatedExercises } from './injuryRules.js';
+import { isExerciseContraindicated } from './contraindicationVocab.js';
 import { getRehabExercisesFor, getPreventionExercisesFor } from '../../data/rehabExercises.js';
 import { hasRecurrenceRisk } from '../../data/injuryTaxonomy.js';
+import { EXERCISES } from '../../data/strengthExercises.js';
 
 const REHAB_REPLACEMENT_THRESHOLD = 0.70; // >70% blocked → replace whole session
 // Full replacement only kicks in when at least one injury is high-severity (>=4).
 // At severity 1-3, exercises are substituted in-place even if many are blocked.
 const FULL_REPLACE_MIN_SEVERITY = 4;
 
-function isBlocked(item, patterns) {
+// WP-46 discipline: resolve a plan item to its catalogue entry by STABLE exId first
+// (rename-proof), display-name second. The id/pattern contraindication join keys on this,
+// so a rename can never sneak a contraindicated lift past an injured athlete (TR-10).
+const EX_BY_ID = new Map(EXERCISES.map(e => [e.id, e]));
+const EX_BY_NAME = new Map(EXERCISES.map(e => [e.name.toLowerCase(), e]));
+const exForItem = (it) =>
+  (it.exId != null && EX_BY_ID.get(it.exId)) || EX_BY_NAME.get(String(it.name || '').toLowerCase()) || null;
+
+// Injury contraindication for a session item, keyed on exercise IDENTITY (id/pattern) — the
+// TR-10 safety join. `contras` are the per-injury contraindication descriptors (id/pattern
+// Sets) + their name-regex fallback, collected once per session by collectContras().
+function isBlocked(item, contras) {
   // Never block mobility primer items
   if (item.tag === 'mobility') return false;
   // Never block already-flagged rehab/prevention items
   if (item.rehab || item.prevention) return false;
-  return patterns.some(p => p.test(item.name));
+  const ex = exForItem(item);
+  return contras.some(c => {
+    // Known catalogue exercise → id/pattern join (rename-proof, novel-exercise-safe).
+    if (ex) return isExerciseContraindicated(ex, c.contra);
+    // Un-stamped / off-catalogue item (no exId, name not in the catalogue) → the legacy
+    // name-regex is the only signal we have; keep it as the honest fallback.
+    return c.regexes.some(r => r.test(item.name));
+  });
+}
+
+// Build, per active injury, both the id/pattern contraindication vocabulary (primary join)
+// and the name-regex fallback (for off-catalogue items), applying the severity/phase policy.
+function collectContras(injuries) {
+  return injuries.map(inj => ({
+    contra: getContraindicatedExercises(inj.body_part_key, inj.severity || 3, inj.rehab_phase || 'protect'),
+    regexes: getContraindications(inj.body_part_key, inj.severity || 3, inj.rehab_phase || 'protect').blockedPatterns,
+  }));
 }
 
 function buildInjuryLabel(inj) {
@@ -95,20 +124,19 @@ function buildRehabSession(injuries, blockedCount) {
 }
 
 function applyToSession(session, injuries) {
-  // Collect all blocked patterns across all active injuries
-  const allPatterns = [];
-  injuries.forEach(inj => {
-    const { blockedPatterns } = getContraindications(inj.body_part_key, inj.severity || 3, inj.rehab_phase || 'protect');
-    allPatterns.push(...blockedPatterns);
-  });
+  // Collect the per-injury contraindication (id/pattern vocabulary + name-regex fallback).
+  const contras = collectContras(injuries);
 
-  if (allPatterns.length === 0) return session;
+  // Nothing to block (every injury is severity ≤1 / unknown region) → session unchanged.
+  const anyBlocks = contras.some(c =>
+    c.contra.patternSet.size || c.contra.extraIdSet.size || c.regexes.length);
+  if (!anyBlocks) return session;
 
   // Count non-mobility items for threshold calculation
   const countable = session.items.filter(it => it.tag !== 'mobility');
 
   const modifiedItems = session.items.map(item => {
-    if (isBlocked(item, allPatterns)) {
+    if (isBlocked(item, contras)) {
       return { ...item, substituted: true, substituteReason: `Contraindicated for ${injuries.map(buildInjuryLabel).join(', ')} at current rehab phase` };
     }
     return item;

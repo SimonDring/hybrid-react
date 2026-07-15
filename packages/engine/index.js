@@ -35,7 +35,8 @@ export {
   dailyLoads, acuteChronic, acwr, acwrSeries, loadDecision, acwrBand,
   combinedMultiplier, deloadRecommendation, sessionLoad, workoutLoad
 } from './src/lib/plan/trainingLoad.js';
-export { getContraindications } from './src/lib/injury/injuryRules.js';
+export { getContraindications, getContraindicatedExercises } from './src/lib/injury/injuryRules.js';
+export { INJURY_CONTRAINDICATIONS, CONTRAINDICATION_VOCAB_VERSION, contraindicationCell, isExerciseContraindicated } from './src/lib/injury/contraindicationVocab.js';
 export { REGIONS, DIAGNOSES } from './src/data/injuryTaxonomy.js';
 export { getQuestions as injuryTriageQuestions, assess as assessInjurySymptoms } from './src/lib/injury/symptomAssessment.js';
 export { applyInjuryRules, applyPrevention } from './src/lib/injury/injuryFilter.js';
