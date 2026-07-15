@@ -7,18 +7,30 @@
  *
  * WHAT IT DOES (per working week, applied AFTER applyWeights so the base-rep loads are
  * already stamped):
- *   • Primary compounds — LOAD creep: the top-set load advances by the governed
- *     minimum-effective rate (progression.estimator_creep) once per COMPLETED prior
- *     working week in the block. Also gets a programmed warm-up ramp to near-maximal
- *     work (progression.warmup_ramp — closes SR-10) and an `estimated` label + driver.
- *   • Accessories — DOUBLE PROGRESSION: reps climb toward the top of the range
- *     (progression.double_progression), load held through the climb, labelled estimated.
+ *   • Primary compounds on a LOAD-creep adaptation (maxStrength) — the top-set load
+ *     advances by the governed minimum-effective rate (progression.estimator_creep)
+ *     once per COMPLETED prior working week in the block. Also gets a programmed
+ *     warm-up ramp to near-maximal work (progression.warmup_ramp — closes SR-10) and
+ *     an `estimated` label + driver.
+ *   • Primary compounds on a REPS-FIRST adaptation (hypertrophy — T3) — the SAME
+ *     double progression accessories use (below): reps climb toward the top of the
+ *     range, load held. No ramp (there is no near-maximal single to ramp toward).
+ *   • Accessories (every creep-gated discipline) — DOUBLE PROGRESSION: reps climb
+ *     toward the top of the range (progression.double_progression), load held
+ *     through the climb, labelled estimated.
  *   • Any LOGGED lift (loggedLiftKeys) is UNTOUCHED — the logged autoregulation path
  *     stays the fast path (07-PROGRESSION §2.1: measured displaces inferred).
  *
- * GATED to the powerlifting discipline this milestone (M2 T2). Hypertrophy / olympic /
- * sports are T3–T5 — they extend CREEP_DISCIPLINES + author their own knowledge, no new
- * mechanism. Every non-powerlifting cohort is byte-identical (the golden master proves it).
+ * GATED per discipline (CREEP_DISCIPLINES): powerlifting (M2 T2) + hypertrophy (M2 T3).
+ * Olympic / sports are T4–T5 — they extend CREEP_DISCIPLINES + author their own knowledge,
+ * no new mechanism. Every ungated cohort is byte-identical (the golden master proves it).
+ *
+ * MODEL PER ADAPTATION (progression.reps_first_model, T3): maxStrength/explosiveStrength
+ * primaries LOAD-creep with a programmed warm-up ramp (T2's model — there IS a near-
+ * maximal single to ramp toward). hypertrophy has no such near-maximal single, so its
+ * PRIMARY role instead runs the SAME reps-first double-progression path T2 already built
+ * for accessories (climb reps toward the top of the range, load held) — no new mechanism,
+ * just a second adaptation routed through it.
  *
  * PURITY (Constitution Art 18): a pure deterministic function of completion history ×
  * governed knowledge × the plan's own week index — no clock, no randomness, no I/O.
@@ -32,9 +44,10 @@ import kb from '../knowledge/kb.js';
 import { DISCIPLINE_DOSE_QUALITY } from '../../data/doseSchemes.js';
 import { matchLiftForItem, parseReps } from '../liftProgression.js';
 
-// Disciplines whose non-logging athletes get estimator creep. M2 T2 = powerlifting only;
-// T3–T5 add 'hypertrophy', 'olympic', and the sport cohorts (each authoring its own rate).
-export const CREEP_DISCIPLINES = new Set(['powerlifting']);
+// Disciplines whose non-logging athletes get estimator creep. M2 T2 = powerlifting;
+// T3 adds 'hypertrophy'. T4–T5 add 'olympic' and the sport cohorts (each authoring its
+// own rate/model).
+export const CREEP_DISCIPLINES = new Set(['powerlifting', 'hypertrophy']);
 
 const round2_5 = (x) => Math.round(x / 2.5) * 2.5;
 
@@ -47,21 +60,26 @@ const round2_5 = (x) => Math.round(x / 2.5) * 2.5;
 export function creepConfig({ discipline, creepWeeks = 0, deload = false, taper = false } = {}) {
   if (!discipline || !CREEP_DISCIPLINES.has(discipline)) return null;
   if (deload || taper) return null;                       // recovery/peaking weeks never creep (🔒 1)
-  const adaptation = DISCIPLINE_DOSE_QUALITY[discipline]; // powerlifting → maxStrength
+  const adaptation = DISCIPLINE_DOSE_QUALITY[discipline]; // powerlifting → maxStrength, hypertrophy → hypertrophy
   const rates = kb.value('progression.estimator_creep');
   const rate = rates && rates[adaptation] && rates[adaptation].weeklyLoadPct;
-  if (rate == null) return null;
+  // T3: which adaptations run REPS-FIRST double progression on their PRIMARY role too
+  // (governed — progression.reps_first_model), rather than load-creep + ramp (T2's model).
+  const repsFirstAdaptations = kb.value('progression.reps_first_model').primaryRoleAdaptations || [];
+  const dpPrimary = repsFirstAdaptations.includes(adaptation);
+  if (rate == null && !dpPrimary) return null;            // no authored progression path for this adaptation
   const weeks = Math.max(0, Math.floor(creepWeeks));
   const dp = kb.value('progression.double_progression');
   const ramp = kb.value('progression.warmup_ramp');
   return {
     adaptation,
     weeks,
-    loadRate: rate,
-    loadFactor: Math.pow(1 + rate, weeks),
+    loadRate: rate == null ? 0 : rate,
+    loadFactor: rate == null ? 1 : Math.pow(1 + rate, weeks),
     repStep: dp.repStepPerWeek,
     repTopDelta: dp.rangeTopDelta,
     rampSteps: ramp.steps,
+    dpPrimary,
   };
 }
 
@@ -111,6 +129,25 @@ const isWorking = (it) =>
   it && it.section !== 'primer' && !it.substituted && it.tag !== 'rehab' &&
   it.volumeFactor !== 0 && !/pain-free/i.test(it.name || '');
 
+// Double progression: climb reps toward the top of the range (load held), labelled
+// estimated with `driver` in the trace. Shared by accessories (every creep-gated
+// discipline) and PRIMARY items on a reps-first adaptation (hypertrophy — T3): the
+// SAME mechanism (and the SAME `.progression` shape T2 shipped), just applied to a
+// second role. No-op (leaves the item untouched) when the base reps can't be parsed
+// or the block hasn't completed a working week yet.
+function applyDoubleProgression(it, cfg, driver) {
+  const base = parseReps(it.sets);
+  if (base == null) return;
+  const bump = Math.min(cfg.weeks * cfg.repStep, cfg.repTopDelta);
+  if (bump <= 0) return;
+  it.sets = bumpRepsBy(it.sets, bump);
+  it.estimated = true;
+  it.progression = {
+    level: 'exercise', currency: 'reps',
+    driver, confidence: 'low', weeks: cfg.weeks, addedReps: bump,
+  };
+}
+
 /**
  * Apply estimator-driven creep to a finalised session's items, in place. Gated + no-op
  * for every non-creep discipline (returns items untouched → byte-identical goldens).
@@ -138,6 +175,13 @@ export function applyProgressionCreep(items = [], opts = {}) {
       // inferred) — no creep, no ramp, no estimate label.
       const lift = matchLiftForItem(it);
       if (lift && logged.has(lift.key)) continue;
+      if (cfg.dpPrimary) {
+        // T3 — hypertrophy: REPS-FIRST double progression on the primary too (no
+        // near-maximal single to ramp toward; climb reps toward the top of the range,
+        // load held — progression.reps_first_model). Same mechanism as accessories.
+        applyDoubleProgression(it, cfg, 'estimated — reps-first double progression (hypertrophy primary; completion-gated)');
+        continue;
+      }
       // LOAD creep on the compound top set (no-op when creepWeeks === 0).
       it.weight = rescaleWeight(it.weight, cfg.loadFactor);
       // Programmed warm-up ramp to near-maximal work (SR-10) — only when there's a load.
@@ -151,18 +195,7 @@ export function applyProgressionCreep(items = [], opts = {}) {
         confidence: 'low', adaptation: cfg.adaptation, weeklyLoadPct: cfg.loadRate, weeks: cfg.weeks,
       };
     } else if (role === 'accessory') {
-      // Double progression: climb reps toward the top of the range (load held).
-      const base = parseReps(it.sets);
-      if (base == null) continue;
-      const bump = Math.min(cfg.weeks * cfg.repStep, cfg.repTopDelta);
-      if (bump <= 0) continue;
-      it.sets = bumpRepsBy(it.sets, bump);
-      it.estimated = true;
-      it.progression = {
-        level: 'exercise', currency: 'reps',
-        driver: 'estimated — double progression (reps→load, completion-gated)',
-        confidence: 'low', weeks: cfg.weeks, addedReps: bump,
-      };
+      applyDoubleProgression(it, cfg, 'estimated — double progression (reps→load, completion-gated)');
     }
   }
   return items;

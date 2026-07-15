@@ -293,8 +293,8 @@ export function reflowPhases({
         rpeOffset, contraindicatedPatterns, blockedNameRegexes,
         categoryPlan: categoryPlanFor(gctx.skbSportId, gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, { levelName: gctx.level, season: gctx.season }),
         discipline: gctx.discipline || null,
-        // Phase 3 M2 T2 — reproduce the baseline's block-scoped creep when this slot is
-        // re-derived (POWERLIFTING only, gated in the allocator). creepWeeks is the FORWARD
+        // Phase 3 M2 — reproduce the baseline's block-scoped creep when this slot is
+        // re-derived (powerlifting T2 + hypertrophy T3, gated in the allocator). creepWeeks is the FORWARD
         // PROJECTION over the block's prior working weeks — the SAME rule the pure generator
         // uses for a fresh plan — so a neutral reflow (which anyway keeps the baseline session)
         // and a reshaped one both carry the identical creep; progression never leaks a per-week

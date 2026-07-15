@@ -129,7 +129,7 @@ function gatesFor(intent, totalSessions) {
 function buildGymWeek(count, ctx, profile, program, diag) {
   return strength.buildWeek({
     intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, winp: ctx.winp, weekNum: ctx.weekNum,
-    // Phase 3 M2 T2 — estimator-driven creep (POWERLIFTING only, gated in the allocator):
+    // Phase 3 M2 — estimator-driven creep (powerlifting T2 + hypertrophy T3, gated in the allocator):
     //  • creepWeeks: completed prior WORKING weeks in this block (forward-projected for a fresh
     //    plan; completion-gated when profile.completed_weeks is present) — computed in the loop.
     //  • loggedLiftKeys: the lift keys the athlete has LOGGED (lift_log) — their compounds keep the
