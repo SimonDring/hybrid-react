@@ -125,6 +125,119 @@ export function applyInjuryVetoes(week, findings) {
   return removed.length ? { week: { ...week, sessions }, removed } : { week, removed };
 }
 
+// ── C1 · the conflict-order RESOLUTION PASS (02-COACHING-PIPELINE §3; EDS §37;
+// Constitution "When principles conflict") ───────────────────────────────────
+// At the audit pin the Constitution's tier order "exists nowhere as code … when
+// two soft rules clash, the winner is whichever line runs later — undocumented"
+// (engine-audit 02 §3). This pass makes it EXPLICIT and TESTABLE: when ≥2 non-pass
+// verdicts land on the SAME item/slot, it resolves them by the Constitution's fixed
+// order and emits a RESOLUTION RECORD naming which verdict won, its tier, and why.
+//
+// The rule (Constitution "When principles conflict", verbatim; §3.2):
+//   1. Across tiers: ABSOLUTE. A lower tier NUMBER defeats every higher number
+//      regardless of confidence — no optimisation confidence overrides a safety gate
+//      (1 > 5); volume trims below target to stay recoverable (3 > 5).
+//   2. Within a tier: CONFIDENCE decides — the higher-confidence verdict prevails.
+//   3. Within a tier at equal confidence: the CONSERVATIVE (more restrictive) verdict
+//      wins — never "whichever line runs later" (the audit's exact defect).
+// Confidence is consulted ONLY inside a tier, NEVER across the boundary — the
+// absolute-across-tiers invariant (§3.2; property-tested in conflict-resolution.test.mjs).
+// Pure: a function of tier-tagged findings alone (no clock, no random, no mutation).
+const CONFIDENCE_RANK = { high: 3, moderate: 2, low: 1, reported: 0 };
+const confValue = (c) => (typeof c === 'number' ? c : (CONFIDENCE_RANK[c] ?? 0));
+
+// The slot two verdicts must share to "conflict". Item-level first (a single
+// exercise), then session-level, then the volume ledger's muscle — never guessed:
+// a finding with no locatable slot cannot be shown to contest another and is skipped.
+function conflictKey(f) {
+  const d = f.detail || {};
+  if (d.session != null && d.item != null) return `item::${d.session}::${d.item}`;
+  if (Number.isInteger(d.sessionIndex) && Number.isInteger(d.itemIndex)) return `item#${d.sessionIndex}.${d.itemIndex}`;
+  if (d.session != null) return `session::${d.session}`;
+  if (d.muscle != null) return `muscle::${d.muscle}`;
+  return null;
+}
+
+const tierName = (tier) => CONFLICT_ORDER[tier - 1] || `tier ${tier}`;
+
+// Resolve one group of ≥2 competing verdicts on a single slot → { winner, rule }.
+// The winner is ALWAYS drawn from the lowest tier number present, so a higher-number
+// item can never prevail no matter its confidence (rule 1). Confidence is read only
+// among the joint-lowest-tier contenders (rule 2); a same-confidence tie falls to the
+// more conservative verdict (rule 3), first-seen for determinism.
+function pickWinner(group) {
+  const minTier = Math.min(...group.map((f) => f.tier));
+  const contenders = group.filter((f) => f.tier === minTier);
+  if (contenders.length === 1) return { winner: contenders[0], rule: 'across-tier' };
+  const maxConf = Math.max(...contenders.map((f) => confValue(f.confidence)));
+  const top = contenders.filter((f) => confValue(f.confidence) === maxConf);
+  if (top.length === 1) return { winner: top[0], rule: 'within-tier-confidence' };
+  const maxSev = Math.max(...top.map((f) => SEVERITY[f.verdict] ?? 0));
+  return { winner: top.find((f) => (SEVERITY[f.verdict] ?? 0) === maxSev), rule: 'within-tier-conservative' };
+}
+
+function whyText(rule, tier) {
+  const name = tierName(tier);
+  if (rule === 'across-tier') return `${name} (tier ${tier}) wins absolutely — a higher tier defeats every lower tier regardless of confidence`;
+  if (rule === 'within-tier-confidence') return `${name} (tier ${tier}): the higher-confidence verdict prevails within the tier`;
+  return `${name} (tier ${tier}): equal confidence — the more conservative (more restrictive) verdict wins`;
+}
+
+function resolutionRecord(slot, group, winner, rule) {
+  return {
+    slot,
+    conflict: group.map((f) => ({ source: f.validatorId, tier: f.tier, verdict: f.verdict, confidence: f.confidence ?? null })),
+    winner: { source: winner.validatorId, tier: winner.tier, verdict: winner.verdict, confidence: winner.confidence ?? null, reason: winner.reason },
+    tier: winner.tier,
+    rule,
+    why: whyText(rule, winner.tier),
+  };
+}
+
+/**
+ * The conflict-order resolution pass (pure). Groups non-pass findings by the slot
+ * they contest; for every slot with ≥2 competing verdicts emits ONE resolution
+ * record (which verdict won, its tier, the rule, and why). Higher tier wins
+ * ABSOLUTELY; confidence modulates only WITHIN a tier (§3.2).
+ * @param {object[]} findings — tier-tagged findings from validateWeek.
+ * @returns {object[]} resolution records, in slot-stable (insertion) order.
+ */
+export function resolveConflicts(findings) {
+  const groups = new Map();
+  for (const f of findings || []) {
+    if (!f || f.verdict === 'pass') continue;
+    const key = conflictKey(f);
+    if (key == null) continue;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(f);
+  }
+  const records = [];
+  for (const [slot, group] of groups) {
+    if (group.length < 2) continue;   // a conflict needs ≥2 verdicts on one slot
+    const { winner, rule } = pickWinner(group);
+    records.push(resolutionRecord(slot, group, winner, rule));
+  }
+  return records;
+}
+
+// Composition with T2's enforcement: each ENFORCED tier-1 removal IS a resolved
+// conflict — the SAFETY & LAW veto defeated the construction's implicit proposal to
+// SHIP that item to serve the objective (§3.1's "construction proposal", OBJECTIVE
+// FIDELITY tier 5). Recording it makes the disposal explicit rather than incidental
+// (the safety veto beats the lower-tier objective BY TIER — 1 > 5 — every time).
+function enforcementResolutions(findings) {
+  return findings
+    .filter((f) => f.tier === SAFETY_AND_LAW_TIER && f.verdict === 'veto' && f.detail
+      && Number.isInteger(f.detail.sessionIndex) && Number.isInteger(f.detail.itemIndex))
+    .map((f) => {
+      const shipProposal = {
+        validatorId: 'construction.ship', tier: 5, verdict: 'proposal', confidence: null,
+        reason: `"${f.detail.item}" ships to serve the session objective`,
+      };
+      return resolutionRecord(conflictKey(f), [f, shipProposal], f, 'across-tier');
+    });
+}
+
 /**
  * Run every registered validator over one constructed week.
  * @param {object} week — { sessions: [...] } in the generated shape
@@ -138,8 +251,10 @@ export function applyInjuryVetoes(week, findings) {
  *   the suite re-runs on what actually ships (`report.week`) so the report proves
  *   the shipped artefact — an emptied session still draws the shipped-empty veto
  *   (Art 15: enforcement may never strand an athlete silently).
- * @returns {{ pass: boolean, findings: object[], counts: {pass,trim,veto} }}
- *   — plus { enforced: {removed: []}, week } ONLY when enforcement is on.
+ * @returns {{ pass: boolean, findings: object[], counts: {pass,trim,veto},
+ *   resolutions: object[] }} — `resolutions` is the C1 conflict-order pass output
+ *   (§3): one record per slot where ≥2 verdicts conflicted, higher tier winning
+ *   absolutely. Plus { enforced: {removed: []}, week } ONLY when enforcement is on.
  */
 export function validateWeek(week, ctx = {}) {
   const findings = [];
@@ -162,14 +277,24 @@ export function validateWeek(week, ctx = {}) {
   }
   // Highest-priority problem first (§37: lower tier number wins), then by severity.
   findings.sort((a, b) => (a.tier - b.tier) || (SEVERITY[b.verdict] - SEVERITY[a.verdict]));
-  const report = { pass: counts.veto === 0 && counts.trim === 0, findings, counts };
+  // C1 — the explicit conflict-order pass: resolve every slot contested by ≥2
+  // verdicts by tier (higher tier absolute; confidence within a tier), recording each.
+  const resolutions = resolveConflicts(findings);
+  const report = { pass: counts.veto === 0 && counts.trim === 0, findings, counts, resolutions };
   // Flag OFF (the default everywhere): report-only — today's behaviour, byte-identical.
   if (!ctx.enforceInjuryVetoes) return report;
   const { week: gated, removed } = applyInjuryVetoes(week, findings);
   if (!removed.length) return { ...report, enforced: { removed }, week };
-  // Re-prove the SHIPPED week (flag off — enforcement ran; recursion stops here).
+  // Re-prove the SHIPPED week (flag off — enforcement ran; recursion stops here). The
+  // enforced tier-1 removals are recorded as explicit across-tier resolutions (safety
+  // beat the item's objective-fidelity claim to ship), ahead of the shipped week's own.
   const finalReport = validateWeek(gated, { ...ctx, enforceInjuryVetoes: false });
-  return { ...finalReport, enforced: { removed }, week: gated };
+  return {
+    ...finalReport,
+    resolutions: [...enforcementResolutions(findings), ...finalReport.resolutions],
+    enforced: { removed },
+    week: gated,
+  };
 }
 
 export default { VALIDATORS, validateWeek };
