@@ -161,6 +161,23 @@ move it to the archive file rather than letting this one grow._
   behaviour-neutral dead-code leftovers deferred to M6's sweep (`styleObjective`;
   the `wp61-govern-scoring` SELECTION_SCORING pin now pins production-dead knowledge).
 
+- **Phase 3 · M3a — MEASURED DIAGNOSIS (displacement + honesty), PR pending Simon's
+  merge (2026-07-15).** M2 fully merged (#181 progression, #182 fill-deletion — the
+  legacy volume-first engine is gone). M3a begins the *measure* verb, per 🔒 2/🔒 3
+  (Simon 2026-07-15: strength from logged lifts first; defer the new-quality vocabulary):
+  a logged lift now yields a **measured** maxStrength estimate (via the governed
+  STRENGTH_STANDARDS — the 🔒 2 anchor) that **displaces the training-age prior at higher
+  confidence and NAMES the displaced prior in the D4 rationale** (C8; Art 16); and the
+  `droppedDemands` honesty ledger now reaches the plan with reasons (Art 15 — the
+  🔒3-deferred qualities are declared, not hidden). **Additive-first proven byte-for-byte**
+  (no logged lifts ⇒ identical plan; `prop-additive-identity` green; only 4 lift-bearing
+  archetypes moved, rationale-line only). k>1 priorities follow from measured confidence
+  (`K_BY_CONFIDENCE`, prioritise.js unchanged). Reuses existing knowledge (no KSV bump).
+  **⚠ 🔒 2 sign-off points for Simon** (both sound per review): undated lifts stay
+  *moderate* confidence pending measurement-date capture; the squat/press "two priorities"
+  example is partial until the 🔒3 vocabulary (strength is one quality today).
+  **Next: M3b — athlete-signal confidence operative** (TR-13; separate PR).
+
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
 0. **⚠ THE DEVELOPMENT PLAN — created 2026-07-13, adoption = Simon's merge.**
