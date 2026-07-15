@@ -21,7 +21,11 @@ const targets = weeklyMuscleTargets({
 assert(typeof targets === 'object' && targets.quads > 0,
   'T2 weeklyMuscleTargets handles sport style');
 
-// ── T3: sport base scheme uses 3×5 on primaries ───────────────────────────
+// ── T3: sport base primary uses a heavy low-rep strength scheme ────────────
+// (M2b, TR-08: the legacy fill's flat sport STYLE-scheme — a fixed 3×5 — was deleted.
+// The single construction path now doses the primary BY QUALITY, which resolves to a
+// heavy low-rep strength scheme, e.g. 4×5. What matters is the rep range, not the exact
+// set count: a real strength dose, never a hypertrophy rep range.)
 const sportSessions = allocateGym({
   targets,
   slots: [{ minutes: 60, equip: ['full_gym'] }],
@@ -30,8 +34,8 @@ const sportSessions = allocateGym({
 });
 const sportPrimaries = sportSessions[0].items.filter(it => it.restSec >= 120);
 assert(sportPrimaries.length >= 1, 'T3a sport session has at least one primary');
-assert(sportPrimaries.some(it => /3\s*[×x]\s*5/.test(it.sets)),
-  'T3b sport base primary uses 3×5');
+assert(sportPrimaries.some(it => /[×x]\s*[3-6]\b/.test(it.sets)),
+  `T3b sport base primary uses a heavy low-rep (3–6) strength scheme (got ${sportPrimaries.map(i => i.sets).join(', ') || 'none'})`);
 
 // ── T4: every item has a positive restSec ─────────────────────────────────
 const allItems = sportSessions.flatMap(s => s.items);

@@ -11,7 +11,6 @@
 //   • olympic rides the strength band and resolves to its explosiveStrength scheme.
 import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets.js';
 import { DOSE_SCHEMES, DISCIPLINE_DOSE_QUALITY } from '@performance-os/engine/data/doseSchemes.js';
-import { EXERCISES } from '@performance-os/engine/data/strengthExercises.js';
 import allocator, { allocateGym } from '@performance-os/engine/lib/plan/allocator.js';
 const { scheme } = allocator;
 
@@ -47,23 +46,25 @@ for (const [disc, q] of Object.entries(DISCIPLINE_DOSE_QUALITY)) {
   assert(scheme(disc, 'base') === DOSE_SCHEMES[q].base, `scheme and DISCIPLINE_DOSE_QUALITY agree for ${disc}`);
 }
 
-// ── 3 · Allocator whitelist: powerlifting keeps the strength family's 3-primary cap ──
-// Exercised on the legacy fill path (no ctx.discipline) so the bestExercise cap is the
-// thing under test. Generous targets + a long slot so the cap is the binding constraint.
+// ── 3 · The discipline's OWN dose scheme reaches the allocated session ──
+// (M2b, TR-08: the legacy volume-first fill — and with it the bestExercise family-based
+// primary CAP — was DELETED. One construction path now: the discipline scheme is applied
+// at allocation, so the P0-1 fallthrough shows up in the built session's REST prescription.)
+// A powerlifting session's heavy primaries rest 180 s (maxStrength); a functional (→
+// hypertrophy) session's primaries rest 120 s — never the functional default by accident.
 const FULL = ['barbell', 'dumbbell', 'machine', 'cable', 'band', 'kettlebell', 'bodyweight'];
 const bigTargets = { quads: 12, hamstrings: 10, glutes: 10, chest: 10, back: 12, shoulders: 8, core: 6 };
-const roleOf = new Map(EXERCISES.map((e) => [e.id, e.role]));
-const primaryCount = (style) => {
+const primaryRests = (style) => {
   const [session] = allocateGym({
     targets: { ...bigTargets },
     slots: [{ minutes: 90, equip: FULL }],
     ctx: { style, intent: 'base', level: 'advanced', sex: 'male', access: FULL, lifts: {} },
   });
-  return (session.items || []).filter((it) => roleOf.get(it.exId) === 'primary').length;
+  return (session.items || []).filter((it) => it.restSec >= 120).map((it) => it.restSec);
 };
-const plPrimaries = primaryCount('powerlifting');
-const fnPrimaries = primaryCount('functional');
-assert(plPrimaries === 3, `powerlifting session holds 3 primaries (got ${plPrimaries})`);
-assert(fnPrimaries <= 2, `functional session capped at 2 primaries (got ${fnPrimaries})`);
+const plRests = primaryRests('powerlifting');
+const fnRests = primaryRests('functional');
+assert(plRests.length > 0 && plRests.every((r) => r === 180), `powerlifting primaries dose at maxStrength rest 180 (got ${plRests.join(', ') || 'none'})`);
+assert(fnRests.length > 0 && fnRests.every((r) => r === 120), `functional primaries dose at hypertrophy rest 120 (got ${fnRests.join(', ') || 'none'})`);
 
 console.log('discipline-style-band done');

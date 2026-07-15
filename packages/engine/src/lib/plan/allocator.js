@@ -33,13 +33,14 @@
 
 import { EXERCISES, LEVELS, availableEquip, CORE_HOLDS } from '../../data/strengthExercises.js';
 import { VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
-import { SELECTION_SCORING as SS } from '../../data/selectionScoring.js';
 import { muscleContribution } from './contributions.js';
 import { parseSetCount } from './volume.js';
 import { applyWeights } from '../liftProgression.js';
 import { stimulusFactor } from '../strength/stimulus.js';
 import { AXIAL_SESSION_CAP, axialOf } from './axial.js';
 import { selectInterventions, tierOf } from './selectInterventions.js';
+// NOTE (M2b): SELECTION_SCORING (SS) was the legacy deficit-fill's greedy scoring economy —
+// deleted with the fill (one construction path now); no import needed here any more.
 import { deriveSessionObjective, assignTargetQualities, competencyAdjustedTarget, constraintAdjustedTarget } from '../session/sessionObjective.js';
 import { getSecondaryGoal } from '../../data/secondaryGoals.js';
 import { getDiscipline } from '../../data/disciplines/index.js';
@@ -56,11 +57,6 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 // ~6–10 hard sets/muscle (the within-session stimulus cap) ≈ 75 min of productive
 // work. The allocator stops a slot here; volume ÷ day count sizes the rest.
 export const SESSION_CEILING_MIN = 75;
-
-// Sport sessions stay lean to leave recovery for the sport: cap fatiguing (working)
-// items per session. The factor-0 prehab/mobility finisher is exempt — it's
-// non-fatiguing — and priority prehab is picked first, so it survives the cap.
-export const SPORT_WORK_ITEM_CAP = 6;
 
 // AXIAL_SESSION_CAP (the within-session spinal-load budget) + axialOf live in
 // ./axial.js, shared with the scheduler + de-spine pass so they can't diverge.
@@ -111,16 +107,6 @@ export function diagnosisSteers({ style, sport, categoryPlan = null, discipline 
 const FINISHER_TARGET_MIN = 30;
 const FINISHER_CAP_MIN = 15;
 
-// Goal's primary training quality, derived from the style — drives the soft
-// strength↔hypertrophy steer. Only the BUILD styles steer; sport + functional are
-// balanced (their selection is already governed by sport priority + emphasis, and
-// steering sport toward strength nudges it into synergist-volume overshoot).
-function primaryQuality(style) {
-  const fam = styleFamily(style);
-  if (fam === 'strength') return 'strength';
-  if (fam === 'bodybuilding') return 'hypertrophy';
-  return null;   // sport + functional = balanced (no steer)
-}
 // Map the build style to its goalTag value (the exercise goalTags vocabulary is
 // strength/hypertrophy/functional — the bodybuilding FAMILY is tagged 'hypertrophy').
 const styleGoalTag = (style) => {
@@ -134,20 +120,6 @@ function powerAllowed(ex, power, prioritySet, style) {
   if (!power) return false;
   return (prioritySet && prioritySet.has(ex.id)) || (ex.goalTags || []).includes(styleGoalTag(style));
 }
-// Soft steer: prefer on-quality work, de-prioritise the off-quality strength/
-// hypertrophy pair; general + (gated-in) power stay neutral.
-function qualityMult(ex, goalPrimary) {
-  const q = ex.quality || 'general';
-  if (!goalPrimary || q === 'general' || q === 'power') return 1.0;
-  return q === goalPrimary ? 1.15 : 0.7;
-}
-// Lengthened-position bias: nudge a hypertrophy plan toward stretch-loaded work
-// (more growth at long muscle lengths — Maeo/Pedrosa/Schoenfeld). Tunable; a
-// tie-breaker weaker than the priority boost, so it never overrides curation.
-function stretchMult(ex, goalPrimary) {
-  return (ex.stretchBias && goalPrimary === 'hypertrophy') ? 1.12 : 1.0;
-}
-
 // ---- rep / RPE / intensity scheme — the DOSE MODEL is governed knowledge now
 // (data/doseSchemes.js, WP-14): schemes keyed by (scheme key, phase) with per-block
 // provenance; this is a thin lookup through the style→scheme bridge, byte-identical
@@ -334,8 +306,6 @@ function shareMuscle(a, b) {
   for (const m in ca) if (cb[m]) return true;
   return false;
 }
-// A light "filler" that can slot into a heavy lift's rest without compromising it.
-function isFiller(ex) { return ex.role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf'; }
 // Can these be supersetted? Not two heavy mains; never overlapping muscles (so
 // antagonist push↔pull, or compound↔unrelated isolation, but not squat↔deadlift).
 function canPair(a, b) {
@@ -447,116 +417,6 @@ export function preferredMember(candidates = [], slotAxial = 0, cap = AXIAL_SESS
   return best;
 }
 
-// How hard to discourage volume that overshoots the remaining target. Higher = the
-// actual allocated volume tracks the evidence-based target more tightly (less junk).
-const OVERSHOOT_PENALTY = 0.1;
-
-// Pick the single best exercise to add to a slot right now, or null when nothing
-// left pays down a deficit (within the slot's remaining time). `targets` is the
-// full per-muscle target (for urgency), `deficit` the running remainder.
-function bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, fillersOnly = false, prioritySet = null, levelName = 'intermediate', power = false, goalPrimary = null, demotePress = false, weeklyExCount = {}, priorityFor = () => false, blockedRx = [], discipline = undefined) {
-  let best = null, bestScore = 0.25; // threshold: ignore near-useless picks
-  for (const ex of EXERCISES) {
-    // NB: ex.discipline is the strength-discipline TAG (olympic/powerlifting), distinct from the session-spec 'discipline' modality field (gym/rehab).
-    // WP-49 Plan 1: discipline-tagged lifts are only selectable when their discipline is active.
-    if (ex.discipline && ex.discipline !== discipline) continue;
-    if (!slot.equip.has(ex.equip)) continue;
-    if (ex.level > slot.level) continue;
-    if (slot.exUsed.has(ex.id)) continue;
-    if (blockedRx.length && blockedRx.some(r => r.test(ex.name))) continue;  // injury-contraindicated (WP-40)
-    if (!powerAllowed(ex, power, prioritySet, style)) continue;   // power gate
-    if (fillersOnly && !isFiller(ex)) continue;   // filler pass: only light rest-gap work
-    // Endurance sports: at most one horizontal-press slot per session (low transfer).
-    if (demotePress && ex.pattern === 'hpush' && slot.picks.some(p => p.ex.pattern === 'hpush')) continue;
-
-    const effectiveRole = effectiveRoleOf(ex, slot.level, demotePress);
-
-    // Cap primaries per slot (3 for the strength family — its sessions are built around
-    // heavy mains — 2 otherwise): beyond that, extra heavy mains crowd out accessories
-    // without adding meaningful variety, and make sessions uncomfortably long.
-    if (!fillersOnly && effectiveRole === 'primary' &&
-        slot.picks.filter(p => p.ex.role === 'primary' && p.effectiveRole === 'primary').length >= (styleFamily(style) === 'strength' ? 3 : 2)) continue;
-
-    const sets = roleSetCount(ex, s, style, effectiveRole);
-    if (sets <= 0) continue;
-    const cost = sets * perSetMin(ex, effectiveRole);
-    // Fillers slot into a main's rest gap, so they don't consume the time budget.
-    if (!fillersOnly && slot.timeUsed > 0 && slot.timeUsed + cost > slot.budget + 2) continue;
-
-    const contrib = muscleContribution(ex);
-    // Stimulus credit: a set's counted volume scales by load class × level (a bird
-    // dog ≈ 0 for an advanced athlete; health work = 0). The factor applies to ALL
-    // the volume math so selection, the MRV ceiling and the count stay coherent.
-    const vf = stimulusFactor(ex, levelName);
-    // Never let a pick push any muscle past its weekly MRV ceiling (counting
-    // synergist credit). This is the backstop that keeps high-frequency plans in
-    // a recoverable range.
-    let exceedsMRV = false;
-    for (const m in contrib) {
-      if ((weeklyDelivered[m] || 0) + sets * contrib[m] * vf > (weeklyCeiling[m] ?? Infinity) + 0.01) { exceedsMRV = true; break; }
-    }
-    if (exceedsMRV) continue;
-
-    let useful = 0, waste = 0;
-    for (const m in contrib) {
-      const eff = sets * contrib[m] * vf;   // stimulus-weighted volume this pick delivers
-      const cap = (perSlotCap[m] ?? Infinity) - (slot.delivered[m] || 0);
-      const weeklyRoom = (weeklyCeiling[m] ?? Infinity) - (weeklyDelivered[m] || 0);
-      const room = Math.min(Math.max(0, deficit[m] || 0), Math.max(0, cap), Math.max(0, weeklyRoom));
-      // Urgency: a muscle far from its target (e.g. calves at 0%) gets weighted
-      // up so single-muscle isolation can compete with multi-muscle compounds,
-      // instead of always being crowded out and starved.
-      const urgency = targets[m] > 0 ? Math.max(0, Math.min(1, (deficit[m] || 0) / targets[m])) : 0;
-      useful += Math.min(eff, room) * (0.6 + 0.9 * urgency);
-      // Volume this pick dumps PAST the remaining target — junk sets that overshoot
-      // the evidence-based target (e.g. a squat piling quads onto a swimmer whose leg
-      // target is already met). Penalised below so actual volume tracks the target.
-      waste += Math.max(0, eff - Math.max(0, deficit[m] || 0));
-    }
-    if (useful <= 0) continue;
-
-    let score = useful;
-    if (slot.patternsUsed.has(ex.pattern)) score *= SS.repeatPatternMult;   // variety within a session
-    if (slot.timeUsed < 5) score *= effectiveRole === 'primary' ? SS.openCompound.primary : SS.openCompound.other; // open on a compound
-    if (ex.pattern === 'hpull' || ex.pattern === 'vpull') score *= SS.posturePullLean; // posture pull-lean
-    if (priorityFor(ex.id, slot.axialLoad)) score *= SS.axialPreferredMult;     // intent's axial-preferred member
-    score *= qualityMult(ex, goalPrimary);                        // goal-quality steer
-    score *= stretchMult(ex, goalPrimary);                        // lengthened-position bias (hypertrophy)
-    // Cross-session variety: an accessory/iso already used in earlier sessions this
-    // week is gently penalised so the SAME filler (cable fly, woodchop, prone raise)
-    // doesn't recur every day. Primaries + power are exempt — repeating the main
-    // lifts / plyos session-on-session IS the progressive-overload signal.
-    if (effectiveRole !== 'primary' && ex.quality !== 'power') {
-      const used = weeklyExCount[ex.id] || 0;
-      if (used) score *= Math.pow(SS.crossSessionRepeatBase, used);
-    }
-    // Split FOCUS bias: steer this day toward the muscles its split assigns (an Upper
-    // day prefers chest/back/shoulders, a Lower day quads/hams/glutes), so the week
-    // reads as a curated split rather than identical days. The multiplier only ever
-    // SUPPRESSES off-focus work (≤1, never a boost) — it reorders which day gets what
-    // without lowering the pick threshold, so the shared weekly deficit still controls
-    // total volume (no overshoot). A null focus (direct call) applies no bias.
-    if (slot.focus) {
-      let c = 0, inFocus = 0;
-      for (const m in contrib) { c += contrib[m]; if ((slot.focus[m] || 0) > 0) inFocus += contrib[m]; }
-      // Region-pure focused days (build/strength only): a candidate whose work is
-      // ENTIRELY off-focus (e.g. a chest press on a Lower day) is EXCLUDED, not just
-      // suppressed — so a focused day stays in its region instead of absorbing
-      // cross-region weekly-deficit spillover. Full-body days weight every trained
-      // muscle > 0, so nothing is ever fully off-focus and nothing is excluded.
-      // SPORT is exempt: sport splits deliberately thread the sport's priority work
-      // through every session (a swimmer leads even a lower day with pull work).
-      if (style !== 'sport' && c > 0 && inFocus === 0) continue;
-      score *= SS.focusFloor + SS.focusSpan * (c > 0 ? inFocus / c : 1);
-    }
-    score -= OVERSHOOT_PENALTY * waste;                            // prefer picks that fit the remaining target
-    score += (hash(ex.id) + weekNum + slot.idx) % 7 * SS.rotationJitter;   // rotation tie-break (rotates near-equal picks)
-
-    if (score > bestScore) { bestScore = score; best = { ex, sets, contrib, effectiveRole }; }
-  }
-  return best;
-}
-
 // Muscles that make up each region — used to label sessions.
 const REGION = {
   lower: ['quads', 'hamstrings', 'glutes', 'calves'],
@@ -665,7 +525,6 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const repBump = femaleRepBump(ctx.sex);
   const levelName = ctx.level || 'intermediate';
   const power = !!ctx.power;
-  const goalPrimary = primaryQuality(style);
   // Endurance sports: demote heavy horizontal pressing (bench) to a light accessory
   // and cap it to one slot per session — it's low-transfer, mass-adding deadweight
   // for runners/cyclists. Swimmers keep pressing (it's sport-specific for them).
@@ -681,10 +540,6 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   // and hid: silent volume loss for injured build athletes (Art 8 / Art 15).
   const blockedRx = ctx.blockedNameRegexes || [];
   const isBlockedEx = (ex) => blockedRx.length > 0 && blockedRx.some((r) => r.test(ex.name));
-  // Sport-only: count fatiguing (working, factor>0) picks in a slot, and whether it's
-  // at the lean cap. The factor-0 supportive finisher is added later and stays exempt.
-  const workCount = (slot) => slot.picks.filter(p => (p.item?.volumeFactor ?? 1) > 0).length;
-  const overSportCap = (slot) => style === 'sport' && workCount(slot) >= SPORT_WORK_ITEM_CAP;
 
   // Hard WEEKLY ceiling: the actual allocated volume for a muscle (counting the
   // synergist contributions that compounds credit) may never exceed its MRV across
@@ -694,18 +549,6 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   for (const m in VOLUME_LANDMARKS) weeklyCeiling[m] = VOLUME_LANDMARKS[m].mrv;
   const weeklyDelivered = {};   // muscle → fractional sets delivered across ALL slots
   const weeklyExCount = {};     // exercise id → sessions it's appeared in this week (variety penalty)
-
-  // Cap how much of a muscle's weekly target lands in ONE slot, so volume spreads
-  // across sessions (frequency). With 2+ slots, no slot gets more than ~half a
-  // muscle; never more than ~half its MRV (the "no-monster" backstop).
-  const freq = Math.min(2, Math.max(1, slots.length));
-  const perSlotCap = {};
-  for (const m in targets) {
-    const even = Math.ceil((targets[m] || 0) / freq) || Infinity;
-    const lm = VOLUME_LANDMARKS[m];
-    const ceiling = lm ? Math.ceil(lm.mrv / 2) : Infinity;
-    perSlotCap[m] = Math.min(even, ceiling);
-  }
 
   const work = slots.map((slot, idx) => ({
     idx,
@@ -717,7 +560,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     picks: [],       // { ex, item } — structured into supersets at finalise
     patternsUsed: new Set(),
     exUsed: new Set(),
-    delivered: {},   // muscle → sets delivered IN THIS SLOT (for perSlotCap)
+    delivered: {},   // muscle → sets delivered IN THIS SLOT (per-slot volume tally)
     muscleVol: {},   // muscle → total fractional sets in this slot (for label/flags)
     focus: slot.focus || null,       // split day's muscle weights — biases selection (null = no bias)
     focusLabel: slot.focusLabel || null,  // WP-49 Plan 2 T3b: the split's region label (Upper/Lower/
@@ -740,13 +583,6 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const priorityByIntent = ctx.priorityByIntent instanceof Map ? ctx.priorityByIntent : new Map();
   const idToIntent = new Map();
   for (const [intent, ids] of priorityByIntent) for (const id of ids) if (!idToIntent.has(id)) idToIntent.set(id, intent);
-  // Boost test used in scoring: is `id` the axial-preferred member of its intent now?
-  const priorityFor = (id, slotAxial) => {
-    const intent = idToIntent.get(id);
-    if (!intent) return prioritySet ? prioritySet.has(id) : false; // sport/no-intent fallback
-    return preferredMember(priorityByIntent.get(intent) || [], slotAxial, AXIAL_SESSION_CAP) === id;
-  };
-
   // Fallback anchor: a fundamental compound, rotated so the week always covers
   // legs + push + pull no matter how few/short the sessions are.
   const FUNDAMENTAL = ['squat', 'hpush', 'hinge', 'hpull', 'vpush', 'lunge', 'vpull'];
@@ -823,25 +659,23 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     return null;
   };
 
-  // ── D11 (SPORT): value-ordered selection satisfying each session's D9/D10 requirement, stopping at
-  //    the fatigue budget. Build keeps the legacy fill below. Muscle-volume stays the MRV ledger.
-  //    Scoped to run + cycle for now: their gym need (posterior-chain/power durability) matches the
-  //    diagnosis-driven target well. Swim is deferred — a swimmer isn't strength-limited, so its
-  //    diagnosis points to mobility (→ robustness), which crowds out the upper-pull/shoulder work a
-  //    swimmer actually needs; swim keeps the legacy fill until the model surfaces that need.
+  // ── ONE construction path (Phase 3 M2b — G6 / TR-08): EVERY cohort is diagnosis-first. The
+  //    value-ordered selection (M-SESS / D11) satisfies each session's D9/D10 requirement, stopping
+  //    at the fatigue budget; muscle-volume stays the MRV LEDGER (Art 6 — it validates, it no longer
+  //    DRIVES). The legacy volume-first deficit fill was DELETED here: proven dead (no cohort routed
+  //    to it after Wave-A cohort rescue + the build flip). diagnosisSteers survives only as
+  //    PlanGenerator's display-honesty gate (whether to SHOW meta.diagnosis) — never a construction fork.
   // WP-49 T4c: a build discipline with NO diagnosed priority (an already-strong athlete, no
-  // capability gap) still steers — seed its canonical quality so selection + dose have a target
-  // instead of falling to the legacy default scheme. Sports/legacy: unchanged (empty stays empty).
+  // capability gap) still gets a target — seed its canonical quality so selection + dose have one
+  // instead of an empty rotation. Sports without a discipline keep the raw (possibly empty) list.
   const rawPriorityQualities = ctx.priorityQualities || [];
   const priorityQualities = (rawPriorityQualities.length === 0 && ctx.discipline && DISCIPLINE_DOSE_QUALITY[ctx.discipline])
     ? [DISCIPLINE_DOSE_QUALITY[ctx.discipline]] : rawPriorityQualities;
-  // Swim is CATEGORY-LED (WP-20): it joins the D11 path only when its SKB category
-  // plan is present (ctx.categoryPlan, built by the caller from the swimming
-  // library) — the plan's per-session assignments replace the quality rotation
-  // that mis-served it in Sprint 8.
+  // Swim + the team sports are CATEGORY-LED (WP-20): they arrive with an SKB category plan
+  // (ctx.categoryPlan, built by the caller) whose per-session assignments name each day's
+  // coverage, movements, and dose quality — replacing the priority-quality rotation.
   const categoryPlan = ctx.categoryPlan || null;
-  const useD11 = diagnosisSteers({ style, sport: ctx.sport, priorityQualities, categoryPlan, discipline: ctx.discipline || null });
-  if (useD11) {
+  {
     const goalPrimaryD11 = null;
     // The D9 target-quality rotation is a property of the WEEK, not of this call. The
     // weekly builder passes all of a week's slots at once, so rotating over work.length
@@ -983,80 +817,6 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     // Finalise sport slots through the SAME structuring/weights/duration machinery, then return.
     return work.map(slot => finaliseSlot(slot, style, ctx));
   }
-
-  // 1) Anchor each slot. SPORT plans lead with the sport's priority work (a swimmer
-  //    opens on a pull, a sprinter on a power lift); when the day has a focus we
-  //    prefer a priority lift that hits it. BUILD plans open on the split day's
-  //    fundamental pattern (an Upper day on a press/row, a Lower day on a squat/
-  //    hinge). Anything uncovered falls back to the rotating fundamental anchor.
-  const sportAnchors = style === 'sport'
-    ? (ctx.exercisePriority || []).map(id => EXERCISES.find(e => e.id === id)).filter(e => e && !isFiller(e))
-    : [];
-  for (const slot of work) {
-    let ex = null;
-    if (sportAnchors.length) {
-      const fit = sportAnchors.filter(e => slot.equip.has(e.equip) && e.level <= slot.level && !isBlockedEx(e));
-      const focused = slot.focus
-        ? fit.filter(e => { const c = muscleContribution(e); return Object.keys(c).some(m => (slot.focus[m] || 0) > 0); })
-        : fit;
-      const pool = focused.length ? focused : fit;
-      if (pool.length) ex = pool[(weekNum + slot.idx) % pool.length];
-    }
-    if (!ex) ex = patternAnchor(slot, slot.anchors || [FUNDAMENTAL[slot.idx % FUNDAMENTAL.length]]);
-    if (!ex && slot.anchors) ex = patternAnchor(slot, FUNDAMENTAL);   // split pattern unavailable → guarantee coverage
-    if (!ex) continue; // equipment can't cover it — the fill pass populates the slot
-    const anchorEffectiveRole = effectiveRoleOf(ex, slot.level, demotePress);
-    place(slot, { ex, sets: roleSetCount(ex, s, style, anchorEffectiveRole), contrib: muscleContribution(ex), effectiveRole: anchorEffectiveRole });
-  }
-
-  // 2) Round-robin fill: interleaving slots spreads each muscle across sessions.
-  let progressed = true;
-  while (progressed) {
-    progressed = false;
-    for (const slot of work) {
-      if (slot.timeUsed >= slot.budget || overSportCap(slot)) continue;
-      const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor, blockedRx, ctx.discipline);
-      if (!pick) continue;
-      place(slot, pick);
-      progressed = true;
-    }
-  }
-
-  // Fallback: if a slot ended up empty (e.g. tiny remaining target on a reflow),
-  // give it light maintenance work against the full target so no session is blank.
-  for (const slot of work) {
-    if (slot.picks.length) continue;
-    const maint = { ...targets };
-    let go = true;
-    while (go && slot.timeUsed < slot.budget) {
-      const pick = bestExercise(slot, targets, maint, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, false, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor, blockedRx, ctx.discipline);
-      if (!pick) { go = false; break; }
-      place(slot, pick);
-      for (const m in pick.contrib) maint[m] -= pick.sets * pick.contrib[m];
-    }
-  }
-
-  // Filler pass: top up with ONE light, non-competing move (calves/core/rear delt/cuff)
-  // into a rest gap — but only when a muscle is still meaningfully short of its weekly
-  // target. This used to add up to (mains+1) fillers chasing every small remainder,
-  // which tacked a string of seemingly-random exercises onto the end of a session.
-  // One targeted filler, real gap only.
-  const FILLER_MIN_GAP = 0.33;   // a muscle must still be ≥ a third of its target short
-  for (const slot of work) {
-    if (slot.timeUsed >= slot.budget || overSportCap(slot)) continue;
-    const pick = bestExercise(slot, targets, deficit, perSlotCap, weeklyCeiling, weeklyDelivered, s, style, weekNum, true, prioritySet, levelName, power, goalPrimary, demotePress, weeklyExCount, priorityFor, blockedRx, ctx.discipline);
-    if (!pick) continue;
-    const realGap = Object.keys(pick.contrib).some(m => (targets[m] || 0) > 0 && (deficit[m] || 0) >= FILLER_MIN_GAP * targets[m]);
-    if (!realGap) continue;
-    place(slot, pick);
-  }
-
-  applyRoundOut();   // season-phased SKB (2026-07-09) — gated; no-op for un-migrated sports
-  addSupportiveFinishers(work, ctx, levelName, s, style, deload, taper, repBump);
-  injectSecondaryGoals(work, ctx, s, style, deload, taper, repBump);   // WP-49 T5 — accessory tail only
-
-  // Finalise each slot: structure into supersets/fillers, then a session spec.
-  return work.map(slot => finaliseSlot(slot, style, ctx));
 }
 
 // Readiness intensity honesty (WP-10): shift a rendered 'RPE n' by the caller's
