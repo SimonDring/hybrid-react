@@ -136,6 +136,24 @@ move it to the archive file rather than letting this one grow._
   (taper) + `matches_this_week` (fixtures) are the same class — taper needs a
   baseline-double-count confirm, fixtures need D8 baseline ownership (M6).
 
+- **Phase 3 · M2a — PROGRESSION IS REAL, PR pending Simon's merge (2026-07-15).**
+  The audit's worst finding (SR-01/G9 — non-logging athletes never progressed) is
+  fixed for every discipline. Estimator-driven creep: conservative, completion-gated
+  (🔒 1), honestly labelled *estimated*, displaced the instant a set is logged.
+  Per-discipline: powerlifting/olympic load-creep + programmed warm-up ramps (SR-10),
+  hypertrophy reps-first double progression, sport gym-work builds off-season only and
+  **holds the maintenance line in/pre/around competition** (Art 2). Rates are governed
+  knowledge with provenance (KSV 1.31→1.35). **Scoreboard: flat/non-progressing
+  archetypes 38/45 → 6/45, and all 6 residual are legitimate in-season maintenance**
+  (Opus review verified). reflow≡baseline + purity hard-green; each discipline's
+  goldens re-baselined scoped. The report-only progression-sanity + dose-coherence
+  validators are M2a's acceptance instrument (promotion to gating = M4).
+  **⚠ Two coaching-judgement calls flagged for Simon:** (1) fresh plans *project*
+  progression forward before it's earned (labelled, self-correcting on log — but a
+  philosophy choice); (2) `completed_weeks` completion-history is still dormant, so
+  completion-gating is aspirational until it's wired (M3/M5).
+  **Next: M2b — delete the legacy volume-first fill** (separate PR after M2a merges).
+
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
 0. **⚠ THE DEVELOPMENT PLAN — created 2026-07-13, adoption = Simon's merge.**
