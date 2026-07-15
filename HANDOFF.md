@@ -196,6 +196,35 @@ move it to the archive file rather than letting this one grow._
   leftovers + the deferred taper/fixture calendar signals).
   **M3 then complete** (M3a measured diagnosis + M3b signal confidence).
 
+- **Phase 3 · M4a — VALIDATION DISPOSES, PR pending Simon's merge (2026-07-15).**
+  M3 fully merged (#183/#184). M4a closes Art 19's *dispose* verb (the audit's most-
+  emphasised gap), per Simon's 2026-07-15 sign-off (safety-only enforcement; 🔒 5
+  injury-veto ON, id-keyed):
+  - **The injury veto ENFORCES** (I5 flipped on) — a contraindicated exercise that
+    reaches the shipped week is vetoed at D14, keyed on a new **id/pattern
+    contraindication vocabulary** (retired the fragile name-regex — TR-10; a novel
+    exercise can no longer slip past) and removed by item identity. A no-safe-work
+    region surfaces an honest *unservable* (never a contraindicated session). It's a
+    backstop — the constraints-first filter substitutes upstream, so goldens are
+    byte-identical; it bites on slip-through (21 seeded-defect assertions prove it).
+  - **The conflict order is an explicit D14 pass** (C1) — Safety>Sport>Recoverability
+    >Intent>Objective>Optimisation, higher tier wins absolutely (270-combo property-
+    proven), with resolution records. Closes the 'winner is whichever line runs later'
+    defect.
+  - **The validation report reaches a human** (TR-02) — `explainValidation` +
+    a WeekDetail 'why your plan was trimmed' banner; a zero-consumer validation
+    product now FAILS CI.
+  Golden byte-identical whole-branch; purity + prop-* green; 204/204 + 14/14.
+  **⚠ Honest caveats (for the PR): (1) INJURY enforcement is fully live; 'lawfulness
+  enforces' is a correctly-wired but EMPTY seam — no lawfulness validator authored
+  yet (M4b). (2) Pre-existing ballistic/olympic contraindication gaps (`clearedIds`:
+  hang_clean, snatch/C&J never blocked) are faithfully preserved — Simon's near-term
+  science review. (3) The contraindication vocab is safety-critical knowledge sitting
+  outside the governed KNOWLEDGE_SET ratchet — M6 governance sweep.**
+  Deferred: M4b non-safety validator build-out (report-only) + gate-promotion (needs
+  a production FP window); override seam + explain-persist (M5). Next: M5 (learning
+  loop + the data product on the DAAS).
+
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
 0. **⚠ THE DEVELOPMENT PLAN — created 2026-07-13, adoption = Simon's merge.**

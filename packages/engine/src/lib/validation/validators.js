@@ -11,7 +11,8 @@
 import kb from '../knowledge/kb.js';
 import { EXERCISES, availableEquip } from '../../data/strengthExercises.js';
 import { parseSetCount, exerciseMuscles } from '../plan/volume.js';
-import { blockedNameRegexesForInjuries } from '../session/movementRequirements.js';
+import { getContraindications, getContraindicatedExercises } from '../injury/injuryRules.js';
+import { isExerciseContraindicated } from '../injury/contraindicationVocab.js';
 
 const EX_BY_NAME = new Map(EXERCISES.map((e) => [e.name.toLowerCase(), e]));
 const EX_BY_ID = new Map(EXERCISES.map((e) => [e.id, e]));
@@ -34,12 +35,37 @@ const isMain = (it) => it.section !== 'primer' && !it.substituted;
 const mainItems = (s) => (s.items || []).filter(isMain);
 
 // ── Tier 1 · SAFETY: contraindicated movements never ship ────────────────────
-// Direct policy check: no shipped working item may match an active injury's
-// blocked name-regexes (the injury system's own severity/phase policy). This is
-// deliberately NOT a diff against the injury filter — the filter legitimately
-// APPENDS rehab work (not idempotent), and a diff can't catch pattern-level
-// under-blocking. Items the injury system itself prescribed (tag 'rehab') and
-// pain-free-range work are exempt by construction.
+// Direct policy check: no shipped working item may be contraindicated for an
+// active injury. The join keys on exercise IDENTITY (M4a T2 / TR-10) — each item
+// resolves to its catalogue entry (by stable exId, name second) and its id +
+// movement pattern are tested against the governed contraindication vocabulary
+// (contraindicationVocab.js, the SAME table + severity policy the upstream injury
+// filter now uses). A catalogue RENAME can't dodge the gate (keyed on exId), and a
+// NOVEL exercise of a contraindicated pattern is caught by its pattern, never
+// missed by a name gap. The name-regex survives only as the honest fallback for
+// off-catalogue / un-stamped items (no exId, name absent from the catalogue).
+// This is deliberately NOT a diff against the injury filter — the filter
+// legitimately APPENDS rehab work (not idempotent). Items the injury system itself
+// prescribed (tag 'rehab') and pain-free-range work are exempt by construction.
+//
+// Per-injury contraindication descriptor: the id/pattern vocabulary (primary,
+// rename-proof) + the name-regex fallback, each under the injury's own
+// severity/phase policy (≤1 → no blocks, ≥4 → force `protect`).
+function collectContras(injuries) {
+  return injuries.map((inj) => ({
+    contra: getContraindicatedExercises(inj.body_part_key, inj.severity || 3, inj.rehab_phase || 'protect'),
+    regexes: getContraindications(inj.body_part_key, inj.severity || 3, inj.rehab_phase || 'protect').blockedPatterns,
+  }));
+}
+const hasBlocks = (contras) => contras.some((c) =>
+  c.contra.patternSet.size || c.contra.extraIdSet.size || c.regexes.length);
+// Is a shipped working item contraindicated for ANY active injury? IDENTITY-keyed
+// (exId → id/pattern), name-regex only when the item has no catalogue entry.
+function itemContraindicated(it, contras) {
+  const ex = exForItem(it);
+  return contras.some((c) =>
+    ex ? isExerciseContraindicated(ex, c.contra) : c.regexes.some((r) => r.test(it.name || '')));
+}
 export const injuryContraindicationValidator = {
   id: 'injury.contraindication',
   knowledgeId: 'injury.contraindication_policy',
@@ -47,8 +73,8 @@ export const injuryContraindicationValidator = {
   run(week, ctx = {}) {
     const injuries = (ctx.injuries || []).filter((i) => i && i.body_part_key);
     if (!injuries.length) return [];
-    const blocked = blockedNameRegexesForInjuries(injuries);
-    if (!blocked.length) return [];
+    const contras = collectContras(injuries);
+    if (!hasBlocks(contras)) return [];
     const findings = [];
     // Indexed walk (not shippedSessions/mainItems): detail must pin the EXACT
     // position in week.sessions[..].items[..] so the D14 gate removes only the
@@ -61,7 +87,7 @@ export const injuryContraindicationValidator = {
         // mark-and-hide with real redistribution.
         if (!isMain(it)) return;
         if (it.tag === 'rehab' || /pain-free/i.test(it.name || '')) return;
-        if (blocked.some((r) => r.test(it.name || ''))) {
+        if (itemContraindicated(it, contras)) {
           findings.push({
             verdict: 'veto',
             reason: `${s.title || 'session'}: "${it.name}" is contraindicated by an active injury`,
