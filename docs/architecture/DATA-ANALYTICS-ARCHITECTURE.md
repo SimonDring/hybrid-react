@@ -3,15 +3,16 @@
 *How the platform measures, models, analyses, and reports the athlete — the governing
 document of the second product.*
 
-> **PROPOSED — designate pending ratification via DOCUMENTATION-GOVERNANCE §Ratification.**
+> **CANONICAL — ratified 2026-07-15 via DOCUMENTATION-GOVERNANCE §Ratification.**
 > This document is the ND-1 deliverable (amendment queue row ND-1; commissioned by
-> governance audit 08 §4 under the GA-512 ruling). Until ratified it binds new work —
-> data-pillar work is built and reviewed against it — but loses precedence conflicts
-> against the ratified set (DOCUMENTATION-GOVERNANCE §1, §3).
+> governance audit 08 §4 under the GA-512 ruling). The adversarial panel returned
+> RATIFY WITH FIXES; every finding was dispositioned (docs/AMENDMENT-QUEUE.md AQ-10,
+> AQ-11, AQ-12 queue the fixes that reach beyond this document's own text) and Simon
+> ratified the result. It now governs at full T2 standing (DOCUMENTATION-GOVERNANCE §1, §3).
 
 | | |
 |---|---|
-| **Status** | v0.1 — PROPOSED designate (T2 candidate, peer to the EDS), pending adversarial panel review and ratification by Simon per DOCUMENTATION-GOVERNANCE §3 |
+| **Status** | v1.0 — CANONICAL (T2, ratified 2026-07-15 per DOCUMENTATION-GOVERNANCE §Ratification; adversarial panel: RATIFY WITH FIXES, fixes applied). Governing for the athlete data & analytics product, peer to the EDS |
 | **Authority** | Subordinate to the [Constitution](../foundation/CONSTITUTION.md), the [Decision Ontology](../foundation/DECISION-ONTOLOGY.md), and the [Knowledge Architecture](../foundation/KNOWLEDGE-ARCHITECTURE.md). Peer to the [EDS](../engine/00-ENGINE-DESIGN-SPECIFICATION.md) and the [TAS](TAS.md), coordinated with [AIGAS](AIGAS.md): the EDS governs how the platform *decides*, the TAS governs *where software responsibilities live*, AIGAS governs *what AI may be* — this document governs how the platform **measures, models, analyses, and reports the athlete**. Where it conflicts with a governing document, the governing document wins and this one is corrected. |
 | **Scope** | Platform-wide and permanent: every capture stream, every element of the longitudinal athlete record, every analytical product (trend, insight, benchmark, squad signal, report), and every delivery surface for analytical content — present or future — is validated against this document before it is built. |
 | **Commissioning evidence** | Benchmark capabilities P2.1–P2.11 + P3.5 ([governance audit 00 §2](../reviews/2026-07-11-governance-audit-00-benchmark.md)); the consolidated per-link requirements of [governance audit 08 §4](../reviews/2026-07-11-governance-audit-08-data-analytics-pillar.md); the GA-512 new-document ruling; the cross-document fixes GA-801, GA-803, GA-804 (audit 08 §5). |
@@ -115,7 +116,8 @@ data underneath it (§4.2).
   impure shell, producing materialised read-models. The readings are reconcilable
   (read-models are serving artefacts, not an engine channel — nothing L5 produces
   enters the engine except as D17 outputs under §2.4), but the TAS §4.5 wording
-  should be clarified when the TAS next amends.
+  should be clarified when the TAS next amends — queued as
+  [AQ-10](../AMENDMENT-QUEUE.md).
 - **Coordinated** with AIGAS: every AI touchpoint in this document (C4 summarisation,
   C5 analysis, C6 drafting, C2 rendering) stays behind AIGAS's categories, seams, and
   gates unchanged (AIGAS §6.2, §11); §2.3.4 defines the grounding surface AIGAS's
@@ -198,7 +200,7 @@ made except against this specification.** The ratify-or-supersede disposition:
 2. **`docs/SCHEMA.md`** — superseded: Phase 3 authors a DAAS-validated data reference
    as its successor; the stale document is archived per DOCUMENTATION-GOVERNANCE §4.
 3. **`player_status` / `CoachVisibleStatus`** — ratified as the first member of the
-   Squad Signal lineage (§5.1; live at commissioning, 2026-07 — status: HANDOFF.md);
+   Squad Signal lineage (§5.1; status: HANDOFF.md);
    its derived-only posture is confirmed, its point-in-time-only limitation is a §9
    staging item, not a design.
 
@@ -213,7 +215,15 @@ sections citing §3/§5 rather than the legacy docs.
 World-class athlete data analysis is one unbroken chain (audit 08 §1): **CAPTURE →
 MODEL → ANALYSE → DECIDE → PRESENT**. The chain is sequential in dependency; a
 world-class fragment in one link is worth little if the next link has no home for its
-output. Two chain-wide rules:
+output.
+
+**Crosswalk to the Ontology.** This five-link chain is the operational elaboration of
+the ratified Analysis Spine's four stages (Ontology §1.4: CAPTURE → MODEL → INSIGHT →
+DECISION): ANALYSE ≙ INSIGHT; DECIDE + PRESENT together ≙ the DECISION stage (entry
+into the Reasoning Spine, and delivery to the humans the platform serves). The Ontology
+names the stages; this document is their architectural owner (§1.2).
+
+Two chain-wide rules:
 
 - **Hard rule — no orphan outputs.** No link may ship a data class or product whose
   consuming link has no governed home for it. A capture stream nothing models, a
@@ -284,15 +294,13 @@ never a silent average.
 
 Testing is a first-class, scheduled, versioned act — not an onboarding questionnaire.
 
-- **Protocols are knowledge.** An Assessment (Ontology Family VIII) is authored as a
-  versioned knowledge entry — procedure, conditions, equipment, the qualities it
-  estimates and the mapping onto each quality's scale, typical error, competency
-  prerequisites, injury contraindications, re-test cadence — under the KA universal
-  entry shape. Each protocol entry lives in **exactly one registry** — a generic
-  quality assessment with the quality taxonomy (Domain 3), a sport-specific battery
-  with the sport (the SKB `assessments` section, Domain 2) — never both. **A protocol
-  change is a new version, never a silent edit** — versioning is what keeps a 2026
-  result comparable with a 2031 one.
+- **Protocols are knowledge.** An Assessment (Ontology Family VIII §10 — its Attributes
+  enumerate the protocol's shape; not restated here) is authored as a versioned
+  knowledge entry under the KA universal entry shape. Each protocol entry lives in
+  **exactly one registry** — a generic quality assessment with the quality taxonomy
+  (Domain 3), a sport-specific battery with the sport (the SKB `assessments` section,
+  Domain 2) — never both. **A protocol change is a new version, never a silent edit**
+  — versioning is what keeps a 2026 result comparable with a 2031 one.
 - **Scheduling is a decision, not a habit.** Which assessments to run, and when, is
   assessment-scheduling reasoning — a future D17-adjacent decision admitted through
   EDS §20.1 when built (§9); until then, cadence guidance from the protocol entry is
@@ -375,7 +383,8 @@ longitudinal record is trend-blind; nothing in §2.1 is done until its output ha
 
 ## 2.3 ANALYSE — the analysis layer, designed
 
-The word at TAS L5 ("Analytics"), expanded (GA-512). Two architectural rules first:
+The Analytics module within TAS L5 (Learning & Research), expanded (GA-512). Two
+architectural rules first:
 
 - **Reasoning is D17; serving is L5.** Every analytical *interpretation* — anything
   that assigns meaning, detects, compares, or flags — is a D17 member: pure engine
@@ -711,7 +720,7 @@ member Athlete State (owner-private)
 Every hop is governed elsewhere and composed here: the server-side roll-up is the
 *only* person-boundary crossing (TAS §7 ⑧); the roll-up is engine logic, never
 per-surface re-derivation (TAS §4.1); `player_status` is ratified as this lineage's
-realisation (§1.5 — live at commissioning, 2026-07; status: HANDOFF.md). **A squad view that would need a raw vital fails the build**
+realisation (§1.5; status: HANDOFF.md). **A squad view that would need a raw vital fails the build**
 (EDS L13 / the privacy validator — cited, already binding).
 
 ## 5.2 The signal family
@@ -964,8 +973,8 @@ C3). Order is by value-per-risk, aligned to the DEVELOPMENT-PLAN's Phase 3/4 slo
 (status and dates live in HANDOFF.md, never here):
 
 1. **S1 — The Metric Dictionary v1 + provenance tagging** (§4.1, §2.1.1) over the
-   streams live at commissioning, 2026-07 (session logs, check-ins, daily metrics,
-   wearable readings — status: HANDOFF.md).
+   already-captured streams (session logs, check-ins, daily metrics, wearable
+   readings — status: HANDOFF.md).
    Everything else keys on it; retrofitting semantics later is the expensive path.
 2. **S2 — The history substrate** (§3.1–§3.3): append-only observation persistence +
    the initial materialised set + stamps. Cures the latest-only JSONB divergence
@@ -996,7 +1005,7 @@ C3). Order is by value-per-risk, aligned to the DEVELOPMENT-PLAN's Phase 3/4 slo
 | D-4 | Assessment-scheduling as a reasoning decision | Needs D17 in the applied EDS + protocol registry maturity (S4) | When batteries scale past "cadence reminder" — unscheduled testing decays into onboarding-only estimates (the GA-421 risk returning) | Protocol cadence surfaced advisorily from S4 |
 | D-5 | Internal-evidence pathway operation | Cohorts too small for non-identifying aggregates; consent machinery lands with Art 22's downstream specs | When cohort sizes clear thresholds — every year unconsented/unaggregated is evidence lost | Consent flags recorded from S2 so history is includable when the gate opens |
 | D-6 | Event-sourced athlete-state versioning (full R-replay) | Cost/complexity vastly exceeds current consumers (§3.3) | If a never-materialised value is demanded historically; full audit-replay of *un*committed derivations | §3.2 admission criteria (materialise anything a human saw); revisit at first bite |
-| D-7 | KA amendments this document surfaced (the internal-evidence rung GA-306; the Stored-Data quality clarification GA-309) | Frozen text; amendments are queued, never applied by a designate | GA-306: at S8 (§6.3's cap is the interim); GA-309: benign under §2.1.1's treatment | Interim treatments stated in §6.3 and §2.1.1; rows stay in the amendment queue |
+| D-7 | KA amendments this document surfaced (the internal-evidence rung GA-306; the Stored-Data quality clarification GA-309) | Frozen text; amendments are queued (AQ-11, AQ-12), never applied inline by any non-frozen document, canonical included | GA-306: at S8 (§6.3's cap is the interim); GA-309: benign under §2.1.1's treatment | Interim treatments stated in §6.3 and §2.1.1; rows stay in the amendment queue |
 
 Every deferral above is recorded, owned, and priced — deferral is explicit, never
 silent (Art 15).
@@ -1040,10 +1049,11 @@ admission criteria, §9's smallest-first order.
 
 ---
 
-*Ratification of this document follows DOCUMENTATION-GOVERNANCE §3: adversarial
-panel review (a dated review whose job is to break it — including hunting for any
-P2 capability the text fails to own operationally), disposition of every finding,
-then Simon's written ratification. Until then: build against it; it yields to the
-ratified set.*
+*This document was ratified per DOCUMENTATION-GOVERNANCE §3: adversarial panel
+review (job: break it — including hunting for any P2 capability the text fails to
+own operationally) returned RATIFY WITH FIXES; every finding was dispositioned —
+fixed inline where the fix was this document's own text, queued to
+docs/AMENDMENT-QUEUE.md (AQ-10, AQ-11, AQ-12) where it reached a frozen document —
+then Simon ratified in writing. It now governs at full T2 standing.*
 
-*— End of the Data & Analytics Architecture Specification v0.1 (PROPOSED designate) —*
+*— End of the Data & Analytics Architecture Specification v1.0 (CANONICAL) —*

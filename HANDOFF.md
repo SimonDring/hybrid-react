@@ -225,6 +225,21 @@ move it to the archive file rather than letting this one grow._
   a production FP window); override seam + explain-persist (M5). Next: M5 (learning
   loop + the data product on the DAAS).
 
+- **Phase 3 · M5 ENTRY GATE — DAAS RATIFICATION, PR pending Simon's merge (2026-07-15).**
+  M4a merged (#185). M5 needs its governing doc canonical first (Simon 2026-07-15:
+  ratify the DAAS first, then build the schema/privacy design for panel review before
+  any migration). The DAAS went through a fresh **adversarial ratification panel**
+  (re-tested against the now-APPLIED v1.1 set — Family VIII/D17/Arts 21-22/derived-data
+  doctrine, all ratified since the DAAS was authored): verdict **RATIFY WITH FIXES**,
+  fixes applied. It flips designate → **canonical T2, peer to the EDS** (the second
+  product's governing foundation). The panel found a real frozen-set inconsistency —
+  TAS §4.5/L1 still say 'priors are the only channel / D1–D16' while ratified EDS D17
+  also feeds the engine — now queued as **AQ-10** (+ AQ-11/GA-306, AQ-12/GA-309 resolve
+  the DAAS's dangling refs); ND-1 → RATIFIED. Merge = the ratify act; DEVELOPMENT-PLAN
+  §8's 3→4 DAAS-ratification gate is then satisfied. **Next: M5 first deliverable —
+  the append-only outcomes/history + consent SCHEMA + RLS/privacy design for panel
+  review (🔒 6), before any migration Simon applies; then D16 promotion policy (🔒 7).**
+
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
 0. **⚠ THE DEVELOPMENT PLAN — created 2026-07-13, adoption = Simon's merge.**

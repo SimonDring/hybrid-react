@@ -18,6 +18,7 @@ flowchart TD
         EDS["EDS — engine spec (FROZEN)<br/>P1–P15 · L1–L15 · D1–D16"]
         TAS["TAS — technical blueprint (FROZEN)<br/>L0–L6 · six-call API"]
         AIGAS["AIGAS — AI governance (FROZEN)<br/>two seams · C1–C9 · 8 prohibitions"]
+        DAAS["DAAS — data & analytics spec (CANONICAL)<br/>5-link chain · Metric Dictionary · propagation rule"]
     end
     subgraph T3 ["T3 — Supporting specs & references"]
         SKB[03 SPORT-KNOWLEDGE-BASE<br/>SportProfile schema]
@@ -49,9 +50,16 @@ flowchart TD
     CONST --> TAS
     EDS --> AIGAS
     TAS -.peer.- AIGAS
+    CONST --> DAAS
+    ONT --> DAAS
+    KA --> DAAS
+    EDS -.peer.- DAAS
+    TAS -.peer.- DAAS
+    AIGAS -.coordinated.- DAAS
     VIS --> TEAM
     EDS --> SKB & PHYS & MB & AM
     TAS --> MB & ATLAS
+    DAAS --> AM & TEAM
     TEAM --> TNS
     MB --> D7
     T3 --> CM & HO
@@ -72,6 +80,7 @@ feed the archive. Full precedence rules: governance doc §1.
 | [`engine/00-ENGINE-DESIGN-SPECIFICATION.md`](engine/00-ENGINE-DESIGN-SPECIFICATION.md) | How the platform reasons: P1–P15, L1–L15, the D1–D16 decision catalogue, three loops, domain models, validation | The engine's decision architecture | Constitution, Ontology, KA | engine 01–05 (subordinate companions) |
 | [`architecture/TAS.md`](architecture/TAS.md) | How software is built to honour the above: L0–L6 layers, module catalogue, six-call engine API, data lifecycle, two learning systems | The technical architecture | All four above | AIGAS (peer), MIGRATION-BLUEPRINT (derived plan) |
 | [`architecture/AIGAS.md`](architecture/AIGAS.md) | What AI may be: four verbs, two seams, C1–C9 capability taxonomy, 8 prohibitions, trust/ops rules | The AI/engine boundary | All governing docs | AIGAS-REVIEW + governance audit 06 (panel record) · **ratified 2026-07-13** |
+| [`architecture/DATA-ANALYTICS-ARCHITECTURE.md`](architecture/DATA-ANALYTICS-ARCHITECTURE.md) (DAAS) | How the platform measures, models, analyses, and reports the athlete — the governing document of the second product: the five-link CAPTURE→MODEL→ANALYSE→DECIDE→PRESENT chain | The data-pillar capabilities P2.1–P2.11 + P3.5; the longitudinal athlete record (§3); the Metric Dictionary (§4.1); the quality→confidence→authority propagation rule (§4.2) | Constitution, Decision Ontology, Knowledge Architecture; peer to EDS/TAS, coordinated with AIGAS | ND-1 (amendment queue) · governance audit 08 (data-analytics pillar) · **ratified 2026-07-15** |
 
 ## T3 · Supporting
 
