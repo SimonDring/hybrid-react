@@ -33472,7 +33472,7 @@
             "confidence": "moderate",
             "magnitude": 0,
             "qualityId": "maxStrength",
-            "rationale": "you meet the maxStrength demand (0.8); maintain it."
+            "rationale": "you meet the maxStrength demand (0.8); maintain it. Measured — displaces the training-age band prior (advanced) (level 0.72)."
           },
           {
             "confidence": "low",
@@ -61780,7 +61780,7 @@
             "confidence": "moderate",
             "magnitude": 0.12,
             "qualityId": "maxStrength",
-            "rationale": "demands maxStrength at 1; your level is 0.87 (measured) — gap 0.13. Responsiveness at your training age: ×0.9."
+            "rationale": "demands maxStrength at 1; your level is 0.87 (measured) — gap 0.13. Responsiveness at your training age: ×0.9. Measured — displaces the training-age band prior (intermediate) (level 0.5)."
           },
           {
             "confidence": "low",
@@ -71473,7 +71473,7 @@
             "confidence": "moderate",
             "magnitude": 0.07,
             "qualityId": "maxStrength",
-            "rationale": "demands maxStrength at 1; your level is 0.92 (measured) — gap 0.08. Responsiveness at your training age: ×0.9."
+            "rationale": "demands maxStrength at 1; your level is 0.92 (measured) — gap 0.08. Responsiveness at your training age: ×0.9. Measured — displaces the training-age band prior (intermediate) (level 0.5)."
           },
           {
             "confidence": "low",
@@ -163472,7 +163472,7 @@
             "confidence": "moderate",
             "magnitude": 0,
             "qualityId": "maxStrength",
-            "rationale": "you meet the maxStrength demand (0.8); maintain it."
+            "rationale": "you meet the maxStrength demand (0.8); maintain it. Measured — displaces the training-age band prior (advanced) (level 0.72)."
           },
           {
             "confidence": "low",
