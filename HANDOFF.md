@@ -152,7 +152,14 @@ move it to the archive file rather than letting this one grow._
   progression forward before it's earned (labelled, self-correcting on log — but a
   philosophy choice); (2) `completed_weeks` completion-history is still dormant, so
   completion-gating is aspirational until it's wired (M3/M5).
-  **Next: M2b — delete the legacy volume-first fill** (separate PR after M2a merges).
+  M2a MERGED (#181). **M2b — the legacy fill is DELETED, PR pending Simon's merge**
+  (branch `phase3-m2b-fill-deletion-2026-07-15`): the volume-first deficit fill,
+  its scoring economy, and the `diagnosisSteers` gate are GONE (−240 LOC) — D11/
+  M-SESS is the ONLY construction path (G6/TR-08 closed). Proven dead first
+  (0/45 archetypes entered it), then byte-identical goldens after (behaviour-neutral).
+  The MRV ledger survives (Art 6 — volume validates, no longer drives). Two
+  behaviour-neutral dead-code leftovers deferred to M6's sweep (`styleObjective`;
+  the `wp61-govern-scoring` SELECTION_SCORING pin now pins production-dead knowledge).
 
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
