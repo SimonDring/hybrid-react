@@ -42,7 +42,7 @@ export { getQuestions as injuryTriageQuestions, assess as assessInjurySymptoms }
 export { applyInjuryRules, applyPrevention } from './src/lib/injury/injuryFilter.js';
 export { default as kb } from './src/lib/knowledge/kb.js';
 export { authorityOf, mayForceAlone, mayScaleAlone } from './src/lib/knowledge/authority.js';
-export { validateWeek, validateWeek as validate, VALIDATORS, CONFLICT_ORDER } from './src/lib/validation/contract.js';
+export { validateWeek, validateWeek as validate, VALIDATORS, CONFLICT_ORDER, explainValidation } from './src/lib/validation/contract.js';
 // The Wave-B report-only net (Phase 3 M2 T1) — advisory D14 members; never gate a plan.
 export { validatePlanProgression, REPORT_ONLY_VALIDATORS, progressionSanityValidator, doseCoherenceValidator } from './src/lib/validation/contract.js';
 export { rollUp, deriveStatus as rollUpStatus, deriveConfidence as rollUpConfidence, LOW_ADHERENCE_THRESHOLD } from './src/lib/team/rollUp.js';

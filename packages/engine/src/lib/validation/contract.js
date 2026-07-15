@@ -238,6 +238,59 @@ function enforcementResolutions(findings) {
     });
 }
 
+// ── TR-02 / M4a T4 · the render-ready validation surface (08-EXPLAINABILITY §5;
+// 13-VALIDATION-STRATEGY §8.3) ───────────────────────────────────────────────
+// At the audit pin the D14 report computed everything a screen would need and
+// reached no screen ("computed-but-unread is a detected defect" — audit 06
+// TR-02). `explainValidation` closes that gap the way §5 prescribes: a PURE
+// PROJECTION over the trace the report already produced — no re-derivation, no
+// new judgement, only reshaping `findings` / `resolutions` / `enforced` into a
+// vocabulary a UI can render without knowing validator internals (tier
+// numbers, verdict enums, capVerdict). Every entry names its tier in PLAIN
+// ENGLISH (tierName) so "why was my plan trimmed" never needs a lookup table
+// client-side. Called on PlanGenerator's pure baseline report AND on
+// PlanService's shipped per-week report (the runtime artefact, post-injury-
+// filter/enforcement) — same function, same shape, both audiences (§5's "one
+// derivation, three renderings" pattern, applied to the report specifically).
+/**
+ * @param {object} report — a ValidationReport from validateWeek (pass, findings,
+ *   counts, resolutions, optional enforced.removed).
+ * @returns {{ pass: boolean, counts: object, notices: object[],
+ *   resolutions: object[], removed: object[] }} — `notices` is every non-pass
+ *   finding with a plain-English tier name attached; `resolutions` mirrors the
+ *   C1 records with the same tier name; `removed` is every enforced (safety)
+ *   veto, tier-stamped (enforcement is always tier 1 by construction — see
+ *   applyInjuryVetoes above). Screens render straight off this shape.
+ */
+export function explainValidation(report) {
+  const notices = (report.findings || [])
+    .filter((f) => f.verdict !== 'pass')
+    .map((f) => ({
+      tier: f.tier,
+      tierName: tierName(f.tier),
+      verdict: f.verdict,
+      validatorId: f.validatorId,
+      reason: f.reason,
+      session: (f.detail && f.detail.session != null) ? f.detail.session : null,
+      item: (f.detail && f.detail.item != null) ? f.detail.item : null,
+    }));
+  const resolutions = (report.resolutions || []).map((r) => ({
+    slot: r.slot,
+    tier: r.tier,
+    tierName: tierName(r.tier),
+    rule: r.rule,
+    why: r.why,
+    winner: { source: r.winner.source, verdict: r.winner.verdict, reason: r.winner.reason },
+  }));
+  // Enforced removals are always SAFETY & LAW (tier 1) by construction —
+  // applyInjuryVetoes above only ever pins tier-1 findings.
+  const removed = ((report.enforced && report.enforced.removed) || []).map((r) => ({
+    session: r.session, item: r.item, reason: r.reason,
+    tier: SAFETY_AND_LAW_TIER, tierName: tierName(SAFETY_AND_LAW_TIER),
+  }));
+  return { pass: report.pass, counts: report.counts, notices, resolutions, removed };
+}
+
 /**
  * Run every registered validator over one constructed week.
  * @param {object} week — { sessions: [...] } in the generated shape
@@ -297,4 +350,4 @@ export function validateWeek(week, ctx = {}) {
   };
 }
 
-export default { VALIDATORS, validateWeek };
+export default { VALIDATORS, validateWeek, explainValidation };

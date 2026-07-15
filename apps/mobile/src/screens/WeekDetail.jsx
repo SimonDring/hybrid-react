@@ -70,6 +70,19 @@ export default function WeekDetail() {
   // WP-52: the coach's team schedule, mapped onto this week (null for team-less athletes).
   const teamInfo = teamWeekInfo(week.num);
 
+  // TR-02 / M4a T4: the declared consumer of the D14 report's render-ready
+  // projection (`_validation.explain`, from PlanService's shippedValidation —
+  // packages/engine/src/lib/validation/contract.js#explainValidation). Safety
+  // removals (enforced.removed, always tier-1 SAFETY & LAW) surface first —
+  // they're the reason work is MISSING, not just adjusted — then any other
+  // trim/veto still standing on the shipped week (e.g. a duration/equipment
+  // trim). A validator that only passed emits nothing here (§5: notices exclude
+  // 'pass').
+  const explain = week._validation && week._validation.explain;
+  const validationNotices = explain
+    ? [...explain.removed, ...explain.notices]
+    : [];
+
   // Build day → session index map for the strip
   const dayMap = {};
   week.sessions.forEach((s, i) => {
@@ -153,6 +166,26 @@ export default function WeekDetail() {
       {week._ruleTrim && (
         <div className="callout amber" style={{ marginBottom: 14 }}>
           <strong>Adjusted for your sport week</strong> — session volume is trimmed to about {Math.round((week._ruleTrim.mult || 1) * 100)}% around your fixtures and training load.
+        </div>
+      )}
+      {/* TR-02 / M4a T4 (13-VALIDATION-STRATEGY §8.3 — the declared consumer for
+          week._validation / meta.validation): "why your plan was trimmed" — every
+          safety veto (M4a T2 enforcement) and every other trim/veto the D14 report
+          found on this shipped week, rendered from the same render-ready projection
+          (explainValidation) PlanService attaches as `_validation.explain`. Nothing
+          here is re-derived — it is a direct read of the trace the validators already
+          produced (Art 14/15: no silent disposal). */}
+      {validationNotices.length > 0 && (
+        <div className="callout amber" style={{ marginBottom: 14 }}>
+          <strong>Why your plan was trimmed</strong>
+          <ul style={{ margin: '6px 0 0', paddingLeft: 18 }}>
+            {validationNotices.map((n, i) => (
+              <li key={i} style={{ fontSize: 13, marginTop: i ? 4 : 0 }}>
+                {n.item ? <strong>{n.item}</strong> : null}{n.item ? ' — ' : ''}{n.reason}
+                {' '}<span style={{ opacity: 0.65 }}>({n.tierName})</span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
       {isCurrent && week._catchUp && (

@@ -19,7 +19,8 @@ import {
   generatePlan, SESSION_CEILING_MIN, resolveProgram, countWeeklyVolume, resolveLifts,
   MUSCLE_GROUPS, MUSCLE_LABELS, applyInjuryRules, applyPrevention, deloadRecommendation,
   ruleVolumeAdjustment, deriveConstraints, buildPrimer, performanceModelForProfile,
-  profileToAthleteModel, kb, sportKnowledge as SKB, applyTeamSchedule, validateWeek
+  profileToAthleteModel, kb, sportKnowledge as SKB, applyTeamSchedule, validateWeek,
+  explainValidation
 } from '@performance-os/engine';
 import * as reflowLib from '@performance-os/engine/lib/plan/reflow.js';
 import { getOverrides } from './sessionOverrides.js';
@@ -304,7 +305,14 @@ function shippedValidation(adaptedWeek, shippedWeek, access, active) {
   const sig = JSON.stringify([access, active.map(i => [i.body_part_key, i.severity, i.rehab_phase, i.status])]);
   const hit = _weekValidation.get(adaptedWeek);
   if (hit && hit.sig === sig) return hit.report;
-  const report = validateWeek(shippedWeek, { access, injuries: active, enforceInjuryVetoes: ENFORCE_INJURY_VETOES });
+  const raw = validateWeek(shippedWeek, { access, injuries: active, enforceInjuryVetoes: ENFORCE_INJURY_VETOES });
+  // TR-02 / M4a T4: attach the render-ready projection alongside the raw report
+  // (additive — `report.week`, `.findings`, `.enforced` etc. are untouched, so
+  // every existing reader of `_validation` sees byte-identical data). `.explain`
+  // is what WeekDetail's "why your plan was trimmed" banner reads — the
+  // declared consumer (docs/design/engine-v2/13-VALIDATION-STRATEGY.md §8.3;
+  // packages/engine/src/lib/validation/consumers.js registers it).
+  const report = { ...raw, explain: explainValidation(raw) };
   _weekValidation.set(adaptedWeek, { sig, report });
   return report;
 }

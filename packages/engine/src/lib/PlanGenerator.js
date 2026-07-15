@@ -34,7 +34,7 @@ import { deriveBlockObjective, blockDeloadSteers, deloadsFromRecoverability, blo
 import { performanceModelForProfile } from './performance/forProfile.js';
 import { profileToAthleteModel } from './adapters/profileToAthleteModel.js';
 import * as SKB from './sportKnowledge/index.js';
-import { validateWeek } from './validation/contract.js';
+import { validateWeek, explainValidation } from './validation/contract.js';
 import { categoryPlanFor } from './session/categoryCoverage.js';
 import { provenance } from '../version.js';
 
@@ -290,7 +290,18 @@ export function generatePlan(profile = {}, opts = {}) {
       const r = validateWeek(week, vctx);
       if (!r.pass) {
         allPass = false;
-        problemWeeks.push({ week: week.num, counts: r.counts, findings: r.findings.filter((f) => f.verdict !== 'pass') });
+        // TR-02 / M4a T4: additive fields only (`resolutions` + `explain`) —
+        // `week`/`counts`/`findings` are unchanged so any archetype that was
+        // already clean (weeks: []) stays byte-identical; only a week that
+        // WAS ALREADY reported as a problem gains the render-ready surface
+        // (08-EXPLAINABILITY §5; 13-VALIDATION-STRATEGY §8.3 — the report is
+        // a consumable surface, not just a pass/fail flag).
+        problemWeeks.push({
+          week: week.num, counts: r.counts,
+          findings: r.findings.filter((f) => f.verdict !== 'pass'),
+          resolutions: r.resolutions,
+          explain: explainValidation(r),
+        });
       }
     }
   }
