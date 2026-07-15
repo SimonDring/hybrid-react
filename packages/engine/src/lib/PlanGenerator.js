@@ -129,6 +129,13 @@ function gatesFor(intent, totalSessions) {
 function buildGymWeek(count, ctx, profile, program, diag) {
   return strength.buildWeek({
     intent: ctx.intent, deload: ctx.deload, taper: ctx.taper, winp: ctx.winp, weekNum: ctx.weekNum,
+    // Phase 3 M2 — estimator-driven creep (powerlifting T2 + hypertrophy T3 + olympic T4, gated in the allocator):
+    //  • creepWeeks: completed prior WORKING weeks in this block (forward-projected for a fresh
+    //    plan; completion-gated when profile.completed_weeks is present) — computed in the loop.
+    //  • loggedLiftKeys: the lift keys the athlete has LOGGED (lift_log) — their compounds keep the
+    //    fast autoregulation path, never crept (07-PROGRESSION §2.1: measured displaces inferred).
+    creepWeeks: ctx.creepWeeks || 0,
+    loggedLiftKeys: new Set(Object.keys((profile && profile.lift_log) || {})),
     phaseWeeks: ctx.phaseWeeks, blockFrac: ctx.blockFrac, minutes: ctx.minutes,
     level: getGymLevel(profile), access: profile.access || [], sex: profile.sex,
     bodyweight: profile.bodyweight_kg,
@@ -216,12 +223,21 @@ export function generatePlan(profile = {}, opts = {}) {
   const deloadWeeks = d7Steers ? deloadsFromRecoverability(total, steerRecoveryRate) : (deloads || []);
   const deloadSet = new Set(deloadWeeks);
 
+  // Phase 3 M2 T2 — estimator-driven creep completion source. A crept week advances only
+  // over prior working weeks that were COMPLETED (07-PROGRESSION §2.1). A fresh plan has no
+  // history → the conservative default is FORWARD PROJECTION (all prior working weeks in the
+  // block assumed complete), which is what makes a planned-but-not-yet-trained athlete's
+  // week 6 ≠ week 5. When profile.completed_weeks (an array of completed week numbers) is
+  // present, creep is gated strictly to it. Pure + deterministic — reads profile, not the clock.
+  const completedWeeks = Array.isArray(profile.completed_weeks) ? new Set(profile.completed_weeks) : null;
+
   const phases = [];
   let weekNum = 0;
   split.forEach((seg, pi) => {
     const meta = PHASE_META[seg.intent];
     const startWk = weekNum + 1;
     const weeks = [];
+    let creepWeeks = 0;   // completed prior WORKING weeks in THIS block (resets each phase — block-scoped, 🔒 1)
 
     for (let winp = 1; winp <= seg.weeks; winp++) {
       weekNum++;
@@ -230,7 +246,7 @@ export function generatePlan(profile = {}, opts = {}) {
       // Block-continuous volume ramp position (0→1 across the whole plan). Deload
       // weeks still drop to MEV in targets.js; this just stops the per-phase reset.
       const blockFrac = total > 1 ? (weekNum - 1) / (total - 1) : 0.5;
-      const ctx = { intent: seg.intent, deload, taper, winp, weekNum, minutes, phaseWeeks: seg.weeks, blockFrac };
+      const ctx = { intent: seg.intent, deload, taper, winp, weekNum, minutes, phaseWeeks: seg.weeks, blockFrac, creepWeeks };
 
       const sportSpecs = buildGymWeek(totalDays, ctx, profile, program, diag);
       const dayNames = chooseDays(availability, sportSpecs.length, profile.sport_days || []);
@@ -238,6 +254,11 @@ export function generatePlan(profile = {}, opts = {}) {
       sessions = despineWeek(sessions, { priorityByIntent: program.priorityByIntent || new Map(), lifts: resolveLifts(profile), level: getGymLevel(profile), bodyweight: profile.bodyweight_kg });
 
       weeks.push({ num: weekNum, deload, taper, theme: themeFor(seg.intent, deload, taper, isRace && weekNum === total), sessions, provisional: pi > 0 });
+
+      // Advance the block's creep counter for the NEXT week: a working (non-deload/-taper)
+      // week counts once it is completed. Fresh plan (no completed_weeks) → forward
+      // projection (every prior working week counts); with history → only completed weeks.
+      if (!deload && !taper && (!completedWeeks || completedWeeks.has(weekNum))) creepWeeks++;
     }
 
     phases.push({

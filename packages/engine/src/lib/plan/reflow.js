@@ -292,7 +292,25 @@ export function reflowPhases({
         weekGymCount: gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, weekSlotIdx: s.i,
         rpeOffset, contraindicatedPatterns, blockedNameRegexes,
         categoryPlan: categoryPlanFor(gctx.skbSportId, gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, { levelName: gctx.level, season: gctx.season }),
-        discipline: gctx.discipline || null
+        discipline: gctx.discipline || null,
+        // Phase 3 M2 — reproduce the baseline's block-scoped creep when this slot is re-derived
+        // (powerlifting T2 + hypertrophy T3 + olympic T4 + sport gym-support T5, gated in the
+        // allocator's finaliseSlot). For a sport, gctx.discipline is null and finaliseSlot resolves
+        // style==='sport' → 'sportSupport', reading gctx.season (passed below in ctx.season) — the
+        // SAME season the baseline used, so the SEASON-shaped creep (off-season builds; pre/in/
+        // transition maintenance ceiling) is identical in both paths and NO calendar effect leaks
+        // into the reflow (the M0 reflow≡baseline invariant; season shapes baseline, reflow is
+        // live-state-only). creepWeeks is the FORWARD PROJECTION over the block's prior working
+        // weeks — the SAME rule the pure generator uses for a fresh plan — so a neutral reflow
+        // (which anyway keeps the baseline session) and a reshaped one both carry the identical
+        // creep; progression never leaks a per-week change into reflow that isn't in baseline.
+        // loggedLiftKeys keeps logged compounds untouched.
+        // ⚠ INVARIANT: this forward projection MUST stay identical to PlanGenerator's creepWeeks
+        // derivation (PlanGenerator.js). When the dormant `completed_weeks` history field is wired
+        // live (M3/M5), it must be threaded into BOTH sites the same way, or a neutral reflow would
+        // carry more creep than baseline and break reflow≡baseline. Keep them a single rule.
+        creepWeeks: (s.phase.weeks || []).filter((w) => w.num < s.week.num && !w.deload && !w.taper).length,
+        loggedLiftKeys: new Set(Object.keys((profile && profile.lift_log) || {}))
       }
     })[0];
     if (spec) {

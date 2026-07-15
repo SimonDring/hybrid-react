@@ -46,6 +46,7 @@ import { getDiscipline } from '../../data/disciplines/index.js';
 import { styleFamily } from '../strength/styleFamily.js';
 import { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, DISCIPLINE_DOSE_QUALITY, LIGHT_STRENGTH_MAINS, POWER_DOSE, REST_SECONDS, ISO_SETS, CORE_SETS, REACTIVE_LIMITS, doseForQuality } from '../../data/doseSchemes.js';
 import { deriveMovementRequirements } from '../session/movementRequirements.js';
+import { applyProgressionCreep } from '../strength/progressionCreep.js';
 import { regionOf, hypertrophyRegionOf } from '../session/sessionSpecs.js';
 import { exerciseMatchesToken } from '../../data/movementPatternMap.js';
 
@@ -1244,6 +1245,27 @@ function finaliseSlot(slot, style, ctx) {
   const items = structureItems(slot.picks);
   shiftRpe(items, ctx.rpeOffset || 0, ctx.rpeFloor != null ? ctx.rpeFloor : 5);
   applyWeights(items, ctx.lifts || {}, ctx.level, ctx.bodyweight);
+  // D12 estimator-driven creep (Phase 3 M2 — powerlifting T2 + hypertrophy T3 + olympic T4 +
+  // sport gym-support T5; gated + no-op for every other cohort): a non-logging athlete's compound
+  // load/reps and accessory reps advance week-over-week at the governed conservative rate. Runs
+  // AFTER applyWeights so accessory (and hypertrophy-primary) loads are stamped at BASE reps
+  // (double progression holds load while reps climb). roleByExId comes from the slot's picks
+  // (effectiveRole survives structuring, keyed by stable exId).
+  //
+  // T5: a sport profile carries NO build discipline (ctx.discipline null), so map style==='sport'
+  // to the synthetic 'sportSupport' creep discipline, and pass ctx.season (program.season) so the
+  // creep is SEASON-shaped — off-season builds, pre/in/transition hit the maintenance ceiling
+  // (progression.sport_support). Both the baseline AND the reflow reach finaliseSlot with the SAME
+  // ctx.style + ctx.season (reflow threads gctx.style/gctx.season), so a neutral reflow reproduces
+  // the identical creep — no season/calendar leak into the reflow (the M0 reflow≡baseline invariant).
+  applyProgressionCreep(items, {
+    discipline: ctx.discipline || (ctx.style === 'sport' ? 'sportSupport' : null),
+    season: ctx.season || null,
+    creepWeeks: ctx.creepWeeks || 0,
+    deload: !!ctx.deload, taper: !!ctx.taper,
+    roleByExId: new Map(slot.picks.map((p) => [p.ex.id, p.effectiveRole || p.ex.role])),
+    loggedLiftKeys: ctx.loggedLiftKeys instanceof Set ? ctx.loggedLiftKeys : new Set(),
+  });
   const total = Object.values(slot.muscleVol).reduce((a, b) => a + b, 0) || 1;
   const lower = (slot.muscleVol.quads || 0) + (slot.muscleVol.hamstrings || 0) +
                 (slot.muscleVol.glutes || 0) + (slot.muscleVol.calves || 0);
