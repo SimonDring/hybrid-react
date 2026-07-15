@@ -47,6 +47,17 @@ const OVERRIDE = {
   goblet_squat: { c: 0.4, perHand: false }, heel_elevated_goblet: { c: 0.35, perHand: false },
   hack_squat: { c: 1.5 }, sl_leg_press: { c: 0.6 }, leg_ext: { c: 0.74 },          // leg ext 0.74×squat
   hang_clean: { c: 0.6 }, power_clean: { c: 0.65 },
+  // olympic classic lifts + derivatives (Phase 3 M2 T4): pattern:'olympic' has no
+  // PATTERN_ANCHOR entry (no generic movement anchor fits a technical lift), so without an
+  // explicit `key` these shipped with NO working weight at all — meaning progressionCreep's
+  // load-creep + warm-up ramp (07-PROGRESSION §2.2; SR-10) had nothing to advance or ramp
+  // from. Anchored to squat by the standard weightlifting-coaching %-of-back-squat heuristic
+  // (Everett, Olympic Weightlifting; Bompa & Haff, Periodization) — internal-conservative,
+  // athlete-specific in reality, and (like every anchor-derived weight) a displayed estimate
+  // only, never a logged truth.
+  snatch: { key: 'squat', c: 0.6 }, power_snatch: { key: 'squat', c: 0.55 },
+  hang_snatch: { key: 'squat', c: 0.5 }, clean_and_jerk: { key: 'squat', c: 0.8 },
+  split_jerk: { key: 'squat', c: 0.85 },
   // hinge / deadlift family
   trap_bar_dl: { c: 1.05 }, rdl: { c: 0.79 }, db_rdl: { c: 0.35 }, good_morning: { c: 0.45 },
   rack_pull: { c: 1.1 }, deficit_deadlift: { c: 0.9 }, hip_thrust: { c: 1.0 },

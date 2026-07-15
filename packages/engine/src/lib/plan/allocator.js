@@ -1245,7 +1245,7 @@ function finaliseSlot(slot, style, ctx) {
   const items = structureItems(slot.picks);
   shiftRpe(items, ctx.rpeOffset || 0, ctx.rpeFloor != null ? ctx.rpeFloor : 5);
   applyWeights(items, ctx.lifts || {}, ctx.level, ctx.bodyweight);
-  // D12 estimator-driven creep (Phase 3 M2 — powerlifting T2 + hypertrophy T3; gated +
+  // D12 estimator-driven creep (Phase 3 M2 — powerlifting T2 + hypertrophy T3 + olympic T4; gated +
   // no-op for every other discipline): a non-logging athlete's compound load/reps and
   // accessory reps advance week-over-week at the governed conservative rate. Runs AFTER
   // applyWeights so accessory (and hypertrophy-primary) loads are stamped at BASE reps

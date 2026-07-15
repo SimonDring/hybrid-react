@@ -21,9 +21,9 @@
  *   • Any LOGGED lift (loggedLiftKeys) is UNTOUCHED — the logged autoregulation path
  *     stays the fast path (07-PROGRESSION §2.1: measured displaces inferred).
  *
- * GATED per discipline (CREEP_DISCIPLINES): powerlifting (M2 T2) + hypertrophy (M2 T3).
- * Olympic / sports are T4–T5 — they extend CREEP_DISCIPLINES + author their own knowledge,
- * no new mechanism. Every ungated cohort is byte-identical (the golden master proves it).
+ * GATED per discipline (CREEP_DISCIPLINES): powerlifting (M2 T2) + hypertrophy (M2 T3) +
+ * olympic (M2 T4). Sports are T5 — they extend CREEP_DISCIPLINES + author their own
+ * knowledge, no new mechanism. Every ungated cohort is byte-identical (golden master proof).
  *
  * MODEL PER ADAPTATION (progression.reps_first_model, T3): maxStrength/explosiveStrength
  * primaries LOAD-creep with a programmed warm-up ramp (T2's model — there IS a near-
@@ -31,6 +31,15 @@
  * PRIMARY role instead runs the SAME reps-first double-progression path T2 already built
  * for accessories (climb reps toward the top of the range, load held) — no new mechanism,
  * just a second adaptation routed through it.
+ *
+ * OLYMPIC (T4): intensity-led, like powerlifting — the classic lifts (snatch, clean &
+ * jerk) and their derivatives LOAD-creep, not reps-first (progression.reps_first_model
+ * does NOT list explosiveStrength). This is where the programmed warm-up ramp matters
+ * MOST (07-PROGRESSION §2.2; SR-10): a near-maximal technical single/double must never
+ * be reached off a coarse ramp built for a submaximal powerlifting compound, so
+ * progression.warmup_ramp carries a PER-ADAPTATION override for explosiveStrength (a
+ * finer ascent) — read by `creepConfig` below, same governed-knowledge mechanism, no
+ * new code path.
  *
  * PURITY (Constitution Art 18): a pure deterministic function of completion history ×
  * governed knowledge × the plan's own week index — no clock, no randomness, no I/O.
@@ -45,9 +54,9 @@ import { DISCIPLINE_DOSE_QUALITY } from '../../data/doseSchemes.js';
 import { matchLiftForItem, parseReps } from '../liftProgression.js';
 
 // Disciplines whose non-logging athletes get estimator creep. M2 T2 = powerlifting;
-// T3 adds 'hypertrophy'. T4–T5 add 'olympic' and the sport cohorts (each authoring its
-// own rate/model).
-export const CREEP_DISCIPLINES = new Set(['powerlifting', 'hypertrophy']);
+// T3 adds 'hypertrophy'; T4 adds 'olympic'. T5 adds the sport cohorts (each authoring
+// its own rate/model).
+export const CREEP_DISCIPLINES = new Set(['powerlifting', 'hypertrophy', 'olympic']);
 
 const round2_5 = (x) => Math.round(x / 2.5) * 2.5;
 
@@ -71,6 +80,10 @@ export function creepConfig({ discipline, creepWeeks = 0, deload = false, taper 
   const weeks = Math.max(0, Math.floor(creepWeeks));
   const dp = kb.value('progression.double_progression');
   const ramp = kb.value('progression.warmup_ramp');
+  // T4: a per-adaptation ramp override (explosiveStrength's finer ascent to a near-
+  // maximal technical single/double) — falls back to the default steps for every
+  // adaptation without one (byte-identical for maxStrength/powerlifting).
+  const rampSteps = (ramp.byAdaptation && ramp.byAdaptation[adaptation]) || ramp.steps;
   return {
     adaptation,
     weeks,
@@ -78,7 +91,7 @@ export function creepConfig({ discipline, creepWeeks = 0, deload = false, taper 
     loadFactor: rate == null ? 1 : Math.pow(1 + rate, weeks),
     repStep: dp.repStepPerWeek,
     repTopDelta: dp.rangeTopDelta,
-    rampSteps: ramp.steps,
+    rampSteps,
     dpPrimary,
   };
 }
