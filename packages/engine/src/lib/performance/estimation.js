@@ -104,7 +104,19 @@ export function estimateCapability(qualityId, model, asOf, demandProfile) {
 
   if (qualityId === 'maxStrength') {
     const m = measuredMaxStrength(model, asOf);
-    if (m) return { qualityId, level: m.level, source: 'measured', confidence: m.confidence, evidence: m.evidence, updatedAt: asOf || null };
+    if (m) {
+      // C8 / Art 16 (03-PERFORMANCE-MODEL §5.2): measured evidence DISPLACES the inferred prior for
+      // this quality, at a higher confidence tier — and the displacement is RECORDED so the diagnosis
+      // can name what real data replaced (Art 14 explainability; become personal as evidence
+      // accumulates, never oversell). `displaces` carries the prior that stood in until this measurement.
+      const round2 = (n) => Math.round(n * 100) / 100;
+      const displaces = { source: inferred.source, level: inferred.level, confidence: inferred.confidence, evidence: inferred.evidence };
+      return {
+        qualityId, level: m.level, source: 'measured', confidence: m.confidence,
+        evidence: `${m.evidence} — displaces ${inferred.evidence} (level ${round2(inferred.level)})`,
+        displaces, updatedAt: asOf || null,
+      };
+    }
   }
   return inferred;
 }

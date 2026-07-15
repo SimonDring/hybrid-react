@@ -36,6 +36,13 @@ export function diagnoseLimitingFactors(capabilities, demandProfile, { trainingA
       : `you meet the ${d.qualityId} demand (${round2(demandImportance)}); maintain it.`;
     if (gap > 0 && injuryRisk > 1) rationale += ` Your injury history raises the stakes here (×${round2(injuryRisk)}).`;
     if (gap > 0 && trainability !== 1.0 && trainingAgeBand) rationale += ` Responsiveness at your training age: ×${round2(trainability)}.`;
+    // C8 / Art 14 (03-PERFORMANCE-MODEL §5.2): when this capability was MEASURED it displaced an
+    // inferred prior — say so, and name the prior it replaced, so the athlete sees the guess giving
+    // way to real evidence (become personal as evidence accumulates). Absent for inferred capabilities,
+    // so a no-measurement athlete's rationale is byte-identical (additive-first).
+    if (cap.source === 'measured' && cap.displaces) {
+      rationale += ` Measured — displaces the ${cap.displaces.evidence} (level ${round2(cap.displaces.level)}).`;
+    }
     return { qualityId: d.qualityId, magnitude, demandImportance: round2(demandImportance), capabilityLevel: round2(capabilityLevel), confidence, trainability: round2(trainability), injuryRisk: round2(injuryRisk), rationale };
   });
 

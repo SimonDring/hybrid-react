@@ -310,6 +310,12 @@ export function generatePlan(profile = {}, opts = {}) {
     // gated; ADVISORY otherwise). `steered` flags whether it actually drove this plan's
     // structure or is inspection-only. One computation, reused here.
     blockPlan: { ...blockPlan, steered: d7Steers },
+    // M3 T2 (P1-9, Art 15 — no silent truncation): the honesty ledger, already computed
+    // on the Performance Model (derivePerformanceModel.js), now reaches the PLAN OUTPUT
+    // too — authored SKB demand the projection couldn't home is declared here, with a
+    // reason, instead of silently vanishing between the model and the plan a screen reads.
+    // Report-only: this list is never consulted by construction (Art 18 purity intact).
+    droppedDemands: (perf.droppedDemands || []).map((d) => ({ skbQuality: d.skbQuality, importance: d.importance, reason: d.reason })),
   } : null;
   return { phases, totalWeeks: total, meta: { validation: { pass: allPass, checked, weeks: problemWeeks }, provenance: provenance(), ...(diagnosis ? { diagnosis } : {}) } };
 }
