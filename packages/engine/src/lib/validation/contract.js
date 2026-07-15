@@ -29,6 +29,22 @@ import { authorityOf } from '../knowledge/authority.js';
 import { mrvCeilingValidator } from './mrvValidator.js';
 import { injuryContraindicationValidator, durationHonestyValidator, equipmentValidator, purposeCoherenceValidator } from './validators.js';
 
+// ── The Wave-B REPORT-ONLY net (13-VALIDATION-STRATEGY §4.3; Phase 3 M2 T1) ────
+// progression-sanity + dose-coherence are members of the D14 suite that OBSERVE but
+// never dispose: they speak `severity`, not the trim/veto verdict vocabulary the gate
+// (applyInjuryVetoes) reads, so by construction they cannot trim, veto, or gate a plan
+// (the report → flag → gate ladder is M4). They are deliberately NOT in the enforcing
+// VALIDATORS array below and NOT run by generatePlan's meta.validation — `validatePlanProgression`
+// is a separate advisory surface, so plans stay byte-identical with or without them
+// (the golden master proves it). Re-exported here so the D14 suite is discoverable
+// from one module.
+export {
+  progressionSanityValidator,
+  doseCoherenceValidator,
+  REPORT_ONLY_VALIDATORS,
+  validatePlanProgression
+} from './progression.js';
+
 // EDS §37 — the fixed conflict-resolution priority order ("the Engine Laws,
 // compiled"). Higher tiers win ABSOLUTELY; confidence modulates within a tier,
 // never across. Every validator declares its tier; the report is sorted by it.
