@@ -258,6 +258,31 @@ move it to the archive file rather than letting this one grow._
   🔒 6: the real migration is authored + Simon-applied (staging→rls-harness→prod), then
   the D16 promotion policy (🔒 7).** Nothing has touched the database.
 
+- **Overnight autonomous run (2026-07-15 → 16). Summary for Simon:**
+  - **M4b MERGED (#189):** the report-only validator suite (5 new EDS §35.1 validators —
+    sport-protection, MEV-floor, dose-coherence, progression-sanity, deload-presence),
+    structurally unable to change a plan (review-verified), goldens byte-identical.
+    Promotion past report-only awaits a production false-positive window (your call + data).
+  - **M5 migration PR #188 — OPEN, AWAITING YOU (do not merge blind — you APPLY it).**
+    The authored substrate migration (20260713); NOT applied to any DB. Twice-reviewed
+    (privacy panel + structural leak-review; caught + fixed the consent-table enable-RLS
+    leak AND a pre-existing cross-user readiness/injury RPC oracle — F1). **Apply staging-
+    first via the SECURITY-DEPLOY M5 runbook; the rls-harness-m5 (P1–P21 + C1/C2/C3 + F1)
+    is the green gate before prod.** Nothing touched the database.
+  - **Designs PR #190 — proposals for your gated calls** (docs-only, merge or leave):
+    🔒 7 D16 promotion policy (twice-gated staged→learned; 4 sub-decisions, each with a
+    conservative rec) + the M6 plan (final phase; 🔒 8/9/10 flagged).
+  - **Note:** an overnight shared-working-tree tangle was caught and cleanly recovered
+    (the migration branch was rebased to migration-only; M4b re-routed to its own branch).
+    No work lost, nothing corrupted; recovery is recorded in the SDD ledger.
+
+  **⏳ DECISIONS WAITING FOR YOU (in rough order):**
+  1. **Apply the M5 migration** (#188) staging-first — the only thing blocking the rest of M5.
+  2. **🔒 7** — rule on the 4 promotion-policy decisions (#190) → then D16 learning is built.
+  3. **🔒 8/9/10** (M6, #190) — functional identity; the allocator re-seat (HIGH-risk); endurance trigger.
+  4. Standing: I5 flag→default (safety); the ballistic/olympic contraindication science review;
+     RLS_STAGING CI secrets; Edge Function deploys (queue #4); the taper/fixtures calendar signals (M6).
+
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
 0. **⚠ THE DEVELOPMENT PLAN — created 2026-07-13, adoption = Simon's merge.**
