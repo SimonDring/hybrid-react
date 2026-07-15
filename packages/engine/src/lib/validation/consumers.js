@@ -28,15 +28,15 @@
 // could, in principle, gain independent consumers later.
 export const VALIDATION_PRODUCTS = {
   'meta.validation': {
-    description: 'PlanGenerator\'s per-week D14 report on the pure baseline plan (profile-known context only, e.g. equipment/duration/purpose — generatePlan is injury-blind). Each problem week carries findings + resolutions + an explainValidation()-shaped render-ready summary.',
+    description: 'PlanGenerator\'s per-week D14 report on the pure baseline plan (profile-known context only, e.g. equipment/duration/purpose — generatePlan is injury-blind). Each problem week carries findings + resolutions + an explainValidation()-shaped render-ready summary (M4b: including `observations` — the report-only observer wave).',
     consumers: [
-      'apps/mobile/src/screens/WeekDetail.jsx — "Why your plan was trimmed" banner (reads week._validation, the runtime analogue of this same report)',
+      'apps/mobile/src/screens/WeekDetail.jsx — "Why your plan was trimmed" banner + "Coaching notes" (observations), reading week._validation, the runtime analogue of this same report',
     ],
   },
   'week._validation': {
-    description: 'PlanService\'s shipped-artefact D14 report (reflowed + injury-filtered, active injuries in ctx; M4a T2 enforcement removals + T3 resolution records included). What the athlete actually trains, validated.',
+    description: 'PlanService\'s shipped-artefact D14 report (reflowed + injury-filtered, active injuries in ctx; M4a T2 enforcement removals + T3 resolution records included; M4b report-only `observations`). What the athlete actually trains, validated.',
     consumers: [
-      'apps/mobile/src/screens/WeekDetail.jsx — "Why your plan was trimmed" banner, rendered from explainValidation(week._validation)',
+      'apps/mobile/src/screens/WeekDetail.jsx — "Why your plan was trimmed" banner + "Coaching notes" (report-only observations), rendered from explainValidation(week._validation)',
     ],
   },
 };

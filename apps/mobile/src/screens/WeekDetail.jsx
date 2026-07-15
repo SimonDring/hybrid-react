@@ -82,6 +82,11 @@ export default function WeekDetail() {
   const validationNotices = explain
     ? [...explain.removed, ...explain.notices]
     : [];
+  // M4b: the REPORT-ONLY observer wave (explain.observations — sport-protection,
+  // MEV-floor, dose-coherence, progression-sanity, deload-presence). These describe
+  // nothing that was DONE to the plan (they never gate), so they render as advisory
+  // "coach's notes", kept apart from the trim/veto "why your plan was trimmed" set.
+  const validationObservations = (explain && explain.observations) || [];
 
   // Build day → session index map for the strip
   const dayMap = {};
@@ -183,6 +188,21 @@ export default function WeekDetail() {
               <li key={i} style={{ fontSize: 13, marginTop: i ? 4 : 0 }}>
                 {n.item ? <strong>{n.item}</strong> : null}{n.item ? ' — ' : ''}{n.reason}
                 {' '}<span style={{ opacity: 0.65 }}>({n.tierName})</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {/* M4b (13-VALIDATION-STRATEGY §4.3 — the report-only observer wave): advisory
+          coaching notes the D14 suite surfaced without changing the plan. Report-only,
+          so they sit apart from the trim/veto set above (nothing here was acted on). */}
+      {validationObservations.length > 0 && (
+        <div className="callout slate" style={{ marginBottom: 14 }}>
+          <strong>Coaching notes</strong>
+          <ul style={{ margin: '6px 0 0', paddingLeft: 18 }}>
+            {validationObservations.map((n, i) => (
+              <li key={i} style={{ fontSize: 13, marginTop: i ? 4 : 0 }}>
+                {n.reason}{' '}<span style={{ opacity: 0.65 }}>({n.tierName})</span>
               </li>
             ))}
           </ul>

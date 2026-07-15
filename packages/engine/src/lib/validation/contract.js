@@ -28,6 +28,7 @@ import kb from '../knowledge/kb.js';
 import { authorityOf } from '../knowledge/authority.js';
 import { mrvCeilingValidator } from './mrvValidator.js';
 import { injuryContraindicationValidator, durationHonestyValidator, equipmentValidator, purposeCoherenceValidator } from './validators.js';
+import { REPORT_ONLY_OBSERVERS } from './observers.js';
 
 // ── The Wave-B REPORT-ONLY net (13-VALIDATION-STRATEGY §4.3; Phase 3 M2 T1) ────
 // progression-sanity + dose-coherence are members of the D14 suite that OBSERVE but
@@ -44,6 +45,21 @@ export {
   REPORT_ONLY_VALIDATORS,
   validatePlanProgression
 } from './progression.js';
+
+// ── The M4b REPORT-ONLY observer wave (observers.js) ──────────────────────────
+// Five D14 members that OBSERVE but never dispose (spec 2026-07-15). validateWeek
+// runs them below the enforcing VALIDATORS and stamps every finding verdict 'note'
+// — a class that never touches counts.trim/veto, so report.pass is untouched and no
+// plan moves (the golden master proves byte-identity). Re-exported so the whole D14
+// suite is discoverable from this one module.
+export {
+  sportProtectionObserver,
+  mevFloorObserver,
+  doseCoherenceObserver,
+  progressionSanityObserver,
+  deloadPresenceObserver,
+  REPORT_ONLY_OBSERVERS
+} from './observers.js';
 
 // EDS §37 — the fixed conflict-resolution priority order ("the Engine Laws,
 // compiled"). Higher tiers win ABSOLUTELY; confidence modulates within a tier,
@@ -69,7 +85,10 @@ export const VALIDATORS = [
 // A verdict may never exceed what the validator's knowledge authority allows:
 // reported → pass-only (it can observe, not act), soft → trim, gate → veto.
 const CEILING = { reported: 'pass', soft: 'trim', gate: 'veto' };
-const SEVERITY = { pass: 0, trim: 1, veto: 2 };
+// 'note' is the REPORT-ONLY verdict (M4b observers) — severity 0, exactly like 'pass',
+// so it never wins a conflict and never counts as a trim/veto. It differs from 'pass'
+// only in that it CARRIES a reason to surface (an observation), where 'pass' is silence.
+const SEVERITY = { pass: 0, note: 0, trim: 1, veto: 2 };
 function capVerdict(verdict, authority) {
   const cap = CEILING[authority] || 'pass';
   return SEVERITY[verdict] > SEVERITY[cap] ? cap : verdict;
@@ -205,7 +224,9 @@ function resolutionRecord(slot, group, winner, rule) {
 export function resolveConflicts(findings) {
   const groups = new Map();
   for (const f of findings || []) {
-    if (!f || f.verdict === 'pass') continue;
+    // 'pass' is silence; 'note' is a report-only observation (M4b) — neither DISPOSES,
+    // so neither can contest another verdict for a slot (an observer never gates).
+    if (!f || f.verdict === 'pass' || f.verdict === 'note') continue;
     const key = conflictKey(f);
     if (key == null) continue;
     if (!groups.has(key)) groups.set(key, []);
@@ -256,19 +277,36 @@ function enforcementResolutions(findings) {
  * @param {object} report — a ValidationReport from validateWeek (pass, findings,
  *   counts, resolutions, optional enforced.removed).
  * @returns {{ pass: boolean, counts: object, notices: object[],
- *   resolutions: object[], removed: object[] }} — `notices` is every non-pass
- *   finding with a plain-English tier name attached; `resolutions` mirrors the
- *   C1 records with the same tier name; `removed` is every enforced (safety)
- *   veto, tier-stamped (enforcement is always tier 1 by construction — see
- *   applyInjuryVetoes above). Screens render straight off this shape.
+ *   observations: object[], resolutions: object[], removed: object[] }} —
+ *   `notices` is every trim/veto finding (the actionable "why your plan was
+ *   trimmed" set) with a plain-English tier name; `observations` is the M4b
+ *   REPORT-ONLY 'note' findings (the observer wave — sport-protection, MEV-floor,
+ *   dose-coherence, progression-sanity, deload-presence), each with reason + tier
+ *   name, kept SEPARATE so the trim/veto banner never conflates an observation
+ *   with an action taken; `resolutions` mirrors the C1 records with the same tier
+ *   name; `removed` is every enforced (safety) veto, tier-stamped (enforcement is
+ *   always tier 1 by construction — see applyInjuryVetoes above). Screens render
+ *   straight off this shape.
  */
 export function explainValidation(report) {
   const notices = (report.findings || [])
-    .filter((f) => f.verdict !== 'pass')
+    .filter((f) => f.verdict !== 'pass' && f.verdict !== 'note')
     .map((f) => ({
       tier: f.tier,
       tierName: tierName(f.tier),
       verdict: f.verdict,
+      validatorId: f.validatorId,
+      reason: f.reason,
+      session: (f.detail && f.detail.session != null) ? f.detail.session : null,
+      item: (f.detail && f.detail.item != null) ? f.detail.item : null,
+    }));
+  // M4b: the report-only observations — surfaced with reason + plain-English tier,
+  // never mixed into `notices` (they name nothing that was done to the plan).
+  const observations = (report.findings || [])
+    .filter((f) => f.verdict === 'note')
+    .map((f) => ({
+      tier: f.tier,
+      tierName: tierName(f.tier),
       validatorId: f.validatorId,
       reason: f.reason,
       session: (f.detail && f.detail.session != null) ? f.detail.session : null,
@@ -288,7 +326,7 @@ export function explainValidation(report) {
     session: r.session, item: r.item, reason: r.reason,
     tier: SAFETY_AND_LAW_TIER, tierName: tierName(SAFETY_AND_LAW_TIER),
   }));
-  return { pass: report.pass, counts: report.counts, notices, resolutions, removed };
+  return { pass: report.pass, counts: report.counts, notices, observations, resolutions, removed };
 }
 
 /**
@@ -326,6 +364,24 @@ export function validateWeek(week, ctx = {}) {
       const verdict = capVerdict(f.verdict, authority);
       counts[verdict]++;
       findings.push({ validatorId: v.id, tier, verdict, authority, confidence: entry.confidence, reason: f.reason, detail: f.detail });
+    }
+  }
+  // ── M4b · the REPORT-ONLY observer wave (observers.js) ──────────────────────
+  // These OBSERVE, never dispose: validateWeek stamps every finding verdict 'note'
+  // — a class NOT counted in counts.trim/veto, so report.pass is untouched and no
+  // plan can move (the golden master proves byte-identity). The `reportOnly` flag on
+  // each observer is the STRUCTURAL guarantee that no observer gates, regardless of
+  // the authority its knowledge cites (spec §2.1/§2.4). A silent observer pushes NO
+  // 'pass' placeholder — silence is its default; only an actual observation is
+  // recorded. Confidence is read from a cited KB entry when the observer names one,
+  // else its declared literal (display only — a 'note' never acts).
+  for (const v of REPORT_ONLY_OBSERVERS) {
+    const tier = v.tier || 6;
+    const entry = v.knowledgeId ? kb.get(v.knowledgeId) : null;
+    const confidence = entry ? entry.confidence : (v.confidence || 'reported');
+    const raw = v.run(week, ctx) || [];
+    for (const f of raw) {
+      findings.push({ validatorId: v.id, tier, verdict: 'note', authority: 'reported', confidence, reason: f.reason, detail: f.detail, reportOnly: true });
     }
   }
   // Highest-priority problem first (§37: lower tier number wins), then by severity.
