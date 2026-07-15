@@ -293,12 +293,18 @@ export function reflowPhases({
         rpeOffset, contraindicatedPatterns, blockedNameRegexes,
         categoryPlan: categoryPlanFor(gctx.skbSportId, gymCountByWeek[`${s.phase.id}_${s.week.num}`] || 1, { levelName: gctx.level, season: gctx.season }),
         discipline: gctx.discipline || null,
-        // Phase 3 M2 — reproduce the baseline's block-scoped creep when this slot is
-        // re-derived (powerlifting T2 + hypertrophy T3 + olympic T4, gated in the allocator). creepWeeks is the FORWARD
-        // PROJECTION over the block's prior working weeks — the SAME rule the pure generator
-        // uses for a fresh plan — so a neutral reflow (which anyway keeps the baseline session)
-        // and a reshaped one both carry the identical creep; progression never leaks a per-week
-        // change into reflow that isn't in baseline. loggedLiftKeys keeps logged compounds untouched.
+        // Phase 3 M2 — reproduce the baseline's block-scoped creep when this slot is re-derived
+        // (powerlifting T2 + hypertrophy T3 + olympic T4 + sport gym-support T5, gated in the
+        // allocator's finaliseSlot). For a sport, gctx.discipline is null and finaliseSlot resolves
+        // style==='sport' → 'sportSupport', reading gctx.season (passed below in ctx.season) — the
+        // SAME season the baseline used, so the SEASON-shaped creep (off-season builds; pre/in/
+        // transition maintenance ceiling) is identical in both paths and NO calendar effect leaks
+        // into the reflow (the M0 reflow≡baseline invariant; season shapes baseline, reflow is
+        // live-state-only). creepWeeks is the FORWARD PROJECTION over the block's prior working
+        // weeks — the SAME rule the pure generator uses for a fresh plan — so a neutral reflow
+        // (which anyway keeps the baseline session) and a reshaped one both carry the identical
+        // creep; progression never leaks a per-week change into reflow that isn't in baseline.
+        // loggedLiftKeys keeps logged compounds untouched.
         creepWeeks: (s.phase.weeks || []).filter((w) => w.num < s.week.num && !w.deload && !w.taper).length,
         loggedLiftKeys: new Set(Object.keys((profile && profile.lift_log) || {}))
       }

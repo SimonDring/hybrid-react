@@ -113,10 +113,13 @@ const parseReps = (sets) => Number((/×\s*(\d+)/.exec(sets || '') || [])[1]) || 
   assert(dp.some((x) => x.w === 8 && x.added > 0), 'double progression: an accessory has climbed reps by week 8 (reps→load, load held)');
 }
 
-// ── 5 · GATE PROOF — a non-creep-gated cohort is UNCHANGED (sports = T5, not yet gated) ──
-// Olympic is now GATED ON (T4 below) — this proof moves to a SPORT profile instead (sport
-// goals resolve discipline=null via resolveBuildDisciplineId, so applyProgressionCreep's
-// gate never engages; sections 15+ below cover olympic itself).
+// ── 5 · MAINTENANCE-CEILING PROOF — an IN-SEASON sport plan carries NO creep (T5) ──────
+// Sports ARE creep-gated now (T5, sections 21+ below) — but SEASON-shaped: the SKB
+// seasonalModel maintains capability in-season, and creep respects that ceiling (holding
+// under rising sport load IS the progression — 07-PROGRESSION §2.6; Constitution Art 2).
+// This in-season sprinter (event ~48 days out → season 'in') must therefore stay FLAT —
+// exactly the reflow-invariant profile the M0 property pins, so it doubles as the "no
+// calendar leak" anchor: no estimated labels, no ramps, no rep climb, anywhere.
 {
   const sport = generatePlan({
     goal_type: 'sport', sport: 'run', run_discipline: 'sprint', sport_intent: 'compete', event_date: '2026-08-30',
@@ -124,7 +127,7 @@ const parseReps = (sets) => Number((/×\s*(\d+)/.exec(sets || '') || [])[1]) || 
     access: FULL, plan_start_date: '2026-07-13', lifts: {}, availability: { days_per_week: 4, days: ['mon', 'tue', 'thu', 'fri'] },
   });
   const sportEstimated = sport.phases.flatMap((p) => p.weeks).flatMap((w) => w.sessions).flatMap((s) => s.items).some((it) => it.estimated);
-  assert(!sportEstimated, 'GATE: a sport plan carries NO estimator-creep labels (T5 — powerlifting T2 + hypertrophy T3 + olympic T4 are the only creep-gated disciplines so far)');
+  assert(!sportEstimated, 'MAINTENANCE CEILING: an IN-SEASON sport plan carries NO estimator-creep labels (season maintains — creep suppressed, holding capability IS the progression; §2.6, Art 2)');
 }
 
 // ── 6 · LOGGED displaces the estimate — the fast path is untouched ────────────────────
@@ -359,6 +362,121 @@ const olyProfile = (extra = {}) => ({
   const a = JSON.stringify(generatePlan(olyProfile()));
   const b = JSON.stringify(generatePlan(olyProfile()));
   assert(a === b, 'determinism (olympic): the crept plan is a pure function of the profile');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════════
+// M2 T5 — SPORTS gym-support (SEASON-shaped: off-season builds, in-season maintains)
+// ══════════════════════════════════════════════════════════════════════════════════
+// A sport athlete's gym work SUPPORTS the sport (Constitution Art 2), so progression is
+// season-shaped (07-PROGRESSION §2.6). The SKB seasonalModel shapes the BASELINE plan;
+// creep advances the gym strength work only WITHIN the phase the baseline chose, and ONLY
+// in the off-season (governed progression.sport_support.creepSeasons) — off-season primaries
+// LOAD-creep like a powerlifter but at HALF the rate (gym-support volume is lower, secondary
+// to the sport). Pre-season, in-season, and transition hit the MAINTENANCE CEILING: no creep
+// at all — holding capability under rising sport load IS the progression there, not a failure
+// to overload. Sports carry no build discipline; the allocator maps style==='sport' → the
+// synthetic 'sportSupport' creep discipline. CRITICALLY: the season is read off program.season
+// (profile-derived, deterministic — NOT live state) identically in the baseline and the reflow,
+// so no calendar effect leaks into a neutral reflow (the M0 reflow≡baseline invariant — that is
+// hard-asserted in prop-reflow-baseline.test.mjs, over an off-season recreational cycle profile
+// that now creeps in baseline yet reproduces byte-identically under a neutral reflow).
+//
+// Off-season sport archetype (matches the golden `sport·rugby·advanced·off·4d`): a real
+// team-sport gym-support cohort with heavy barbell compounds to load-creep. The block is
+// base(wks1–4) → build(wks6–12) with deloads at 5 & 10 (so wk5 is itself a deload; wk6 opens
+// the build block at creepWeeks 0). sportSeason 'off_season' normalises to sport_season 'off'.
+const sportOff = (extra = {}) => ({
+  goal_type: 'sport', sport: 'rugby', sport_intent: 'compete', sport_season: 'off',
+  experience_level: 'advanced', experience: { gym: 'advanced' },
+  sex: 'male', bodyweight_kg: 90, access: FULL, plan_start_date: '2026-07-13',
+  lifts: {}, availability: { days_per_week: 4, days: ['mon', 'tue', 'thu', 'fri'] },
+  sport_days: ['wed', 'sat'],
+  ...extra,
+});
+
+// ── 21 · THE G9 GATE, off-season sport — week 6 ≠ week 5 in load (SR-01 closed) ────────
+{
+  const plan = generatePlan(sportOff());
+  const w5 = topSet(weekOf(plan, 5), /squat/i);   // wk5 is the base-block deload
+  const w6 = topSet(weekOf(plan, 6), /squat/i);   // wk6 opens the build block
+  assert(w5 && w6, 'G9 (sport off-season): the squat primary is present in weeks 5 and 6');
+  assert(w6.kg > 0 && w6.kg !== w5.kg, `G9 (sport off-season): week 6 ≠ week 5 in load (SR-01 closed) — wk5 ${w5.it.sets} ${w5.it.weight} → wk6 ${w6.it.sets} ${w6.it.weight}`);
+  assert(w6.it.estimated === true, 'G9 (sport off-season): the week-6 advancement is LABELLED estimated');
+  assert(w6.it.progression && w6.it.progression.currency === 'load' && /estimated/i.test(w6.it.progression.driver),
+    `G9 (sport off-season): the estimate carries its LOAD driver in the trace — "${w6.it.progression && w6.it.progression.driver}"`);
+  assert(w6.it.progression && w6.it.progression.confidence === 'low', 'G9 (sport off-season): the estimate carries a lowered confidence tier (Art 13)');
+  assert(w6.it.progression && w6.it.progression.weeklyLoadPct === 0.0075,
+    'G9 (sport off-season): the sport gym-support compound creeps at its OWN governed rate (0.75%/wk — HALF powerlifting\'s 1.5%; gym-support volume is lower)');
+  assert(Array.isArray(w6.it.warmupRamp) && w6.it.warmupRamp.length >= 2,
+    'SR-10 (sport off-season): the heavy compound carries a programmed warm-up ramp (never cold off a primer)');
+}
+
+// ── 22 · UNCONFOUNDED creep proof — two adjacent WORKING weeks in the build block ─────
+// wk5 is a deload; wk6→wk8 are consecutive WORKING weeks, isolating the creep mechanism
+// from the deload-scheme contrast (same discipline T3/T4 used).
+{
+  const plan = generatePlan(sportOff());
+  assert(!weekOf(plan, 6).deload && !weekOf(plan, 7).deload && !weekOf(plan, 8).deload,
+    'sanity: weeks 6, 7, 8 are consecutive WORKING weeks (no deload between them)');
+  const w6 = topSet(weekOf(plan, 6), /squat/i);
+  const w8 = topSet(weekOf(plan, 8), /squat/i);
+  assert(w8.kg > w6.kg, `sport off-season creep is PROGRESSIVE across two completed working weeks: wk6 ${w6.it.weight} → wk8 ${w8.it.weight}`);
+  assert(w8.it.progression.weeks > w6.it.progression.weeks,
+    'the completed-working-week count accumulates block-scoped, as designed');
+}
+
+// ── 23 · MAINTENANCE CEILING (again, explicit) — pre-season and transition also stay FLAT ──
+// Only the off-season builds; every other phase holds capability (the maintenance ceiling),
+// so a pre-season (volume-taper window) and a transition (recovery) sport plan carry NO creep.
+{
+  const pre = generatePlan({ goal_type: 'sport', sport: 'run', run_discipline: 'long', sport_intent: 'compete', event_date: '2026-10-11',
+    experience_level: 'intermediate', experience: { gym: 'intermediate' }, sex: 'male', bodyweight_kg: 75,
+    access: FULL, plan_start_date: '2026-07-13', lifts: {}, availability: { days_per_week: 3, days: ['mon', 'wed', 'fri'] } });
+  const preEst = pre.phases.flatMap((p) => p.weeks).flatMap((w) => w.sessions).flatMap((s) => s.items).some((it) => it.estimated);
+  assert(!preEst, 'MAINTENANCE CEILING: a PRE-SEASON sport plan (volume-taper window) carries NO creep');
+
+  const trans = generatePlan({ goal_type: 'sport', sport: 'cycle', sport_intent: 'compete', event_date: '2026-07-03',
+    experience_level: 'intermediate', experience: { gym: 'intermediate' }, sex: 'male', bodyweight_kg: 72,
+    access: FULL, plan_start_date: '2026-07-13', lifts: {}, availability: { days_per_week: 3, days: ['mon', 'wed', 'fri'] } });
+  const transEst = trans.phases.flatMap((p) => p.weeks).flatMap((w) => w.sessions).flatMap((s) => s.items).some((it) => it.estimated);
+  assert(!transEst, 'MAINTENANCE CEILING: a TRANSITION (post-event recovery) sport plan carries NO creep');
+}
+
+// ── 24 · progression-sanity's FLAT-BLOCK flag goes QUIET for the off-season sport cohort
+// (T5's acceptance instrument). NOTE (calibration, not a bug): an IN-SEASON sport plan may
+// LEGITIMATELY still flag flat — maintenance is a decided, correct sameness (§2.6, §3.2), not
+// the SR-01 undecided one; forcing it to progress would violate Art 2 (the gym serves the
+// sport). That is a validator-calibration note for M4's ladder, not something to fix here. ──
+{
+  const plan = generatePlan(sportOff());
+  const report = validatePlanProgression(plan);
+  const flat = report.findings.filter((f) => f.validator === 'progression.sanity' && /flat block/.test(f.reason));
+  assert(flat.length === 0, `progression-sanity's flat-block flag is QUIET for the crept OFF-SEASON sport plan (was the SR-01 defect); found ${flat.length}`);
+}
+
+// ── 25 · accessory double progression fires for the off-season sport cohort too ──────────
+{
+  const plan = generatePlan(sportOff());
+  const dp = [];
+  for (const w of [6, 9]) {
+    for (const s of weekOf(plan, w).sessions) for (const it of s.items)
+      if (it.progression && it.progression.currency === 'reps' && it.progression.driver === 'estimated — double progression (reps→load, completion-gated)') dp.push({ w, name: it.name });
+  }
+  assert(dp.length > 0, 'sport off-season accessories climb reps via the SAME double-progression path (no fork)');
+}
+
+// ── 26 · LOGGED displaces the estimate for sport too, + determinism (Art 18) ─────────────
+{
+  const logged = generatePlan(sportOff({ lift_log: { squat: { e1rm: 180, rpe: 8, at: '2026-07-10' } } }));
+  const w6 = topSet(weekOf(logged, 6), /back squat/i);
+  const w8 = topSet(weekOf(logged, 8), /back squat/i);
+  if (w6 && w8) {
+    assert(!w6.it.estimated && !w8.it.estimated, 'LOGGED (sport): a logged compound is NOT labelled estimated (measured displaces inferred)');
+    assert(w6.kg === w8.kg, 'LOGGED (sport): the logged compound does not creep (autoregulation owns it)');
+  }
+  const a = JSON.stringify(generatePlan(sportOff()));
+  const b = JSON.stringify(generatePlan(sportOff()));
+  assert(a === b, 'determinism (sport): the crept plan is a pure function of the profile (no clock, no randomness)');
 }
 
 if (failures) { console.error(`\n${failures} assertion(s) failed.`); }

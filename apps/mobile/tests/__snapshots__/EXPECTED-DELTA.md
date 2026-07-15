@@ -24,6 +24,58 @@ neither is present.
 
 ---
 
+## 2026-07-15 — Phase 3 M2 T5: progression extended to SPORTS gym-support (season-shaped; off-season builds, in-season maintains)
+- Changed archetypes (content): the 17 OFF-SEASON sport archetypes only —
+  `sport·run-sprint·intermediate·off·4d`, `sport·run-middle·intermediate·off·4d`,
+  `sport·run-long·intermediate·off·4d`, `sport·cycle·intermediate·off·3d`,
+  `sport·swim·intermediate·off·3d`, `sport·triathlon·intermediate·off·3d`,
+  `sport·hurling·intermediate·off·3d`, `sport·field_hockey·advanced·off·4d`,
+  `sport·soccer·intermediate·off·3d`, `sport·rugby·advanced·off·4d`,
+  `sport·gaa-codeless·intermediate·off·3d(legacy)`,
+  `sport·rugby·advanced·off·4d·{armed-d7-low,armed-d7-high,position-outside-backs}`,
+  `sport·soccer·intermediate·off·3d·position-goalkeeper`, and the two zero-gap
+  recreational-off cohorts `sport·run-middle·advanced·zero-gap`,
+  `sport·cycle·advanced·zero-gap`. Every other archetype (28 total) is BYTE-IDENTICAL
+  bar the version stamp — verified by a full recursive per-archetype key diff excluding
+  `knowledgeSetVersion` (run ad hoc against the committed snapshot BEFORE re-baselining):
+  17 real content diffs, 28 stamp-only. 17 + 28 = 45 (the full matrix).
+- **Deliberately NOT moved — the maintenance ceiling (season conservatism, 07-PROGRESSION
+  §2.6; Constitution Art 2):** every PRE-SEASON, IN-SEASON, and TRANSITION sport archetype
+  is stamp-only — `sport·run-sprint·advanced·in·4d(taper)`, `sport·run-long·intermediate·pre·3d`,
+  `sport·cycle·intermediate·in·2d`, `sport·cycle·intermediate·transition·3d`,
+  `sport·swim·advanced·in·3d`, `sport·gaelic_football·intermediate·in·3d`. These hold
+  capability rather than chase gym PRs (holding under rising sport load IS the progression),
+  so creep is suppressed and their plans are unchanged — confirmed content-identical in the
+  same audit. All 15 build archetypes (strength/powerlifting/hypertrophy/functional/olympic),
+  the measured pair, the PL non-logging progressor, and all 7 `injured·*` (no stamp at all)
+  are likewise stamp-only.
+- Added archetypes: none.
+- Keys that moved (off-season sports only): `meta.provenance.knowledgeSetVersion`
+  (1.34.0 → 1.35.0 — moves on every provenance-bearing archetype); AND, on the 17
+  off-season sport archetypes only, `phases[].weeks[].sessions[].items[]` — loadable
+  gym-support compounds (squats/hinges/presses) gain a progressive `.weight` (LOAD creep
+  within a block at the sport gym-support rate, 0.75%/completed working week — HALF
+  powerlifting's 1.5%), a `.warmupRamp` (the generic 3-step ramp — maxStrength adaptation,
+  no per-adaptation override), and `.estimated`/`.progression` fields; accessories double-
+  progress reps (unchanged in shape from T2's mechanism). All movement is PROGRESSIVE within
+  a block (deload weeks correctly do not creep).
+- Why: Phase 3 M2 T5 (docs/superpowers/plans/2026-07-15-phase3-m2-progression.md; spec §2/§7;
+  07-PROGRESSION §2.5/§2.6) — extends T2's estimator-driven creep to sport gym-support cohorts.
+  A sport's gym work SUPPORTS the sport, so progression is SEASON-shaped: the SKB seasonalModel
+  already shapes the baseline plan; creep advances the gym strength work only WITHIN the phase
+  the baseline chose, and only in the off-season (governed `progression.sport_support.creepSeasons`).
+  Critically, the season is read off `program.season` (profile-derived, deterministic — NOT live
+  state) identically in the baseline and the reflow's re-derivation, so NO season/calendar effect
+  leaks into a neutral reflow — the M0 reflow≡baseline hard invariant stays intact
+  (`packages/engine/tests/prop-reflow-baseline.test.mjs` still hard-passes, incl. the off-season
+  recreational-cycle profile that now creeps in baseline yet reproduces byte-identically under a
+  neutral reflow). No new mechanism: the allocator maps `style==='sport'` → the synthetic
+  `'sportSupport'` creep discipline. Governed by 1 new knowledge entry
+  (`progression.sport_support`). KNOWLEDGE_SET_VERSION 1.34.0 → 1.35.0.
+- Claim: no other archetype moved (audited key-by-key against this note — the 28 non-off-season
+  archetypes differ ONLY on the knowledgeSetVersion stamp line or not at all; verified by a full
+  recursive per-archetype key diff excluding that field, not eyeballing).
+
 ## 2026-07-15 — Phase 3 M2 T4: progression extended to OLYMPIC (intensity-led load-creep + finer ramp)
 - Changed archetypes (content): the 1 OLYMPIC-discipline archetype only —
   `build·olympic·advanced·4d`. Every other archetype (44 total: all `build·strength·*` +

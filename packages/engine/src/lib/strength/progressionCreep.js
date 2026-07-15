@@ -22,8 +22,20 @@
  *     stays the fast path (07-PROGRESSION §2.1: measured displaces inferred).
  *
  * GATED per discipline (CREEP_DISCIPLINES): powerlifting (M2 T2) + hypertrophy (M2 T3) +
- * olympic (M2 T4). Sports are T5 — they extend CREEP_DISCIPLINES + author their own
- * knowledge, no new mechanism. Every ungated cohort is byte-identical (golden master proof).
+ * olympic (M2 T4) + sportSupport (M2 T5 — every sport gym-support cohort; the allocator maps
+ * style==='sport' → the synthetic 'sportSupport' discipline). Every ungated cohort is
+ * byte-identical (golden master proof).
+ *
+ * SPORT GYM-SUPPORT (T5): SEASON-shaped (07-PROGRESSION §2.6; Constitution Art 2 — the gym
+ * serves the sport). The SKB seasonalModel shapes the BASELINE (off-season builds, in-season
+ * maintains); creep advances the gym strength work only WITHIN that phase, and ONLY in the
+ * off-season (governed progression.sport_support.creepSeasons) — off-season primaries LOAD-creep
+ * like powerlifting but at HALF the rate (gym-support volume is lower). Pre-season, in-season
+ * and transition hit the MAINTENANCE CEILING: no creep at all — holding capability under rising
+ * sport load IS the progression there. Because the season is read off program.season (profile-
+ * derived, deterministic — NOT live state) identically in the baseline and the reflow's
+ * re-derivation, this never leaks a calendar effect into a neutral reflow (the M0
+ * reflow≡baseline hard invariant stays intact — season shapes baseline, reflow is live-state-only).
  *
  * MODEL PER ADAPTATION (progression.reps_first_model, T3): maxStrength/explosiveStrength
  * primaries LOAD-creep with a programmed warm-up ramp (T2's model — there IS a near-
@@ -54,9 +66,12 @@ import { DISCIPLINE_DOSE_QUALITY } from '../../data/doseSchemes.js';
 import { matchLiftForItem, parseReps } from '../liftProgression.js';
 
 // Disciplines whose non-logging athletes get estimator creep. M2 T2 = powerlifting;
-// T3 adds 'hypertrophy'; T4 adds 'olympic'. T5 adds the sport cohorts (each authoring
-// its own rate/model).
-export const CREEP_DISCIPLINES = new Set(['powerlifting', 'hypertrophy', 'olympic']);
+// T3 adds 'hypertrophy'; T4 adds 'olympic'. T5 adds 'sportSupport' — the SYNTHETIC creep
+// discipline every sport gym-support cohort (run/cycle/swim/team/…) resolves to (a sport
+// profile carries no build discipline; the allocator maps style==='sport' → 'sportSupport'
+// at the finaliseSlot call site). It authors its own SEASON-shaped rate/ceiling
+// (progression.sport_support) — no new mechanism.
+export const CREEP_DISCIPLINES = new Set(['powerlifting', 'hypertrophy', 'olympic', 'sportSupport']);
 
 const round2_5 = (x) => Math.round(x / 2.5) * 2.5;
 
@@ -66,23 +81,42 @@ const round2_5 = (x) => Math.round(x / 2.5) * 2.5;
  * `creepWeeks` = completed prior WORKING weeks in this block (0 for the block's first
  * working week → no load advance yet, but the ramp/label still apply).
  */
-export function creepConfig({ discipline, creepWeeks = 0, deload = false, taper = false } = {}) {
+export function creepConfig({ discipline, creepWeeks = 0, deload = false, taper = false, season = null } = {}) {
   if (!discipline || !CREEP_DISCIPLINES.has(discipline)) return null;
   if (deload || taper) return null;                       // recovery/peaking weeks never creep (🔒 1)
-  const adaptation = DISCIPLINE_DOSE_QUALITY[discipline]; // powerlifting → maxStrength, hypertrophy → hypertrophy
-  const rates = kb.value('progression.estimator_creep');
-  const rate = rates && rates[adaptation] && rates[adaptation].weeklyLoadPct;
-  // T3: which adaptations run REPS-FIRST double progression on their PRIMARY role too
-  // (governed — progression.reps_first_model), rather than load-creep + ramp (T2's model).
-  const repsFirstAdaptations = kb.value('progression.reps_first_model').primaryRoleAdaptations || [];
-  const dpPrimary = repsFirstAdaptations.includes(adaptation);
-  if (rate == null && !dpPrimary) return null;            // no authored progression path for this adaptation
-  const weeks = Math.max(0, Math.floor(creepWeeks));
   const dp = kb.value('progression.double_progression');
   const ramp = kb.value('progression.warmup_ramp');
+  let adaptation, rate, dpPrimary = false;
+
+  if (discipline === 'sportSupport') {
+    // T5 — sport gym-support: SEASON-shaped (07-PROGRESSION §2.6; Constitution Art 2).
+    // The SKB seasonalModel already shaped the BASELINE (off builds, in maintains); creep
+    // advances the gym strength work only WITHIN that phase and only in the OFF-SEASON
+    // (governed creepSeasons). Pre-season (volume-taper window), in-season (maintain), and
+    // transition (recover) hit the MAINTENANCE CEILING — creep suppressed entirely, because
+    // holding capability under rising sport load IS the progression there, not a failure to
+    // overload (§2.6). `season` is program.season (deriveSeason — profile-derived, DETERMINISTIC,
+    // NOT live state), passed IDENTICALLY into the baseline and the reflow's re-derivation, so
+    // this never leaks a calendar effect into a neutral reflow (the M0 reflow≡baseline invariant).
+    const ss = kb.value('progression.sport_support');
+    if (!ss || !Array.isArray(ss.creepSeasons) || !ss.creepSeasons.includes(season || 'off')) return null;
+    adaptation = ss.adaptation;                           // maxStrength — the sport compound load-creeps like a powerlifter…
+    rate = ss.weeklyLoadPct;                              // …but at HALF the rate (gym-support volume is lower, 🔒 1)
+  } else {
+    adaptation = DISCIPLINE_DOSE_QUALITY[discipline];     // powerlifting → maxStrength, hypertrophy → hypertrophy
+    const rates = kb.value('progression.estimator_creep');
+    rate = rates && rates[adaptation] && rates[adaptation].weeklyLoadPct;
+    // T3: which adaptations run REPS-FIRST double progression on their PRIMARY role too
+    // (governed — progression.reps_first_model), rather than load-creep + ramp (T2's model).
+    const repsFirstAdaptations = kb.value('progression.reps_first_model').primaryRoleAdaptations || [];
+    dpPrimary = repsFirstAdaptations.includes(adaptation);
+    if (rate == null && !dpPrimary) return null;          // no authored progression path for this adaptation
+  }
+
+  const weeks = Math.max(0, Math.floor(creepWeeks));
   // T4: a per-adaptation ramp override (explosiveStrength's finer ascent to a near-
   // maximal technical single/double) — falls back to the default steps for every
-  // adaptation without one (byte-identical for maxStrength/powerlifting).
+  // adaptation without one (byte-identical for maxStrength/powerlifting/sportSupport).
   const rampSteps = (ramp.byAdaptation && ramp.byAdaptation[adaptation]) || ramp.steps;
   return {
     adaptation,
