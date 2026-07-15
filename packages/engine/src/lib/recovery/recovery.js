@@ -69,6 +69,9 @@ function volumeFromScore(score, greenCut = BANDS.greenCut) {
 // confidence model they consume (as readinessIndex's V2_WEIGHTS do); the reliability + maturity
 // inputs are the governed/derived signal. The gate is INERT unless a confidence is supplied, so
 // every legacy caller (no confidence → full authority) is byte-identical.
+// ⚠ PROVISIONAL / UNGOVERNED: these cut-points are in-code heuristics pending the M6 P2-10
+// governance sweep, which will promote them to a governed recovery.signal_confidence_gate entry
+// (with provenance + KSV) once the values settle. Keep them here, clearly marked, until then.
 const FULL_AUTHORITY_CONFIDENCE = 0.5;
 const MIN_RETAINED_FRACTION = 0.15;
 const RPE_AUTHORITY_CONFIDENCE = 0.5;

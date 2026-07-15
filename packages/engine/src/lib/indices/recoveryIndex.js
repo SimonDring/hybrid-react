@@ -49,12 +49,24 @@ export function recoveryIndex({ objectiveScore = null, subjective = null, source
   // consumer (recoveryFromScore) bounds the volume cut by exactly this number.
   const hasHistory = Array.isArray(prior);
   const recency = recencyFactor(asOf, date);
-  const subjMaturity = hasHistory ? baselineMaturity(prior.filter((r) => hasAny(r, SUBJECTIVE_FIELDS)).length) * recency : 1;
-  const objMaturity = hasHistory ? baselineMaturity(prior.filter((r) => hasAny(r, OBJECTIVE_FIELDS)).length) * recency : 1;
+  const subjPriorCount = hasHistory ? prior.filter((r) => hasAny(r, SUBJECTIVE_FIELDS)).length : 0;
+  const objPriorCount = hasHistory ? prior.filter((r) => hasAny(r, OBJECTIVE_FIELDS)).length : 0;
+  const subjMaturity = hasHistory ? baselineMaturity(subjPriorCount) * recency : 1;
+  const objMaturity = hasHistory ? baselineMaturity(objPriorCount) * recency : 1;
+
+  // A half is EXPECTED unless we have POSITIVE evidence the athlete doesn't provide it:
+  // history IS available AND this half has zero history AND it's absent today. Then it
+  // drops out of the confidence denominator — a manual-only (no-wearable) athlete is NOT
+  // capped for a device they don't own (Saw 2016 — subjective is the more sensitive
+  // signal); only THIN history lowers confidence, which is the real signal. A wearable
+  // user who merely missed today's sync (objective history exists) still expects it and
+  // degrades gracefully. Legacy no-prior callers keep both halves expected → byte-identical.
+  const subjExpected = !(hasHistory && subjPriorCount === 0 && subj == null);
+  const objExpected = !(hasHistory && objPriorCount === 0 && objectiveScore == null);
 
   const parts = [
-    { name: 'subjective', present: subj != null, value: subj, weight: 6, source: 'manual', baselineMaturity: subjMaturity },
-    { name: 'objective', present: objectiveScore != null, value: objectiveScore, weight: 4, source, baselineMaturity: objMaturity }
+    { name: 'subjective', present: subj != null, value: subj, weight: 6, source: 'manual', baselineMaturity: subjMaturity, expected: subjExpected },
+    { name: 'objective', present: objectiveScore != null, value: objectiveScore, weight: 4, source, baselineMaturity: objMaturity, expected: objExpected }
   ];
   return makeIndex({ value, parts });
 }

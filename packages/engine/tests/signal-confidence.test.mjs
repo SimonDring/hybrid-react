@@ -67,6 +67,27 @@ const staleIx = readinessIndex({ metric: badRow(dayBefore(6)), prior: Array.from
 const staleOut = recoveryFromScore(staleIx.value, { confidence: staleIx.confidence, greenCut: 67 });
 assert(staleOut.volumeModifier > matureOut.volumeModifier, `stale entry cuts LESS than the fresh mature one (${staleOut.volumeModifier} > ${matureOut.volumeModifier})`);
 
+// ── MANUAL-ONLY (no wearable): confidence reflects the data the athlete ACTUALLY provides ──
+// A no-wearable athlete must NOT be capped for a device they don't own (Saw 2016 — subjective
+// is the more sensitive signal). Only THIN history gates them. Driving row + priors carry NO
+// objective fields (no hrv/rhr/sleep), and objectiveScore is null (nothing to compute).
+const manualRow = (date) => ({ date, source: 'manual', energy: 2, mood: 2, soreness: 2, stress: 2, sleep_quality: 2 });
+const manualPrior = (n) => ({ date: dayBefore(n), source: 'manual', energy: 3, mood: 3, soreness: 3, stress: 3, sleep_quality: 3 });
+
+// (a) manual-only MATURE bad entry → FULL authority (the regression guard)
+const manualMatureIx = readinessIndex({ metric: manualRow(asOf), prior: Array.from({ length: 10 }, (_, i) => manualPrior(i + 1)), objectiveScore: null, asOf, v2: true });
+const manualMatureOut = recoveryFromScore(manualMatureIx.value, { confidence: manualMatureIx.confidence, greenCut: 67 });
+assert(manualMatureIx.confidence >= 0.5, `manual-only mature history → FULL authority confidence, not capped ~0.42 (got ${manualMatureIx.confidence})`);
+assert(manualMatureOut.volumeModifier <= 0.8, `manual-only mature bad day → full ~22% volume cut (modifier ${manualMatureOut.volumeModifier})`);
+assert(manualMatureOut.rpeOffset === -1, 'manual-only mature bad day → intensity eased (rpeOffset -1) — regression fixed');
+
+// (b) manual-only IMMATURE single bad entry → still BOUNDED (immaturity still gates)
+const manualImmatureIx = readinessIndex({ metric: manualRow(asOf), prior: [], objectiveScore: null, asOf, v2: true });
+const manualImmatureOut = recoveryFromScore(manualImmatureIx.value, { confidence: manualImmatureIx.confidence, greenCut: 67 });
+assert(manualImmatureIx.confidence === 0, `manual-only single un-baselined entry → 0 confidence (got ${manualImmatureIx.confidence})`);
+assert(manualImmatureOut.volumeModifier > 0.9, `manual-only immature → bounded, small cut, NOT full (modifier ${manualImmatureOut.volumeModifier})`);
+assert(manualImmatureOut.rpeOffset === 0, 'manual-only immature → intensity not eased (still gated)');
+
 // ── the gate is INERT without a confidence (legacy path unchanged) ───────────────────
 assert(recoveryFromScore(35).volumeModifier === 0.78, 'no confidence supplied → legacy full 0.78 (gate inert)');
 assert(recoveryFromScore(35).rpeOffset === -1, 'no confidence supplied → legacy rpeOffset -1 (gate inert)');
