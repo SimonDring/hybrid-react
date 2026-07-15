@@ -439,6 +439,24 @@ set search_path = public as $$
      );
 $$;
 
+-- ── F1 — close the pre-existing readiness/injury RPC oracle (leak review) ────
+-- derive_injury_status(uuid) + latest_readiness(uuid) (from 20260708) are
+-- SECURITY DEFINER, take an ARBITRARY target uuid, and had NO caller gate and NO
+-- revoke — so Postgres granted EXECUTE to PUBLIC and they were callable via
+-- PostgREST RPC: any authenticated user could rpc('latest_readiness',{target:X})
+-- → X's readiness, rpc('derive_injury_status',{target:X}) → X's injury
+-- availability. Cross-user, unconsented — bypassing the exact membership+consent
+-- model M5 gates (the same oracle class C2 closed for has_active_grant). Revoke
+-- the client grant. The player_status / squad_signal server-truth triggers still
+-- call them fine (those triggers are SECURITY DEFINER — EXECUTE is checked
+-- against the function owner, not the caller). player_display_name(uuid) is the
+-- same shape; revoked too (a coach already sees the name, but no client calls it
+-- by RPC — closing the enumeration oracle costs nothing). Verified: nothing in
+-- apps/mobile or supabase/functions calls any of the three by RPC.
+revoke execute on function public.derive_injury_status(uuid) from anon, authenticated;
+revoke execute on function public.latest_readiness(uuid)     from anon, authenticated;
+revoke execute on function public.player_display_name(uuid)  from anon, authenticated;
+
 -- ============================================================================
 -- 3) THE ONE CROSS-PERSON TABLE — squad_signal_snapshots (design §3.4)
 --

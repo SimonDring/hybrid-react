@@ -133,6 +133,18 @@ async function main() {
     .select('metric_id, value').eq('user_id', A.id).eq('metric_id', 'hrv');
   ok((rawCross || []).length === 0, 'P4: RAW VITALS (a raw-vital monitoring_entries row) return ZERO rows cross-user — the Art 11 floor');
 
+  // ── F1 — the pre-existing readiness/injury RPC oracle is CLOSED (leak review) ─
+  // Before 20260713, derive_injury_status/latest_readiness were PUBLIC-executable
+  // SECURITY DEFINER over an arbitrary target → any authenticated user could read
+  // anyone's readiness / injury availability by RPC, bypassing membership+consent.
+  // The revoke (this migration) makes the direct RPC fail for a non-coach.
+  const { error: f1read } = await B.client.rpc('latest_readiness', { target: A.id });
+  ok(!!f1read, 'F1: a non-coach CANNOT rpc latest_readiness against another user (execute revoked)');
+  const { error: f1inj } = await B.client.rpc('derive_injury_status', { target: A.id });
+  ok(!!f1inj, 'F1: a non-coach CANNOT rpc derive_injury_status against another user (execute revoked)');
+  const { error: f1name } = await B.client.rpc('player_display_name', { target: A.id });
+  ok(!!f1name, 'F1: a non-coach CANNOT rpc player_display_name against another user (execute revoked)');
+
   // ── P5 — an owner's in-place UPDATE of an evidence row is REJECTED ───────────
   // No UPDATE policy ⇒ RLS default-denies the in-place edit (0 rows); the
   // forbid_evidence_update guard trigger is the deeper belt-and-suspenders layer.
@@ -187,6 +199,19 @@ async function main() {
   // Before any grant: membership alone is NOT enough — the coach reads nothing.
   const { data: preGrant } = await C.client.from('squad_signal_snapshots').select('id').eq('user_id', A.id);
   ok((preGrant || []).length === 0, 'crossing: with membership but NO grant, the coach reads nothing (consent required)');
+
+  // ── Coverage (b) — a grant of a DIFFERENT scope does NOT open the crossing ───
+  // A is an active member and grants ONLY 'availability' (not 'squad_signals').
+  // The crossing policy is scoped to 'squad_signals', so the coach still reads
+  // nothing — a grant is not a blanket key. (This 'availability' grant, with its
+  // default flags, is reused for the P17 recording-fidelity check below.)
+  await A.client.from('consent_grants').insert({ grantor_user_id: A.id, grantee_kind: 'team', grantee_team_id: team.id, scope: 'availability' });
+  const { data: covScopeSnap } = await C.client.from('squad_signal_snapshots').select('id').eq('user_id', A.id);
+  ok((covScopeSnap || []).length === 0, "coverage(b): an 'availability' grant does NOT open the 'squad_signals' crossing (scope-specific)");
+  const { data: covScopeAvail } = await C.client.rpc('has_active_grant', { member: A.id, team: team.id, want_scope: 'availability' });
+  ok(covScopeAvail === true, "coverage(b): has_active_grant is true for the granted 'availability' scope…");
+  const { data: covScopeSquad } = await C.client.rpc('has_active_grant', { member: A.id, team: team.id, want_scope: 'squad_signals' });
+  ok(covScopeSquad === false, "coverage(b): …but false for 'squad_signals' (no such grant yet) — scopes don't cross-substitute");
 
   // A grants the squad_signals crossing to the team (with the distinct flags set for P17).
   const { error: grantErr } = await A.client.from('consent_grants').insert({
@@ -256,7 +281,7 @@ async function main() {
   const { data: p17 } = await A.client.from('consent_grants')
     .select('secondary_use, ai_processing').eq('grantor_user_id', A.id).eq('grantee_team_id', team.id).eq('scope', 'squad_signals').single();
   ok(p17 && p17.secondary_use === true && p17.ai_processing === true, 'P17: secondary_use + ai_processing are recorded exactly as written');
-  await A.client.from('consent_grants').insert({ grantor_user_id: A.id, grantee_kind: 'team', grantee_team_id: team.id, scope: 'availability' });
+  // the plain 'availability' grant created earlier (coverage b) carries the defaults
   const { data: p17def } = await A.client.from('consent_grants')
     .select('secondary_use, ai_processing').eq('grantor_user_id', A.id).eq('grantee_team_id', team.id).eq('scope', 'availability').single();
   ok(p17def && p17def.secondary_use === false && p17def.ai_processing === false, 'P17: the flags default to false on a plain grant (recording fidelity)');
@@ -274,6 +299,12 @@ async function main() {
   ok(!!p19ins, 'P19: a coach CANNOT create a grant on the athlete\'s behalf');
   const { data: p19rev } = await C.client.from('consent_grants').update({ revoked_at: nowIso }).eq('grantor_user_id', A.id).eq('scope', 'squad_signals').select('id');
   ok((p19rev || []).length === 0, 'P19: a coach CANNOT revoke the athlete\'s grant (0 rows)');
+
+  // ── Coverage (a) — an OUTSIDER coach cannot read A's consent_grants ──────────
+  // O is a real coach (of oTeam) but not of A's team; the "named coach reads
+  // their grants" policy is team-scoped, so O reads none of A's grants.
+  const { data: covOutGrant } = await O.client.from('consent_grants').select('id').eq('grantor_user_id', A.id);
+  ok((covOutGrant || []).length === 0, "coverage(a): an outsider-team coach reads ZERO of A's consent_grants (team-scoped)");
 
   // ── P20 — athlete B reads ZERO of A's consent_grants; cannot mutate them ─────
   const { data: p20 } = await B.client.from('consent_grants').select('id').eq('grantor_user_id', A.id);

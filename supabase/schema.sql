@@ -1577,6 +1577,16 @@ set search_path = public as $$
      );
 $$;
 
+-- F1 (leak review) — close the readiness/injury RPC oracle. derive_injury_status
+-- / latest_readiness / player_display_name (20260708/09) are SECURITY DEFINER over
+-- an ARBITRARY target uuid and were PUBLIC-executable via PostgREST RPC — a
+-- cross-user, unconsented oracle bypassing membership+consent (same class as C2).
+-- The server-truth triggers still call them (DEFINER — checked against the owner,
+-- not the caller). No client/edge code calls them by RPC.
+revoke execute on function public.derive_injury_status(uuid) from anon, authenticated;
+revoke execute on function public.latest_readiness(uuid)     from anon, authenticated;
+revoke execute on function public.player_display_name(uuid)  from anon, authenticated;
+
 -- ── the ONE cross-person table — squad_signal_snapshots (design §3.4) ────────
 create table if not exists public.squad_signal_snapshots (
   id                    uuid primary key default gen_random_uuid(),
