@@ -283,6 +283,21 @@ move it to the archive file rather than letting this one grow._
   4. Standing: I5 flag→default (safety); the ballistic/olympic contraindication science review;
      RLS_STAGING CI secrets; Edge Function deploys (queue #4); the taper/fixtures calendar signals (M6).
 
+- **🎉 M5 SUBSTRATE IS LIVE ON PROD (2026-07-16, Simon).** All outstanding migrations
+  applied via cumulative `db push` (staging → `rls-harness-m5` green → prod); ledger
+  updated (20260713 + the 20260706–20260710 chain now confirmed on prod). The athlete's
+  **append-only career record + consent model + the derived-only cross-person crossing**
+  are real: 12 tables, owner-private at rest, one consent-and-membership-gated crossing,
+  policy-only revocation, the F1 cross-user oracle closed. The 256 KB `users.profile`
+  blob (TR-03) is retired as the substrate; `block_outcomes` is now the D16 evidence base.
+  This SATISFIES the M5 entry gate: the record the learning loop consumes now EXISTS.
+  **▶ NEXT (unblocked): 🔒 7 — rule on the D16 promotion-policy decisions (PR #190).**
+  Simon's 4 calls (promotion threshold / shrinkage / first-armed lever / demotion) →
+  then I build the D16 staged→learned learning loop (the last verb, LEARN). App-side
+  wiring to WRITE `block_outcomes` on block close + bounded reads is the paired build.
+  ⚠ Confirm: if the 20260707 OAuth chain was among the applied, the paired Edge Functions
+  (fitbit/strava callbacks + fitbit-sync) deploy separately — check they're live.
+
 ## ⏰ OPEN QUEUE (in rough priority; ⚠ = needs Simon's call)
 
 0. **⚠ THE DEVELOPMENT PLAN — created 2026-07-13, adoption = Simon's merge.**
