@@ -373,6 +373,47 @@ export async function setGoals(goals) {
   return updateProfile({ goals });
 }
 
+// ---------- M5-L2: the D16 learning substrate (block_outcomes) ----------
+// The athlete's append-only, owner-private block-outcome history — the evidence the
+// D16 promotion policy (promoteFromOutcomes) learns from. Supabase-ONLY: there is no
+// localStorage mirror, by design (§4) — when offline/signed-out the loop ABSTAINS
+// (readBlockOutcomes returns [] → no promotion, no demotion), never learning off a
+// stale local blob. Rows are INSERT-only; the block_outcomes_no_update trigger
+// enforces append-only at rest, and corrections append a new row via supersedes_id.
+
+// Append ONE materialised block-outcome row. Caller (AthleteModelService) supplies the
+// row incl. the NOT NULL provenance columns (engine/knowledge/method versions). Returns
+// the inserted row, or null when offline/signed-out (the loop then abstains).
+export async function appendBlockOutcome(row) {
+  if (!canSync()) return null;
+  const userId = uid();
+  const { data, error } = await supabase
+    .from('block_outcomes')
+    .insert(clean(row, userId))
+    .select()
+    .single();
+  if (error) { logError('appendBlockOutcome', error); return null; }
+  return data;
+}
+
+// Read the most-recent `limit` block-outcome rows (owner-private; bounded — no
+// select('*') sprawl, TR-03), newest→oldest, with superseded rows collapsed out.
+// Returns [] when offline/signed-out (the loop abstains).
+export async function readBlockOutcomes({ limit = 12 } = {}) {
+  if (!canSync()) return [];
+  const userId = uid();
+  const { data, error } = await supabase
+    .from('block_outcomes')
+    .select('id, supersedes_id, period_start, period_end, observed, outcome_signals, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  if (error) { logError('readBlockOutcomes', error); return []; }
+  const rows = data || [];
+  const superseded = new Set(rows.map((r) => r.supersedes_id).filter(Boolean));
+  return rows.filter((r) => !superseded.has(r.id));
+}
+
 /**
  * Soft-delete all the user's logged training data in the cloud (sessions,
  * check-ins, daily metrics, injuries, reassessments) — but keep the account and
