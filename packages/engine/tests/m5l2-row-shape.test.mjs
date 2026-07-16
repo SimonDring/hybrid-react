@@ -50,3 +50,25 @@ const row = (periodEnd, recoveryRate, confidence) => ({
   const out = promoteFromOutcomes(abstain, 1, {});
   assert(!out.learnedPriors.recoveryRate, 'all-abstain history → no promotion');
 }
+
+// ── TR-05 integration guard: a POPULATION-default `current` is NOT "learned" ───
+// The schema seeds learnedPriors.recoveryRate {source:'population'} on every athlete.
+// Passing that as `current` must NOT flip the athlete into the demotion branch (which
+// would arm a prior without the gates). One block + population current → NO promotion.
+{
+  const oneBlock = [row('2026-02-01', 1.08, 0.6)];
+  const populationCurrent = { learnedPriors: { recoveryRate: { value: 1, source: 'population', confidence: 'low' } } };
+  const out = promoteFromOutcomes(oneBlock, 1, { current: populationCurrent });
+  assert(!out.learnedPriors.recoveryRate,
+    'population-default current is NOT learned → 1 block bypasses no gates → no promotion (TR-05)');
+}
+
+// ── A genuinely-learned `current` DOES engage demotion hysteresis (a miss demotes) ──
+{
+  // Two hits then a clear miss, with a learned prior in force → demote.
+  const hist = [row('2026-01-01', 1.10, 0.6), row('2026-02-01', 1.10, 0.6), row('2026-03-01', 0.72, 0.6)];
+  const learnedCurrent = { learnedPriors: { recoveryRate: { value: 1.1, source: 'learned', confidence: 'moderate' } } };
+  const out = promoteFromOutcomes(hist, 1, { current: learnedCurrent });
+  assert(!out.learnedPriors.recoveryRate && out.provenance.demotedFrom === 'learned',
+    'a learned current + a mispredicting last block → demotion (hysteresis still works)');
+}

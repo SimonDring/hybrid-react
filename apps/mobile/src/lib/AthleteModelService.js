@@ -154,6 +154,14 @@ export async function learnFromBlockClose({ startISO, endISO, priorityQualities,
   // ② Append this block — idempotently. If a row already covers this window (re-fire), reuse
   // it; else insert. A null insert = offline/error ⇒ ABSTAIN (return unchanged — no landing,
   // so no offline demotion). The just-appended row joins the history the policy sees.
+  //
+  // Idempotency scope: this guards SEQUENTIAL re-fires (the second read sees the first's row).
+  // period_start = the block's plan_start_date, which advances on close, so a re-fire always
+  // targets the current block and appears in the 12-row window. It does NOT guard two
+  // genuinely-concurrent inserts of the same window — acceptable here because the caller is a
+  // single, fire-and-forget call from finish() behind setCompleting(true). A DB unique key is
+  // deliberately NOT used: it fights the append-only supersedes_id correction model (a
+  // correction legitimately re-uses period_start). A dedup/advisory-lock backstop is a follow-up.
   const existing = history.find((r) => r.period_start === startISO);
   if (existing) {
     // already recorded — history already contains it; fall through to (idempotent) landing
@@ -176,8 +184,14 @@ export async function learnFromBlockClose({ startISO, endISO, priorityQualities,
   }
 
   // ④ Run the pure promotion policy over the window (oldest → newest). populationPrior = 1.
+  // Signal "a learned prior is in force" ONLY when one genuinely is (source==='learned') —
+  // the schema-default recoveryRate is source:'population' on every athlete, and passing it
+  // as `current` would flip an unlearned athlete into the demotion branch and arm a prior
+  // without the gates (TR-05). Explicit { tier:'learned' } avoids that trap entirely.
+  const isLearned = !!(model.learnedPriors && model.learnedPriors.recoveryRate
+    && model.learnedPriors.recoveryRate.source === 'learned');
   const chronological = [...history].sort((a, b) => String(a.period_end).localeCompare(String(b.period_end)));
-  const result = promoteFromOutcomes(chronological, 1, { current: { learnedPriors: model.learnedPriors } });
+  const result = promoteFromOutcomes(chronological, 1, { current: isLearned ? { tier: 'learned' } : {} });
 
   // ⑤ Land BOTH outcomes (§5, pure) and only write the profile when the decision changed.
   const sig = (m) => JSON.stringify({
