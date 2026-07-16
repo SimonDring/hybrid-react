@@ -277,14 +277,29 @@ move it to the archive file rather than letting this one grow._
     No work lost, nothing corrupted; recovery is recorded in the SDD ledger.
 
   **⏳ DECISIONS WAITING FOR YOU (in rough order):**
-  1. **Merge M5-L1 (#191)** — the D16 promotion policy (engine, LEARN verb). Green, reviewed,
-     additive-first. See the 2026-07-16 run note below for the TR-05 fix the review caught.
-  2. **Approve the M5-L2 approach (#192, docs-only)** — the app-wiring design to close the loop.
-     Confirm the §7 engineering calls (recoveryRate mapping / windows / evolve WP-59 in place);
-     then I build the live-path wiring. No 🔒 in it — the coaching policy was ruled at 🔒 7.
-  3. **🔒 8/9/10** (M6, #190) — functional identity; the allocator re-seat (HIGH-risk); endurance trigger.
-  4. Standing: I5 flag→default (safety); the ballistic/olympic contraindication science review;
-     RLS_STAGING CI secrets; Edge Function deploys (queue #4); the taper/fixtures calendar signals (M6).
+  1. **Merge M5-L2 (#194)** — the app-side wiring that CLOSES the learning loop (engine+app).
+     Green (first M5 work validated by the restored CI gate), additive-first, reviewed twice.
+     ⚠ Once deployed it writes the LIVE block_outcomes substrate on block close — your merge.
+  2. **🔒 8/9/10** (M6, #190) — functional identity; the allocator re-seat (HIGH-risk); endurance trigger.
+  3. Standing: I5 flag→default (safety); the ballistic/olympic contraindication science review;
+     RLS_STAGING CI secrets (arms the rls-harness job — now valid, currently skipped); Edge
+     Function deploys (queue #4); the taper/fixtures calendar signals (M6).
+
+- **2026-07-16 (cont.) — M5-L1 + M5-L2 MERGED/BUILT; CI gate restored.**
+  - **#191 (M5-L1) + #192 (M5-L2 design) MERGED** (Simon).
+  - **⚠ CI WAS SILENTLY BROKEN — now fixed (#193, merged).** `test.yml`'s rls-harness job used
+    `if: ${{ secrets.X != '' }}` at JOB level, which is INVALID (secrets aren't available in a
+    job-level `if:`) — GitHub rejected the whole workflow at 0s, so the engine gate (npm test +
+    test:engine + lint) + snapshot-guard NEVER RAN since the file was added. Every "CI-green" this
+    month was local-only. Fixed by gating the harness at STEP level. The gate now runs on every PR.
+  - **M5-L2 BUILT — PR #194 (engine+app), awaiting your merge.** Closes the LEARN verb end to end:
+    deriveRecoveryObservation (pure materialiser, ≈1.0 vs own baseline) → appendBlockOutcome (live,
+    append-only, owner-private) → readBlockOutcomes (bounded) → promoteFromOutcomes → applyPromotionToModel
+    (§5 landing; demotion resets to population; OFFLINE ABSTAINS, never demotes). Goldens byte-identical.
+    **A build review caught a BLOCKER** — the schema-default population prior was being read as
+    "learned" by the policy's wasLearned (existence-not-source), re-arming the D7 steer off ONE block
+    (TR-05 through the integration). Fixed at both layers (policy hardened to require source==='learned';
+    app passes {tier:'learned'} only when genuinely learned) + 2 new guard tests. 205/205 + 19/19, CI green.
 
 - **Overnight autonomous run (2026-07-16). 🔒 7 ruled → M5-L1 built → M5-L2 designed.**
   - **🔒 7 RULED (Simon: "go with your recommendations").** Twice-gated promotion (≥3 blocks +
