@@ -277,12 +277,17 @@ move it to the archive file rather than letting this one grow._
     No work lost, nothing corrupted; recovery is recorded in the SDD ledger.
 
   **⏳ DECISIONS WAITING FOR YOU (in rough order):**
-  1. **🔒 9 / 🔒 10** (M6) — the allocator re-seat (standing HIGH-risk pause; its entry gate needs
-     🔒 9 signed before the first extraction commit) and the endurance-scope trigger (Stage 7; the
-     real functional/GPP module rides here). ✅ **🔒 8 RULED 2026-07-16** —
-     `docs/design/m6/RULING-8-functional-identity.md`: functional fitness gets an HONEST LABEL now
-     (stays hypertrophy-base + functional accessories + conditioning; a real GPP module defers to
-     Stage 7 with endurance) and equipment-forced discipline demotion must be SURFACED, never silent.
+  1. **🔒 10** (M6) — the endurance-scope trigger (Stage 7; the real functional/GPP module rides
+     here). The last open M6 lock.
+  2. **M6 sub-phase (b) — the allocator re-seat — is now UNBLOCKED to build** (🔒 9 ruled). Say go
+     and I author the re-seat design spec + execute it as byte-identity-gated PRs (the FIRST one,
+     M-DOSE, is yours to review/merge to validate the harness).
+  ✅ **🔒 8 RULED 2026-07-16** — `docs/design/m6/RULING-8-functional-identity.md`: functional fitness
+     gets an HONEST LABEL now; equipment-forced discipline demotion must be SURFACED, never silent.
+  ✅ **🔒 9 RULED 2026-07-16** — `docs/design/m6/RULING-9-allocator-reseat.md`: extract
+     **M-DOSE → M-SCHED → M-SESS** (call-graph leaves first, entangled core last); byte-identity per
+     commit (now CI-enforced post-#193), pure moves only, KSV unchanged, contract-proven-with-fixtures,
+     module-scoped rollback; first extraction is Simon's review to validate the harness.
   2. Standing: I5 flag→default (safety); the ballistic/olympic contraindication science review;
      RLS_STAGING CI secrets (arms the rls-harness job — now valid, currently skipped); Edge
      Function deploys (queue #4); the taper/fixtures calendar signals (M6).
