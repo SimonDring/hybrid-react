@@ -85,6 +85,9 @@ export { ENGINE_VERSION, provenance } from './src/version.js';
 export { KNOWLEDGE_SET_VERSION } from './src/lib/knowledge/entries.js';
 // WP-59 — the first honest learning loop (pure; STAGED, never engine-consumed).
 export { blockOutcome } from './src/lib/learning/blockOutcome.js';
+// M5-L1 — the D16 staged→learned promotion policy (pure; writes priors ONLY). The
+// ONLY writer of learnedPriors.recoveryRate, and only on promotion (TR-05).
+export { promoteFromOutcomes, PROMOTION_DEFAULTS, PROMOTION_POLICY_VERSION } from './src/lib/learning/promoteFromOutcomes.js';
 export { readinessValidation } from './src/lib/indices/readinessValidation.js';
 // WP-49 (Plan 1) — the discipline + secondary-goal knowledge foundation (STAGED,
 // never engine-consumed yet; Plan 2 flips build onto this).
