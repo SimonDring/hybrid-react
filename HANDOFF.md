@@ -277,9 +277,12 @@ move it to the archive file rather than letting this one grow._
     No work lost, nothing corrupted; recovery is recorded in the SDD ledger.
 
   **⏳ DECISIONS WAITING FOR YOU (in rough order):**
-  1. **🔒 8/9/10** (M6, #190 — plan on main) — functional-discipline identity; the allocator
-     re-seat (standing HIGH-risk pause; its entry gate needs 🔒 9 signed); endurance trigger.
-     This is the whole remaining road — M6 cannot start until you rule these.
+  1. **🔒 9 / 🔒 10** (M6) — the allocator re-seat (standing HIGH-risk pause; its entry gate needs
+     🔒 9 signed before the first extraction commit) and the endurance-scope trigger (Stage 7; the
+     real functional/GPP module rides here). ✅ **🔒 8 RULED 2026-07-16** —
+     `docs/design/m6/RULING-8-functional-identity.md`: functional fitness gets an HONEST LABEL now
+     (stays hypertrophy-base + functional accessories + conditioning; a real GPP module defers to
+     Stage 7 with endurance) and equipment-forced discipline demotion must be SURFACED, never silent.
   2. Standing: I5 flag→default (safety); the ballistic/olympic contraindication science review;
      RLS_STAGING CI secrets (arms the rls-harness job — now valid, currently skipped); Edge
      Function deploys (queue #4); the taper/fixtures calendar signals (M6).
