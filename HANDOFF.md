@@ -277,11 +277,35 @@ move it to the archive file rather than letting this one grow._
     No work lost, nothing corrupted; recovery is recorded in the SDD ledger.
 
   **⏳ DECISIONS WAITING FOR YOU (in rough order):**
-  1. **Apply the M5 migration** (#188) staging-first — the only thing blocking the rest of M5.
-  2. **🔒 7** — rule on the 4 promotion-policy decisions (#190) → then D16 learning is built.
+  1. **Merge M5-L1 (#191)** — the D16 promotion policy (engine, LEARN verb). Green, reviewed,
+     additive-first. See the 2026-07-16 run note below for the TR-05 fix the review caught.
+  2. **Approve the M5-L2 approach (#192, docs-only)** — the app-wiring design to close the loop.
+     Confirm the §7 engineering calls (recoveryRate mapping / windows / evolve WP-59 in place);
+     then I build the live-path wiring. No 🔒 in it — the coaching policy was ruled at 🔒 7.
   3. **🔒 8/9/10** (M6, #190) — functional identity; the allocator re-seat (HIGH-risk); endurance trigger.
   4. Standing: I5 flag→default (safety); the ballistic/olympic contraindication science review;
      RLS_STAGING CI secrets; Edge Function deploys (queue #4); the taper/fixtures calendar signals (M6).
+
+- **Overnight autonomous run (2026-07-16). 🔒 7 ruled → M5-L1 built → M5-L2 designed.**
+  - **🔒 7 RULED (Simon: "go with your recommendations").** Twice-gated promotion (≥3 blocks +
+    confidence floor; last-block-predictive), ~15% shrinkage widening to 30%, deload-rhythm the
+    ONLY armed lever, fast asymmetric demotion. Recorded in `docs/design/m5-learning/PROMOTION-POLICY.md`.
+  - **M5-L1 BUILT — PR #191 (the LEARN verb, engine).** Pure `promoteFromOutcomes`
+    (packages/engine/.../learning/), the exact ruled gates, anti-circular Gate B, provenance-stamped.
+    204/204 + 17/17 + lint clean. **A pre-PR adversarial review caught a real live defect** the
+    goldens couldn't see: the schema-default `recoveryRate:{value:1,source:'population'}` was arming
+    the D7 deload steer for *every real onboarded user* off a population default with zero learning
+    (no golden carries an athlete_model, so it was invisible — the first report falsely read TR-05
+    as confirmed). **Fixed:** the steer now arms ONLY on `source==='learned'`; a new schema-default
+    golden archetype pins the population plan byte-identical; a `tr05-source-gate` regression test
+    has teeth. Additive-only re-baseline (45→46 archetypes, zero existing moved).
+  - **M5-L2 DESIGNED — PR #192 (docs-only, awaiting your approval of the approach).** How the app
+    writes `block_outcomes` on block close, reads a bounded window, feeds `promoteFromOutcomes`,
+    lands the priors. Gated design-first because it's the first LIVE-substrate write on the app path
+    and materialises the evidence the loop learns from. **Rev 2 after its own adversarial review**
+    caught that WP-59's `blockOutcome()` does NOT emit the `recoveryRate` shape rev 1 assumed —
+    rev 2 specifies a new pure `deriveRecoveryObservation` helper + fixes a demotion-drop dosing-
+    safety hole. No 🔒 (coaching ruled at 🔒 7); §7 lists the engineering calls to confirm.
 
 - **🎉 M5 SUBSTRATE IS LIVE ON PROD (2026-07-16, Simon).** All outstanding migrations
   applied via cumulative `db push` (staging → `rls-harness-m5` green → prod); ledger
