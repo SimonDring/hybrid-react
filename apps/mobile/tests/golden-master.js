@@ -127,6 +127,16 @@ const MATRIX = {
   'sport·rugby·advanced·off·4d·armed-d7-low': { ...A({ goalType: 'sport', skbSport: 'rugby', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'advanced', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['wed', 'sat'] }), athlete_model: { learnedPriors: { recoveryRate: { value: 0.75, source: 'learned', confidence: 'moderate' } } } },
   'sport·rugby·advanced·off·4d·armed-d7-high': { ...A({ goalType: 'sport', skbSport: 'rugby', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'advanced', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['wed', 'sat'] }), athlete_model: { learnedPriors: { recoveryRate: { value: 1.2, source: 'learned', confidence: 'moderate' } } } },
 
+  // TR-05 schema-default (M5-L1, audit 06): the state EVERY real onboarded user reaches —
+  // createAthleteModel seeds learnedPriors.recoveryRate {value:1, source:'population'}. This
+  // archetype carries that schema DEFAULT (source≠'learned'). It MUST be byte-identical to the
+  // no-model 'sport·rugby·advanced·off·4d' row (population deload rhythm, steer OFF) — an
+  // unlearned prior does NOT arm D7 (the source-gate at PlanGenerator.js:213). Before the fix
+  // this armed the steer off zero learning (the TR-05 root defect); the regression guard is
+  // packages/engine/tests/tr05-source-gate.test.mjs. NOTE: there is no un-suffixed rugby·advanced·
+  // off·4d row in this matrix, so this pins the population plan directly for that shape.
+  'sport·rugby·advanced·off·4d·schema-default-prior': { ...A({ goalType: 'sport', skbSport: 'rugby', sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'advanced', daysPerWeek: 4, sessionMinutes: 60, days: ['mon', 'tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: {}, sportDays: ['wed', 'sat'] }), athlete_model: { learnedPriors: { recoveryRate: { value: 1, source: 'population', confidence: 'low' }, volumeTolerance: { value: 1, source: 'population', confidence: 'low' } } } },
+
   // Measured-vs-prior pair (audit 07 SR-02 / audit 08 G1): the D1 measured-estimator seam.
   // ONE quality (maxStrength) can be "measured" — from profile.lifts via performanceMetrics —
   // every other quality is always prior-inferred (estimation.js). Identical profile in every

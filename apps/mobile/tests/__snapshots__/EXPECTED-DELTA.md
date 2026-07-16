@@ -187,3 +187,23 @@ EXPECTED-DELTA: 4 lift-bearing archetypes (build·strength·intermediate, measur
 
 ## 2026-07-15 — M3a T2 silent-list burn-down
 EXPECTED-DELTA: additive field only — plan.meta.diagnosis.droppedDemands (with plain-language reasons) now surfaced for sport archetypes (was computed but never reached the plan). [] for build/no-sport. Verified: stripping droppedDemands from both snapshots = zero other diffs across all 45 archetypes. No plan/magnitude/priority change.
+
+## 2026-07-16 — M5-L1 TR-05 source-gate (schema-default prior must not arm D7)
+EXPECTED-DELTA: ADDED archetypes: 1 — `sport·rugby·advanced·off·4d·schema-default-prior`
+(45 → 46). It carries the createAthleteModel schema DEFAULT
+(learnedPriors.recoveryRate {value:1, source:'population'}) and is BYTE-IDENTICAL to the
+no-model rugby·advanced·off·4d plan (population deload rhythm, D7 steer OFF) — proven directly
+in packages/engine/tests/tr05-source-gate.test.mjs.
+- Changed archetypes (content): NONE. The source-gate at PlanGenerator.js:213 now arms the D7
+  deload steer ONLY when learnedPriors.recoveryRate.source === 'learned'. No EXISTING fixture
+  carries a source:'population' recoveryRate in profile.athlete_model, so nothing moved:
+  the two `armed-d7-{low,high}` fixtures were already source:'learned' → still arm, byte-identical;
+  the `position-*` fixtures carry no learnedPriors → unarmed both ways; every no-model archetype
+  → null both ways. Verified: golden compare flagged ONLY the one new key (no mismatch on any of
+  the 45 existing).
+- Why: TR-05 (audit 06) hard rule — a schema-default/unlearned prior must never arm a learned
+  steer. createAthleteModel seeds source:'population' on every real onboarded user; gating on
+  `value != null` alone armed that default off ZERO learning (a live additive-first defect for
+  real users, hidden because goldens carry no athlete_model). M5-L1 deliverable (spec §2).
+- No KSV/engine-version change (arming-condition fix; no science table, no plan-shape change for
+  any snapshotted archetype). Regression guard: tr05-source-gate.test.mjs.
