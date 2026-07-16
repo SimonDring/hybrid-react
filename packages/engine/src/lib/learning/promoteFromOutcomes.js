@@ -117,7 +117,11 @@ function shrink(rawEstimate, pop, cap) {
  * @param {object} [opts]
  *   opts.current   — the previous promotion result (or an athlete model's learnedPriors),
  *                    used ONLY to know whether a LEARNED prior currently exists (demotion).
- *                    Accepts { tier:'learned' } | { provenance:{tier} } | { learnedPriors:{recoveryRate} }.
+ *                    Accepts { tier:'learned' } | { provenance:{tier:'learned'} } |
+ *                    { learnedPriors:{recoveryRate:{source:'learned'}} }. NOTE: the
+ *                    learnedPriors shape requires source==='learned' — do NOT pass a whole
+ *                    model's learnedPriors, whose recoveryRate defaults to source:'population'
+ *                    (that would read as "learned" for every athlete). Prefer { tier:'learned' }.
  *   opts.thresholds — partial override of PROMOTION_DEFAULTS (test seams).
  * @returns {{ learnedPriors: object, staged: object, provenance: object }}
  *   learnedPriors — { recoveryRate: { value, source:'learned', confidence } } ONLY on promotion,
@@ -137,11 +141,17 @@ export function promoteFromOutcomes(blockOutcomeHistory, populationPrior = 1, op
   };
 
   // Was a LEARNED recoveryRate prior in force before this pass? (drives demotion, §2/§d)
+  // CRITICAL (TR-05): a schema-default athlete model carries learnedPriors.recoveryRate =
+  // {source:'population'} for EVERYONE, so the presence of a recoveryRate object is NOT
+  // evidence of learning — only source==='learned' is. Testing existence alone made every
+  // model look "learned", flipping unlearned athletes into the demotion branch (which arms
+  // a learned prior without the gates). The learnedPriors shape therefore requires the
+  // source stamp; { tier:'learned' } / { provenance:{tier:'learned'} } remain accepted.
   const cur = opts.current || null;
   const wasLearned = !!(cur && (
     cur.tier === 'learned'
     || (cur.provenance && cur.provenance.tier === 'learned')
-    || (cur.learnedPriors && cur.learnedPriors.recoveryRate)
+    || (cur.learnedPriors && cur.learnedPriors.recoveryRate && cur.learnedPriors.recoveryRate.source === 'learned')
   ));
 
   // ── Empty / no evidence → population tier, byte-identical (additive-first) ──

@@ -88,6 +88,8 @@ export { blockOutcome } from './src/lib/learning/blockOutcome.js';
 // M5-L1 — the D16 staged→learned promotion policy (pure; writes priors ONLY). The
 // ONLY writer of learnedPriors.recoveryRate, and only on promotion (TR-05).
 export { promoteFromOutcomes, PROMOTION_DEFAULTS, PROMOTION_POLICY_VERSION } from './src/lib/learning/promoteFromOutcomes.js';
+// M5-L2 — materialises one block's recovery observation for the substrate row (pure).
+export { deriveRecoveryObservation } from './src/lib/learning/deriveRecoveryObservation.js';
 export { readinessValidation } from './src/lib/indices/readinessValidation.js';
 // WP-49 (Plan 1) — the discipline + secondary-goal knowledge foundation (STAGED,
 // never engine-consumed yet; Plan 2 flips build onto this).
