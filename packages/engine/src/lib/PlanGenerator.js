@@ -210,7 +210,15 @@ export function generatePlan(profile = {}, opts = {}) {
   // (block shape from the diagnosis × recoverability, not the style enum). Gated + reversible;
   // no-prior profiles keep the template (BYTE-IDENTICAL). One blockPlan feeds both the steer
   // and meta.diagnosis. blockPlanToSplit returns null if it can't fit → template fallback.
-  const steerRecoveryRate = (profile.athlete_model && profile.athlete_model.learnedPriors && profile.athlete_model.learnedPriors.recoveryRate && profile.athlete_model.learnedPriors.recoveryRate.value) ?? null;
+  //
+  // TR-05 (audit 06, M5-L1 hard rule): a schema-DEFAULT prior must NEVER arm the steer. Only a
+  // GENUINELY-LEARNED prior (source==='learned', stamped by learning/promoteFromOutcomes on
+  // promotion) arms — a population/staged default resolves to null → population deload rhythm,
+  // byte-identical. createAthleteModel seeds recoveryRate {value:1, source:'population'} on every
+  // real onboarded user; gating on value alone armed that population default off ZERO learning
+  // (the exact TR-05 root defect this seam exists to prevent). The source check closes it.
+  const lpRecovery = profile.athlete_model && profile.athlete_model.learnedPriors && profile.athlete_model.learnedPriors.recoveryRate;
+  const steerRecoveryRate = (lpRecovery && lpRecovery.source === 'learned' && lpRecovery.value != null) ? lpRecovery.value : null;
   const blockPlan = deriveBlockObjective({
     priorityQualities: diag.priorityQualities,
     limitingFactors: perf.limitingFactors || [],
