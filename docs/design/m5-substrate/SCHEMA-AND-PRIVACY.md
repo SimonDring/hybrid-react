@@ -468,9 +468,13 @@ clamps the soft trend metrics — so a member can neither publish a false availa
 value crossing another person's boundary. Raw vitals never appear because no raw column exists.
 
 `player_status` itself remains the *current-row* surface (unchanged); `squad_signal_snapshots`
-is its dated history. The `team_members_cleanup_status` F3 trigger is extended to also delete a
-departed member's `squad_signal_snapshots` rows; the `consent_revocation_cleanup` trigger (§2.2)
-does the same on revocation.
+is its dated history. Per 🔒 D1 (§2.2, §6.5), the crossing is ended **at the policy layer only**
+— an ended membership (`coach_reads_member` → false) OR a revoked grant (`has_active_grant` →
+false) stops the coach's read forward, and the athlete's own snapshot rows are **kept, never
+deleted** (they are the athlete's dated career record, which Art 22 export must return). There is
+therefore **no** `consent_revocation_cleanup` trigger, and the `team_members_cleanup_status` F3
+trigger is **not** extended to `squad_signal_snapshots` — it still deletes only the pure
+coach-surface `player_status` row. Erasure (`delete_user`) stays the athlete's only destructive path.
 
 ### 3.5 The RLS proof set (what the harness must prove)
 

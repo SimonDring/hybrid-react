@@ -561,6 +561,24 @@ begin
   delete from public.training_plans    where user_id = uid;
   delete from public.wearable_connections where user_id = uid;
   delete from public.player_status     where user_id = uid;
+
+  -- M5 outcomes substrate (20260713, C3): the nine owner-private tables, the
+  -- cross-person snapshot, and the consent pair — explicitly erased (belt-and-
+  -- suspenders beyond ON DELETE CASCADE). Forward-referenced (defined later in
+  -- this file); plpgsql bodies are only syntax-checked at CREATE, so this is fine.
+  delete from public.block_outcomes             where user_id = uid;
+  delete from public.session_outcomes           where user_id = uid;
+  delete from public.readiness_snapshots        where user_id = uid;
+  delete from public.monitoring_entries         where user_id = uid;
+  delete from public.test_results               where user_id = uid;
+  delete from public.match_performances         where user_id = uid;
+  delete from public.external_load_observations where user_id = uid;
+  delete from public.baselines                  where user_id = uid;
+  delete from public.served_artefacts           where user_id = uid;
+  delete from public.squad_signal_snapshots     where user_id = uid;
+  delete from public.consent_events             where grantor_user_id = uid;
+  delete from public.consent_grants             where grantor_user_id = uid;
+
   delete from public.team_members      where user_id = uid;   -- teams they FOUNDED cascade via teams.created_by
   delete from public.users             where id = uid;
 
@@ -1231,9 +1249,431 @@ grant execute on function public.consume_oauth_state(text, text) to service_role
 revoke execute on function public.consume_oauth_state(text, text) from anon, authenticated;  -- consume is service_role-only
 
 -- ============================================================================
--- Done. Verify in Table Editor — you should see all 19 tables:
+-- M5 OUTCOMES SUBSTRATE — the athlete's append-only career record + consent +
+-- RLS (migration 20260713_m5_outcomes_substrate.sql).
+-- Design: docs/design/m5-substrate/SCHEMA-AND-PRIVACY.md (privacy panel SOUND
+-- WITH CONDITIONS + 🔒 6). The platform's most privacy-sensitive surface.
+--
+-- FOUR LAWS ENFORCED IN THE SCHEMA (design §0):
+--   1. Append-only evidence — no UPDATE policy + a guard trigger; corrections
+--      append via supersedes_id.
+--   2. Owner-private at rest — auth.uid() = user_id on every table; NO coach
+--      policy on any raw-bearing table.
+--   3. Only a derived roll-up crosses a person boundary, and only by consent —
+--      squad_signal_snapshots (no raw-vital column) requires BOTH active
+--      membership (coach_reads_member) AND an active grant (has_active_grant).
+--   4. Every derived row is stamped engine_version × knowledge_set_version.
+--   Revocation is POLICY-ONLY (🔒 D1): the athlete keeps their own history.
+-- ============================================================================
+
+-- Append-only guard (design §3.1) — belt-and-suspenders on the no-UPDATE-policy
+-- default-deny.
+create or replace function public.forbid_evidence_update()
+returns trigger language plpgsql as $$
+begin
+  raise exception 'evidence rows are append-only; insert a superseding row (supersedes_id)';
+end; $$;
+-- (has_active_grant is defined below, after consent_grants exists — it is a
+--  LANGUAGE sql function that references that table.)
+
+-- ── the nine owner-private, append-only tables (design §1.3) ─────────────────
+create table if not exists public.block_outcomes (
+  id                    uuid primary key default gen_random_uuid(),
+  user_id               uuid not null references public.users(id) on delete cascade,
+  created_at            timestamptz not null default now(),
+  supersedes_id         uuid references public.block_outcomes(id),
+  engine_version        text not null,
+  knowledge_set_version text not null,
+  method_id             text not null,
+  method_version        text not null,
+  computed_for          date,
+  input_refs            jsonb not null default '[]'::jsonb,
+  plan_id               uuid references public.training_plans(id) on delete set null,
+  block_index           int,
+  period_start          date,
+  period_end            date,
+  goal_snapshot         jsonb,
+  planned               jsonb,
+  observed              jsonb,
+  outcome_signals       jsonb
+);
+create index if not exists idx_block_outcomes_user on public.block_outcomes(user_id, created_at desc);
+
+create table if not exists public.session_outcomes (
+  id                    uuid primary key default gen_random_uuid(),
+  user_id               uuid not null references public.users(id) on delete cascade,
+  created_at            timestamptz not null default now(),
+  supersedes_id         uuid references public.session_outcomes(id),
+  engine_version        text not null,
+  knowledge_set_version text not null,
+  method_id             text not null,
+  method_version        text not null,
+  computed_for          date,
+  input_refs            jsonb not null default '[]'::jsonb,
+  session_id            uuid references public.sessions(id) on delete set null,
+  completed_on          date,
+  adherence_pct         numeric,
+  volume_by_quality     jsonb,
+  e1rm_by_lift          jsonb,
+  session_load          numeric
+);
+create index if not exists idx_session_outcomes_user on public.session_outcomes(user_id, created_at desc);
+
+create table if not exists public.readiness_snapshots (
+  id                    uuid primary key default gen_random_uuid(),
+  user_id               uuid not null references public.users(id) on delete cascade,
+  created_at            timestamptz not null default now(),
+  supersedes_id         uuid references public.readiness_snapshots(id),
+  engine_version        text not null,
+  knowledge_set_version text not null,
+  method_id             text not null,
+  method_version        text not null,
+  computed_for          date,
+  input_refs            jsonb not null default '[]'::jsonb,
+  readiness             int,
+  load_state            text,
+  acwr                  numeric,
+  baseline_maturity     numeric
+);
+create index if not exists idx_readiness_snapshots_user on public.readiness_snapshots(user_id, created_at desc);
+
+create table if not exists public.monitoring_entries (
+  id                    uuid primary key default gen_random_uuid(),
+  user_id               uuid not null references public.users(id) on delete cascade,
+  created_at            timestamptz not null default now(),
+  supersedes_id         uuid references public.monitoring_entries(id),
+  metric_id             text not null,
+  provenance_class      text not null,
+  reliability_tag       text,
+  source_system         text,
+  observed_at           timestamptz not null,
+  quality_flags         jsonb not null default '{}'::jsonb,
+  value                 numeric,
+  unit                  text,
+  window_start          timestamptz,
+  window_end            timestamptz
+);
+create index if not exists idx_monitoring_entries_user on public.monitoring_entries(user_id, observed_at desc);
+create index if not exists idx_monitoring_entries_metric on public.monitoring_entries(user_id, metric_id, observed_at desc);
+
+create table if not exists public.test_results (
+  id                    uuid primary key default gen_random_uuid(),
+  user_id               uuid not null references public.users(id) on delete cascade,
+  created_at            timestamptz not null default now(),
+  supersedes_id         uuid references public.test_results(id),
+  metric_id             text not null,
+  provenance_class      text not null,
+  reliability_tag       text,
+  source_system         text,
+  observed_at           timestamptz not null,
+  quality_flags         jsonb not null default '{}'::jsonb,
+  assessment_id         text not null,
+  protocol_version      text not null,
+  raw_values            jsonb not null,
+  derived_score         numeric,
+  score_map_version     text,
+  conditions            jsonb
+);
+create index if not exists idx_test_results_user on public.test_results(user_id, observed_at desc);
+
+create table if not exists public.match_performances (
+  id                    uuid primary key default gen_random_uuid(),
+  user_id               uuid not null references public.users(id) on delete cascade,
+  created_at            timestamptz not null default now(),
+  supersedes_id         uuid references public.match_performances(id),
+  metric_id             text not null,
+  provenance_class      text not null,
+  reliability_tag       text,
+  source_system         text,
+  observed_at           timestamptz not null,
+  quality_flags         jsonb not null default '{}'::jsonb,
+  fixture_ref           text,
+  played_on             date,
+  minutes               numeric,
+  availability_status   text,
+  return_horizon        date,
+  output_kpis           jsonb,
+  context               jsonb
+);
+create index if not exists idx_match_performances_user on public.match_performances(user_id, played_on desc);
+
+create table if not exists public.external_load_observations (
+  id                    uuid primary key default gen_random_uuid(),
+  user_id               uuid not null references public.users(id) on delete cascade,
+  created_at            timestamptz not null default now(),
+  supersedes_id         uuid references public.external_load_observations(id),
+  metric_id             text not null,
+  provenance_class      text not null,
+  reliability_tag       text,
+  source_system         text,
+  observed_at           timestamptz not null,
+  quality_flags         jsonb not null default '{}'::jsonb,
+  session_ref           text,
+  observed_on           date,
+  distance_m            numeric,
+  sprint_count          int,
+  high_speed_m          numeric,
+  pitch_rpe             numeric,
+  raw                   jsonb
+);
+create index if not exists idx_external_load_user on public.external_load_observations(user_id, observed_on desc);
+
+create table if not exists public.baselines (
+  id                    uuid primary key default gen_random_uuid(),
+  user_id               uuid not null references public.users(id) on delete cascade,
+  created_at            timestamptz not null default now(),
+  supersedes_id         uuid references public.baselines(id),
+  engine_version        text not null,
+  knowledge_set_version text not null,
+  method_id             text not null,
+  method_version        text not null,
+  computed_for          date,
+  input_refs            jsonb not null default '[]'::jsonb,
+  metric_id             text not null,
+  central               numeric,
+  spread                numeric,
+  maturity              numeric
+);
+create index if not exists idx_baselines_user on public.baselines(user_id, metric_id, created_at desc);
+
+create table if not exists public.served_artefacts (
+  id                    uuid primary key default gen_random_uuid(),
+  user_id               uuid not null references public.users(id) on delete cascade,
+  created_at            timestamptz not null default now(),
+  supersedes_id         uuid references public.served_artefacts(id),
+  engine_version        text not null,
+  knowledge_set_version text not null,
+  method_id             text not null,
+  method_version        text not null,
+  computed_for          date,
+  input_refs            jsonb not null default '[]'::jsonb,
+  artefact_type         text not null,
+  audience              text not null,
+  statement             jsonb not null,
+  derivation            jsonb not null,
+  quality               jsonb not null,
+  authority             jsonb not null,
+  privacy_class         text not null,
+  served_at             timestamptz not null default now()
+);
+create index if not exists idx_served_artefacts_user on public.served_artefacts(user_id, served_at desc);
+
+-- RLS + append-only guard for the nine owner-private tables (design §3.1):
+-- read/insert/delete YOUR OWN; NO update policy (append-only); NO coach policy.
+do $$
+declare t text;
+begin
+  foreach t in array array[
+    'block_outcomes','session_outcomes','readiness_snapshots','monitoring_entries',
+    'test_results','match_performances','external_load_observations','baselines',
+    'served_artefacts'
+  ]
+  loop
+    execute format('alter table public.%I enable row level security;', t);
+    execute format('drop policy if exists "own rows read" on public.%I;', t);
+    execute format('create policy "own rows read" on public.%I for select using (auth.uid() = user_id);', t);
+    execute format('drop policy if exists "own rows insert" on public.%I;', t);
+    execute format('create policy "own rows insert" on public.%I for insert with check (auth.uid() = user_id);', t);
+    execute format('drop policy if exists "own rows delete" on public.%I;', t);
+    execute format('create policy "own rows delete" on public.%I for delete using (auth.uid() = user_id);', t);
+    execute format('drop trigger if exists %I_no_update on public.%I;', t, t);
+    execute format('create trigger %I_no_update before update on public.%I for each row execute function public.forbid_evidence_update();', t, t);
+  end loop;
+end $$;
+
+-- ── consent pair (design §2; Art 22) ────────────────────────────────────────
+create table if not exists public.consent_grants (
+  id               uuid primary key default gen_random_uuid(),
+  grantor_user_id  uuid not null references public.users(id) on delete cascade,
+  grantee_kind     text not null,
+  grantee_team_id  uuid references public.teams(id) on delete cascade,
+  scope            text not null,
+  granularity      jsonb not null default '{}'::jsonb,
+  secondary_use    boolean not null default false,
+  purpose          text,
+  ai_processing    boolean not null default false,
+  granted_at       timestamptz not null default now(),
+  revoked_at       timestamptz,
+  created_at       timestamptz not null default now(),
+  updated_at       timestamptz not null default now(),
+  unique (grantor_user_id, grantee_kind, grantee_team_id, scope)
+);
+create index if not exists idx_consent_grants_grantor on public.consent_grants(grantor_user_id);
+create index if not exists idx_consent_grants_team on public.consent_grants(grantee_team_id);
+
+create table if not exists public.consent_events (
+  id               uuid primary key default gen_random_uuid(),
+  grant_id         uuid references public.consent_grants(id) on delete set null,
+  grantor_user_id  uuid not null references public.users(id) on delete cascade,
+  event            text not null,
+  detail           jsonb not null default '{}'::jsonb,
+  created_at       timestamptz not null default now()
+);
+create index if not exists idx_consent_events_grantor on public.consent_events(grantor_user_id, created_at desc);
+create index if not exists idx_consent_events_grant on public.consent_events(grant_id);
+
+drop trigger if exists trg_consent_grants_updated on public.consent_grants;
+create trigger trg_consent_grants_updated
+  before update on public.consent_grants
+  for each row execute function set_updated_at();
+
+-- every write to consent_grants appends a consent_events audit row (design §2.1)
+create or replace function public.consent_grants_audit()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  if tg_op = 'INSERT' then
+    insert into consent_events (grant_id, grantor_user_id, event, detail)
+      values (new.id, new.grantor_user_id, 'granted',
+              jsonb_build_object('scope', new.scope, 'grantee_kind', new.grantee_kind,
+                                 'grantee_team_id', new.grantee_team_id,
+                                 'secondary_use', new.secondary_use,
+                                 'ai_processing', new.ai_processing));
+  elsif tg_op = 'UPDATE' then
+    if new.revoked_at is not null and old.revoked_at is null then
+      insert into consent_events (grant_id, grantor_user_id, event, detail)
+        values (new.id, new.grantor_user_id, 'revoked', jsonb_build_object('scope', new.scope));
+    elsif new.granularity is distinct from old.granularity then
+      insert into consent_events (grant_id, grantor_user_id, event, detail)
+        values (new.id, new.grantor_user_id, 'scope_narrowed', jsonb_build_object('scope', new.scope));
+    end if;
+  end if;
+  return new;
+end; $$;
+
+drop trigger if exists consent_grants_audit on public.consent_grants;
+create trigger consent_grants_audit
+  after insert or update on public.consent_grants
+  for each row execute function public.consent_grants_audit();
+
+-- RLS — consent_grants (design §3.2, B1: RLS MUST be on or the who-consented map leaks)
+alter table public.consent_grants enable row level security;
+drop policy if exists "grantor manages grants" on public.consent_grants;
+create policy "grantor manages grants" on public.consent_grants
+  for all using (auth.uid() = grantor_user_id) with check (auth.uid() = grantor_user_id);
+drop policy if exists "named coach reads their grants" on public.consent_grants;
+create policy "named coach reads their grants" on public.consent_grants
+  for select using (grantee_team_id is not null and is_coach_of_team(grantee_team_id));
+
+-- RLS — consent_events (design §3.2, B1): owner reads own; inserts trigger-only
+alter table public.consent_events enable row level security;
+drop policy if exists "own consent events read" on public.consent_events;
+create policy "own consent events read" on public.consent_events
+  for select using (auth.uid() = grantor_user_id);
+
+-- has_active_grant (design §3.3; C2 oracle lockdown) — SECURITY DEFINER + pinned
+-- search_path, gated on is_coach_of_team so it is constantly false for any
+-- non-coach of `team` (never a consent oracle), mirroring coach_reads_member.
+-- Defined here because it references consent_grants (must already exist).
+create or replace function public.has_active_grant(member uuid, team uuid, want_scope text)
+returns boolean language sql security definer stable
+set search_path = public as $$
+  select is_coach_of_team(team)
+     and exists (
+       select 1 from consent_grants g
+       where g.grantor_user_id = member
+         and g.grantee_team_id  = team
+         and g.scope            = want_scope
+         and g.revoked_at is null
+     );
+$$;
+
+-- F1 (leak review) — close the readiness/injury RPC oracle. derive_injury_status
+-- / latest_readiness / player_display_name (20260708/09) are SECURITY DEFINER over
+-- an ARBITRARY target uuid and were PUBLIC-executable via PostgREST RPC — a
+-- cross-user, unconsented oracle bypassing membership+consent (same class as C2).
+-- The server-truth triggers still call them (DEFINER — checked against the owner,
+-- not the caller). No client/edge code calls them by RPC.
+revoke execute on function public.derive_injury_status(uuid) from anon, authenticated;
+revoke execute on function public.latest_readiness(uuid)     from anon, authenticated;
+revoke execute on function public.player_display_name(uuid)  from anon, authenticated;
+
+-- ── the ONE cross-person table — squad_signal_snapshots (design §3.4) ────────
+create table if not exists public.squad_signal_snapshots (
+  id                    uuid primary key default gen_random_uuid(),
+  user_id               uuid not null references public.users(id) on delete cascade,
+  team_id               uuid not null references public.teams(id) on delete cascade,
+  engine_version        text not null,
+  knowledge_set_version text not null,
+  method_id             text not null,
+  method_version        text not null,
+  computed_for          date,
+  input_refs            jsonb not null default '[]'::jsonb,
+  readiness             int,
+  load_state            text,
+  acwr                  numeric,
+  adherence_pct         numeric,
+  injury_status         text,
+  confidence            numeric,
+  created_at            timestamptz not null default now(),
+  supersedes_id         uuid references public.squad_signal_snapshots(id)
+  -- NOTE: NO raw-vital column exists. Adding one is a schema change (Art 11).
+);
+create index if not exists idx_squad_signal_snapshots_team
+  on public.squad_signal_snapshots(team_id, user_id, created_at desc);
+create index if not exists idx_squad_signal_snapshots_user
+  on public.squad_signal_snapshots(user_id, created_at desc);
+
+alter table public.squad_signal_snapshots
+  drop constraint if exists chk_squad_signal_texts,
+  add  constraint chk_squad_signal_texts
+       check (char_length(coalesce(load_state, '')) <= 40
+              and char_length(coalesce(injury_status, '')) <= 40) not valid;
+
+-- C1 — server-truth (BEFORE INSERT): override injury_status/readiness from the
+-- member's OWN owner-private data, clamp the soft metrics (like player_status).
+create or replace function public.squad_signal_snapshots_server_truth()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  new.injury_status := derive_injury_status(new.user_id);
+  new.readiness     := latest_readiness(new.user_id);
+  if new.adherence_pct is not null then
+    new.adherence_pct := greatest(0, least(100, new.adherence_pct));
+  end if;
+  if new.acwr is not null and new.acwr < 0 then new.acwr := null; end if;
+  if new.confidence is not null then
+    new.confidence := greatest(0, least(1, new.confidence));
+  end if;
+  if new.load_state is not null
+     and new.load_state not in ('no-data','ramping','balanced','high','overreaching')
+  then new.load_state := null; end if;
+  return new;
+end; $$;
+
+drop trigger if exists squad_signal_snapshots_server_truth on public.squad_signal_snapshots;
+create trigger squad_signal_snapshots_server_truth
+  before insert on public.squad_signal_snapshots
+  for each row execute function public.squad_signal_snapshots_server_truth();
+
+drop trigger if exists squad_signal_snapshots_no_update on public.squad_signal_snapshots;
+create trigger squad_signal_snapshots_no_update
+  before update on public.squad_signal_snapshots
+  for each row execute function public.forbid_evidence_update();
+
+alter table public.squad_signal_snapshots enable row level security;
+drop policy if exists "own snapshot insert" on public.squad_signal_snapshots;
+create policy "own snapshot insert" on public.squad_signal_snapshots
+  for insert with check (auth.uid() = user_id and is_member_of_team(team_id));
+drop policy if exists "own snapshot delete" on public.squad_signal_snapshots;
+create policy "own snapshot delete" on public.squad_signal_snapshots
+  for delete using (auth.uid() = user_id);
+-- THE CROSSING: member reads own; a coach reads ONLY with active membership AND grant.
+drop policy if exists "member or consented coach" on public.squad_signal_snapshots;
+create policy "member or consented coach" on public.squad_signal_snapshots
+  for select using (
+    auth.uid() = user_id
+    or (coach_reads_member(team_id, user_id)
+        and has_active_grant(user_id, team_id, 'squad_signals'))
+  );
+-- (delete_user() above already erases all 12 M5 tables — C3.)
+
+-- ============================================================================
+-- Done. Verify in Table Editor — you should see all 31 tables:
 -- users, training_plans, phases, weeks, sessions, session_logs, set_logs,
 -- weekly_checkins, reassessments, daily_metrics, injuries, wearable_readings,
 -- ai_recommendations, wearable_connections, workouts, teams, team_members,
--- player_status, oauth_states.
+-- player_status, oauth_states,
+-- -- M5 outcomes substrate (20260713):
+-- block_outcomes, session_outcomes, readiness_snapshots, monitoring_entries,
+-- test_results, match_performances, external_load_observations, baselines,
+-- served_artefacts, squad_signal_snapshots, consent_grants, consent_events.
 -- ============================================================================

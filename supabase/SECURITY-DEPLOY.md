@@ -28,6 +28,7 @@ Everything below was proven on staging: `node supabase/tests/rls-harness.mjs` �
 | `migrations/20260710_team_join_codes.sql` | Team founding + join-code invites (create_team/join_team_with_code/rotate RPCs) | DB migration |
 | `migrations/20260711_team_scoping.sql` | WP-50: `player_status` coach reads become TEAM-scoped (`is_coach_of_team`, drops `is_coach_of`); `teams.join_code` column-revoked + coach-only `get_team_join_code` RPC. **Apply to STAGING first and re-run the harness (new WP-50 cases) — not yet staging-proven.** | DB migration |
 | `migrations/20260712_player_status_membership_scope.sql` | F3 (2026-07-09 data review — TEAM DATA ISOLATION): an ENDED membership ends the coach's read of `player_status`. Coach SELECT now requires the player's ACTIVE membership (`coach_reads_member`); a roster DELETE or status→'left' triggers cleanup of the derived row; one-time orphan backfill. **Apply to STAGING first and run the harness (new F3 cases) — depends on 20260711 being applied.** | DB migration |
+| `migrations/20260713_m5_outcomes_substrate.sql` | M5 outcomes substrate: 12 new tables (nine owner-private append-only; the cross-person derived `squad_signal_snapshots`; the consent pair) + `has_active_grant()` + append-only/server-truth/consent-audit triggers + extended `delete_user()`. Owner-private at rest; the one crossing needs active membership AND active consent; revocation is policy-only (athlete keeps history). **Apply to STAGING first and run `rls-harness-m5.mjs` (P1–P21 + C1/C2/C3) — see the dedicated M5 section below.** | DB migration |
 | `functions/fitbit-auth-callback` | resolves `state` via `consume_oauth_state` (S1) | Edge Function |
 | `functions/strava-auth-callback` | resolves `state` via `consume_oauth_state` (S1) | Edge Function |
 | `functions/fitbit-sync` | stops logging raw vitals (S4) + 92-day clamp (S8) | Edge Function |
@@ -72,6 +73,45 @@ Temporarily point `apps/mobile/.env.local` at **production**, then
 prod's ref, so to verify prod you'd flip the `PROD_REF` guard off for one run **or** just
 trust the staging proof (identical SQL). Simplest: trust staging (57/57 on identical
 migrations) and spot-check in the app that wearable connect still works.
+
+## M5 outcomes substrate — the append-only career record + consent (`20260713`)
+
+The platform's **most privacy-sensitive migration**: it builds the athlete's
+append-only health record, the consent model, and the one consent-gated
+cross-person read. It is AUTHORED but NOT APPLIED by any agent — you apply it,
+**staging first**, and only promote to prod once the extended harness is green.
+Its guarantees are structural (design `docs/design/m5-substrate/SCHEMA-AND-PRIVACY.md`):
+owner-private at rest, no raw-vital column on the one cross-person table, revocation
+is policy-only (the athlete keeps their history). Do not shortcut the harness gate —
+"policies ship only with their proofs".
+
+```bash
+cd ~/Code/hybrid-react
+
+# 1. Point the CLI at STAGING (the safe default) and confirm .env.local is staging.
+supabase link --project-ref nqlzashaqyqbwdlnaadw
+
+# 2. Apply the migration to STAGING (db push is cumulative + ordered).
+supabase db push          # dry-run first if you like: supabase db push --dry-run
+
+# 3. Prove it on staging — the WHOLE M5 proof set must be green (P1–P21 + C1/C2/C3).
+#    (apps/mobile/.env.local must point at STAGING; the harness hard-refuses prod.)
+node supabase/tests/rls-harness-m5.mjs      # expect: all passed, 0 failed
+#    (also re-run the base harness — node supabase/tests/rls-harness.mjs — unchanged.)
+
+# 4. Only after step 3 is green: point at PRODUCTION and apply.
+supabase link --project-ref ggldomlmycvpwtzzjzcd
+supabase db push          # applies 20260713 (and any earlier pending migration)
+
+# 5. Verify on prod (spot-check): a coach still reads ONLY their derived board,
+#    and the new substrate tables return nothing cross-user. Then re-point at staging.
+supabase link --project-ref nqlzashaqyqbwdlnaadw
+```
+
+No Edge Function changes ride with M5 — it is DB-only. The async readers (D17
+analytics, D16 promotion) stay flag-OFF; the plan path never reads the substrate,
+so applying the tables changes no coaching behaviour (rollback = disable readers,
+data retained — design §6.3).
 
 ## Dashboard settings (not in the repo — your call)
 - **Auth → Confirm email: ON** (S14) — closes the open-signup abuse surface.
