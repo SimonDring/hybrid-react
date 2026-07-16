@@ -49,22 +49,47 @@ jobs:
   # one-time setup Simon would do to arm it (Settings → Secrets and variables →
   # Actions → add RLS_STAGING_SUPABASE_URL / RLS_STAGING_SUPABASE_ANON_KEY, pointed
   # at hybrid-training-staging, never at production).
+  # NOTE (2026-07-16): the `secrets` context is NOT available in a job-level `if:`
+  # — GitHub rejects the whole workflow as invalid ("workflow file issue", 0s), which
+  # silently disabled the ENTIRE gate (engine-suite included) since this file was added.
+  # The secret-presence gate is therefore a STEP-level guard: `secrets` is read only in
+  # a step `env:` (allowed), a first step publishes `armed`, and every real step runs
+  # `if: steps.gate.outputs.armed == 'true'`. Unarmed ⇒ steps skip, the JOB still
+  # succeeds (skipped, not failed, not silently absent) — the original intent, now valid.
   rls-harness:
     runs-on: ubuntu-latest
-    if: ${{ secrets.RLS_STAGING_SUPABASE_URL != '' }}
     steps:
+      - name: Gate on staging-secret presence
+        id: gate
+        env:
+          RLS_STAGING_SUPABASE_URL: ${{ secrets.RLS_STAGING_SUPABASE_URL }}
+        run: |
+          if [ -n "$RLS_STAGING_SUPABASE_URL" ]; then
+            echo "armed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "armed=false" >> "$GITHUB_OUTPUT"
+            echo "No RLS_STAGING_SUPABASE_URL secret — RLS harness skipped (see test.yml header)." >> "$GITHUB_STEP_SUMMARY"
+          fi
       - uses: actions/checkout@v4
+        if: steps.gate.outputs.armed == 'true'
       - uses: actions/setup-node@v4
+        if: steps.gate.outputs.armed == 'true'
         with:
           node-version: 20
       - run: npm ci
+        if: steps.gate.outputs.armed == 'true'
       - name: Write staging credentials (the harness reads apps/mobile/.env.local)
+        if: steps.gate.outputs.armed == 'true'
+        env:
+          RLS_STAGING_SUPABASE_URL: ${{ secrets.RLS_STAGING_SUPABASE_URL }}
+          RLS_STAGING_SUPABASE_ANON_KEY: ${{ secrets.RLS_STAGING_SUPABASE_ANON_KEY }}
         run: |
           cat > apps/mobile/.env.local <<EOF
-          VITE_SUPABASE_URL="${{ secrets.RLS_STAGING_SUPABASE_URL }}"
-          VITE_SUPABASE_ANON_KEY="${{ secrets.RLS_STAGING_SUPABASE_ANON_KEY }}"
+          VITE_SUPABASE_URL="$RLS_STAGING_SUPABASE_URL"
+          VITE_SUPABASE_ANON_KEY="$RLS_STAGING_SUPABASE_ANON_KEY"
           EOF
       - run: node supabase/tests/rls-harness.mjs
+        if: steps.gate.outputs.armed == 'true'
 
   # Expected-delta guard (Phase 3 M0 T4 — 13-VALIDATION-STRATEGY.md §2.3, the
   # TR-01 recurrence guard made mechanical). TR-01 was a real regression
