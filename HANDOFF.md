@@ -277,13 +277,21 @@ move it to the archive file rather than letting this one grow._
     No work lost, nothing corrupted; recovery is recorded in the SDD ledger.
 
   **⏳ DECISIONS WAITING FOR YOU (in rough order):**
-  1. **Merge M5-L2 (#194)** — the app-side wiring that CLOSES the learning loop (engine+app).
-     Green (first M5 work validated by the restored CI gate), additive-first, reviewed twice.
-     ⚠ Once deployed it writes the LIVE block_outcomes substrate on block close — your merge.
-  2. **🔒 8/9/10** (M6, #190) — functional identity; the allocator re-seat (HIGH-risk); endurance trigger.
-  3. Standing: I5 flag→default (safety); the ballistic/olympic contraindication science review;
+  1. **🔒 8/9/10** (M6, #190 — plan on main) — functional-discipline identity; the allocator
+     re-seat (standing HIGH-risk pause; its entry gate needs 🔒 9 signed); endurance trigger.
+     This is the whole remaining road — M6 cannot start until you rule these.
+  2. Standing: I5 flag→default (safety); the ballistic/olympic contraindication science review;
      RLS_STAGING CI secrets (arms the rls-harness job — now valid, currently skipped); Edge
      Function deploys (queue #4); the taper/fixtures calendar signals (M6).
+
+- **🎉 M5-L2 LIVE ON PROD (2026-07-16, #194 merged, deploy green).** The D16 LEARN verb is closed
+  end to end: on block close the app materialises a recovery observation, appends it to the live
+  append-only owner-private block_outcomes substrate, reads a bounded window, runs the pure
+  promotion policy, and lands the result. **The learning loop is real** — but INERT for every
+  athlete until they accrue ≥3 real blocks of recovery evidence AND both gates pass (additive-first:
+  no existing plan changed on deploy; offline-safe; the first behaviour change for anyone is an
+  earned promotion). Phase 3 milestone M5 (measure → learn) is COMPLETE. Next up the roadmap: M6
+  (structure & breadth — all 🔒 8/9/10, Simon's).
 
 - **2026-07-16 (cont.) — M5-L1 + M5-L2 MERGED/BUILT; CI gate restored.**
   - **#191 (M5-L1) + #192 (M5-L2 design) MERGED** (Simon).
