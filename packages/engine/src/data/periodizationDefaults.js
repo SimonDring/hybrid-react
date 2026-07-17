@@ -19,4 +19,17 @@ export const SPORT_BLOCKS = {
   transition: { totalWeeks: 4,  split: [{ intent: 'base', weeks: 4 }], deloads: [] },
 };
 
-export default { SEASONS, DEFAULT_SEASON_VOLUME, SPORT_BLOCKS };
+// Season-phase detection cut-points: how many DAYS until the athlete's event each window opens.
+// ≤ `in` days = the race / in-season window; ≤ `pre` days = pre-season; beyond = off-season
+// (an event already passed is 'transition'). Periodisation (D7, phaseFromEventDate) reads these;
+// a sport may still override the phase via its SKB seasonalModel window.
+//
+// Relocated VERBATIM from lib/plan/periodization.js (closure §3 row 10; commitment C3 / Art 17 —
+// the phase boundaries are coaching KNOWLEDGE, not engine logic; a scientist can review the windows
+// without opening the engine). VALUE UNCHANGED (56 / 120). No plan delta — knowledge relocation only.
+// Provenance: general block-periodisation practice — the ~8-week race window aligns with taper +
+// peaking literature (Bosquet 2007; Travis & Mujika 2020) and the ~17-week pre-season with a
+// standard preparatory mesocycle block (Issurin 2010). Confidence: moderate.
+export const SEASON_PHASE_CUTOFF_DAYS = { in: 56, pre: 120 };
+
+export default { SEASONS, DEFAULT_SEASON_VOLUME, SPORT_BLOCKS, SEASON_PHASE_CUTOFF_DAYS };

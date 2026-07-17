@@ -19,7 +19,7 @@
  */
 import { gymSupportFor } from '../sportKnowledge/gymSupport.js';
 import { seasonFromWindow } from './seasonWindow.js';
-import { SPORT_BLOCKS } from '../../data/periodizationDefaults.js';
+import { SPORT_BLOCKS, SEASON_PHASE_CUTOFF_DAYS } from '../../data/periodizationDefaults.js';
 import { getDiscipline, resolveBuildDisciplineId } from '../../data/disciplines/index.js';
 
 /**
@@ -52,10 +52,10 @@ export function deriveSeason(profile = {}, asOf = profile.plan_start_date || nul
     if (isNaN(event.getTime()) || isNaN(today.getTime())) return null;
 
     const daysOut = Math.round((event - today) / 86400000);
-    if (daysOut < 0)   return 'transition';   // event has passed
-    if (daysOut <= 56) return 'in';            // ≤8 weeks: race window
-    if (daysOut <= 120) return 'pre';          // 8–17 weeks: pre-season
-    return 'off';                              // >17 weeks: off-season
+    if (daysOut < 0)   return 'transition';                        // event has passed
+    if (daysOut <= SEASON_PHASE_CUTOFF_DAYS.in)  return 'in';      // ≤8 weeks: race window (governed)
+    if (daysOut <= SEASON_PHASE_CUTOFF_DAYS.pre) return 'pre';     // 8–17 weeks: pre-season (governed)
+    return 'off';                                                  // >17 weeks: off-season
   }
 
   // No event date — use the explicit season (compete) or the training goal (recreational).
