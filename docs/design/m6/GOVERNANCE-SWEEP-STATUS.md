@@ -51,6 +51,15 @@ would be dishonest governance (Art 13/14), so these are routed here rather than 
   `hang_clean`/`snatch`/clean-&-jerk should be contraindicated for given injury regions is Simon's
   near-term science review (travels with row 4).
 
+## The review harness
+
+Run **`npm run provenance:review -w @performance-os/engine`** (`packages/engine/tools/provenance-review.mjs`;
+pass a `YYYY-MM-DD` for the staleness section). Read-only — it surfaces every item below, PRIORITISED:
+**A** safety-critical gate-tier (the 20 `high_risk` referral diagnoses that need citations; the
+ballistic/olympic contraindication clearances to confirm) · **B** the age/sex modifier (row 5) ·
+**C** the provenance shape-upgrade tables (rows 2/8/13) with the governed-KB shape to match ·
+**D** staleness (KV-6). Give the calls table-by-table; each becomes a governed, stamp-only change.
+
 ## Recommendation
 
 The mechanical sweep is **complete** — C3's "zero coaching magnitudes at full authority in code" is
