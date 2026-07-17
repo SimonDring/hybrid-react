@@ -1,6 +1,6 @@
 // tests/working-volume.js — counting reflects real stimulus.
 import { countWeeklyVolume } from '@performance-os/engine/lib/plan/volume.js';
-import { allocateGym } from '@performance-os/engine/lib/plan/allocator.js';
+import { allocateGym } from '@performance-os/engine/lib/session/sessionBuilder.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

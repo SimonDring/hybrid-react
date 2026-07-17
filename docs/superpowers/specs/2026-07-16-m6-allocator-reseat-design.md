@@ -68,10 +68,22 @@ M-SESS is extracted — moving them now would create an M-SCHED↔allocator cycl
   `muscleContribution`, `REST_SECONDS` — no selection helper, no cycle. Byte-identical.
 - **M-SCHED 2b — session-assembly post-passes:** the five post-passes above. Travels **with**
   M-SESS (extraction 3) so the shared helpers land once, cleanly, in that pass.
-- **M-SESS — extraction 3:** the `allocateGym()` selection body + `lib/session/*` +
-  `selectInterventions.js`, plus the 2b post-passes and the shared leaf helpers. Extracted against
-  the proven M-DOSE + M-SCHED contracts; empties `allocator.js` (the exit condition).
+- **M-SESS — extraction 3 (DONE):** `allocator.js` (the selection body + the 2b post-passes +
+  the shared leaf helpers) was **renamed to `lib/session/sessionBuilder.js`** — what remained after
+  M-DOSE + M-SCHED left *is* M-SESS. 3 importers (PlanGenerator, strength, reflow) + the engine
+  barrel + 11 deep-import tests repointed; `allocator.js` **deleted**. The 2b post-passes
+  (addHypertrophyIsolation / addSupportiveFinishers / injectSecondaryGoals / styleObjective /
+  finaliseSlot) stay in M-SESS by dependency necessity (they need M-SESS's perSetMin/finisherPool/
+  focusLabel; M-SESS already imports M-SCHED, so they can't move to M-SCHED without a cycle).
 - The already-separate `scheduler.js`/`despine.js`/`axial.js`/`primers.js` are conceptually M-SCHED
   but already modular — no move needed.
 
 Each is its own byte-identity-gated PR under the same rules.
+
+## 5. Re-seat complete (exit condition met)
+
+`allocator.js` **no longer exists**. Selection lives in `session/sessionBuilder.js` (M-SESS), dose
+in `dose/dose.js` (M-DOSE), structuring in `schedule/structure.js` (M-SCHED) — each behind a typed,
+fixture-testable contract, each extracted byte-identically (every golden unchanged, KSV never
+bumped, across all three PRs). The 1,052-line concentration is gone. This satisfies the M6 (b) /
+🔒 9 exit gate: "allocator.js no longer exists as a concentration."

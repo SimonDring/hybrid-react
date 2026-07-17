@@ -8,7 +8,7 @@
 // quality keys line up with the quality registry for WP-21.
 
 import { DOSE_SCHEMES, STYLE_SCHEME_BRIDGE, DEFAULT_SCHEME_KEY, POWER_DOSE, REST_SECONDS } from '@performance-os/engine/data/doseSchemes.js';
-import allocator from '@performance-os/engine/lib/plan/allocator.js';
+import allocator from '@performance-os/engine/lib/session/sessionBuilder.js';
 const { scheme } = allocator;
 import { getQuality } from '@performance-os/engine/data/qualities.js';
 

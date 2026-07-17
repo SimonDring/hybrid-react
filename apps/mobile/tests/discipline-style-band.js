@@ -11,7 +11,7 @@
 //   • olympic rides the strength band and resolves to its explosiveStrength scheme.
 import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets.js';
 import { DOSE_SCHEMES, DISCIPLINE_DOSE_QUALITY } from '@performance-os/engine/data/doseSchemes.js';
-import allocator, { allocateGym } from '@performance-os/engine/lib/plan/allocator.js';
+import allocator, { allocateGym } from '@performance-os/engine/lib/session/sessionBuilder.js';
 const { scheme } = allocator;
 
 function assert(cond, msg) {

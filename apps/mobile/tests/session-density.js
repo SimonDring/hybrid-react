@@ -8,7 +8,7 @@
 // supersetting legitimately compresses a 18-set session into ~30 min.
 import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { suggestOptimalFrequency } from '@performance-os/engine/lib/plan/frequency.js';
-import { SESSION_CEILING_MIN } from '@performance-os/engine/lib/plan/allocator.js';
+import { SESSION_CEILING_MIN } from '@performance-os/engine/lib/session/sessionBuilder.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
 
 function assert(cond, msg) {

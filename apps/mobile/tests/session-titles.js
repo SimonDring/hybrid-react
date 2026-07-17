@@ -2,7 +2,7 @@
 // Session titles must be SIMPLE and reflect what the session actually trains:
 // Upper / Lower / Push / Pull / Full body / Core — no jargon, no per-muscle suffix.
 // Sport + functional plans may append a QUALITY tag (Power / Explosive) — see below.
-import { focusLabel, qualityTag } from '@performance-os/engine/lib/plan/allocator.js';
+import { focusLabel, qualityTag } from '@performance-os/engine/lib/session/sessionBuilder.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
