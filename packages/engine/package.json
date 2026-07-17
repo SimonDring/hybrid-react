@@ -12,6 +12,7 @@
   "scripts": {
     "test": "node ../../apps/mobile/tests/run-all.mjs",
     "test:engine": "node tests/run-engine.mjs",
-    "bench": "node tests/bench.mjs"
+    "bench": "node tests/bench.mjs",
+    "fv:review": "node tools/fv-review.mjs"
   }
 }
