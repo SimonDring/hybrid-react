@@ -514,7 +514,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
         // T4b-2: an olympic day supplies its own per-day family (slot.priorityIds); every other
         // discipline day uses the full discipline priority list. Gated to the build-discipline cohort
         // so sports + legacy see priorityIds=null (byte-identical).
-        priorityIds: slot.priorityIds || (ctx.discipline ? (ctx.exercisePriority || []) : null)
+        priorityIds: slot.priorityIds || (ctx.discipline ? (ctx.exercisePriority || []) : null),
+        // Force-velocity-aware selection (M-SESS refinement) — flag-gated, default OFF: undefined
+        // ctx.forceVelocityAware ⇒ false ⇒ byte-identical. Step 2 flips this on (audited, Simon-gated).
+        forceVelocityAware: !!ctx.forceVelocityAware
       });
       if (assignment) objective.rationale += ` (${assignment.rationale})`;
       // WP-30a: ship the D9 objective WITH the session — the rationale string now
