@@ -1,5 +1,5 @@
 // tests/session-sequence.js — supportive work is sequenced last: working → core → health.
-import { allocateGym } from '@performance-os/engine/lib/plan/allocator.js';
+import { allocateGym } from '@performance-os/engine/lib/session/sessionBuilder.js';
 import { EXERCISES } from '@performance-os/engine/data/strengthExercises.js';
 
 function assert(cond, msg) {

@@ -1,7 +1,7 @@
 // tests/exercise-selection.js
 import { EXERCISES, LEVELS } from '@performance-os/engine/data/strengthExercises.js';
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
-import { allocateGym } from '@performance-os/engine/lib/plan/allocator.js';
+import { allocateGym } from '@performance-os/engine/lib/session/sessionBuilder.js';
 import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets.js';
 import { buildWeek } from '@performance-os/engine/lib/plan/strength.js';
 

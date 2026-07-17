@@ -1,4 +1,4 @@
-import { preferredMember, allocateGym } from '@performance-os/engine/lib/plan/allocator.js';
+import { preferredMember, allocateGym } from '@performance-os/engine/lib/session/sessionBuilder.js';
 let pass = 0;
 const assert = (c, m) => { if (!c) { console.error('FAIL:', m); process.exitCode = 1; } else pass++; };
 

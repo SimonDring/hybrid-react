@@ -4,7 +4,7 @@
 // 90+ min into one session. (Session length is volume-driven now — sessionMinutes
 // in the fixtures is ignored; the ceiling is SESSION_CEILING_MIN.)
 import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
-import { SESSION_CEILING_MIN } from '@performance-os/engine/lib/plan/allocator.js';
+import { SESSION_CEILING_MIN } from '@performance-os/engine/lib/session/sessionBuilder.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
 
 function assert(cond, msg) {

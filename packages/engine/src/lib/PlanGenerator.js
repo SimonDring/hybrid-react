@@ -29,7 +29,7 @@ import { resolveProgram } from './strength/program.js';
 import { resolvePeriodization } from './plan/periodization.js';
 import { getGymLevel } from './Utils.js';
 import { deriveConstraints, suggestGymDays } from './plan/constraints.js';
-import { SESSION_CEILING_MIN, diagnosisSteers } from './plan/allocator.js';
+import { SESSION_CEILING_MIN, diagnosisSteers } from './session/sessionBuilder.js';
 import { deriveBlockObjective, blockDeloadSteers, deloadsFromRecoverability, blockPlanToSplit } from './plan/blockObjective.js';
 import { performanceModelForProfile } from './performance/forProfile.js';
 import { profileToAthleteModel } from './adapters/profileToAthleteModel.js';

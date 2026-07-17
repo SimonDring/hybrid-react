@@ -26,7 +26,7 @@ export { resolveProgram } from './src/lib/strength/program.js';
 export { deriveBlockObjective, blockDeloadSteers, deloadsFromRecoverability, blockPlanToSplit } from './src/lib/plan/blockObjective.js';
 export { resolvePeriodization, deriveSeason, continueBlock } from './src/lib/plan/periodization.js';
 export { weeklyMuscleTargets } from './src/lib/strength/targets.js';
-export { allocateGym, SESSION_CEILING_MIN } from './src/lib/plan/allocator.js';
+export { allocateGym, SESSION_CEILING_MIN } from './src/lib/session/sessionBuilder.js';
 export { assessRecovery, recoveryFromScore, subjectiveScore } from './src/lib/recovery/recovery.js';
 export { assessLoad, assessLoad as deriveLoad } from './src/lib/load/load.js';
 export { readinessIndex, readinessIndex as deriveReadiness } from './src/lib/indices/index.js';

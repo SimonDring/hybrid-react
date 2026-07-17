@@ -1,57 +1,50 @@
 /**
- * allocator — the "fill" half of the target → ledger → fill model, and the heart
- * of the adaptive gym engine.
+ * session/sessionBuilder — the D9/D10/D11 session builder (M-SESS), the value-ordered
+ * selection engine at the heart of the adaptive gym engine. This is the M6 re-seat's final
+ * extraction (🔒 9): it was `plan/allocator.js` — the 1,052-line concentration — until the
+ * D12 dose primitives (→ M-DOSE, `dose/dose.js`) and the D13 structuring core (→ M-SCHED,
+ * `schedule/structure.js`) were extracted; what remained IS M-SESS, renamed here. The
+ * "allocator" concentration no longer exists.
  *
- * It takes a weekly per-muscle SET-VOLUME target (from src/lib/strength/targets.js)
- * and a set of session "slots" — each with a time budget and available equipment —
- * and produces concrete gym sessions that spend the available time on the volume
- * that matters most, progressing toward the target.
+ * It takes a weekly per-muscle SET-VOLUME target (from strength/targets.js) and a set of
+ * session "slots" — each with a time budget and available equipment — and produces concrete
+ * gym sessions that spend the available time on the volume that matters most, progressing
+ * toward the target. A transparent greedy search: track a per-muscle DEFICIT, go round-robin
+ * across slots, each round each slot picks the ONE exercise paying down the biggest remaining
+ * deficits per set (favouring compounds + frequency), gated by equipment/experience, ties
+ * broken by variety + a posture-friendly pull lean + weekly rotation. Stop a slot at its time
+ * budget; whatever deficit remains is the honest gap the UI surfaces rather than hides.
  *
- * Why this replaces fixed splits: a real busy professional trains an irregular
- * number of times, for irregular lengths, with whatever kit is to hand (full gym
- * one week, hotel dumbbells the next). A fixed "upper/lower ×2" split can't bend
- * to that. An allocator can: give it 2 slots or 5, 30 min or 75, barbells or just
- * bands, and it fills each slot with the highest-value work toward the same goal.
- *
- * How it fills (a transparent greedy search, not a black box):
- *  • Track a running per-muscle DEFICIT (how far each muscle is from its target).
- *  • Go round-robin across the slots; each round, each slot picks the ONE
- *    exercise that pays down the biggest remaining deficits per set — which
- *    naturally favours compound lifts (they hit several muscles at once) and
- *    spreads a muscle across ≥2 sessions (frequency) instead of dumping it all
- *    in one. Equipment + experience gate the choices; movement variety, a
- *    posture-friendly pull lean, and weekly rotation break ties.
- *  • Stop a slot when its time budget is spent. Stop overall when the deficits
- *    are paid or the slots are full — whatever is left is the honest gap (too
- *    few/short sessions to hit the ideal), which the UI surfaces rather than hides.
+ * Session assembly (addHypertrophyIsolation / addSupportiveFinishers / injectSecondaryGoals /
+ * styleObjective / finaliseSlot) lives here too: it depends on this module's selection helpers
+ * (perSetMin / finisherPool / focusLabel), so it belongs with M-SESS — moving it to M-SCHED
+ * would cycle (M-SESS already imports M-SCHED). It calls the stable M-DOSE + M-SCHED contracts.
  *
  * Pure function → reproducible sessions → stable completion keys.
- *
- * NOTE: no circular import. strength.js calls THIS; this imports only data +
- * liftProgression + volume helpers, never strength.js.
+ * NOTE: no circular import. strength.js + reflow.js call THIS; this imports only data + the
+ * dose/structure/session leaf modules, never strength.js.
  */
 
 import { EXERCISES, LEVELS, availableEquip } from '../../data/strengthExercises.js';
 import { VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
-import { muscleContribution } from './contributions.js';
-import { parseSetCount } from './volume.js';
+import { muscleContribution } from '../plan/contributions.js';
+import { parseSetCount } from '../plan/volume.js';
 import { applyWeights } from '../liftProgression.js';
 import { stimulusFactor } from '../strength/stimulus.js';
-import { AXIAL_SESSION_CAP, axialOf } from './axial.js';
-import { selectInterventions, tierOf } from './selectInterventions.js';
+import { AXIAL_SESSION_CAP, axialOf } from '../plan/axial.js';
+import { selectInterventions, tierOf } from '../plan/selectInterventions.js';
 // NOTE (M2b): SELECTION_SCORING (SS) was the legacy deficit-fill's greedy scoring economy —
 // deleted with the fill (one construction path now); no import needed here any more.
-import { deriveSessionObjective, assignTargetQualities, competencyAdjustedTarget, constraintAdjustedTarget } from '../session/sessionObjective.js';
+import { deriveSessionObjective, assignTargetQualities, competencyAdjustedTarget, constraintAdjustedTarget } from './sessionObjective.js';
 import { getSecondaryGoal } from '../../data/secondaryGoals.js';
 import { getDiscipline } from '../../data/disciplines/index.js';
 import { styleFamily } from '../strength/styleFamily.js';
 import { DISCIPLINE_DOSE_QUALITY, POWER_DOSE, REACTIVE_LIMITS, doseForQuality } from '../../data/doseSchemes.js';
-import { deriveMovementRequirements } from '../session/movementRequirements.js';
+import { deriveMovementRequirements } from './movementRequirements.js';
 import { applyProgressionCreep } from '../strength/progressionCreep.js';
-import { regionOf, hypertrophyRegionOf } from '../session/sessionSpecs.js';
+import { regionOf, hypertrophyRegionOf } from './sessionSpecs.js';
 import { exerciseMatchesToken } from '../../data/movementPatternMap.js';
-// M-DOSE (M6 re-seat, 🔒 9): the D12 dose primitives now live in ../dose/dose.js;
-// allocator imports the ones it still calls outside the moved cluster.
+// M-DOSE (M6 re-seat, 🔒 9): the D12 dose primitives (dose/dose.js).
 import { scheme, olympicClassicLift, roleSetCount, makeItem } from '../dose/dose.js';
 // M-SCHED (M6 re-seat, 🔒 9): the D13 structuring core (supersets/ordering + RPE post-pass).
 import { structureItems, shiftRpe } from '../schedule/structure.js';

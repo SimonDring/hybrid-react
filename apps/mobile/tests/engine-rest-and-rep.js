@@ -1,7 +1,7 @@
 // tests/engine-rest-and-rep.js
 import { resolveProgram } from '@performance-os/engine/lib/strength/program.js';
 import { weeklyMuscleTargets } from '@performance-os/engine/lib/strength/targets.js';
-import { allocateGym } from '@performance-os/engine/lib/plan/allocator.js';
+import { allocateGym } from '@performance-os/engine/lib/session/sessionBuilder.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }

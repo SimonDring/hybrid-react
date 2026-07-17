@@ -1,5 +1,5 @@
 import { rollingTarget, distributeAcrossSlots, WINDOW_DAYS } from '@performance-os/engine/lib/plan/rollingVolume.js';
-import { allocateGym } from '@performance-os/engine/lib/plan/allocator.js';
+import { allocateGym } from '@performance-os/engine/lib/session/sessionBuilder.js';
 import { countWeeklyVolume } from '@performance-os/engine/lib/plan/volume.js';
 import { VOLUME_LANDMARKS, MUSCLE_GROUPS } from '@performance-os/engine/data/muscleVolume.js';
 

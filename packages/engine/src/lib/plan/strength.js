@@ -19,7 +19,7 @@
  */
 
 import { weeklyMuscleTargets } from '../strength/targets.js';
-import { allocateGym } from './allocator.js';
+import { allocateGym } from '../session/sessionBuilder.js';
 import { resolveSplit } from './split.js';
 import { olympicPriorityIds } from '../../data/disciplines/olympic.js';
 

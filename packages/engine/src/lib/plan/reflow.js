@@ -21,7 +21,7 @@ import { WINDOW_DAYS, distributeAcrossSlots } from './rollingVolume.js';
 import { resolveSplit } from './split.js';
 import { olympicPriorityIds } from '../../data/disciplines/olympic.js';
 import { MUSCLE_GROUPS } from '../../data/muscleVolume.js';
-import { allocateGym } from './allocator.js';
+import { allocateGym } from '../session/sessionBuilder.js';
 import { functionalSlotMinutes } from './strength.js';
 import { despineWeek } from './despine.js';
 import { provenance } from '../../version.js';
