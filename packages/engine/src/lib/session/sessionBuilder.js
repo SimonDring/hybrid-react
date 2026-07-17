@@ -48,6 +48,7 @@ import { D11_STEERED_ENGINE_SPORTS } from '../../data/sportEngineBinding.js';
 // M6(a) governance sweep (closure §3 row 1 subset): session-assembly time budgets are governed
 // knowledge now (KA Domain 6), not code literals.
 import { SESSION_BUILDING } from '../../data/sessionBuilding.js';
+import { SELECTION_SCORING } from '../../data/selectionScoring.js';
 // M-DOSE (M6 re-seat, 🔒 9): the D12 dose primitives (dose/dose.js).
 import { scheme, olympicClassicLift, roleSetCount, makeItem } from '../dose/dose.js';
 // M-SCHED (M6 re-seat, 🔒 9): the D13 structuring core (supersets/ordering + RPE post-pass).
@@ -133,9 +134,9 @@ function hash(str) { let h = 0; for (let i = 0; i < str.length; i++) h = (h * 31
 // still hit real volume instead of "3×8 squats and done" (Iversen et al. 2021).
 function perSetMin(ex, effectiveRole) {
   const role = effectiveRole != null ? effectiveRole : ex.role;
-  if (role === 'primary') return 2.8;                                    // heavy main, fuller rest
-  if (role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf') return 1.2; // light filler
-  return 1.5;                                                               // accessory, supersetted
+  if (role === 'primary') return SESSION_BUILDING.perSetMinByRole.primary;                          // heavy main, fuller rest
+  if (role === 'iso' || ex.pattern === 'core' || ex.pattern === 'calf') return SESSION_BUILDING.perSetMinByRole.isoCoreCalf; // light filler
+  return SESSION_BUILDING.perSetMinByRole.accessory;                                                 // accessory, supersetted
 }
 // Usable minutes after a brief warm-up (time-efficient training skips long warm-ups).
 function slotBudget(minutes) { return Math.max(8, (minutes || 60) - 4); }
@@ -179,10 +180,10 @@ function finisherPool(slot, ctx, levelName) {
   });
   const relevance = (ex) => {
     let r = 0;
-    if (prio.has(ex.id)) r += 3;
-    if (sport && (ex.sportTags || []).includes(sport)) r += 2;
-    if (!sport && (ex.goalTags || []).includes(goal)) r += 1;
-    if (ex.pattern === 'mobility') r += 0.5;     // general mobility is a safe fallback
+    if (prio.has(ex.id)) r += SELECTION_SCORING.finisherRelevance.priority;
+    if (sport && (ex.sportTags || []).includes(sport)) r += SELECTION_SCORING.finisherRelevance.sportTag;
+    if (!sport && (ex.goalTags || []).includes(goal)) r += SELECTION_SCORING.finisherRelevance.goalTag;
+    if (ex.pattern === 'mobility') r += SELECTION_SCORING.finisherRelevance.mobilityFallback;     // general mobility is a safe fallback
     return r;
   };
   const ranked = cands.sort((a, b) => relevance(b) - relevance(a) || (hash(a.id) % 5) - (hash(b.id) % 5));
@@ -210,10 +211,10 @@ export function focusLabel(mv) {
   const sum = (ms) => ms.reduce((a, m) => a + (mv[m] || 0), 0);
   const lower = sum(REGION.lower), push = sum(REGION.push), pull = sum(REGION.pull), core = sum(REGION.core);
   const upper = push + pull;
-  const meaningful = 0.25 * total;
+  const meaningful = SESSION_BUILDING.focusLabel.meaningfulFraction * total;
   // Meaningful work in BOTH halves of the body → Full body.
   if (lower >= meaningful && upper >= meaningful) return 'Full body';
-  if (core >= 0.5 * total) return 'Core';
+  if (core >= SESSION_BUILDING.focusLabel.coreDominance * total) return 'Core';
   if (lower >= upper) return lower >= meaningful ? 'Lower' : 'Full body';
   // Upper-dominant: name the actual movement focus — but only when that axis truly
   // dominates. A day that's mostly core with a token press isn't a "Push" day.

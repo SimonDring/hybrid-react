@@ -16,6 +16,24 @@ export const SESSION_BUILDING = {
   finisherCapMin: 15,        // ...but never add more than this many minutes of supportive finisher
   hypertrophyIsoCapMin: 12,  // hypertrophy direct-isolation pass: at most this many minutes of added isolation
   secondaryCapMin: 10,       // secondary-goal corrective: at most this many minutes per session
+
+  // Wall-clock minutes a working SET roughly costs, by role (closure §3 row 1). Supersetting
+  // compresses non-primary work (performed in another lift's rest), so filler sets are cheap —
+  // this is what lets a short session still hit real volume (Iversen et al. 2021). Confidence: low.
+  perSetMinByRole: {
+    primary: 2.8,     // heavy main, fuller rest
+    isoCoreCalf: 1.2, // light filler (iso / core / calf)
+    accessory: 1.5,   // accessory, supersetted
+  },
+
+  // Session-focus LABELLING thresholds (closure §3 row 1): as fractions of the session's total
+  // working volume, how much a region must carry to name the day. `meaningfulFraction` = the
+  // minimum share for a region to count toward the label; `coreDominance` = the core share above
+  // which a day reads 'Core'. These NAME the session, they do not steer its content. Confidence: low.
+  focusLabel: {
+    meaningfulFraction: 0.25,
+    coreDominance: 0.5,
+  },
 };
 
 export default { SESSION_BUILDING };

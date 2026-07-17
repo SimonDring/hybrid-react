@@ -24,6 +24,16 @@ neither is present.
 
 ---
 
+## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROW 1 cont. (perSetMin/focus/finisher weights; KSV 1.40.0 → 1.41.0)
+- Changed archetypes (content): **none.** No plan changed.
+- Keys that moved: `meta.provenance.knowledgeSetVersion` ONLY (1.40.0 → 1.41.0), every archetype.
+  Non-stamp diff empty (verified). Manifest re-baselined to 1.41.0 (44 files).
+- Why: the remaining sessionBuilder steering magnitudes relocated verbatim — per-set minute costs by
+  role (2.8/1.2/1.5) + focus-label thresholds (0.25/0.5) → `data/sessionBuilding.js`; supportive-
+  finisher relevance weights (3/2/1/0.5) → `data/selectionScoring.js` (closure §3 row 1 cont.).
+  Values unchanged. SESSION_CEILING_MIN 75 stays (governed at the pin).
+- Claim: no archetype content moved — stamp-only, audited key-by-key.
+
 ## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROW 1 subset (session-assembly caps; KSV 1.39.0 → 1.40.0)
 - Changed archetypes (content): **none.** No plan changed.
 - Added archetypes: none.
