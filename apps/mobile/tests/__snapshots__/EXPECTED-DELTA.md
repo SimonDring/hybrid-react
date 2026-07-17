@@ -24,6 +24,11 @@ neither is present.
 
 ---
 
+## 2026-07-16 — Phase 3 M6(f) polish: TR-18 clock default + stale comments (KSV 1.44.0 → 1.45.0)
+- Changed archetypes (content): **none.** Stamp-only (`knowledgeSetVersion` 1.44.0 → 1.45.0; non-stamp diff empty). Manifest 46 files.
+- Why: TR-18 — the uncalled `new Date()` default in `kb.staleEntries` removed (engine takes no clock read even by signature; lib-only). Stale comments corrected: `data/secondaryGoals.js` ("not yet read" → it IS read, WP-49 Plan 2 T5) and `sessionBuilder.js` finaliseSlot (the legacy fill was deleted at M2b). Only the secondaryGoals edit touches a governed data file → the KSV bump; it is comment-only, no value change.
+- Claim: no archetype content moved — stamp-only.
+
 ## 2026-07-16 — Phase 3 M6(c) phase 1: D6 Training Strategy (parallel v0; KSV 1.43.0 → 1.44.0)
 - Changed archetypes (content): **none.** Stamp-only (`knowledgeSetVersion` 1.43.0 → 1.44.0; non-stamp diff empty). Manifest 46 files (+2: `data/interventionClass.js`).
 - Why: new D6 `Strategy` object (`lib/strategy/strategy.js`) + its governed intervention-class knowledge (`data/interventionClass.js`). PARALLEL v0 — steers nothing (the D4/D5/D7 advisory rollout), so no plan changes; only the knowledge-set version bumps for the new table.
