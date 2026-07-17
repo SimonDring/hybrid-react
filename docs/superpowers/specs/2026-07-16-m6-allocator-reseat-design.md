@@ -55,13 +55,23 @@ bump, passes it in), `effectiveRoleOf` (caller resolves role, passes it in), `pe
    module imports only what its moved functions need.
 5. `npm run lint` 0 errors. Merge is Simon's (first extraction).
 
-## 4. Next extractions (not this build)
+## 4. Next extractions (updated after executing extraction 1–2)
 
-- **M-SCHED** (extraction 2): `structureItems`, `finaliseSlot`, the post-passes (`shiftRpe`,
-  `addHypertrophyIsolation`, `addSupportiveFinishers`, `injectSecondaryGoals`, `styleObjective`) +
-  the already-separate `scheduler.js`/`despine.js`/`axial.js`/`primers.js`. Calls the stable M-DOSE
-  contract.
-- **M-SESS** (extraction 3): the `allocateGym()` selection body + `lib/session/*` +
-  `selectInterventions.js`. Extracted against two proven contracts; empties `allocator.js`.
+**M-SCHED splits into 2a + 2b** — a decomposition discovered during execution and permitted by
+🔒 9 ("several commits"). The session-assembly **post-passes** (`addHypertrophyIsolation`,
+`addSupportiveFinishers`, `injectSecondaryGoals`, `styleObjective`, `finaliseSlot`) depend on
+**selection-side helpers** (`perSetMin`, `finisherPool`, `focusLabel`) that only get a home when
+M-SESS is extracted — moving them now would create an M-SCHED↔allocator cycle. So:
+
+- **M-SCHED 2a — structuring core (THIS build):** `structureItems` (+ its `canPair`/`shareMuscle`)
+  and `shiftRpe` → `lib/schedule/structure.js`. Depends only on `cnsTier` (M-DOSE),
+  `muscleContribution`, `REST_SECONDS` — no selection helper, no cycle. Byte-identical.
+- **M-SCHED 2b — session-assembly post-passes:** the five post-passes above. Travels **with**
+  M-SESS (extraction 3) so the shared helpers land once, cleanly, in that pass.
+- **M-SESS — extraction 3:** the `allocateGym()` selection body + `lib/session/*` +
+  `selectInterventions.js`, plus the 2b post-passes and the shared leaf helpers. Extracted against
+  the proven M-DOSE + M-SCHED contracts; empties `allocator.js` (the exit condition).
+- The already-separate `scheduler.js`/`despine.js`/`axial.js`/`primers.js` are conceptually M-SCHED
+  but already modular — no move needed.
 
 Each is its own byte-identity-gated PR under the same rules.
