@@ -94,6 +94,9 @@ export { deriveRecoveryObservation } from './src/lib/learning/deriveRecoveryObse
 // granularity. PARALLEL v0 — steers nothing yet (the D4/D5/D7 advisory rollout pattern).
 export { deriveStrategy } from './src/lib/strategy/strategy.js';
 export { INTERVENTION_CLASS, interventionClassFor } from './src/data/interventionClass.js';
+// M6(c) phase 2 — D8 Weekly Objective (microcycle): consumes the SKB `microcycles` section by
+// fixture density. PARALLEL v0 — steers nothing yet (flag-gated reshaping is a later flip).
+export { deriveWeeklyObjective } from './src/lib/microcycle/weeklyObjective.js';
 export { readinessValidation } from './src/lib/indices/readinessValidation.js';
 // WP-49 (Plan 1) — the discipline + secondary-goal knowledge foundation (STAGED,
 // never engine-consumed yet; Plan 2 flips build onto this).
