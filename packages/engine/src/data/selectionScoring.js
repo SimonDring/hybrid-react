@@ -19,6 +19,12 @@ export const SELECTION_SCORING = {
   crossSessionRepeatBase: 0.82,                  // ^(times used this week) — decays a lift repeated across days
   focusFloor: 0.4, focusSpan: 0.6,               // sport focus weighting: 0.4 + 0.6 × in-focus ratio
   rotationJitter: 0.01,                          // × ((hash+week+slot) % 7) — deterministic tie-break rotation
+
+  // Supportive-FINISHER candidate relevance ranking (closure §3 row 1): additive points that order
+  // the factor-0 support pool for a short session — a priority-list lift outranks a sport-tagged
+  // one, which outranks a goal-tagged one, with general mobility a safe fallback. Ordinal, not
+  // absolute; the ordering is the point. Confidence: low (seed heuristic).
+  finisherRelevance: { priority: 3, sportTag: 2, goalTag: 1, mobilityFallback: 0.5 },
 };
 
 export default { SELECTION_SCORING };
