@@ -24,6 +24,17 @@ neither is present.
 
 ---
 
+## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROW 1 subset (session-assembly caps; KSV 1.39.0 → 1.40.0)
+- Changed archetypes (content): **none.** No plan changed.
+- Added archetypes: none.
+- Keys that moved, per archetype: `meta.provenance.knowledgeSetVersion` ONLY (1.39.0 → 1.40.0),
+  every archetype. Non-stamp diff empty (verified). Manifest re-baselined to 1.40.0 (44 files, +1:
+  new `data/sessionBuilding.js`).
+- Why: the four session-assembly time caps (finisherTargetMin 30 / finisherCapMin 15 /
+  hypertrophyIsoCapMin 12 / secondaryCapMin 10) relocated VERBATIM from `sessionBuilder.js` into the
+  governed `data/sessionBuilding.js` (closure §3 row 1 subset; C3 / Art 17). Values unchanged.
+- Claim: no archetype content moved — stamp-only, audited key-by-key.
+
 ## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROW 7b (engineSport cohort facts; KSV 1.38.0 → 1.39.0)
 - Changed archetypes (content): **none.** No plan changed.
 - Added archetypes: none.
