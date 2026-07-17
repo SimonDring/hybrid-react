@@ -27,8 +27,13 @@ export function byTag(tag) { return ENTRIES.filter(e => e.appliesTo.includes(tag
 /** Validate the whole registry against the schema. @returns {{ok, errors}} */
 export function validate() { return validateRegistry(ENTRIES); }
 
-/** Entries whose lastReviewed is older than `months` — drives a staleness check. */
-export function staleEntries(months = 18, asOf = new Date()) {
+/** Entries whose lastReviewed is older than `months` — drives a staleness check.
+ * TR-18 (M6 f): `asOf` (the reference "now") is a REQUIRED caller input — the engine takes no clock
+ * read, not even a default one, so purity holds by signature, not merely by absence of a caller
+ * (Art 18). The impure app/report band supplies the date; called with no `asOf` it returns [] rather
+ * than reading the wall clock. */
+export function staleEntries(months = 18, asOf = null) {
+  if (asOf == null) return [];
   const cutoff = new Date(asOf);
   cutoff.setMonth(cutoff.getMonth() - months);
   return ENTRIES.filter(e => new Date(e.lastReviewed + 'T00:00:00') < cutoff);

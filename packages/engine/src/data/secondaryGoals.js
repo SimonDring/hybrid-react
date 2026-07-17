@@ -2,10 +2,10 @@
  * secondaryGoals — the fixed menu of add-on goals (posture / prehab / mobility /
  * conditioning) an athlete can multi-select alongside their discipline.
  *
- * DATA ONLY (WP-49 Plan 1 Task 4). This module is authored but not yet read by
- * the plan generator — the behaviour that layers these onto a discipline plan's
- * accessory tail is Plan 2. Design: docs/superpowers/specs/2026-07-07-build-
- * discipline-engine-design.md §5.
+ * DATA ONLY (WP-49 Plan 1 Task 4). This module is READ by the plan generator
+ * (WP-49 Plan 2 Task 5 shipped): injectSecondaryGoals (session/sessionBuilder.js)
+ * layers these onto a discipline plan's accessory tail via getSecondaryGoal.
+ * Design: docs/superpowers/specs/2026-07-07-build-discipline-engine-design.md §5.
  *
  * The hard rule (Plan 2 will enforce this, not this file): secondary goals
  * compete ONLY for the accessory/finisher slots, AFTER the discipline diagnosis.

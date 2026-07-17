@@ -713,9 +713,9 @@ function styleObjective(slot, style, ctx) {
   return { ...o, source: 'style' };
 }
 
-// Finalise a single slot: structure into supersets/fillers, then a session spec.
-// Shared verbatim by the legacy fill path and the D11 sport path so BUILD output
-// stays byte-identical no matter which path populated slot.picks.
+// Finalise a single slot: structure into supersets/fillers, then a session spec. The finalisation
+// is shared by every path that populates slot.picks (the D11 value-ordered selection is the one
+// construction path now — the legacy deficit fill was deleted at M2b).
 function finaliseSlot(slot, style, ctx) {
   const deload = !!ctx.deload;
   // D11/category sessions carry their own D9 objective; every other session gets the
