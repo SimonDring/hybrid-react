@@ -24,6 +24,11 @@ neither is present.
 
 ---
 
+## 2026-07-16 — force-velocity-aware selection STEP 1 (flag-OFF; KSV 1.45.0 → 1.46.0)
+- Changed archetypes (content): **none.** Stamp-only (`knowledgeSetVersion` 1.45.0 → 1.46.0; non-stamp diff empty). Manifest 46 files.
+- Why: new governed `SELECTION_SCORING.forceVelocityWeight` (0.15) + a FLAG-GATED force-velocity-match nudge in `selectInterventions.valueOf` (`ctx.forceVelocityAware`, default OFF). Flag off ⇒ the nudge branch never runs ⇒ selection byte-identical; only the new weight bumps KSV.
+- Claim: no archetype content moved — stamp-only. (Step 2 flips the flag on = a separate, audited, behaviour-changing PR.)
+
 ## 2026-07-16 — Phase 3 M6(f) polish: TR-18 clock default + stale comments (KSV 1.44.0 → 1.45.0)
 - Changed archetypes (content): **none.** Stamp-only (`knowledgeSetVersion` 1.44.0 → 1.45.0; non-stamp diff empty). Manifest 46 files.
 - Why: TR-18 — the uncalled `new Date()` default in `kb.staleEntries` removed (engine takes no clock read even by signature; lib-only). Stale comments corrected: `data/secondaryGoals.js` ("not yet read" → it IS read, WP-49 Plan 2 T5) and `sessionBuilder.js` finaliseSlot (the legacy fill was deleted at M2b). Only the secondaryGoals edit touches a governed data file → the KSV bump; it is comment-only, no value change.

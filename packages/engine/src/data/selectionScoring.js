@@ -25,6 +25,13 @@ export const SELECTION_SCORING = {
   // one, which outranks a goal-tagged one, with general mobility a safe fallback. Ordinal, not
   // absolute; the ordering is the point. Confidence: low (seed heuristic).
   finisherRelevance: { priority: 3, sportTag: 2, goalTag: 1, mobilityFallback: 0.5 },
+
+  // Force-velocity-aware selection nudge (M-SESS; flag-gated). Within a quality's candidates, a
+  // perfect force-velocity match lifts the transfer-per-fatigue value by ~half this, a poor match
+  // damps it by ~half — a SMALL soft re-ordering that never overrides the quality tier. Deliberately
+  // conservative: both the quality→force-velocity map and the exercise tags are seed/needsReview, so
+  // authority is capped (Art 13). Raise only after a movement-map science pass.
+  forceVelocityWeight: 0.15,
 };
 
 export default { SELECTION_SCORING };

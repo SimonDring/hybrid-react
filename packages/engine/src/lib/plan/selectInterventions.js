@@ -9,6 +9,8 @@
  */
 import { EXERCISES } from '../../data/strengthExercises.js';
 import { exerciseQualities } from '../../data/exerciseQualities.js';
+import { QUALITY_MOVEMENT } from '../../data/qualityMovementMap.js';
+import { SELECTION_SCORING } from '../../data/selectionScoring.js';
 import { stimulusFactor } from '../strength/stimulus.js';
 import { VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
 import kb from '../knowledge/kb.js';
@@ -68,16 +70,42 @@ export function tierOf(ex, target, sport, skbIds = null) {
 // OR the SKB library's authored per-movement transfer rating ÷ divisor — whichever is
 // better. The sport scientist's judgement (rating 1–10, per-entry provenance in the
 // SKB) replaces the old blunt ×1.5 membership boost (Sprint 9 19a).
-function valueOf(ex, target, skbIds) {
+// The force→velocity continuum positions (M-SESS force-velocity-aware selection). The off-continuum
+// classes (controlled-hypertrophy / endurance / isometric / mobility) are each their OWN quality's
+// home — the quality tag already selects them — so they don't take part in the continuum distance.
+const FV_CONTINUUM = { 'maximal-force': 0, 'strength-speed': 1, 'speed-strength': 2, ballistic: 3 };
+const FV_SPAN = 3;
+// 0..1 match between the target quality's IDEAL force-velocity (QUALITY_MOVEMENT) and the exercise's
+// (exerciseQualities). 0.5 = NEUTRAL (no nudge) when either side is missing or off the continuum —
+// so an un-tagged exercise is never penalised (additive-first). Both maps are seed → soft (Art 13).
+export function forceVelocityMatch(ex, target) {
+  const targetFV = QUALITY_MOVEMENT[target]?.forceVelocity;
+  const exFV = exerciseQualities(ex.id)?.forceVelocity;
+  if (!targetFV || !exFV) return 0.5;
+  const pt = FV_CONTINUUM[targetFV], pe = FV_CONTINUUM[exFV];
+  if (pt == null || pe == null) return targetFV === exFV ? 1 : 0.5; // off-continuum: exact match only
+  return 1 - Math.abs(pe - pt) / FV_SPAN;
+}
+
+function valueOf(ex, target, skbIds, forceVelocityAware = false) {
   const role = trainsTarget(ex, target);
   const match = role === 'primary' ? TRANSFER.primary : role === 'secondary' ? TRANSFER.secondary : TRANSFER.support;
   const qualityValue = match / fatigueScalar(ex);
   const rating = skbRatingOf(skbIds, ex.id);
   const transferValue = rating != null ? (rating / TRANSFER.skbRatingDivisor) / fatigueScalar(ex) : 0;
-  return Math.max(qualityValue, transferValue);
+  const value = Math.max(qualityValue, transferValue);
+  // Force-velocity-aware nudge (flag-gated; default OFF ⇒ this branch never runs ⇒ byte-identical).
+  // A small soft re-ordering WITHIN a quality toward the exercises whose force-velocity best fits the
+  // target: perfect match ×(1+w/2), poor match ×(1−w/2). The quality tier still bounds it, so a
+  // wrong-quality exercise can never win (Art 13 — the seed map steers at soft input only).
+  if (forceVelocityAware) {
+    const w = SELECTION_SCORING.forceVelocityWeight || 0;
+    return value * (1 + w * (forceVelocityMatch(ex, target) - 0.5));
+  }
+  return value;
 }
 
-export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [], categoryIds = null, discipline = undefined, priorityIds = null } = {}) {
+export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [], categoryIds = null, discipline = undefined, priorityIds = null, forceVelocityAware = false } = {}) {
   const target = req?.objective?.targetQuality;
   const reqPatterns = new Set(req?.requirements?.movementPatterns || []);
   const contra = new Set((req?.requirements?.contraindicated || []).map((c) => c.pattern));
@@ -131,7 +159,7 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
       ? (1e6 - priorityRank.get(ex.id))   // authored order within tier 0 (rank 0 sorts first)
       : isCategoryPick
         ? (skbRatingOf(skbIds, ex.id) ?? TRANSFER.skbDefaultRating) / TRANSFER.skbRatingDivisor
-        : valueOf(ex, target, skbIds);
+        : valueOf(ex, target, skbIds, forceVelocityAware);
     cand.push({ ex, tier, value });
   }
   cand.sort((a, b) => a.tier - b.tier || b.value - a.value || (a.ex.id < b.ex.id ? -1 : a.ex.id > b.ex.id ? 1 : 0));
