@@ -24,6 +24,18 @@ neither is present.
 
 ---
 
+## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROW 7 (category-led cohort fact; KSV 1.37.0 → 1.38.0)
+- Changed archetypes (content): **none.** No plan changed.
+- Added archetypes: none.
+- Keys that moved, per archetype: `meta.provenance.knowledgeSetVersion` ONLY (1.37.0 → 1.38.0),
+  every archetype. Non-stamp diff empty (verified). Manifest re-baselined to 1.38.0 over 43 files
+  (7 SKB JSON profiles gained `meta.cohorts.categoryLed`).
+- Why: the category-led sport membership (swimming, hurling, gaelic_football, field_hockey, soccer,
+  rugby, triathlon) became an authored SKB fact; `categoryCoverage.js` now derives `CATEGORY_LED`
+  from the SKB instead of a hardcoded Set (closure §3 row 7; C3 / Art 17). Membership is UNCHANGED —
+  verified the derived set equals the original 7 exactly (the 4 rating-based sports carry no flag).
+- Claim: no archetype content moved — stamp-only, audited key-by-key.
+
 ## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROWS 11 + 6 (KSV 1.36.0 → 1.37.0)
 - Changed archetypes (content): **none.** No plan changed.
 - Added archetypes: none.

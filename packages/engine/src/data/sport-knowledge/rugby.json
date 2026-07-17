@@ -3,6 +3,7 @@
   "schemaVersion": "1.0.0",
   "lastReviewed": "2026-07-06",
   "meta": {
+    "cohorts": { "categoryLed": true },
     "sport": "Rugby Union",
     "label": "Rugby Union",
     "category": "Invasion / collision team sport",

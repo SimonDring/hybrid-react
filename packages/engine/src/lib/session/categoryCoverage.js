@@ -107,7 +107,14 @@ export function weekCategoryPlan(skbSportId, sessionCount, { levelName = 'interm
 // single-leg/calf durability) that the fixed-10 quality vocabulary cannot name — its
 // authored library encodes it as categories. Run/cycle stay rating-based (their categories
 // agree with their diagnosed qualities — recorded 19b scope decision).
-const CATEGORY_LED = new Set(['swimming', 'hurling', 'gaelic_football', 'field_hockey', 'soccer', 'rugby', 'triathlon']);
+//
+// This membership is now an AUTHORED SKB FACT (`meta.cohorts.categoryLed`), not a code set —
+// closure §3 row 7 (C3 / Art 17): a sport's cohort is knowledge, so adding a category-led
+// sport is an SKB authoring change, not a code-set edit (the Art-17 falsification TR-12 names).
+// Absence of the flag = rating-based. Membership UNCHANGED (the same 7 sports).
+const CATEGORY_LED = new Set(
+  SKB.all().filter((p) => p.meta && p.meta.cohorts && p.meta.cohorts.categoryLed).map((p) => p.id),
+);
 
 /** The category plan for a sport IF it is category-led; null otherwise. */
 export function categoryPlanFor(skbSportId, sessionCount, opts = {}) {

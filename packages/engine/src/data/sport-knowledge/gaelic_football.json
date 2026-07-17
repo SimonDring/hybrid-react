@@ -4,6 +4,7 @@
   "label": "Gaelic Football",
   "lastReviewed": "2026-06-28",
   "meta": {
+    "cohorts": { "categoryLed": true },
     "sport": "Gaelic Football",
     "category": "Invasion / field team sport",
     "teamOrIndividual": "team",
