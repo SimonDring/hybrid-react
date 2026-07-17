@@ -94,7 +94,7 @@ export function buildWeek(ctx = {}) {
     ctx: {
       style, intent: ctx.intent, deload, taper, weekNum: ctx.weekNum,
       level: ctx.level, sex: ctx.sex, lifts: ctx.lifts, access: ctx.access || [],
-      bodyweight: ctx.bodyweight,
+      bodyweight: ctx.bodyweight, forceVelocityAware: !!ctx.forceVelocityAware,
       exercisePriority: ctx.exercisePriority || [], sport: ctx.sport || null, power: !!ctx.power,
       priorityByIntent: ctx.priorityByIntent || new Map(),
       priorityQualities: ctx.priorityQualities || [], season: ctx.season || null, skbIds: ctx.skbIds || new Set(),

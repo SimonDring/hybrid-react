@@ -138,7 +138,7 @@ function buildGymWeek(count, ctx, profile, program, diag) {
     loggedLiftKeys: new Set(Object.keys((profile && profile.lift_log) || {})),
     phaseWeeks: ctx.phaseWeeks, blockFrac: ctx.blockFrac, minutes: ctx.minutes,
     level: getGymLevel(profile), access: profile.access || [], sex: profile.sex,
-    bodyweight: profile.bodyweight_kg,
+    bodyweight: profile.bodyweight_kg, forceVelocityAware: !!ctx.forceVelocityAware,
     gymDays: count, lifts: resolveLifts(profile),
     style: program.style, emphasis: program.emphasis, volumeScalar: program.volumeScalar,
     power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || [],
@@ -254,7 +254,7 @@ export function generatePlan(profile = {}, opts = {}) {
       // Block-continuous volume ramp position (0→1 across the whole plan). Deload
       // weeks still drop to MEV in targets.js; this just stops the per-phase reset.
       const blockFrac = total > 1 ? (weekNum - 1) / (total - 1) : 0.5;
-      const ctx = { intent: seg.intent, deload, taper, winp, weekNum, minutes, phaseWeeks: seg.weeks, blockFrac, creepWeeks };
+      const ctx = { intent: seg.intent, deload, taper, winp, weekNum, minutes, phaseWeeks: seg.weeks, blockFrac, creepWeeks, forceVelocityAware: !!opts.forceVelocityAware };
 
       const sportSpecs = buildGymWeek(totalDays, ctx, profile, program, diag);
       const dayNames = chooseDays(availability, sportSpecs.length, profile.sport_days || []);
