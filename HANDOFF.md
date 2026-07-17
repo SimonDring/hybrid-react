@@ -288,10 +288,17 @@ move it to the archive file rather than letting this one grow._
     vendor-derived vs subjective — TR-15 / Art 16). Byte-identical.
   - (f) polish (#214): TR-18 clock default removed + stale comments; most TR-16 "rot" proved live/
     intentional/already-clean. Also THIS SESSION: fixed the CI engine gate (#193) — it had never run.
-  - **REMAINING = Simon's calls only:** the D6/D8 flag-gated LIVE FLIPS (turn the v0s on, reviewed
-    vs real plans); the science/provenance review packet (#209 — sweep rows 2/8/13 + rows 4/5 +
-    ballistic/olympic contraindication vocab); 🔒 10 endurance trigger (Stage 7). No mechanical
-    sub-phase remains for autonomous pickup.
+  - **REMAINING = Simon's calls only:** the science/provenance review packet (#209 — sweep rows
+    2/8/13 + rows 4/5 + ballistic/olympic contraindication vocab); 🔒 10 endurance trigger (Stage 7).
+    No mechanical sub-phase remains for autonomous pickup.
+  - **D6 flip: ruled OUT** (redundant with quality-tag selection — `docs/design/m6/D6-FLIP-DESIGN.md`).
+    **D8 flip: blocked** on the fixture-input pipeline (Stage-5 coach schedule → per-player plan; not
+    built). **Force-velocity-aware selection** — the real refinement the D6 analysis surfaced — STEP 1
+    (mechanism, flag-OFF, byte-identical) MERGED (#217); the FLIP is **PARKED pending a force-velocity
+    science review** (`docs/design/m6/FV-SELECTION-PARKED.md`): the flip audit found 5/15 archetypes
+    move but the swaps (e.g. kb_swing→sled_push for explosive work) rest on SEED force-velocity tags —
+    validate the tags first, then flip with a scoped audited re-baseline. Flag reachable via
+    `generatePlan(p, {forceVelocityAware:true})` (plumbing byte-identical).
 
   **2026-07-16 (cont.) — M6 in flight: 🔒 8/9/10 all ruled; re-seat DONE; governance sweep mostly done.**
   - **🔒 8/9/10 RULED** (docs/design/m6/RULING-8/9/10). **M6 sub-phase (b) — the allocator re-seat —
