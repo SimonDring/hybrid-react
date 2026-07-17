@@ -24,6 +24,14 @@ neither is present.
 
 ---
 
+## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROWS 12 + 3 (shape upgrades; KSV 1.41.0 → 1.42.0)
+- Changed archetypes (content): **none.** Stamp-only (`knowledgeSetVersion` 1.41.0 → 1.42.0 on
+  every archetype; non-stamp diff empty). Manifest re-baselined (44 files).
+- Why: ROW 12 — `LIGHT_STRENGTH_MAINS` gained the evidence block it lacked (`_evidence`, not an
+  intent key → scheme() unchanged). ROW 3 — the modality-similarity fall-back distance is now the
+  named seed `MODALITY_SIM_DEFAULT` (Art 13 label). Values unchanged (light schemes; 0.4).
+- Claim: no archetype content moved — stamp-only.
+
 ## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROW 1 cont. (perSetMin/focus/finisher weights; KSV 1.40.0 → 1.41.0)
 - Changed archetypes (content): **none.** No plan changed.
 - Keys that moved: `meta.provenance.knowledgeSetVersion` ONLY (1.40.0 → 1.41.0), every archetype.
