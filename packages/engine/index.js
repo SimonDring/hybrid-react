@@ -31,6 +31,8 @@ export { assessRecovery, recoveryFromScore, subjectiveScore } from './src/lib/re
 export { assessLoad, assessLoad as deriveLoad } from './src/lib/load/load.js';
 export { readinessIndex, readinessIndex as deriveReadiness } from './src/lib/indices/index.js';
 export { computeReadiness, readinessFor, sleepScoreFor } from './src/lib/Readiness.js';
+// M6(e) / TR-15 — the one typed, honestly-named seam a wearable / daily-metrics row enters through.
+export { adaptWearableReading } from './src/lib/adapters/wearableReading.js';
 export {
   dailyLoads, acuteChronic, acwr, acwrSeries, loadDecision, acwrBand,
   combinedMultiplier, deloadRecommendation, sessionLoad, workoutLoad

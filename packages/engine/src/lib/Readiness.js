@@ -18,6 +18,10 @@
  * the user enters a readiness value manually. See memory/reference for details.
  */
 
+// M6(e) / TR-15: a wearable row enters through ONE honest adapter seam (measured vs vendor-derived
+// vs subjective) instead of scattered field reads. Pure remap — values unchanged.
+import { adaptWearableReading } from './adapters/wearableReading.js';
+
 // Map a 0-100 score to a status band.
 function bandFromScore(score) {
   if (score >= 70) return 'strong';
@@ -80,7 +84,11 @@ function deriveScore(latest, prior) {
  */
 export function readinessFor(metric, prior = []) {
   if (!metric) return null;
-  if (metric.readiness_score != null) return { score: metric.readiness_score, estimated: false };
+  // The vendor's readiness composite (if the device supplied one) enters through the honest adapter
+  // seam — it is NOT a measured readiness, so `estimated: false` here means "not the engine's own
+  // estimate" (source-provided), never "ground truth" (Art 16; M6(e) TR-15). Value unchanged.
+  const vendor = adaptWearableReading(metric).vendorDerived.readinessComposite;
+  if (vendor != null) return { score: vendor, estimated: false };
   const derived = deriveScore(metric, prior);
   if (derived != null) return { score: derived, estimated: true };
   return null;
@@ -96,7 +104,10 @@ export function readinessFor(metric, prior = []) {
  */
 export function sleepScoreFor(metric) {
   if (!metric) return null;
-  if (metric.sleep_score != null) return { score: metric.sleep_score, estimated: false };
+  // The vendor's sleep composite enters through the honest adapter seam — a vendor algorithm, not a
+  // measured sleep quality (Art 16; M6(e) TR-15). Value unchanged.
+  const vendorSleep = adaptWearableReading(metric).vendorDerived.sleepComposite;
+  if (vendorSleep != null) return { score: vendorSleep, estimated: false };
   if (metric.sleep_duration_min == null) return null;
 
   // Duration: 8h (480 min) → 100.
