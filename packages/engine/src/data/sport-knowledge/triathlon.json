@@ -4,6 +4,7 @@
   "label": "Triathlon (swim/bike/run)",
   "lastReviewed": "2026-06-29",
   "meta": {
+    "cohorts": { "categoryLed": true },
     "sport": "Triathlon",
     "category": "Endurance — individual (multi-discipline, sequential swim→bike→run)",
     "teamOrIndividual": "individual",

@@ -4,6 +4,7 @@
   "label": "Swimming (pool)",
   "lastReviewed": "2026-06-28",
   "meta": {
+    "cohorts": { "categoryLed": true },
     "sport": "Swimming",
     "category": "Endurance / power — individual (pool, cyclic)",
     "teamOrIndividual": "individual",

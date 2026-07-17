@@ -4,6 +4,7 @@
   "label": "Hurling",
   "lastReviewed": "2026-06-28",
   "meta": {
+    "cohorts": { "categoryLed": true },
     "sport": "Hurling",
     "category": "Invasion / field team sport (stick-and-ball)",
     "teamOrIndividual": "team",
