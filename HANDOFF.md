@@ -291,6 +291,18 @@ move it to the archive file rather than letting this one grow._
   - **REMAINING = Simon's calls only:** the science/provenance review packet (#209 — sweep rows
     2/8/13 + rows 4/5 + ballistic/olympic contraindication vocab); 🔒 10 endurance trigger (Stage 7).
     No mechanical sub-phase remains for autonomous pickup.
+  - **PROVENANCE / science review: PARKED (Simon, 2026-07-16), tooled + started.** Harness:
+    `npm run provenance:review -w @performance-os/engine [YYYY-MM-DD]` (read-only; A safety → B
+    modifiers → C provenance rows 2/8/13 → D staleness). **DONE:** closure §3 ROW 4 shape upgrade —
+    all 20 high_risk referral-gate flags carry machine-readable `referral` provenance (basis +
+    confidence:'high' + source:null + needsCitation:true), byte-identical (KSV 1.47.0). **PENDING
+    (Simon/clinician, no autonomous pickup — do NOT fabricate citations):** the 20 referral SOURCES
+    (fill `referral.source`, needsCitation:false → harness flips [PENDING]→[✓]); the ballistic/olympic
+    contraindication clearances (hang_clean/power_clean/push_press/bounding_a_skip × injured regions);
+    row 5 femaleRepBump + age modifier; rows 2/8/13 per-entry provenance. Resume: run the harness, get
+    Simon's calls table-by-table, apply as governed stamp-only changes.
+  - **FORCE-VELOCITY selection: PARKED**, mechanism merged (#217), flag reachable, audit reproducible.
+    Harness `npm run fv:review`. See `docs/design/m6/FV-SELECTION-PARKED.md` (validate seed fv tags → flip).
   - **D6 flip: ruled OUT** (redundant with quality-tag selection — `docs/design/m6/D6-FLIP-DESIGN.md`).
     **D8 flip: blocked** on the fixture-input pipeline (Stage-5 coach schedule → per-player plan; not
     built). **Force-velocity-aware selection** — the real refinement the D6 analysis surfaced — STEP 1
