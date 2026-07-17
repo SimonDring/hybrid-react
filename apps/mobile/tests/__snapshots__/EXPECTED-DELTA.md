@@ -24,6 +24,11 @@ neither is present.
 
 ---
 
+## 2026-07-16 — Phase 3 M6(c) phase 1: D6 Training Strategy (parallel v0; KSV 1.43.0 → 1.44.0)
+- Changed archetypes (content): **none.** Stamp-only (`knowledgeSetVersion` 1.43.0 → 1.44.0; non-stamp diff empty). Manifest 46 files (+2: `data/interventionClass.js`).
+- Why: new D6 `Strategy` object (`lib/strategy/strategy.js`) + its governed intervention-class knowledge (`data/interventionClass.js`). PARALLEL v0 — steers nothing (the D4/D5/D7 advisory rollout), so no plan changes; only the knowledge-set version bumps for the new table.
+- Claim: no archetype content moved — stamp-only.
+
 ## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROW 9 (sport-support load magnitudes; KSV 1.42.0 → 1.43.0)
 - Changed archetypes (content): **none.** Stamp-only (`knowledgeSetVersion` 1.42.0 → 1.43.0; non-stamp diff empty). Manifest 45 files (+1 `data/sportLoadDefaults.js`).
 - Why: the global sport-load defaults (goal factor, volume floor/ceil, sport-day trim) relocated verbatim from `lib/strength/sportLoad.js` → governed `data/sportLoadDefaults.js`. Values unchanged; per-sport systemic factor already an SKB fact.
