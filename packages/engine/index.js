@@ -99,6 +99,7 @@ export { INTERVENTION_CLASS, interventionClassFor } from './src/data/interventio
 // M6(c) phase 2 — D8 Weekly Objective (microcycle): consumes the SKB `microcycles` section by
 // fixture density. PARALLEL v0 — steers nothing yet (flag-gated reshaping is a later flip).
 export { deriveWeeklyObjective } from './src/lib/microcycle/weeklyObjective.js';
+export { mdMapForWeek } from './src/lib/microcycle/fixtureWeeks.js';
 export { readinessValidation } from './src/lib/indices/readinessValidation.js';
 // WP-49 (Plan 1) — the discipline + secondary-goal knowledge foundation (STAGED,
 // never engine-consumed yet; Plan 2 flips build onto this).
