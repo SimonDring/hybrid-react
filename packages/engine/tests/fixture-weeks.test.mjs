@@ -1,6 +1,6 @@
 // packages/engine/tests/fixture-weeks.test.mjs
 import assert from 'node:assert/strict';
-import { mdMapForWeek } from '@performance-os/engine';
+import { mdMapForWeek, mdConstraintsFrom } from '@performance-os/engine';
 
 let n = 0;
 const ok = (c, m) => { n++; assert.ok(c, m); console.log('PASS:', m); };
@@ -39,5 +39,28 @@ const ok = (c, m) => { n++; assert.ok(c, m); console.log('PASS:', m); };
   ok(r.matchesThisWeek === 2, 'two matches in week 1');
   ok(r.mdOffsetByWeekday.get(3) === 1, 'Thursday is MD+1 relative to the Wed match (nearest)');
   ok(r.mdOffsetByWeekday.get(4) === -1, 'Friday is MD-1 relative to the Sat match (nearest)');
+}
+// oneMatchPerWeek soccer constraints, Saturday match (offsets: Tue -4, Thu -2, Fri -1, Sat 0, Sun +1).
+{
+  const { mdOffsetByWeekday } = mdMapForWeek({
+    fixtures: [{ dateISO: '2026-07-18', weekdayIdx: 5 }], matchWeekday: null,
+    planStartDate: '2026-07-13', weekNum: 1,
+  });
+  const c = mdConstraintsFrom({
+    avoidHeavyLiftingDays: ['MD-1', 'MD', 'MD+1'],
+    preferExplosiveWorkDays: ['MD-2', 'MD-3'],
+    heavyDay: 'MD-4 or MD-3 (lower-body strength)', powerDay: 'MD-2 (power)',
+    recoveryDay: 'MD+1 (active recovery)', injuryPreventionDay: null,
+  }, mdOffsetByWeekday);
+  ok(c.avoidHeavyIdx.has(4) && c.avoidHeavyIdx.has(5) && c.avoidHeavyIdx.has(6), 'avoid-heavy = Fri/Sat/Sun (MD-1/MD/MD+1)');
+  ok(c.preferExplosiveIdx.has(3) && c.preferExplosiveIdx.has(2), 'prefer-explosive = Thu/Wed (MD-2/MD-3)');
+  ok(c.heavyTargetIdx.has(1) && c.heavyTargetIdx.has(2), 'heavy target = Tue/Wed (MD-4/MD-3)');
+  ok(c.recoveryIdx.has(6), 'recovery = Sunday (MD+1)');
+}
+// Sentinel-only congested constraints → null (byte-safe; sentinel semantics are Simon's call).
+{
+  const { mdOffsetByWeekday } = mdMapForWeek({ fixtures: [{ dateISO: '2026-07-18', weekdayIdx: 5 }], matchWeekday: null, planStartDate: '2026-07-13', weekNum: 1 });
+  const c = mdConstraintsFrom({ avoidHeavyLiftingDays: ['all'], preferExplosiveWorkDays: ['match-day primer only'], heavyDay: 'none', powerDay: 'match-day priming only', recoveryDay: 'every non-match day', injuryPreventionDay: null }, mdOffsetByWeekday);
+  ok(c === null, 'unparseable sentinel constraints yield no reshape (null)');
 }
 console.log(`\nfixture-weeks: ${n}/${n} checks passed`);

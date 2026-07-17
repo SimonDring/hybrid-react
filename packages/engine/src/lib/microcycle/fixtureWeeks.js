@@ -50,4 +50,40 @@ export function mdMapForWeek({ fixtures = [], matchWeekday = null, planStartDate
   return { matchesThisWeek: matchIdx.length ? matchesThisWeek : 0, mdOffsetByWeekday };
 }
 
-export default { mdMapForWeek };
+// Parse every `MD±n` token in a string or string[] into a Set of signed offsets. "MD" alone = 0.
+// Non-MD sentinel words ("all", "none", "every day between matches", …) contribute nothing.
+function offsetsFrom(spec) {
+  const out = new Set();
+  const scan = (s) => {
+    if (typeof s !== 'string') return;
+    const re = /MD([+-]\d+)?/g; let m;
+    while ((m = re.exec(s)) !== null) out.add(m[1] ? Number(m[1]) : 0);
+  };
+  if (Array.isArray(spec)) spec.forEach(scan); else scan(spec);
+  return out;
+}
+
+// Which weekday indices in this week carry an offset in `offsets`.
+function idxWhereOffset(mdOffsetByWeekday, offsets) {
+  const s = new Set();
+  if (!offsets.size) return s;
+  for (const [d, o] of mdOffsetByWeekday) if (offsets.has(o)) s.add(d);
+  return s;
+}
+
+/**
+ * Translate a sport's spacing constraints + this week's offset map into concrete weekday-index
+ * sets the scheduler penalises against. Returns null when nothing is parseable (byte-safe: the
+ * scheduler then sees no mdConstraints and runs exactly as today).
+ */
+export function mdConstraintsFrom(spacingConstraints, mdOffsetByWeekday) {
+  if (!spacingConstraints || !mdOffsetByWeekday || !mdOffsetByWeekday.size) return null;
+  const avoidHeavyIdx = idxWhereOffset(mdOffsetByWeekday, offsetsFrom(spacingConstraints.avoidHeavyLiftingDays));
+  const preferExplosiveIdx = idxWhereOffset(mdOffsetByWeekday, offsetsFrom(spacingConstraints.preferExplosiveWorkDays));
+  const heavyTargetIdx = idxWhereOffset(mdOffsetByWeekday, offsetsFrom(spacingConstraints.heavyDay));
+  const recoveryIdx = idxWhereOffset(mdOffsetByWeekday, offsetsFrom(spacingConstraints.recoveryDay));
+  if (!avoidHeavyIdx.size && !preferExplosiveIdx.size && !heavyTargetIdx.size && !recoveryIdx.size) return null;
+  return { avoidHeavyIdx, preferExplosiveIdx, heavyTargetIdx, recoveryIdx };
+}
+
+export default { mdMapForWeek, mdConstraintsFrom };
