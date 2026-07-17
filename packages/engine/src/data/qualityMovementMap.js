@@ -8,6 +8,8 @@
  * to the gym-trainable qualities that SUPPORT them (e.g. aerobicCapacity → robustness + reactiveStrength:
  * durability + running economy via tendon stiffness — the EDS in-season-runner's exact gym prescription).
  */
+import { SSC_SCREENED_ENGINE_SPORTS } from './sportEngineBinding.js';
+
 const ev = (confidence) => ({ level: 'seed', confidence, source: 'seed movement map (Sprint 7)', needsReview: true });
 
 export const QUALITY_MOVEMENT = {
@@ -41,7 +43,7 @@ export const CARDIO_GYM_SUPPORT = {
 // stretch-shortening cycle, and their evidence-based gym support is heavy strength
 // (Rønnestad 2010; Aagaard 2011). A sport-agnostic map was injecting pogos into a
 // cyclist's plan. Sports whose locomotion loads the SSC:
-const SSC_SPORTS = new Set(['run']);
+const SSC_SPORTS = new Set(SSC_SCREENED_ENGINE_SPORTS);
 export function cardioGymSupport(qualityId, sport = null) {
   const base = CARDIO_GYM_SUPPORT[qualityId];
   if (!base) return null;

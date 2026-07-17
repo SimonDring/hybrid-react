@@ -24,6 +24,17 @@ neither is present.
 
 ---
 
+## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROW 7b (engineSport cohort facts; KSV 1.38.0 → 1.39.0)
+- Changed archetypes (content): **none.** No plan changed.
+- Added archetypes: none.
+- Keys that moved, per archetype: `meta.provenance.knowledgeSetVersion` ONLY (1.38.0 → 1.39.0),
+  every archetype. Non-stamp diff empty (verified). Manifest re-baselined to 1.39.0 (43 files).
+- Why: the two remaining sport-fact code Sets are now derived from authored binding flags —
+  `D11_SPORTS` (run, cycle) from `sportEngineBinding.js` `d11Steered`, `SSC_SPORTS` (run) from
+  `sscScreened` (closure §3 row 7b; C3 / Art 17). Membership UNCHANGED — asserted directly
+  (D11 == {run, cycle}, SSC == {run}). Row 7 now complete.
+- Claim: no archetype content moved — stamp-only, audited key-by-key.
+
 ## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROW 7 (category-led cohort fact; KSV 1.37.0 → 1.38.0)
 - Changed archetypes (content): **none.** No plan changed.
 - Added archetypes: none.
