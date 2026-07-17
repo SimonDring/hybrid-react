@@ -45,6 +45,9 @@ import { applyProgressionCreep } from '../strength/progressionCreep.js';
 import { regionOf, hypertrophyRegionOf } from './sessionSpecs.js';
 import { exerciseMatchesToken } from '../../data/movementPatternMap.js';
 import { D11_STEERED_ENGINE_SPORTS } from '../../data/sportEngineBinding.js';
+// M6(a) governance sweep (closure §3 row 1 subset): session-assembly time budgets are governed
+// knowledge now (KA Domain 6), not code literals.
+import { SESSION_BUILDING } from '../../data/sessionBuilding.js';
 // M-DOSE (M6 re-seat, 🔒 9): the D12 dose primitives (dose/dose.js).
 import { scheme, olympicClassicLift, roleSetCount, makeItem } from '../dose/dose.js';
 // M-SCHED (M6 re-seat, 🔒 9): the D13 structuring core (supersets/ordering + RPE post-pass).
@@ -88,8 +91,8 @@ export function diagnosisSteers({ style, sport, categoryPlan = null, discipline 
 // Supportive finisher: round a short session out toward FINISHER_TARGET_MIN with
 // sport/goal-appropriate factor-0 work (prehab/mobility/core-activation), but never
 // add more than FINISHER_CAP_MIN — a session is never mostly prehab.
-const FINISHER_TARGET_MIN = 30;
-const FINISHER_CAP_MIN = 15;
+const FINISHER_TARGET_MIN = SESSION_BUILDING.finisherTargetMin;
+const FINISHER_CAP_MIN = SESSION_BUILDING.finisherCapMin;
 
 // Map the build style to its goalTag value (the exercise goalTags vocabulary is
 // strength/hypertrophy/functional — the bodybuilding FAMILY is tagged 'hypertrophy').
@@ -564,7 +567,7 @@ const ISO_FOR_REGION = {
   upper: ['triceps_pushdown', 'biceps_curl', 'lateral_raise'],
   full:  ['biceps_curl', 'triceps_pushdown', 'calf_raise'],
 };
-const HYP_ISO_CAP_MIN = 12;
+const HYP_ISO_CAP_MIN = SESSION_BUILDING.hypertrophyIsoCapMin;
 function addHypertrophyIsolation(work, ctx, weeklyDelivered, weeklyCeiling, targets, s, style, deload, taper, repBump, levelName) {
   if (ctx.discipline !== 'hypertrophy') return;
   const contra = ctx.contraindicatedPatterns instanceof Set ? ctx.contraindicatedPatterns : new Set(ctx.contraindicatedPatterns || []);
@@ -638,7 +641,7 @@ function addSupportiveFinishers(work, ctx, levelName, s, style, deload, taper, r
 // corrective). Gated: no-op when ctx.secondaryGoals is empty, so every sport + no-goal build plan
 // is byte-identical. Equipment / injury (blocked name + contraindicated pattern) / duplicate aware.
 const EX_BY_ID_ALL = new Map(EXERCISES.map((e) => [e.id, e]));
-const SECONDARY_CAP_MIN = 10;   // at most ~10 min of secondary corrective per session
+const SECONDARY_CAP_MIN = SESSION_BUILDING.secondaryCapMin;   // at most ~10 min of secondary corrective per session
 function injectSecondaryGoals(work, ctx, s, style, deload, taper, repBump) {
   const goals = (ctx.secondaryGoals || []).map(getSecondaryGoal).filter(Boolean);
   if (!goals.length) return;
