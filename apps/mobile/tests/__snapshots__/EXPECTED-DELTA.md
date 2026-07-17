@@ -24,6 +24,11 @@ neither is present.
 
 ---
 
+## 2026-07-16 — provenance review, closure §3 ROW 4 shape upgrade (referral provenance; KSV 1.46.0 → 1.47.0)
+- Changed archetypes (content): **none.** Stamp-only (`knowledgeSetVersion` 1.46.0 → 1.47.0; non-stamp diff empty). Manifest 46 files.
+- Why: every high_risk injuryTaxonomy diagnosis (the 20 professional-referral gate flags) gained machine-readable `referral` provenance ({basis, confidence:'high', source:null, needsCitation:true}). `referral` is read by nothing (engine injury-blind; app reads named fields) → no plan change; only the knowledge-set version bumps. The specific clinical citations remain a clinician's to supply (deliberately not fabricated).
+- Claim: no archetype content moved — stamp-only.
+
 ## 2026-07-16 — force-velocity-aware selection STEP 1 (flag-OFF; KSV 1.45.0 → 1.46.0)
 - Changed archetypes (content): **none.** Stamp-only (`knowledgeSetVersion` 1.45.0 → 1.46.0; non-stamp diff empty). Manifest 46 files.
 - Why: new governed `SELECTION_SCORING.forceVelocityWeight` (0.15) + a FLAG-GATED force-velocity-match nudge in `selectInterventions.valueOf` (`ctx.forceVelocityAware`, default OFF). Flag off ⇒ the nudge branch never runs ⇒ selection byte-identical; only the new weight bumps KSV.
