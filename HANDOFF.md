@@ -276,6 +276,19 @@ move it to the archive file rather than letting this one grow._
     (the migration branch was rebased to migration-only; M4b re-routed to its own branch).
     No work lost, nothing corrupted; recovery is recorded in the SDD ledger.
 
+  **2026-07-16 (cont.) — M6 in flight: 🔒 8/9/10 all ruled; re-seat DONE; governance sweep mostly done.**
+  - **🔒 8/9/10 RULED** (docs/design/m6/RULING-8/9/10). **M6 sub-phase (b) — the allocator re-seat —
+    COMPLETE + merged:** allocator.js no longer exists; split byte-identically into M-DOSE
+    (`dose/dose.js` #198), M-SCHED (`schedule/structure.js` #199), M-SESS (`session/sessionBuilder.js`
+    #200). Every extraction stamp/byte-verified; goldens never moved.
+  - **M6 sub-phase (a) — governance sweep: the 10 mechanical rows DONE + merged** (#201–#208; KSV
+    1.35.0 → 1.43.0, every move stamp-only, goldens byte-identical). Every plan-STEERING code literal
+    is now governed knowledge (C3 met). **Remaining rows are NOT mechanical — routed to you:**
+    `docs/design/m6/GOVERNANCE-SWEEP-STATUS.md` — rows 2/8/13 (per-entry provenance authoring, science-
+    adjacent) + rows 4/5 + the ballistic/olympic contraindication vocab (always your science calls).
+  - **Remaining M6:** sub-phases (c) D6/D8 typed objects, (d) age/sex modifiers (🔒 science, row 5),
+    (e) wearable adapter, (f) polish/dead-scaffolding. None re-open a ruled 🔒.
+
   **⏳ WHAT'S NEXT (all M6 locks now ruled — the road is BUILD work + standing items):**
   1. **M6 sub-phase (b) — the allocator re-seat — is UNBLOCKED to build** (🔒 9 ruled). Say go and
      I author the re-seat design spec + execute it as byte-identity-gated PRs (the FIRST one, M-DOSE,
