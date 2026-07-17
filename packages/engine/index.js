@@ -90,6 +90,10 @@ export { blockOutcome } from './src/lib/learning/blockOutcome.js';
 export { promoteFromOutcomes, PROMOTION_DEFAULTS, PROMOTION_POLICY_VERSION } from './src/lib/learning/promoteFromOutcomes.js';
 // M5-L2 — materialises one block's recovery observation for the substrate row (pure).
 export { deriveRecoveryObservation } from './src/lib/learning/deriveRecoveryObservation.js';
+// M6(c) — D6 Training Strategy (M-STRAT), a typed develop/maintain object at intervention-class
+// granularity. PARALLEL v0 — steers nothing yet (the D4/D5/D7 advisory rollout pattern).
+export { deriveStrategy } from './src/lib/strategy/strategy.js';
+export { INTERVENTION_CLASS, interventionClassFor } from './src/data/interventionClass.js';
 export { readinessValidation } from './src/lib/indices/readinessValidation.js';
 // WP-49 (Plan 1) — the discipline + secondary-goal knowledge foundation (STAGED,
 // never engine-consumed yet; Plan 2 flips build onto this).
