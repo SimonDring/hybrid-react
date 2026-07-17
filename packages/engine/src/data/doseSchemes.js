@@ -138,6 +138,12 @@ export const LIGHT_STRENGTH_MAINS = {
   build: { main: '4 × 8', acc: '3 × 10' },
   peak: { main: '4 × 6', acc: '3 × 8' },
   fallback: { main: '4 × 8', acc: '3 × 10' },
+  // Closure §3 row 12 (shape upgrade): the one dose scheme that lacked an evidence block now
+  // carries one, like its siblings. Read by scheme() via the intent keys above; `_evidence` is not
+  // an intent, so behaviour is unchanged. When a max-strength goal can't load a barbell main, the
+  // work drops to a hypertrophy-range substitution on the best available load — a stopgap, not the
+  // prescription the goal wants (hence low confidence; the honest fix is barbell access).
+  _evidence: ev('low', 'Barbell-unavailable strength substitution — hypertrophy-range dosing on the best available implement (Schoenfeld 2017 rep ranges); a stopgap when the max-strength barbell main cannot be loaded'),
 };
 
 // ── Power / plyometric dose (quality-dosed, never the role scheme) ────────────

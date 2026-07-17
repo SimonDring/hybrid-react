@@ -56,9 +56,14 @@ const SIM = {
   band:       { free: 0.45, cable: 0.6, machine: 0.4, band: 1.0, bodyweight: 0.5 },
   bodyweight: { free: 0.5, cable: 0.4, machine: 0.35, band: 0.5, bodyweight: 1.0 }
 };
+// Closure §3 row 3 — the fall-back modality-similarity distance, now a NAMED SEED (Art 13): a
+// moderate default for an unrecognised modality pair, capped as a seed (it steers substitution
+// RANKING only, a soft input, never a gate). SEED — replace with authored pairwise distances if a
+// new modality is added. Value unchanged (0.4).
+const MODALITY_SIM_DEFAULT = 0.4; // seed · confidence low · heuristic ordinal
 export function modalitySim(equipA, equipB) {
   const a = MODALITY[equipA] || 'free', b = MODALITY[equipB] || 'free';
-  return (SIM[a] && SIM[a][b] != null) ? SIM[a][b] : 0.4;
+  return (SIM[a] && SIM[a][b] != null) ? SIM[a][b] : MODALITY_SIM_DEFAULT;
 }
 
 export default { DEFAULT_MUSCLES, ISO_GROUP, OVERRIDES, MODALITY, modalitySim };
