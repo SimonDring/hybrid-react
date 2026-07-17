@@ -18,14 +18,18 @@ const bar = (s) => `\n${'═'.repeat(80)}\n${s}\n${'═'.repeat(80)}`;
 // ── A. SAFETY-CRITICAL (gate-tier, Art 8) — do first ──────────────────────────
 console.log(bar('A · SAFETY-CRITICAL — gate-tier, do first (Art 8: a gate needs high-confidence knowledge)'));
 
-console.log('\n  ROW 4 — injuryTaxonomy `high_risk` flags (immediate professional-referral gate, NO citations today).');
-console.log('  These MUST carry citations before they can gate (Art 13). Flagged high_risk:');
-let hi = 0;
+console.log('\n  ROW 4 — injuryTaxonomy `high_risk` flags (immediate professional-referral gate).');
+console.log('  Provenance SHAPE is in place (referral{basis,confidence,source,needsCitation}); the CITATION');
+console.log('  per diagnosis is a clinician\'s to supply. [✓]=cited  [PENDING]=needs a source:');
+let hi = 0, pending = 0;
 for (const region of Object.keys(DIAGNOSES)) {
   const flagged = (DIAGNOSES[region] || []).filter((d) => d.high_risk);
-  if (flagged.length) { hi += flagged.length; console.log(`    ${region.padEnd(16)} ${flagged.map((d) => d.key).join(', ')}`); }
+  if (!flagged.length) continue;
+  hi += flagged.length;
+  const marks = flagged.map((d) => { const cited = d.referral && d.referral.source; if (!cited) pending++; return `${d.key}${cited ? '[✓]' : '[PENDING]'}`; });
+  console.log(`    ${region.padEnd(16)} ${marks.join(', ')}`);
 }
-console.log(`    → ${hi} high_risk diagnoses need a referral citation each.`);
+console.log(`    → ${hi} high_risk diagnoses; ${pending} still need a clinical citation (fill referral.source, needsCitation:false).`);
 
 console.log('\n  CONTRAINDICATION vocab (M4a caveat 2) — exercises CLEARED from a contraindicated pattern');
 console.log('  (blocked ⇔ pattern contraindicated AND id NOT in clearedIds). Review: should each stay cleared?');
