@@ -24,6 +24,20 @@ neither is present.
 
 ---
 
+## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROWS 11 + 6 (KSV 1.36.0 → 1.37.0)
+- Changed archetypes (content): **none.** No plan changed.
+- Added archetypes: none.
+- Keys that moved, per archetype: `meta.provenance.knowledgeSetVersion` ONLY (1.36.0 → 1.37.0),
+  every archetype. Full per-archetype diff confirms the only changed line is the stamp.
+  `knowledge-set-manifest.json` re-baselined to 1.37.0 over 43 files (+1: new `data/reflowEffects.js`).
+- Why: ROW 11 — the runtime reflow's load-response effect magnitudes relocated VERBATIM from
+  `lib/sportKnowledge/reflowAdjust.js` → governed `data/reflowEffects.js`. ROW 6 — the v2 readiness
+  weights + capacityModulation now read from the governed KB entry `index.readiness.weights` (single
+  operative source; retires the decorative code copy). Both feed the RUNTIME readiness/reflow band,
+  not the baseline plan, so no golden content moves; row 11 bumps KSV (new governed data file), row 6
+  is lib-only. All values unchanged.
+- Claim: no archetype content moved — stamp-only, audited key-by-key.
+
 ## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROW 10: season-phase cut-points → governed knowledge (KSV 1.35.0 → 1.36.0)
 - Changed archetypes (content): **none.** No plan changed.
 - Added archetypes: none.

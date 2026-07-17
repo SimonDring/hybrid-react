@@ -6,6 +6,7 @@
  * the engine catalogue doesn't have yet).
  */
 import { evaluateRules } from './rules.js';
+import { REFLOW_EFFECT_MAGNITUDES as M } from '../../data/reflowEffects.js';
 
 // Calendar / season-schedule signals are KNOWN at plan-generation time and are already
 // applied by baseline periodisation (seasonProgramming → the SKB `competition` block;
@@ -29,11 +30,11 @@ export function ruleVolumeAdjustment(profile, context = {}, { excludeSignals = R
     ruleIds.push(e.ruleId);
     switch (e.type) {
       case 'reduce_volume_pct': { const pct = (e.params && e.params.pct) || 0; volumeMult *= (1 - pct / 100); break; }
-      case 'minimal_effective_volume': volumeMult = Math.min(volumeMult, 0.6); break;
-      case 'taper':                    volumeMult = Math.min(volumeMult, 0.55); break;
-      case 'priming_only':             volumeMult = Math.min(volumeMult, 0.4); break;
-      case 'reduce_one_step':          volumeMult *= 0.85; break;
-      case 'withhold':                 volumeMult = Math.min(volumeMult, 0.2); break;
+      case 'minimal_effective_volume': volumeMult = Math.min(volumeMult, M.minimal_effective_volume); break;
+      case 'taper':                    volumeMult = Math.min(volumeMult, M.taper); break;
+      case 'priming_only':             volumeMult = Math.min(volumeMult, M.priming_only); break;
+      case 'reduce_one_step':          volumeMult *= M.reduce_one_step; break;
+      case 'withhold':                 volumeMult = Math.min(volumeMult, M.withhold); break;
       case 'force_deload':             forceDeload = true; break;
       default: break; // reserved → no-op
     }

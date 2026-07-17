@@ -21,6 +21,7 @@ import { trainingLoadIndex } from './trainingLoadIndex.js';
 import { recoveryCapacityIndex } from './recoveryCapacityIndex.js';
 import { consistencyIndex } from './consistencyIndex.js';
 import { bandFromValue } from './contract.js';
+import { value as kbValue } from '../knowledge/kb.js';
 
 /**
  * @param {object} inputs
@@ -35,10 +36,14 @@ import { bandFromValue } from './contract.js';
  * @param {object} [inputs.consistency]     { completed, planned, loggedDays, windowDays } → Consistency (optional)
  * @returns {{ value, confidence, band, contributors, missingInputs, indices }}
  */
-// v2 weighting (knowledge base: index.readiness.weights) — subjective is the largest
-// single component (Saw 2016), HRV the primary objective marker, sleep heavy; Recovery
-// Capacity nudges the ceiling. Returns null if none of the weighted parts are present.
-const V2_WEIGHTS = { wellness: 0.40, sleep: 0.25, cardio: 0.25, fatigue: 0.10 };
+// v2 weighting — subjective is the largest single component (Saw 2016), HRV the primary
+// objective marker, sleep heavy; Recovery Capacity nudges the ceiling. Returns null if none of
+// the weighted parts are present. The magnitudes are read from the governed KB entry
+// `index.readiness.weights` — the SINGLE OPERATIVE SOURCE (closure §3 row 6; C3 / Art 13): the
+// entry was decorative (a code copy drove the plan while the governed value sat unread — the
+// drift class KV-2 guards). Now the engine reads the entry; the copy is gone. Values unchanged.
+const READINESS = kbValue('index.readiness.weights');
+const V2_WEIGHTS = READINESS.weights;
 function readinessV2(sub) {
   let num = 0, den = 0;
   for (const k of Object.keys(V2_WEIGHTS)) {
@@ -48,7 +53,7 @@ function readinessV2(sub) {
   if (den === 0) return null;
   let v = num / den;
   const cap = sub.recoveryCapacity && sub.recoveryCapacity.value;
-  if (cap != null) v += (cap - 50) * 0.1; // capacity modulates the ceiling (±5 at the extremes)
+  if (cap != null) v += (cap - 50) * READINESS.capacityModulation; // capacity modulates the ceiling (±5 at the extremes)
   return Math.round(Math.max(0, Math.min(100, v)));
 }
 
