@@ -276,6 +276,23 @@ move it to the archive file rather than letting this one grow._
     (the migration branch was rebased to migration-only; M4b re-routed to its own branch).
     No work lost, nothing corrupted; recovery is recorded in the SDD ledger.
 
+  **2026-07-16 — M6 BUILD SUB-PHASES COMPLETE (a/b/c/e/f all merged). Decision Engine V2 IS the engine.**
+  - (a) governance sweep: 10 mechanical rows merged (#201–#208; KSV 1.35→1.43, every move stamp-only).
+    Every plan-STEERING code literal is now governed knowledge (C3 met).
+  - (b) allocator re-seat: allocator.js DELETED — split byte-identically into M-DOSE (dose/dose.js),
+    M-SCHED (schedule/structure.js), M-SESS (session/sessionBuilder.js) (#198–#200).
+  - (c) D6 Strategy (#211) + D8 WeeklyObjective (#212) typed objects — the Stage-7 endurance
+    prerequisite. PARALLEL v0 (steer nothing yet; byte-identical). D8 consumes the dormant SKB
+    `microcycles` section.
+  - (e) wearable adapter (#213): one honest typed seam (adaptWearableReading; measured vs
+    vendor-derived vs subjective — TR-15 / Art 16). Byte-identical.
+  - (f) polish (#214): TR-18 clock default removed + stale comments; most TR-16 "rot" proved live/
+    intentional/already-clean. Also THIS SESSION: fixed the CI engine gate (#193) — it had never run.
+  - **REMAINING = Simon's calls only:** the D6/D8 flag-gated LIVE FLIPS (turn the v0s on, reviewed
+    vs real plans); the science/provenance review packet (#209 — sweep rows 2/8/13 + rows 4/5 +
+    ballistic/olympic contraindication vocab); 🔒 10 endurance trigger (Stage 7). No mechanical
+    sub-phase remains for autonomous pickup.
+
   **2026-07-16 (cont.) — M6 in flight: 🔒 8/9/10 all ruled; re-seat DONE; governance sweep mostly done.**
   - **🔒 8/9/10 RULED** (docs/design/m6/RULING-8/9/10). **M6 sub-phase (b) — the allocator re-seat —
     COMPLETE + merged:** allocator.js no longer exists; split byte-identically into M-DOSE
