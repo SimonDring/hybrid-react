@@ -8,16 +8,19 @@
  * See docs/superpowers/specs/2026-06-28-sport-load-aware-planning-design.md §5.
  */
 import { DEFAULT_SEASON_VOLUME } from '../../data/periodizationDefaults.js';
+// M6(a) governance sweep (closure §3 row 9): the global sport-support load magnitudes are governed
+// knowledge now (KA Domain 7); the per-sport systemic factor is already an SKB fact.
+import { SPORT_LOAD } from '../../data/sportLoadDefaults.js';
 
-const GOAL_FACTOR = { build_base: 1.0, get_stronger: 0.90, stay_durable: 1.0 };
-export const VOLUME_FLOOR = 0.5, VOLUME_CEIL = 1.0;
+const GOAL_FACTOR = SPORT_LOAD.goalFactor;
+export const VOLUME_FLOOR = SPORT_LOAD.volumeFloor, VOLUME_CEIL = SPORT_LOAD.volumeCeil;
 
 // More sport sessions a week ⇒ less room for gym. Each day beyond two trims ~0.07.
 export function sportDayFactor(n) {
-  if (n <= 2) return 1.0;
-  if (n === 3) return 0.92;
-  if (n === 4) return 0.85;
-  return 0.78;             // ≥5
+  if (n <= 2) return SPORT_LOAD.sportDayFactor.upTo2;
+  if (n === 3) return SPORT_LOAD.sportDayFactor.three;
+  if (n === 4) return SPORT_LOAD.sportDayFactor.four;
+  return SPORT_LOAD.sportDayFactor.fivePlus;             // ≥5
 }
 
 export function sportLoadScalar(profile = {}, { season = 'off', gymSupport = null } = {}) {
