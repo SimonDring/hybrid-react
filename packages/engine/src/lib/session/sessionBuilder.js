@@ -44,6 +44,7 @@ import { deriveMovementRequirements } from './movementRequirements.js';
 import { applyProgressionCreep } from '../strength/progressionCreep.js';
 import { regionOf, hypertrophyRegionOf } from './sessionSpecs.js';
 import { exerciseMatchesToken } from '../../data/movementPatternMap.js';
+import { D11_STEERED_ENGINE_SPORTS } from '../../data/sportEngineBinding.js';
 // M-DOSE (M6 re-seat, 🔒 9): the D12 dose primitives (dose/dose.js).
 import { scheme, olympicClassicLift, roleSetCount, makeItem } from '../dose/dose.js';
 // M-SCHED (M6 re-seat, 🔒 9): the D13 structuring core (supersets/ordering + RPE post-pass).
@@ -63,7 +64,9 @@ const EX_BY_ID = new Map(EXERCISES.map(e => [e.id, e]));
 // predicate shared by the allocator's branch and PlanGenerator's meta.diagnosis emission
 // (WP-42a display honesty: a plan never ships a diagnosis it ignored). Extend the sets
 // here when a cohort flips (WP-48 team sports, WP-49 build) and both stay in lockstep.
-const D11_SPORTS = new Set(['run', 'cycle']);
+// The D11-rating-steered engineSport buckets — an authored SKB-binding fact now, not a code Set
+// (closure §3 row 7b; C3 / Art 17). Membership unchanged (run, cycle).
+const D11_SPORTS = new Set(D11_STEERED_ENGINE_SPORTS);
 export function diagnosisSteers({ style, sport, categoryPlan = null, discipline = null } = {}) {
   // WP-49 (Plan 2 T3/T4c): a build-discipline profile (powerlifting/hypertrophy/olympic) ALWAYS
   // steers — the discipline IS the athlete's chosen path, so it uses the diagnosis-first engine
