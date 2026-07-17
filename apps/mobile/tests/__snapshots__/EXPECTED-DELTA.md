@@ -24,6 +24,20 @@ neither is present.
 
 ---
 
+## 2026-07-16 — Phase 3 M6(a) governance sweep, closure §3 ROW 10: season-phase cut-points → governed knowledge (KSV 1.35.0 → 1.36.0)
+- Changed archetypes (content): **none.** No plan changed.
+- Added archetypes: none.
+- Keys that moved, per archetype: `meta.provenance.knowledgeSetVersion` ONLY (1.35.0 → 1.36.0),
+  on every archetype. Verified by a full per-archetype diff: the ONLY changed lines in
+  `engine-golden-master.json` are `knowledgeSetVersion` (empty non-stamp diff confirmed).
+  `knowledge-set-manifest.json` re-baselined to 1.36.0 over 42 files.
+- Why: the season-phase detection cut-points (`{in:56, pre:120}` days-to-event) were relocated
+  VERBATIM from `lib/plan/periodization.js` into the governed `data/periodizationDefaults.js`
+  (`SEASON_PHASE_CUTOFF_DAYS`) — commitment C3 / Art 17, closure §3 row 10 (M6 §3(a) governance
+  sweep). The numeric values are unchanged, so the plan is byte-identical; only the knowledge-set
+  version bumps because a governed data table gained an entry (ratchet).
+- Claim: no other archetype content moved — audited key-by-key against this note (stamp-only).
+
 ## 2026-07-15 — Phase 3 M2 T5: progression extended to SPORTS gym-support (season-shaped; off-season builds, in-season maintains)
 - Changed archetypes (content): the 17 OFF-SEASON sport archetypes only —
   `sport·run-sprint·intermediate·off·4d`, `sport·run-middle·intermediate·off·4d`,
