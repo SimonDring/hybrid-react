@@ -31,6 +31,26 @@ Mechanically the nudge is correct: for `explosiveStrength` the map's ideal is **
 (mid-continuum), so `sled_push` (`speed-strength`) out-scores `kb_swing`/`broad_jump` (both
 `ballistic`, the reactive end). Whether that's a *sharpening* depends on the tags being right.
 
+## The review harness
+
+Run **`npm run fv:review -w @performance-os/engine`** (`packages/engine/tools/fv-review.mjs`). It
+prints, in one place: (A) every quality's ideal force-velocity + confidence; (B) every exercise's
+force-velocity tag grouped by value, with **⚠ THIN** flags where a continuum class has ≤3 exercises
+(selection is fragile there); (C) the flip impact per archetype with the **force-velocity reasoning
+behind every swap** (each swapped exercise's fv + its match to each quality it trains); (D) the next
+step. Read-only — it never changes data or plans. Edit the tags in `data/exerciseQualities.js` /
+`data/qualityMovementMap.js`, re-run, and watch the swaps until every one is a reviewed sharpening.
+
+**What the harness already flags (starting points for the review):**
+- The **mid-continuum is thin** — only `strength-speed` (hang_clean, power_clean) and `speed-strength`
+  (sled_push). Yet `explosiveStrength`'s ideal is `strength-speed`, so explosive selection swings on
+  these 2–3 tags. Are they right? Should more lifts sit here?
+- The **olympic lifts are tagged `ballistic`** (snatch/clean&jerk/…), not strength-speed — is that
+  the intended force-velocity for loaded classic lifts?
+- `build·olympic` drops `broad_jump`, which is a **perfect reactiveStrength match (1.00)** but a poor
+  explosiveStrength one (0.33) — is the olympic block's *target quality* (explosive vs reactive)
+  right, and should a broad jump stay?
+
 ## What the science review must validate (the gate)
 
 Before the flip, a sports-science pass on the **force-velocity knowledge** (both are `seed` /
