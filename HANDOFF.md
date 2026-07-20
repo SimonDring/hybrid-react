@@ -1,11 +1,45 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-13 (Phase 0: Track B merged, Track A Wave A complete pending PR). This file carries **current
+_Last updated: 2026-07-20 (Sport-data integration roadmap adopted; Phase 1 PR A merged; Phase 2 underway). This file carries **current
 state and the open queue only**. The full session-by-session history (2026-06-11 →
 2026-07-09, ~1,800 lines) is preserved verbatim at
 [`docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md`](docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md).
 Keep this file current at the end of each session; when an entry stops being current,
 move it to the archive file rather than letting this one grow._
+
+## 2026-07-20 — SPORT-DATA INTEGRATION ROADMAP (aerobic + match-day → S&C output)
+
+New workstream, adopted this session (Simon's direction). Umbrella spec:
+`docs/superpowers/specs/2026-07-17-sport-data-integration-roadmap-design.md`. It feeds
+aerobic (Strava) + pitch/GPS data into the athlete model and reacts the S&C output to it,
+in four phases, built the house way (additive-first, flag-OFF, byte-identical until a
+deliberate flip). **Key reframe: most of this is finishing pipes that already exist** —
+Strava OAuth+sync is LIVE (`workouts` table), already contributes to load via a crude
+`duration×3` proxy, and the match-day microcycle logic is already AUTHORED in every team
+SKB (just switched off).
+
+- **Phase 1 — match-day-aware scheduling (team-driven). PR A MERGED to main (flag OFF).**
+  The fixture-aware microcycle MECHANISM: `mdMapForWeek`/`mdConstraintsFrom` (new
+  `microcycle/fixtureWeeks.js`), governed `SCHEDULING_PENALTIES.md` (KSV 1.48.0), scheduler
+  MD penalties (inert when null), `PlanGenerator` wiring behind `opts.fixtureMicrocycle`
+  (default OFF), `applyTeamSchedule` stamps `team_fixtures`/`team_match_weekday`, and
+  `matches_this_week` added to `REFLOW_EXCLUDED_SIGNALS` (kills the baseline/reflow
+  double-count). Computed in the BASELINE, never the reflow (fixtures are deterministic from
+  plan_start_date). Whole-branch reviewed READY-TO-MERGE; byte-identity proven (stamp-only
+  golden + manifest re-baseline); 205/205 + engine 30/30 + lint clean. Plan:
+  `docs/superpowers/plans/2026-07-17-phase1-matchday-scheduling.md`.
+  **⚠ PR B (the FLIP — turns it on for team athletes) is Simon's:** the congested-week volume
+  cut (defer vs governed knob), sentinel semantics (`"all"`/`"none"`/`"match-day priming"`),
+  MD-penalty weight ordering, + 2 review-flagged prereqs (`\b`-anchor the MD token regex;
+  confirm SKB `preferExplosiveWorkDays` authoring). Task 8 in the plan.
+- **Phase 2 — aerobic loading + a fitness–fatigue ("form") model.** IN PROGRESS this session,
+  built additive-first/flag-OFF. Real aerobic load from Strava `raw` (replacing `duration×3`)
+  + a Banister/CTL-ATL-TSB form model as a new SOFT steer, governed low-confidence knowledge.
+  The FLIP (letting form/aerobic-load steer live plans + the D9 dose-shrink) is Simon's.
+- **Phase 3 — full sport/match ingestion boundary (DAAS §2.1.5).** Design spec only this
+  session; the build touches Supabase schema migrations + RLS (Simon applies to prod).
+- **Phase 4 — AI full-picture (Stage 6/AIGAS).** Design note only; gated on Simon's
+  `AI_ENABLED` go-live and downstream of Phase 3's data.
 
 ## Where the platform stands (2026-07-09, main)
 
