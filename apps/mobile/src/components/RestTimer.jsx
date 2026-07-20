@@ -1,8 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { playBeep } from '../lib/sound.js';
 
-const PRESETS = [60, 90, 120, 180];
-
 function fmt(s) {
   const m = Math.floor(s / 60);
   const ss = s % 60;
@@ -23,7 +21,7 @@ function fmt(s) {
  *     set-completion time) so the countdown is correct even if the tab was busy.
  *   onComplete: optional — fired once when the countdown reaches 0 (the runner uses it
  *     to auto-advance). Called from a timer/visibility callback (never during render).
- * Pick a preset to override; tap the time to pause/resume. Vibrates + beeps on finish.
+ * Rest duration is always plan-prescribed; tap the time to pause/resume. Vibrates + beeps on finish.
  */
 export default function RestTimer({ restStart, onComplete }) {
   const [secs, setSecs] = useState(0);
@@ -60,7 +58,7 @@ export default function RestTimer({ restStart, onComplete }) {
     tick();
     const id = setInterval(tick, 250);
     return () => clearInterval(id);
-  }, [running]);  // eslint-disable-line react-hooks/exhaustive-deps
+  }, [running]);
 
   // Catch-up: recompute the instant the page is visible again after a lock/background.
   useEffect(() => {
@@ -77,15 +75,8 @@ export default function RestTimer({ restStart, onComplete }) {
       document.removeEventListener('visibilitychange', onVisible);
       window.removeEventListener('pageshow', onVisible);
     };
-  }, [running]);  // eslint-disable-line react-hooks/exhaustive-deps
+  }, [running]);
 
-  const startSecs = (n) => {
-    if (n <= 0) return;
-    firedRef.current = false;
-    endAtRef.current = Date.now() + n * 1000;
-    setSecs(n);
-    setRunning(true);
-  };
 
   // Tap the display: pause (capture remaining) / resume (fresh end time from remaining).
   const toggle = () => {
@@ -99,7 +90,15 @@ export default function RestTimer({ restStart, onComplete }) {
     }
   };
 
-  const reset = () => { endAtRef.current = null; setRunning(false); setSecs(0); };
+  // Restart the same prescribed rest from the top (plan-driven — no manual durations).
+  const restart = () => {
+    if (!restStart?.secs) return;
+    firedRef.current = false;
+    pausedRef.current = 0;
+    endAtRef.current = Date.now() + restStart.secs * 1000;
+    setSecs(restStart.secs);
+    setRunning(true);
+  };
 
   // Auto-start when a set is logged — restStart.at changes each time. Anchor to the
   // real set-completion timestamp so the countdown is accurate from the off.
@@ -117,14 +116,13 @@ export default function RestTimer({ restStart, onComplete }) {
       <button className={`rt-display ${running ? 'running' : ''}`} onClick={toggle} disabled={secs === 0}>
         <span className="rt-label">Rest</span>
         <span className="rt-time">{fmt(secs)}</span>
-        <span className="rt-state">{secs === 0 ? 'pick a time' : running ? 'tap to pause' : 'tap to resume'}</span>
+        <span className="rt-state">{running ? 'tap to pause' : 'tap to resume'}</span>
       </button>
-      <div className="rt-presets">
-        {PRESETS.map(n => (
-          <button key={n} className="rt-preset" onClick={() => startSecs(n)}>{n}s</button>
-        ))}
-        {secs > 0 && <button className="rt-preset rt-reset" onClick={reset}>Reset</button>}
-      </div>
+      {secs > 0 && (
+        <div className="rt-presets">
+          <button className="rt-preset rt-reset" onClick={restart}>Restart rest</button>
+        </div>
+      )}
     </div>
   );
 }
