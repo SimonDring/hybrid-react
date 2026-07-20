@@ -84,7 +84,7 @@
 
 **Files:**
 - Modify: `apps/mobile/src/stores/trainingStore.js` (in `buildView`, ~lines 92–146)
-- Test: `apps/mobile/tests/form-view.test.mjs`
+- Test: `apps/mobile/tests/form-view.js` (app-side tests are `.js` — `run-all.mjs` only globs `tests/*.js`; a `.test.mjs` is invisible to `npm test`/CI)
 
 **Interfaces:**
 - Consumes: `aerobicDailyLoads` (Task 1), `computeForm` (Task 2). Produces a `formView` on the built view object alongside `loadView`.
