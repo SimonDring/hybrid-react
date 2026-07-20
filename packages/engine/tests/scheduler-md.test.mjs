@@ -1,33 +1,36 @@
+// scheduler-md.test.mjs — the D13 scheduler honours match-day spacing penalties, inert when null.
+// The fixture is deliberately built so the BASELINE (no mdConstraints) places the heavy session on
+// an avoid-heavy day — asserted directly as a non-vacuity guard — so the "shaped" assertions genuinely
+// prove the MD block runs (they fail if it does nothing).
 import assert from 'node:assert/strict';
 import { scheduleWeek } from '../src/lib/plan/scheduler.js';
 
 let n = 0; const ok = (c, m) => { n++; assert.ok(c, m); console.log('PASS:', m); };
 
-// Three sessions, all available weekdays Mon/Tue/Wed/Thu/Fri (indices 0-4). One is heavy+high-axial.
 const spec = (focus, { hard = false, axial = 0 } = {}) => ({
   focus, discipline: 'gym', duration: 60, items: [], axialLoad: axial,
   intensity: hard ? 'hard' : 'moderate', muscleVol: { quads: axial ? 10 : 2 },
 });
-const sportSpecs = [spec('Heavy', { hard: true, axial: 4 }), spec('Power'), spec('Accessory')];
-const dayNames = ['Tuesday', 'Thursday', 'Friday']; // MD-4, MD-2, MD-1 for a Saturday match
+// Heavy is the LAST session → identity-permutation tie-break lands it on the last day (Friday idx4).
+const sportSpecs = [spec('Power'), spec('Accessory'), spec('Heavy', { hard: true, axial: 4 })];
+const dayNames = ['Monday', 'Wednesday', 'Friday']; // idx 0, 2, 4
 
-// mdConstraints for a Saturday (idx 5) match: avoid heavy on Fri(4)/Sat(5)/Sun(6); heavy target Tue(1)/Wed(2).
+// Saturday match (idx5): avoid heavy on Fri(4)/Sat(5)/Sun(6); heavy target Tue(1)/Wed(2).
 const md = {
   avoidHeavyIdx: new Set([4, 5, 6]), preferExplosiveIdx: new Set([3, 2]),
   heavyTargetIdx: new Set([1, 2]), recoveryIdx: new Set([6]),
 };
 
-// Baseline (no mdConstraints) — capture placement.
 const base = scheduleWeek({ sportSpecs, dayNames, busyDays: [], sportMuscles: [] });
 const baseHeavy = base.find((s) => s.title.includes('Heavy')).dayIdx;
+// NON-VACUITY: without MD shaping the heavy session lands on an avoid-heavy day (Friday = MD-1).
+ok(md.avoidHeavyIdx.has(baseHeavy), `baseline places heavy on an avoid-heavy day (idx ${baseHeavy}) — fixture is a real test`);
 
-// With mdConstraints — the heavy session must NOT land on an avoid-heavy day.
 const shaped = scheduleWeek({ sportSpecs, dayNames, busyDays: [], sportMuscles: [], mdConstraints: md });
 const shapedHeavy = shaped.find((s) => s.title.includes('Heavy')).dayIdx;
-ok(!md.avoidHeavyIdx.has(shapedHeavy), `heavy session avoids MD-1/MD/MD+1 (landed on idx ${shapedHeavy})`);
-ok(md.heavyTargetIdx.has(shapedHeavy), `heavy session lands on a heavy-target day (idx ${shapedHeavy})`);
+ok(!md.avoidHeavyIdx.has(shapedHeavy), `MD shaping moves heavy OFF the avoid day (idx ${shapedHeavy})`);
+ok(md.heavyTargetIdx.has(shapedHeavy), `MD shaping lands heavy on a target day (idx ${shapedHeavy})`);
 
-// Null mdConstraints is byte-identical to the no-arg baseline.
 const nullMd = scheduleWeek({ sportSpecs, dayNames, busyDays: [], sportMuscles: [], mdConstraints: null });
 ok(JSON.stringify(nullMd) === JSON.stringify(base), 'mdConstraints:null is byte-identical to baseline');
 console.log(`\nscheduler-md: ${n}/${n} checks passed`);
