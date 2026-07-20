@@ -29,6 +29,10 @@ const IDX_DAY = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturd
 const isHard = (s) => s.intensity === 'hard';
 const isHighAxial = (s) => (s.axialLoad || 0) >= HIGH_DAY_THRESHOLD;
 const isPlyoLoaded = (s) => (s.plyoLoad || 0) > 0;
+const isHeavy = (s) => isHard(s) && isHighAxial(s);
+const isPower = (s) => isPlyoLoaded(s)
+  || s._objective?.quality === 'explosiveStrength'
+  || s._objective?.quality === 'reactiveStrength';
 const gap = (a, b) => ((b - a) % 7 + 7) % 7;
 
 // The muscle groups a session works HARD (within half of its biggest) — its
@@ -83,6 +87,18 @@ function score(placed, ctx) {
         if (isHard(cur.spec)) pen += proximity; // small nudge for any hard day
       }
     }
+    // Match-day microcycle shaping (Phase 1). Soft, additive to the same minimised penalty.
+    const md = ctx.mdConstraints;
+    if (md) {
+      const d = cur.idx;
+      if (isHeavy(cur.spec) && md.avoidHeavyIdx.has(d)) pen += SP.md.heavyOnAvoidDay;
+      if (isHard(cur.spec) && md.recoveryIdx.has(d)) pen += SP.md.hardOnRecoveryDay;
+      if (isPower(cur.spec) && md.preferExplosiveIdx.size && !md.preferExplosiveIdx.has(d)) pen += SP.md.powerOffPreferredDay;
+      if (isHeavy(cur.spec) && md.heavyTargetIdx.size && !md.heavyTargetIdx.has(d)) {
+        let nearest = 7; for (const t of md.heavyTargetIdx) nearest = Math.min(nearest, dayDistance(d, t));
+        pen += SP.md.heavyOffTargetDayPerStep * nearest;
+      }
+    }
     if (n < 2) continue;
     const nxt = placed[(i + 1) % n];
     const g = gap(cur.idx, nxt.idx);
@@ -123,7 +139,7 @@ function permutations(n) {
 }
 
 // Best session→day assignment as [{ idx, spec }] (weekday index + session spec).
-function placeSport(sportSpecs, dayNames, busyDays = [], sportMuscles = []) {
+function placeSport(sportSpecs, dayNames, busyDays = [], sportMuscles = [], mdConstraints = null) {
   const days = dayNames.slice(0, sportSpecs.length);
   const order = days.map((d, i) => ({ idx: DAY_IDX[d] ?? i, i })).sort((a, b) => a.idx - b.idx);
   if (!sportSpecs.length) return [];
@@ -131,7 +147,7 @@ function placeSport(sportSpecs, dayNames, busyDays = [], sportMuscles = []) {
   let best = perms[0], bestPen = Infinity;
   for (const perm of perms) {
     const placed = order.map((slot, k) => ({ idx: slot.idx, spec: sportSpecs[perm[k]] }));
-    const pen = score(placed, { busyDays, sportMuscles });
+    const pen = score(placed, { busyDays, sportMuscles, mdConstraints });
     if (pen < bestPen) { bestPen = pen; best = perm; if (pen === 0) break; }
   }
   return order.map((slot, k) => ({ idx: slot.idx, spec: sportSpecs[best[k]] }));
@@ -143,10 +159,12 @@ function placeSport(sportSpecs, dayNames, busyDays = [], sportMuscles = []) {
  *   dayNames     weekday names for the sessions
  *   busyDays     the athlete's sport-day weekday indices (kept away from / lightened)
  *   sportMuscles the sport's key muscles (drives the proximity penalty)
+ *   mdConstraints optional match-day weekday-index sets (Phase 1); null/absent is inert —
+ *                 output is byte-identical to today when omitted
  * @returns {Array} sessions { title, duration, items, axialLoad, dayIdx } in weekday order
  */
-export function scheduleWeek({ sportSpecs = [], dayNames = [], busyDays = [], sportMuscles = [] }) {
-  const placedSport = placeSport(sportSpecs, dayNames, busyDays, sportMuscles);
+export function scheduleWeek({ sportSpecs = [], dayNames = [], busyDays = [], sportMuscles = [], mdConstraints = null }) {
+  const placedSport = placeSport(sportSpecs, dayNames, busyDays, sportMuscles, mdConstraints);
   const all = placedSport
     .map(p => ({ idx: p.idx, spec: p.spec }))
     .sort((a, b) => a.idx - b.idx);

@@ -26,6 +26,18 @@ export const SCHEDULING_PENALTIES = {
     sameMusclePerGroup: 3,
     hardHard: 2,
   },
+  // Match-day microcycle shaping (Phase 1; flag-gated fixtureMicrocycle). Soft nudges that
+  // position gym work around a fixture: heavy far from the match, power close, recovery after.
+  // Weighted BELOW adjacent.sameMusclePerGroup (14) so MD shaping refines placement without
+  // overriding muscle-recovery spacing. Evidence L5 (heuristic ordinal — no literature fixes a
+  // number; the ORDERING is the knowledge: a heavy lift inside MD-1/MD/MD+1 is the worst case).
+  // Confidence low. See docs/superpowers/specs/2026-07-17-sport-data-integration-roadmap-design.md.
+  md: {
+    heavyOnAvoidDay: 12,          // heavy + high-axial gym work on MD-1/MD/MD+1
+    hardOnRecoveryDay: 6,         // any hard session on the MD+1 recovery day
+    powerOffPreferredDay: 4,      // power/plyo work NOT on a preferred (MD-2/MD-3) day
+    heavyOffTargetDayPerStep: 2,  // × weekday distance from the nearest heavy-target (MD-4/MD-3) day
+  },
 };
 
 export default { SCHEDULING_PENALTIES };
