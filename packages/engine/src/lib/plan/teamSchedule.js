@@ -21,6 +21,20 @@ const SPORT_LOAD_TYPES = new Set(['match', 'pitch', 'pool', 'track', 'conditioni
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
+// Weekday key → Monday-anchored index (Mon=0 … Sun=6), matching fixtureWeeks/scheduler.
+const DAY_INDEX = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
+const weekdayIdxOfISO = (iso) => { const d = new Date(iso + 'T00:00:00'); return isNaN(d.getTime()) ? null : (d.getDay() + 6) % 7; };
+
+// Upcoming match fixtures (date >= asOf), normalised + sorted, for the fixture-aware microcycle.
+function upcomingMatchFixtures(fixtures, asOf) {
+  if (!asOf || !ISO_DATE.test(asOf)) return [];
+  return fixtures
+    .filter(f => f && f.type === 'match' && typeof f.date === 'string' && ISO_DATE.test(f.date) && f.date >= asOf)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map(f => ({ dateISO: f.date, weekdayIdx: weekdayIdxOfISO(f.date) }))
+    .filter(f => f.weekdayIdx != null);
+}
+
 /**
  * Defensive parse of a raw `teams.schedule` jsonb value (the cross-app
  * contract; the column DEFAULTS to '[]'::jsonb, an array). Anything that is
@@ -81,7 +95,10 @@ export function applyTeamSchedule(profile, rawSchedule, asOf = null) {
   const matchDays = daysWhere(schedule.weeklyPattern, t => t === 'match');
   const loadDays = daysWhere(schedule.weeklyPattern, t => SPORT_LOAD_TYPES.has(t));
   const eventDate = profile.event_date ? null : gatedEventDate(schedule.fixtures, asOf);
-  if (!matchDays.length && !loadDays.length && !eventDate) return profile;
+  const matchWeekdays = daysWhere(schedule.weeklyPattern, t => t === 'match').map(k => DAY_INDEX[k]);
+  const teamFixtures = upcomingMatchFixtures(schedule.fixtures, asOf);
+  // widen the "nothing to do" guard so fixture stamping alone still produces a new profile
+  if (!matchDays.length && !loadDays.length && !eventDate && !teamFixtures.length && !matchWeekdays.length) return profile;
 
   const next = { ...profile };
   let changed = false;
@@ -114,6 +131,9 @@ export function applyTeamSchedule(profile, rawSchedule, asOf = null) {
     next.event_date = eventDate;
     changed = true;
   }
+
+  if (teamFixtures.length) { next.team_fixtures = teamFixtures; changed = true; }
+  if (matchWeekdays.length) { next.team_match_weekday = matchWeekdays[0]; changed = true; }
 
   return changed ? next : profile;
 }
