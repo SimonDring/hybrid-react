@@ -360,7 +360,7 @@ export default function SessionDetail() {
                 {[1, 2, 3, 4, 5].map(n => (
                   <button
                     key={n}
-                    className={`rating-btn ${ratings[rk] === n ? 'active' : ''}`}
+                    className={`rating-btn ${ratings[rk] === n ? 'selected' : ''}`}
                     onClick={() => setRatings(prev => ({ ...prev, [rk]: n }))}
                   >
                     {n}

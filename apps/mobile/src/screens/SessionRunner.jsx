@@ -353,7 +353,7 @@ export default function SessionRunner() {
               <div className="rn-rpe-label">RPE <InfoTip {...GLOSSARY.rpe} /></div>
               <div className="rating-row">
                 {[6, 7, 8, 9, 10].map(n => (
-                  <button key={n} className={`rating-btn ${draft.rpe === n ? 'active' : ''}`} onClick={() => setDraft(d => ({ ...d, rpe: n }))}>{n}</button>
+                  <button key={n} className={`rating-btn ${draft.rpe === n ? 'selected' : ''}`} onClick={() => setDraft(d => ({ ...d, rpe: n }))}>{n}</button>
                 ))}
               </div>
 

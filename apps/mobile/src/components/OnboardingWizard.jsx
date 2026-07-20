@@ -99,19 +99,16 @@ const HINT = { fontSize: 11, color: 'var(--txt-muted)', marginTop: 6, lineHeight
 // ---- UI atoms ----
 function Chip({ selected, onClick, label, hint, emoji, center }) {
   return (
-    <button onClick={onClick} style={{
+    <button onClick={onClick} className={`opt-chip ${selected ? 'is-selected' : ''}`} style={{
       width: '100%', height: '100%', boxSizing: 'border-box',
       minHeight: emoji ? 62 : (hint ? 58 : 46),
-      padding: emoji ? '12px 14px' : '10px 12px', borderRadius: 12, cursor: 'pointer', fontFamily: 'inherit',
-      border: `1.5px solid ${selected ? 'var(--accent)' : 'var(--hairline)'}`,
-      background: selected ? 'rgba(111,211,196,0.12)' : 'var(--bg-surface)', color: 'var(--txt-strong)',
-      transition: 'border-color 0.12s, background 0.12s',
+      padding: emoji ? '12px 14px' : '10px 12px',
       display: 'flex', alignItems: 'center', justifyContent: center && !emoji ? 'center' : 'flex-start', gap: emoji ? 12 : 0,
       textAlign: center && !emoji ? 'center' : 'left'
     }}>
       {emoji && <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0 }}>{emoji}</span>}
       <span style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
-        <span style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.2 }}>{label}</span>
+        <span className="opt-chip-label" style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.2 }}>{label}</span>
         {hint && <span style={{ fontSize: 11, color: 'var(--txt-muted)', lineHeight: 1.3 }}>{hint}</span>}
       </span>
     </button>
@@ -147,10 +144,8 @@ function SummaryRow({ label, value }) {
 // Small inline pill toggle (used for the pull-up vs lat-pulldown choice).
 function MiniToggle({ on, onClick, label }) {
   return (
-    <button onClick={onClick} style={{
-      fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit',
-      border: `1.5px solid ${on ? 'var(--accent)' : 'var(--hairline)'}`,
-      background: on ? 'rgba(111,211,196,0.12)' : 'var(--bg-surface)', color: 'var(--txt-strong)'
+    <button onClick={onClick} className={`opt-chip ${on ? 'is-selected' : ''}`} style={{
+      fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 8
     }}>{label}</button>
   );
 }

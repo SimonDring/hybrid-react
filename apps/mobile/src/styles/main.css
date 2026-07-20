@@ -541,6 +541,24 @@ html, body {
   border-color: var(--ink);
 }
 
+/* One app-wide selected treatment for tappable option controls (chips, toggles,
+   preset buttons). Strong enough to read at a glance on Midnight. */
+.opt-chip {
+  border: 1.5px solid var(--hairline);
+  background: var(--bg-surface);
+  color: var(--txt-strong);
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.12s, background 0.12s, box-shadow 0.12s;
+}
+.opt-chip.is-selected {
+  border: 2px solid var(--accent);
+  background: rgba(111, 211, 196, 0.16);
+  box-shadow: 0 0 0 1px rgba(111, 211, 196, 0.25) inset;
+}
+.opt-chip.is-selected .opt-chip-label { font-weight: 700; }
+
 /* OVERVIEW timeline */
 
 .phase-row .when { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
