@@ -32,14 +32,31 @@ SKB (just switched off).
   cut (defer vs governed knob), sentinel semantics (`"all"`/`"none"`/`"match-day priming"`),
   MD-penalty weight ordering, + 2 review-flagged prereqs (`\b`-anchor the MD token regex;
   confirm SKB `preferExplosiveWorkDays` authoring). Task 8 in the plan.
-- **Phase 2 — aerobic loading + a fitness–fatigue ("form") model.** IN PROGRESS this session,
-  built additive-first/flag-OFF. Real aerobic load from Strava `raw` (replacing `duration×3`)
-  + a Banister/CTL-ATL-TSB form model as a new SOFT steer, governed low-confidence knowledge.
-  The FLIP (letting form/aerobic-load steer live plans + the D9 dose-shrink) is Simon's.
-- **Phase 3 — full sport/match ingestion boundary (DAAS §2.1.5).** Design spec only this
-  session; the build touches Supabase schema migrations + RLS (Simon applies to prod).
-- **Phase 4 — AI full-picture (Stage 6/AIGAS).** Design note only; gated on Simon's
-  `AI_ENABLED` go-live and downstream of Phase 3's data.
+- **Phase 2 — aerobic loading + a fitness–fatigue ("form") model. MERGED to main (PR #223, flag OFF).**
+  Governed **Banister-TRIMP** aerobic load (`load/aerobicLoad.js`, `load.aerobic.trimp`) + a
+  **CTL/ATL/TSB** form model (`load/form.js`, `load.form.model`; TrainingPeaks PMC), KSV
+  1.48.0→**1.50.0**, all science cited (Banister 1991 / Tanaka 2001 / TrainingPeaks). Built as a
+  **parallel-advisory READOUT**: `computeForm` runs app-side in `buildView` → `formView` +
+  `formVerdict` → a Form card on the Training Load screen; **NOT read by `generatePlan`/reflow** →
+  byte-identical (stamp-only golden re-baseline). The deload **corroboration seam**
+  (`deloadRecommendation`'s optional `form`) is **default-OFF** (never forces alone — Art 13).
+  Whole-branch reviewed READY-TO-MERGE; 207/207 + engine 33/33 + lint clean. Spec/plan:
+  `docs/superpowers/specs|plans/2026-07-20-phase2-aerobic-form-model*`.
+  **⚠ Not visually verified:** the Form card's pixel render is behind auth (compile/lint/theme-var
+  clean, null-safe, reuses existing styled classes) — a 30-sec glance behind sign-in closes it.
+  **⚠ The FLIP is Simon's** (spec §The flip): aerobic load → live ACWR; form → deload (the review
+  flagged a **corroborator-tiering coaching call** — low-confidence form is currently equal-tier to
+  readiness/recovery); the **D9 dose-shrink**; readout fidelity (per-date restHr, HR-quality→confidence).
+- **Phase 3 — full sport/match ingestion boundary (DAAS §2.1.5). DESIGN SPEC authored**
+  (`docs/superpowers/specs/2026-07-20-phase3-sport-match-ingestion-design.md`). Not built — the
+  build is **Supabase schema migrations + RLS** (Simon applies to prod; RLS harness gates). Reuses
+  the wearable-ACL pattern + the live M5 owner-private substrate; External Load Observation
+  (GPS/top-speed/distance/sprints) + Match Performance (minutes/availability/KPIs); manual/file
+  first, vendor GPS-vests later; coach sees derived-roll-up only (Arts 11/22).
+- **Phase 4 — AI full-picture (Stage 6/AIGAS). DESIGN NOTE authored**
+  (`docs/superpowers/specs/2026-07-20-phase4-ai-full-picture-note.md`). Not started — a dependency,
+  not just a deferral: downstream of Phase 3's data + gated on Simon's `AI_ENABLED` go-live (open
+  queue #3). AIGAS C5 grounding surface + the three governed routes; never gates/replaces the engine.
 
 ## Where the platform stands (2026-07-09, main)
 
