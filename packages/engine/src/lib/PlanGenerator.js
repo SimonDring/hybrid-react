@@ -37,6 +37,8 @@ import * as SKB from './sportKnowledge/index.js';
 import { validateWeek, explainValidation } from './validation/contract.js';
 import { categoryPlanFor } from './session/categoryCoverage.js';
 import { provenance } from '../version.js';
+import { deriveWeeklyObjective } from './microcycle/weeklyObjective.js';
+import { mdMapForWeek, mdConstraintsFrom } from './microcycle/fixtureWeeks.js';
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
@@ -258,7 +260,21 @@ export function generatePlan(profile = {}, opts = {}) {
 
       const sportSpecs = buildGymWeek(totalDays, ctx, profile, program, diag);
       const dayNames = chooseDays(availability, sportSpecs.length, profile.sport_days || []);
-      let sessions = scheduleWeek({ sportSpecs, dayNames, busyDays, sportMuscles });
+      // Phase 1 — fixture-aware microcycle (flag-gated, default OFF). Baseline-owned: fixtures
+      // are deterministic from plan_start_date (Art 18). No flag / no fixtures / no sport → null
+      // mdConstraints → scheduleWeek runs exactly as today (additive-identity).
+      let mdConstraints = null;
+      if (opts.fixtureMicrocycle && skbSportId && (profile.team_fixtures || profile.team_match_weekday != null)) {
+        const { matchesThisWeek, mdOffsetByWeekday } = mdMapForWeek({
+          fixtures: profile.team_fixtures || [], matchWeekday: profile.team_match_weekday ?? null,
+          planStartDate: profile.plan_start_date || null, weekNum,
+        });
+        const wobj = deriveWeeklyObjective({
+          blockObjective: null, microcycles: SKB.section(skbSportId, 'microcycles'), matchesThisWeek,
+        });
+        if (wobj.value.fixtureAware) mdConstraints = mdConstraintsFrom(wobj.value.spacingConstraints, mdOffsetByWeekday);
+      }
+      let sessions = scheduleWeek({ sportSpecs, dayNames, busyDays, sportMuscles, mdConstraints });
       sessions = despineWeek(sessions, { priorityByIntent: program.priorityByIntent || new Map(), lifts: resolveLifts(profile), level: getGymLevel(profile), bodyweight: profile.bodyweight_kg });
 
       weeks.push({ num: weekNum, deload, taper, theme: themeFor(seg.intent, deload, taper, isRace && weekNum === total), sessions, provisional: pi > 0 });
