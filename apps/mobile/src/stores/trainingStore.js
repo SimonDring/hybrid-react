@@ -13,7 +13,7 @@
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, drainOutbox, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
-import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, dailyLoads, acuteChronic, acwr, acwrSeries, acwrBand, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex } from '@performance-os/engine';
+import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, dailyLoads, acuteChronic, acwr, acwrSeries, acwrBand, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex, aerobicDailyLoads, computeForm } from '@performance-os/engine';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch, adaptedSessionByKey } from '../lib/PlanService.js';
 import * as Plan from '../lib/PlanService.js';
 import { consistencyGoal } from '../lib/goals.js';
@@ -145,6 +145,16 @@ function buildView() {
     .map(l => ({ date: (l.completed_at || '').split('T')[0], ...sessionLoad(l) }));
   const loadView = { acute: Math.round(ac.acute), chronic: Math.round(ac.chronic), acwr: acwrVal, band, sessions: loadSessions };
 
+  // Form (fitness/fatigue) readout — a PARALLEL, advisory CTL/ATL/TSB read of the
+  // athlete's own aerobic load history (Phase 2 T4). This is a READOUT ONLY: it is
+  // NOT passed into setRuntime, the reflow, or generatePlan — the plan stays exactly
+  // as it is today. See docs/superpowers/specs/2026-07-20-phase2-aerobic-form-model-design.md.
+  const restHr = latestMetric.resting_hr ?? null;
+  const sex = profileRow.sex ?? null;
+  const age = profileRow.age ?? null;
+  const formDl = aerobicDailyLoads(sessionLogsAll, workoutsAll, { restHr, maxHr: null, sex, age });
+  const formView = computeForm(formDl, { asOf: today });
+
   // Per-set training history grouped by session id — drives the runner's resume.
   const setLogsBySession = {};
   Database.tables.setLogs.all().forEach(r => {
@@ -161,6 +171,7 @@ function buildView() {
     injuries:     Database.services.listInjuries(),
     dailyMetrics,
     load:         loadView,
+    formView,
     readiness:    readinessIx,
     adaptation:   currentAdaptation(),
     syncing:      false,

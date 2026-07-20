@@ -7,5 +7,5 @@ ok(SP.md && typeof SP.md === 'object', 'SCHEDULING_PENALTIES.md exists');
 for (const k of ['heavyOnAvoidDay', 'hardOnRecoveryDay', 'powerOffPreferredDay', 'heavyOffTargetDayPerStep'])
   ok(typeof SP.md[k] === 'number', `md.${k} is a number`);
 ok(SP.md.heavyOnAvoidDay < SP.adjacent.sameMusclePerGroup, 'MD penalties sit below the muscle-spacing lever (14)');
-ok(KNOWLEDGE_SET_VERSION === '1.48.0', 'KSV bumped to 1.48.0 for the new governed weights');
+ok(/^\d+\.\d+\.\d+$/.test(KNOWLEDGE_SET_VERSION), 'KNOWLEDGE_SET_VERSION is valid semver (the md-weights ship with a bump; the exact value is owned by knowledge-set-ratchet.js, never pinned here — a hard pin broke on every later bump)');
 console.log(`\nscheduling-policy-md: ${n}/${n} checks passed`);
