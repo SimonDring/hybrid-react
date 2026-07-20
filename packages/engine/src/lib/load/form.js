@@ -24,6 +24,8 @@ import kb from '../knowledge/kb.js';
 
 const _F = kb.value('load.form.model');
 
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 function round1(v) { return Math.round(v * 10) / 10; }
 
 // One UTC calendar day after `iso` ('YYYY-MM-DD').
@@ -50,18 +52,32 @@ export function computeForm(dailySeries = [], { asOf } = {}) {
   }
 
   const asOfDate = String(asOf).slice(0, 10);
+  if (!DATE_RE.test(asOfDate)) {
+    // Fail-fast (consistent with kb.get's throw-on-unknown-id style): a malformed
+    // asOf would otherwise sort lexically ABOVE any real date and the day-walk
+    // below would never reach `end` — an infinite loop. Caught here, before the walk.
+    throw new Error(`computeForm: asOf must be a YYYY-MM-DD date (got ${JSON.stringify(asOf)})`);
+  }
   const byDate = new Map(loaded.map((d) => [d.date, d.load]));
   const start = loaded.reduce((min, d) => (d.date < min ? d.date : min), loaded[0].date);
   const end = asOfDate >= start ? asOfDate : start; // defensive: asOf before the first loaded day
 
   const kCtl = 1 - Math.exp(-1 / _F.ctlDays);
   const kAtl = 1 - Math.exp(-1 / _F.atlDays);
+  // Pure defensive backstop (NOT a governed coaching parameter): with a validated
+  // asOf the walk always reaches `end` well within this cap, so it never changes
+  // output for valid input — it only guarantees the loop is structurally incapable
+  // of running forever if some future caller/refactor breaks that invariant.
+  const MAX_DAYS = 20000; // ≈ 55 years of daily steps
   let ctl = 0, atl = 0;
+  let steps = 0;
   for (let day = start; ; day = nextDay(day)) {
     const load = byDate.get(day) || 0;
     ctl = ctl * (1 - kCtl) + load * kCtl;
     atl = atl * (1 - kAtl) + load * kAtl;
     if (day === end) break;
+    steps += 1;
+    if (steps >= MAX_DAYS) break; // backstop only — should be unreachable for valid input
   }
 
   const tsb = ctl - atl;

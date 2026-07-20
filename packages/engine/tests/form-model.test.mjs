@@ -12,6 +12,11 @@ import { computeForm } from '@performance-os/engine';
 let n = 0;
 const ok = (c, m) => { n++; assert.ok(c, m); console.log('PASS:', m); };
 const close = (a, b, tol, m) => ok(Math.abs(a - b) < tol, `${m} (got ${a}, expected ~${b})`);
+// assert.throws is synchronous — if computeForm's asOf guard is missing/broken,
+// the call inside `fn` hangs forever (the day-walk never terminates) rather than
+// returning or throwing, so this is a genuine "does not hang" check, not just a
+// throw check: a regression here fails by freezing the test run, not by a red assert.
+const throwsOk = (fn, re, m) => { n++; assert.throws(fn, re, m); console.log('PASS:', m); };
 
 // Independent re-derivation of the published CTL/ATL EWMA recurrence (TrainingPeaks
 // PMC / Coggan; ctlDays=42 "fitness", atlDays=7 "fatigue") — NOT a call into form.js.
@@ -115,6 +120,33 @@ function dateAt(startISO, offsetDays) {
   ok(r.band === null, 'empty series — band null');
   ok(r.confidence === 0, 'empty series — confidence 0');
   ok(typeof r.rationale === 'string' && r.rationale.length > 0, 'empty series — rationale is still a non-empty explanatory string');
+}
+
+// ── invalid asOf → fail-fast throw, NOT an infinite loop (review-confirmed bug: a
+//    missing/malformed asOf used to lexically sort above any real date, so the
+//    day-walk never reached `end` and hung the process) ──
+{
+  throwsOk(
+    () => computeForm([{ date: '2026-01-01', load: 50 }], {}),
+    /asOf must be a YYYY-MM-DD date/,
+    'missing asOf — throws fail-fast (does not hang)'
+  );
+  throwsOk(
+    () => computeForm([{ date: '2026-01-01', load: 50 }], { asOf: 'not-a-date' }),
+    /asOf must be a YYYY-MM-DD date/,
+    'malformed asOf — throws fail-fast (does not hang)'
+  );
+}
+
+// ── empty series → the zero object even with NO asOf at all (empty-series
+//    short-circuit runs BEFORE the asOf guard, so an empty series never needs one) ──
+{
+  const r1 = computeForm([], { asOf: '2026-01-01' });
+  const r2 = computeForm([], {});
+  for (const r of [r1, r2]) {
+    ok(r.ctl === 0 && r.atl === 0 && r.tsb === 0 && r.band === null && r.confidence === 0,
+      'empty series (with or without asOf) — still returns the zero object, no throw');
+  }
 }
 
 // ── determinism: same input + asOf → identical output, every field, twice ──
