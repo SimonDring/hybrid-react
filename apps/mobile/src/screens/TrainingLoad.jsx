@@ -73,7 +73,7 @@ export default function TrainingLoad() {
           <div className="stat-card"><div className="l">Fatigue · ATL</div><div className="v">{form.atl.toFixed(1)}</div><div className="d">recent</div></div>
           <div className="stat-card"><div className="l">Form · TSB</div><div className="v" style={{ color: fv.color }}>{form.tsb.toFixed(1)}</div><div className="d">{fv.label}</div></div>
         </div>
-        {confidenceNote(form.confidence) && (
+        {confidenceNote(form.confidence) && !(form.band && form.confidence != null && form.confidence < 0.5) && (
           <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 8 }}>{confidenceNote(form.confidence)}</div>
         )}
       </div>
