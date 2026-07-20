@@ -35,6 +35,12 @@ function upcomingMatchFixtures(fixtures, asOf) {
     .filter(f => f.weekdayIdx != null);
 }
 
+// Structural equality for the normalised fixture list (dateISO + weekdayIdx, in order).
+function sameFixtures(a, b) {
+  if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false;
+  return a.every((f, i) => f.dateISO === b[i].dateISO && f.weekdayIdx === b[i].weekdayIdx);
+}
+
 /**
  * Defensive parse of a raw `teams.schedule` jsonb value (the cross-app
  * contract; the column DEFAULTS to '[]'::jsonb, an array). Anything that is
@@ -132,8 +138,14 @@ export function applyTeamSchedule(profile, rawSchedule, asOf = null) {
     changed = true;
   }
 
-  if (teamFixtures.length) { next.team_fixtures = teamFixtures; changed = true; }
-  if (matchWeekdays.length) { next.team_match_weekday = matchWeekdays[0]; changed = true; }
+  if (teamFixtures.length && !sameFixtures(teamFixtures, profile.team_fixtures)) {
+    next.team_fixtures = teamFixtures;
+    changed = true;
+  }
+  if (matchWeekdays.length && matchWeekdays[0] !== profile.team_match_weekday) {
+    next.team_match_weekday = matchWeekdays[0];
+    changed = true;
+  }
 
   return changed ? next : profile;
 }

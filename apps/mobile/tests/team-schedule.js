@@ -66,6 +66,15 @@ const ok = (cond, msg) => { n++; assert.ok(cond, msg); console.log('PASS:', msg)
   ok(withFix.team_fixtures[0].weekdayIdx === 5, 'Saturday 2026-07-18 → weekday index 5');
   ok(withFix.team_match_weekday === 6, 'the recurring Sunday match weekday (pattern) is stamped (index 6)');
 
+  // Idempotence: re-applying to an already-stamped profile returns the SAME reference (no churn).
+  const onceFix = applyTeamSchedule(profile(), { ...SCHEDULE, fixtures: [
+    { id: 'a', type: 'match', label: 'x', date: '2026-07-25' },
+  ] }, '2026-07-13');
+  const twiceFix = applyTeamSchedule(onceFix, { ...SCHEDULE, fixtures: [
+    { id: 'a', type: 'match', label: 'x', date: '2026-07-25' },
+  ] }, '2026-07-13');
+  ok(twiceFix === onceFix, 'applyTeamSchedule is idempotent: re-applying an already-adjusted profile returns the same reference');
+
   // floor: an athlete with only mon+sun cannot drop below 2 gym days
   const packed = { ...profile(), availability: { days_per_week: 2, days: ['mon', 'sun'] } };
   const kept = applyTeamSchedule(packed, SCHEDULE, '2026-07-06');
