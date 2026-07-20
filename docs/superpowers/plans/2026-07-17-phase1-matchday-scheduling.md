@@ -153,7 +153,7 @@ export { mdMapForWeek } from './src/lib/microcycle/fixtureWeeks.js';
 - [ ] **Step 4: Run test to verify it passes**
 
 Run: `node packages/engine/tests/fixture-weeks.test.mjs`
-Expected: PASS — `fixture-weeks: 13/13 checks passed`.
+Expected: PASS — `fixture-weeks: 12/12 checks passed` (the self-counting `n/n` reports the actual assertion total).
 
 - [ ] **Step 5: Commit**
 
@@ -719,6 +719,17 @@ git commit -m "test(engine): re-baseline golden stamp KSV 1.48.0 (Phase 1 PR A, 
 ---
 
 # PR B — the flip (behaviour change; scoped, audited; PAUSES for Simon)
+
+**PR-B prerequisites (surfaced by PR A's final whole-branch review — do these first):**
+- **Anchor the MD token regex.** In `fixtureWeeks.js` `offsetsFrom`, change `/MD([+-]\d+)?/g`
+  to `\b`-anchored (`/\bMD([+-]\d+)?\b/g`) so a future SKB token like `"UMD-3"` can't silently
+  parse. PR B is exactly when SKB spacing-constraint vocabulary widens.
+- **Confirm `preferExplosiveWorkDays` authoring.** The power nudge is driven by
+  `preferExplosiveWorkDays`, NOT the prose `powerDay` field (which is parsed-then-ignored). Verify
+  every SKB sport that should be fixture-shaped authors `preferExplosiveWorkDays`, or the power
+  positioning silently no-ops. Add a one-line note to the SKB authoring guide.
+- **Optional cosmetic fold-ins:** align `scheduler.js` `let nearest = 7` → `99` (file convention);
+  DRY `teamSchedule.js` `matchWeekdays = matchDays.map(k => DAY_INDEX[k])`.
 
 ### Task 8: Flip the flag on the app path + one audited fixture archetype
 
