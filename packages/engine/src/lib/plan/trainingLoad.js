@@ -138,21 +138,33 @@ export function combinedMultiplier(rm, decision = { action: 'none', multiplier: 
 //   recentRecovery  mean of recent session 'recovery' ratings (1–5) or null
 //   illness         athlete flagged ill today
 //   scheduledDeload is the current week already a planned deload?
+//   form            OPTIONAL computeForm() output {ctl,atl,tsb,band,confidence,
+//                    rationale} (Phase 2 T5 seam) — null/absent for every current
+//                    caller (byte-identical). See formFatigued below.
 // → { action: 'force' | 'defer' | 'none', reason }
-export function deloadRecommendation({ loadAction = null, readiness = null, recentRecovery = null, illness = false, scheduledDeload = false } = {}) {
+export function deloadRecommendation({ loadAction = null, readiness = null, recentRecovery = null, illness = false, scheduledDeload = false, form = null } = {}) {
   // Cut-points are governed knowledge (recovery.deload_thresholds) — the strongest
   // behavioural call in the runtime layer now carries provenance.
   const DT = kb.value('recovery.deload_thresholds');
   const loadDeload = loadAction === 'deload';
   const lowReadiness = readiness != null && readiness < DT.readinessLow;
   const poorRecovery = recentRecovery != null && recentRecovery <= DT.recoveryPoor;
+  // formFatigued (Phase 2 T5 — deload corroboration seam, default-OFF): the
+  // CTL/ATL/TSB form model's 'fatigued' band is low-confidence (population time
+  // constants; per-individual calibration contested — Art 13), so like ACWR it may
+  // only CORROBORATE, never force alone. It is wired ONLY into the loadDeload
+  // corroboration below, alongside lowReadiness/poorRecovery — outside a loadDeload
+  // signal it has no effect on `fatigued` at all. No caller passes `form` yet, so
+  // it is always null here today and this stays inert (byte-identical).
+  const formFatigued = !!(form && form.band === 'fatigued');
   // Fatigued: illness, OR low readiness backed by poor recovery, OR a high-load signal
-  // CORROBORATED by low readiness / poor recovery. Whether ACWR may force alone is a
-  // property of its knowledge authority (confidence:'low' → 'reported' → it may not);
-  // the corroboration requirement is the mechanism, not a per-site convention.
+  // CORROBORATED by low readiness / poor recovery / a fatigued form. Whether ACWR may
+  // force alone is a property of its knowledge authority (confidence:'low' →
+  // 'reported' → it may not); the corroboration requirement is the mechanism, not a
+  // per-site convention.
   const acwrForcesAlone = mayForceAlone('load.acwr.policy');
   const fatigued = illness || (lowReadiness && poorRecovery)
-    || (loadDeload && (acwrForcesAlone || lowReadiness || poorRecovery));
+    || (loadDeload && (acwrForcesAlone || lowReadiness || poorRecovery || formFatigued));
   // Fresh: high readiness, good recovery, and load not elevated.
   const fresh = readiness != null && readiness >= DT.readinessFresh
     && (recentRecovery == null || recentRecovery >= DT.recoveryFresh)
