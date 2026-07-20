@@ -100,6 +100,21 @@ two bases converge. Documented, not hidden (DAAS §3.6 — a visible seam, not a
 4. Confirm the aerobic-TRIMP HRmax/HRrest estimates + the TSB band cut-points as governed
    knowledge (they ship PROVISIONAL/low-confidence here).
 
+**Flip considerations surfaced by the Phase 2 whole-branch review (Simon's calls at the flip):**
+- **Corroborator tiering (coaching call).** The default-OFF seam currently makes low-confidence
+  `form:'fatigued'` an EQUAL-tier corroborator to the moderate-confidence `lowReadiness`/
+  `poorRecovery` inside the `loadDeload` branch — so `(ACWR-deload + form-fatigued)` could force a
+  deload even against high readiness + good recovery (two low-confidence signals outvoting two
+  higher-confidence ones). At the flip, decide whether form should be a weaker/half-weight
+  corroborator (Art 13) — needs your explicit sign-off.
+- **Readout fidelity (engineering, at the flip).** `aerobicDailyLoads` currently discards
+  `aerobicLoad`'s per-workout `confidence`/`method` (only `.load` is used), and `restHr` is a
+  single latest value applied to every historical workout — so form confidence today is purely
+  history-maturity and old TRIMP scores carry drift. Wire per-date restHr + propagate HR-data
+  quality into `formView.confidence` when the readout goes live.
+- **Two `deloadRecommendation` callers** (`reflow.js`, `PlanService.js`) — the flip must pass
+  `form` to the live one, and give the force branch a form-specific reason string.
+
 ## Governance guardrails
 
 Engine pure (Art 18); knowledge is cited/confidence-tagged data, not literals; additive-first
