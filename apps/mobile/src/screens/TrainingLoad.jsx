@@ -5,7 +5,7 @@
  */
 import { useState } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
-import { loadVerdict } from '../lib/verdicts.js';
+import { loadVerdict, formVerdict, confidenceNote } from '../lib/verdicts.js';
 import InfoTip from '../components/ui/InfoTip.jsx';
 import { GLOSSARY } from '../data/metricGlossary.js';
 
@@ -22,6 +22,8 @@ export default function TrainingLoad() {
   const load = useTrainingStore(s => s.load) || { acute: 0, chronic: 0, acwr: null, band: null, sessions: [] };
   const adaptation = useTrainingStore(s => s.adaptation);
   const lv = loadVerdict(load, adaptation);
+  const form = useTrainingStore(s => s.formView) || { ctl: 0, atl: 0, tsb: 0, band: null, confidence: null };
+  const fv = formVerdict(form);
   const [info, setInfo] = useState(false);
 
   return (
@@ -61,6 +63,20 @@ export default function TrainingLoad() {
           </div>
         </div>
       )}
+
+      <h2 className="h3">Form</h2>
+      <div className="health-card" style={{ marginBottom: 16 }}>
+        <div className="hc-headline" style={{ color: fv.color }}>{fv.headline}</div>
+        <div className="hc-note" style={{ marginTop: 4 }}>{fv.note}</div>
+        <div className="stat-grid cols-3" style={{ marginTop: 14 }}>
+          <div className="stat-card"><div className="l">Fitness · CTL</div><div className="v">{form.ctl.toFixed(1)}</div><div className="d">baseline</div></div>
+          <div className="stat-card"><div className="l">Fatigue · ATL</div><div className="v">{form.atl.toFixed(1)}</div><div className="d">recent</div></div>
+          <div className="stat-card"><div className="l">Form · TSB</div><div className="v" style={{ color: fv.color }}>{form.tsb.toFixed(1)}</div><div className="d">{fv.label}</div></div>
+        </div>
+        {confidenceNote(form.confidence) && (
+          <div style={{ fontSize: 11, color: 'var(--txt-muted)', marginTop: 8 }}>{confidenceNote(form.confidence)}</div>
+        )}
+      </div>
 
       <h2 className="h3">Recent sessions</h2>
       {load.sessions.length === 0 ? (
