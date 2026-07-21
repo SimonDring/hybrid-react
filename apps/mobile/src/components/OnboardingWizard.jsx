@@ -502,13 +502,19 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
             <OptionGrid cols={1} gap={6}>
               {EQUIPMENT_PRESETS.map(o => (
                 <Chip key={o.key} selected={sameSet(a.equipment, o.equip)}
-                  onClick={() => setA(prev => ({
-                    ...prev,
-                    equipment: [...o.equip],
-                    // Detail was never opened → stays skipped. Already engaged → follow the
-                    // new preset's own defaults rather than leaving stale, mismatched picks.
-                    equipmentDetail: prev.equipmentDetail != null ? defaultDetailKeysFor(o.key, o.equip) : null
-                  }))}
+                  onClick={() => setA(prev => {
+                    // Re-clicking the ALREADY-active preset is a no-op — resetting here would
+                    // silently wipe hand-tweaked detail unchecks (the brief's rule is
+                    // "SWITCHING preset resets", and a re-affirm is not a switch).
+                    if (sameSet(prev.equipment, o.equip)) return prev;
+                    return {
+                      ...prev,
+                      equipment: [...o.equip],
+                      // Detail was never opened → stays skipped. Already engaged → follow the
+                      // new preset's own defaults rather than leaving stale, mismatched picks.
+                      equipmentDetail: prev.equipmentDetail != null ? defaultDetailKeysFor(o.key, o.equip) : null
+                    };
+                  })}
                   label={o.label} hint={o.hint} />
               ))}
             </OptionGrid>
