@@ -409,6 +409,7 @@
   "positions": [
     {
       "name": "Goalkeeper",
+      "priorityPatterns": ["lunge", "iso", "squat"],
       "role": "Shot-stopping in full protective kit; commanding the circle; distribution.",
       "movementDemands": "Low total distance; explosive lateral pushes, splits, dives and rapid recoveries under ~20 kg of kit.",
       "runningDemands": "Lowest of any position.",
@@ -439,6 +440,7 @@
     },
     {
       "name": "Defender",
+      "priorityPatterns": ["hinge", "iso", "core"],
       "role": "Circle defence, marking, outletting; often first receiver under press.",
       "movementDemands": "Positional discipline with repeated short accelerations, lunging tackles and low blocks; frequent hitting (long outlets).",
       "runningDemands": "Moderate total distance; high deceleration + lunge counts.",
@@ -469,6 +471,7 @@
     },
     {
       "name": "Midfielder",
+      "priorityPatterns": ["hinge", "calf", "squat"],
       "role": "Link play; the largest running load; press triggers and recovery runs.",
       "movementDemands": "Continuous box-to-box shuttling in the crouched carry position; constant accelerations.",
       "runningDemands": "Highest total + high-speed distance (~8-9 km elite).",
@@ -499,6 +502,7 @@
     },
     {
       "name": "Forward",
+      "priorityPatterns": ["hinge", "lunge", "calf"],
       "role": "Pressing from the front; elimination 1v1s; circle finishing and deflections.",
       "movementDemands": "Sprint-press clusters, sharp eliminations from a deep crouch, deflection stances.",
       "runningDemands": "High sprint counts; moderate-high total distance.",

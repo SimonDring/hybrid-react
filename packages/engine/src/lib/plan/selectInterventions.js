@@ -105,7 +105,14 @@ function valueOf(ex, target, skbIds, forceVelocityAware = false) {
   return value;
 }
 
-export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [], categoryIds = null, discipline = undefined, priorityIds = null, forceVelocityAware = false } = {}) {
+export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [], categoryIds = null, discipline = undefined, priorityIds = null, forceVelocityAware = false, positionPatterns = null } = {}) {
+  // Position priority-pattern nudge (Sprint 3 B2): a small ADDITIVE preference for candidates whose
+  // movement pattern is on the athlete's SKB position list. NOT flag-gated (ships on) but never a
+  // gate — additive, so it only re-orders WITHIN a quality tier (the sort below is tier-first),
+  // and it touches only the score, never candidacy: the pool is identical with/without a position.
+  // Empty/absent list ⇒ bonus is always 0 ⇒ byte-identical (every non-team-position plan).
+  const positionSet = positionPatterns && positionPatterns.length ? new Set(positionPatterns) : null;
+  const positionBonus = (ex) => (positionSet && positionSet.has(ex.pattern) ? (SELECTION_SCORING.positionPatternWeight || 0) : 0);
   const target = req?.objective?.targetQuality;
   const reqPatterns = new Set(req?.requirements?.movementPatterns || []);
   const contra = new Set((req?.requirements?.contraindicated || []).map((c) => c.pattern));
@@ -155,11 +162,16 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
     // Within a category assignment the authored rating alone orders picks — the
     // transfer-per-fatigue division would let a cheap prehab move outrank the
     // pull-up the assignment exists for; the fatigue BUDGET still bounds totals.
-    const value = isPriority
+    const baseValue = isPriority
       ? (1e6 - priorityRank.get(ex.id))   // authored order within tier 0 (rank 0 sorts first)
       : isCategoryPick
         ? (skbRatingOf(skbIds, ex.id) ?? TRANSFER.skbDefaultRating) / TRANSFER.skbRatingDivisor
         : valueOf(ex, target, skbIds, forceVelocityAware);
+    // Position nudge applies to ALL three value paths (category-led team sports pick via the
+    // rating path, not valueOf): a tiny additive lift, bounded by the tier sort. It is a no-op on
+    // the discipline priority path in practice — position implies a sport, disciplines don't set
+    // priorityIds — and the ±0.1 could never reorder integer-ranked (1e6−rank) anchors anyway.
+    const value = baseValue + positionBonus(ex);
     cand.push({ ex, tier, value });
   }
   cand.sort((a, b) => a.tier - b.tier || b.value - a.value || (a.ex.id < b.ex.id ? -1 : a.ex.id > b.ex.id ? 1 : 0));

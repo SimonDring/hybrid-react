@@ -517,7 +517,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
         priorityIds: slot.priorityIds || (ctx.discipline ? (ctx.exercisePriority || []) : null),
         // Force-velocity-aware selection (M-SESS refinement) — flag-gated, default OFF: undefined
         // ctx.forceVelocityAware ⇒ false ⇒ byte-identical. Step 2 flips this on (audited, Simon-gated).
-        forceVelocityAware: !!ctx.forceVelocityAware
+        forceVelocityAware: !!ctx.forceVelocityAware,
+        // Sprint 3 B2: the athlete's SKB position priorityPatterns — a small additive D11 nudge
+        // toward this position's prioritised movement patterns. [] (no sport/position) ⇒ no-op.
+        positionPatterns: ctx.positionPatterns || []
       });
       if (assignment) objective.rationale += ` (${assignment.rationale})`;
       // WP-30a: ship the D9 objective WITH the session — the rationale string now

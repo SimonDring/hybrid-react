@@ -371,6 +371,7 @@
   "positions": [
     {
       "name": "Front row (props & hooker)",
+      "priorityPatterns": ["hinge", "squat", "core"],
       "role": "Scrum engine, close-quarter contact, ruck/maul work, lineout throwing (hooker) and lifting; the heaviest collision and axial-load workload in the team.",
       "movementDemands": "Sustained maximal scrum drive, repeated rucking and mauling, short hard accelerations into contact; lowest running distance, highest static/collision load.",
       "runningDemands": "Lowest total distance (~5-6 km), almost all low-speed; very high collision and isometric load.",
@@ -402,6 +403,7 @@
     },
     {
       "name": "Second row (locks)",
+      "priorityPatterns": ["squat", "vpush", "hinge"],
       "role": "Lineout jumping and lifting, restart contests, scrum drive, high-volume ruck/maul work; the aerial and engine forwards.",
       "movementDemands": "Repeated maximal jumps and lifts, sustained scrum/maul drive, continuous rucking; large frame moved over ~6-7 km.",
       "runningDemands": "Low-moderate (~6-7 km); high work density in tight play.",
@@ -433,6 +435,7 @@
     },
     {
       "name": "Back row (flankers & No. 8)",
+      "priorityPatterns": ["hinge", "squat", "hpull"],
       "role": "The link forwards — tackling, jackaling, carrying, covering; the highest repeat-effort workload in the pack, blending collision with ground coverage.",
       "movementDemands": "Repeated high-intensity efforts — tackle, get up, sprint to the next ruck, carry, repeat; the densest collision-plus-running load in the team.",
       "runningDemands": "Highest of the forwards (~7 km) at a high work:rest density.",
@@ -464,6 +467,7 @@
     },
     {
       "name": "Half-backs (scrum-half & fly-half)",
+      "priorityPatterns": ["hinge", "lunge", "core"],
       "role": "The controllers — service and distribution, tactical kicking, decision-making, defensive organisation; high skill under fatigue and contact.",
       "movementDemands": "Constant short movement, repeated passing (scrum-half) and kicking (fly-half), sharp acceleration and evasion; high cognitive load with contact exposure at the ruck and in defence.",
       "runningDemands": "Moderate (~6-7 km) with frequent short accelerations and direction changes.",
@@ -495,6 +499,7 @@
     },
     {
       "name": "Outside backs (wings, fullback, centres)",
+      "priorityPatterns": ["hinge", "squat", "calf"],
       "role": "Finishing and covering — top-speed line-breaks, kick-chase and counter, high-ball contests and last-line defence; the fastest players with the highest sprint exposure.",
       "movementDemands": "Maximal-velocity sprints on breaks, chases and cover; repeated high-ball jump-land; hard collisions in the tackle and midfield contact (centres).",
       "runningDemands": "Highest total and high-speed distance (~7 km, top-end speed exposure peaks here).",

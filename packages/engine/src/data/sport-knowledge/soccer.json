@@ -361,6 +361,7 @@
   "positions": [
     {
       "name": "Goalkeeper",
+      "priorityPatterns": ["lunge", "squat", "iso"],
       "role": "Shot-stopping, commanding the box on crosses, 1v1 denial, distribution (now a passing position too).",
       "movementDemands": "Explosive lateral dives, maximal vertical jumps, rapid get-ups, short bursts off the line; hundreds of low-intensity positioning adjustments.",
       "runningDemands": "Lowest of any position (~4-6 km, almost all walking/jogging).",
@@ -392,6 +393,7 @@
     },
     {
       "name": "Centre-back",
+      "priorityPatterns": ["squat", "hinge", "iso"],
       "role": "Aerial dominance in both boxes, front-foot defending, duel winning, build-up passing.",
       "movementDemands": "Repeated maximal jumps under contact, hard short accelerations to step in, emergency recovery sprints, physical duels.",
       "runningDemands": "Lowest outfield total distance (~9-10 km) but high-consequence maximal sprints when exposed.",
@@ -423,6 +425,7 @@
     },
     {
       "name": "Full-back / Wing-back",
+      "priorityPatterns": ["hinge", "calf", "squat"],
       "role": "The corridor engine: overlap and underlap runs in attack, recovery sprints in defence, crossing supply.",
       "movementDemands": "The highest repeat-sprint load in the team — continuous up-and-back corridor running, high-speed overlaps, maximal recovery sprints, crossing under fatigue.",
       "runningDemands": "Highest high-speed-running and sprint distance of any position (~10-12 km total, sprint volume peaks here).",
@@ -454,6 +457,7 @@
     },
     {
       "name": "Central midfielder",
+      "priorityPatterns": ["hinge", "lunge", "core"],
       "role": "The link: circulation, pressing triggers, box-to-box support, second balls, tempo control.",
       "movementDemands": "Near-continuous shuttling with constant turns (~700/match concentrate here), tight-space COD, press-and-recover cycles.",
       "runningDemands": "Highest total distance (~11-13 km elite); moderate sprint distance but the most direction changes.",
@@ -485,6 +489,7 @@
     },
     {
       "name": "Striker / Forward",
+      "priorityPatterns": ["hinge", "lunge", "squat"],
       "role": "Penetrating runs in behind, first-step separation, finishing, aerial threat, first line of the press.",
       "movementDemands": "Explosive short accelerations from standing/curved starts, sharp COD to create shooting angles, maximal sprints in behind, repeated jumps in the box, high kicking (shooting) volume.",
       "runningDemands": "Moderate total (~10-11 km) but the highest density of maximal accelerations and penalty-box explosive actions.",

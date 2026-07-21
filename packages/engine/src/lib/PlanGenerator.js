@@ -144,6 +144,7 @@ function buildGymWeek(count, ctx, profile, program, diag) {
     power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || [],
     priorityByIntent: program.priorityByIntent || new Map(),
     priorityQualities: diag.priorityQualities, season: program.season, skbIds: diag.skbIds,
+    positionPatterns: diag.positionPatterns || [],   // Sprint 3 B2 — position priority-pattern nudge
     categoryPlan: diag.categoryPlan, discipline: program.discipline || null,
     // Season-phased SKB (2026-07-09): the current-phase programming block + derived round-out
     // targets (null for un-migrated sports → the allocator's round-out pass is a no-op).
@@ -174,7 +175,15 @@ export function generatePlan(profile = {}, opts = {}) {
   // legacy path. asOf comes from the profile's start date (never the clock) — deterministic.
   const asOf = profile.plan_start_date || null;
   const perf = opts.performanceModel || performanceModelForProfile(profile, asOf);
-  const skbSportId = program.sport ? (profileToAthleteModel(profile, asOf)?.sportingContext?.primarySport || null) : null;
+  const athleteModel = program.sport ? profileToAthleteModel(profile, asOf) : null;
+  const skbSportId = athleteModel?.sportingContext?.primarySport || null;
+  // Sprint 3 B2: the athlete's SKB position priorityPatterns — a small D11 selection nudge toward
+  // the movement patterns this position's gym programming prioritises (authored from its
+  // gymPriorities prose). [] when no sport/position/data → the nudge is a no-op (byte-identical).
+  const positionName = athleteModel?.sportingContext?.position || null;
+  const positionPatterns = (skbSportId && positionName)
+    ? ((SKB.section(skbSportId, 'positions') || []).find((p) => p.name === positionName)?.priorityPatterns || [])
+    : [];
   const diag = {
     priorityQualities: (perf && perf.priorityAdaptations) || [],
     // Category-led sports (WP-20 — swim): the SKB library's per-session coverage plan.
@@ -182,6 +191,7 @@ export function generatePlan(profile = {}, opts = {}) {
     // Map(id → transferToSportRating): the library's authored transfer judgement per
     // movement (Sprint 9 19a) — membership grants §34 tier-4 standing, the rating values it.
     skbIds: skbSportId ? new Map((SKB.section(skbSportId, 'exerciseLibrary')?.exercises || []).map((e) => [e.id, e.transferToSportRating])) : new Map(),
+    positionPatterns,
   };
   const { busyDays, sportMuscles } = deriveConstraints(profile);
   const availability = profile.availability || {};

@@ -98,6 +98,7 @@ export function buildWeek(ctx = {}) {
       exercisePriority: ctx.exercisePriority || [], sport: ctx.sport || null, power: !!ctx.power,
       priorityByIntent: ctx.priorityByIntent || new Map(),
       priorityQualities: ctx.priorityQualities || [], season: ctx.season || null, skbIds: ctx.skbIds || new Set(),
+      positionPatterns: ctx.positionPatterns || [],   // Sprint 3 B2 — position priority-pattern nudge (D11)
       categoryPlan: ctx.categoryPlan || null, discipline: ctx.discipline || null,
       secondaryGoals: ctx.secondaryGoals || [],   // WP-49 T5 — accessory-tail corrective add-ons
       programming: ctx.programming || null, roundOut: ctx.roundOut || null,   // season-phased SKB (2026-07-09)

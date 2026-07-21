@@ -24,6 +24,16 @@ neither is present.
 
 ---
 
+## 2026-07-21 — Sprint 3 B2: position priority-pattern nudge (ships ON; KSV 1.47.0 → 1.48.0)
+- Changed archetypes (content): **2** — `sport·rugby·advanced·off·4d·position-outside-backs` and `sport·soccer·intermediate·off·3d·position-goalkeeper` (the only two POSITIONED team-sport fixtures).
+- Added archetypes: none.
+- Keys that moved, per archetype:
+  - rugby outside-backs: one main-slot `exId` `barbell_row` (hpull) → `glute_ham_raise` (hinge) — the position's hinge priority (eccentric hamstring / Nordic, its non-negotiable) lifted a hinge driver over an hpull of the same tier.
+  - soccer goalkeeper: one accessory `exId` `calf_raise` (calf iso) → `depth_jump` (squat-pattern reactive jump) — the position's squat priority lifted a reactive squat-pattern jump over a calf iso.
+  - plus `meta.provenance.knowledgeSetVersion` 1.47.0 → 1.48.0 on **every** archetype (the new governed weight + SKB data bumps the knowledge-set version).
+- Why: Sprint 3 Task B2 — the five team-sport SKB positions gained a structured `priorityPatterns` list (authored from their gymPriorities prose), and D11 (`lib/plan/selectInterventions.js`) gained a small ADDITIVE governed nudge (`SELECTION_SCORING.positionPatternWeight` = 0.1) preferring candidates whose pattern is on the athlete's position list. Additive ⇒ re-orders within a quality tier only; NUDGE not gate (candidate pool identical — proven in `tests/position-priority-patterns.js`).
+- Claim: no other archetype's content moved (audited key-by-key against this note; every non-positioned archetype is a pure stamp-only diff). Manifest re-baselined for the new/changed governed files.
+
 ## 2026-07-16 — provenance review, closure §3 ROW 4 shape upgrade (referral provenance; KSV 1.46.0 → 1.47.0)
 - Changed archetypes (content): **none.** Stamp-only (`knowledgeSetVersion` 1.46.0 → 1.47.0; non-stamp diff empty). Manifest 46 files.
 - Why: every high_risk injuryTaxonomy diagnosis (the 20 professional-referral gate flags) gained machine-readable `referral` provenance ({basis, confidence:'high', source:null, needsCitation:true}). `referral` is read by nothing (engine injury-blind; app reads named fields) → no plan change; only the knowledge-set version bumps. The specific clinical citations remain a clinician's to supply (deliberately not fabricated).
