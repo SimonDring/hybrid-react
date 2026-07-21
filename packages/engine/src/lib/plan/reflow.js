@@ -256,6 +256,12 @@ export function reflowPhases({
     recovery ? recovery.volumeModifier : 1,
     { action: loadAction, multiplier: load ? load.loadModifier : 1 }
   );
+  // D9 dose-shrink (Phase 2 flip follow-up): form-fatigued → a gentle volume trim, capped via
+  // Math.min (not multiplied) so a deload that already cut mult below the trim floor is never
+  // double-counted — this only bites in the "fatigued but not deloading" middle zone.
+  const DOSE = kb.value('load.form.dose');
+  const formMult = (form && form.band === 'fatigued') ? DOSE.fatiguedVolumeMult : 1;
+  mult = Math.min(mult, formMult);
   const travelPolicy = kb.value('recovery.travel_policy');
   if (!reverted && override === 'easy') mult = Math.min(mult, travelPolicy.volumeCap);
   mult *= ruleAdj.volumeMult;
