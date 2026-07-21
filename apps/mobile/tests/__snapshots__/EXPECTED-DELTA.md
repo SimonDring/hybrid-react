@@ -24,6 +24,26 @@ neither is present.
 
 ---
 
+## 2026-07-21 — mobility loadClass closure (chip fix; KSV 1.50.0 → 1.51.0)
+- Changed archetypes (content): **none.** Stamp-only (`knowledgeSetVersion` 1.50.0 → 1.51.0; non-stamp diff empty). Manifest re-baselined.
+- Why: hip_flexor_90_90 / cat_camel_thoracic / thoracic_foam_roller gained `loadClass: 'health'` (zero volume, supportive structuring — the catalogue's own authored intent). No fixture selects these three as main items, so no plan content moves; real plans that do select them change structure/volume-credit. Commit fa7b971 carries the audit.
+- Claim: no archetype content moved — stamp-only.
+
+## 2026-07-21 — Sprint 3 C1: equipment taxonomy + detailed-availability layer (inert; KSV 1.49.0 → 1.50.0)
+- Changed archetypes (content): **none.** Stamp-only (non-stamp diff empty). Manifest re-baselined (+ data/equipmentTaxonomy.js; 14 catalogue entries gained `equipDetail` tags — availability unchanged when no `access_detail` is provided, which is true of every fixture).
+- Claim: no archetype content moved — stamp-only. (C2's selection wiring is lib-only, no KSV bump, golden fully byte-identical.)
+
+## 2026-07-21 — Sprint 3 B3: position injury-prevention nudge (ships ON, tier≥3-bounded; KSV 1.48.0 → 1.49.0)
+- Changed archetypes (content): **none.** Stamp-only (non-stamp diff empty). Manifest re-baselined (26 positions gained structured `commonInjuryRegions`; new governed `SELECTION_SCORING.positionInjuryPreventionWeight` 0.1).
+- Why: the nudge is gated to tier ≥ 3 (prehab must never displace a tier-1/2 anchor), and no positioned fixture surfaces a reorderable tier-3+ prevention accessory — so the mechanism is live but currently inert in fixtures (unit-proven in tests/position-prevention.js). Whether prevention should steer more strongly is an open coaching call (Simon).
+- Claim: no archetype content moved — stamp-only.
+
+## 2026-07-21 — Sprint 3 B1: position secondaryQualities floor the demand profile at 0.7 (KSV unchanged; engine content change)
+- Changed archetypes (content): **1** — `sport·rugby·advanced·off·4d·position-outside-backs`: `meta.diagnosis.droppedDemands` row `aerialAbility` importance `0.6 → 0.7` (the new SECONDARY_FLOOR; evidence `skb:rugby:pos:…:secondary`).
+- Added archetypes: none.
+- Why: Sprint 3 Task B1 (docs/superpowers/specs/2026-07-20-sprint3-coaching-depth-design.md §B) — a position's `secondaryQualities` now floor demand at 0.7, the way primaries floor at 0.9. Outside-backs' other secondaries (acceleration 0.8, explosivePower→explosiveStrength 0.8) already sat ≥ 0.7; soccer goalkeeper's (stability 0.7) sat exactly at the floor — so this one dropped-side row is the entire fixture delta. Projected-side raises are unit-proven (tests/demand-position-secondary.js, soccer Striker reactiveStrength 0.6 → 0.7). Commit c5189aa carries the full audit.
+- Claim: no other archetype moved (audited key-by-key; positionless profiles byte-identical).
+
 ## 2026-07-21 — Sprint 3 B2: position priority-pattern nudge (ships ON; KSV 1.47.0 → 1.48.0)
 - Changed archetypes (content): **2** — `sport·rugby·advanced·off·4d·position-outside-backs` and `sport·soccer·intermediate·off·3d·position-goalkeeper` (the only two POSITIONED team-sport fixtures).
 - Added archetypes: none.

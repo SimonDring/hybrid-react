@@ -83,3 +83,15 @@ assert(frontPicks.length === noPos.length && halfPicks.length === noPos.length,
 
 // ── determinism / purity ──────────────────────────────────────────────────────
 assert(JSON.stringify(run(frontRow)) === JSON.stringify(frontPicks), 'C1 deterministic under a fixed position');
+
+// ── (d) NEGATIVE — the SKB validator rejects a bogus priorityPatterns token ──────
+// Mirrors position-prevention.js's D1 (whole-branch review follow-up): validation
+// symmetry proven, not assumed.
+const { validateSportProfile } = await import('@performance-os/engine/lib/sportKnowledge/schema.js');
+const rugbyClone = JSON.parse(JSON.stringify(SKB.get('rugby')));
+const cleanErrs = validateSportProfile(rugbyClone).filter((e) => /priorityPatterns/.test(e));
+assert(cleanErrs.length === 0, 'D0 the authored SKB priorityPatterns all validate');
+rugbyClone.positions[0].priorityPatterns = ['hinge', 'not_a_real_pattern'];
+const patErrs = validateSportProfile(rugbyClone).filter((e) => /priorityPatterns/.test(e));
+assert(patErrs.length === 1 && /not_a_real_pattern/.test(patErrs[0]),
+  'D1 a bogus priorityPatterns token is rejected by the SKB validator');
