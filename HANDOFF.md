@@ -1,15 +1,15 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-21 (overnight UX/coaching-depth branch complete — PR #228 open, DO NOT MERGE
-until Simon reviews B/C; branch merged up to main incl. the sport-data roadmap flips — match-day
-scheduling + the form model are LIVE on main). This file carries **current
+_Last updated: 2026-07-21 (overnight UX/coaching-depth branch — Simon approved B/C + the
+loadable-equipment weight gate and authorized the merge of PR #228 to main; branch carries
+main's sport-data flips — match-day scheduling + the form model are LIVE). This file carries **current
 state and the open queue only**. The full session-by-session history (2026-06-11 →
 2026-07-09, ~1,800 lines) is preserved verbatim at
 [`docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md`](docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md).
 Keep this file current at the end of each session; when an entry stops being current,
 move it to the archive file rather than letting this one grow._
 
-## 2026-07-21 — overnight branch `claude/session-ui-flow-improvements-92b44a` (PR open, unmerged)
+## 2026-07-21 — overnight branch `claude/session-ui-flow-improvements-92b44a` (PR #228 — MERGED, Simon-approved)
 
 Simon's 2026-07-20 fix list, executed as three sprints (specs + plans in
 `docs/superpowers/{specs,plans}/2026-07-20-sprint*`); every task subagent-implemented,
@@ -43,10 +43,8 @@ KSV **1.56.0** on the branch (this branch's four bumps renumbered 1.53–1.56 ab
 - **Golden net delta vs main (audited post-merge; entries in `EXPECTED-DELTA.md`):**
   KSV 1.52.0→1.56.0 stamps + B1's one droppedDemands row + B2's two positioned-archetype
   swaps. Nothing else — no interaction deltas with main's match-day/form work.
-- **Merge gates:** Sprints 1–2 + 3A are green/low-risk per the charter; **B2/B3/C pause
-  for Simon** (coaching philosophy + public onboarding surface). Noted follow-ups (see PR
-  body): weight stepper gated to loadable equipment across all roles (Simon's call,
-  2026-07-21 — closed); B3 anchor-steering question;
+- **Merge gates: cleared** — Simon approved B2/B3/C and the loadable-equipment weight
+  gate 2026-07-21 and authorized the merge. Remaining open notes: B3 anchor-steering question;
   SessionOverview same-name merge edge; QUALITY_LABELS circular-import tidy.
 
 ## 2026-07-20 — SPORT-DATA INTEGRATION ROADMAP (aerobic + match-day → S&C output)
