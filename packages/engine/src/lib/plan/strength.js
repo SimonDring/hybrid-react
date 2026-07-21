@@ -82,7 +82,7 @@ export function buildWeek(ctx = {}) {
   const split = resolveSplit({ gymDays, style, emphasis: ctx.emphasis, competedLift: ctx.competedLift || 'both' });
   const slotMin = functionalSlotMinutes(style, minutes);
   const slots = split.map(day => ({
-    minutes: slotMin, equip: ctx.access || [], anchors: day.anchors, focus: day.weights, focusLabel: day.focus,
+    minutes: slotMin, equip: ctx.access || [], accessDetail: ctx.accessDetail || null, anchors: day.anchors, focus: day.weights, focusLabel: day.focus,
     // WP-49 Plan 2 T4b-2: olympic days carry a per-day priority subset (the day's lift family) +
     // a target-quality override (snatch/C&J days are explosive; the squat day is max strength).
     // Absent for every other split → the allocator falls back to the discipline-wide priority list.
@@ -94,6 +94,9 @@ export function buildWeek(ctx = {}) {
     ctx: {
       style, intent: ctx.intent, deload, taper, weekNum: ctx.weekNum,
       level: ctx.level, sex: ctx.sex, lifts: ctx.lifts, access: ctx.access || [],
+      // Sprint 3 C2: the athlete's OPTIONAL detailed-equipment declaration (nullable). Absent ⇒
+      // detail is null everywhere downstream ⇒ every equipment gate degrades to base-only (byte-identical).
+      accessDetail: ctx.accessDetail || null,
       bodyweight: ctx.bodyweight, forceVelocityAware: !!ctx.forceVelocityAware,
       exercisePriority: ctx.exercisePriority || [], sport: ctx.sport || null, power: !!ctx.power,
       priorityByIntent: ctx.priorityByIntent || new Map(),

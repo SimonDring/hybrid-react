@@ -8,6 +8,7 @@
  * 4 sport accessory · 5 lagging-muscle hypertrophy (within MEV/MRV) · 6 core · 7 mobility.
  */
 import { EXERCISES } from '../../data/strengthExercises.js';
+import { exerciseAvailable } from '../../data/equipmentTaxonomy.js';
 import { exerciseQualities } from '../../data/exerciseQualities.js';
 import { QUALITY_MOVEMENT } from '../../data/qualityMovementMap.js';
 import { SELECTION_SCORING } from '../../data/selectionScoring.js';
@@ -105,7 +106,7 @@ function valueOf(ex, target, skbIds, forceVelocityAware = false) {
   return value;
 }
 
-export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [], categoryIds = null, discipline = undefined, priorityIds = null, forceVelocityAware = false, positionPatterns = null, positionPreventionIds = null } = {}) {
+export function selectInterventions({ req, exercises = EXERCISES, equip, equipDetail = null, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [], categoryIds = null, discipline = undefined, priorityIds = null, forceVelocityAware = false, positionPatterns = null, positionPreventionIds = null } = {}) {
   // Position priority-pattern nudge (Sprint 3 B2): a small ADDITIVE preference for candidates whose
   // movement pattern is on the athlete's SKB position list. NOT flag-gated (ships on) but never a
   // gate — additive, so it only re-orders WITHIN a quality tier (the sort below is tier-first),
@@ -135,12 +136,14 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
   // press) over the competition lift it assists. rank 0 = highest priority.
   const priorityRank = new Map((priorityIds || []).map((id, i) => [id, i]));
 
-  // Eligible candidates, tiered + valued.
-  const cand = [];
+  // Eligible candidates, tiered + valued. Sprint 3 C2: each carries a `detailOk` flag —
+  // does the athlete's DETAILED equipment (equipDetail) admit it? — so the base-pool
+  // coverage fallback below can re-admit a whole pattern the detail set would otherwise empty.
+  const eligible = [];
   for (const ex of exercises) {
     // WP-49 Plan 1: discipline-tagged lifts are only selectable when their discipline is active.
     if (ex.discipline && ex.discipline !== discipline) continue;
-    if (equip && !equip.has(ex.equip)) continue;
+    if (equip && !equip.has(ex.equip)) continue;   // BASE gate — detail can never expand access
     if ((ex.level ?? 0) > level) continue;
     if (contra.has(ex.pattern)) continue;
     // Name-level contraindication (WP-13): the pattern vocabulary is majority-vote
@@ -182,7 +185,25 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
     // the discipline priority path in practice — position implies a sport, disciplines don't set
     // priorityIds — and the ±0.1 could never reorder integer-ranked (1e6−rank) anchors anyway.
     const value = baseValue + positionBonus(ex) + preventionBonus(ex, tier);
-    cand.push({ ex, tier, value });
+    // Equipment-detail narrowing (Sprint 3 C2). detailOk true ⇒ the athlete's DETAILED equipment
+    // admits this exercise. With no detail supplied (equipDetail null) exerciseAvailable degrades to
+    // the base gate already applied above ⇒ always true ⇒ byte-identical to pre-C2. Category picks
+    // were legality-filtered above; they narrow the same way (their base gate already passed).
+    const detailOk = !equipDetail || !equip || exerciseAvailable(ex, { base: equip, detail: equipDetail });
+    eligible.push({ ex, tier, value, detailOk });
+  }
+  // Base-pool COVERAGE FALLBACK (Art 15 — no silent truncation). Detail narrows WITHIN a movement
+  // pattern only while that pattern KEEPS ≥1 detailed option. A pattern the base pool covered but the
+  // detail set emptied entirely falls back to its base-category candidates (they are re-admitted here
+  // rather than vanishing) so the session still covers the pattern. The independent D14
+  // equipment-detail-coverage observer (observers.js) recomputes and NAMES each shipped fallback pick
+  // by pattern — construction proposes the fallback, validation surfaces it (Art 19). No detail ⇒ every
+  // eligible is detailOk ⇒ every pattern is "covered" ⇒ nothing re-admitted beyond today's pool.
+  const patternHasDetail = new Set();
+  for (const e of eligible) if (e.detailOk) patternHasDetail.add(e.ex.pattern);
+  const cand = [];
+  for (const e of eligible) {
+    if (e.detailOk || !patternHasDetail.has(e.ex.pattern)) cand.push({ ex: e.ex, tier: e.tier, value: e.value });
   }
   cand.sort((a, b) => a.tier - b.tier || b.value - a.value || (a.ex.id < b.ex.id ? -1 : a.ex.id > b.ex.id ? 1 : 0));
 

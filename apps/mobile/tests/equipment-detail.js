@@ -15,6 +15,11 @@ import {
   availableEquipDetailed,
   exerciseAvailable,
 } from '@performance-os/engine';
+// Sprint 3 C2 — the WIRING layer: real plan generation must thread access_detail through
+// selection (narrow within a detailed base) with a D14 base-pool COVERAGE FALLBACK + flag.
+import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
+import { substituteOptions } from '@performance-os/engine/lib/plan/substitutions.js';
+import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
 
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
@@ -103,6 +108,87 @@ assert(availableEquipDetailed(['full_gym'], []).detail === null, 'empty accessDe
   const avail = availableEquipDetailed(['bodyweight', 'band'], ['resistance_bands', 'leg_press_45']);
   assert(!avail.base.has('machine'), 'no-expand: machine still absent');
   assert(exerciseAvailable(byId.leg_curl, avail) === false, 'no-expand: leg_curl unavailable (machine base absent) despite a machine detail key');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Sprint 3 C2 — WIRING into real plan generation
+// ══════════════════════════════════════════════════════════════════════════════
+const A = (o) => ({ ...BLANK_ANSWERS, ...o });
+// A bodyweight+band advanced functional athlete: baseline ships Pull-up + Band-assisted
+// pull-up (the only two vpull movements available on this base — BOTH tagged pullup_bar).
+const BW_BAND_ANSWERS = A({ goalType: 'build', strengthStyle: 'functional', experienceLevel: 'advanced', daysPerWeek: 4, days: ['mon', 'tue', 'thu', 'fri'], equipment: ['bodyweight', 'band'], sex: 'male', lifts: {} });
+const shippedNames = (plan) => {
+  const s = new Set();
+  for (const ph of plan.phases) for (const w of ph.weeks) for (const sess of w.sessions) for (const it of (sess.items || [])) s.add(it.name);
+  return s;
+};
+const byNameLower = Object.fromEntries(EXERCISES.map((e) => [e.name.toLowerCase(), e]));
+// Every shipped WORKING item must be available under the detail set, UNLESS its pattern was
+// named in the coverage-fallback ledger (Art 15 — a base-pool fallback is surfaced, never silent).
+const invariantHolds = (plan, avail) => {
+  const flagged = new Set((plan.meta.validation.equipmentDetailFallbacks || []).map((f) => f.pattern));
+  for (const ph of plan.phases) for (const w of ph.weeks) for (const sess of w.sessions) for (const it of (sess.items || [])) {
+    if (it.section === 'primer' || it.substituted) continue;
+    const ex = byNameLower[(it.name || '').toLowerCase()];
+    if (!ex) continue;
+    if (avail.base.has(ex.equip) && !exerciseAvailable(ex, avail) && !flagged.has(ex.pattern)) return { ok: false, offender: `${it.name} (${ex.pattern})` };
+  }
+  return { ok: true };
+};
+
+// ── Byte-identity: absent/null/[] access_detail ≡ the field never present ──────────
+{
+  const prof = answersToProfile(BW_BAND_ANSWERS);
+  const baseline = JSON.stringify(generatePlan(prof));
+  assert(baseline === JSON.stringify(generatePlan({ ...prof, access_detail: null })), 'plan with access_detail:null is byte-identical to no field');
+  assert(baseline === JSON.stringify(generatePlan({ ...prof, access_detail: [] })), 'plan with access_detail:[] is byte-identical to no field');
+  assert(generatePlan(prof).meta.validation.equipmentDetailFallbacks === undefined, 'no detail → no equipmentDetailFallbacks ledger on meta.validation');
+}
+
+// ── Uncoverable pattern → base-pool fallback + a named D14 flag ─────────────────────
+// Detail the bodyweight rig WITHOUT a pull-up bar: both vpull movements (Pull-up,
+// Band-assisted pull-up) are tagged pullup_bar, so narrowing empties the vpull pattern.
+{
+  const prof = { ...answersToProfile(BW_BAND_ANSWERS), access_detail: ['plyo_box'] };
+  const avail = availableEquipDetailed(prof.access, prof.access_detail);
+  assert(avail.detail instanceof Set && avail.detail.has('plyo_box'), 'precondition: plyo_box details the bodyweight base');
+  const plan = generatePlan(prof);
+  const fb = plan.meta.validation.equipmentDetailFallbacks;
+  assert(Array.isArray(fb) && fb.length > 0, 'uncoverable vpull → meta.validation carries an equipmentDetailFallbacks ledger');
+  assert(fb.some((f) => f.pattern === 'vpull'), 'the coverage-fallback flag NAMES the uncoverable pattern (vpull)');
+  assert(fb.every((f) => typeof f.reason === 'string' && f.reason.length > 0 && f.week != null), 'every fallback entry carries a plain-English reason + week (Art 15)');
+  // Coverage was preserved — the base-pool pull-up STILL ships (the pattern wasn't dropped).
+  assert(shippedNames(plan).has('Pull-up'), 'coverage preserved: Pull-up still ships via the base-pool fallback');
+  assert(invariantHolds(plan, avail).ok, 'every detail-excluded shipped item has its pattern named in the fallback ledger (no silent truncation)');
+}
+
+// ── Narrowing WITH an alternative → the tagged exercise is dropped, NO flag ─────────
+// Detail the bodyweight rig WITH a pull-up bar but WITHOUT a dip station: Dip (tagged
+// dip_station) is narrowed out, but push-ups cover the hpush pattern → no fallback.
+{
+  const prof = { ...answersToProfile(BW_BAND_ANSWERS), access_detail: ['pullup_bar'] };
+  const avail = availableEquipDetailed(prof.access, prof.access_detail);
+  const plan = generatePlan(prof);
+  assert(plan.meta.validation.equipmentDetailFallbacks === undefined, 'coverable narrowing → NO fallback ledger (hpush still covered by push-ups)');
+  assert(invariantHolds(plan, avail).ok, `no shipped item is detail-excluded: ${JSON.stringify(invariantHolds(plan, avail).offender)}`);
+  assert(shippedNames(plan).has('Pull-up'), 'the detailed pull-up bar keeps Pull-up available');
+  assert(![...shippedNames(plan)].some((n) => /^dip$/i.test(n)), 'narrow: Dip (tagged dip_station, omitted) never ships when push-ups cover hpush');
+}
+
+// ── The on-the-fly SWAP path (substitutions.js) narrows to detailed equipment ──────
+{
+  const item = { name: byId.lat_pulldown.name, sets: '3×10', rpe: 8 };
+  const optsNoDetail = substituteOptions(item, { access: ['full_gym'], max: 12 });
+  const optsNoDetailIds = new Set(optsNoDetail.map((o) => o.id));
+  assert(optsNoDetailIds.has('pullup'), 'swap (no detail): Pull-up is offered as a lat-pulldown alternative');
+  // Detail the bodyweight rig WITHOUT a pull-up bar → Pull-up + assisted variant excluded from the swap menu.
+  const optsDetail = substituteOptions(item, { access: ['full_gym'], accessDetail: ['dip_station', 'plyo_box'], max: 12 });
+  const optsDetailIds = new Set(optsDetail.map((o) => o.id));
+  assert(!optsDetailIds.has('pullup'), 'swap (detailed, no pullup_bar): Pull-up is NOT offered');
+  assert(!optsDetailIds.has('assisted_pullup'), 'swap (detailed, no pullup_bar): Band-assisted pull-up is NOT offered');
+  // accessDetail null degrades to today's behaviour exactly.
+  const optsNull = substituteOptions(item, { access: ['full_gym'], accessDetail: null, max: 12 });
+  assert(JSON.stringify(optsNull) === JSON.stringify(optsNoDetail), 'swap: accessDetail null is byte-identical to no accessDetail');
 }
 
 console.log('equipment-detail done');

@@ -26,6 +26,7 @@
  */
 
 import { EXERCISES, LEVELS, availableEquip } from '../../data/strengthExercises.js';
+import { availableEquipDetailed, exerciseAvailable } from '../../data/equipmentTaxonomy.js';
 import { VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
 import { muscleContribution } from '../plan/contributions.js';
 import { parseSetCount } from '../plan/volume.js';
@@ -63,6 +64,13 @@ export const SESSION_CEILING_MIN = 75;
 // ./axial.js, shared with the scheduler + de-spine pass so they can't diverge.
 
 const EX_BY_ID = new Map(EXERCISES.map(e => [e.id, e]));
+
+// Sprint 3 C2 — is an exercise available given a slot's BASE equipment (slot.equip, a Set)
+// AND the athlete's optional DETAILED equipment (slot.detail, a Set|null)? Every equipment
+// gate in this module routes through here so detail narrowing is applied uniformly. With no
+// detail (slot.detail null/absent) exerciseAvailable degrades to slot.equip.has(ex.equip) —
+// EXACTLY today's base gate — so an athlete who declared no detail is byte-identical.
+const exAvail = (slot, ex) => exerciseAvailable(ex, { base: slot.equip, detail: slot.detail || null });
 
 // Which cohorts the diagnosis actually STEERS (the D11/category-led gate) — the ONE
 // predicate shared by the allocator's branch and PlanGenerator's meta.diagnosis emission
@@ -172,7 +180,7 @@ function finisherPool(slot, ctx, levelName) {
   const cands = EXERCISES.filter(ex => {
     // WP-49 Plan 1: discipline-tagged lifts are only selectable when their discipline is active.
     if (ex.discipline && ex.discipline !== ctx.discipline) return false;
-    if (!slot.equip.has(ex.equip)) return false;
+    if (!exAvail(slot, ex)) return false;   // Sprint 3 C2 — base + optional equipment-detail gate
     if (ex.level > slot.level) return false;
     if (slot.exUsed.has(ex.id)) return false;
     if (blockedRx.length && blockedRx.some(r => r.test(ex.name))) return false;  // injury-contraindicated (WP-40)
@@ -286,10 +294,16 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const weeklyDelivered = {};   // muscle → fractional sets delivered across ALL slots
   const weeklyExCount = {};     // exercise id → sessions it's appeared in this week (variety penalty)
 
-  const work = slots.map((slot, idx) => ({
+  const work = slots.map((slot, idx) => {
+    // Sprint 3 C2: resolve the slot's BASE grant + optional DETAILED availability in one pass.
+    // accessDetail rides the slot (strength.js) or the shared ctx; absent ⇒ detail is null ⇒
+    // every equipment gate degrades to today's base-only behaviour (byte-identical).
+    const avail = availableEquipDetailed(slot.equip || ctx.access || [], slot.accessDetail || ctx.accessDetail || null);
+    return {
     idx,
     minutes: slot.minutes || 60,
-    equip: availableEquip(slot.equip || ctx.access || []),
+    equip: avail.base,
+    detail: avail.detail,
     level: LEVELS[ctx.level] ?? 0,
     budget: slotBudget(slot.minutes || 60),
     timeUsed: 0,
@@ -307,7 +321,8 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
     targetQualityOverride: slot.targetQualityOverride || null,  // WP-49 T4b-2: olympic per-day quality
     anchors: slot.anchors || null,   // split day's opening pattern(s)
     axialLoad: 0                     // running spinal-load budget for this session
-  }));
+    };
+  });
 
   // SHARED weekly deficit — the single volume controller. Each slot pays it down;
   // the split steers WHICH slot gets WHAT (anchors + focus bias), never the total.
@@ -366,7 +381,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
         if (added >= maxCover) break;
         if (slot.picks.some(p => exerciseMatchesToken(p.ex, token))) continue;   // already covered
         const cands = EXERCISES.filter(ex =>
-          exerciseMatchesToken(ex, token) && slot.equip.has(ex.equip) && ex.level <= slot.level &&
+          exerciseMatchesToken(ex, token) && exAvail(slot, ex) && ex.level <= slot.level &&
           !slot.exUsed.has(ex.id) && !isBlockedEx(ex) && stimulusFactor(ex, levelName) > 0 &&
           (!ex.discipline || ex.discipline === ctx.discipline));
         if (!cands.length) continue;
@@ -384,7 +399,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
   const patternAnchor = (slot, patterns) => {
     for (const pat of patterns) {
       // WP-49 Plan 1: discipline-tagged lifts are only selectable when their discipline is active.
-      let cands = EXERCISES.filter(e => (!e.discipline || e.discipline === ctx.discipline) && e.pattern === pat && slot.equip.has(e.equip) && e.level <= slot.level && powerAllowed(e, power, prioritySet, style) && !isBlockedEx(e));
+      let cands = EXERCISES.filter(e => (!e.discipline || e.discipline === ctx.discipline) && e.pattern === pat && exAvail(slot, e) && e.level <= slot.level && powerAllowed(e, power, prioritySet, style) && !isBlockedEx(e));
       if (!cands.length) continue;
       const prim = cands.filter(e => e.role === 'primary');
       if (prim.length) cands = prim;
@@ -464,7 +479,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
           if (!reqQ) return false;
           const pats = new Set(reqQ.movementPatterns || []);
           return EXERCISES.some((ex) =>
-            slot.equip.has(ex.equip) && (ex.level ?? 0) <= slot.level &&
+            exAvail(slot, ex) && (ex.level ?? 0) <= slot.level &&
             !contraPatternsD11.has(ex.pattern) &&
             !blockedRxD11.some((r) => r.test(ex.name)) &&
             (tierOf(ex, q, ctx.sport) === 1 || tierOf(ex, q, ctx.sport) === 2) &&
@@ -505,7 +520,7 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
         return { ex, sets: roleSetCount(ex, slot.scheme, style, effectiveRole), contrib: muscleContribution(ex), effectiveRole };
       };
       const picks = selectInterventions({
-        req, equip: slot.equip, level: slot.level, levelName, sport: ctx.sport,
+        req, equip: slot.equip, equipDetail: slot.detail, level: slot.level, levelName, sport: ctx.sport,
         skbIds: ctx.skbIds || new Set(), ledger: { weeklyDelivered, weeklyCeiling }, makePick,
         blockedNameRegexes: ctx.blockedNameRegexes || [],
         categoryIds: assignment ? new Set(assignment.exerciseIds) : null,
@@ -584,12 +599,11 @@ function addHypertrophyIsolation(work, ctx, weeklyDelivered, weeklyCeiling, targ
   const blockedRx = ctx.blockedNameRegexes || [];
   for (const slot of work) {
     const list = ISO_FOR_REGION[hypertrophyRegionOf(slot.focusLabel)] || ISO_FOR_REGION.full;
-    const have = slot.equip instanceof Set ? slot.equip : availableEquip(slot.equip || ctx.access || []);
     let budget = Math.min(HYP_ISO_CAP_MIN, (slot.minutes || 60) - slot.timeUsed);
     for (const id of list) {
       if (budget <= 2) break;
       const ex = EX_BY_ID_ALL.get(id);
-      if (!ex || !have.has(ex.equip) || slot.exUsed.has(ex.id)) continue;
+      if (!ex || !exAvail(slot, ex) || slot.exUsed.has(ex.id)) continue;   // Sprint 3 C2 — base + detail gate
       if (contra.has(ex.pattern) || blockedRx.some((r) => r.test(ex.name))) continue;
       const contrib = muscleContribution(ex);
       const vf = stimulusFactor(ex, levelName);
@@ -658,11 +672,10 @@ function injectSecondaryGoals(work, ctx, s, style, deload, taper, repBump) {
   const blockedRx = ctx.blockedNameRegexes || [];
   const contra = ctx.contraindicatedPatterns instanceof Set ? ctx.contraindicatedPatterns : new Set(ctx.contraindicatedPatterns || []);
   for (const slot of work) {
-    const have = slot.equip instanceof Set ? slot.equip : availableEquip(slot.equip || ctx.access || []);
     // One legal corrective queue per goal; round-robin so a multi-select SPREADS, not stacks.
     const queues = goals.map((g) => (g.accessoryPreferences || [])
       .map((id) => EX_BY_ID_ALL.get(id)).filter(Boolean)
-      .filter((ex) => have.has(ex.equip) && !slot.exUsed.has(ex.id) && !contra.has(ex.pattern) && !blockedRx.some((r) => r.test(ex.name)))
+      .filter((ex) => exAvail(slot, ex) && !slot.exUsed.has(ex.id) && !contra.has(ex.pattern) && !blockedRx.some((r) => r.test(ex.name)))   // Sprint 3 C2 — base + detail gate
       .map((ex) => ({ ex, goalId: g.id })));
     let budget = Math.min(SECONDARY_CAP_MIN, (slot.minutes || 60) - slot.timeUsed);
     let progress = true;

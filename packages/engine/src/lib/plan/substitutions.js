@@ -14,7 +14,8 @@
  * (separate from the allocator's pattern-based muscleContribution — see that file).
  */
 
-import { EXERCISES, LEVELS, availableEquip } from '../../data/strengthExercises.js';
+import { EXERCISES, LEVELS } from '../../data/strengthExercises.js';
+import { availableEquipDetailed, exerciseAvailable } from '../../data/equipmentTaxonomy.js';
 import { applyWeights, matchLift } from '../liftProgression.js';
 import { anchorForName } from '../strength/exerciseLoad.js';
 import { DEFAULT_MUSCLES, ISO_GROUP, OVERRIDES, modalitySim } from '../../data/exerciseSimilarity.js';
@@ -70,7 +71,7 @@ const coverage = (need, have) => {
  * @param {object} opts    { access, lifts, level, max, injuries }
  * @returns {Array<{ id, name, equip, pattern, sets, rpe, weight, sameLift, score }>}
  */
-export function substituteOptions(item, { access = [], lifts = {}, level = 'intermediate', max = 8, injuries = [] } = {}) {
+export function substituteOptions(item, { access = [], accessDetail = null, lifts = {}, level = 'intermediate', max = 8, injuries = [] } = {}) {
   const orig = exerciseByName(item && item.name);
   if (!orig) return [];
   const om = resolveMuscles(orig);
@@ -86,7 +87,10 @@ export function substituteOptions(item, { access = [], lifts = {}, level = 'inte
   const origUni = isUnilateral(orig);
   const origCoeff = (anchorForName(orig.name) || {}).coefficient;
   const origStretch = !!orig.stretchBias;
-  const have = availableEquip(access);
+  // Sprint 3 C2: an equipment SWAP is a selection — narrow candidates to the athlete's DETAILED
+  // equipment when they've declared it (never OFFER a lift their detail excludes). accessDetail
+  // absent/null ⇒ avail.detail null ⇒ exerciseAvailable degrades to the base gate (byte-identical).
+  const avail = availableEquipDetailed(access, accessDetail);
   const lvl = LEVELS[level] ?? LEVELS.intermediate;
 
   const out = [];
@@ -96,7 +100,7 @@ export function substituteOptions(item, { access = [], lifts = {}, level = 'inte
     if (cand.quality === 'power') continue;               // Olympic/plyo/power lifts aren't equipment-swap subs
     if (tierOf(cand) !== origTier) continue;              // compound→compound, iso→iso
     if (cand.level > lvl) continue;
-    if (!have.has(cand.equip)) continue;
+    if (!exerciseAvailable(cand, avail)) continue;   // Sprint 3 C2 — base + optional equipment-detail gate
     if (blocked.length && blocked.some((r) => r.test(cand.name))) continue;  // injury-contraindicated
 
     const cm = resolveMuscles(cand);

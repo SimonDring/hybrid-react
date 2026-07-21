@@ -36,7 +36,15 @@ import { countWeeklyVolume } from '../plan/volume.js';
 import { VOLUME_LANDMARKS } from '../../data/muscleVolume.js';
 import { HIGH_DAY_THRESHOLD } from '../plan/axial.js';
 import { BASE_LENGTH_WEEKS } from '../../data/blockPriors.js';
+import { EXERCISES } from '../../data/strengthExercises.js';
+import { availableEquipDetailed, exerciseAvailable } from '../../data/equipmentTaxonomy.js';
 import { doseCoherenceValidator, progressionSanityValidator } from './progression.js';
+
+// Resolve a shipped plan item to its catalogue entry (stable exId first, name second) —
+// mirrors validators.js#exForItem so the equipment-detail observer keys on identity.
+const OBS_EX_BY_ID = new Map(EXERCISES.map((e) => [e.id, e]));
+const OBS_EX_BY_NAME = new Map(EXERCISES.map((e) => [e.name.toLowerCase(), e]));
+const obsExForItem = (it) => (it.exId != null && OBS_EX_BY_ID.get(it.exId)) || OBS_EX_BY_NAME.get((it.name || '').toLowerCase());
 
 // Half-set rounding slack (precedent: mrvValidator.js EPSILON) — under a floor by
 // ≤ half a set is rounding, not a real shortfall.
@@ -191,15 +199,59 @@ export const deloadPresenceObserver = {
   },
 };
 
+// ── 6 · EQUIPMENT-DETAIL COVERAGE (tier 4) — a base-pool fallback is never silent ──
+// Sprint 3 C2. The optional detailed-equipment layer (data/equipmentTaxonomy.js) narrows
+// selection WITHIN a base category the athlete detailed — but only while the athlete's
+// movement PATTERN keeps ≥1 detailed option. When a detail set empties a pattern the base
+// pool covered, selection FALLS BACK to that pattern's base-category candidates (construction —
+// selectInterventions.js) so the pattern is still trained. This observer is the VALIDATION half
+// of that decision (Art 19 — construction proposes, validation disposes/surfaces): it RECOMPUTES
+// the narrowing over the shipped week and NAMES every item that shipped despite the athlete's
+// detail excluding it (detail-excluded yet base-included ⇒ it can only have arrived via the
+// coverage fallback). Art 15 (no silent truncation): the fallback is reported, never hidden.
+// Quiet unless the caller supplies BOTH ctx.access and a non-empty ctx.accessDetail — so every
+// athlete who declared no detail (the baseline, every golden archetype) sees NO note (byte-identical).
+export const equipmentDetailCoverageObserver = {
+  id: 'equipment.detail-coverage',
+  tier: 4,
+  reportOnly: true,
+  knowledge: 'data/equipmentTaxonomy.js (the optional detailed-equipment layer — availableEquipDetailed/exerciseAvailable)',
+  confidence: 'moderate',
+  run(week, ctx = {}) {
+    if (!ctx.access || !ctx.access.length || !ctx.accessDetail || !ctx.accessDetail.length) return [];
+    const avail = availableEquipDetailed(ctx.access, ctx.accessDetail);
+    if (!avail.detail) return [];   // no usable detail (nothing declared narrowed) ⇒ nothing to surface
+    const findings = [];
+    for (const s of week.sessions || []) {
+      if (!isGymSession(s)) continue;
+      for (const it of s.items || []) {
+        if (it.section === 'primer' || it.substituted) continue;   // struck / primer items aren't shipped work
+        const ex = obsExForItem(it);
+        if (!ex) continue;
+        // Detail-EXCLUDED yet BASE-included ⇒ it can only have shipped via the base-pool coverage
+        // fallback (a pattern the detail set emptied). Name it + its pattern (Art 15).
+        if (avail.base.has(ex.equip) && !exerciseAvailable(ex, avail)) {
+          findings.push({
+            reason: `${s.title || 'session'}: "${it.name}" is not in your detailed equipment, but shipped as a base-pool fallback — the ${ex.pattern} pattern had no detailed option left, so it fell back to the base ${ex.equip} pool to keep the pattern covered`,
+            detail: { session: s.title, item: it.name, pattern: ex.pattern, equip: ex.equip, equipDetail: ex.equipDetail || null },
+          });
+        }
+      }
+    }
+    return findings;
+  },
+};
+
 // The report-only registry — members of the D14 suite that OBSERVE (verdict 'note'),
 // never dispose. validateWeek runs these AFTER the enforcing VALIDATORS and stamps
 // every finding 'note'; they can never move a plan (the golden master proves it).
 export const REPORT_ONLY_OBSERVERS = [
-  sportProtectionObserver,   // tier 2
-  mevFloorObserver,          // tier 3
-  deloadPresenceObserver,    // tier 3
-  doseCoherenceObserver,     // tier 4
-  progressionSanityObserver, // tier 4
+  sportProtectionObserver,          // tier 2
+  mevFloorObserver,                 // tier 3
+  deloadPresenceObserver,           // tier 3
+  doseCoherenceObserver,            // tier 4
+  progressionSanityObserver,        // tier 4
+  equipmentDetailCoverageObserver,  // tier 4 — Sprint 3 C2
 ];
 
 export default {
@@ -208,5 +260,6 @@ export default {
   doseCoherenceObserver,
   progressionSanityObserver,
   deloadPresenceObserver,
+  equipmentDetailCoverageObserver,
   REPORT_ONLY_OBSERVERS,
 };

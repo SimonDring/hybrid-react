@@ -8,6 +8,7 @@
  * sessions. Sessions must carry `dayIdx`, `axialLoad`, and items may carry `intent`.
  */
 import { EXERCISES } from '../../data/strengthExercises.js';
+import { availableEquipDetailed, exerciseAvailable } from '../../data/equipmentTaxonomy.js';
 import { applyWeights } from '../liftProgression.js';
 import { HIGH_DAY_THRESHOLD, axialOf } from './axial.js';
 
@@ -60,11 +61,16 @@ function reorderSession(items) {
   return [...lead, ...out];
 }
 
-export function despineWeek(sessions = [], { priorityByIntent = new Map(), lifts = {}, level = 'intermediate', bodyweight = null, blockedNameRegexes = [] } = {}) {
+export function despineWeek(sessions = [], { priorityByIntent = new Map(), lifts = {}, level = 'intermediate', bodyweight = null, blockedNameRegexes = [], access = null, accessDetail = null } = {}) {
   // WP-40: a de-spine swap is a SELECTION and must honour runtime contraindications —
   // without this, despine could re-introduce an injury-blocked lift AFTER the allocator
   // (legacy or D11) deliberately avoided it. The pure generator passes none.
   const isBlocked = (ex) => blockedNameRegexes.length > 0 && blockedNameRegexes.some((r) => r.test(ex.name));
+  // Sprint 3 C2: a de-spine swap is a SELECTION and must honour the athlete's DETAILED equipment
+  // too (same logic as the contraindication guard above) — it must never swap in a lift the detail
+  // set excludes. Absent access/accessDetail ⇒ avail is null ⇒ no narrowing (byte-identical).
+  const avail = access && accessDetail && accessDetail.length ? availableEquipDetailed(access, accessDetail) : null;
+  const detailAdmits = (ex) => !avail || !avail.detail || exerciseAvailable(ex, avail);
   const ordered = [...sessions].sort((a, b) => (a.dayIdx ?? 0) - (b.dayIdx ?? 0));
   for (let i = 1; i < ordered.length; i++) {
     const prev = ordered[i - 1], cur = ordered[i];
@@ -77,7 +83,7 @@ export function despineWeek(sessions = [], { priorityByIntent = new Map(), lifts
       const cands = priorityByIntent.get(it.intent) || [];
       // lowest-axial available candidate of this intent
       let best = null, bestAx = Infinity;
-      for (const id of cands) { const c = BY_ID.get(id); if (c && !isBlocked(c) && axialOf(c) < bestAx) { best = c; bestAx = axialOf(c); } }
+      for (const id of cands) { const c = BY_ID.get(id); if (c && !isBlocked(c) && detailAdmits(c) && axialOf(c) < bestAx) { best = c; bestAx = axialOf(c); } }
       if (best && best.id !== ex.id && bestAx < axialOf(ex)) {
         it.name = best.name; it.exId = best.id; it.weight = undefined; swapped = true;
       }
