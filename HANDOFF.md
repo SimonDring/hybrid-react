@@ -34,9 +34,11 @@ SKB (just switched off).
   ADDED, 0 existing moved — every fixture-less athlete byte-identical). Prereqs done (`\b`-anchored
   the MD regex; `preferExplosiveWorkDays` verified authored in all 11 sports). **DEFERRED (Simon's,
   open):** the congested-week volume cut; sentinel semantics (`"all"`/`"none"`/`"match-day priming"`
-  parse to null → no reshape today). **⚠ Coaching eyeball:** with a Sat fixture the heavy day landed
-  on MD-2 (not the SKB target MD-4) — soft-penalty weights prioritise avoiding MD-1; a one-line
-  `schedulingPolicy.md` tweak pulls it toward MD-4 if wanted.
+  parse to null → no reshape today). **Heavy→MD-4 preference LANDED (PR #229):**
+  `heavyOffTargetDayPerStep` raised 2→4 (cap-safe: 4×3=12 ≤ muscle-spacing 14; a regression test
+  guards the cap). **⚠ Simon's call, open:** the pinned fixture archetype's heavy STILL lands on MD-2,
+  not MD-4, because its plyo-loaded accessories create a real 48–72h spacing conflict; forcing MD-4
+  there needs weight **6**, which would override muscle-recovery spacing — your tradeoff to make.
 - **Phase 2 — aerobic loading + a fitness–fatigue ("form") model. MERGED to main (PR #223, flag OFF).**
   Governed **Banister-TRIMP** aerobic load (`load/aerobicLoad.js`, `load.aerobic.trimp`) + a
   **CTL/ATL/TSB** form model (`load/form.js`, `load.form.model`; TrainingPeaks PMC), KSV
@@ -57,9 +59,19 @@ SKB (just switched off).
   deload but never forces alone or against a clearly-fresh athlete (Art 13). **golden byte-identical**
   (baseline reads neither ACWR nor form); `prop-reflow-baseline` green; 208/208. Reviewer cleared the
   readiness blast-radius (TRIMP carries 0 weight in the blended readiness *value* — display-only).
-  **DEFERRED (Simon's, open):** the **D9 dose-shrink** (hard aerobic day → lighter lifting that day) —
-  the sharpest coaching call, not built. **Backlog:** a form-specific deload reason string (Art 14);
-  TRIMP-scale heterogeneity within `dl`; readout fidelity (per-date restHr, HR-quality→confidence).
+  **D9 dose-shrink LANDED (PR #229, Simon-approved):** governed `load.form.dose = {fatiguedVolumeMult:
+  0.9}`; in the reflow, `mult = Math.min(mult, form.band==='fatigued' ? 0.9 : 1)` — a gentle
+  form-fatigued volume trim, capped, byte-identical when not fatigued, `Math.min` prevents
+  double-counting a deload (proven vs the real 0.5 ACWR floor). Golden stamp-only (baseline never
+  reflows); KSV 1.50.0→**1.52.0**. **Backlog (Simon's/deferred):** a form-specific deload reason string
+  (Art 14); per-day (not week-level) D9 granularity; TRIMP-scale heterogeneity within `dl`; readout
+  fidelity (per-date restHr, HR-quality→confidence).
+  **AI integration (asked 2026-07-21):** production AI = a server-side Supabase Edge Function
+  (`ai-render`) with an `ANTHROPIC_API_KEY` secret (pay-per-token) — the Max plan is for interactive
+  dev use, not embedding into the app for end users. Prototype on a little API credit (+ prompt
+  caching/Batch), keep `AI_ENABLED=false` in prod, flip to an API key at go-live. Migration runbook:
+  `supabase/SECURITY-DEPLOY.md` (write migration + ledger row → staging `db push` → rls-harness → prod
+  `db push` → deploy Edge Functions separately → relink staging) — Simon applies to prod.
 - **Phase 3 — full sport/match ingestion boundary (DAAS §2.1.5). DESIGN SPEC authored**
   (`docs/superpowers/specs/2026-07-20-phase3-sport-match-ingestion-design.md`). Not built — the
   build is **Supabase schema migrations + RLS** (Simon applies to prod; RLS harness gates). Reuses
