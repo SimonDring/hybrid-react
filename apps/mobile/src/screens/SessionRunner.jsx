@@ -8,6 +8,7 @@ import RestTimer from '../components/RestTimer.jsx';
 import { useWakeLock } from '../hooks/useWakeLock.js';
 import { ensureAudio } from '../lib/sound.js';
 import SubstituteSheet from '../components/SubstituteSheet.jsx';
+import SessionOverview from '../components/SessionOverview.jsx';
 import InfoTip from '../components/ui/InfoTip.jsx';
 import { GLOSSARY } from '../data/metricGlossary.js';
 
@@ -166,6 +167,7 @@ export default function SessionRunner() {
   const [resting, setResting] = useState(false);
   const [restSeed, setRestSeed] = useState(null);
   const [subSheet, setSubSheet] = useState(null);   // { originalName, options } when open
+  const [overviewOpen, setOverviewOpen] = useState(false);
   const restingRef = useRef(false);          // guards against double-advance (skip + auto)
   const carryRef = useRef({});               // exerciseName → last actual {weight,reps,rpe}
 
@@ -208,6 +210,14 @@ export default function SessionRunner() {
   // (primer/prep steps and already-logged sets can be stepped past freely).
   const setUnlogged = step.kind === 'set' && !loggedSet.has(loggedKey(step.exerciseName, step.setIndex));
   const forwardDisabled = isLast || setUnlogged;
+
+  // A step is "done" if it's behind the cursor, or (for a set) already logged.
+  const isStepDone = (i) => {
+    const st = steps[i];
+    if (!st) return false;
+    if (st.kind === 'set') return loggedSet.has(loggedKey(st.exerciseName, st.setIndex));
+    return i < cursor;
+  };
 
   const advanceAfterRest = (restSec) => {
     ensureAudio();   // unlock audio within this tap so the rest-end beep can play later
@@ -290,9 +300,13 @@ export default function SessionRunner() {
           <span className="runner-progress-text">Step {cursor + 1} of {steps.length}</span>
           <button className="runner-nav" onClick={() => goTo(1)} disabled={forwardDisabled} aria-label="Next step" title={setUnlogged ? 'Log this set to continue' : 'Next step'}>›</button>
         </div>
-        <div style={{ width: 32 }} />
+        <button className="runner-nav" onClick={() => setOverviewOpen(o => !o)} aria-label="Session overview">▼</button>
       </div>
       <div className="runner-bar"><div className="runner-bar-fill" style={{ width: `${((cursor) / steps.length) * 100}%` }} /></div>
+
+      {overviewOpen && (
+        <SessionOverview steps={steps} cursor={cursor} isStepDone={isStepDone} onClose={() => setOverviewOpen(false)} />
+      )}
 
       {resting ? (
         <div className="runner-body">
