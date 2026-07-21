@@ -59,7 +59,25 @@ assert(ex && Math.abs(ex.importance - 0.8) < 1e-9 && !ex.evidence.endsWith(':sec
 const maxStr = frontRow.find((d) => d.qualityId === 'maxStrength');
 assert(maxStr && maxStr.importance >= 0.9, 'T8 front-row maxStrength (primary) still floors at ≥0.9');
 
-// ── 4. no position → no floors anywhere (base projection only, byte-identical across calls) ──
+// ── 4. a genuine secondary-only raise, on the PROJECTED side (coverage: review follow-up) ──
+// Soccer 'Striker / Forward' secondaryQualities include reactiveStrength — identity-mapped to
+// the PM quality (T0e), authored at sport-level importance 6 → base 0.6, below the 0.7 floor.
+// This is the projected-side mirror of T1's dropped-side raise: the floor must MOVE a mapped
+// quality, not just re-stamp an already-satisfied one (which T6/T7 cover).
+assert(mapSkbQuality('reactiveStrength') === 'reactiveStrength', 'T0e reactiveStrength maps to itself');
+const striker = buildDemandProfile('soccer', 'Striker / Forward');
+const reactive = striker.find((d) => d.qualityId === 'reactiveStrength');
+assert(reactive && Math.abs(reactive.importance - 0.7) < 1e-9,
+  'T12 striker reactiveStrength (secondary, base 0.6) raised to the secondary floor 0.7 on the projected side');
+assert(reactive && reactive.evidence.endsWith(':secondary'),
+  'T13 the projected-side raise carries :secondary evidence');
+// the sport-wide baseline (no position) must NOT be raised — the floor is position-scoped
+const soccerBase = buildDemandProfile('soccer', null);
+const reactiveBase = soccerBase.find((d) => d.qualityId === 'reactiveStrength');
+assert(reactiveBase && Math.abs(reactiveBase.importance - 0.6) < 1e-9,
+  'T14 no position → soccer reactiveStrength stays at its authored base (0.6), unfloored');
+
+// ── 5. no position → no floors anywhere (base projection only, byte-identical across calls) ──
 const noPos1 = buildDemandProfile('rugby', null);
 const noPos2 = buildDemandProfile('rugby', null);
 assert(JSON.stringify(noPos1) === JSON.stringify(noPos2), 'T9 buildDemandProfile(\'rugby\', null) is deterministic');
