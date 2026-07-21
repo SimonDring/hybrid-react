@@ -49,4 +49,29 @@ assert(legacySteps.length === 3, 'off-catalogue item still produces 3 legacy set
 assert(legacySteps.every((s) => s.kind === 'set' && s.collectRpe === true && s.collectWeight === true),
   'off-catalogue item keeps legacy full-collection behaviour');
 
+// --- REGRESSION: a simple-done (mobility) member paired into a SUPERSET must not vanish ---
+//
+// Catalogue mobility items can reach a superset group with an "N × R" dose string
+// (they lack loadClass, so structureItems' isSupportive misses them). Before the
+// classifier gate they wrongly appeared as strength sets; with the gate, makeSetSteps
+// returns [] for them — so the multi-item branch must surface them as ONE prep (Done)
+// step and interleave rounds only over the remaining members, never drop them.
+
+const supersetSession = {
+  items: [
+    { name: 'Cat-Camel + Thoracic Rotation', exId: 'cat_camel_thoracic', sets: '2 × 8', section: 'main', superset: true, group: 'A' },
+    { name: 'Single-arm dumbbell row', sets: '3 × 10', section: 'main', superset: true, group: 'A', restSec: 90 },
+  ],
+};
+const ssSteps = buildSteps(supersetSession);
+
+const ssMobility = ssSteps.filter((s) => s.exerciseName === 'Cat-Camel + Thoracic Rotation');
+assert(ssMobility.length === 1, 'superset-paired mobility member surfaces exactly once (not dropped)');
+assert(ssMobility[0].kind === 'prep', 'superset-paired mobility member surfaces as a prep (Done) step');
+
+const ssRows = ssSteps.filter((s) => s.exerciseName === 'Single-arm dumbbell row');
+assert(ssRows.length === 3, 'remaining superset member still produces its 3 set steps');
+assert(ssRows.every((s) => s.kind === 'set' && s.restSec === 90),
+  'effectively-solo superset member keeps its own rest on every round (last-of-round rule)');
+
 console.log(process.exitCode ? 'runner-steps FAILURES' : `PASS: runner-steps — ${pass} assertions`);

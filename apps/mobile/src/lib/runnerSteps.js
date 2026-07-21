@@ -84,7 +84,14 @@ export function buildSteps(session) {
       if (sets.length === 0) steps.push(makePrep(it));   // non-strength main (run/swim/mobility)
       else steps.push(...sets);
     } else {
-      const perMember = block.items.map(it => makeSetSteps(it));
+      // A simple-done member (e.g. a mobility move paired into the group) can't be
+      // interleaved set-by-set — makeSetSteps returns [] for it, and dropping it would
+      // silently change the session's structure. Surface it ONCE as a prep (Done) step
+      // and interleave rounds only over the remaining members.
+      const simpleDone = block.items.filter(it => classifyItem(it).simpleDone);
+      const setMembers = block.items.filter(it => !classifyItem(it).simpleDone);
+      simpleDone.forEach(it => steps.push(makePrep(it)));
+      const perMember = setMembers.map(it => makeSetSteps(it));
       const rounds = Math.max(0, ...perMember.map(s => s.length));
       for (let r = 0; r < rounds; r++) {
         const round = perMember.map(s => s[r]).filter(Boolean);
