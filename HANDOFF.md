@@ -45,8 +45,8 @@ KSV **1.56.0** on the branch (this branch's four bumps renumbered 1.53–1.56 ab
   swaps. Nothing else — no interaction deltas with main's match-day/form work.
 - **Merge gates:** Sprints 1–2 + 3A are green/low-risk per the charter; **B2/B3/C pause
   for Simon** (coaching philosophy + public onboarding surface). Noted follow-ups (see PR
-  body): bodyweight accessories now show an enabled weight stepper + "pick a load" hint
-  (Simon's call whether to gate to loadable equip); B3 anchor-steering question;
+  body): weight stepper gated to loadable equipment across all roles (Simon's call,
+  2026-07-21 — closed); B3 anchor-steering question;
   SessionOverview same-name merge edge; QUALITY_LABELS circular-import tidy.
 
 ## 2026-07-20 — SPORT-DATA INTEGRATION ROADMAP (aerobic + match-day → S&C output)

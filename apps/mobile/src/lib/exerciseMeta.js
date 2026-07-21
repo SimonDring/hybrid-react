@@ -28,7 +28,9 @@ export function classifyItem(item) {
     const loadable = LOADABLE_EQUIP.has(e.equip);
     return { collectRpe: loadable, collectWeight: loadable, simpleDone: false };
   }
-  return { collectRpe: true, collectWeight: true, simpleDone: false };  // primary/accessory/iso
+  // primary/accessory/iso: RPE always meaningful; the weight stepper only where the
+  // movement is actually loadable (Simon 2026-07-21 — a push-up shouldn't ask for a load).
+  return { collectRpe: true, collectWeight: LOADABLE_EQUIP.has(e.equip), simpleDone: false };
 }
 
 // Most recent logged weight for this exercise across OTHER sessions (the runner's

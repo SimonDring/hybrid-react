@@ -93,4 +93,15 @@ assert(lastLoggedWeightFor('Back squat', setLogsBySession) === 999, 'lastLoggedW
 assert(lastLoggedWeightFor('Deadlift', setLogsBySession) === null, 'lastLoggedWeightFor returns null when the exercise was never logged');
 assert(lastLoggedWeightFor('Back squat', {}) === null, 'lastLoggedWeightFor returns null against an empty log set');
 
+// Bodyweight strength accessories: RPE yes, weight NO (Simon 2026-07-21 —
+// the stepper is gated to loadable equipment across every role, not just core).
+const cPushup = classifyItem({ exId: 'pushup', sets: '3 × 12' });
+assert(cPushup.collectRpe === true && cPushup.collectWeight === false && cPushup.simpleDone === false,
+  'bodyweight accessory (pushup): RPE collected, weight stepper gated off');
+const cDip = classifyItem({ exId: 'dip', sets: '3 × 8' });
+assert(cDip.collectWeight === false, 'bodyweight accessory (dip): weight stepper gated off');
+const cSquatStill = classifyItem({ exId: 'back_squat', sets: '4 × 5' });
+assert(cSquatStill.collectWeight === true && cSquatStill.collectRpe === true,
+  'loadable primary (back squat): weight + RPE unchanged');
+
 console.log(process.exitCode ? 'exercise-meta FAILURES' : `PASS: exercise-meta — ${pass} assertions`);
