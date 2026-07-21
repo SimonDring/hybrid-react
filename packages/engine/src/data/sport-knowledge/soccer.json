@@ -361,6 +361,7 @@
   "positions": [
     {
       "name": "Goalkeeper",
+      "priorityPatterns": ["lunge", "squat", "iso"],
       "role": "Shot-stopping, commanding the box on crosses, 1v1 denial, distribution (now a passing position too).",
       "movementDemands": "Explosive lateral dives, maximal vertical jumps, rapid get-ups, short bursts off the line; hundreds of low-intensity positioning adjustments.",
       "runningDemands": "Lowest of any position (~4-6 km, almost all walking/jogging).",
@@ -383,6 +384,7 @@
         "shoulder/hand impact injuries",
         "knee contusions"
       ],
+      "commonInjuryRegions": ["hip", "shoulder", "knee"],
       "gymPriorities": [
         "single-leg lateral power (dive push-off)",
         "adductor strength (Copenhagen)",
@@ -392,6 +394,7 @@
     },
     {
       "name": "Centre-back",
+      "priorityPatterns": ["squat", "hinge", "iso"],
       "role": "Aerial dominance in both boxes, front-foot defending, duel winning, build-up passing.",
       "movementDemands": "Repeated maximal jumps under contact, hard short accelerations to step in, emergency recovery sprints, physical duels.",
       "runningDemands": "Lowest outfield total distance (~9-10 km) but high-consequence maximal sprints when exposed.",
@@ -414,6 +417,7 @@
         "ankle sprain (aerial landings in traffic)",
         "head impacts (aerial duels)"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "cervical"],
       "gymPriorities": [
         "maximal lower-body strength + jump power",
         "eccentric hamstring (their sprints are rare, maximal, and unprepared — the classic CB injury)",
@@ -423,6 +427,7 @@
     },
     {
       "name": "Full-back / Wing-back",
+      "priorityPatterns": ["hinge", "calf", "squat"],
       "role": "The corridor engine: overlap and underlap runs in attack, recovery sprints in defence, crossing supply.",
       "movementDemands": "The highest repeat-sprint load in the team — continuous up-and-back corridor running, high-speed overlaps, maximal recovery sprints, crossing under fatigue.",
       "runningDemands": "Highest high-speed-running and sprint distance of any position (~10-12 km total, sprint volume peaks here).",
@@ -445,6 +450,7 @@
         "calf/Achilles overload",
         "ankle sprain"
       ],
+      "commonInjuryRegions": ["hamstring", "calf", "ankle"],
       "gymPriorities": [
         "eccentric hamstring capacity (Nordic) — non-negotiable at this sprint volume",
         "calf capacity",
@@ -454,6 +460,7 @@
     },
     {
       "name": "Central midfielder",
+      "priorityPatterns": ["hinge", "lunge", "core"],
       "role": "The link: circulation, pressing triggers, box-to-box support, second balls, tempo control.",
       "movementDemands": "Near-continuous shuttling with constant turns (~700/match concentrate here), tight-space COD, press-and-recover cycles.",
       "runningDemands": "Highest total distance (~11-13 km elite); moderate sprint distance but the most direction changes.",
@@ -476,6 +483,7 @@
         "adductor/groin (turn volume)",
         "ankle sprain (traffic)"
       ],
+      "commonInjuryRegions": ["hamstring", "hip", "ankle"],
       "gymPriorities": [
         "eccentric hamstring + adductor pillars",
         "single-leg strength for turn deceleration",
@@ -485,6 +493,7 @@
     },
     {
       "name": "Striker / Forward",
+      "priorityPatterns": ["hinge", "lunge", "squat"],
       "role": "Penetrating runs in behind, first-step separation, finishing, aerial threat, first line of the press.",
       "movementDemands": "Explosive short accelerations from standing/curved starts, sharp COD to create shooting angles, maximal sprints in behind, repeated jumps in the box, high kicking (shooting) volume.",
       "runningDemands": "Moderate total (~10-11 km) but the highest density of maximal accelerations and penalty-box explosive actions.",
@@ -507,6 +516,7 @@
         "quadriceps/rectus femoris (shooting volume, kicking leg)",
         "adductor/groin"
       ],
+      "commonInjuryRegions": ["hamstring", "quad", "hip"],
       "gymPriorities": [
         "acceleration strength (hip thrust, sled, split squat)",
         "eccentric hamstring",

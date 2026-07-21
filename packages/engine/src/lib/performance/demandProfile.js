@@ -1,10 +1,12 @@
 // Builds a Performance-Model demand profile from the SKB: base importances from the sport's
-// physicalProfile, elevated for the chosen position's primary qualities. Pure; imports in-package
-// SKB data directly (same pattern as estimation.js). Never throws on unknown sport/position.
+// physicalProfile, elevated for the chosen position's primary qualities (and, more gently, its
+// secondary qualities). Pure; imports in-package SKB data directly (same pattern as
+// estimation.js). Never throws on unknown sport/position.
 import * as SKB from '../sportKnowledge/index.js';
 import { mapSkbQuality } from '../../data/sportQualityMap.js';
 
-const PRIMARY_FLOOR = 0.9;   // a position's primary qualities are at least this demanding
+const PRIMARY_FLOOR = 0.9;     // a position's primary qualities are at least this demanding
+const SECONDARY_FLOOR = 0.7;   // a position's secondary qualities are at least this demanding
 
 // The ONE walk over the SKB structures (whole-branch review 2026-07-13: the
 // projection and the honesty ledger used to duplicate this traversal — same
@@ -12,6 +14,10 @@ const PRIMARY_FLOOR = 0.9;   // a position's primary qualities are at least this
 // quality lands in exactly one of two maps, under the SAME semantics:
 //   projected — pmId → { importance, evidence }   (mapSkbQuality knows it)
 //   dropped   — skbName → { importance, evidence } (the projection cannot carry it)
+// Sprint 3 Task B1: secondaryQualities are floored the same way, at SECONDARY_FLOOR (0.7),
+// on BOTH sides of the projection seam. The secondary loop runs BEFORE the primary loop so a
+// quality authored in both a position's primary and secondary lists always settles at the
+// higher PRIMARY_FLOOR — primary always wins ties.
 function walkDemands(sportId, positionId) {
   const projected = new Map();
   const dropped = new Map();
@@ -31,10 +37,23 @@ function walkDemands(sportId, positionId) {
     }
   }
 
-  // position boost: the position's primaryQualities are elevated to the floor —
-  // on whichever side of the projection seam they land
+  // position boost: the position's secondary qualities are elevated to their (lower) floor
+  // first, so a subsequent primaryQualities match (same PM quality or dropped key) always
+  // overwrites upward to PRIMARY_FLOOR — primary wins ties.
   const positions = SKB.section(sportId, 'positions') || [];
   const pos = positions.find((p) => p.name === positionId);
+  if (pos && Array.isArray(pos.secondaryQualities)) {
+    for (const skbName of pos.secondaryQualities) {
+      const pm = mapSkbQuality(skbName);
+      const side = pm ? projected : dropped;
+      const key = pm || skbName;
+      const cur = side.get(key);
+      if (!cur || cur.importance < SECONDARY_FLOOR) side.set(key, { importance: SECONDARY_FLOOR, evidence: `skb:${sportId}:pos:${positionId}:secondary` });
+    }
+  }
+
+  // position boost: the position's primaryQualities are elevated to the floor —
+  // on whichever side of the projection seam they land
   if (pos && Array.isArray(pos.primaryQualities)) {
     for (const skbName of pos.primaryQualities) {
       const pm = mapSkbQuality(skbName);

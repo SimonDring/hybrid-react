@@ -50,6 +50,16 @@ for (const [key, profile] of cases) {
     `T8 ${key}: focus equals the engine's top limiting factor (${atlas.focus && atlas.focus.id})`);
   assert(atlas.focus.why === model.limitingFactors[0].rationale,
     `T9 ${key}: the focus "why" is the diagnosis's own emitted rationale`);
+  // A2: explainFocus's plain-English fields ride alongside the raw shape — the
+  // engine's rationale stays available (Art 14), just demoted into `detail`.
+  assert(typeof atlas.focus.headline === 'string' && atlas.focus.headline.length > 0,
+    `T9a ${key}: focus has a plain-English headline`);
+  assert(typeof atlas.focus.meaning === 'string' && atlas.focus.meaning.length > 0,
+    `T9b ${key}: focus has a plain-English meaning`);
+  assert(typeof atlas.focus.whyItMatters === 'string' && atlas.focus.whyItMatters.length > 0,
+    `T9c ${key}: focus has a plain-English whyItMatters`);
+  assert(typeof atlas.focus.detail === 'string' && atlas.focus.detail.includes(model.limitingFactors[0].rationale),
+    `T9d ${key}: focus detail carries the engine's own rationale (un-softened)`);
 }
 
 // ---- different sports demand differently ---------------------------------
@@ -67,6 +77,9 @@ assert(b.hasDemand && b.pillars.length >= 4 && b.pillars.every(p => Number.isFin
 const bModel = performanceModelForProfile(buildProfile, ASOF);
 assert(b.focus && b.focus.id === bModel.limitingFactors[0].qualityId && b.focus.why === bModel.limitingFactors[0].rationale,
   'T12 build: focus IS the engine\'s top limiter with its own emitted rationale');
+assert(typeof b.focus.headline === 'string' && typeof b.focus.meaning === 'string'
+  && typeof b.focus.whyItMatters === 'string' && b.focus.detail.includes(bModel.limitingFactors[0].rationale),
+  'T12a build: focus carries explainFocus\'s plain-English fields too');
 
 // ---- measured lifts sharpen the model ------------------------------------
 const noLifts = computeAtlas({ ...buildProfile, lifts: null }, ASOF);

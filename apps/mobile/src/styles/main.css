@@ -541,6 +541,24 @@ html, body {
   border-color: var(--ink);
 }
 
+/* One app-wide selected treatment for tappable option controls (chips, toggles,
+   preset buttons). Strong enough to read at a glance on Midnight. */
+.opt-chip {
+  border: 1.5px solid var(--hairline);
+  background: var(--bg-surface);
+  color: var(--txt-strong);
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.12s, background 0.12s, box-shadow 0.12s;
+}
+.opt-chip.is-selected {
+  border: 2px solid var(--accent);
+  background: rgba(111, 211, 196, 0.16);
+  box-shadow: 0 0 0 1px rgba(111, 211, 196, 0.25) inset;
+}
+.opt-chip.is-selected .opt-chip-label { font-weight: 700; }
+
 /* OVERVIEW timeline */
 
 .phase-row .when { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
@@ -1023,6 +1041,7 @@ body { font-variant-numeric: tabular-nums; }
 .af-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--status-strain); }
 .af-title { font-size: 15px; font-weight: 600; color: var(--txt-strong); margin: 6px 0 4px; }
 .af-why { font-size: 12.5px; line-height: 1.5; color: var(--txt-body); }
+.af-detail { font-size: 12px; color: var(--txt-muted); line-height: 1.55; margin-top: 6px; }
 
 .atlas-bars-head {
   font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
@@ -2689,3 +2708,38 @@ button:active,
   cursor: pointer;
 }
 .update-toast__dismiss:active { color: var(--txt-body); }
+
+/* Session overview pull-down (runner) */
+.so-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 60; }
+.so-panel {
+  position: absolute; top: 0; left: 0; right: 0;
+  max-height: 78vh; overflow-y: auto;
+  background: var(--bg-surface); border-bottom: 1px solid var(--hairline);
+  border-radius: 0 0 18px 18px; padding: 14px 16px 8px; box-shadow: var(--shadow-md);
+  animation: so-drop 0.18s ease-out;
+}
+@keyframes so-drop { from { transform: translateY(-12px); opacity: 0.6; } to { transform: none; opacity: 1; } }
+.so-head { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--txt-muted); margin-bottom: 8px; }
+.so-row { display: flex; align-items: baseline; gap: 10px; padding: 8px 10px; border-radius: 10px; }
+.so-row.is-selected { background: rgba(111,211,196,0.12); }
+.so-row.done { opacity: 0.5; }
+.so-mark { width: 14px; flex-shrink: 0; font-size: 11px; color: var(--accent); }
+.so-name { font-size: 14px; font-weight: 600; color: var(--txt-strong); min-width: 0; flex: 1; }
+.so-detail { font-size: 12px; color: var(--txt-muted); flex-shrink: 0; }
+.so-close { display: block; margin: 6px auto 0; background: none; border: none; color: var(--txt-muted); font-size: 14px; cursor: pointer; padding: 6px 20px; font-family: inherit; }
+
+/* Completed-session summary card */
+.done-card {
+  background: var(--bg-surface); border: 1px solid var(--hairline);
+  border-left: 3px solid var(--moss); border-radius: 12px;
+  padding: 14px 16px; box-shadow: var(--shadow-sm);
+}
+.dc-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.dc-badge { font-size: 13px; font-weight: 700; color: var(--moss); }
+.dc-when { font-size: 12px; color: var(--txt-muted); }
+.dc-duration { font-size: 12.5px; color: var(--txt-body); margin-top: 4px; }
+.dc-ratings { display: flex; gap: 22px; margin-top: 12px; }
+.dc-rating { text-align: center; }
+.dc-rating-val { font-size: 18px; font-weight: 700; color: var(--txt-strong); }
+.dc-rating-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--txt-muted); margin-top: 1px; }
+.dc-notes { font-size: 13px; font-style: italic; color: var(--txt-body); opacity: 0.85; margin-top: 10px; }

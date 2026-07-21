@@ -362,6 +362,7 @@
   "positions": [
     {
       "name": "Goalkeeper",
+      "priorityPatterns": ["core", "vpush", "carry"],
       "role": "Shot-stopping (fast sliotar), long puck-outs (restart strategy), sweeping.",
       "movementDemands": "Low total distance; explosive reactions/dives; maximal striking for puck-outs.",
       "runningDemands": "Lowest of any position.",
@@ -385,6 +386,7 @@
         "hand/wrist",
         "groin (puck-outs)"
       ],
+      "commonInjuryRegions": ["shoulder", "wrist", "hip"],
       "gymPriorities": [
         "rotational/striking power",
         "shoulder robustness",
@@ -394,6 +396,7 @@
     },
     {
       "name": "Full-back line",
+      "priorityPatterns": ["hinge", "squat", "carry"],
       "role": "Defend the inside line, contest the dropping sliotar, dispossess.",
       "movementDemands": "Reactive marking; repeated short sprints + aerial/ground duels.",
       "runningDemands": "Moderate; high accel/decel density.",
@@ -418,6 +421,7 @@
         "hand/wrist",
         "ACL"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "wrist", "knee"],
       "gymPriorities": [
         "posterior-chain strength",
         "deceleration/landing",
@@ -428,6 +432,7 @@
     },
     {
       "name": "Half-back line",
+      "priorityPatterns": ["hinge", "core", "squat"],
       "role": "Defend then drive forward; a primary attacking spring; high two-way running.",
       "movementDemands": "Box-to-box; among the highest distances and high-speed running; long-range striking.",
       "runningDemands": "Very high.",
@@ -451,6 +456,7 @@
         "groin",
         "ankle"
       ],
+      "commonInjuryRegions": ["hamstring", "hip", "ankle"],
       "gymPriorities": [
         "eccentric hamstring",
         "rotational/striking power",
@@ -460,6 +466,7 @@
     },
     {
       "name": "Midfield",
+      "priorityPatterns": ["squat", "core", "hinge"],
       "role": "Win the dropping ball, link the lines, cover the most ground; long-range scoring/striking.",
       "movementDemands": "Highest total distance + frequent maximal jumps for the dropping sliotar.",
       "runningDemands": "Highest.",
@@ -484,6 +491,7 @@
         "back",
         "hand"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "lumbar", "wrist"],
       "gymPriorities": [
         "vertical + rotational power",
         "posterior chain",
@@ -494,6 +502,7 @@
     },
     {
       "name": "Half-forward line",
+      "priorityPatterns": ["hinge", "lunge", "core"],
       "role": "Two-way forwards: score, create, win primary possession and track back.",
       "movementDemands": "High two-way running, repeated sprints into space, striking on the move.",
       "runningDemands": "Very high.",
@@ -517,6 +526,7 @@
         "groin",
         "hand/wrist"
       ],
+      "commonInjuryRegions": ["hamstring", "hip", "wrist"],
       "gymPriorities": [
         "eccentric hamstring",
         "sprint/COD power",
@@ -526,6 +536,7 @@
     },
     {
       "name": "Full-forward line",
+      "priorityPatterns": ["lunge", "core", "squat"],
       "role": "Inside scorers: win short ball, lose markers, finish fast.",
       "movementDemands": "Short explosive movements, reactive striking, contested catches.",
       "runningDemands": "Moderate (lowest of outfield); high acceleration density.",
@@ -550,6 +561,7 @@
         "hand/wrist",
         "groin"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "wrist", "hip"],
       "gymPriorities": [
         "acceleration/COD power",
         "rotational/striking power",

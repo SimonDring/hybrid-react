@@ -88,6 +88,7 @@ export { ruleVolumeAdjustment } from './src/lib/sportKnowledge/reflowAdjust.js';
 export { MUSCLE_GROUPS, MUSCLE_LABELS, VOLUME_LANDMARKS } from './src/data/muscleVolume.js';
 export { STRENGTH_STANDARDS, STRENGTH_BANDS, strengthBandFor } from './src/data/strengthStandards.js';
 export { EXERCISES, LEVELS, availableEquip } from './src/data/strengthExercises.js';
+export { EQUIPMENT_TAXONOMY, EQUIPMENT_DETAIL_KEYS, availableEquipDetailed, exerciseAvailable } from './src/data/equipmentTaxonomy.js';
 export { DOSE_SCHEMES, doseForQuality, REACTIVE_LIMITS } from './src/data/doseSchemes.js';
 export { ENGINE_VERSION, provenance } from './src/version.js';
 export { KNOWLEDGE_SET_VERSION } from './src/lib/knowledge/entries.js';

@@ -75,7 +75,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 10,
@@ -6620,7 +6620,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 10,
@@ -11192,7 +11192,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 10,
@@ -19494,7 +19494,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 10,
@@ -23479,7 +23479,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 10,
@@ -28005,7 +28005,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 10,
@@ -33505,7 +33505,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -40849,7 +40849,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -47149,7 +47149,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -55102,7 +55102,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -59960,7 +59960,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -61833,7 +61833,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -71527,7 +71527,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -77901,7 +77901,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -84275,7 +84275,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -92151,7 +92151,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -97275,7 +97275,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 4,
@@ -98101,7 +98101,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -103199,7 +103199,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 4,
@@ -104415,7 +104415,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -110481,7 +110481,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -115223,7 +115223,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 4,
@@ -116441,7 +116441,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -121343,7 +121343,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -127561,7 +127561,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -133802,7 +133802,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -139905,6 +139905,11 @@
           },
           {
             "importance": 0.7,
+            "reason": "aerialAbility is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "aerialAbility"
+          },
+          {
+            "importance": 0.7,
             "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
             "skbQuality": "changeOfDirection"
           },
@@ -139917,11 +139922,6 @@
             "importance": 0.7,
             "reason": "deceleration is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
             "skbQuality": "deceleration"
-          },
-          {
-            "importance": 0.6,
-            "reason": "aerialAbility is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
-            "skbQuality": "aerialAbility"
           },
           {
             "importance": 0.5,
@@ -139989,7 +139989,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -140385,12 +140385,35 @@
                   },
                   {
                     "estimated": true,
-                    "exId": "barbell_row",
+                    "exId": "glute_ham_raise",
                     "group": "B",
+                    "intent": "glute_ham_raise",
+                    "name": "Glute-Ham Raise",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 0
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "barbell_row",
+                    "group": "C",
                     "intent": "barbell_row",
                     "name": "Barbell row",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "B1",
+                    "num": "C1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -140427,11 +140450,11 @@
                   {
                     "estimated": true,
                     "exId": "bench",
-                    "group": "C",
+                    "group": "D",
                     "intent": "bench",
                     "name": "Bench press",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "C1",
+                    "num": "D1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -140464,29 +140487,6 @@
                       }
                     ],
                     "weight": "77.5 kg"
-                  },
-                  {
-                    "estimated": true,
-                    "exId": "glute_ham_raise",
-                    "group": "D",
-                    "intent": "glute_ham_raise",
-                    "name": "Glute-Ham Raise",
-                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "D1",
-                    "progression": {
-                      "adaptation": "maxStrength",
-                      "confidence": "low",
-                      "currency": "load",
-                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
-                      "level": "exercise",
-                      "weeklyLoadPct": 0.0075,
-                      "weeks": 0
-                    },
-                    "restSec": 180,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
                   }
                 ],
                 "title": "Friday · Full body"
@@ -140903,12 +140903,35 @@
                   },
                   {
                     "estimated": true,
-                    "exId": "barbell_row",
+                    "exId": "glute_ham_raise",
                     "group": "B",
+                    "intent": "glute_ham_raise",
+                    "name": "Glute-Ham Raise",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 1
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "barbell_row",
+                    "group": "C",
                     "intent": "barbell_row",
                     "name": "Barbell row",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "B1",
+                    "num": "C1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -140945,11 +140968,11 @@
                   {
                     "estimated": true,
                     "exId": "bench",
-                    "group": "C",
+                    "group": "D",
                     "intent": "bench",
                     "name": "Bench press",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "C1",
+                    "num": "D1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -140982,29 +141005,6 @@
                       }
                     ],
                     "weight": "77.5 kg"
-                  },
-                  {
-                    "estimated": true,
-                    "exId": "glute_ham_raise",
-                    "group": "D",
-                    "intent": "glute_ham_raise",
-                    "name": "Glute-Ham Raise",
-                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "D1",
-                    "progression": {
-                      "adaptation": "maxStrength",
-                      "confidence": "low",
-                      "currency": "load",
-                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
-                      "level": "exercise",
-                      "weeklyLoadPct": 0.0075,
-                      "weeks": 1
-                    },
-                    "restSec": 180,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
                   }
                 ],
                 "title": "Friday · Full body"
@@ -141421,12 +141421,35 @@
                   },
                   {
                     "estimated": true,
-                    "exId": "barbell_row",
+                    "exId": "glute_ham_raise",
                     "group": "B",
+                    "intent": "glute_ham_raise",
+                    "name": "Glute-Ham Raise",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 2
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "barbell_row",
+                    "group": "C",
                     "intent": "barbell_row",
                     "name": "Barbell row",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "B1",
+                    "num": "C1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -141463,11 +141486,11 @@
                   {
                     "estimated": true,
                     "exId": "bench",
-                    "group": "C",
+                    "group": "D",
                     "intent": "bench",
                     "name": "Bench press",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "C1",
+                    "num": "D1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -141500,29 +141523,6 @@
                       }
                     ],
                     "weight": "77.5 kg"
-                  },
-                  {
-                    "estimated": true,
-                    "exId": "glute_ham_raise",
-                    "group": "D",
-                    "intent": "glute_ham_raise",
-                    "name": "Glute-Ham Raise",
-                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "D1",
-                    "progression": {
-                      "adaptation": "maxStrength",
-                      "confidence": "low",
-                      "currency": "load",
-                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
-                      "level": "exercise",
-                      "weeklyLoadPct": 0.0075,
-                      "weeks": 2
-                    },
-                    "restSec": 180,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
                   }
                 ],
                 "title": "Friday · Full body"
@@ -141939,12 +141939,35 @@
                   },
                   {
                     "estimated": true,
-                    "exId": "barbell_row",
+                    "exId": "glute_ham_raise",
                     "group": "B",
+                    "intent": "glute_ham_raise",
+                    "name": "Glute-Ham Raise",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 3
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "barbell_row",
+                    "group": "C",
                     "intent": "barbell_row",
                     "name": "Barbell row",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "B1",
+                    "num": "C1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -141981,11 +142004,11 @@
                   {
                     "estimated": true,
                     "exId": "bench",
-                    "group": "C",
+                    "group": "D",
                     "intent": "bench",
                     "name": "Bench press",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "C1",
+                    "num": "D1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -142018,29 +142041,6 @@
                       }
                     ],
                     "weight": "80 kg"
-                  },
-                  {
-                    "estimated": true,
-                    "exId": "glute_ham_raise",
-                    "group": "D",
-                    "intent": "glute_ham_raise",
-                    "name": "Glute-Ham Raise",
-                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "D1",
-                    "progression": {
-                      "adaptation": "maxStrength",
-                      "confidence": "low",
-                      "currency": "load",
-                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
-                      "level": "exercise",
-                      "weeklyLoadPct": 0.0075,
-                      "weeks": 3
-                    },
-                    "restSec": 180,
-                    "rpe": "RPE 7",
-                    "sets": "3 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
                   }
                 ],
                 "title": "Friday · Full body"
@@ -142199,24 +142199,23 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "barbell_row",
+                    "exId": "glute_ham_raise",
                     "group": "B",
-                    "intent": "barbell_row",
-                    "name": "Barbell row",
+                    "intent": "glute_ham_raise",
+                    "name": "Glute-Ham Raise",
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 6",
                     "sets": "2 × 8",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "90 kg"
+                    "volumeFactor": 1
                   },
                   {
-                    "exId": "bench",
+                    "exId": "barbell_row",
                     "group": "C",
-                    "intent": "bench",
-                    "name": "Bench press",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "C1",
                     "restSec": 180,
@@ -142224,7 +142223,7 @@
                     "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "75 kg"
+                    "weight": "90 kg"
                   },
                   {
                     "exId": "hip_flexor_90_90",
@@ -142897,12 +142896,35 @@
                   },
                   {
                     "estimated": true,
-                    "exId": "barbell_row",
+                    "exId": "glute_ham_raise",
                     "group": "B",
+                    "intent": "glute_ham_raise",
+                    "name": "Glute-Ham Raise",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 0
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "barbell_row",
+                    "group": "C",
                     "intent": "barbell_row",
                     "name": "Barbell row",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "B1",
+                    "num": "C1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -142939,11 +142961,11 @@
                   {
                     "estimated": true,
                     "exId": "bench",
-                    "group": "C",
+                    "group": "D",
                     "intent": "bench",
                     "name": "Bench press",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "C1",
+                    "num": "D1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -142976,29 +142998,6 @@
                       }
                     ],
                     "weight": "77.5 kg"
-                  },
-                  {
-                    "estimated": true,
-                    "exId": "glute_ham_raise",
-                    "group": "D",
-                    "intent": "glute_ham_raise",
-                    "name": "Glute-Ham Raise",
-                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "D1",
-                    "progression": {
-                      "adaptation": "maxStrength",
-                      "confidence": "low",
-                      "currency": "load",
-                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
-                      "level": "exercise",
-                      "weeklyLoadPct": 0.0075,
-                      "weeks": 0
-                    },
-                    "restSec": 180,
-                    "rpe": "RPE 7→8",
-                    "sets": "4 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
                   }
                 ],
                 "title": "Friday · Full body"
@@ -143415,12 +143414,35 @@
                   },
                   {
                     "estimated": true,
-                    "exId": "barbell_row",
+                    "exId": "glute_ham_raise",
                     "group": "B",
+                    "intent": "glute_ham_raise",
+                    "name": "Glute-Ham Raise",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 1
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "barbell_row",
+                    "group": "C",
                     "intent": "barbell_row",
                     "name": "Barbell row",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "B1",
+                    "num": "C1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -143457,11 +143479,11 @@
                   {
                     "estimated": true,
                     "exId": "bench",
-                    "group": "C",
+                    "group": "D",
                     "intent": "bench",
                     "name": "Bench press",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "C1",
+                    "num": "D1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -143494,29 +143516,6 @@
                       }
                     ],
                     "weight": "77.5 kg"
-                  },
-                  {
-                    "estimated": true,
-                    "exId": "glute_ham_raise",
-                    "group": "D",
-                    "intent": "glute_ham_raise",
-                    "name": "Glute-Ham Raise",
-                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "D1",
-                    "progression": {
-                      "adaptation": "maxStrength",
-                      "confidence": "low",
-                      "currency": "load",
-                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
-                      "level": "exercise",
-                      "weeklyLoadPct": 0.0075,
-                      "weeks": 1
-                    },
-                    "restSec": 180,
-                    "rpe": "RPE 7→8",
-                    "sets": "4 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
                   }
                 ],
                 "title": "Friday · Full body"
@@ -143933,12 +143932,35 @@
                   },
                   {
                     "estimated": true,
-                    "exId": "barbell_row",
+                    "exId": "glute_ham_raise",
                     "group": "B",
+                    "intent": "glute_ham_raise",
+                    "name": "Glute-Ham Raise",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 2
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "barbell_row",
+                    "group": "C",
                     "intent": "barbell_row",
                     "name": "Barbell row",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "B1",
+                    "num": "C1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -143975,11 +143997,11 @@
                   {
                     "estimated": true,
                     "exId": "bench",
-                    "group": "C",
+                    "group": "D",
                     "intent": "bench",
                     "name": "Bench press",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "C1",
+                    "num": "D1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -144012,29 +144034,6 @@
                       }
                     ],
                     "weight": "77.5 kg"
-                  },
-                  {
-                    "estimated": true,
-                    "exId": "glute_ham_raise",
-                    "group": "D",
-                    "intent": "glute_ham_raise",
-                    "name": "Glute-Ham Raise",
-                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "D1",
-                    "progression": {
-                      "adaptation": "maxStrength",
-                      "confidence": "low",
-                      "currency": "load",
-                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
-                      "level": "exercise",
-                      "weeklyLoadPct": 0.0075,
-                      "weeks": 2
-                    },
-                    "restSec": 180,
-                    "rpe": "RPE 7→8",
-                    "sets": "4 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
                   }
                 ],
                 "title": "Friday · Full body"
@@ -144451,12 +144450,35 @@
                   },
                   {
                     "estimated": true,
-                    "exId": "barbell_row",
+                    "exId": "glute_ham_raise",
                     "group": "B",
+                    "intent": "glute_ham_raise",
+                    "name": "Glute-Ham Raise",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 3
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "barbell_row",
+                    "group": "C",
                     "intent": "barbell_row",
                     "name": "Barbell row",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "B1",
+                    "num": "C1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -144493,11 +144515,11 @@
                   {
                     "estimated": true,
                     "exId": "bench",
-                    "group": "C",
+                    "group": "D",
                     "intent": "bench",
                     "name": "Bench press",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "C1",
+                    "num": "D1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -144530,29 +144552,6 @@
                       }
                     ],
                     "weight": "80 kg"
-                  },
-                  {
-                    "estimated": true,
-                    "exId": "glute_ham_raise",
-                    "group": "D",
-                    "intent": "glute_ham_raise",
-                    "name": "Glute-Ham Raise",
-                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "D1",
-                    "progression": {
-                      "adaptation": "maxStrength",
-                      "confidence": "low",
-                      "currency": "load",
-                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
-                      "level": "exercise",
-                      "weeklyLoadPct": 0.0075,
-                      "weeks": 3
-                    },
-                    "restSec": 180,
-                    "rpe": "RPE 7→8",
-                    "sets": "4 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
                   }
                 ],
                 "title": "Friday · Full body"
@@ -144711,24 +144710,23 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "barbell_row",
+                    "exId": "glute_ham_raise",
                     "group": "B",
-                    "intent": "barbell_row",
-                    "name": "Barbell row",
+                    "intent": "glute_ham_raise",
+                    "name": "Glute-Ham Raise",
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "B1",
                     "restSec": 180,
                     "rpe": "RPE 6",
                     "sets": "2 × 8",
                     "superset": false,
-                    "volumeFactor": 1,
-                    "weight": "90 kg"
+                    "volumeFactor": 1
                   },
                   {
-                    "exId": "bench",
+                    "exId": "barbell_row",
                     "group": "C",
-                    "intent": "bench",
-                    "name": "Bench press",
+                    "intent": "barbell_row",
+                    "name": "Barbell row",
                     "note": "deload — ~65% load, leave 3+ reps in the tank",
                     "num": "C1",
                     "restSec": 180,
@@ -144736,7 +144734,7 @@
                     "sets": "2 × 8",
                     "superset": false,
                     "volumeFactor": 1,
-                    "weight": "75 kg"
+                    "weight": "90 kg"
                   },
                   {
                     "exId": "hip_flexor_90_90",
@@ -145432,12 +145430,35 @@
                   },
                   {
                     "estimated": true,
-                    "exId": "barbell_row",
+                    "exId": "glute_ham_raise",
                     "group": "B",
+                    "intent": "glute_ham_raise",
+                    "name": "Glute-Ham Raise",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 4
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "barbell_row",
+                    "group": "C",
                     "intent": "barbell_row",
                     "name": "Barbell row",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "B1",
+                    "num": "C1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -145474,11 +145495,11 @@
                   {
                     "estimated": true,
                     "exId": "bench",
-                    "group": "C",
+                    "group": "D",
                     "intent": "bench",
                     "name": "Bench press",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "C1",
+                    "num": "D1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -145511,29 +145532,6 @@
                       }
                     ],
                     "weight": "80 kg"
-                  },
-                  {
-                    "estimated": true,
-                    "exId": "glute_ham_raise",
-                    "group": "D",
-                    "intent": "glute_ham_raise",
-                    "name": "Glute-Ham Raise",
-                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "D1",
-                    "progression": {
-                      "adaptation": "maxStrength",
-                      "confidence": "low",
-                      "currency": "load",
-                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
-                      "level": "exercise",
-                      "weeklyLoadPct": 0.0075,
-                      "weeks": 4
-                    },
-                    "restSec": 180,
-                    "rpe": "RPE 7→8",
-                    "sets": "4 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
                   }
                 ],
                 "title": "Friday · Full body"
@@ -145950,12 +145948,35 @@
                   },
                   {
                     "estimated": true,
-                    "exId": "barbell_row",
+                    "exId": "glute_ham_raise",
                     "group": "B",
+                    "intent": "glute_ham_raise",
+                    "name": "Glute-Ham Raise",
+                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 5
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7→8",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "barbell_row",
+                    "group": "C",
                     "intent": "barbell_row",
                     "name": "Barbell row",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "B1",
+                    "num": "C1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -145992,11 +146013,11 @@
                   {
                     "estimated": true,
                     "exId": "bench",
-                    "group": "C",
+                    "group": "D",
                     "intent": "bench",
                     "name": "Bench press",
                     "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "C1",
+                    "num": "D1",
                     "progression": {
                       "adaptation": "maxStrength",
                       "confidence": "low",
@@ -146029,29 +146050,6 @@
                       }
                     ],
                     "weight": "80 kg"
-                  },
-                  {
-                    "estimated": true,
-                    "exId": "glute_ham_raise",
-                    "group": "D",
-                    "intent": "glute_ham_raise",
-                    "name": "Glute-Ham Raise",
-                    "note": "3 s down, 3 s up — heavy, tendon-loading tempo",
-                    "num": "D1",
-                    "progression": {
-                      "adaptation": "maxStrength",
-                      "confidence": "low",
-                      "currency": "load",
-                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
-                      "level": "exercise",
-                      "weeklyLoadPct": 0.0075,
-                      "weeks": 5
-                    },
-                    "restSec": 180,
-                    "rpe": "RPE 7→8",
-                    "sets": "4 × 8",
-                    "superset": false,
-                    "volumeFactor": 1
                   }
                 ],
                 "title": "Friday · Full body"
@@ -146207,7 +146205,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -152424,7 +152422,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -158902,7 +158900,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 6,
@@ -160774,7 +160772,7 @@
     "meta": {
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 10,
@@ -165089,7 +165087,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 10,
@@ -170405,7 +170403,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 4,
@@ -172132,7 +172130,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 6,
@@ -175271,7 +175269,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -180105,7 +180103,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -184939,7 +184937,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -186669,15 +186667,15 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "calf_raise",
+                    "exId": "depth_jump",
                     "group": "C",
-                    "intent": "calf_raise",
-                    "name": "Calf raise",
-                    "note": "",
+                    "intent": "depth_jump",
+                    "name": "Depth Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
-                    "restSec": 60,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 12",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1
                   },
@@ -188603,15 +188601,15 @@
                     "volumeFactor": 1
                   },
                   {
-                    "exId": "calf_raise",
+                    "exId": "depth_jump",
                     "group": "C",
-                    "intent": "calf_raise",
-                    "name": "Calf raise",
-                    "note": "",
+                    "intent": "depth_jump",
+                    "name": "Depth Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
                     "num": "C1",
-                    "restSec": 60,
-                    "rpe": "RPE 6",
-                    "sets": "3 × 12",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
                     "superset": false,
                     "volumeFactor": 1
                   },
@@ -189767,7 +189765,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 4,
@@ -190919,7 +190917,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,
@@ -195621,7 +195619,7 @@
       },
       "provenance": {
         "engineVersion": "1.4.0",
-        "knowledgeSetVersion": "1.52.0"
+        "knowledgeSetVersion": "1.56.0"
       },
       "validation": {
         "checked": 12,

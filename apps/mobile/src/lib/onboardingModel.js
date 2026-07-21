@@ -86,6 +86,11 @@ export const BLANK_ANSWERS = {
   startDate: '',                // ISO YYYY-MM-DD, used only when startWhen === 'date'
   strengthAccess: '',           // legacy access tier — still accepted, superseded by `equipment`
   equipment: [],                // equipment keys: barbell/dumbbell/machine/cable/band/kettlebell/bodyweight
+  // Sprint 3 C3: the optional "detail my gym" checklist — specific taxonomy item keys
+  // (EQUIPMENT_TAXONOMY) the user has, narrowing within a base category. null = the
+  // "Detail my gym" expander was never opened (skipped) → profile.access_detail stays
+  // null and selection degrades to today's base-only behaviour.
+  equipmentDetail: null,
   injuries: [], notes: '',
   skbSport: '',                 // SKB profile id (e.g. 'running_sprint' | 'cycling'); preferred over `sport`
   position: '',                 // SKB position name
@@ -211,6 +216,10 @@ export function answersToProfilePatch(a) {
       allocation: { gym: a.daysPerWeek }
     },
     access,
+    // Sprint 3 C3: optional narrowing within the base categories above (never expands
+    // access — see packages/engine/src/data/equipmentTaxonomy.js). Empty/never-set
+    // normalises to null so a skipped or all-unchecked expander degrades identically.
+    access_detail: (a.equipmentDetail && a.equipmentDetail.length) ? a.equipmentDetail : null,
     markers: (a.notes || '').trim(),
 
     // Endurance-era fields explicitly cleared (no longer captured).

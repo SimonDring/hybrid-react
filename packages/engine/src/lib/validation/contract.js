@@ -58,6 +58,7 @@ export {
   doseCoherenceObserver,
   progressionSanityObserver,
   deloadPresenceObserver,
+  equipmentDetailCoverageObserver,
   REPORT_ONLY_OBSERVERS
 } from './observers.js';
 

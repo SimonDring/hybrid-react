@@ -8,6 +8,7 @@
  * The strength-progress goals stay folded in below. iOS-first, single column.
  */
 
+import { useState } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
 import { localISO } from '@performance-os/engine';
@@ -60,9 +61,11 @@ export default function Atlas() {
 
       {atlas.focus && (
         <div className="atlas-focus">
-          <div className="af-eyebrow">Your limiting factor</div>
-          <div className="af-title">{atlas.focus.label} · {atlas.focus.score} vs {atlas.focus.demand} demanded</div>
-          <div className="af-why">{atlas.focus.why}</div>
+          <div className="af-eyebrow">Your focus</div>
+          <div className="af-title">{atlas.focus.headline}</div>
+          <div className="af-why">{atlas.focus.meaning}</div>
+          <div className="af-why" style={{ marginTop: 6 }}>{atlas.focus.whyItMatters}</div>
+          <FocusDetail text={atlas.focus.detail} />
         </div>
       )}
 
@@ -102,5 +105,17 @@ export default function Atlas() {
         ))}
       </div>
     </>
+  );
+}
+
+function FocusDetail({ text }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ marginTop: 8 }}>
+      <button className="btn-text" style={{ padding: 0, fontSize: 12 }} onClick={() => setOpen(o => !o)}>
+        {open ? 'Hide the numbers ▲' : 'How we worked this out ▼'}
+      </button>
+      {open && <div className="af-detail">{text}</div>}
+    </div>
   );
 }

@@ -322,4 +322,28 @@ export const INJURY_PROFILES = {
   },
 };
 
+// The injury taxonomy's region vocabulary — the SOLE legal token set for a position's
+// `commonInjuryRegions` (Sprint 3 B3). A region maps a body area to its evidence-based
+// prevention protocol (preventionExercises above), so a position that flags a region can
+// have that region's prevention entries preferred at selection.
+export const INJURY_REGIONS = Object.keys(INJURY_PROFILES);
+
+/**
+ * preventionIdsForRegions — Sprint 3 B3: resolve a set of injury regions to the exercise
+ * ids their prevention protocols recommend (INJURY_PROFILES[region].preventionExercises).
+ * PURE: deduped + sorted for determinism. Unknown regions contribute nothing (a nudge,
+ * never a gate). This is the "prevention library" a position's commonInjuryRegions map onto.
+ * @param {string[]} regions
+ * @returns {string[]} deterministic, deduped exercise ids
+ */
+export function preventionIdsForRegions(regions = []) {
+  const ids = new Set();
+  for (const region of regions || []) {
+    const profile = INJURY_PROFILES[region];
+    if (!profile) continue;
+    for (const ex of profile.preventionExercises || []) if (ex && ex.id) ids.add(ex.id);
+  }
+  return [...ids].sort();
+}
+
 export default INJURY_PROFILES;

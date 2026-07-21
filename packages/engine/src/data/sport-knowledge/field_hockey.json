@@ -409,6 +409,7 @@
   "positions": [
     {
       "name": "Goalkeeper",
+      "priorityPatterns": ["lunge", "iso", "squat"],
       "role": "Shot-stopping in full protective kit; commanding the circle; distribution.",
       "movementDemands": "Low total distance; explosive lateral pushes, splits, dives and rapid recoveries under ~20 kg of kit.",
       "runningDemands": "Lowest of any position.",
@@ -430,6 +431,7 @@
         "hip/adductor overload (splits)",
         "knee contusions"
       ],
+      "commonInjuryRegions": ["hip", "knee"],
       "gymPriorities": [
         "single-leg lateral power",
         "adductor strength (Copenhagen)",
@@ -439,6 +441,7 @@
     },
     {
       "name": "Defender",
+      "priorityPatterns": ["hinge", "iso", "core"],
       "role": "Circle defence, marking, outletting; often first receiver under press.",
       "movementDemands": "Positional discipline with repeated short accelerations, lunging tackles and low blocks; frequent hitting (long outlets).",
       "runningDemands": "Moderate total distance; high deceleration + lunge counts.",
@@ -460,6 +463,7 @@
         "groin/adductor (lunging)",
         "low-back (hitting volume)"
       ],
+      "commonInjuryRegions": ["hip", "lumbar"],
       "gymPriorities": [
         "hinge strength (hit base + posture)",
         "adductor capacity",
@@ -469,6 +473,7 @@
     },
     {
       "name": "Midfielder",
+      "priorityPatterns": ["hinge", "calf", "squat"],
       "role": "Link play; the largest running load; press triggers and recovery runs.",
       "movementDemands": "Continuous box-to-box shuttling in the crouched carry position; constant accelerations.",
       "runningDemands": "Highest total + high-speed distance (~8-9 km elite).",
@@ -490,6 +495,7 @@
         "hamstring (volume of accelerations)",
         "calf/Achilles overload"
       ],
+      "commonInjuryRegions": ["hamstring", "calf"],
       "gymPriorities": [
         "eccentric hamstring (Nordic)",
         "calf capacity",
@@ -499,6 +505,7 @@
     },
     {
       "name": "Forward",
+      "priorityPatterns": ["hinge", "lunge", "calf"],
       "role": "Pressing from the front; elimination 1v1s; circle finishing and deflections.",
       "movementDemands": "Sprint-press clusters, sharp eliminations from a deep crouch, deflection stances.",
       "runningDemands": "High sprint counts; moderate-high total distance.",
@@ -520,6 +527,7 @@
         "hamstring (sprint clusters)",
         "ankle (cutting)"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle"],
       "gymPriorities": [
         "acceleration strength (hip thrust, split squat)",
         "eccentric hamstring",

@@ -356,6 +356,7 @@
   "positions": [
     {
       "name": "Goalkeeper",
+      "priorityPatterns": ["squat", "core", "vpush"],
       "role": "Shot-stopping, kick-outs (restart strategy), sweeping behind defence.",
       "movementDemands": "Low total distance; explosive dives, short reactions; long kick-out striking.",
       "runningDemands": "Lowest of any position.",
@@ -377,6 +378,7 @@
         "shoulder (diving)",
         "groin (kick-outs)"
       ],
+      "commonInjuryRegions": ["shoulder", "hip"],
       "gymPriorities": [
         "lower-body power",
         "rotational/kick power",
@@ -386,6 +388,7 @@
     },
     {
       "name": "Full-back line (corner-back / full-back)",
+      "priorityPatterns": ["hinge", "squat", "core"],
       "role": "Man-marking, defending the inside line, contesting high ball.",
       "movementDemands": "Reactive man-marking; repeated short sprints + aerial contests.",
       "runningDemands": "Moderate; high acceleration/deceleration density.",
@@ -409,6 +412,7 @@
         "ankle",
         "ACL (cutting/landing)"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "knee"],
       "gymPriorities": [
         "posterior-chain max strength",
         "deceleration/landing",
@@ -418,6 +422,7 @@
     },
     {
       "name": "Half-back line",
+      "priorityPatterns": ["hinge", "squat", "calf"],
       "role": "Defend then drive forward as a primary attacking outlet; high two-way running.",
       "movementDemands": "Box-to-box; among the highest distances and high-speed running.",
       "runningDemands": "Very high (total + high-speed).",
@@ -441,6 +446,7 @@
         "groin",
         "ankle"
       ],
+      "commonInjuryRegions": ["hamstring", "hip", "ankle"],
       "gymPriorities": [
         "eccentric hamstring",
         "running-economy support",
@@ -450,6 +456,7 @@
     },
     {
       "name": "Midfield",
+      "priorityPatterns": ["squat", "hinge", "calf"],
       "role": "Win kick-outs (aerial), link defence and attack, cover the most ground.",
       "movementDemands": "Highest total distance + frequent maximal jumps for kick-outs.",
       "runningDemands": "Highest.",
@@ -473,6 +480,7 @@
         "ankle (landing)",
         "back"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "lumbar"],
       "gymPriorities": [
         "vertical power (jump)",
         "posterior chain",
@@ -483,6 +491,7 @@
     },
     {
       "name": "Half-forward line",
+      "priorityPatterns": ["hinge", "lunge", "core"],
       "role": "Two-way running forwards: score, create, and track back to defend.",
       "movementDemands": "High two-way running with repeated sprints into space.",
       "runningDemands": "Very high.",
@@ -506,6 +515,7 @@
         "groin",
         "quad/hip-flexor (kicking)"
       ],
+      "commonInjuryRegions": ["hamstring", "hip", "quad"],
       "gymPriorities": [
         "eccentric hamstring",
         "sprint/COD power",
@@ -515,6 +525,7 @@
     },
     {
       "name": "Full-forward line (corner-forward / full-forward)",
+      "priorityPatterns": ["lunge", "squat", "core"],
       "role": "Inside scorers: lose markers over short distances, finish chances.",
       "movementDemands": "Short explosive movements, sidesteps, contested catches.",
       "runningDemands": "Moderate (lowest of outfield); high acceleration density.",
@@ -538,6 +549,7 @@
         "ankle",
         "groin"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "hip"],
       "gymPriorities": [
         "acceleration/COD power",
         "contact robustness",

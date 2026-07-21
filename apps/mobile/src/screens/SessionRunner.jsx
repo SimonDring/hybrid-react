@@ -2,107 +2,26 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useTrainingStore } from '../stores/trainingStore.js';
 import * as Plan from '../lib/PlanService.js';
-import { parseExercise } from '../lib/uiHelpers.js';
-import { matchLift, parseReps, parseRpe, sessionKey } from '@performance-os/engine';
+import { sessionKey } from '@performance-os/engine';
 import RestTimer from '../components/RestTimer.jsx';
 import { useWakeLock } from '../hooks/useWakeLock.js';
 import { ensureAudio } from '../lib/sound.js';
 import SubstituteSheet from '../components/SubstituteSheet.jsx';
+import SessionOverview from '../components/SessionOverview.jsx';
 import InfoTip from '../components/ui/InfoTip.jsx';
 import { GLOSSARY } from '../data/metricGlossary.js';
+import { buildSteps } from '../lib/runnerSteps.js';
+import { lastLoggedWeightFor } from '../lib/exerciseMeta.js';
 
 const WEIGHT_STEP = 2.5;
 // Midnight palette: primer = teal (the app's primary accent), main = neutral. No rust.
 const SECTION_COLOR = { primer: 'var(--accent)', main: 'var(--txt-muted)' };
 
-// Numeric weight from a target string ("82.5 kg" → 82.5, "15 kg/hand" → 15, "—" → null).
-function parseWeight(s) { const m = /([\d.]+)/.exec(s || ''); return m ? Number(m[1]) : null; }
-// Leading set count from a prescription ("2 × 15" → 2) — drives the primer circuit rounds.
-function setsCount(s) { const m = /^(\d+)\s*[×x]/.exec(s || ''); return m ? Number(m[1]) : null; }
 const slug = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-/**
- * Expand a session into an ordered list of STEPS for the runner.
- *  • primer items                → a CIRCUIT: one `primerRound` step per round, each
- *    listing every primer move (no per-move rest, not logged).
- *  • non-strength main item       → one `prep` step (do it, tap Done — not logged)
- *  • strength item "N × R"        → N `set` steps (weight/reps/RPE, logged)
- *  • supersets (same group)       → interleaved by round (A1·s1, A2·s1, rest, A1·s2 …);
- *    only the last set of each round carries the real rest.
- */
-export function buildSteps(session) {
-  const allItems = (session.items || []).filter(it => !it.substituted);
-  const primerItems = allItems.filter(it => it.section === 'primer');
-  const mainItems = allItems.filter(it => it.section !== 'primer');
-  const steps = [];
-
-  // Primer → a short CIRCUIT: one step per round, each listing every primer move.
-  // Rounds come from the primer moves' set count (e.g. "2 × 15" → 2 rounds).
-  if (primerItems.length) {
-    const counts = primerItems.map(it => setsCount(it.sets)).filter(Boolean);
-    const rounds = counts.length ? Math.max(...counts) : 2;
-    const moves = primerItems.map(it => ({ name: it.name, reps: parseReps(it.sets), note: it.note || it.cue || '' }));
-    for (let r = 1; r <= rounds; r++) {
-      steps.push({ kind: 'primerRound', section: 'primer', round: r, totalRounds: rounds, moves });
-    }
-  }
-
-  // Main work → set-by-set. Group consecutive supersetted items (same group) into a block.
-  const blocks = [];
-  mainItems.forEach(it => {
-    const last = blocks[blocks.length - 1];
-    if (it.superset && it.group && last && last.superset && last.group === it.group) last.items.push(it);
-    else blocks.push({ superset: !!it.superset, group: it.group, items: [it] });
-  });
-
-  const makeSetSteps = (it) => {
-    const p = parseExercise(it);
-    if (p.type !== 'strength') return [];
-    const lift = matchLift(it.name);
-    const arr = [];
-    for (let s = 1; s <= p.sets; s++) {
-      arr.push({
-        kind: 'set', item: it, section: it.section || 'main', exerciseName: it.name,
-        setIndex: s, totalSets: p.sets,
-        targetReps: parseReps(it.sets), repsLabel: p.reps,
-        targetWeight: parseWeight(it.weight),
-        weightLabel: (it.weight && it.weight !== '—') ? it.weight : null,
-        targetRpe: parseRpe(it.rpe),
-        restSec: it.restSec || 0,
-        liftKey: lift ? lift.key : null,
-        note: it.note || it.cue || ''
-      });
-    }
-    return arr;
-  };
-
-  const makePrep = (it) => ({
-    kind: 'prep', item: it, section: it.section || 'main', exerciseName: it.name,
-    prescription: it.sets || '', rpe: (it.rpe || '').replace(/^RPE\s+/i, ''),
-    restSec: it.restSec || 0, note: it.note || it.cue || ''
-  });
-
-  blocks.forEach(block => {
-    if (block.items.length === 1) {
-      const it = block.items[0];
-      const sets = makeSetSteps(it);
-      if (sets.length === 0) steps.push(makePrep(it));   // non-strength main (run/swim/mobility)
-      else steps.push(...sets);
-    } else {
-      const perMember = block.items.map(it => makeSetSteps(it));
-      const rounds = Math.max(0, ...perMember.map(s => s.length));
-      for (let r = 0; r < rounds; r++) {
-        const round = perMember.map(s => s[r]).filter(Boolean);
-        round.forEach((st, i) => {
-          st.restSec = i === round.length - 1 ? (st.restSec || 0) : 0;  // rest once per round
-          steps.push(st);
-        });
-      }
-    }
-  });
-
-  return steps;
-}
+// buildSteps now lives in ../lib/runnerSteps.js (plain module, so it can be tested under
+// node without a JSX parser). Re-exported here so nothing importing it from the screen breaks.
+export { buildSteps };
 
 function Stepper({ label, value, unit, onDec, onInc, disabled }) {
   return (
@@ -166,24 +85,41 @@ export default function SessionRunner() {
   const [resting, setResting] = useState(false);
   const [restSeed, setRestSeed] = useState(null);
   const [subSheet, setSubSheet] = useState(null);   // { originalName, options } when open
+  const [overviewOpen, setOverviewOpen] = useState(false);
   const restingRef = useRef(false);          // guards against double-advance (skip + auto)
   const carryRef = useRef({});               // exerciseName → last actual {weight,reps,rpe}
 
   const step = steps[cursor] || null;
 
+  // Most recent logged weight for this exercise from a PREVIOUS session (loadable core
+  // work with no prescribed target, e.g. Pallof press). Computed once here so the
+  // draft-seeding effect below and the "Last time" hint in the render agree. Keyed on
+  // steps too: an in-session substitution rebuilds steps at the SAME cursor, and the
+  // memo must re-resolve for the new exercise (steps is content-signature-memoized, so
+  // no spurious recomputes). Once this session's carry covers the exercise (sets 2+),
+  // the carry wins the seed and the hint would be stale — return null then. Reading
+  // carryRef.current here is safe: it's mutated synchronously in logCurrentSet before
+  // the cursor update triggers this memo.
+  const lastTime = useMemo(() => {
+    if (!step || step.kind !== 'set' || step.targetWeight != null || !step.collectWeight) return null;
+    if (carryRef.current[step.exerciseName]) return null;   // in-session carry already covers this
+    return lastLoggedWeightFor(step.exerciseName, setLogsBySession, sessionDbId);
+  }, [cursor, steps]);  // eslint-disable-line react-hooks/exhaustive-deps
+
   // Seed the draft on entering a set step: carry forward the last actual for this
-  // exercise, else fall back to the prescribed target.
+  // exercise, else fall back to the prescribed target, else the last logged weight
+  // from a previous session.
   useEffect(() => {
     if (!step || step.kind !== 'set') return;
     const carried = carryRef.current[step.exerciseName];
     setDraft({
-      weight: carried?.weight ?? step.targetWeight,
+      weight: carried?.weight ?? step.targetWeight ?? lastTime,
       reps: carried?.reps ?? step.targetReps,
       rpe: carried?.rpe ?? step.targetRpe
     });
     setResting(false);
     restingRef.current = false;
-  }, [cursor, steps]);
+  }, [cursor, steps]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   // All steps already logged on entry → straight to completion.
   useEffect(() => {
@@ -208,6 +144,14 @@ export default function SessionRunner() {
   // (primer/prep steps and already-logged sets can be stepped past freely).
   const setUnlogged = step.kind === 'set' && !loggedSet.has(loggedKey(step.exerciseName, step.setIndex));
   const forwardDisabled = isLast || setUnlogged;
+
+  // A step is "done" if it's behind the cursor, or (for a set) already logged.
+  const isStepDone = (i) => {
+    const st = steps[i];
+    if (!st) return false;
+    if (st.kind === 'set') return loggedSet.has(loggedKey(st.exerciseName, st.setIndex));
+    return i < cursor;
+  };
 
   const advanceAfterRest = (restSec) => {
     ensureAudio();   // unlock audio within this tap so the rest-end beep can play later
@@ -264,7 +208,7 @@ export default function SessionRunner() {
       target_rpe: step.targetRpe,
       actual_weight: draft.weight,
       actual_reps: draft.reps,
-      actual_rpe: draft.rpe,
+      actual_rpe: step.collectRpe === false ? null : draft.rpe,
       is_primer: false,
       completed_at: new Date().toISOString()
     });
@@ -278,7 +222,8 @@ export default function SessionRunner() {
     return { ...d, [field]: nextVal };
   });
 
-  const hasWeight = step.kind === 'set' && (step.targetWeight != null || step.weightLabel != null);
+  const hasWeight = step.kind === 'set' && step.collectWeight !== false
+    && (step.targetWeight != null || step.weightLabel != null || step.collectWeight === true);
 
   return (
     <div className="runner" style={{ '--rn-color': color }}>
@@ -290,9 +235,13 @@ export default function SessionRunner() {
           <span className="runner-progress-text">Step {cursor + 1} of {steps.length}</span>
           <button className="runner-nav" onClick={() => goTo(1)} disabled={forwardDisabled} aria-label="Next step" title={setUnlogged ? 'Log this set to continue' : 'Next step'}>›</button>
         </div>
-        <div style={{ width: 32 }} />
+        <button className="runner-nav" onClick={() => setOverviewOpen(o => !o)} aria-label="Session overview">▼</button>
       </div>
       <div className="runner-bar"><div className="runner-bar-fill" style={{ width: `${((cursor) / steps.length) * 100}%` }} /></div>
+
+      {overviewOpen && (
+        <SessionOverview steps={steps} cursor={cursor} isStepDone={isStepDone} onClose={() => setOverviewOpen(false)} />
+      )}
 
       {resting ? (
         <div className="runner-body">
@@ -341,8 +290,12 @@ export default function SessionRunner() {
               <div className="rn-setline">Set {step.setIndex} of {step.totalSets}</div>
               <div className="rn-target">
                 Target: {step.targetReps ?? step.repsLabel} reps
-                {step.weightLabel ? ` @ ${step.weightLabel}` : ''} @ RPE {step.targetRpe}
+                {step.weightLabel
+                  ? ` @ ${step.weightLabel}`
+                  : (step.collectWeight === true ? ' · pick a load you can hold with good form' : '')}
+                {step.collectRpe !== false ? ` @ RPE ${step.targetRpe}` : ''}
               </div>
+              {lastTime != null && <div className="rn-target">Last time: {lastTime} kg</div>}
 
               <div className="rn-steppers">
                 <Stepper label="Reps" value={draft.reps} onDec={() => bump('reps', -1, 0)} onInc={() => bump('reps', 1)} />
@@ -350,12 +303,16 @@ export default function SessionRunner() {
                   onDec={() => bump('weight', -WEIGHT_STEP, 0)} onInc={() => bump('weight', WEIGHT_STEP)} />
               </div>
 
-              <div className="rn-rpe-label">RPE <InfoTip {...GLOSSARY.rpe} /></div>
-              <div className="rating-row">
-                {[6, 7, 8, 9, 10].map(n => (
-                  <button key={n} className={`rating-btn ${draft.rpe === n ? 'active' : ''}`} onClick={() => setDraft(d => ({ ...d, rpe: n }))}>{n}</button>
-                ))}
-              </div>
+              {step.collectRpe !== false && (
+                <>
+                  <div className="rn-rpe-label">RPE <InfoTip {...GLOSSARY.rpe} /></div>
+                  <div className="rating-row">
+                    {[6, 7, 8, 9, 10].map(n => (
+                      <button key={n} className={`rating-btn ${draft.rpe === n ? 'selected' : ''}`} onClick={() => setDraft(d => ({ ...d, rpe: n }))}>{n}</button>
+                    ))}
+                  </div>
+                </>
+              )}
 
               <button className="btn-primary" style={{ width: '100%', marginTop: 22 }} onClick={logCurrentSet}>
                 {isLast ? 'Log set & finish' : 'Log set'}

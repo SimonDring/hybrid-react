@@ -1,12 +1,51 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-20 (Sport-data roadmap: Phases 1 & 2 fully merged to main INCL. both flips —
-match-day scheduling + the form model are LIVE and steering plans; Phases 3–4 designed). This file carries **current
+_Last updated: 2026-07-21 (overnight UX/coaching-depth branch — Simon approved B/C + the
+loadable-equipment weight gate and authorized the merge of PR #228 to main; branch carries
+main's sport-data flips — match-day scheduling + the form model are LIVE). This file carries **current
 state and the open queue only**. The full session-by-session history (2026-06-11 →
 2026-07-09, ~1,800 lines) is preserved verbatim at
 [`docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md`](docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md).
 Keep this file current at the end of each session; when an entry stops being current,
 move it to the archive file rather than letting this one grow._
+
+## 2026-07-21 — overnight branch `claude/session-ui-flow-improvements-92b44a` (PR #228 — MERGED, Simon-approved)
+
+Simon's 2026-07-20 fix list, executed as three sprints (specs + plans in
+`docs/superpowers/{specs,plans}/2026-07-20-sprint*`); every task subagent-implemented,
+per-task reviewed, whole-branch reviewed (verdict: ready for PR). Suite 217/217 after
+merging main (PRs #223–#230 incl. the sport-data flips) into the branch, lint 0 errors,
+KSV **1.56.0** on the branch (this branch's four bumps renumbered 1.53–1.56 above main's
+1.52.0 in the merge — see `EXPECTED-DELTA.md`'s merge note).
+
+- **Sprint 1 (app-only UX):** selection-contrast fix (real `.rating-btn` class-mismatch
+  bug + shared `.opt-chip`/`.is-selected` treatment), rest timer plan-driven only
+  (presets removed, Restart kept), live-session pull-down overview (SessionOverview),
+  completion celebration + Return home, Midnight summary card with measured duration,
+  onboarding draft persistence (`lib/onboardingDraft.js`).
+- **Sprint 2 (app-only session intelligence):** the spec's engine change proved
+  unnecessary (items already carry `exId` — deviation note in the spec);
+  `lib/exerciseMeta.js` classifier + `lib/runnerSteps.js` gate RPE/weight by role
+  (mobility → Done; loadable core → weight + cross-session last-time memory). A Critical
+  superset content-drop was caught in review and fixed (simple-done superset members
+  surface once as prep steps).
+- **Sprint 3 (coaching depth):** A — Atlas limiting-factor panel in plain English
+  (`lib/atlasLanguage.js`), numbers demoted to a "How we worked this out" disclosure.
+  B — SKB position depth woken: secondary-quality floor 0.7 (B1); `priorityPatterns`
+  D11 nudge ships ON and moves the 2 positioned fixtures (B2); `commonInjuryRegions`
+  prevention nudge ships ON but tier≥3-gated and currently **inert in fixtures** (B3 —
+  open coaching call for Simon: should prevention steer session anchors?). C — equipment
+  taxonomy (~30-item "Detail my gym" model): governed data + narrowing-only availability
+  + D14 coverage fallback + onboarding expander; no-detail behaviour byte-identical
+  (acceptance-tested).
+- **Root-cause chip fix (Simon-initiated):** the 3 mobility catalogue entries gained
+  `loadClass: 'health'` (stamp-only).
+- **Golden net delta vs main (audited post-merge; entries in `EXPECTED-DELTA.md`):**
+  KSV 1.52.0→1.56.0 stamps + B1's one droppedDemands row + B2's two positioned-archetype
+  swaps. Nothing else — no interaction deltas with main's match-day/form work.
+- **Merge gates: cleared** — Simon approved B2/B3/C and the loadable-equipment weight
+  gate 2026-07-21 and authorized the merge. Remaining open notes: B3 anchor-steering question;
+  SessionOverview same-name merge edge; QUALITY_LABELS circular-import tidy.
 
 ## 2026-07-20 — SPORT-DATA INTEGRATION ROADMAP (aerobic + match-day → S&C output)
 

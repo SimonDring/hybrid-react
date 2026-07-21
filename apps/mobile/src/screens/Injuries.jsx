@@ -91,12 +91,9 @@ function SeverityPicker({ value, onChange }) {
       <label style={labelStyle}>Severity</label>
       <div style={{ display: 'flex', gap: 6 }}>
         {[1, 2, 3, 4, 5].map(n => (
-          <button key={n} onClick={() => onChange(n)} style={{
+          <button key={n} onClick={() => onChange(n)} className={`opt-chip ${value === n ? 'is-selected' : ''}`} style={{
             flex: 1, padding: '8px 0', borderRadius: 8,
-            border: `1.5px solid ${value === n ? 'var(--accent)' : 'var(--hairline)'}`,
-            background: value === n ? 'rgba(111,211,196,0.15)' : 'transparent',
-            color: value === n ? 'var(--accent)' : 'var(--txt-muted)',
-            fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit'
+            fontSize: 14, fontWeight: 600
           }}>{n}</button>
         ))}
       </div>

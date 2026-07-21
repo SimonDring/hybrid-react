@@ -32,6 +32,27 @@ export const SELECTION_SCORING = {
   // conservative: both the quality→force-velocity map and the exercise tags are seed/needsReview, so
   // authority is capped (Art 13). Raise only after a movement-map science pass.
   forceVelocityWeight: 0.15,
+
+  // Position priority-pattern nudge (Sprint 3 B2; NOT flag-gated — ships on). Each team-sport SKB
+  // position declares a small `priorityPatterns` list (authored from its gymPriorities prose); D11
+  // adds this ADDITIVE bonus to a candidate whose movement pattern is on the athlete's position
+  // list — a SMALL soft preference within a quality's candidates. Additive ⇒ it re-orders only
+  // WITHIN a tier (the sort is tier-first), so it is a preference weight, NEVER a gate: the
+  // candidate pool is identical with/without a position. Deliberately conservative: the pattern
+  // lists are authored seed knowledge (needsReview), so authority is capped (Art 13). Raise only
+  // after a position-programming science pass.
+  positionPatternWeight: 0.1,
+
+  // Position injury-prevention nudge (Sprint 3 B3; NOT flag-gated — ships on). Each team-sport SKB
+  // position declares a `commonInjuryRegions` list (authored from its commonInjuries prose); those
+  // regions resolve to the injury taxonomy's prevention exercises (INJURY_PROFILES.preventionExercises).
+  // D11 adds this ADDITIVE bonus to a candidate that is a prevention exercise for one of the
+  // position's injury regions — so a front row's cervical/shoulder prehab ranks ahead of a
+  // sport-generic prevention pick. Additive ⇒ it re-orders only WITHIN a quality tier (the sort is
+  // tier-first), so it is a preference weight, NEVER a gate: the candidate POOL is identical
+  // with/without a position. Deliberately conservative: the region lists are authored seed knowledge
+  // (needsReview), so authority is capped (Art 13). Raise only after a prevention-programming science pass.
+  positionInjuryPreventionWeight: 0.1,
 };
 
 export default { SELECTION_SCORING };

@@ -36,6 +36,7 @@ import { profileToAthleteModel } from './adapters/profileToAthleteModel.js';
 import * as SKB from './sportKnowledge/index.js';
 import { validateWeek, explainValidation } from './validation/contract.js';
 import { categoryPlanFor } from './session/categoryCoverage.js';
+import { preventionIdsForRegions } from './injury/profiles.js';
 import { provenance } from '../version.js';
 import { deriveWeeklyObjective } from './microcycle/weeklyObjective.js';
 import { mdMapForWeek, mdConstraintsFrom } from './microcycle/fixtureWeeks.js';
@@ -140,12 +141,17 @@ function buildGymWeek(count, ctx, profile, program, diag) {
     loggedLiftKeys: new Set(Object.keys((profile && profile.lift_log) || {})),
     phaseWeeks: ctx.phaseWeeks, blockFrac: ctx.blockFrac, minutes: ctx.minutes,
     level: getGymLevel(profile), access: profile.access || [], sex: profile.sex,
+    // Sprint 3 C2: the athlete's OPTIONAL detailed-equipment declaration (nullable array of
+    // taxonomy keys). Absent/null ⇒ selection degrades to today's base-only gate (byte-identical).
+    accessDetail: profile.access_detail || null,
     bodyweight: profile.bodyweight_kg, forceVelocityAware: !!ctx.forceVelocityAware,
     gymDays: count, lifts: resolveLifts(profile),
     style: program.style, emphasis: program.emphasis, volumeScalar: program.volumeScalar,
     power: program.power, sport: program.sport, exercisePriority: program.exercisePriority || [],
     priorityByIntent: program.priorityByIntent || new Map(),
     priorityQualities: diag.priorityQualities, season: program.season, skbIds: diag.skbIds,
+    positionPatterns: diag.positionPatterns || [],   // Sprint 3 B2 — position priority-pattern nudge
+    positionPreventionIds: diag.positionPreventionIds || [],   // Sprint 3 B3 — position injury-prevention nudge
     categoryPlan: diag.categoryPlan, discipline: program.discipline || null,
     // Season-phased SKB (2026-07-09): the current-phase programming block + derived round-out
     // targets (null for un-migrated sports → the allocator's round-out pass is a no-op).
@@ -176,7 +182,20 @@ export function generatePlan(profile = {}, opts = {}) {
   // legacy path. asOf comes from the profile's start date (never the clock) — deterministic.
   const asOf = profile.plan_start_date || null;
   const perf = opts.performanceModel || performanceModelForProfile(profile, asOf);
-  const skbSportId = program.sport ? (profileToAthleteModel(profile, asOf)?.sportingContext?.primarySport || null) : null;
+  const athleteModel = program.sport ? profileToAthleteModel(profile, asOf) : null;
+  const skbSportId = athleteModel?.sportingContext?.primarySport || null;
+  // Sprint 3 B2: the athlete's SKB position priorityPatterns — a small D11 selection nudge toward
+  // the movement patterns this position's gym programming prioritises (authored from its
+  // gymPriorities prose). [] when no sport/position/data → the nudge is a no-op (byte-identical).
+  const positionName = athleteModel?.sportingContext?.position || null;
+  const positionRecord = (skbSportId && positionName)
+    ? ((SKB.section(skbSportId, 'positions') || []).find((p) => p.name === positionName) || null)
+    : null;
+  const positionPatterns = positionRecord?.priorityPatterns || [];
+  // Sprint 3 B3: the athlete's SKB position common injury regions → the prevention exercises those
+  // regions recommend (the injury taxonomy's prevention library). A small D11 selection nudge toward
+  // position-relevant prevention. [] when no sport/position/data → a no-op (byte-identical).
+  const positionPreventionIds = preventionIdsForRegions(positionRecord?.commonInjuryRegions || []);
   const diag = {
     priorityQualities: (perf && perf.priorityAdaptations) || [],
     // Category-led sports (WP-20 — swim): the SKB library's per-session coverage plan.
@@ -184,6 +203,8 @@ export function generatePlan(profile = {}, opts = {}) {
     // Map(id → transferToSportRating): the library's authored transfer judgement per
     // movement (Sprint 9 19a) — membership grants §34 tier-4 standing, the rating values it.
     skbIds: skbSportId ? new Map((SKB.section(skbSportId, 'exerciseLibrary')?.exercises || []).map((e) => [e.id, e.transferToSportRating])) : new Map(),
+    positionPatterns,
+    positionPreventionIds,
   };
   const { busyDays, sportMuscles } = deriveConstraints(profile);
   const availability = profile.availability || {};
@@ -275,7 +296,7 @@ export function generatePlan(profile = {}, opts = {}) {
         if (wobj.value.fixtureAware) mdConstraints = mdConstraintsFrom(wobj.value.spacingConstraints, mdOffsetByWeekday);
       }
       let sessions = scheduleWeek({ sportSpecs, dayNames, busyDays, sportMuscles, mdConstraints });
-      sessions = despineWeek(sessions, { priorityByIntent: program.priorityByIntent || new Map(), lifts: resolveLifts(profile), level: getGymLevel(profile), bodyweight: profile.bodyweight_kg });
+      sessions = despineWeek(sessions, { priorityByIntent: program.priorityByIntent || new Map(), lifts: resolveLifts(profile), level: getGymLevel(profile), bodyweight: profile.bodyweight_kg, access: profile.access || [], accessDetail: profile.access_detail || null });
 
       weeks.push({ num: weekNum, deload, taper, theme: themeFor(seg.intent, deload, taper, isRace && weekNum === total), sessions, provisional: pi > 0 });
 
@@ -309,13 +330,24 @@ export function generatePlan(profile = {}, opts = {}) {
   // run over the whole plan from inside the per-week validateWeek — they emit once, on
   // the plan's terminal week (observers.js#isPlanTerminalWeek). Report-only ('note'):
   // they never move a plan, so meta.validation stays byte-identical (goldens prove it).
-  const vctx = { access: profile.access || [], planPhases: phases };
+  // Sprint 3 C2: accessDetail rides vctx so the equipment-detail-coverage observer (D14) can
+  // recompute narrowing over the shipped week. Absent ⇒ the observer is quiet (byte-identical).
+  const vctx = { access: profile.access || [], accessDetail: profile.access_detail || null, planPhases: phases };
   let allPass = true, checked = 0;
   const problemWeeks = [];
+  // Sprint 3 C2: base-pool coverage fallbacks the D14 observer surfaced across the plan (Art 15 —
+  // no silent truncation). Populated ONLY when a detailed athlete's narrowing emptied a movement
+  // pattern; empty for every athlete who declared no detail ⇒ meta.validation stays byte-identical.
+  const equipmentDetailFallbacks = [];
   for (const phase of phases) {
     for (const week of phase.weeks) {
       checked++;
       const r = validateWeek(week, vctx);
+      for (const f of r.findings) {
+        if (f.validatorId === 'equipment.detail-coverage' && f.verdict === 'note') {
+          equipmentDetailFallbacks.push({ week: week.num, pattern: f.detail?.pattern ?? null, item: f.detail?.item ?? null, reason: f.reason });
+        }
+      }
       if (!r.pass) {
         allPass = false;
         // TR-02 / M4a T4: additive fields only (`resolutions` + `explain`) —
@@ -356,7 +388,11 @@ export function generatePlan(profile = {}, opts = {}) {
     // Report-only: this list is never consulted by construction (Art 18 purity intact).
     droppedDemands: (perf.droppedDemands || []).map((d) => ({ skbQuality: d.skbQuality, importance: d.importance, reason: d.reason })),
   } : null;
-  return { phases, totalWeeks: total, meta: { validation: { pass: allPass, checked, weeks: problemWeeks }, provenance: provenance(), ...(diagnosis ? { diagnosis } : {}) } };
+  // Sprint 3 C2: attach the equipment-detail coverage-fallback ledger ONLY when non-empty — a
+  // guarded field, so a plan with no detail (every existing profile) carries the identical
+  // meta.validation shape it did before (the golden master proves byte-identity).
+  const validation = { pass: allPass, checked, weeks: problemWeeks, ...(equipmentDetailFallbacks.length ? { equipmentDetailFallbacks } : {}) };
+  return { phases, totalWeeks: total, meta: { validation, provenance: provenance(), ...(diagnosis ? { diagnosis } : {}) } };
 }
 
 export default { generatePlan };
