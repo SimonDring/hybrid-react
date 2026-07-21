@@ -28,6 +28,7 @@ export default function Health() {
   const load = useTrainingStore(s => s.load);
   const adaptation = useTrainingStore(s => s.adaptation);
   const injuries = useTrainingStore(s => s.injuries);
+  const pitchSessions = useTrainingStore(s => s.pitchSessions);
 
   const fa = fitnessAge(profile, dailyMetrics);
   const lv = loadVerdict(load, adaptation);
@@ -81,6 +82,12 @@ export default function Health() {
           valueColor={activeInjuries.length > 0 ? 'var(--status-strain)' : undefined}
           sub={activeInjuries.length === 0 ? 'all clear' : activeInjuries.map(i => i.title || i.body_part).filter(Boolean).join(', ')}
           onClick={() => navigate('/tracking/injuries')}
+        />
+        <Tile
+          label="Pitch sessions"
+          value={(pitchSessions && pitchSessions.length) ? `${pitchSessions.length} logged` : 'Log one'}
+          sub="minutes · RPE · GPS"
+          onClick={() => navigate('/tracking/pitch')}
         />
       </div>
     </>

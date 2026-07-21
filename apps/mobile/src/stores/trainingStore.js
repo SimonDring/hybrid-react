@@ -12,8 +12,8 @@
 
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
-import Sync, { pullFromSupabase, runSessionDMigration, drainOutbox, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
-import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, acuteChronic, acwr, acwrSeries, acwrBand, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex, aerobicDailyLoads, computeForm } from '@performance-os/engine';
+import Sync, { pullFromSupabase, runSessionDMigration, drainOutbox, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions, appendSportSession, readSportObservations } from '../lib/SyncService.js';
+import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, acuteChronic, acwr, acwrSeries, acwrBand, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex, aerobicDailyLoads, computeForm, adaptManualSportEntry, groupSportObservations } from '@performance-os/engine';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch, adaptedSessionByKey } from '../lib/PlanService.js';
 import * as Plan from '../lib/PlanService.js';
 import { consistencyGoal } from '../lib/goals.js';
@@ -195,6 +195,8 @@ export const useTrainingStore = create((set) => ({
   fitbitError: null,        // last sync failure reason (null when ok) — drives the UI
   stravaSyncing: false,
   stravaError: null,        // last Strava sync failure reason (null when ok)
+  pitchSessions: [],        // Phase 3 S6a: hand-logged pitch/match sessions (owner-private
+                            // M5 evidence; Supabase-only, no local cache — loaded explicitly)
 
   // Re-read the local cache into the view (used by the dev preview seeder).
   refresh: () => set(buildView()),
@@ -209,6 +211,35 @@ export const useTrainingStore = create((set) => ({
     Sync.fetchMyTeamSchedule()
       .then((raw) => { setTeamSchedule(raw); set(buildView()); })
       .catch(() => {});
+  },
+
+  // ----- Phase 3 S6a: manual pitch/match logging -----
+  // Log a hand-entered pitch/match session. The engine ACL adapter normalises + validates
+  // each datum through the Metric Dictionary; the app supplies the clock/date/ref (the
+  // adapter is pure). Writes are owner-private, append-only, Supabase-only (no local cache),
+  // so we refresh the surfaced list explicitly rather than through buildView(). Returns
+  // { ok, warnings } — warnings list any fields the dictionary rejected (never silent).
+  async logPitchSession(input) {
+    const ctx = {
+      observedAt: new Date().toISOString(),
+      on: (input && input.playedOn) || new Date().toISOString().slice(0, 10),
+      ref: (globalThis.crypto?.randomUUID?.() || `sess-${Date.now()}`),
+    };
+    const { ok, errors, externalRows, matchRows } = adaptManualSportEntry(input || {}, ctx);
+    if (!ok) return { ok: false, errors };
+    const res = await appendSportSession({ externalRows, matchRows });
+    if (res == null) return { ok: false, errors: ['Not signed in — sign in to save your session.'] };
+    await useTrainingStore.getState().loadPitchSessions();
+    return { ok: true, warnings: errors };
+  },
+
+  // Load + group the athlete's recent pitch/match observations for the surface.
+  // Fire-and-forget safe (mirrors refreshTeamSchedule); [] when offline/signed-out.
+  async loadPitchSessions() {
+    try {
+      const rows = await readSportObservations({ limit: 60 });
+      set({ pitchSessions: groupSportObservations(rows) });
+    } catch { /* offline / signed-out → leave as-is */ }
   },
 
   refreshTeamStatus() {
