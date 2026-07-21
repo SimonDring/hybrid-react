@@ -10,6 +10,7 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { BLANK_ANSWERS, localISODate, resolveStartDate, answersToProfile } from '../lib/onboardingModel.js';
+import { saveDraft, loadDraft } from '../lib/onboardingDraft.js';
 import { epley1RM, pullupE1RM, suggestGymDays, suggestOptimalFrequency, selectableSports, positionsFor } from '@performance-os/engine';
 
 // ---- Option catalogues ----
@@ -172,9 +173,10 @@ function TestRow({ label, weight, reps, onWeight, onReps, e1rm, repsOnly }) {
   );
 }
 
-export default function OnboardingWizard({ initialAnswers, onComplete, onAnswersChange, devTools = false, completeLabel = 'Create my plan' }) {
-  const [a, setA] = useState({ ...BLANK_ANSWERS, ...(initialAnswers || {}) });
-  const [step, setStep] = useState(0);
+export default function OnboardingWizard({ initialAnswers, onComplete, onAnswersChange, devTools = false, completeLabel = 'Create my plan', persistDraft = false }) {
+  const draft = useMemo(() => (persistDraft ? loadDraft() : null), []);  // eslint-disable-line react-hooks/exhaustive-deps
+  const [a, setA] = useState({ ...BLANK_ANSWERS, ...(initialAnswers || {}), ...(draft?.answers || {}) });
+  const [step, setStep] = useState(draft?.step || 0);
   const [saving, setSaving] = useState(false);
   const scrollRef = useRef(null);
 
@@ -194,6 +196,7 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
   const changeRef = useRef(onAnswersChange);
   changeRef.current = onAnswersChange;
   useEffect(() => { if (changeRef.current) changeRef.current(a); }, [a]);
+  useEffect(() => { if (persistDraft) saveDraft(a, step); }, [a, step, persistDraft]);
 
   const isBuild = a.goalType === 'build';
   const isSport = a.goalType === 'sport';

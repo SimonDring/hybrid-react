@@ -16,6 +16,7 @@ import {
   BLANK_ANSWERS, answersToProfilePatch, answersToInjuries
 } from '../lib/onboardingModel.js';
 import * as AthleteModelService from '../lib/AthleteModelService.js';
+import { clearDraft } from '../lib/onboardingDraft.js';
 
 export default function Onboarding() {
   const profile = useTrainingStore(s => s.profile);
@@ -41,6 +42,7 @@ export default function Onboarding() {
       setSubmitError(first || 'Please check your details and try again.');
       return; // block: profile not saved, onboarding stays open
     }
+    clearDraft(); // profile saved — the in-progress draft is no longer needed
     // Sprint 3: also build + persist the Athlete Model (parallel to the legacy profile;
     // the live engine still consumes the legacy profile). Non-blocking — model persistence
     // must never break onboarding completion.
@@ -54,7 +56,7 @@ export default function Onboarding() {
   return (
     <>
       {submitError && <div className="onboard-error" role="alert">{submitError}</div>}
-      <OnboardingWizard initialAnswers={initialAnswers} onComplete={handleComplete} />
+      <OnboardingWizard initialAnswers={initialAnswers} onComplete={handleComplete} persistDraft />
     </>
   );
 }
