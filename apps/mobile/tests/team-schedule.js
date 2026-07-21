@@ -134,8 +134,14 @@ const ok = (cond, msg) => { n++; assert.ok(cond, msg); console.log('PASS:', msg)
     fixtures: [{ id: 'm', type: 'match', label: 'league', date: '2026-07-18' }] };
   const withSched = applyTeamSchedule(fp, sched, '2026-07-13');
   const flipped = generatePlan(withSched, { fixtureMicrocycle: true });
-  const fri = flipped.phases[0].weeks[0].sessions.find((s) => s.dayIdx === 4); // Friday = MD-1
-  ok(!fri || fri.axialLoad < 3, `flip: no heavy-axial gym work on Friday (MD-1) (axial ${fri?.axialLoad})`);
+  const wk = flipped.phases[0].weeks[0].sessions;
+  const fri = wk.find((s) => s.dayIdx === 4); // Friday = MD-1 (the Sat 2026-07-18 fixture)
+  ok(fri, 'flip: a Friday (MD-1) session exists — the assertion below is non-vacuous');
+  ok(fri.axialLoad < 3, `flip: no heavy-axial gym work on Friday MD-1 (axial ${fri.axialLoad})`);
+  // Teeth: the heaviest session MOVED to a far-from-match day (MD-4 Tue / MD-2 Thu), not just vanished.
+  const heaviest = wk.reduce((a, b) => (b.axialLoad > a.axialLoad ? b : a));
+  ok(heaviest.axialLoad >= 3 && (heaviest.dayIdx === 1 || heaviest.dayIdx === 3),
+    `flip: heavy work landed away from MD-1, on Tue(MD-4)/Thu(MD-2) (idx ${heaviest.dayIdx}, axial ${heaviest.axialLoad})`);
 }
 
 console.log(`\nteam-schedule: ${n}/${n} checks passed`);
