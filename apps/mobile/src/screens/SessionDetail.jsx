@@ -7,6 +7,16 @@ import ExerciseInfo from '../components/ExerciseInfo.jsx';
 import { clearChecked } from '../lib/SessionProgress.js';
 import { trackedLiftsInSession, sessionKey } from '@performance-os/engine';
 
+// Measured duration in whole minutes — only when both stamps exist and the value is
+// plausible (5 min – 6 h); an overnight-forgotten completion shows no duration.
+function measuredDuration(state) {
+  if (!state?.startedAt || !state?.completedAt) return null;
+  const mins = Math.round((new Date(state.completedAt) - new Date(state.startedAt)) / 60000);
+  return mins >= 5 && mins <= 360 ? mins : null;
+}
+const fmtWhen = (iso) => new Date(iso).toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' })
+  + ' · ' + new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
 // The single prescription string shown in the compact preview row — sets×reps for
 // strength ("4 × 5"), distance/target for run/swim/cycle. Weight & RPE are
 // deliberately omitted from the preview; they appear set-by-set in the runner.
@@ -298,34 +308,25 @@ export default function SessionDetail() {
               <div style={{ fontSize: 12.5, color: 'var(--txt-muted)', marginTop: 2 }}>Nice work — it's in the log.</div>
             </div>
           )}
-          <div className="callout green" style={{ marginTop: 20 }}>
-            <strong>Completed</strong>
-            {state.completedAt && (
-              <div style={{ fontSize: 12, marginTop: 2, opacity: 0.7 }}>
-                {new Date(state.completedAt).toLocaleString()}
-              </div>
+          <div className="done-card" style={{ marginTop: 20 }}>
+            <div className="dc-head">
+              <span className="dc-badge">✓ Completed</span>
+              {state.completedAt && <span className="dc-when">{fmtWhen(state.completedAt)}</span>}
+            </div>
+            {measuredDuration(state) != null && (
+              <div className="dc-duration">{measuredDuration(state)} min session</div>
             )}
             {state.quality != null && (
-              <div style={{ display: 'flex', gap: 16, marginTop: 10, fontSize: 13 }}>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 18, fontWeight: 700 }}>{state.quality}</div>
-                  <div style={{ fontSize: 10, opacity: 0.7, letterSpacing: '0.08em' }}>QUALITY</div>
-                </div>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 18, fontWeight: 700 }}>{state.energy}</div>
-                  <div style={{ fontSize: 10, opacity: 0.7, letterSpacing: '0.08em' }}>ENERGY</div>
-                </div>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 18, fontWeight: 700 }}>{state.recovery}</div>
-                  <div style={{ fontSize: 10, opacity: 0.7, letterSpacing: '0.08em' }}>RECOVERY</div>
-                </div>
+              <div className="dc-ratings">
+                {[['Quality', state.quality], ['Energy', state.energy], ['Recovery', state.recovery]].map(([label, v]) => (
+                  <div className="dc-rating" key={label}>
+                    <div className="dc-rating-val">{v}</div>
+                    <div className="dc-rating-label">{label}</div>
+                  </div>
+                ))}
               </div>
             )}
-            {state.notes && (
-              <div style={{ fontSize: 13, marginTop: 10, fontStyle: 'italic', opacity: 0.8 }}>
-                "{state.notes}"
-              </div>
-            )}
+            {state.notes && <div className="dc-notes">"{state.notes}"</div>}
           </div>
           <button
             className="btn-secondary"
