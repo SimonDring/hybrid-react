@@ -11,7 +11,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { BLANK_ANSWERS, localISODate, resolveStartDate, answersToProfile } from '../lib/onboardingModel.js';
 import { saveDraft, loadDraft } from '../lib/onboardingDraft.js';
-import { epley1RM, pullupE1RM, suggestGymDays, suggestOptimalFrequency, selectableSports, positionsFor } from '@performance-os/engine';
+import { epley1RM, pullupE1RM, suggestGymDays, suggestOptimalFrequency, selectableSports, positionsFor, EQUIPMENT_TAXONOMY } from '@performance-os/engine';
 
 // ---- Option catalogues ----
 export const GOAL_TYPES = [
@@ -89,6 +89,15 @@ const equipLabel = (equip = []) =>
   EQUIPMENT_PRESETS.find(p => sameSet(equip, p.equip))?.label
   || (equip.length ? equip.map(k => EQUIPMENT_ITEMS.find(i => i.key === k)?.label || k).join(', ') : '—');
 
+// Sprint 3 C3 — "Detail my gym (optional)": the item keys a given quick-preset ships with by
+// default (advisory metadata on EQUIPMENT_TAXONOMY), restricted to bases the user actually has.
+const defaultDetailKeysFor = (presetKey, equip = []) => {
+  const bases = new Set(equip);
+  return EQUIPMENT_TAXONOMY.flatMap(g => g.items)
+    .filter(it => it.defaultFor.includes(presetKey) && bases.has(it.base))
+    .map(it => it.key);
+};
+
 // ---- shared styles ----
 const INPUT = {
   width: '100%', minWidth: 0, maxWidth: '100%', fontSize: 16, padding: '12px 14px', borderRadius: 11, border: '1px solid var(--hairline)',
@@ -150,6 +159,52 @@ function MiniToggle({ on, onClick, label }) {
     }}>{label}</button>
   );
 }
+// Sprint 3 C3 — the optional "Detail my gym" expander: a collapsed row that opens into the
+// EQUIPMENT_TAXONOMY checklist, grouped by station type and restricted to bases the user
+// already picked above (checking off a leg-press machine is meaningless if they said
+// bodyweight-only). `detail` is null until the user opens it — closed & untouched keeps it
+// null so profile.access_detail degrades to today's base-only behaviour.
+function EquipmentDetailExpander({ equipment, detail, open, onToggleOpen, onToggleItem }) {
+  const bases = new Set(equipment || []);
+  const groups = EQUIPMENT_TAXONOMY
+    .map(g => ({ ...g, items: g.items.filter(it => bases.has(it.base)) }))
+    .filter(g => g.items.length > 0);
+  const count = (detail || []).length;
+
+  return (
+    <div style={{ marginTop: 10 }}>
+      <button onClick={onToggleOpen} className={`opt-chip ${open ? 'is-selected' : ''}`} style={{
+        width: '100%', boxSizing: 'border-box', padding: '10px 12px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', textAlign: 'left'
+      }}>
+        <span className="opt-chip-label" style={{ fontSize: 13, fontWeight: 600 }}>Detail my gym (optional)</span>
+        <span style={{ fontSize: 11, color: 'var(--txt-muted)' }}>
+          {count > 0 ? `Detailed (${count} item${count === 1 ? '' : 's'})` : (open ? 'Hide' : 'Show')}
+        </span>
+      </button>
+      {open && (
+        <div style={{ marginTop: 10, display: 'grid', gap: 14 }}>
+          <div style={HINT}>
+            Tell us exactly what's on the floor and we'll narrow exercise selection to match —
+            leave anything unchecked and we'll assume you have the full run of what you picked above.
+          </div>
+          {groups.length === 0 && <div style={HINT}>Nothing to detail for bodyweight-only training.</div>}
+          {groups.map(g => (
+            <div key={g.group}>
+              <label style={FIELD_LABEL}>{g.group}</label>
+              <OptionGrid cols={2} gap={6}>
+                {g.items.map(it => (
+                  <Chip key={it.key} center selected={(detail || []).includes(it.key)}
+                    onClick={() => onToggleItem(it.key)} label={it.label} />
+                ))}
+              </OptionGrid>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 // A quick-test row: a weight + reps (or reps only for pull-ups) with a live e1RM readout.
 function TestRow({ label, weight, reps, onWeight, onReps, e1rm, repsOnly }) {
   return (
@@ -181,7 +236,13 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
   const scrollRef = useRef(null);
 
   const set = (patch) => setA(prev => ({ ...prev, ...patch }));
-  const toggle = (key, listName) => set({ [listName]: a[listName].includes(key) ? a[listName].filter(k => k !== key) : [...a[listName], key] });
+  // (a[listName] || []) — equipmentDetail starts life as null (never opened); every other
+  // list field is always an array, so this is a no-op for them.
+  const toggle = (key, listName) => set({ [listName]: (a[listName] || []).includes(key) ? (a[listName] || []).filter(k => k !== key) : [...(a[listName] || []), key] });
+
+  // Sprint 3 C3: whether the "Detail my gym (optional)" checklist is expanded. Starts open
+  // if a restored draft already has detail captured, so the user sees what they picked.
+  const [equipDetailOpen, setEquipDetailOpen] = useState(() => a.equipmentDetail != null);
 
   // Quick-test scratch (raw weight/reps the user types); the COMPUTED e1RM lands in
   // a.lifts via setLift, tagged 'tested' so the model doesn't re-normalise it.
@@ -439,12 +500,37 @@ export default function OnboardingWizard({ initialAnswers, onComplete, onAnswers
           <div>
             <label style={FIELD_LABEL}>Equipment</label>
             <OptionGrid cols={1} gap={6}>
-              {EQUIPMENT_PRESETS.map(o => <Chip key={o.key} selected={sameSet(a.equipment, o.equip)} onClick={() => set({ equipment: [...o.equip] })} label={o.label} hint={o.hint} />)}
+              {EQUIPMENT_PRESETS.map(o => (
+                <Chip key={o.key} selected={sameSet(a.equipment, o.equip)}
+                  onClick={() => setA(prev => ({
+                    ...prev,
+                    equipment: [...o.equip],
+                    // Detail was never opened → stays skipped. Already engaged → follow the
+                    // new preset's own defaults rather than leaving stale, mismatched picks.
+                    equipmentDetail: prev.equipmentDetail != null ? defaultDetailKeysFor(o.key, o.equip) : null
+                  }))}
+                  label={o.label} hint={o.hint} />
+              ))}
             </OptionGrid>
             <div style={{ ...HINT, marginTop: 8 }}>Or pick exactly what you've got:</div>
             <OptionGrid cols={4}>
               {EQUIPMENT_ITEMS.map(it => <Chip key={it.key} center selected={(a.equipment || []).includes(it.key)} onClick={() => toggle(it.key, 'equipment')} label={it.label} />)}
             </OptionGrid>
+            <EquipmentDetailExpander
+              equipment={a.equipment}
+              detail={a.equipmentDetail}
+              open={equipDetailOpen}
+              onToggleOpen={() => {
+                setEquipDetailOpen(o => !o);
+                // Opening for the first time seeds the checklist from whichever preset
+                // matches the current equipment (empty if it's a custom mix).
+                if (a.equipmentDetail == null) {
+                  const activePreset = EQUIPMENT_PRESETS.find(p => sameSet(a.equipment, p.equip));
+                  set({ equipmentDetail: activePreset ? defaultDetailKeysFor(activePreset.key, a.equipment) : [] });
+                }
+              }}
+              onToggleItem={(key) => toggle(key, 'equipmentDetail')}
+            />
           </div>
           <div><label style={FIELD_LABEL}>Which days suit you? (optional)</label><OptionGrid cols={4}>{DAYS.map(d => <Chip key={d.key} center selected={a.days.includes(d.key)} onClick={() => toggle(d.key, 'days')} label={d.label} />)}</OptionGrid></div>
         </div>
