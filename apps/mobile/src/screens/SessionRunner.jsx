@@ -11,6 +11,7 @@ import SessionOverview from '../components/SessionOverview.jsx';
 import InfoTip from '../components/ui/InfoTip.jsx';
 import { GLOSSARY } from '../data/metricGlossary.js';
 import { buildSteps } from '../lib/runnerSteps.js';
+import { lastLoggedWeightFor } from '../lib/exerciseMeta.js';
 
 const WEIGHT_STEP = 2.5;
 // Midnight palette: primer = teal (the app's primary accent), main = neutral. No rust.
@@ -90,19 +91,28 @@ export default function SessionRunner() {
 
   const step = steps[cursor] || null;
 
+  // Most recent logged weight for this exercise from a PREVIOUS session (loadable core
+  // work with no prescribed target, e.g. Pallof press). Computed once here so the
+  // draft-seeding effect below and the "Last time" hint in the render agree.
+  const lastTime = useMemo(() => {
+    if (!step || step.kind !== 'set' || step.targetWeight != null || !step.collectWeight) return null;
+    return lastLoggedWeightFor(step.exerciseName, setLogsBySession, sessionDbId);
+  }, [cursor]);  // eslint-disable-line react-hooks/exhaustive-deps
+
   // Seed the draft on entering a set step: carry forward the last actual for this
-  // exercise, else fall back to the prescribed target.
+  // exercise, else fall back to the prescribed target, else the last logged weight
+  // from a previous session.
   useEffect(() => {
     if (!step || step.kind !== 'set') return;
     const carried = carryRef.current[step.exerciseName];
     setDraft({
-      weight: carried?.weight ?? step.targetWeight,
+      weight: carried?.weight ?? step.targetWeight ?? lastTime,
       reps: carried?.reps ?? step.targetReps,
       rpe: carried?.rpe ?? step.targetRpe
     });
     setResting(false);
     restingRef.current = false;
-  }, [cursor, steps]);
+  }, [cursor, steps]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   // All steps already logged on entry → straight to completion.
   useEffect(() => {
@@ -278,6 +288,7 @@ export default function SessionRunner() {
                   : (step.collectWeight === true ? ' · pick a load you can hold with good form' : '')}
                 {step.collectRpe !== false ? ` @ RPE ${step.targetRpe}` : ''}
               </div>
+              {lastTime != null && <div className="rn-target">Last time: {lastTime} kg</div>}
 
               <div className="rn-steppers">
                 <Stepper label="Reps" value={draft.reps} onDec={() => bump('reps', -1, 0)} onInc={() => bump('reps', 1)} />
