@@ -371,6 +371,8 @@ export function profileSignature(profile) {
     // plan_start_date anchors EVERY date in the plan (PlanGenerator reads it, never
     // the clock) — a changed start date must bust the memo or dates go stale.
     psd: profile.plan_start_date,
+    // Phase 1 PR B: team fixtures drive MD-relative placement — a fixture change must regenerate.
+    tf: profile.team_fixtures, tmw: profile.team_match_weekday,
     am: athleteModelSignature(profile.athlete_model)
   });
 }
@@ -403,7 +405,11 @@ function generated() {
   if (!profile.focus || profile.focus.length === 0) return null;
   const sig = profileSignature(profile);
   if (_cache.sig !== sig) {
-    _cache = { sig, plan: generatePlan(profile) };
+    // Phase 1 PR B: fixture-aware microcycle ON. activeProfile() already runs
+    // applyTeamSchedule, so team_fixtures/team_match_weekday (when present) drive
+    // MD-relative placement; athletes with no team fixtures are unaffected
+    // (additive-identity — see generator-fixture-microcycle.test.mjs).
+    _cache = { sig, plan: generatePlan(profile, { fixtureMicrocycle: true }) };
   }
   return _cache.plan;
 }

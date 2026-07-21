@@ -121,6 +121,21 @@ const ok = (cond, msg) => { n++; assert.ok(cond, msg); console.log('PASS:', msg)
   // and the baseline DID use Sunday — the assertion above is not vacuous
   ok(base.phases[0].weeks[0].sessions.some((s) => s.dayIdx === 6),
     'the unconstrained baseline trained on Sunday');
+
+  // Phase 1 flip: a fixed-date soccer schedule with a Saturday fixture positions the heavy
+  // day away from MD-1. Uses a FIXED plan_start_date so placement is deterministic.
+  const fixedSoccer = () => answersToProfile({
+    ...BLANK_ANSWERS, goalType: 'sport', sport: 'soccer', skbSport: 'soccer',
+    experienceLevel: 'intermediate', daysPerWeek: 3, days: ['tue', 'thu', 'fri'],
+    strengthAccess: 'full_gym', sportSeason: 'off_season',
+  });
+  const fp = { ...fixedSoccer(), plan_start_date: '2026-07-13' };
+  const sched = { weeklyPattern: PATTERN(['gym', 'gym', 'gym', 'gym', 'gym', 'rest', 'match']),
+    fixtures: [{ id: 'm', type: 'match', label: 'league', date: '2026-07-18' }] };
+  const withSched = applyTeamSchedule(fp, sched, '2026-07-13');
+  const flipped = generatePlan(withSched, { fixtureMicrocycle: true });
+  const fri = flipped.phases[0].weeks[0].sessions.find((s) => s.dayIdx === 4); // Friday = MD-1
+  ok(!fri || fri.axialLoad < 3, `flip: no heavy-axial gym work on Friday (MD-1) (axial ${fri?.axialLoad})`);
 }
 
 console.log(`\nteam-schedule: ${n}/${n} checks passed`);

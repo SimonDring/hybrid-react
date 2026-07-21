@@ -63,4 +63,11 @@ const ok = (c, m) => { n++; assert.ok(c, m); console.log('PASS:', m); };
   const c = mdConstraintsFrom({ avoidHeavyLiftingDays: ['all'], preferExplosiveWorkDays: ['match-day primer only'], heavyDay: 'none', powerDay: 'match-day priming only', recoveryDay: 'every non-match day', injuryPreventionDay: null }, mdOffsetByWeekday);
   ok(c === null, 'unparseable sentinel constraints yield no reshape (null)');
 }
+// PR B prereq — anchor the MD token regex: a widened future SKB vocabulary token like "UMD-3"
+// must NOT mis-parse as "MD-3" (the un-anchored regex would find "MD-3" as a substring of it).
+{
+  const { mdOffsetByWeekday } = mdMapForWeek({ fixtures: [{ dateISO: '2026-07-18', weekdayIdx: 5 }], matchWeekday: null, planStartDate: '2026-07-13', weekNum: 1 });
+  const c = mdConstraintsFrom({ avoidHeavyLiftingDays: ['UMD-3'], preferExplosiveWorkDays: [], heavyDay: null, powerDay: null, recoveryDay: null, injuryPreventionDay: null }, mdOffsetByWeekday);
+  ok(c === null, 'a "UMD-3"-style token is ignored (word-boundary-anchored MD token regex)');
+}
 console.log(`\nfixture-weeks: ${n}/${n} checks passed`);
