@@ -43,6 +43,15 @@ export { aerobicLoad, aerobicDailyLoads } from './src/lib/load/aerobicLoad.js';
 // Phase 2 T2 — governed CTL/ATL/TSB form model (parallel, advisory). Does NOT feed
 // generatePlan or the reflow.
 export { computeForm } from './src/lib/load/form.js';
+// Phase 3 S1 — the Metric Dictionary (DAAS §4.1): the governed normalisation target every
+// ingestion boundary keys on, with validate-on-load + the validateObservation() seam. Its
+// OWN METRIC_DICTIONARY_VERSION (outside the KNOWLEDGE_SET ratchet); read by nothing in the
+// plan path — authored knowledge Phase-3 adapters/surfaces will consume.
+export {
+  METRIC_DICTIONARY, METRIC_DICTIONARY_VERSION, PROVENANCE_CLASSES, RELIABILITY_TAGS,
+  PRIVACY_CLASSES, M5_TABLES, getMetric, isKnownMetric, privacyClassOf, precedenceFor,
+  reliabilityFor, mayCrossToRollUp, validateObservation, assertValidRegistry, entryProblems,
+} from './src/lib/metrics/index.js';
 export { getContraindications, getContraindicatedExercises } from './src/lib/injury/injuryRules.js';
 export { INJURY_CONTRAINDICATIONS, CONTRAINDICATION_VOCAB_VERSION, contraindicationCell, isExerciseContraindicated } from './src/lib/injury/contraindicationVocab.js';
 export { REGIONS, DIAGNOSES } from './src/data/injuryTaxonomy.js';
