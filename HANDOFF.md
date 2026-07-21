@@ -1,6 +1,7 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-20 (Sport-data integration roadmap adopted; Phase 1 PR A merged; Phase 2 underway). This file carries **current
+_Last updated: 2026-07-20 (Sport-data roadmap: Phases 1 & 2 fully merged to main INCL. both flips —
+match-day scheduling + the form model are LIVE and steering plans; Phases 3–4 designed). This file carries **current
 state and the open queue only**. The full session-by-session history (2026-06-11 →
 2026-07-09, ~1,800 lines) is preserved verbatim at
 [`docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md`](docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md).
@@ -28,10 +29,14 @@ SKB (just switched off).
   plan_start_date). Whole-branch reviewed READY-TO-MERGE; byte-identity proven (stamp-only
   golden + manifest re-baseline); 205/205 + engine 30/30 + lint clean. Plan:
   `docs/superpowers/plans/2026-07-17-phase1-matchday-scheduling.md`.
-  **⚠ PR B (the FLIP — turns it on for team athletes) is Simon's:** the congested-week volume
-  cut (defer vs governed knob), sentinel semantics (`"all"`/`"none"`/`"match-day priming"`),
-  MD-penalty weight ordering, + 2 review-flagged prereqs (`\b`-anchor the MD token regex;
-  confirm SKB `preferExplosiveWorkDays` authoring). Task 8 in the plan.
+  **PR B — the FLIP — MERGED to main (PR #225): match-day scheduling is now LIVE** for team
+  athletes with coach fixtures (placement-only). Additive-identity audited (golden: 1 archetype
+  ADDED, 0 existing moved — every fixture-less athlete byte-identical). Prereqs done (`\b`-anchored
+  the MD regex; `preferExplosiveWorkDays` verified authored in all 11 sports). **DEFERRED (Simon's,
+  open):** the congested-week volume cut; sentinel semantics (`"all"`/`"none"`/`"match-day priming"`
+  parse to null → no reshape today). **⚠ Coaching eyeball:** with a Sat fixture the heavy day landed
+  on MD-2 (not the SKB target MD-4) — soft-penalty weights prioritise avoiding MD-1; a one-line
+  `schedulingPolicy.md` tweak pulls it toward MD-4 if wanted.
 - **Phase 2 — aerobic loading + a fitness–fatigue ("form") model. MERGED to main (PR #223, flag OFF).**
   Governed **Banister-TRIMP** aerobic load (`load/aerobicLoad.js`, `load.aerobic.trimp`) + a
   **CTL/ATL/TSB** form model (`load/form.js`, `load.form.model`; TrainingPeaks PMC), KSV
@@ -44,9 +49,17 @@ SKB (just switched off).
   `docs/superpowers/specs|plans/2026-07-20-phase2-aerobic-form-model*`.
   **⚠ Not visually verified:** the Form card's pixel render is behind auth (compile/lint/theme-var
   clean, null-safe, reuses existing styled classes) — a 30-sec glance behind sign-in closes it.
-  **⚠ The FLIP is Simon's** (spec §The flip): aerobic load → live ACWR; form → deload (the review
-  flagged a **corroborator-tiering coaching call** — low-confidence form is currently equal-tier to
-  readiness/recovery); the **D9 dose-shrink**; readout fidelity (per-date restHr, HR-quality→confidence).
+  **The FLIP — MERGED to main (PR #226): the form model now STEERS the runtime.** (A) aerobic
+  Banister-TRIMP is the live ACWR basis (`buildView` uses `aerobicDailyLoads`; closes the two-basis
+  seam — ACWR + form + readiness load-card now share one basis; only HR-bearing workouts change,
+  no-HR/no-workout byte-identical). (B) form → `deloadRecommendation` with **CONSERVATIVE tiering**:
+  `formCorroborates = formFatigued && !(highReadiness && goodRecovery)` — corroborates a high-load
+  deload but never forces alone or against a clearly-fresh athlete (Art 13). **golden byte-identical**
+  (baseline reads neither ACWR nor form); `prop-reflow-baseline` green; 208/208. Reviewer cleared the
+  readiness blast-radius (TRIMP carries 0 weight in the blended readiness *value* — display-only).
+  **DEFERRED (Simon's, open):** the **D9 dose-shrink** (hard aerobic day → lighter lifting that day) —
+  the sharpest coaching call, not built. **Backlog:** a form-specific deload reason string (Art 14);
+  TRIMP-scale heterogeneity within `dl`; readout fidelity (per-date restHr, HR-quality→confidence).
 - **Phase 3 — full sport/match ingestion boundary (DAAS §2.1.5). DESIGN SPEC authored**
   (`docs/superpowers/specs/2026-07-20-phase3-sport-match-ingestion-design.md`). Not built — the
   build is **Supabase schema migrations + RLS** (Simon applies to prod; RLS harness gates). Reuses
