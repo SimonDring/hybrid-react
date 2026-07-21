@@ -13,6 +13,7 @@
  */
 
 import { performanceModelForProfile, selectableSports } from '@performance-os/engine';
+import { explainFocus } from './atlasLanguage.js';
 
 // Presentation config — quality id → athlete-facing label.
 export const QUALITY_LABELS = {
@@ -54,7 +55,8 @@ function sportLabel(profile) {
 /**
  * computeAtlas(profile, asOfISO) →
  *   { label, hasDemand, estimated, pillars: [{ id, label, score, demand|null,
- *     gap, confidence, source, evidence }], focus: { id, label, score, demand, why } | null }
+ *     gap, confidence, source, evidence }],
+ *     focus: { id, label, score, demand, why, headline, meaning, whyItMatters, detail } | null }
  *
  * Pure given (profile, asOf) — the caller passes today's date (UI edge owns the clock).
  */
@@ -91,17 +93,20 @@ export function computeAtlas(profile = {}, asOfISO = null) {
 
   // The focus IS the engine's top limiting factor (D4) — same diagnosis the planner
   // prioritises from, with its own emitted rationale. Build athletes have no
-  // diagnosis, so no focus is invented for them.
+  // diagnosis, so no focus is invented for them. explainFocus (A1) translates it
+  // into plain English; `why` stays for back-compat (see focus.why importers).
+  const sport = sportLabel(profile);
   const lf = (model.limitingFactors || [])[0] || null;
   const focus = lf ? {
     id: lf.qualityId, label: labelOf(lf.qualityId),
     score: pct(lf.capabilityLevel), demand: pct(lf.demandImportance),
     why: lf.rationale,
+    ...explainFocus(lf, { sportLabel: sport }),
   } : null;
 
   const estimated = (model.capabilities || []).some((c) => c.source !== 'measured');
 
-  return { label: sportLabel(profile), hasDemand, estimated, pillars, focus };
+  return { label: sport, hasDemand, estimated, pillars, focus };
 }
 
 export default { computeAtlas, QUALITY_LABELS };
