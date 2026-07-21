@@ -414,6 +414,70 @@ export async function readBlockOutcomes({ limit = 12 } = {}) {
   return rows.filter((r) => !superseded.has(r.id));
 }
 
+// ── Phase 3 S6a: manual pitch/match logging (owner-private M5 evidence tables) ──────
+// Same discipline as appendBlockOutcome: these tables are append-only (a *_no_update
+// trigger rejects UPDATEs), so use plain .insert() — NEVER upsert. clean() stamps user_id
+// for the "own rows insert" RLS check (auth.uid() = user_id). Abstain (null) when offline/
+// signed-out. One logged session becomes several one-metric rows sharing a ref.
+// Returns { ok:true, external, match } on success, { ok:false, reason:'offline' } when
+// signed-out/unconfigured, { ok:false, reason:'error' } on a DB failure — so the caller can
+// message honestly (a signed-in DB error must NOT read as "not signed in").
+// Atomicity: the two tables can't share a client-side transaction, so on a second-insert
+// failure we COMPENSATE — delete the match rows we just inserted (owner-delete RLS) — so a
+// session is never left half-saved and a retry can't duplicate the committed half.
+export async function appendSportSession({ externalRows = [], matchRows = [] } = {}) {
+  if (!canSync()) return { ok: false, reason: 'offline' };
+  const userId = uid();
+  let matchIds = [];
+  if (matchRows.length) {
+    const { data, error } = await supabase
+      .from('match_performances')
+      .insert(matchRows.map((r) => clean(r, userId)))
+      .select('id');
+    if (error) { logError('appendSportSession/match', error); return { ok: false, reason: 'error' }; }
+    matchIds = (data || []).map((r) => r.id);
+  }
+  if (externalRows.length) {
+    const { data, error } = await supabase
+      .from('external_load_observations')
+      .insert(externalRows.map((r) => clean(r, userId)))
+      .select('id');
+    if (error) {
+      logError('appendSportSession/external', error);
+      if (matchIds.length) { // compensating rollback so the session isn't half-saved
+        const del = await supabase.from('match_performances').delete().in('id', matchIds);
+        if (del.error) logError('appendSportSession/rollback', del.error);
+      }
+      return { ok: false, reason: 'error' };
+    }
+    return { ok: true, external: (data || []).length, match: matchIds.length };
+  }
+  return { ok: true, external: 0, match: matchIds.length };
+}
+
+// Read the most-recent sport observations from BOTH M5 tables (owner-private; bounded
+// column lists — no select('*'), TR-03), newest→oldest, superseded rows collapsed out.
+// Returns the raw rows (the store groups them via groupSportObservations). [] offline.
+export async function readSportObservations({ limit = 60 } = {}) {
+  if (!canSync()) return [];
+  const userId = uid();
+  const collapse = (rows) => {
+    const superseded = new Set((rows || []).map((r) => r.supersedes_id).filter(Boolean));
+    return (rows || []).filter((r) => !superseded.has(r.id));
+  };
+  const [m, e] = await Promise.all([
+    supabase.from('match_performances')
+      .select('id, supersedes_id, metric_id, provenance_class, observed_at, played_on, fixture_ref, minutes, availability_status')
+      .eq('user_id', userId).order('observed_at', { ascending: false }).limit(limit),
+    supabase.from('external_load_observations')
+      .select('id, supersedes_id, metric_id, provenance_class, observed_at, observed_on, session_ref, distance_m, high_speed_m, sprint_count, pitch_rpe, raw')
+      .eq('user_id', userId).order('observed_at', { ascending: false }).limit(limit),
+  ]);
+  if (m.error) { logError('readSportObservations/match', m.error); return []; }
+  if (e.error) { logError('readSportObservations/external', e.error); return []; }
+  return [...collapse(m.data), ...collapse(e.data)];
+}
+
 /**
  * Soft-delete all the user's logged training data in the cloud (sessions,
  * check-ins, daily metrics, injuries, reassessments) — but keep the account and

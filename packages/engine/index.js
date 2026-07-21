@@ -52,6 +52,10 @@ export {
   PRIVACY_CLASSES, M5_TABLES, getMetric, isKnownMetric, privacyClassOf, precedenceFor,
   reliabilityFor, mayCrossToRollUp, validateObservation, assertValidRegistry, entryProblems,
 } from './src/lib/metrics/index.js';
+// Phase 3 S6a — the manual pitch/match logging ACL adapter (a second wearable-ACL instance):
+// hand-logged input → dictionary-validated owner-private observation rows. Pure (time/ref via
+// ctx). Read by the app's SyncService/store, never by the plan path.
+export { adaptManualSportEntry, groupSportObservations } from './src/lib/adapters/manualSportEntry.js';
 export { getContraindications, getContraindicatedExercises } from './src/lib/injury/injuryRules.js';
 export { INJURY_CONTRAINDICATIONS, CONTRAINDICATION_VOCAB_VERSION, contraindicationCell, isExerciseContraindicated } from './src/lib/injury/contraindicationVocab.js';
 export { REGIONS, DIAGNOSES } from './src/data/injuryTaxonomy.js';
