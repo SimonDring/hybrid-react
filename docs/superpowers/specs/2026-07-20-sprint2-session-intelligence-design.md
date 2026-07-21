@@ -95,3 +95,10 @@ Implement overnight after Sprint 1. The engine change is additive but touches
 the golden master, so the PR ships with the key-by-key baseline audit in its
 description. Merge autonomously only if the audit shows purely additive keys;
 anything unexpected in the baseline diff → pause for Simon.
+
+## Implementation note (2026-07-20, pre-build discovery)
+
+Plan items ALREADY carry `exId` (WP-46) and the catalogue is already exported to the
+app — so the "thread exerciseId/role through the engine" step in this spec is
+unnecessary. The sprint ships app-only: a classifier resolves items against the
+exported catalogue (by exId, name fallback). No engine change, no golden-master change.
