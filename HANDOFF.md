@@ -112,11 +112,26 @@ SKB (just switched off).
   `supabase/SECURITY-DEPLOY.md` (write migration + ledger row → staging `db push` → rls-harness → prod
   `db push` → deploy Edge Functions separately → relink staging) — Simon applies to prod.
 - **Phase 3 — full sport/match ingestion boundary (DAAS §2.1.5). DESIGN SPEC authored**
-  (`docs/superpowers/specs/2026-07-20-phase3-sport-match-ingestion-design.md`). Not built — the
-  build is **Supabase schema migrations + RLS** (Simon applies to prod; RLS harness gates). Reuses
-  the wearable-ACL pattern + the live M5 owner-private substrate; External Load Observation
+  (`docs/superpowers/specs/2026-07-20-phase3-sport-match-ingestion-design.md`). Reuses the
+  wearable-ACL pattern + the live M5 owner-private substrate; External Load Observation
   (GPS/top-speed/distance/sprints) + Match Performance (minutes/availability/KPIs); manual/file
   first, vendor GPS-vests later; coach sees derived-roll-up only (Arts 11/22).
+  - **S1 — the Metric Dictionary v1: LANDED (PR #231, 2026-07-21).** The governed
+    normalisation target every ingestion boundary keys on (DAAS §4.1) — 13 versioned entries
+    (`vital`/`external-load`/`match-performance`) with semantics + source classes + per-class
+    reliability + precedence + commensurability ruling + privacy class + M5 landing column;
+    validate-on-load throws on any malformed entry; `validateObservation()` is the ingestion
+    seam (rejects unknown id / a provenance class the metric doesn't permit / an out-of-range
+    value); `mayCrossToRollUp()` the privacy hook (raw-vital never crosses, Art 11). Lives at
+    `packages/engine/src/lib/metrics/` with its OWN `METRIC_DICTIONARY_VERSION` — OUTSIDE the
+    KSV ratchet hash set ⇒ **no KSV bump, every golden byte-identical**, read by nothing in the
+    plan path (additive/inert). **No Supabase change** — the M5 tables it targets
+    (`external_load_observations`, `match_performances`, `daily_metrics`) are already on prod
+    (20260713). Spec: `docs/superpowers/specs/2026-07-21-phase3-metric-dictionary-v1-design.md`.
+  - **Still Simon's (the rest of Phase 3):** the ACL **adapters** that WRITE observations +
+    the app **logging surface** (they consume the dictionary — it landed first); any additive
+    column migration (**Supabase schema + RLS, Simon applies to prod; the RLS harness gates**);
+    the CI privacy sweep wiring (reads `mayCrossToRollUp`/privacy classes once a boundary writes).
 - **Phase 4 — AI full-picture (Stage 6/AIGAS). DESIGN NOTE authored**
   (`docs/superpowers/specs/2026-07-20-phase4-ai-full-picture-note.md`). Not started — a dependency,
   not just a deferral: downstream of Phase 3's data + gated on Simon's `AI_ENABLED` go-live (open
