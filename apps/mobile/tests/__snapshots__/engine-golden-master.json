@@ -139905,6 +139905,11 @@
           },
           {
             "importance": 0.7,
+            "reason": "aerialAbility is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "aerialAbility"
+          },
+          {
+            "importance": 0.7,
             "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
             "skbQuality": "changeOfDirection"
           },
@@ -139917,11 +139922,6 @@
             "importance": 0.7,
             "reason": "deceleration is authored in the sport's demand profile (importance 0.7) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
             "skbQuality": "deceleration"
-          },
-          {
-            "importance": 0.6,
-            "reason": "aerialAbility is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
-            "skbQuality": "aerialAbility"
           },
           {
             "importance": 0.5,
