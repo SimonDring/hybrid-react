@@ -98,6 +98,7 @@ export default function SessionDetail() {
   const [notes, setNotes] = useState('');
   const [infoItem, setInfoItem] = useState(null); // exercise tapped for the form guide
   const [injuryBannerOpen, setInjuryBannerOpen] = useState(false);
+  const [justFinished, setJustFinished] = useState(false);
 
   const phase = Plan.getPhase(Number(phaseId));
   const week = phase ? phase.weeks.find(w => w.num === Number(weekNum)) : null;
@@ -109,6 +110,7 @@ export default function SessionDetail() {
     setShowForm(false);
     setRatings({ quality: null, energy: null, recovery: null });
     setNotes('');
+    setJustFinished(false);
   }, [key]);
 
   // The runner sends the athlete back here with ?finish=1 when the last set is done —
@@ -182,6 +184,7 @@ export default function SessionDetail() {
     setShowForm(false);
     setRatings({ quality: null, energy: null, recovery: null });
     setNotes('');
+    setJustFinished(true);
   };
 
   const handleUncomplete = () => {
@@ -288,6 +291,13 @@ export default function SessionDetail() {
       {/* Completion state */}
       {isDone && (
         <>
+          {justFinished && (
+            <div style={{ textAlign: 'center', marginTop: 20 }}>
+              <div style={{ fontSize: 34 }}>🎉</div>
+              <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--txt-strong)', marginTop: 4 }}>Session complete</div>
+              <div style={{ fontSize: 12.5, color: 'var(--txt-muted)', marginTop: 2 }}>Nice work — it's in the log.</div>
+            </div>
+          )}
           <div className="callout green" style={{ marginTop: 20 }}>
             <strong>Completed</strong>
             {state.completedAt && (
@@ -338,6 +348,9 @@ export default function SessionDetail() {
               />
             );
           })()}
+          <button className="btn-primary" style={{ marginTop: 16, width: '100%' }} onClick={() => navigate('/')}>
+            Return home
+          </button>
         </>
       )}
 
