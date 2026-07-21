@@ -228,7 +228,12 @@ export const useTrainingStore = create((set) => ({
     const { ok, errors, externalRows, matchRows } = adaptManualSportEntry(input || {}, ctx);
     if (!ok) return { ok: false, errors };
     const res = await appendSportSession({ externalRows, matchRows });
-    if (res == null) return { ok: false, errors: ['Not signed in — sign in to save your session.'] };
+    if (!res.ok) {
+      const text = res.reason === 'offline'
+        ? 'Not signed in — sign in to save your session.'
+        : 'Couldn\'t save your session — please try again.';
+      return { ok: false, errors: [text] };
+    }
     await useTrainingStore.getState().loadPitchSessions();
     return { ok: true, warnings: errors };
   },
@@ -281,6 +286,7 @@ export const useTrainingStore = create((set) => ({
     }
     useTrainingStore.getState().refreshTeamStatus();   // the coach board reflects sign-in state
     useTrainingStore.getState().refreshTeamSchedule(); // coach-set constraints reach the plan
+    useTrainingStore.getState().loadPitchSessions();   // hand-logged sessions surface app-wide (Health tile, etc.)
     return result;
   },
 

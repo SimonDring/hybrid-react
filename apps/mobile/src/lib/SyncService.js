@@ -419,27 +419,40 @@ export async function readBlockOutcomes({ limit = 12 } = {}) {
 // trigger rejects UPDATEs), so use plain .insert() — NEVER upsert. clean() stamps user_id
 // for the "own rows insert" RLS check (auth.uid() = user_id). Abstain (null) when offline/
 // signed-out. One logged session becomes several one-metric rows sharing a ref.
+// Returns { ok:true, external, match } on success, { ok:false, reason:'offline' } when
+// signed-out/unconfigured, { ok:false, reason:'error' } on a DB failure — so the caller can
+// message honestly (a signed-in DB error must NOT read as "not signed in").
+// Atomicity: the two tables can't share a client-side transaction, so on a second-insert
+// failure we COMPENSATE — delete the match rows we just inserted (owner-delete RLS) — so a
+// session is never left half-saved and a retry can't duplicate the committed half.
 export async function appendSportSession({ externalRows = [], matchRows = [] } = {}) {
-  if (!canSync()) return null;
+  if (!canSync()) return { ok: false, reason: 'offline' };
   const userId = uid();
-  const result = { external: 0, match: 0 };
+  let matchIds = [];
   if (matchRows.length) {
     const { data, error } = await supabase
       .from('match_performances')
       .insert(matchRows.map((r) => clean(r, userId)))
       .select('id');
-    if (error) { logError('appendSportSession/match', error); return null; }
-    result.match = (data || []).length;
+    if (error) { logError('appendSportSession/match', error); return { ok: false, reason: 'error' }; }
+    matchIds = (data || []).map((r) => r.id);
   }
   if (externalRows.length) {
     const { data, error } = await supabase
       .from('external_load_observations')
       .insert(externalRows.map((r) => clean(r, userId)))
       .select('id');
-    if (error) { logError('appendSportSession/external', error); return null; }
-    result.external = (data || []).length;
+    if (error) {
+      logError('appendSportSession/external', error);
+      if (matchIds.length) { // compensating rollback so the session isn't half-saved
+        const del = await supabase.from('match_performances').delete().in('id', matchIds);
+        if (del.error) logError('appendSportSession/rollback', del.error);
+      }
+      return { ok: false, reason: 'error' };
+    }
+    return { ok: true, external: (data || []).length, match: matchIds.length };
   }
-  return result;
+  return { ok: true, external: 0, match: matchIds.length };
 }
 
 // Read the most-recent sport observations from BOTH M5 tables (owner-private; bounded

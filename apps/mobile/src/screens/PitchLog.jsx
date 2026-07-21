@@ -53,7 +53,7 @@ export default function PitchLog() {
 
   useEffect(() => { loadPitchSessions(); }, [loadPitchSessions]);
 
-  const canSave = num(minutes) != null || rpe != null;
+  const canSave = num(minutes) != null || rpe != null || availability != null;
 
   async function save() {
     setBusy(true); setMsg(null);
@@ -64,7 +64,8 @@ export default function PitchLog() {
       availability: availability ?? undefined,
       // GPS (third-party) — convert friendly units to the dictionary's canonical m / m·s⁻¹
       distanceM: num(distanceKm) != null ? Math.round(num(distanceKm) * 1000) : undefined,
-      sprintCount: num(sprints),
+      sprintCount: num(sprints) != null ? Math.round(num(sprints)) : undefined, // int column
+
       topSpeedMs: num(topSpeedKmh) != null ? Number((num(topSpeedKmh) / 3.6).toFixed(2)) : undefined,
     };
     const res = await logPitchSession(input);
@@ -132,7 +133,7 @@ export default function PitchLog() {
                 onChange={e => setDistanceKm(e.target.value)} placeholder="e.g. 8.2" style={inputStyle} />
             </Field>
             <Field label="Sprints">
-              <input type="number" inputMode="numeric" min="0" value={sprints}
+              <input type="number" inputMode="numeric" min="0" step="1" value={sprints}
                 onChange={e => setSprints(e.target.value)} placeholder="e.g. 14" style={inputStyle} />
             </Field>
             <Field label="Top speed (km/h)">
