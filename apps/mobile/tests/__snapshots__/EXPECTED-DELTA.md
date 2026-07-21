@@ -24,16 +24,20 @@ neither is present.
 
 ---
 
-## 2026-07-21 — mobility loadClass closure (chip fix; KSV 1.50.0 → 1.51.0)
-- Changed archetypes (content): **none.** Stamp-only (`knowledgeSetVersion` 1.50.0 → 1.51.0; non-stamp diff empty). Manifest re-baselined.
+## 2026-07-21 — merge of main (PRs #223–#230) into the overnight branch (KSV renumber 1.48–1.51 → 1.53–1.56)
+- Main and this branch both bumped KSV from 1.47.0 independently (main: MD penalties/Phase-2/MD-4/D9 → 1.52.0; this branch: B2/B3/C1/mobility-chip → its own 1.48–1.51). On merge, this branch's four bumps were RENUMBERED to 1.53.0–1.56.0 on top of main's 1.52.0 (entries below edited to match; content unchanged).
+- Post-merge audit (JSON-level, stamp-scrubbed, all 47 archetypes incl. main's new fixture archetype): net delta vs main = KSV stamps 1.52.0 → 1.56.0 + the SAME two positioned archetypes as before the merge (outside-backs: B1 droppedDemands row + B2 hinge swap; goalkeeper: B2 reactive-squat swap). **No interaction deltas** between main's match-day/form work and this branch's position/equipment work. 217/217 tests green.
+
+## 2026-07-21 — mobility loadClass closure (chip fix; KSV 1.55.0 → 1.56.0)
+- Changed archetypes (content): **none.** Stamp-only (`knowledgeSetVersion` 1.55.0 → 1.56.0; non-stamp diff empty). Manifest re-baselined.
 - Why: hip_flexor_90_90 / cat_camel_thoracic / thoracic_foam_roller gained `loadClass: 'health'` (zero volume, supportive structuring — the catalogue's own authored intent). No fixture selects these three as main items, so no plan content moves; real plans that do select them change structure/volume-credit. Commit fa7b971 carries the audit.
 - Claim: no archetype content moved — stamp-only.
 
-## 2026-07-21 — Sprint 3 C1: equipment taxonomy + detailed-availability layer (inert; KSV 1.49.0 → 1.50.0)
+## 2026-07-21 — Sprint 3 C1: equipment taxonomy + detailed-availability layer (inert; KSV 1.54.0 → 1.55.0)
 - Changed archetypes (content): **none.** Stamp-only (non-stamp diff empty). Manifest re-baselined (+ data/equipmentTaxonomy.js; 14 catalogue entries gained `equipDetail` tags — availability unchanged when no `access_detail` is provided, which is true of every fixture).
 - Claim: no archetype content moved — stamp-only. (C2's selection wiring is lib-only, no KSV bump, golden fully byte-identical.)
 
-## 2026-07-21 — Sprint 3 B3: position injury-prevention nudge (ships ON, tier≥3-bounded; KSV 1.48.0 → 1.49.0)
+## 2026-07-21 — Sprint 3 B3: position injury-prevention nudge (ships ON, tier≥3-bounded; KSV 1.53.0 → 1.54.0)
 - Changed archetypes (content): **none.** Stamp-only (non-stamp diff empty). Manifest re-baselined (26 positions gained structured `commonInjuryRegions`; new governed `SELECTION_SCORING.positionInjuryPreventionWeight` 0.1).
 - Why: the nudge is gated to tier ≥ 3 (prehab must never displace a tier-1/2 anchor), and no positioned fixture surfaces a reorderable tier-3+ prevention accessory — so the mechanism is live but currently inert in fixtures (unit-proven in tests/position-prevention.js). Whether prevention should steer more strongly is an open coaching call (Simon).
 - Claim: no archetype content moved — stamp-only.
@@ -44,13 +48,13 @@ neither is present.
 - Why: Sprint 3 Task B1 (docs/superpowers/specs/2026-07-20-sprint3-coaching-depth-design.md §B) — a position's `secondaryQualities` now floor demand at 0.7, the way primaries floor at 0.9. Outside-backs' other secondaries (acceleration 0.8, explosivePower→explosiveStrength 0.8) already sat ≥ 0.7; soccer goalkeeper's (stability 0.7) sat exactly at the floor — so this one dropped-side row is the entire fixture delta. Projected-side raises are unit-proven (tests/demand-position-secondary.js, soccer Striker reactiveStrength 0.6 → 0.7). Commit c5189aa carries the full audit.
 - Claim: no other archetype moved (audited key-by-key; positionless profiles byte-identical).
 
-## 2026-07-21 — Sprint 3 B2: position priority-pattern nudge (ships ON; KSV 1.47.0 → 1.48.0)
+## 2026-07-21 — Sprint 3 B2: position priority-pattern nudge (ships ON; KSV 1.52.0 → 1.53.0)
 - Changed archetypes (content): **2** — `sport·rugby·advanced·off·4d·position-outside-backs` and `sport·soccer·intermediate·off·3d·position-goalkeeper` (the only two POSITIONED team-sport fixtures).
 - Added archetypes: none.
 - Keys that moved, per archetype:
   - rugby outside-backs: one main-slot `exId` `barbell_row` (hpull) → `glute_ham_raise` (hinge) — the position's hinge priority (eccentric hamstring / Nordic, its non-negotiable) lifted a hinge driver over an hpull of the same tier.
   - soccer goalkeeper: one accessory `exId` `calf_raise` (calf iso) → `depth_jump` (squat-pattern reactive jump) — the position's squat priority lifted a reactive squat-pattern jump over a calf iso.
-  - plus `meta.provenance.knowledgeSetVersion` 1.47.0 → 1.48.0 on **every** archetype (the new governed weight + SKB data bumps the knowledge-set version).
+  - plus `meta.provenance.knowledgeSetVersion` 1.52.0 → 1.53.0 on **every** archetype (the new governed weight + SKB data bumps the knowledge-set version).
 - Why: Sprint 3 Task B2 — the five team-sport SKB positions gained a structured `priorityPatterns` list (authored from their gymPriorities prose), and D11 (`lib/plan/selectInterventions.js`) gained a small ADDITIVE governed nudge (`SELECTION_SCORING.positionPatternWeight` = 0.1) preferring candidates whose pattern is on the athlete's position list. Additive ⇒ re-orders within a quality tier only; NUDGE not gate (candidate pool identical — proven in `tests/position-priority-patterns.js`).
 - Claim: no other archetype's content moved (audited key-by-key against this note; every non-positioned archetype is a pure stamp-only diff). Manifest re-baselined for the new/changed governed files.
 

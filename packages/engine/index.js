@@ -37,6 +37,12 @@ export {
   dailyLoads, acuteChronic, acwr, acwrSeries, loadDecision, acwrBand,
   combinedMultiplier, deloadRecommendation, sessionLoad, workoutLoad
 } from './src/lib/plan/trainingLoad.js';
+// Phase 2 T1 — governed Banister-TRIMP aerobic load (parallel; the form model's own
+// load basis). Does NOT feed generatePlan or the live ACWR path above.
+export { aerobicLoad, aerobicDailyLoads } from './src/lib/load/aerobicLoad.js';
+// Phase 2 T2 — governed CTL/ATL/TSB form model (parallel, advisory). Does NOT feed
+// generatePlan or the reflow.
+export { computeForm } from './src/lib/load/form.js';
 export { getContraindications, getContraindicatedExercises } from './src/lib/injury/injuryRules.js';
 export { INJURY_CONTRAINDICATIONS, CONTRAINDICATION_VOCAB_VERSION, contraindicationCell, isExerciseContraindicated } from './src/lib/injury/contraindicationVocab.js';
 export { REGIONS, DIAGNOSES } from './src/data/injuryTaxonomy.js';
@@ -100,6 +106,7 @@ export { INTERVENTION_CLASS, interventionClassFor } from './src/data/interventio
 // M6(c) phase 2 — D8 Weekly Objective (microcycle): consumes the SKB `microcycles` section by
 // fixture density. PARALLEL v0 — steers nothing yet (flag-gated reshaping is a later flip).
 export { deriveWeeklyObjective } from './src/lib/microcycle/weeklyObjective.js';
+export { mdMapForWeek, mdConstraintsFrom } from './src/lib/microcycle/fixtureWeeks.js';
 export { readinessValidation } from './src/lib/indices/readinessValidation.js';
 // WP-49 (Plan 1) — the discipline + secondary-goal knowledge foundation (STAGED,
 // never engine-consumed yet; Plan 2 flips build onto this).

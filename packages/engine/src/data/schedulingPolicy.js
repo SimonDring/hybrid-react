@@ -26,6 +26,30 @@ export const SCHEDULING_PENALTIES = {
     sameMusclePerGroup: 3,
     hardHard: 2,
   },
+  // Match-day microcycle shaping (Phase 1; flag-gated fixtureMicrocycle). Soft nudges that
+  // position gym work around a fixture: heavy far from the match, power close, recovery after.
+  // Weighted BELOW adjacent.sameMusclePerGroup (14) so MD shaping refines placement without
+  // overriding muscle-recovery spacing. Evidence L5 (heuristic ordinal — no literature fixes a
+  // number; the ORDERING is the knowledge: a heavy lift inside MD-1/MD/MD+1 is the worst case).
+  // Confidence low. See docs/superpowers/specs/2026-07-17-sport-data-integration-roadmap-design.md.
+  //
+  // heavyOffTargetDayPerStep raised 2→4 (2026-07-21 refinement): heavy day should PREFER
+  // landing on MD-4/MD-3 (the SKB target), not merely avoid MD-1/MD/MD+1 — 2 was too weak
+  // against the avoid-MD-1 term (12) and same-muscle-adjacent spacing (14), so heavy would
+  // settle for an off-target day rather than the target one whenever avoidance was already
+  // satisfied. 4 is the largest step that keeps heavyOffTargetDayPerStep × 3 (the max
+  // weekday distance) ≤ adjacent.sameMusclePerGroup (14) — so the preference nudge can never
+  // outweigh genuine muscle-recovery spacing, per the ORDERING this file already commits to.
+  // Reaching MD-4/MD-3 in every case (incl. when the accessory days are plyometric-loaded,
+  // where the 48–72 h plyo-spacing rule — doseSchemes.REACTIVE_LIMITS — is the actual
+  // "unavoidable constraint" forcing heavy to stay off-target) needs a stronger step (6) that
+  // breaches this cap; deliberately not taken here — see coaching-refinements-report.md.
+  md: {
+    heavyOnAvoidDay: 12,          // heavy + high-axial gym work on MD-1/MD/MD+1
+    hardOnRecoveryDay: 6,         // any hard session on the MD+1 recovery day
+    powerOffPreferredDay: 4,      // power/plyo work NOT on a preferred (MD-2/MD-3) day
+    heavyOffTargetDayPerStep: 4,  // × weekday distance from the nearest heavy-target (MD-4/MD-3) day — prefers MD-4/MD-3, capped so muscle-recovery spacing still wins when it genuinely conflicts
+  },
 };
 
 export default { SCHEDULING_PENALTIES };

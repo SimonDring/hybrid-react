@@ -56,3 +56,33 @@ export function loadVerdict(load, adaptation) {
   const note = (adaptation && !adaptation.reverted && adaptation.reason) ? adaptation.reason : base.note;
   return { tone: base.tone, label: base.label, note, color: TONE[base.tone] };
 }
+
+// FORM: plain-language read of computeForm()'s {ctl,atl,tsb,band,confidence,rationale}
+// (packages/engine). 'fresh' = positive TSB (recovered, good day to push); 'fatigued' =
+// negative TSB (carrying fatigue, ease off); 'neutral' = balanced form — reads as caution/
+// steady content-wise, distinct from the true no-data 'neutral' tone used when band is null.
+const FORM = {
+  fresh:    { tone: 'positive', label: 'Fresh',    headline: 'Fresh — good day to push',   note: "Your form's up — you're recovered. Good day to push." },
+  neutral:  { tone: 'caution',  label: 'Balanced', headline: 'Balanced — train as planned', note: 'Your form is steady — train as planned.' },
+  fatigued: { tone: 'strain',   label: 'Fatigued', headline: 'Fatigued — ease off today',   note: "Your form's negative — you're carrying fatigue. Ease off and let it absorb." }
+};
+
+export function formVerdict(form) {
+  const band = form && form.band;
+  const base = FORM[band];
+  if (!base) {
+    return {
+      tone: 'neutral',
+      label: 'Building baseline',
+      headline: 'Building your baseline',
+      note: 'A few more sessions and your form trend appears here.',
+      color: TONE.neutral
+    };
+  }
+  let note = base.note;
+  if (form.confidence != null && form.confidence < 0.5) {
+    const caveat = confidenceNote(form.confidence);
+    if (caveat) note = `${note} ${caveat}`;
+  }
+  return { tone: base.tone, label: base.label, headline: base.headline, note, color: TONE[base.tone] };
+}

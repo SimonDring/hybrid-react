@@ -13,7 +13,7 @@
 import { create } from 'zustand';
 import Database from '../lib/Database.js';
 import Sync, { pullFromSupabase, runSessionDMigration, drainOutbox, syncFitbit, syncStrava, checkConnections, setDevicePrimary, linkWorkout, unlinkWorkout, enrichSessions } from '../lib/SyncService.js';
-import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, dailyLoads, acuteChronic, acwr, acwrSeries, acwrBand, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex } from '@performance-os/engine';
+import { nextE1RM, resolveLifts, substituteOptions, getGymLevel, computeReadiness, acuteChronic, acwr, acwrSeries, acwrBand, sessionLoad, assessRecovery, recoveryFromScore, assessLoad, readinessIndex, aerobicDailyLoads, computeForm } from '@performance-os/engine';
 import { setRuntime, currentAdaptation, sessionDiscipline, getWeek, withinEpoch, adaptedSessionByKey } from '../lib/PlanService.js';
 import * as Plan from '../lib/PlanService.js';
 import { consistencyGoal } from '../lib/goals.js';
@@ -92,7 +92,18 @@ function buildView() {
   const today = new Date().toISOString().split('T')[0];
   const sessionLogsAll = Database.tables.sessionLogs.all();
   const workoutsAll = Database.tables.workouts.all();
-  const dl = dailyLoads(sessionLogsAll, workoutsAll);
+  const latestMetric = [...dailyMetrics].sort((a, b) => (b.date || '').localeCompare(a.date || ''))[0] || {};
+  const profileRow = Database.services.getProfile() || {};
+  // Phase 2 flip (2026-07-21): the live ACWR basis is now the governed Banister-TRIMP
+  // aerobic load (aerobicDailyLoads) instead of the crude duration×3 workout proxy —
+  // the SAME basis Phase 2 T4 built for the form readout below, so the seam closes:
+  // form and the live ACWR now share one load basis. restHr/sex/age derive from the
+  // athlete's own recent metrics/profile (aerobicLoad() falls back internally when
+  // any of them is absent). See docs/superpowers/specs/2026-07-20-phase2-aerobic-form-model-design.md.
+  const restHr = latestMetric.resting_hr ?? null;
+  const sex = profileRow.sex ?? null;
+  const age = profileRow.age ?? null;
+  const dl = aerobicDailyLoads(sessionLogsAll, workoutsAll, { restHr, maxHr: null, sex, age });
   const ac = acuteChronic(dl, today);
   const acwrVal = acwr(ac);
   // Load contract (ACWR demoted to a soft input). Recovery contract blends objective
@@ -100,8 +111,6 @@ function buildView() {
   // mood — dormant until captured) + illness/travel flags. See src/lib/{load,recovery}/.
   const loadOut = assessLoad({ acwrVal, recentAcwr: acwrSeries(dl, today, 4) });
   const objectiveScore = computeReadiness(dailyMetrics, logs).score;
-  const latestMetric = [...dailyMetrics].sort((a, b) => (b.date || '').localeCompare(a.date || ''))[0] || {};
-  const profileRow = Database.services.getProfile() || {};
   const readinessV2 = profileRow.readiness_v2 !== false;   // evidence-based weighting is the DEFAULT; set readiness_v2:false to opt out
 
   // Derived Readiness Index — the physiological index breakdown. Computed once, reused
@@ -132,7 +141,16 @@ function buildView() {
       travel: !!latestMetric.travel
     });
 
-  setRuntime({ sessions, recovery: recoveryOut, load: loadOut });
+  // Form (fitness/fatigue) readout — a PARALLEL, advisory CTL/ATL/TSB read of the
+  // athlete's own aerobic load history (Phase 2 T4), sharing the SAME TRIMP-based
+  // daily-load basis as the live ACWR above (Phase 2 flip — the seam closes: one
+  // load basis feeds both). formView is still not read by generatePlan/the pure
+  // baseline (byte-identical there) — but Phase 2 flip (B) now threads it into
+  // setRuntime below so the RUNTIME deload decision can use it as a corroborator
+  // (deloadRecommendation's conservative form-tiering; packages/engine/src/lib/plan/trainingLoad.js).
+  const formView = computeForm(dl, { asOf: today });
+
+  setRuntime({ sessions, recovery: recoveryOut, load: loadOut, form: formView });
 
   // Load view-model: acute/chronic/acwr + recent session loads (newest first).
   // WP-57: the band derives from the engine's ONE governed classifier — these
@@ -161,6 +179,7 @@ function buildView() {
     injuries:     Database.services.listInjuries(),
     dailyMetrics,
     load:         loadView,
+    formView,
     readiness:    readinessIx,
     adaptation:   currentAdaptation(),
     syncing:      false,

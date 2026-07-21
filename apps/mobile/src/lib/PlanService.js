@@ -51,7 +51,7 @@ function activeProfile() {
 // The store supplies an immutable runtime SNAPSHOT — swapped whole on every
 // setRuntime, frozen so nothing can mutate it in place. Every read goes through
 // runtime(); the external setRuntime signature is unchanged (store + tests).
-let _snapshot = Object.freeze({ sessions: Object.freeze({}), recovery: null, load: null });
+let _snapshot = Object.freeze({ sessions: Object.freeze({}), recovery: null, load: null, form: null });
 const runtime = () => _snapshot;
 let _adaptCache = { key: null, phases: null };
 let _lastForgiven = null;   // per-muscle sets left unscheduled last reflow (over the safe ceiling)
@@ -60,7 +60,13 @@ export function setRuntime(rt = {}) {
   _snapshot = Object.freeze({
     sessions: rt.sessions || {},
     recovery: rt.recovery ?? null,
-    load: rt.load ?? null
+    load: rt.load ?? null,
+    // form (Phase 2 flip): the store's CTL/ATL/TSB form readout — a corroborator ONLY
+    // in deloadRecommendation's conservative tiering (packages/engine/src/lib/plan/
+    // trainingLoad.js), never a gate on its own (Art 13). PlanService stays opaque to
+    // it — it never imports the form/aerobic-load engine modules directly (those live
+    // only in trainingStore.js), it just carries whatever the store hands it through.
+    form: rt.form ?? null
   });
 }
 
@@ -208,7 +214,7 @@ function adaptedPhases() {
   const cwWeek = g.phases.flatMap(p => p.weeks || []).find(w => w.num === cw) || {};
   const rec = reverted ? { action: 'none', reason: null } : deloadRecommendation({
     loadAction, readiness: recovery ? recovery.score : null, recentRecovery,
-    illness: override === 'rest', scheduledDeload: !!cwWeek.deload
+    illness: override === 'rest', scheduledDeload: !!cwWeek.deload, form: runtime().form
   });
   // Memo-key band mirrors deloadRecommendation's cut-points — read from the same
   // KB entry so the mirror can't drift from the decision it caches for.
@@ -245,7 +251,7 @@ function adaptedPhases() {
     phases: g.phases, currentWeek: cw, today, gctx: gymCtx(profile), profile,
     sessions: runtime().sessions, recovery, load, reverted, overrides, activeInjuries,
     dateFor: dateForSession, totalWeeks: totalWeeks(),
-    startDate: getStartDate(), startISO: epochStartISO(),
+    startDate: getStartDate(), startISO: epochStartISO(), form: runtime().form,
   });
   _lastForgiven = forgiven;
   _adaptCache = { key, phases };
@@ -371,6 +377,8 @@ export function profileSignature(profile) {
     // plan_start_date anchors EVERY date in the plan (PlanGenerator reads it, never
     // the clock) — a changed start date must bust the memo or dates go stale.
     psd: profile.plan_start_date,
+    // Phase 1 PR B: team fixtures drive MD-relative placement — a fixture change must regenerate.
+    tf: profile.team_fixtures, tmw: profile.team_match_weekday,
     am: athleteModelSignature(profile.athlete_model)
   });
 }
@@ -403,7 +411,11 @@ function generated() {
   if (!profile.focus || profile.focus.length === 0) return null;
   const sig = profileSignature(profile);
   if (_cache.sig !== sig) {
-    _cache = { sig, plan: generatePlan(profile) };
+    // Phase 1 PR B: fixture-aware microcycle ON. activeProfile() already runs
+    // applyTeamSchedule, so team_fixtures/team_match_weekday (when present) drive
+    // MD-relative placement; athletes with no team fixtures are unaffected
+    // (additive-identity — see generator-fixture-microcycle.test.mjs).
+    _cache = { sig, plan: generatePlan(profile, { fixtureMicrocycle: true }) };
   }
   return _cache.plan;
 }

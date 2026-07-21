@@ -181,18 +181,20 @@ export function recentSessionRecovery(sessions, startISO, n = 4) {
 export function reflowPhases({
   phases: basePhases, currentWeek: cw, today, gctx, profile,
   sessions, recovery, load, reverted, overrides, activeInjuries,
-  dateFor, totalWeeks, startDate, startISO,
+  dateFor, totalWeeks, startDate, startISO, form = null,
 }) {
   const weeksTouched = [cw, cw + 1];               // the horizon spans at most two weeks
   const override = recovery ? recovery.sessionOverride : null;   // illness('rest') / travel('easy')
   const loadAction = load && load.inputs ? load.inputs.action : 'none';
 
   // Adaptive deload (F9): promote fatigue into a TRUE deload, or DEFER a planned one.
+  // form (Phase 2 flip): the athlete's CTL/ATL/TSB readout, corroborating only —
+  // see deloadRecommendation's conservative tiering (trainingLoad.js).
   const recentRecovery = recentSessionRecovery(sessions, startISO);
   const cwWeek = basePhases.flatMap((p) => p.weeks || []).find((w) => w.num === cw) || {};
   const rec = reverted ? { action: 'none', reason: null } : deloadRecommendation({
     loadAction, readiness: recovery ? recovery.score : null, recentRecovery,
-    illness: override === 'rest', scheduledDeload: !!cwWeek.deload
+    illness: override === 'rest', scheduledDeload: !!cwWeek.deload, form
   });
 
   // SKB decision rules (sport-specific) → conservative reflow modifiers.
@@ -254,6 +256,12 @@ export function reflowPhases({
     recovery ? recovery.volumeModifier : 1,
     { action: loadAction, multiplier: load ? load.loadModifier : 1 }
   );
+  // D9 dose-shrink (Phase 2 flip follow-up): form-fatigued → a gentle volume trim, capped via
+  // Math.min (not multiplied) so a deload that already cut mult below the trim floor is never
+  // double-counted — this only bites in the "fatigued but not deloading" middle zone.
+  const DOSE = kb.value('load.form.dose');
+  const formMult = (form && form.band === 'fatigued') ? DOSE.fatiguedVolumeMult : 1;
+  mult = Math.min(mult, formMult);
   const travelPolicy = kb.value('recovery.travel_policy');
   if (!reverted && override === 'easy') mult = Math.min(mult, travelPolicy.volumeCap);
   mult *= ruleAdj.volumeMult;

@@ -116,4 +116,12 @@ assert(sig({ sport_season: 'in' }) !== sig(), 'T15 sport_season still invalidate
 assert(sig({ plan_start_date: '2026-07-20' }) !== sig(),
   'T16 plan_start_date change invalidates (all plan dates anchor to it)');
 
+// ── Phase 1 PR B: team fixtures drive MD-relative placement (generatePlan now always
+// runs with fixtureMicrocycle:true) — a fixture change must regenerate or a coach's
+// updated schedule keeps serving the old, un-reshaped plan ────────────────────────
+assert(sig({ team_fixtures: [{ dateISO: '2026-07-18', weekdayIdx: 5 }] }) !== sig(),
+  'T17 team_fixtures change invalidates (drives fixture-aware MD placement)');
+assert(sig({ team_match_weekday: 5 }) !== sig(),
+  'T18 team_match_weekday change invalidates (recurring MD fallback anchor)');
+
 console.log('\nplan-memo-signature: done.');

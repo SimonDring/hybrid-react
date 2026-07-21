@@ -1,6 +1,8 @@
 # Project Handoff — state of play
 
-_Last updated: 2026-07-21 (overnight UX/coaching-depth branch complete, PR open — DO NOT MERGE until Simon's other in-flight branch lands and B/C are reviewed). This file carries **current
+_Last updated: 2026-07-21 (overnight UX/coaching-depth branch complete — PR #228 open, DO NOT MERGE
+until Simon reviews B/C; branch merged up to main incl. the sport-data roadmap flips — match-day
+scheduling + the form model are LIVE on main). This file carries **current
 state and the open queue only**. The full session-by-session history (2026-06-11 →
 2026-07-09, ~1,800 lines) is preserved verbatim at
 [`docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md`](docs/archive/HANDOFF-HISTORY-2026-06--2026-07.md).
@@ -11,8 +13,10 @@ move it to the archive file rather than letting this one grow._
 
 Simon's 2026-07-20 fix list, executed as three sprints (specs + plans in
 `docs/superpowers/{specs,plans}/2026-07-20-sprint*`); every task subagent-implemented,
-per-task reviewed, whole-branch reviewed (verdict: ready for PR). Suite 214/214, lint 0
-errors, KSV **1.51.0** on the branch.
+per-task reviewed, whole-branch reviewed (verdict: ready for PR). Suite 217/217 after
+merging main (PRs #223–#230 incl. the sport-data flips) into the branch, lint 0 errors,
+KSV **1.56.0** on the branch (this branch's four bumps renumbered 1.53–1.56 above main's
+1.52.0 in the merge — see `EXPECTED-DELTA.md`'s merge note).
 
 - **Sprint 1 (app-only UX):** selection-contrast fix (real `.rating-btn` class-mismatch
   bug + shared `.opt-chip`/`.is-selected` treatment), rest timer plan-driven only
@@ -35,14 +39,90 @@ errors, KSV **1.51.0** on the branch.
   + D14 coverage fallback + onboarding expander; no-detail behaviour byte-identical
   (acceptance-tested).
 - **Root-cause chip fix (Simon-initiated):** the 3 mobility catalogue entries gained
-  `loadClass: 'health'` (KSV 1.51.0, stamp-only).
-- **Golden net delta (audited; entries in `EXPECTED-DELTA.md`):** KSV 1.47.0→1.51.0
-  stamps + B1's one droppedDemands row + B2's two positioned-archetype swaps. Nothing else.
+  `loadClass: 'health'` (stamp-only).
+- **Golden net delta vs main (audited post-merge; entries in `EXPECTED-DELTA.md`):**
+  KSV 1.52.0→1.56.0 stamps + B1's one droppedDemands row + B2's two positioned-archetype
+  swaps. Nothing else — no interaction deltas with main's match-day/form work.
 - **Merge gates:** Sprints 1–2 + 3A are green/low-risk per the charter; **B2/B3/C pause
   for Simon** (coaching philosophy + public onboarding surface). Noted follow-ups (see PR
   body): bodyweight accessories now show an enabled weight stepper + "pick a load" hint
   (Simon's call whether to gate to loadable equip); B3 anchor-steering question;
   SessionOverview same-name merge edge; QUALITY_LABELS circular-import tidy.
+
+## 2026-07-20 — SPORT-DATA INTEGRATION ROADMAP (aerobic + match-day → S&C output)
+
+New workstream, adopted this session (Simon's direction). Umbrella spec:
+`docs/superpowers/specs/2026-07-17-sport-data-integration-roadmap-design.md`. It feeds
+aerobic (Strava) + pitch/GPS data into the athlete model and reacts the S&C output to it,
+in four phases, built the house way (additive-first, flag-OFF, byte-identical until a
+deliberate flip). **Key reframe: most of this is finishing pipes that already exist** —
+Strava OAuth+sync is LIVE (`workouts` table), already contributes to load via a crude
+`duration×3` proxy, and the match-day microcycle logic is already AUTHORED in every team
+SKB (just switched off).
+
+- **Phase 1 — match-day-aware scheduling (team-driven). PR A MERGED to main (flag OFF).**
+  The fixture-aware microcycle MECHANISM: `mdMapForWeek`/`mdConstraintsFrom` (new
+  `microcycle/fixtureWeeks.js`), governed `SCHEDULING_PENALTIES.md` (KSV 1.48.0), scheduler
+  MD penalties (inert when null), `PlanGenerator` wiring behind `opts.fixtureMicrocycle`
+  (default OFF), `applyTeamSchedule` stamps `team_fixtures`/`team_match_weekday`, and
+  `matches_this_week` added to `REFLOW_EXCLUDED_SIGNALS` (kills the baseline/reflow
+  double-count). Computed in the BASELINE, never the reflow (fixtures are deterministic from
+  plan_start_date). Whole-branch reviewed READY-TO-MERGE; byte-identity proven (stamp-only
+  golden + manifest re-baseline); 205/205 + engine 30/30 + lint clean. Plan:
+  `docs/superpowers/plans/2026-07-17-phase1-matchday-scheduling.md`.
+  **PR B — the FLIP — MERGED to main (PR #225): match-day scheduling is now LIVE** for team
+  athletes with coach fixtures (placement-only). Additive-identity audited (golden: 1 archetype
+  ADDED, 0 existing moved — every fixture-less athlete byte-identical). Prereqs done (`\b`-anchored
+  the MD regex; `preferExplosiveWorkDays` verified authored in all 11 sports). **DEFERRED (Simon's,
+  open):** the congested-week volume cut; sentinel semantics (`"all"`/`"none"`/`"match-day priming"`
+  parse to null → no reshape today). **Heavy→MD-4 preference LANDED (PR #229):**
+  `heavyOffTargetDayPerStep` raised 2→4 (cap-safe: 4×3=12 ≤ muscle-spacing 14; a regression test
+  guards the cap). **⚠ Simon's call, open:** the pinned fixture archetype's heavy STILL lands on MD-2,
+  not MD-4, because its plyo-loaded accessories create a real 48–72h spacing conflict; forcing MD-4
+  there needs weight **6**, which would override muscle-recovery spacing — your tradeoff to make.
+- **Phase 2 — aerobic loading + a fitness–fatigue ("form") model. MERGED to main (PR #223, flag OFF).**
+  Governed **Banister-TRIMP** aerobic load (`load/aerobicLoad.js`, `load.aerobic.trimp`) + a
+  **CTL/ATL/TSB** form model (`load/form.js`, `load.form.model`; TrainingPeaks PMC), KSV
+  1.48.0→**1.50.0**, all science cited (Banister 1991 / Tanaka 2001 / TrainingPeaks). Built as a
+  **parallel-advisory READOUT**: `computeForm` runs app-side in `buildView` → `formView` +
+  `formVerdict` → a Form card on the Training Load screen; **NOT read by `generatePlan`/reflow** →
+  byte-identical (stamp-only golden re-baseline). The deload **corroboration seam**
+  (`deloadRecommendation`'s optional `form`) is **default-OFF** (never forces alone — Art 13).
+  Whole-branch reviewed READY-TO-MERGE; 207/207 + engine 33/33 + lint clean. Spec/plan:
+  `docs/superpowers/specs|plans/2026-07-20-phase2-aerobic-form-model*`.
+  **⚠ Not visually verified:** the Form card's pixel render is behind auth (compile/lint/theme-var
+  clean, null-safe, reuses existing styled classes) — a 30-sec glance behind sign-in closes it.
+  **The FLIP — MERGED to main (PR #226): the form model now STEERS the runtime.** (A) aerobic
+  Banister-TRIMP is the live ACWR basis (`buildView` uses `aerobicDailyLoads`; closes the two-basis
+  seam — ACWR + form + readiness load-card now share one basis; only HR-bearing workouts change,
+  no-HR/no-workout byte-identical). (B) form → `deloadRecommendation` with **CONSERVATIVE tiering**:
+  `formCorroborates = formFatigued && !(highReadiness && goodRecovery)` — corroborates a high-load
+  deload but never forces alone or against a clearly-fresh athlete (Art 13). **golden byte-identical**
+  (baseline reads neither ACWR nor form); `prop-reflow-baseline` green; 208/208. Reviewer cleared the
+  readiness blast-radius (TRIMP carries 0 weight in the blended readiness *value* — display-only).
+  **D9 dose-shrink LANDED (PR #229, Simon-approved):** governed `load.form.dose = {fatiguedVolumeMult:
+  0.9}`; in the reflow, `mult = Math.min(mult, form.band==='fatigued' ? 0.9 : 1)` — a gentle
+  form-fatigued volume trim, capped, byte-identical when not fatigued, `Math.min` prevents
+  double-counting a deload (proven vs the real 0.5 ACWR floor). Golden stamp-only (baseline never
+  reflows); KSV 1.50.0→**1.52.0**. **Backlog (Simon's/deferred):** a form-specific deload reason string
+  (Art 14); per-day (not week-level) D9 granularity; TRIMP-scale heterogeneity within `dl`; readout
+  fidelity (per-date restHr, HR-quality→confidence).
+  **AI integration (asked 2026-07-21):** production AI = a server-side Supabase Edge Function
+  (`ai-render`) with an `ANTHROPIC_API_KEY` secret (pay-per-token) — the Max plan is for interactive
+  dev use, not embedding into the app for end users. Prototype on a little API credit (+ prompt
+  caching/Batch), keep `AI_ENABLED=false` in prod, flip to an API key at go-live. Migration runbook:
+  `supabase/SECURITY-DEPLOY.md` (write migration + ledger row → staging `db push` → rls-harness → prod
+  `db push` → deploy Edge Functions separately → relink staging) — Simon applies to prod.
+- **Phase 3 — full sport/match ingestion boundary (DAAS §2.1.5). DESIGN SPEC authored**
+  (`docs/superpowers/specs/2026-07-20-phase3-sport-match-ingestion-design.md`). Not built — the
+  build is **Supabase schema migrations + RLS** (Simon applies to prod; RLS harness gates). Reuses
+  the wearable-ACL pattern + the live M5 owner-private substrate; External Load Observation
+  (GPS/top-speed/distance/sprints) + Match Performance (minutes/availability/KPIs); manual/file
+  first, vendor GPS-vests later; coach sees derived-roll-up only (Arts 11/22).
+- **Phase 4 — AI full-picture (Stage 6/AIGAS). DESIGN NOTE authored**
+  (`docs/superpowers/specs/2026-07-20-phase4-ai-full-picture-note.md`). Not started — a dependency,
+  not just a deferral: downstream of Phase 3's data + gated on Simon's `AI_ENABLED` go-live (open
+  queue #3). AIGAS C5 grounding surface + the three governed routes; never gates/replaces the engine.
 
 ## Where the platform stands (2026-07-09, main)
 
