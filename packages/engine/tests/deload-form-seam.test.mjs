@@ -1,19 +1,31 @@
 // packages/engine/tests/deload-form-seam.test.mjs
 //
-// Phase 2 T5 — deload corroboration seam (built, default-OFF). Extends
-// deloadRecommendation with an optional `form` (the computeForm output
-// {ctl, atl, tsb, band, confidence, rationale}). form.band === 'fatigued' is
-// wired as a CORROBORATOR ONLY, alongside lowReadiness/poorRecovery, inside the
-// existing loadDeload branch — it can never force a deload on its own (Art 13:
-// the form model's population time constants are contested, so it stays a
-// soft, low-confidence input, never a gate — same governed pattern as the
-// ACWR demotion it sits beside).
+// Phase 2 flip (2026-07-21) — the deload corroboration seam is now LIVE:
+// reflow.js and PlanService.js both pass the athlete's real `form` (the
+// computeForm output {ctl, atl, tsb, band, confidence, rationale}) into
+// deloadRecommendation. form.band === 'fatigued' is wired as a CORROBORATOR
+// ONLY, alongside lowReadiness/poorRecovery, inside the existing loadDeload
+// branch — it can never force a deload on its own (Art 13: the form model's
+// population time constants are contested, so it stays a soft, low-confidence
+// input, never a gate — same governed pattern as the ACWR demotion it sits
+// beside).
 //
-// No caller passes `form` yet (the reflow flip is Simon's) — this file proves
-// two things: (a) the seam is OFF by default (byte-identical to today's
-// documented behaviour across a spread of branches), and (b) the seam is
-// genuinely WIRED (corroborates a load-deload signal) without ever forcing
-// alone.
+// CONSERVATIVE TIERING (the flip's coaching call, resolved this session): form
+// is NOT an equal-tier corroborator to lowReadiness/poorRecovery. A fatigued
+// form corroborates a load-deload signal for anyone who ISN'T clearly fresh, but
+// it must NOT be able to force a deload against a CLEARLY FRESH athlete (readiness
+// >= readinessFresh AND recentRecovery >= recoveryFresh) — two low-confidence
+// signals (ACWR + form) can't outvote strong freshness evidence. This is a
+// DELIBERATE behaviour change from the original equal-tier seam design (flagged
+// in the Phase 2 design spec's "flip considerations" as Simon's call to make).
+//
+// This file proves: (a) every caller that omits `form` (or passes null/a
+// non-fatigued band) is byte-identical to pre-flip behaviour; (b) form fatigued
+// NEVER forces alone, with or without a loadDeload signal; (c) form fatigued
+// DOES corroborate a load-deload signal for a NOT-clearly-fresh athlete; (d) form
+// fatigued does NOT force against a CLEARLY FRESH athlete (the conservative
+// tiering, the file's main discriminator); (e) form never touches the
+// scheduled-deload defer path.
 import assert from 'node:assert/strict';
 import { deloadRecommendation } from '@performance-os/engine';
 
@@ -92,18 +104,45 @@ for (const { label, input, expected } of cases) {
   same(r2, { action: 'none', reason: null } , 'form fatigued alone (loadAction null) — does NOT force');
 }
 
-// ── (c) form 'fatigued' DOES corroborate a load-deload signal ────────────
-// Same readiness/recovery as the "load-deload signal ALONE" case above (which
-// resolved to 'none') — now with form fatigued added, the loadDeload branch's
-// corroboration is satisfied and it forces. This is the direct proof the seam
-// is wired, not just inert.
+// ── (c) form 'fatigued' DOES corroborate a load-deload signal for a
+// NOT-clearly-fresh athlete ───────────────────────────────────────────────
+// readiness 55 / recovery 3 sit BELOW the fresh cut-points (readinessFresh 70,
+// recoveryFresh 4) — not low enough to corroborate on their own (lowReadiness
+// needs <50, poorRecovery needs <=2), but not fresh enough to block form's
+// corroboration either. The same load-deload signal that resolves to 'none'
+// alone now forces once a fatigued form corroborates it.
 {
   const fatiguedForm = { ctl: 40, atl: 60, tsb: -20, band: 'fatigued', confidence: 0.9, rationale: 'x' };
-  const withoutForm = deloadRecommendation({ loadAction: 'deload', readiness: 80, recentRecovery: 5 });
-  ok(withoutForm.action === 'none', 'baseline (no form) — load-deload alone with high readiness/good recovery does not force');
+  const withoutForm = deloadRecommendation({ loadAction: 'deload', readiness: 55, recentRecovery: 3 });
+  ok(withoutForm.action === 'none', 'baseline (no form) — load-deload alone (readiness 55, recovery 3 — not clearly fresh) does not force');
 
-  const withForm = deloadRecommendation({ loadAction: 'deload', readiness: 80, recentRecovery: 5, form: fatiguedForm });
-  ok(withForm.action === 'force', 'WIRED: adding a fatigued form to the same inputs now forces the deload (corroboration)');
+  const withForm = deloadRecommendation({ loadAction: 'deload', readiness: 55, recentRecovery: 3, form: fatiguedForm });
+  ok(withForm.action === 'force', 'WIRED: a fatigued form corroborates the same load-deload signal for a NOT-clearly-fresh athlete (readiness 55, recovery 3) — forces');
+}
+
+// ── (d) CONSERVATIVE TIERING: form 'fatigued' does NOT force against a
+// CLEARLY FRESH athlete ───────────────────────────────────────────────────
+// readiness 75 / recovery 5 are BOTH at/above the fresh cut-points (70/4) — the
+// same "high readiness + good recovery" case that already blocks ACWR from
+// forcing alone. This is the DELIBERATE Phase 2 flip behaviour change: an
+// equal-tier seam would force here (form fatigued + loadDeload); the
+// conservative-tiered seam does not — two low-confidence signals cannot
+// outvote strong freshness evidence (Art 13).
+{
+  const fatiguedForm = { ctl: 40, atl: 60, tsb: -20, band: 'fatigued', confidence: 0.9, rationale: 'x' };
+  const r = deloadRecommendation({ loadAction: 'deload', readiness: 75, recentRecovery: 5, form: fatiguedForm });
+  same(r, { action: 'none', reason: null }, 'CONSERVATIVE: a fatigued form does NOT force a deload against a clearly fresh athlete (readiness 75, recovery 5)');
+}
+
+// ── (e) form 'fatigued' ALONE (no loadDeload signal) never forces — restated
+// with NOT-clearly-fresh inputs so this is a real discriminator, not just a
+// re-test of the fresh-block from (d) ─────────────────────────────────────
+{
+  const fatiguedForm = { ctl: 40, atl: 60, tsb: -20, band: 'fatigued', confidence: 0.9, rationale: 'x' };
+  const r1 = deloadRecommendation({ loadAction: 'none', readiness: 55, recentRecovery: 3, form: fatiguedForm });
+  same(r1, { action: 'none', reason: null }, 'form fatigued alone (no loadDeload signal, not clearly fresh) never forces');
+  const r2 = deloadRecommendation({ loadAction: null, readiness: 55, recentRecovery: 3, form: fatiguedForm });
+  same(r2, { action: 'none', reason: null }, 'form fatigued alone (loadAction null, not clearly fresh) never forces');
 }
 
 // ── form must not affect the fresh/defer path ─────────────────────────────

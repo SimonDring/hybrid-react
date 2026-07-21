@@ -1,9 +1,15 @@
-// tests/form-view.js — Phase 2 T4: buildView computes a parallel `formView` readout
-// (CTL/ATL/TSB) from the athlete's own aerobic load history. It is a READOUT only —
-// it must never reach setRuntime, the reflow, or generatePlan (Art 18; spec
-// docs/superpowers/specs/2026-07-20-phase2-aerobic-form-model-design.md). This test
-// pins (a) formView's correctness for a seeded load history and (b) its structural
-// isolation from the plan path.
+// tests/form-view.js — Phase 2 T4 + the Phase 2 flip (2026-07-21): buildView
+// computes a parallel `formView` readout (CTL/ATL/TSB) from the athlete's own
+// aerobic load history. Since the flip, `formView` DOES reach setRuntime — it
+// feeds the deload-corroboration seam (deloadRecommendation's conservative
+// tiering, packages/engine/src/lib/plan/trainingLoad.js) — but it must still
+// NEVER reach the PURE baseline: generatePlan/PlanGenerator.js never reads it,
+// so every plan stays byte-identical (Art 18; spec
+// docs/superpowers/specs/2026-07-20-phase2-aerobic-form-model-design.md). This
+// test pins (a) formView's correctness for a seeded load history, (b) that it
+// DOES now reach setRuntime, and (c) that PlanGenerator (and PlanService, which
+// only ever handles it opaquely — see PlanService.setRuntime) never imports the
+// form/aerobic-load engine modules.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -24,16 +30,18 @@ function assert(cond, msg) {
 }
 
 // ── structural proof: the ONLY channel from buildView into the reflow/plan is
-// setRuntime — pin that its call carries no form reference, and that the plan
-// path (PlanService, PlanGenerator) never imports the form/aerobic-load modules.
-// Grepped on SOURCE TEXT so this can't pass by runtime accident.
+// setRuntime — pin that its call NOW carries a form reference (the Phase 2 flip),
+// and that the plan path (PlanService, PlanGenerator) still never IMPORTS the
+// form/aerobic-load engine modules directly (PlanService only ever receives the
+// value opaquely through setRuntime/runtime().form). Grepped on SOURCE TEXT so
+// this can't pass by runtime accident.
 const here = path.dirname(url.fileURLToPath(import.meta.url));
 const storeSrc = fs.readFileSync(path.join(here, '../src/stores/trainingStore.js'), 'utf8');
 assert(/aerobicDailyLoads/.test(storeSrc) && /computeForm/.test(storeSrc),
   'trainingStore imports aerobicDailyLoads + computeForm');
 const setRuntimeCall = (storeSrc.match(/setRuntime\(\{[^}]*\}\);/) || [''])[0];
 assert(setRuntimeCall.length > 0, 'setRuntime(...) call is found in trainingStore.js');
-assert(!/form/i.test(setRuntimeCall), `setRuntime(...) call carries no form reference (got: ${setRuntimeCall})`);
+assert(/form/i.test(setRuntimeCall), `setRuntime(...) call carries a form reference (Phase 2 flip — got: ${setRuntimeCall})`);
 
 for (const rel of ['../src/lib/PlanService.js', '../../../packages/engine/src/lib/PlanGenerator.js']) {
   const src = fs.readFileSync(path.join(here, rel), 'utf8');
