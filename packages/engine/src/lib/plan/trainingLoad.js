@@ -139,8 +139,9 @@ export function combinedMultiplier(rm, decision = { action: 'none', multiplier: 
 //   illness         athlete flagged ill today
 //   scheduledDeload is the current week already a planned deload?
 //   form            OPTIONAL computeForm() output {ctl,atl,tsb,band,confidence,
-//                    rationale} (Phase 2 T5 seam) — null/absent for every current
-//                    caller (byte-identical). See formFatigued below.
+//                    rationale} (Phase 2 flip — now LIVE; reflow.js/PlanService.js
+//                    pass the athlete's real formView). null/absent (every OFF
+//                    caller/test) stays byte-identical. See formCorroborates below.
 // → { action: 'force' | 'defer' | 'none', reason }
 export function deloadRecommendation({ loadAction = null, readiness = null, recentRecovery = null, illness = false, scheduledDeload = false, form = null } = {}) {
   // Cut-points are governed knowledge (recovery.deload_thresholds) — the strongest
@@ -149,22 +150,27 @@ export function deloadRecommendation({ loadAction = null, readiness = null, rece
   const loadDeload = loadAction === 'deload';
   const lowReadiness = readiness != null && readiness < DT.readinessLow;
   const poorRecovery = recentRecovery != null && recentRecovery <= DT.recoveryPoor;
-  // formFatigued (Phase 2 T5 — deload corroboration seam, default-OFF): the
-  // CTL/ATL/TSB form model's 'fatigued' band is low-confidence (population time
-  // constants; per-individual calibration contested — Art 13), so like ACWR it may
-  // only CORROBORATE, never force alone. It is wired ONLY into the loadDeload
-  // corroboration below, alongside lowReadiness/poorRecovery — outside a loadDeload
-  // signal it has no effect on `fatigued` at all. No caller passes `form` yet, so
-  // it is always null here today and this stays inert (byte-identical).
+  const highReadiness = readiness != null && readiness >= DT.readinessFresh;
+  const goodRecovery = recentRecovery != null && recentRecovery >= DT.recoveryFresh;
+  // formCorroborates (Phase 2 flip; Art 13 — CONSERVATIVE TIERING): the CTL/ATL/TSB
+  // form model's 'fatigued' band is low-confidence (population time constants;
+  // per-individual calibration contested), so like ACWR it may only CORROBORATE a
+  // high-load deload signal, never force alone. Unlike a same-tier corroborator, it
+  // must NOT be able to force a deload against a clearly-fresh athlete (high readiness
+  // AND good recovery) — two low-confidence signals (ACWR + form) can't outvote strong
+  // freshness evidence. It is wired ONLY into the loadDeload corroboration below,
+  // alongside lowReadiness/poorRecovery — outside a loadDeload signal it has no effect
+  // on `fatigued` at all.
   const formFatigued = !!(form && form.band === 'fatigued');
+  const formCorroborates = formFatigued && !(highReadiness && goodRecovery);
   // Fatigued: illness, OR low readiness backed by poor recovery, OR a high-load signal
-  // CORROBORATED by low readiness / poor recovery / a fatigued form. Whether ACWR may
-  // force alone is a property of its knowledge authority (confidence:'low' →
-  // 'reported' → it may not); the corroboration requirement is the mechanism, not a
-  // per-site convention.
+  // CORROBORATED by low readiness / poor recovery / a (non-overridden) fatigued form.
+  // Whether ACWR may force alone is a property of its knowledge authority (confidence:
+  // 'low' → 'reported' → it may not); the corroboration requirement is the mechanism,
+  // not a per-site convention.
   const acwrForcesAlone = mayForceAlone('load.acwr.policy');
   const fatigued = illness || (lowReadiness && poorRecovery)
-    || (loadDeload && (acwrForcesAlone || lowReadiness || poorRecovery || formFatigued));
+    || (loadDeload && (acwrForcesAlone || lowReadiness || poorRecovery || formCorroborates));
   // Fresh: high readiness, good recovery, and load not elevated.
   const fresh = readiness != null && readiness >= DT.readinessFresh
     && (recentRecovery == null || recentRecovery >= DT.recoveryFresh)
