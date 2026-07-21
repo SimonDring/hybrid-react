@@ -128,10 +128,31 @@ SKB (just switched off).
     plan path (additive/inert). **No Supabase change** — the M5 tables it targets
     (`external_load_observations`, `match_performances`, `daily_metrics`) are already on prod
     (20260713). Spec: `docs/superpowers/specs/2026-07-21-phase3-metric-dictionary-v1-design.md`.
-  - **Still Simon's (the rest of Phase 3):** the ACL **adapters** that WRITE observations +
-    the app **logging surface** (they consume the dictionary — it landed first); any additive
-    column migration (**Supabase schema + RLS, Simon applies to prod; the RLS harness gates**);
-    the CI privacy sweep wiring (reads `mayCrossToRollUp`/privacy classes once a boundary writes).
+  - **S6a — manual pitch/match logging: LANDED (PR #233, 2026-07-21).** The first WRITE into
+    the boundary. Athlete hand-logs a session at **/tracking/pitch** (minutes / RPE /
+    availability = self-report; optional GPS distance / sprints / top speed = third-party,
+    transcribed off a tracker) → the pure engine ACL adapter `adaptManualSportEntry`
+    (`packages/engine/src/lib/adapters/manualSportEntry.js`, mirrors `adaptWearableReading`)
+    normalises + validates each datum through the Metric Dictionary (honest provenance
+    ENFORCED — a self-report GPS distance is rejected; Foster sRPE derived only when both
+    inputs valid; time/ref via ctx = pure) → owner-private rows written to
+    `external_load_observations` / `match_performances` via `SyncService.appendSportSession`
+    (append-only, plain `.insert()` never upsert, `clean()` stamps user_id, abstains offline,
+    compensating-delete rollback on partial failure). Store: `logPitchSession` /
+    `loadPitchSessions` + `pitchSessions`; surfaced on the Health tile. **No migration** — the
+    M5 owner-insert RLS was already live (20260713). Additive/inert: owner-private only (zero
+    coach exposure), no plan-behaviour change, no KSV bump, no golden churn. Full suite
+    217/217; build clean; lint 0. Spec:
+    `docs/superpowers/specs/2026-07-21-phase3-manual-sport-logging-design.md`.
+    **⚠ Simon's 30-sec smoke test:** the live Supabase insert needs a signed-in session (the
+    app gates on auth; `canSync()` abstains signed-out), so it's verified-by-construction
+    (RLS confirmed present, mirrors the proven `appendBlockOutcome` path) but not exercised
+    end-to-end from the build — log one pitch session while signed in to confirm.
+  - **Still Simon's / later Phase 3:** vendor GPS-file/CSV import (S6b); editing a logged
+    session (append-only supports it via `supersedes_id`; v1 only inserts + owner-delete);
+    **wiring these observations INTO the form model / plan** (the substrate readers stay
+    flag-OFF — a later, reviewed flip); any additive column migration (**Supabase schema +
+    RLS, Simon applies to prod; the RLS harness gates**); the CI privacy sweep wiring.
 - **Phase 4 — AI full-picture (Stage 6/AIGAS). DESIGN NOTE authored**
   (`docs/superpowers/specs/2026-07-20-phase4-ai-full-picture-note.md`). Not started — a dependency,
   not just a deferral: downstream of Phase 3's data + gated on Simon's `AI_ENABLED` go-live (open
