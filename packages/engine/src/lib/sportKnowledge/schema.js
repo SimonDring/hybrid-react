@@ -22,12 +22,18 @@
 
 import { MOVEMENT_POLICY_TOKENS } from '../../data/movementPatternMap.js';
 import { EXERCISES } from '../../data/strengthExercises.js';
+import { INJURY_REGIONS } from '../injury/profiles.js';
 
 // The exercise catalogue's `pattern` vocabulary (data/strengthExercises.js) — the SOLE legal
 // values for a position's `priorityPatterns` (Sprint 3 B2). Derived from the catalogue so the two
 // can never drift: a typo'd or invented pattern would silently never match a candidate, so the
 // validator rejects it up front.
 const CATALOGUE_PATTERNS = new Set(EXERCISES.map((e) => e.pattern));
+
+// The injury taxonomy's region vocabulary (lib/injury/profiles.js) — the SOLE legal values for a
+// position's `commonInjuryRegions` (Sprint 3 B3). Derived from the taxonomy so the two can never
+// drift: a token with no matching prevention protocol would silently never fire, so it is rejected.
+const TAXONOMY_REGIONS = new Set(INJURY_REGIONS);
 
 export const SCHEMA_VERSION = '1.0.0';
 
@@ -169,6 +175,17 @@ export function validateSportProfile(p) {
         if (!isArr(pos.priorityPatterns)) errs.push(`${lbl}: must be an array`);
         else pos.priorityPatterns.forEach((pat) => {
           if (!CATALOGUE_PATTERNS.has(pat)) errs.push(`${lbl}: "${pat}" is not a catalogue movement pattern`);
+        });
+      }
+      // Sprint 3 B3: a position MAY declare `commonInjuryRegions` — the injury-taxonomy regions
+      // (derived from its `commonInjuries` prose) whose prevention protocols D11 should prefer.
+      // Each token must be a real INJURY_PROFILES region, or the prevention nudge would silently
+      // never fire. Validated only where authored (a missing list is a valid scaffold).
+      if (isObj(pos) && pos.commonInjuryRegions != null) {
+        const lbl = `${id}.positions[${i}].commonInjuryRegions`;
+        if (!isArr(pos.commonInjuryRegions)) errs.push(`${lbl}: must be an array`);
+        else pos.commonInjuryRegions.forEach((region) => {
+          if (!TAXONOMY_REGIONS.has(region)) errs.push(`${lbl}: "${region}" is not an injury-taxonomy region`);
         });
       }
     });

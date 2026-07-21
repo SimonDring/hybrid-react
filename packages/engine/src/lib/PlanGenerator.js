@@ -36,6 +36,7 @@ import { profileToAthleteModel } from './adapters/profileToAthleteModel.js';
 import * as SKB from './sportKnowledge/index.js';
 import { validateWeek, explainValidation } from './validation/contract.js';
 import { categoryPlanFor } from './session/categoryCoverage.js';
+import { preventionIdsForRegions } from './injury/profiles.js';
 import { provenance } from '../version.js';
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
@@ -145,6 +146,7 @@ function buildGymWeek(count, ctx, profile, program, diag) {
     priorityByIntent: program.priorityByIntent || new Map(),
     priorityQualities: diag.priorityQualities, season: program.season, skbIds: diag.skbIds,
     positionPatterns: diag.positionPatterns || [],   // Sprint 3 B2 — position priority-pattern nudge
+    positionPreventionIds: diag.positionPreventionIds || [],   // Sprint 3 B3 — position injury-prevention nudge
     categoryPlan: diag.categoryPlan, discipline: program.discipline || null,
     // Season-phased SKB (2026-07-09): the current-phase programming block + derived round-out
     // targets (null for un-migrated sports → the allocator's round-out pass is a no-op).
@@ -181,9 +183,14 @@ export function generatePlan(profile = {}, opts = {}) {
   // the movement patterns this position's gym programming prioritises (authored from its
   // gymPriorities prose). [] when no sport/position/data → the nudge is a no-op (byte-identical).
   const positionName = athleteModel?.sportingContext?.position || null;
-  const positionPatterns = (skbSportId && positionName)
-    ? ((SKB.section(skbSportId, 'positions') || []).find((p) => p.name === positionName)?.priorityPatterns || [])
-    : [];
+  const positionRecord = (skbSportId && positionName)
+    ? ((SKB.section(skbSportId, 'positions') || []).find((p) => p.name === positionName) || null)
+    : null;
+  const positionPatterns = positionRecord?.priorityPatterns || [];
+  // Sprint 3 B3: the athlete's SKB position common injury regions → the prevention exercises those
+  // regions recommend (the injury taxonomy's prevention library). A small D11 selection nudge toward
+  // position-relevant prevention. [] when no sport/position/data → a no-op (byte-identical).
+  const positionPreventionIds = preventionIdsForRegions(positionRecord?.commonInjuryRegions || []);
   const diag = {
     priorityQualities: (perf && perf.priorityAdaptations) || [],
     // Category-led sports (WP-20 — swim): the SKB library's per-session coverage plan.
@@ -192,6 +199,7 @@ export function generatePlan(profile = {}, opts = {}) {
     // movement (Sprint 9 19a) — membership grants §34 tier-4 standing, the rating values it.
     skbIds: skbSportId ? new Map((SKB.section(skbSportId, 'exerciseLibrary')?.exercises || []).map((e) => [e.id, e.transferToSportRating])) : new Map(),
     positionPatterns,
+    positionPreventionIds,
   };
   const { busyDays, sportMuscles } = deriveConstraints(profile);
   const availability = profile.availability || {};

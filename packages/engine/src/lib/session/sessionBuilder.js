@@ -520,7 +520,10 @@ export function allocateGym({ targets = {}, slots = [], ctx = {} } = {}) {
         forceVelocityAware: !!ctx.forceVelocityAware,
         // Sprint 3 B2: the athlete's SKB position priorityPatterns — a small additive D11 nudge
         // toward this position's prioritised movement patterns. [] (no sport/position) ⇒ no-op.
-        positionPatterns: ctx.positionPatterns || []
+        positionPatterns: ctx.positionPatterns || [],
+        // Sprint 3 B3: prevention exercise ids for this position's common injury regions — a small
+        // additive D11 nudge preferring position-relevant prevention. [] (no sport/position) ⇒ no-op.
+        positionPreventionIds: ctx.positionPreventionIds || []
       });
       if (assignment) objective.rationale += ` (${assignment.rationale})`;
       // WP-30a: ship the D9 objective WITH the session — the rationale string now

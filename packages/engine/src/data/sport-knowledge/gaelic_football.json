@@ -378,6 +378,7 @@
         "shoulder (diving)",
         "groin (kick-outs)"
       ],
+      "commonInjuryRegions": ["shoulder", "hip"],
       "gymPriorities": [
         "lower-body power",
         "rotational/kick power",
@@ -411,6 +412,7 @@
         "ankle",
         "ACL (cutting/landing)"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "knee"],
       "gymPriorities": [
         "posterior-chain max strength",
         "deceleration/landing",
@@ -444,6 +446,7 @@
         "groin",
         "ankle"
       ],
+      "commonInjuryRegions": ["hamstring", "hip", "ankle"],
       "gymPriorities": [
         "eccentric hamstring",
         "running-economy support",
@@ -477,6 +480,7 @@
         "ankle (landing)",
         "back"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "lumbar"],
       "gymPriorities": [
         "vertical power (jump)",
         "posterior chain",
@@ -511,6 +515,7 @@
         "groin",
         "quad/hip-flexor (kicking)"
       ],
+      "commonInjuryRegions": ["hamstring", "hip", "quad"],
       "gymPriorities": [
         "eccentric hamstring",
         "sprint/COD power",
@@ -544,6 +549,7 @@
         "ankle",
         "groin"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "hip"],
       "gymPriorities": [
         "acceleration/COD power",
         "contact robustness",

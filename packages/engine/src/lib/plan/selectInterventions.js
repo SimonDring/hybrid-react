@@ -105,7 +105,7 @@ function valueOf(ex, target, skbIds, forceVelocityAware = false) {
   return value;
 }
 
-export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [], categoryIds = null, discipline = undefined, priorityIds = null, forceVelocityAware = false, positionPatterns = null } = {}) {
+export function selectInterventions({ req, exercises = EXERCISES, equip, level = 0, levelName = 'intermediate', sport = null, skbIds = new Set(), ledger = {}, makePick, blockedNameRegexes = [], categoryIds = null, discipline = undefined, priorityIds = null, forceVelocityAware = false, positionPatterns = null, positionPreventionIds = null } = {}) {
   // Position priority-pattern nudge (Sprint 3 B2): a small ADDITIVE preference for candidates whose
   // movement pattern is on the athlete's SKB position list. NOT flag-gated (ships on) but never a
   // gate — additive, so it only re-orders WITHIN a quality tier (the sort below is tier-first),
@@ -113,6 +113,16 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
   // Empty/absent list ⇒ bonus is always 0 ⇒ byte-identical (every non-team-position plan).
   const positionSet = positionPatterns && positionPatterns.length ? new Set(positionPatterns) : null;
   const positionBonus = (ex) => (positionSet && positionSet.has(ex.pattern) ? (SELECTION_SCORING.positionPatternWeight || 0) : 0);
+  // Position injury-prevention nudge (Sprint 3 B3): a second small ADDITIVE preference for candidates
+  // that are a prevention exercise for one of the athlete's position's common injury regions (the ids
+  // are resolved upstream from the position's SKB commonInjuryRegions via the injury taxonomy). Same
+  // discipline as B2 — additive, tier-bounded, never a gate. Empty/absent set ⇒ always 0 ⇒ byte-identical.
+  // Applied ONLY to CORRECTIVE/accessory candidates (tier ≥ 3): prevention is a preference among the
+  // prehab/sport-accessory/core picks, NOT a lever on the session's PRIMARY anchor — a small prehab iso
+  // must never leapfrog a tier-1/2 compound and hijack the day's dose quality (that would reshape the
+  // session, not re-rank its prevention). Minimum effective intervention (Art 7).
+  const preventionSet = positionPreventionIds && positionPreventionIds.length ? new Set(positionPreventionIds) : null;
+  const preventionBonus = (ex, tier) => (preventionSet && tier >= 3 && preventionSet.has(ex.id) ? (SELECTION_SCORING.positionInjuryPreventionWeight || 0) : 0);
   const target = req?.objective?.targetQuality;
   const reqPatterns = new Set(req?.requirements?.movementPatterns || []);
   const contra = new Set((req?.requirements?.contraindicated || []).map((c) => c.pattern));
@@ -167,11 +177,11 @@ export function selectInterventions({ req, exercises = EXERCISES, equip, level =
       : isCategoryPick
         ? (skbRatingOf(skbIds, ex.id) ?? TRANSFER.skbDefaultRating) / TRANSFER.skbRatingDivisor
         : valueOf(ex, target, skbIds, forceVelocityAware);
-    // Position nudge applies to ALL three value paths (category-led team sports pick via the
-    // rating path, not valueOf): a tiny additive lift, bounded by the tier sort. It is a no-op on
+    // Position nudges apply to ALL three value paths (category-led team sports pick via the
+    // rating path, not valueOf): a tiny additive lift, bounded by the tier sort. Both are a no-op on
     // the discipline priority path in practice — position implies a sport, disciplines don't set
     // priorityIds — and the ±0.1 could never reorder integer-ranked (1e6−rank) anchors anyway.
-    const value = baseValue + positionBonus(ex);
+    const value = baseValue + positionBonus(ex) + preventionBonus(ex, tier);
     cand.push({ ex, tier, value });
   }
   cand.sort((a, b) => a.tier - b.tier || b.value - a.value || (a.ex.id < b.ex.id ? -1 : a.ex.id > b.ex.id ? 1 : 0));

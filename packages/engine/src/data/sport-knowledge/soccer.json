@@ -384,6 +384,7 @@
         "shoulder/hand impact injuries",
         "knee contusions"
       ],
+      "commonInjuryRegions": ["hip", "shoulder", "knee"],
       "gymPriorities": [
         "single-leg lateral power (dive push-off)",
         "adductor strength (Copenhagen)",
@@ -416,6 +417,7 @@
         "ankle sprain (aerial landings in traffic)",
         "head impacts (aerial duels)"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "cervical"],
       "gymPriorities": [
         "maximal lower-body strength + jump power",
         "eccentric hamstring (their sprints are rare, maximal, and unprepared — the classic CB injury)",
@@ -448,6 +450,7 @@
         "calf/Achilles overload",
         "ankle sprain"
       ],
+      "commonInjuryRegions": ["hamstring", "calf", "ankle"],
       "gymPriorities": [
         "eccentric hamstring capacity (Nordic) — non-negotiable at this sprint volume",
         "calf capacity",
@@ -480,6 +483,7 @@
         "adductor/groin (turn volume)",
         "ankle sprain (traffic)"
       ],
+      "commonInjuryRegions": ["hamstring", "hip", "ankle"],
       "gymPriorities": [
         "eccentric hamstring + adductor pillars",
         "single-leg strength for turn deceleration",
@@ -512,6 +516,7 @@
         "quadriceps/rectus femoris (shooting volume, kicking leg)",
         "adductor/groin"
       ],
+      "commonInjuryRegions": ["hamstring", "quad", "hip"],
       "gymPriorities": [
         "acceleration strength (hip thrust, sled, split squat)",
         "eccentric hamstring",

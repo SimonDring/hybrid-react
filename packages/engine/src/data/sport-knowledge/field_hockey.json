@@ -431,6 +431,7 @@
         "hip/adductor overload (splits)",
         "knee contusions"
       ],
+      "commonInjuryRegions": ["hip", "knee"],
       "gymPriorities": [
         "single-leg lateral power",
         "adductor strength (Copenhagen)",
@@ -462,6 +463,7 @@
         "groin/adductor (lunging)",
         "low-back (hitting volume)"
       ],
+      "commonInjuryRegions": ["hip", "lumbar"],
       "gymPriorities": [
         "hinge strength (hit base + posture)",
         "adductor capacity",
@@ -493,6 +495,7 @@
         "hamstring (volume of accelerations)",
         "calf/Achilles overload"
       ],
+      "commonInjuryRegions": ["hamstring", "calf"],
       "gymPriorities": [
         "eccentric hamstring (Nordic)",
         "calf capacity",
@@ -524,6 +527,7 @@
         "hamstring (sprint clusters)",
         "ankle (cutting)"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle"],
       "gymPriorities": [
         "acceleration strength (hip thrust, split squat)",
         "eccentric hamstring",

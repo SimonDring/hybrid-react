@@ -386,6 +386,7 @@
         "hand/wrist",
         "groin (puck-outs)"
       ],
+      "commonInjuryRegions": ["shoulder", "wrist", "hip"],
       "gymPriorities": [
         "rotational/striking power",
         "shoulder robustness",
@@ -420,6 +421,7 @@
         "hand/wrist",
         "ACL"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "wrist", "knee"],
       "gymPriorities": [
         "posterior-chain strength",
         "deceleration/landing",
@@ -454,6 +456,7 @@
         "groin",
         "ankle"
       ],
+      "commonInjuryRegions": ["hamstring", "hip", "ankle"],
       "gymPriorities": [
         "eccentric hamstring",
         "rotational/striking power",
@@ -488,6 +491,7 @@
         "back",
         "hand"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "lumbar", "wrist"],
       "gymPriorities": [
         "vertical + rotational power",
         "posterior chain",
@@ -522,6 +526,7 @@
         "groin",
         "hand/wrist"
       ],
+      "commonInjuryRegions": ["hamstring", "hip", "wrist"],
       "gymPriorities": [
         "eccentric hamstring",
         "sprint/COD power",
@@ -556,6 +561,7 @@
         "hand/wrist",
         "groin"
       ],
+      "commonInjuryRegions": ["hamstring", "ankle", "wrist", "hip"],
       "gymPriorities": [
         "acceleration/COD power",
         "rotational/striking power",

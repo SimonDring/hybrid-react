@@ -394,6 +394,7 @@
         "shoulder (scrum/tackle)",
         "lumbar spine (repeated scrum flexion/compression)"
       ],
+      "commonInjuryRegions": ["cervical", "shoulder", "lumbar"],
       "gymPriorities": [
         "maximal posterior-chain + squat strength (scrum drive)",
         "cervical strengthening — non-negotiable for front-row eligibility and safety",
@@ -426,6 +427,7 @@
         "knee (contact + landing)",
         "lumbar spine (scrum + lift)"
       ],
+      "commonInjuryRegions": ["shoulder", "knee", "lumbar"],
       "gymPriorities": [
         "maximal strength + vertical/lift power (lineout)",
         "shoulder + scapular robustness for lifting overhead under load",
@@ -458,6 +460,7 @@
         "hamstring (repeated sprint-to-contact)",
         "concussion (tackle exposure)"
       ],
+      "commonInjuryRegions": ["shoulder", "hamstring", "cervical"],
       "gymPriorities": [
         "strength + repeat-effort power maintenance",
         "eccentric hamstring (Nordic) for repeated sprint-to-contact",
@@ -490,6 +493,7 @@
         "hamstring / groin (repeated acceleration + kicking)",
         "concussion"
       ],
+      "commonInjuryRegions": ["shoulder", "hamstring", "hip", "cervical"],
       "gymPriorities": [
         "acceleration strength (hip thrust, sled, split squat)",
         "trunk anti-rotation + rotational power for passing and kicking",
@@ -522,6 +526,7 @@
         "shoulder (finishing and cover tackles)",
         "ankle (cutting + landing)"
       ],
+      "commonInjuryRegions": ["hamstring", "shoulder", "ankle"],
       "gymPriorities": [
         "eccentric hamstring capacity (Nordic) — non-negotiable at this sprint exposure",
         "max-velocity support (heavy strength + sprint exposure on pitch)",
