@@ -48,12 +48,20 @@ export function entryProblems(e) {
   if (typeof e.semantics !== 'string' || !e.semantics.trim()) p.push(`${at} semantics (one falsifiable sentence) required`);
   if (typeof e.unit !== 'string' || !e.unit.trim()) p.push(`${at} unit required`);
   if (typeof e.scale !== 'string' || !e.scale.trim()) p.push(`${at} scale required`);
-  // range: numeric {min,max} with min<=max, OR a nominal {values:[...]}
+  // range must MATCH the scale: a nominal scale carries {values:[...]}, every other scale
+  // carries numeric {min,max} with min<=max. Keying on scale (not just "does values[] exist")
+  // stops a numeric metric from smuggling in a value-list and skipping its bound check.
   const r = e.range;
   if (!r || typeof r !== 'object') p.push(`${at} range required`);
-  else if (Array.isArray(r.values)) { if (!r.values.length) p.push(`${at} nominal range needs non-empty values`); }
-  else if (typeof r.min !== 'number' || typeof r.max !== 'number') p.push(`${at} range needs numeric min/max (or a values[] list)`);
-  else if (r.min > r.max) p.push(`${at} range min>max (${r.min}>${r.max})`);
+  else if (e.scale === 'nominal') {
+    if (!Array.isArray(r.values) || !r.values.length) p.push(`${at} a nominal-scale metric needs a non-empty range.values[]`);
+  } else if (Array.isArray(r.values)) {
+    p.push(`${at} a ${e.scale}-scale metric must use a numeric range {min,max}, not a values[] list`);
+  } else if (typeof r.min !== 'number' || typeof r.max !== 'number') {
+    p.push(`${at} range needs numeric min/max`);
+  } else if (r.min > r.max) {
+    p.push(`${at} range min>max (${r.min}>${r.max})`);
+  }
   // sources
   if (!Array.isArray(e.sources) || !e.sources.length) p.push(`${at} sources must be a non-empty list`);
   else for (const s of e.sources) {
@@ -127,18 +135,32 @@ export function mayCrossToRollUp(id) { return privacyClassOf(id) === 'derived-sa
 /**
  * The ingestion-boundary seam (§2.1.1 hard rule 1). A datum is admitted only if its
  * metric_id is known AND its provenance_class is one the metric's dictionary entry permits.
- * @param {{metric_id?:string, provenance_class?:string}} obs
+ * If a `value` is supplied it is also bound-checked against the entry's range — so the
+ * authored ranges GATE capture rather than sit decorative (the KV-2 governed-data-as-
+ * decoration drift class this repo guards against). `value` stays optional for the pure
+ * id+provenance check.
+ * @param {{metric_id?:string, provenance_class?:string, value?:number|string}} obs
  * @returns {{ok:boolean, errors:string[]}}
  */
 export function validateObservation(obs = {}) {
   const errors = [];
-  const { metric_id, provenance_class } = obs || {};
+  const { metric_id, provenance_class, value } = obs || {};
   const e = metric_id != null ? BY_ID.get(metric_id) : null;
   if (!metric_id) errors.push('missing metric_id');
   else if (!e) errors.push(`unknown metric_id "${metric_id}" — no dictionary entry (never guessed into an id; queue unmapped and report)`);
   if (!provenance_class) errors.push('missing provenance_class');
   else if (!PROVENANCE_CLASSES.includes(provenance_class)) errors.push(`provenance_class "${provenance_class}" ∉ the closed provenance set`);
   else if (e && !e.sources.some((s) => s.class === provenance_class)) errors.push(`metric "${metric_id}" does not admit provenance class "${provenance_class}" (permitted: ${e.sources.map((s) => s.class).join(', ')})`);
+  if (e && value != null) {
+    const r = e.range;
+    if (Array.isArray(r.values)) {
+      if (!r.values.includes(value)) errors.push(`value "${value}" ∉ ${metric_id} allowed values [${r.values.join(', ')}]`);
+    } else if (typeof value !== 'number' || Number.isNaN(value)) {
+      errors.push(`value for ${metric_id} must be numeric (${e.unit})`);
+    } else if (value < r.min || value > r.max) {
+      errors.push(`value ${value} out of range for ${metric_id} [${r.min}, ${r.max}] ${e.unit}`);
+    }
+  }
   return { ok: errors.length === 0, errors };
 }
 

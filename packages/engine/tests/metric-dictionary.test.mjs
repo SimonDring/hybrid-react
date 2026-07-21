@@ -48,6 +48,8 @@ throws(() => assertValidRegistry([{ ...base(), privacyClass: 'kinda-private' }])
 throws(() => assertValidRegistry([{ ...base(), precedence: ['third-party'] }]), 'rejects a precedence not ⊆ the entry sources');
 throws(() => assertValidRegistry([base(), base()]), 'rejects a duplicate id (one metric per concept)');
 throws(() => assertValidRegistry([{ ...base(), storesTo: { table: 'made_up_table', column: 'x' } }]), 'rejects a storesTo pointing at an unknown table');
+throws(() => assertValidRegistry([{ ...base(), scale: 'ratio', range: { values: ['x'] } }]), 'rejects a ratio-scale metric carrying a nominal values[] list (range must match scale)');
+throws(() => assertValidRegistry([{ ...base(), family: 'external-load', scale: 'nominal', range: { min: 0, max: 1 } }]), 'rejects a nominal-scale metric with a numeric range');
 
 // ── 2. structural invariants across the whole real registry ─────────────────
 const ids = METRIC_DICTIONARY.map((e) => e.id);
@@ -69,12 +71,27 @@ for (const id of [
 ]) ok(isKnownMetric(id), `v1 metric present: ${id}`);
 ok(getMetric('gps.total_distance.session').storesTo.table === 'external_load_observations', 'distance maps to external_load_observations');
 ok(getMetric('exposure.minutes.match').storesTo.table === 'match_performances', 'minutes maps to match_performances');
+// Every column-bearing entry maps to its EXACT M5 column — a typo in the shipped data
+// fails here (the validator only checks the table exists, not the column name).
+const EXPECTED_COLS = {
+  'hr.resting.daily': 'resting_hr', 'hrv.rmssd.night': 'hrv_ms', 'sleep.duration.night': 'sleep_duration_min',
+  'gps.total_distance.session': 'distance_m', 'gps.high_speed_distance.session': 'high_speed_m',
+  'sprint.count.session': 'sprint_count', 'rpe.session.pitch': 'pitch_rpe',
+  'exposure.minutes.match': 'minutes', 'availability.status.match': 'availability_status',
+};
+for (const [id, col] of Object.entries(EXPECTED_COLS))
+  ok(getMetric(id).storesTo.column === col, `storesTo column for ${id} is ${col}`);
 
 // ── 5. the ingestion-boundary seam — §2.1.1 hard rule (1), both directions ───
 ok(validateObservation({ metric_id: 'rpe.session.pitch', provenance_class: 'self-report' }).ok, 'accepts a well-formed pitch-RPE observation');
 ok(!validateObservation({ metric_id: 'no.such.metric', provenance_class: 'self-report' }).ok, 'rejects an unknown metric_id (no silent guessing)');
 ok(!validateObservation({ metric_id: 'rpe.session.pitch', provenance_class: 'device' }).ok, 'rejects a provenance class the metric does not permit (RPE is self-report, not device)');
 ok(!validateObservation({ metric_id: 'gps.total_distance.session' }).ok, 'rejects an observation with no provenance class');
+// value gating — the authored ranges GATE capture when a value is supplied (non-decorative)
+ok(validateObservation({ metric_id: 'hr.resting.daily', provenance_class: 'device', value: 55 }).ok, 'accepts an in-range resting HR (55 bpm)');
+ok(!validateObservation({ metric_id: 'hr.resting.daily', provenance_class: 'device', value: 500 }).ok, 'rejects an out-of-range resting HR (500 bpm)');
+ok(validateObservation({ metric_id: 'availability.status.match', provenance_class: 'coach-report', value: 'available' }).ok, 'accepts a valid availability enum value');
+ok(!validateObservation({ metric_id: 'availability.status.match', provenance_class: 'coach-report', value: 'injured' }).ok, 'rejects an availability value outside the enum (never leaks clinical detail)');
 
 // ── 6. the privacy-validator hook (rule 6 of the §4.2 propagation rule) ──────
 ok(mayCrossToRollUp('exposure.minutes.match') === true, 'a derived-safe metric may cross to a roll-up');

@@ -73,7 +73,7 @@ export const METRIC_DICTIONARY = [
     privacyClass: 'raw-vital',
     baseline: { individuallyBaselined: true, model: 'rolling-personal-norm' },
     provenance: { author: 'Phase 3 S1 (2026-07-21)', reviewed: null, confidence: 'moderate' },
-    storesTo: { table: 'wearable_readings', column: null },
+    storesTo: { table: 'daily_metrics', column: 'hrv_ms' },
   },
   {
     id: 'sleep.duration.night',
