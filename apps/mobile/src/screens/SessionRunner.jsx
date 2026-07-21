@@ -93,11 +93,18 @@ export default function SessionRunner() {
 
   // Most recent logged weight for this exercise from a PREVIOUS session (loadable core
   // work with no prescribed target, e.g. Pallof press). Computed once here so the
-  // draft-seeding effect below and the "Last time" hint in the render agree.
+  // draft-seeding effect below and the "Last time" hint in the render agree. Keyed on
+  // steps too: an in-session substitution rebuilds steps at the SAME cursor, and the
+  // memo must re-resolve for the new exercise (steps is content-signature-memoized, so
+  // no spurious recomputes). Once this session's carry covers the exercise (sets 2+),
+  // the carry wins the seed and the hint would be stale — return null then. Reading
+  // carryRef.current here is safe: it's mutated synchronously in logCurrentSet before
+  // the cursor update triggers this memo.
   const lastTime = useMemo(() => {
     if (!step || step.kind !== 'set' || step.targetWeight != null || !step.collectWeight) return null;
+    if (carryRef.current[step.exerciseName]) return null;   // in-session carry already covers this
     return lastLoggedWeightFor(step.exerciseName, setLogsBySession, sessionDbId);
-  }, [cursor]);  // eslint-disable-line react-hooks/exhaustive-deps
+  }, [cursor, steps]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   // Seed the draft on entering a set step: carry forward the last actual for this
   // exercise, else fall back to the prescribed target, else the last logged weight
