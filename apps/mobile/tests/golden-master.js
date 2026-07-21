@@ -19,6 +19,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { generatePlan } from '@performance-os/engine/lib/PlanGenerator.js';
 import { applyInjuryRules } from '@performance-os/engine/lib/injury/injuryFilter.js';
+import { applyTeamSchedule } from '@performance-os/engine/lib/plan/teamSchedule.js';
 import { answersToProfile, BLANK_ANSWERS } from '../src/lib/onboardingModel.js';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
@@ -215,15 +216,49 @@ for (const region of INJURY_REGIONS) {
   INJURY_MATRIX[`injured·${region}·intermediate·4d·full`] = { region, injury: { body_part_key: region, status: 'active', severity: 4, rehab_phase: 'protect', side: 'n/a' } };
 }
 
+// Phase 1 PR B — the flip (docs/superpowers/plans/2026-07-17-phase1-matchday-scheduling.md
+// Task 8). PlanService.js now ALWAYS calls generatePlan(profile, { fixtureMicrocycle: true }),
+// so this is the ONE archetype that legitimately moves on this PR's re-baseline: a team-fixture-
+// bearing soccer athlete whose heavy/power/recovery gym work is placed relative to a real
+// Saturday fixture instead of ignoring it. Built from a FIXED plan_start_date (2026-07-13, not
+// today-anchored) + applyTeamSchedule (the same seam PlanService.activeProfile() runs) so MD
+// placement is deterministic across runs — every other archetype in this file calls
+// generatePlan(profile) directly with NO opts and carries no team_fixtures, so it stays on the
+// flag-OFF-equivalent path (no team_fixtures/team_match_weekday ⇒ mdConstraints stays null ⇒
+// byte-identical — additive-identity, proven by generator-fixture-microcycle.test.mjs) and must
+// NOT move here.
+//
+// Kept in its own FIXTURE_MATRIX (not MATRIX) because the value is an already-built PROFILE
+// (post-applyTeamSchedule), not an "answers" object toProfile()/answersToProfile() would recognise.
+const FIXTURE_SOCCER = (() => {
+  const base = {
+    ...answersToProfile({
+      ...BLANK_ANSWERS, goalType: 'sport', skbSport: 'soccer',
+      sportIntent: 'compete', sportSeason: 'off_season', experienceLevel: 'intermediate',
+      daysPerWeek: 3, days: ['tue', 'thu', 'fri'], equipment: FULL, sex: 'male', lifts: {},
+    }),
+    plan_start_date: '2026-07-13',
+  };
+  const schedule = {
+    weeklyPattern: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, i) => ({ day, type: i === 6 ? 'match' : 'gym' })),
+    fixtures: [{ id: 'm', type: 'match', label: 'league', date: '2026-07-18' }],
+  };
+  return applyTeamSchedule(base, schedule, '2026-07-13');
+})();
+const FIXTURE_MATRIX = {
+  'sport·soccer·fixture-md·intermediate·3d(flip)': FIXTURE_SOCCER,
+};
+OPTS_MATRIX['sport·soccer·fixture-md·intermediate·3d(flip)'] = { fixtureMicrocycle: true };
+
 function assert(cond, msg) {
   if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; }
   else console.log('PASS:', msg);
 }
 
-// Every archetype key the matrix knows, whichever of the three shapes it's stored in
-// (plain MATRIX / MATRIX+OPTS_MATRIX / INJURY_MATRIX). Keeps buildCurrent() and the
-// in-process determinism check (below) walking exactly the same set.
-const ALL_KEYS = [...Object.keys(MATRIX), ...Object.keys(INJURY_MATRIX)];
+// Every archetype key the matrix knows, whichever of the four shapes it's stored in
+// (plain MATRIX / MATRIX+OPTS_MATRIX / INJURY_MATRIX / FIXTURE_MATRIX). Keeps buildCurrent()
+// and the in-process determinism check (below) walking exactly the same set.
+const ALL_KEYS = [...Object.keys(MATRIX), ...Object.keys(INJURY_MATRIX), ...Object.keys(FIXTURE_MATRIX)];
 
 // Generates one archetype's pinned value. Injury archetypes aren't a generatePlan()
 // output at all — generatePlan is injury-blind (PlanGenerator.js's own comment: "runtime
@@ -238,6 +273,9 @@ function generateArchetype(key) {
     const baseWeek = basePlan.phases[0].weeks[1];
     return applyInjuryRules(baseWeek, [injury]);
   }
+  // FIXTURE_MATRIX values are already-built PROFILES (post-applyTeamSchedule), not "answers" —
+  // toProfile()/answersToProfile() must NOT run on them a second time.
+  if (key in FIXTURE_MATRIX) return generatePlan(FIXTURE_MATRIX[key], OPTS_MATRIX[key] || {});
   return generatePlan(toProfile(MATRIX[key]), OPTS_MATRIX[key] || {});
 }
 

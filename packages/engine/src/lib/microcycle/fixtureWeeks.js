@@ -56,7 +56,7 @@ function offsetsFrom(spec) {
   const out = new Set();
   const scan = (s) => {
     if (typeof s !== 'string') return;
-    const re = /MD([+-]\d+)?/g; let m;
+    const re = /\bMD([+-]\d+)?\b/g; let m;
     while ((m = re.exec(s)) !== null) out.add(m[1] ? Number(m[1]) : 0);
   };
   if (Array.isArray(spec)) spec.forEach(scan); else scan(spec);
