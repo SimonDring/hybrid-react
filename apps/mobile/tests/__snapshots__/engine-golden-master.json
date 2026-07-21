@@ -175135,6 +175135,4840 @@
     ],
     "totalWeeks": 6
   },
+  "sport·soccer·fixture-md·intermediate·3d(flip)": {
+    "meta": {
+      "diagnosis": {
+        "blockPlan": {
+          "blocks": [
+            {
+              "confidence": "low",
+              "deloadWeeks": [
+                4
+              ],
+              "developsQuality": "aerobicCapacity",
+              "index": 0,
+              "intensityShape": "build",
+              "isTaper": false,
+              "lengthWeeks": 4,
+              "maintainsQualities": [],
+              "objective": "develop:aerobicCapacity",
+              "rationale": "develop aerobicCapacity — top D5 limiter (magnitude 0.34); off-season accumulation, 4wk (recoverability moderate).",
+              "season": "off",
+              "source": "diagnosis",
+              "tracesTo": {
+                "limiter": "aerobicCapacity",
+                "order": 1
+              },
+              "trajectory": "accumulation",
+              "volumeShape": "ramp"
+            }
+          ],
+          "sequencingNotes": [
+            "anaerobicCapacity (limiter magnitude 0.34) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "explosiveStrength (limiter magnitude 0.24) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "maxStrength (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "stability (limiter magnitude 0.13) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "mobility (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block.",
+            "reactiveStrength (limiter magnitude 0.06) deferred — conflicts with a higher-priority quality this block; develop it in a later block."
+          ],
+          "source": "diagnosis",
+          "steered": false
+        },
+        "droppedDemands": [
+          {
+            "importance": 0.9,
+            "reason": "acceleration is authored in the sport's demand profile (importance 0.9) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "acceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "changeOfDirection is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "changeOfDirection"
+          },
+          {
+            "importance": 0.8,
+            "reason": "coordination is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "coordination"
+          },
+          {
+            "importance": 0.8,
+            "reason": "deceleration is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "deceleration"
+          },
+          {
+            "importance": 0.8,
+            "reason": "sprintSpeed is authored in the sport's demand profile (importance 0.8) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "sprintSpeed"
+          },
+          {
+            "importance": 0.6,
+            "reason": "rotationalPower is authored in the sport's demand profile (importance 0.6) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "rotationalPower"
+          },
+          {
+            "importance": 0.4,
+            "reason": "neckStrength is authored in the sport's demand profile (importance 0.4) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "neckStrength"
+          },
+          {
+            "importance": 0.2,
+            "reason": "gripStrength is authored in the sport's demand profile (importance 0.2) but has no Performance-Model quality mapping yet — the diagnosis could not weigh it.",
+            "skbQuality": "gripStrength"
+          }
+        ],
+        "limitingFactors": [
+          {
+            "confidence": "low",
+            "magnitude": 0.34,
+            "qualityId": "aerobicCapacity",
+            "rationale": "demands aerobicCapacity at 0.9; your level is 0.5 (inferred) — gap 0.4. Responsiveness at your training age: ×0.95."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.34,
+            "qualityId": "anaerobicCapacity",
+            "rationale": "demands anaerobicCapacity at 0.9; your level is 0.5 (inferred) — gap 0.4. Responsiveness at your training age: ×0.95."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.24,
+            "qualityId": "explosiveStrength",
+            "rationale": "demands explosiveStrength at 0.8; your level is 0.5 (inferred) — gap 0.3."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.13,
+            "qualityId": "maxStrength",
+            "rationale": "demands maxStrength at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.9."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.13,
+            "qualityId": "stability",
+            "rationale": "demands stability at 0.7; your level is 0.5 (inferred) — gap 0.2. Responsiveness at your training age: ×0.95."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.06,
+            "qualityId": "mobility",
+            "rationale": "demands mobility at 0.6; your level is 0.5 (inferred) — gap 0.1."
+          },
+          {
+            "confidence": "low",
+            "magnitude": 0.06,
+            "qualityId": "reactiveStrength",
+            "rationale": "demands reactiveStrength at 0.6; your level is 0.5 (inferred) — gap 0.1."
+          }
+        ],
+        "priorityQualities": [
+          {
+            "order": 1,
+            "qualityId": "aerobicCapacity",
+            "rationale": "prioritising aerobicCapacity (limiter magnitude 0.34); develop via mitochondrial_density, stroke_volume, capillary_density."
+          }
+        ],
+        "sport": "soccer"
+      },
+      "provenance": {
+        "engineVersion": "1.4.0",
+        "knowledgeSetVersion": "1.50.0"
+      },
+      "validation": {
+        "checked": 12,
+        "pass": true,
+        "weeks": []
+      }
+    },
+    "phases": [
+      {
+        "gates": [
+          {
+            "label": "Hit 3 sessions most weeks",
+            "required": true
+          },
+          {
+            "label": "Movements feel smooth and pain-free",
+            "required": false
+          }
+        ],
+        "id": 1,
+        "range": "Wks 1–5",
+        "status": "current",
+        "summary": "Lay the foundation — consistent volume, solid technique, no chasing intensity yet.",
+        "tagline": "Build the foundation — volume, technique and work capacity.",
+        "tags": [
+          "Base",
+          "Foundation"
+        ],
+        "title": "Base",
+        "weekEnd": 5,
+        "weekStart": 1,
+        "weeks": [
+          {
+            "deload": false,
+            "num": 1,
+            "provisional": false,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "Develop stability",
+                  "quality": "stability",
+                  "rationale": "targeting stability from the diagnosis; low load / anti-movement, RIR 2–3; fatigue budget moderate. (covers adductor prevention + speed/sprint support + posterior chain + trunk (anti-rotation) from the soccer library; dosed as stability (led by copenhagen))"
+                },
+                "axialLoad": 1,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "sled_push",
+                    "group": "A",
+                    "intent": "sled_push",
+                    "name": "Sled Push",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "57.5 kg"
+                  },
+                  {
+                    "exId": "rdl",
+                    "group": "B",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 150,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "pallof",
+                    "group": "C",
+                    "intent": "pallof",
+                    "name": "Pallof press",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 0.3
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Lower Power"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers single-leg strength + max strength + knee control (ACL prehab) from the soccer library; dosed as maxStrength (led by split_squat))"
+                },
+                "axialLoad": 3,
+                "dayIdx": 3,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "back_squat",
+                    "group": "B",
+                    "intent": "back_squat",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 0
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "warmupRamp": [
+                      {
+                        "pct": 0.4,
+                        "reps": 5,
+                        "weight": "37.5 kg"
+                      },
+                      {
+                        "pct": 0.6,
+                        "reps": 3,
+                        "weight": "55 kg"
+                      },
+                      {
+                        "pct": 0.8,
+                        "reps": 2,
+                        "weight": "75 kg"
+                      }
+                    ],
+                    "weight": "92.5 kg"
+                  },
+                  {
+                    "exId": "sl_hinge",
+                    "group": "C",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "reverse_pec_deck",
+                    "group": "D",
+                    "name": "Reverse Pec Deck",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "decline_pushup",
+                    "group": "E",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
+                    "group": "F",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  }
+                ],
+                "title": "Thursday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high. (covers hamstring prevention + explosive power + calf/achilles from the soccer library; dosed as robustness (led by nordic_curl))"
+                },
+                "axialLoad": 0,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "exId": "broad_jump",
+                    "group": "B",
+                    "intent": "broad_jump",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "depth_jump",
+                    "group": "C",
+                    "intent": "depth_jump",
+                    "name": "Depth Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "C1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "calf_raise",
+                    "group": "D",
+                    "intent": "calf_raise",
+                    "name": "Calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Lower Power"
+              }
+            ],
+            "taper": false,
+            "theme": "Build base volume and movement quality."
+          },
+          {
+            "deload": false,
+            "num": 2,
+            "provisional": false,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "Develop stability",
+                  "quality": "stability",
+                  "rationale": "targeting stability from the diagnosis; low load / anti-movement, RIR 2–3; fatigue budget moderate. (covers adductor prevention + speed/sprint support + posterior chain + trunk (anti-rotation) from the soccer library; dosed as stability (led by copenhagen))"
+                },
+                "axialLoad": 1,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "sled_push",
+                    "group": "A",
+                    "intent": "sled_push",
+                    "name": "Sled Push",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "57.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "rdl",
+                    "group": "B",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 9",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "pallof",
+                    "group": "C",
+                    "intent": "pallof",
+                    "name": "Pallof press",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 0.3
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Lower Power"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers single-leg strength + max strength + knee control (ACL prehab) from the soccer library; dosed as maxStrength (led by split_squat))"
+                },
+                "axialLoad": 3,
+                "dayIdx": 3,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 9 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "back_squat",
+                    "group": "B",
+                    "intent": "back_squat",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 1
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "warmupRamp": [
+                      {
+                        "pct": 0.4,
+                        "reps": 5,
+                        "weight": "37.5 kg"
+                      },
+                      {
+                        "pct": 0.6,
+                        "reps": 3,
+                        "weight": "55 kg"
+                      },
+                      {
+                        "pct": 0.8,
+                        "reps": 2,
+                        "weight": "75 kg"
+                      }
+                    ],
+                    "weight": "92.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "sl_hinge",
+                    "group": "C",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 9",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "reverse_pec_deck",
+                    "group": "D",
+                    "name": "Reverse Pec Deck",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "decline_pushup",
+                    "group": "E",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "E1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 9",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "pike_pushup",
+                    "group": "F",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "F1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 9",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  }
+                ],
+                "title": "Thursday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high. (covers hamstring prevention + explosive power + calf/achilles from the soccer library; dosed as robustness (led by nordic_curl))"
+                },
+                "axialLoad": 0,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 11",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "broad_jump",
+                    "group": "B",
+                    "intent": "broad_jump",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 5",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "depth_jump",
+                    "group": "C",
+                    "intent": "depth_jump",
+                    "name": "Depth Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 5",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "calf_raise",
+                    "group": "D",
+                    "intent": "calf_raise",
+                    "name": "Calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Lower Power"
+              }
+            ],
+            "taper": false,
+            "theme": "Build base volume and movement quality."
+          },
+          {
+            "deload": false,
+            "num": 3,
+            "provisional": false,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "Develop stability",
+                  "quality": "stability",
+                  "rationale": "targeting stability from the diagnosis; low load / anti-movement, RIR 2–3; fatigue budget moderate. (covers adductor prevention + speed/sprint support + posterior chain + trunk (anti-rotation) from the soccer library; dosed as stability (led by copenhagen))"
+                },
+                "axialLoad": 1,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "sled_push",
+                    "group": "A",
+                    "intent": "sled_push",
+                    "name": "Sled Push",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "57.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "rdl",
+                    "group": "B",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "pallof",
+                    "group": "C",
+                    "intent": "pallof",
+                    "name": "Pallof press",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 0.3
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Lower Power"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers single-leg strength + max strength + knee control (ACL prehab) from the soccer library; dosed as maxStrength (led by split_squat))"
+                },
+                "axialLoad": 3,
+                "dayIdx": 3,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "back_squat",
+                    "group": "B",
+                    "intent": "back_squat",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 2
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "warmupRamp": [
+                      {
+                        "pct": 0.4,
+                        "reps": 5,
+                        "weight": "37.5 kg"
+                      },
+                      {
+                        "pct": 0.6,
+                        "reps": 3,
+                        "weight": "57.5 kg"
+                      },
+                      {
+                        "pct": 0.8,
+                        "reps": 2,
+                        "weight": "75 kg"
+                      }
+                    ],
+                    "weight": "95 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "sl_hinge",
+                    "group": "C",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "reverse_pec_deck",
+                    "group": "D",
+                    "name": "Reverse Pec Deck",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "decline_pushup",
+                    "group": "E",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "E1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "pike_pushup",
+                    "group": "F",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "F1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  }
+                ],
+                "title": "Thursday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high. (covers hamstring prevention + explosive power + calf/achilles from the soccer library; dosed as robustness (led by nordic_curl))"
+                },
+                "axialLoad": 0,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "broad_jump",
+                    "group": "B",
+                    "intent": "broad_jump",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 6",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "depth_jump",
+                    "group": "C",
+                    "intent": "depth_jump",
+                    "name": "Depth Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 6",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "calf_raise",
+                    "group": "D",
+                    "intent": "calf_raise",
+                    "name": "Calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Lower Power"
+              }
+            ],
+            "taper": false,
+            "theme": "Build base volume and movement quality."
+          },
+          {
+            "deload": false,
+            "num": 4,
+            "provisional": false,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "Develop stability",
+                  "quality": "stability",
+                  "rationale": "targeting stability from the diagnosis; low load / anti-movement, RIR 2–3; fatigue budget moderate. (covers adductor prevention + speed/sprint support + posterior chain + trunk (anti-rotation) from the soccer library; dosed as stability (led by copenhagen))"
+                },
+                "axialLoad": 1,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "sled_push",
+                    "group": "A",
+                    "intent": "sled_push",
+                    "name": "Sled Push",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 7",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "57.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "rdl",
+                    "group": "B",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 11",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "pallof",
+                    "group": "C",
+                    "intent": "pallof",
+                    "name": "Pallof press",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 0.3
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Lower Power"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers single-leg strength + max strength + knee control (ACL prehab) from the soccer library; dosed as maxStrength (led by split_squat))"
+                },
+                "axialLoad": 3,
+                "dayIdx": 3,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 11 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "back_squat",
+                    "group": "B",
+                    "intent": "back_squat",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 3
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "warmupRamp": [
+                      {
+                        "pct": 0.4,
+                        "reps": 5,
+                        "weight": "37.5 kg"
+                      },
+                      {
+                        "pct": 0.6,
+                        "reps": 3,
+                        "weight": "57.5 kg"
+                      },
+                      {
+                        "pct": 0.8,
+                        "reps": 2,
+                        "weight": "75 kg"
+                      }
+                    ],
+                    "weight": "95 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "sl_hinge",
+                    "group": "C",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 11",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "reverse_pec_deck",
+                    "group": "D",
+                    "name": "Reverse Pec Deck",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "decline_pushup",
+                    "group": "E",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "E1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 11",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "pike_pushup",
+                    "group": "F",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "F1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 11",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  }
+                ],
+                "title": "Thursday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high. (covers hamstring prevention + explosive power + calf/achilles from the soccer library; dosed as robustness (led by nordic_curl))"
+                },
+                "axialLoad": 0,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 13",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "broad_jump",
+                    "group": "B",
+                    "intent": "broad_jump",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 7",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "depth_jump",
+                    "group": "C",
+                    "intent": "depth_jump",
+                    "name": "Depth Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 7",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "calf_raise",
+                    "group": "D",
+                    "intent": "calf_raise",
+                    "name": "Calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Lower Power"
+              }
+            ],
+            "taper": false,
+            "theme": "Build base volume and movement quality."
+          },
+          {
+            "deload": true,
+            "num": 5,
+            "provisional": false,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "Develop stability",
+                  "quality": "stability",
+                  "rationale": "targeting stability from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget low. (covers adductor prevention + speed/sprint support + posterior chain + trunk (anti-rotation) from the soccer library; dosed as stability (led by copenhagen))"
+                },
+                "axialLoad": 1,
+                "dayIdx": 1,
+                "duration": "~25 min",
+                "items": [
+                  {
+                    "exId": "sled_push",
+                    "group": "A",
+                    "intent": "sled_push",
+                    "name": "Sled Push",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "57.5 kg"
+                  },
+                  {
+                    "exId": "rdl",
+                    "group": "B",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 150,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "C",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "D",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "E",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "F",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 60,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "G",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Tuesday · Lower Explosive"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate. (covers hamstring prevention + explosive power + calf/achilles from the soccer library; dosed as robustness (led by nordic_curl))"
+                },
+                "axialLoad": 0,
+                "dayIdx": 3,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "95 kg"
+                  },
+                  {
+                    "exId": "broad_jump",
+                    "group": "B",
+                    "intent": "broad_jump",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "calf_raise",
+                    "group": "C",
+                    "intent": "calf_raise",
+                    "name": "Calf raise",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "H",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 60,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Thursday · Lower Power"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate. (covers single-leg strength + max strength + knee control (ACL prehab) from the soccer library; dosed as maxStrength (led by split_squat))"
+                },
+                "axialLoad": 3,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "back_squat",
+                    "group": "B",
+                    "intent": "back_squat",
+                    "name": "Back squat",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "90 kg"
+                  },
+                  {
+                    "exId": "sl_hinge",
+                    "group": "C",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "reverse_pec_deck",
+                    "group": "D",
+                    "name": "Reverse Pec Deck",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "35 kg"
+                  },
+                  {
+                    "exId": "decline_pushup",
+                    "group": "E",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
+                    "group": "F",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "G",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "H",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "H",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Full body"
+              }
+            ],
+            "taper": false,
+            "theme": "Deload — volume cut. Recover and absorb the work."
+          }
+        ]
+      },
+      {
+        "gates": [
+          {
+            "label": "Absorb the added intensity without lingering soreness",
+            "required": true
+          }
+        ],
+        "id": 2,
+        "range": "Wks 6–12",
+        "status": "provisional",
+        "summary": "Progressively harder sessions appear. Hold form and let recovery keep pace.",
+        "tagline": "Add intensity and goal-specific work.",
+        "tags": [
+          "Build",
+          "Intensity"
+        ],
+        "title": "Build",
+        "weekEnd": 12,
+        "weekStart": 6,
+        "weeks": [
+          {
+            "deload": false,
+            "num": 6,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "Develop stability",
+                  "quality": "stability",
+                  "rationale": "targeting stability from the diagnosis; low load / anti-movement, RIR 2–3; fatigue budget moderate. (covers adductor prevention + speed/sprint support + posterior chain + trunk (anti-rotation) from the soccer library; dosed as stability (led by copenhagen))"
+                },
+                "axialLoad": 1,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "sled_push",
+                    "group": "A",
+                    "intent": "sled_push",
+                    "name": "Sled Push",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "57.5 kg"
+                  },
+                  {
+                    "exId": "rdl",
+                    "group": "B",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "pallof",
+                    "group": "C",
+                    "intent": "pallof",
+                    "name": "Pallof press",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 0.3
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Lower Power"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers single-leg strength + max strength + knee control (ACL prehab) from the soccer library; dosed as maxStrength (led by split_squat))"
+                },
+                "axialLoad": 3,
+                "dayIdx": 3,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "back_squat",
+                    "group": "B",
+                    "intent": "back_squat",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 0
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "warmupRamp": [
+                      {
+                        "pct": 0.4,
+                        "reps": 5,
+                        "weight": "40 kg"
+                      },
+                      {
+                        "pct": 0.6,
+                        "reps": 3,
+                        "weight": "57.5 kg"
+                      },
+                      {
+                        "pct": 0.8,
+                        "reps": 2,
+                        "weight": "77.5 kg"
+                      }
+                    ],
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "exId": "sl_hinge",
+                    "group": "C",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "reverse_pec_deck",
+                    "group": "D",
+                    "name": "Reverse Pec Deck",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "exId": "decline_pushup",
+                    "group": "E",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
+                    "group": "F",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 6",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  }
+                ],
+                "title": "Thursday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high. (covers hamstring prevention + explosive power + calf/achilles from the soccer library; dosed as robustness (led by nordic_curl))"
+                },
+                "axialLoad": 0,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "exId": "broad_jump",
+                    "group": "B",
+                    "intent": "broad_jump",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "depth_jump",
+                    "group": "C",
+                    "intent": "depth_jump",
+                    "name": "Depth Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "C1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "calf_raise",
+                    "group": "D",
+                    "intent": "calf_raise",
+                    "name": "Calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Lower Power"
+              }
+            ],
+            "taper": false,
+            "theme": "Progress the intensity. Keep form honest."
+          },
+          {
+            "deload": false,
+            "num": 7,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "Develop stability",
+                  "quality": "stability",
+                  "rationale": "targeting stability from the diagnosis; low load / anti-movement, RIR 2–3; fatigue budget moderate. (covers adductor prevention + speed/sprint support + posterior chain + trunk (anti-rotation) from the soccer library; dosed as stability (led by copenhagen))"
+                },
+                "axialLoad": 1,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "sled_push",
+                    "group": "A",
+                    "intent": "sled_push",
+                    "name": "Sled Push",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "57.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "rdl",
+                    "group": "B",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 9",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "pallof",
+                    "group": "C",
+                    "intent": "pallof",
+                    "name": "Pallof press",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 0.3
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Lower Power"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers single-leg strength + max strength + knee control (ACL prehab) from the soccer library; dosed as maxStrength (led by split_squat))"
+                },
+                "axialLoad": 3,
+                "dayIdx": 3,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 7 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "back_squat",
+                    "group": "B",
+                    "intent": "back_squat",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 1
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "warmupRamp": [
+                      {
+                        "pct": 0.4,
+                        "reps": 5,
+                        "weight": "40 kg"
+                      },
+                      {
+                        "pct": 0.6,
+                        "reps": 3,
+                        "weight": "57.5 kg"
+                      },
+                      {
+                        "pct": 0.8,
+                        "reps": 2,
+                        "weight": "77.5 kg"
+                      }
+                    ],
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "sl_hinge",
+                    "group": "C",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 7",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "reverse_pec_deck",
+                    "group": "D",
+                    "name": "Reverse Pec Deck",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "decline_pushup",
+                    "group": "E",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "E1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 7",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "pike_pushup",
+                    "group": "F",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "F1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 7",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  }
+                ],
+                "title": "Thursday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high. (covers hamstring prevention + explosive power + calf/achilles from the soccer library; dosed as robustness (led by nordic_curl))"
+                },
+                "axialLoad": 0,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 11",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "broad_jump",
+                    "group": "B",
+                    "intent": "broad_jump",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 5",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "depth_jump",
+                    "group": "C",
+                    "intent": "depth_jump",
+                    "name": "Depth Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 1,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 1
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 5",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "calf_raise",
+                    "group": "D",
+                    "intent": "calf_raise",
+                    "name": "Calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Lower Power"
+              }
+            ],
+            "taper": false,
+            "theme": "Progress the intensity. Keep form honest."
+          },
+          {
+            "deload": false,
+            "num": 8,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "Develop stability",
+                  "quality": "stability",
+                  "rationale": "targeting stability from the diagnosis; low load / anti-movement, RIR 2–3; fatigue budget moderate. (covers adductor prevention + speed/sprint support + posterior chain + trunk (anti-rotation) from the soccer library; dosed as stability (led by copenhagen))"
+                },
+                "axialLoad": 1,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "sled_push",
+                    "group": "A",
+                    "intent": "sled_push",
+                    "name": "Sled Push",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "57.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "rdl",
+                    "group": "B",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "pallof",
+                    "group": "C",
+                    "intent": "pallof",
+                    "name": "Pallof press",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 0.3
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Lower Power"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers single-leg strength + max strength + knee control (ACL prehab) from the soccer library; dosed as maxStrength (led by split_squat))"
+                },
+                "axialLoad": 3,
+                "dayIdx": 3,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "back_squat",
+                    "group": "B",
+                    "intent": "back_squat",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 2
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "warmupRamp": [
+                      {
+                        "pct": 0.4,
+                        "reps": 5,
+                        "weight": "40 kg"
+                      },
+                      {
+                        "pct": 0.6,
+                        "reps": 3,
+                        "weight": "60 kg"
+                      },
+                      {
+                        "pct": 0.8,
+                        "reps": 2,
+                        "weight": "80 kg"
+                      }
+                    ],
+                    "weight": "100 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "sl_hinge",
+                    "group": "C",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "reverse_pec_deck",
+                    "group": "D",
+                    "name": "Reverse Pec Deck",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "decline_pushup",
+                    "group": "E",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "E1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "pike_pushup",
+                    "group": "F",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "F1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  }
+                ],
+                "title": "Thursday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high. (covers hamstring prevention + explosive power + calf/achilles from the soccer library; dosed as robustness (led by nordic_curl))"
+                },
+                "axialLoad": 0,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "broad_jump",
+                    "group": "B",
+                    "intent": "broad_jump",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 6",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "depth_jump",
+                    "group": "C",
+                    "intent": "depth_jump",
+                    "name": "Depth Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 2,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 2
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 6",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "calf_raise",
+                    "group": "D",
+                    "intent": "calf_raise",
+                    "name": "Calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Lower Power"
+              }
+            ],
+            "taper": false,
+            "theme": "Progress the intensity. Keep form honest."
+          },
+          {
+            "deload": false,
+            "num": 9,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "Develop stability",
+                  "quality": "stability",
+                  "rationale": "targeting stability from the diagnosis; low load / anti-movement, RIR 2–3; fatigue budget moderate. (covers adductor prevention + speed/sprint support + posterior chain + trunk (anti-rotation) from the soccer library; dosed as stability (led by copenhagen))"
+                },
+                "axialLoad": 1,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "sled_push",
+                    "group": "A",
+                    "intent": "sled_push",
+                    "name": "Sled Push",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 7",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "57.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "rdl",
+                    "group": "B",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 11",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "pallof",
+                    "group": "C",
+                    "intent": "pallof",
+                    "name": "Pallof press",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 0.3
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Lower Power"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers single-leg strength + max strength + knee control (ACL prehab) from the soccer library; dosed as maxStrength (led by split_squat))"
+                },
+                "axialLoad": 3,
+                "dayIdx": 3,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 9 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "back_squat",
+                    "group": "B",
+                    "intent": "back_squat",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 3
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "warmupRamp": [
+                      {
+                        "pct": 0.4,
+                        "reps": 5,
+                        "weight": "40 kg"
+                      },
+                      {
+                        "pct": 0.6,
+                        "reps": 3,
+                        "weight": "60 kg"
+                      },
+                      {
+                        "pct": 0.8,
+                        "reps": 2,
+                        "weight": "80 kg"
+                      }
+                    ],
+                    "weight": "100 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "sl_hinge",
+                    "group": "C",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 9",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "reverse_pec_deck",
+                    "group": "D",
+                    "name": "Reverse Pec Deck",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "decline_pushup",
+                    "group": "E",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "E1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 9",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "pike_pushup",
+                    "group": "F",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "F1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 9",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  }
+                ],
+                "title": "Thursday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high. (covers hamstring prevention + explosive power + calf/achilles from the soccer library; dosed as robustness (led by nordic_curl))"
+                },
+                "axialLoad": 0,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 13",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "broad_jump",
+                    "group": "B",
+                    "intent": "broad_jump",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 7",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "depth_jump",
+                    "group": "C",
+                    "intent": "depth_jump",
+                    "name": "Depth Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 3,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 3
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 7",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "calf_raise",
+                    "group": "D",
+                    "intent": "calf_raise",
+                    "name": "Calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Lower Power"
+              }
+            ],
+            "taper": false,
+            "theme": "Progress the intensity. Keep form honest."
+          },
+          {
+            "deload": true,
+            "num": 10,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "Develop stability",
+                  "quality": "stability",
+                  "rationale": "targeting stability from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget low. (covers adductor prevention + speed/sprint support + posterior chain + trunk (anti-rotation) from the soccer library; dosed as stability (led by copenhagen))"
+                },
+                "axialLoad": 1,
+                "dayIdx": 1,
+                "duration": "~25 min",
+                "items": [
+                  {
+                    "exId": "sled_push",
+                    "group": "A",
+                    "intent": "sled_push",
+                    "name": "Sled Push",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "57.5 kg"
+                  },
+                  {
+                    "exId": "rdl",
+                    "group": "B",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "restSec": 150,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "C",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "D",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "E",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "F",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 60,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "G",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Tuesday · Lower Explosive"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate. (covers hamstring prevention + explosive power + calf/achilles from the soccer library; dosed as robustness (led by nordic_curl))"
+                },
+                "axialLoad": 0,
+                "dayIdx": 3,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 10",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "95 kg"
+                  },
+                  {
+                    "exId": "broad_jump",
+                    "group": "B",
+                    "intent": "broad_jump",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "calf_raise",
+                    "group": "C",
+                    "intent": "calf_raise",
+                    "name": "Calf raise",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  },
+                  {
+                    "exId": "ankle_plantarflex_band",
+                    "group": "H",
+                    "name": "Banded Ankle Plantarflexion",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 60,
+                    "rpe": "RPE 5",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Thursday · Lower Power"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; reduced load (~65%, leave 3+ reps in reserve); fatigue budget moderate. (covers single-leg strength + max strength + knee control (ACL prehab) from the soccer library; dosed as maxStrength (led by split_squat))"
+                },
+                "axialLoad": 3,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "20 kg/hand"
+                  },
+                  {
+                    "exId": "back_squat",
+                    "group": "B",
+                    "intent": "back_squat",
+                    "name": "Back squat",
+                    "note": "deload — ~65% load, leave 3+ reps in the tank",
+                    "num": "B1",
+                    "restSec": 180,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 5",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "90 kg"
+                  },
+                  {
+                    "exId": "sl_hinge",
+                    "group": "C",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "reverse_pec_deck",
+                    "group": "D",
+                    "name": "Reverse Pec Deck",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "35 kg"
+                  },
+                  {
+                    "exId": "decline_pushup",
+                    "group": "E",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "pike_pushup",
+                    "group": "F",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 90,
+                    "rpe": "RPE 6",
+                    "sets": "2 × 8",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "G",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "H",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "H",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "H1",
+                    "restSec": 75,
+                    "rpe": "RPE 5",
+                    "sets": "2 × 6",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Full body"
+              }
+            ],
+            "taper": false,
+            "theme": "Deload — volume cut. Recover and absorb the work."
+          },
+          {
+            "deload": false,
+            "num": 11,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "Develop stability",
+                  "quality": "stability",
+                  "rationale": "targeting stability from the diagnosis; low load / anti-movement, RIR 2–3; fatigue budget moderate. (covers adductor prevention + speed/sprint support + posterior chain + trunk (anti-rotation) from the soccer library; dosed as stability (led by copenhagen))"
+                },
+                "axialLoad": 1,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "sled_push",
+                    "group": "A",
+                    "intent": "sled_push",
+                    "name": "Sled Push",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 4
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "57.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "rdl",
+                    "group": "B",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 4
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "pallof",
+                    "group": "C",
+                    "intent": "pallof",
+                    "name": "Pallof press",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 0.3
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Lower Power"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers single-leg strength + max strength + knee control (ACL prehab) from the soccer library; dosed as maxStrength (led by split_squat))"
+                },
+                "axialLoad": 3,
+                "dayIdx": 3,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 4
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 10 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "back_squat",
+                    "group": "B",
+                    "intent": "back_squat",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 4
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "warmupRamp": [
+                      {
+                        "pct": 0.4,
+                        "reps": 5,
+                        "weight": "40 kg"
+                      },
+                      {
+                        "pct": 0.6,
+                        "reps": 3,
+                        "weight": "60 kg"
+                      },
+                      {
+                        "pct": 0.8,
+                        "reps": 2,
+                        "weight": "80 kg"
+                      }
+                    ],
+                    "weight": "100 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "sl_hinge",
+                    "group": "C",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 4
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "reverse_pec_deck",
+                    "group": "D",
+                    "name": "Reverse Pec Deck",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "decline_pushup",
+                    "group": "E",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "E1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 4
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "pike_pushup",
+                    "group": "F",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "F1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 4
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  }
+                ],
+                "title": "Thursday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high. (covers hamstring prevention + explosive power + calf/achilles from the soccer library; dosed as robustness (led by nordic_curl))"
+                },
+                "axialLoad": 0,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 4
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 14",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "broad_jump",
+                    "group": "B",
+                    "intent": "broad_jump",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 4
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "depth_jump",
+                    "group": "C",
+                    "intent": "depth_jump",
+                    "name": "Depth Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 4
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "calf_raise",
+                    "group": "D",
+                    "intent": "calf_raise",
+                    "name": "Calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Lower Power"
+              }
+            ],
+            "taper": false,
+            "theme": "Progress the intensity. Keep form honest."
+          },
+          {
+            "deload": false,
+            "num": 12,
+            "provisional": true,
+            "sessions": [
+              {
+                "_objective": {
+                  "purpose": "Develop stability",
+                  "quality": "stability",
+                  "rationale": "targeting stability from the diagnosis; low load / anti-movement, RIR 2–3; fatigue budget moderate. (covers adductor prevention + speed/sprint support + posterior chain + trunk (anti-rotation) from the soccer library; dosed as stability (led by copenhagen))"
+                },
+                "axialLoad": 1,
+                "dayIdx": 1,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "sled_push",
+                    "group": "A",
+                    "intent": "sled_push",
+                    "name": "Sled Push",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 5
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "57.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "rdl",
+                    "group": "B",
+                    "intent": "rdl",
+                    "name": "Romanian deadlift",
+                    "note": "",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 5
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "80 kg"
+                  },
+                  {
+                    "exId": "pallof",
+                    "group": "C",
+                    "intent": "pallof",
+                    "name": "Pallof press",
+                    "note": "",
+                    "num": "C1",
+                    "restSec": 60,
+                    "rpe": "RPE 6",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 0.3
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "D",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "E",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "cat_camel_thoracic",
+                    "group": "F",
+                    "name": "Cat-Camel + Thoracic Rotation",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "prone_w_raise",
+                    "group": "G",
+                    "name": "Prone W Raise",
+                    "note": "",
+                    "num": "G1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0,
+                    "weight": "4 kg/hand"
+                  }
+                ],
+                "title": "Tuesday · Lower Power"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop max strength",
+                  "quality": "maxStrength",
+                  "rationale": "targeting max strength from the diagnosis; ≥85% 1RM, RIR 1–3; fatigue budget high. (covers single-leg strength + max strength + knee control (ACL prehab) from the soccer library; dosed as maxStrength (led by split_squat))"
+                },
+                "axialLoad": 3,
+                "dayIdx": 3,
+                "duration": "~35 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "split_squat",
+                    "group": "A",
+                    "intent": "split_squat",
+                    "name": "Bulgarian split squat",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 5
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 10 ea.",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "22.5 kg/hand"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "back_squat",
+                    "group": "B",
+                    "intent": "back_squat",
+                    "name": "Back squat",
+                    "note": "+small load when the last set is ≤ target RPE",
+                    "num": "B1",
+                    "progression": {
+                      "adaptation": "maxStrength",
+                      "confidence": "low",
+                      "currency": "load",
+                      "driver": "estimated — governed creep rate (forward-projected; completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeklyLoadPct": 0.0075,
+                      "weeks": 5
+                    },
+                    "restSec": 180,
+                    "rpe": "RPE 8",
+                    "sets": "4 × 4",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "warmupRamp": [
+                      {
+                        "pct": 0.4,
+                        "reps": 5,
+                        "weight": "40 kg"
+                      },
+                      {
+                        "pct": 0.6,
+                        "reps": 3,
+                        "weight": "60 kg"
+                      },
+                      {
+                        "pct": 0.8,
+                        "reps": 2,
+                        "weight": "80 kg"
+                      }
+                    ],
+                    "weight": "100 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "sl_hinge",
+                    "group": "C",
+                    "intent": "sl_hinge",
+                    "name": "Single-leg hip hinge",
+                    "note": "",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 5
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "exId": "reverse_pec_deck",
+                    "group": "D",
+                    "name": "Reverse Pec Deck",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "37.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "decline_pushup",
+                    "group": "E",
+                    "name": "Feet-elevated push-up",
+                    "note": "",
+                    "num": "E1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 5
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "pike_pushup",
+                    "group": "F",
+                    "name": "Pike push-up",
+                    "note": "",
+                    "num": "F1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 5
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7→8",
+                    "sets": "3 × 10",
+                    "superset": false,
+                    "volumeFactor": 0.4
+                  }
+                ],
+                "title": "Thursday · Full body"
+              },
+              {
+                "_objective": {
+                  "purpose": "Develop robustness",
+                  "quality": "robustness",
+                  "rationale": "targeting robustness from the diagnosis; progressive, tissue-specific, RIR 1–3; fatigue budget high. (covers hamstring prevention + explosive power + calf/achilles from the soccer library; dosed as robustness (led by nordic_curl))"
+                },
+                "axialLoad": 0,
+                "dayIdx": 4,
+                "duration": "~30 min",
+                "items": [
+                  {
+                    "estimated": true,
+                    "exId": "hip_thrust",
+                    "group": "A",
+                    "intent": "hip_thrust",
+                    "name": "Hip thrust",
+                    "note": "",
+                    "num": "A1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 5
+                    },
+                    "restSec": 90,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 14",
+                    "superset": false,
+                    "volumeFactor": 1,
+                    "weight": "97.5 kg"
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "broad_jump",
+                    "group": "B",
+                    "intent": "broad_jump",
+                    "name": "Broad Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "B1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 5
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "estimated": true,
+                    "exId": "depth_jump",
+                    "group": "C",
+                    "intent": "depth_jump",
+                    "name": "Depth Jump",
+                    "note": "explosive — move fast, full recovery; stop the set if speed drops",
+                    "num": "C1",
+                    "progression": {
+                      "addedReps": 4,
+                      "confidence": "low",
+                      "currency": "reps",
+                      "driver": "estimated — double progression (reps→load; forward-projected, completion-gated when logged history is present)",
+                      "level": "exercise",
+                      "weeks": 5
+                    },
+                    "restSec": 150,
+                    "rpe": "RPE 7",
+                    "sets": "4 × 8",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "calf_raise",
+                    "group": "D",
+                    "intent": "calf_raise",
+                    "name": "Calf raise",
+                    "note": "",
+                    "num": "D1",
+                    "restSec": 60,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 12",
+                    "superset": false,
+                    "volumeFactor": 1
+                  },
+                  {
+                    "exId": "hip_flexor_90_90",
+                    "group": "E",
+                    "name": "90/90 Hip Flexor Stretch",
+                    "note": "",
+                    "num": "E1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  },
+                  {
+                    "exId": "thoracic_foam_roller",
+                    "group": "F",
+                    "name": "Thoracic Foam Roller Extension",
+                    "note": "",
+                    "num": "F1",
+                    "restSec": 75,
+                    "rpe": "RPE 7",
+                    "sets": "3 × 8",
+                    "superset": false,
+                    "tag": "mobility",
+                    "volumeFactor": 0
+                  }
+                ],
+                "title": "Friday · Lower Power"
+              }
+            ],
+            "taper": false,
+            "theme": "Progress the intensity. Keep form honest."
+          }
+        ]
+      }
+    ],
+    "totalWeeks": 12
+  },
   "sport·soccer·intermediate·off·3d": {
     "meta": {
       "diagnosis": {
