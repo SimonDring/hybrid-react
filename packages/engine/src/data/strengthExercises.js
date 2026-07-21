@@ -144,16 +144,16 @@ export const EXERCISES = [
   // ---------------- FUNCTIONAL / DESK-JOB COUNTERBALANCE ----------------
   // mobility-pattern + health-class items: the functional primer (prepended by
   // buildWeek) and supportive-finisher pool. They count zero toward volume.
-  { id: 'hip_flexor_90_90',        name: '90/90 Hip Flexor Stretch',       pattern: 'mobility', equip: 'bodyweight', level: 0, role: 'core',   goalTags: ['functional'] },
+  { id: 'hip_flexor_90_90', loadClass: 'health',        name: '90/90 Hip Flexor Stretch',       pattern: 'mobility', equip: 'bodyweight', level: 0, role: 'core',   goalTags: ['functional'] },
   { id: 'glute_bridge_activation', loadClass: 'health',  name: 'Glute Bridge (2s hold)',         pattern: 'hinge',    equip: 'bodyweight', level: 0, role: 'core',   goalTags: ['functional'] },
   { id: 'band_pull_apart', loadClass: 'health',          name: 'Band Pull-Apart',                pattern: 'hpull',    equip: 'band',       level: 0, role: 'iso',    goalTags: ['functional', 'hypertrophy'], sportTags: ['swim'] },
-  { id: 'cat_camel_thoracic',       name: 'Cat-Camel + Thoracic Rotation', pattern: 'mobility', equip: 'bodyweight', level: 0, role: 'core',   goalTags: ['functional'] },
+  { id: 'cat_camel_thoracic', loadClass: 'health',       name: 'Cat-Camel + Thoracic Rotation', pattern: 'mobility', equip: 'bodyweight', level: 0, role: 'core',   goalTags: ['functional'] },
   { id: 'half_kneeling_pallof', loadClass: 'isoCore',     name: 'Half-Kneeling Pallof Press',    pattern: 'core',     equip: 'cable',      level: 1, role: 'core',  goalTags: ['functional'], sportTags: ['run', 'swim'] },
   { id: 'serratus_wall_slide', loadClass: 'health',      name: 'Serratus Wall Slide',            pattern: 'core',     equip: 'bodyweight', level: 0, role: 'core',  goalTags: ['functional'], sportTags: ['swim'] },
   { id: 'bird_dog', loadClass: 'isoCore',                 name: 'Bird Dog (5s hold)',             pattern: 'core',     equip: 'bodyweight', level: 0, role: 'core',  goalTags: ['functional', 'strength'] },
   { id: 'tall_kneeling_landmine', axialLoad: 1, equipDetail: 'landmine',   name: 'Tall-Kneeling Landmine Press',  pattern: 'vpush',    equip: 'barbell',    level: 1, role: 'accessory', minLevelForPrimary: 'returning', goalTags: ['functional'] },
   { id: 'prone_hip_extension', loadClass: 'health',      name: 'Prone Hip Extension',           pattern: 'hinge',    equip: 'bodyweight', level: 0, role: 'iso',   goalTags: ['functional'], sportTags: ['cycle'] },
-  { id: 'thoracic_foam_roller',     name: 'Thoracic Foam Roller Extension',pattern: 'mobility', equip: 'bodyweight', level: 0, role: 'core',  goalTags: ['functional'], sportTags: ['cycle'] },
+  { id: 'thoracic_foam_roller', loadClass: 'health',     name: 'Thoracic Foam Roller Extension',pattern: 'mobility', equip: 'bodyweight', level: 0, role: 'core',  goalTags: ['functional'], sportTags: ['cycle'] },
 
   // ---------------- RUN SUPPORT ----------------
   { id: 'double_leg_pogo', quality: 'power',     name: 'Double-Leg Pogo Jump',      pattern: 'squat',  equip: 'bodyweight', level: 1, role: 'accessory', minLevelForPrimary: 'returning',    sportTags: ['run'], goalTags: ['functional'] },
